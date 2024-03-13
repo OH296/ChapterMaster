@@ -20,7 +20,7 @@ global.weapons={
     },
     "melee_hands": 1,
     "range": 1,
-    "spli": 1, 
+    "spli": 3, 
     "tags":["axe"]
   },
   "Snazzgun": {
@@ -33,7 +33,7 @@ global.weapons={
     "ranged_hands": 2,
     "ammo": 20,
     "range": 3.1,
-    "spli": 1,
+    "spli": 3,
     "arp": 0,
     "tags":["rifle"]
   },
@@ -48,7 +48,7 @@ global.weapons={
     "ranged_hands": 0,
     "ammo": 6,
     "range": 2.1,
-    "spli": 1,
+    "spli": 3,
     "arp": 0,
     "tags":["pistol"]
   },
@@ -99,7 +99,7 @@ global.weapons={
     },
     "ammo": 10,
     "range": 6.1,
-    "spli": 1,
+    "spli": 3,
     "arp": 0,
     "tags":[],
     "ranged_hands":2,
@@ -116,7 +116,7 @@ global.weapons={
     },
     "ammo": 10,
     "range": 6.1,
-    "spli": 1,
+    "spli": 3,
     "arp": 0,
     "tags":["rifle","arcane"],
     "ranged_hands":2,    
@@ -166,7 +166,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 0
     },
     "Chainsword": {
@@ -181,7 +181,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["chain", "sword"],
     },
@@ -202,7 +202,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["chain", "axe"],
     },
@@ -223,7 +223,7 @@ global.weapons={
         "melee_hands": 1,
         "ranged_hands": 1,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "tags":["banner"],   
     },
     "Eviscerator": {
@@ -243,7 +243,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["chain", "sword"],
     },
@@ -264,7 +264,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "special_description": "Parry",
         "tags":["power", "sword"],
@@ -302,7 +302,7 @@ global.weapons={
         "melee_hands": 1.25,
         "ranged_hands": 1,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["power", "chain", "fist", "siege"],
     },
@@ -336,7 +336,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "special_description": "Parry",
         "tags":["power", "sword","elder","xenos"],
@@ -358,7 +358,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["power"],
     },
@@ -400,7 +400,7 @@ global.weapons={
         "ranged_hands": 2,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["power", "axe"],
     },    
@@ -421,7 +421,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["power","fist"],
     },
@@ -437,7 +437,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["power","dual","fist"],
     },
@@ -458,7 +458,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["power", "vehicle","dual","fist"],
     },
@@ -479,7 +479,7 @@ global.weapons={
         "ranged_hands": 2,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["power", "hammer", "siege"],
         "req_exp":90,
@@ -522,7 +522,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
          "tags":["arcane", "sword"],
     },
@@ -570,7 +570,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 0,
         "range": 10,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
          "tags":["bolt", "attached"]
     },
@@ -602,7 +602,7 @@ global.weapons={
         "ranged_hands": 2,
         "ammo": 16,
         "range": 12,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["bolt"]
     },
@@ -618,7 +618,7 @@ global.weapons={
         "ranged_hands": 2.25,
         "ammo": 8,
         "range": 2,
-        "spli": 1,
+        "spli": 3,
         "arp": -1,
         "tags":["flame","heavy_ranged"]
     },
@@ -634,7 +634,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 6,
         "range": 2.1,
-        "spli": 1,
+        "spli": 3,
         "arp": -1,
         "tags":["dreadnought","flame"]
     },
@@ -648,7 +648,7 @@ global.weapons={
         "description": "A brutal crushing claw capable of tearing open armour and felsh with ease.",
         "melee_hands": 5, 
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["dreadnought"]  
     },
@@ -662,7 +662,7 @@ global.weapons={
         "description": "While a variety of melee weapons are used by dreadnoughts, this power fist with flamer is the most common.",
         "melee_hands": 5, 
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["dreadnought","fist"]
     },       
@@ -678,7 +678,7 @@ global.weapons={
         "ranged_hands": 2.25,
         "ammo": 0,
         "range": 3.1,
-        "spli": 1,
+        "spli": 3,
         "arp": -1,
         "tags":["vehicle","flame","dreadnought"]
     },
@@ -710,7 +710,7 @@ global.weapons={
         "ranged_hands": 2.25,
         "ammo": 8,
         "range": 4.1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["melta","heavy_ranged", "dreadnought"]
     },
@@ -758,7 +758,7 @@ global.weapons={
         "ranged_hands": 2,
         "ammo": 16,
         "range": 12,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["plasma"]
     },
@@ -790,7 +790,7 @@ global.weapons={
         "ranged_hands": 2,
         "ammo": 20,
         "range": 18,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["precision"]
     },
@@ -806,7 +806,7 @@ global.weapons={
         "ranged_hands": 2.25,
         "ammo": 5,
         "range": 12,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["heavy_ranged","dreadnought"]
     },
@@ -822,7 +822,7 @@ global.weapons={
         "ranged_hands": 2.25,
         "ammo": 25,
         "range": 18,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["heavy_ranged","dreadnought"]
     },
@@ -838,7 +838,7 @@ global.weapons={
         "ranged_hands": 2.25,
         "ammo": 6,
         "range": 24,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["heavy_ranged","dreadnought"]
     },
@@ -870,7 +870,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 1,
         "range": 20,
-        "spli": 1,
+        "spli": 3,
         "arp": 1
     },
     "Integrated Bolters": {
@@ -885,7 +885,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 20,
         "range": 8.1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["bolt"]
     },
@@ -906,7 +906,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "second_profiles":["Integrated Bolters"],
         "tags":["power","fist"],
@@ -923,7 +923,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 0,
         "range": 1,
-        "spli": 1,
+        "spli": 3,
         "arp": 0
     },
     "Twin Linked Heavy Bolter": {
@@ -938,7 +938,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 20,
         "range": 16,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["heavy_ranged","vehicle","dreadnought"]
     },
@@ -986,7 +986,7 @@ global.weapons={
         "ranged_hands": 2.25,
         "ammo": 10,
         "range": 16,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["heavy_ranged"]
     },
@@ -1002,7 +1002,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 6,
         "range": 20,
-        "spli": 1,
+        "spli": 3,
         "arp": 1
     },
     "HK Missile": {
@@ -1021,7 +1021,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 20,
         "range": 16,
-        "spli": 1,
+        "spli": 3,
         "arp": 0
     },
     "Twin Linked Lascannon Mount": {
@@ -1036,7 +1036,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 10,
         "range": 20,
-        "spli": 1,
+        "spli": 3,
         "arp": 1
     },
     "Twin Linked Assault Cannon Mount": {
@@ -1051,7 +1051,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 5,
         "range": 12,
-        "spli": 1,
+        "spli": 3,
         "arp": 0
     },
     "Reaper Autocannon Mount": {
@@ -1066,7 +1066,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 25,
         "range": 15,
-        "spli": 1,
+        "spli": 3,
         "arp": 0
     },
     "Quad Linked Heavy Bolter Sponsons": {
@@ -1081,7 +1081,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 10,
         "range": 16,
-        "spli": 1,
+        "spli": 3,
         "arp": 1
     },
     "Twin Linked Lascannon Sponsons": {
@@ -1096,7 +1096,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 5,
         "range": 20,
-        "spli": 1,
+        "spli": 3,
         "arp": 1
     },
     "Lascannon Sponsons": {
@@ -1111,7 +1111,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 5,
         "range": 20,
-        "spli": 1,
+        "spli": 3,
         "arp": 1
     },    
     "Hurricane Bolter Sponsons": {
@@ -1126,7 +1126,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 20,
         "range": 12,
-        "spli": 1,
+        "spli": 3,
         "arp": 0
     },
     "Flamestorm Cannon Sponsons": {
@@ -1141,7 +1141,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 6,
         "range": 3,
-        "spli": 1,
+        "spli": 3,
         "arp": 1
     },
     "Twin Linked Heavy Flamer Sponsons": {
@@ -1156,7 +1156,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 12,
         "range": 2.1,
-        "spli": 1,
+        "spli": 3,
         "arp": -1,
         "tags":["flame", "vehicle","sponson"]
     },
@@ -1172,7 +1172,7 @@ global.weapons={
         "ranged_hands": 2,
         "ammo": 30,
         "range": 12,
-        "spli": 1,
+        "spli": 3,
     },        
     "Twin Linked Multi-Melta Sponsons": {
         "abbreviation": "TwnMltMelts", 
@@ -1186,7 +1186,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 6,
         "range": 4.1,
-        "spli": 1,
+        "spli": 3,
         "arp": 1,
         "tags":["vehicle", "Sponson", "melta"]
     },
@@ -1202,7 +1202,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 25,
         "range": 18,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["vehicle", "Sponson", "volkite"]
     },
@@ -1230,7 +1230,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 50,
         "range": 18,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["vehicle", "turrent"]
     },     
@@ -1246,7 +1246,7 @@ global.weapons={
         "ranged_hands": 1.1,
         "ammo": 10,
         "range": 10,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["bolt"]
     },
@@ -1267,7 +1267,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 4,
         "range": 2.1,
-        "spli": 1,
+        "spli": 3,
         "arp": -1,
         "tags":["flame"]
     },
@@ -1283,7 +1283,7 @@ global.weapons={
         "ranged_hands": 0,
         "ammo": 4,
         "range": 2.1,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "tags":["flame"]
     },
@@ -1299,7 +1299,7 @@ global.weapons={
         "ranged_hands": 1.5,
         "ammo": 15,
         "range": 10,
-        "spli": 1,
+        "spli": 3,
         "arp": 0,
         "second_profiles":["Flamer"],
         "tags":["combi", "bolt"]
@@ -1316,7 +1316,7 @@ global.weapons={
         "ranged_hands": 1,
         "ammo": 4,
         "range": 2.1,
-        "spli": 1,
+        "spli": 3,
         "arp": -1,
         "tags":["flame"]
     },
@@ -1944,7 +1944,7 @@ function equipment_struct(item_data, core_type,quality="none") constructor{
                 stat_order = ["description", "special_description", "armour_value", "hp_mod", "damage_resistance_mod", "attack", "ranged_mod", "melee_mod", "ammo", "range", "melee_hands", "ranged_hands", "arp", "spli", "req_exp", "tags"];
                 break;
             case "weapon":
-                stat_order = ["description", "attack", "ranged_mod", "melee_mod", "ammo", "range", "armour_value", "hp_mod", "damage_resistance_mod", "melee_hands", "ranged_hands", "arp", "spli", "special_description", "req_exp", "tags"];
+                stat_order = ["description", "special_description", "attack", "spli", "ammo", "range", "ranged_mod", "melee_mod", "armour_value", "hp_mod", "damage_resistance_mod", "melee_hands", "ranged_hands", "special_properties", "req_exp", "tags"];
                 break;
             }
         for (var i = 0; i < array_length(stat_order); i++) {
@@ -1978,6 +1978,14 @@ function equipment_struct(item_data, core_type,quality="none") constructor{
                 case "attack":
                     if (attack!=0){
                         item_desc_tooltip += $"Damage: {attack}#"
+                    }
+                    break;
+                case "spli":
+                    if (spli>1){
+                        item_desc_tooltip += $"Attack Rate: {spli}#"
+                    }
+                    else{
+                        item_desc_tooltip += $"Attack Rate: {spli+1}#"
                     }
                     break;
                 case "ranged_mod":
@@ -2026,14 +2034,15 @@ function equipment_struct(item_data, core_type,quality="none") constructor{
                     } else if (arp<0){
                         item_desc_tooltip += $"Low Penetration#"
                     }
-                    break;
-                case "spli":
-                    if (spli!=0){
-                        if (range>1.1){
-                            item_desc_tooltip += $"Ranged, Rapid Fire#"
-                        } else {
-                            item_desc_tooltip += $"Melee, Splash#"
+                    if (array_length(special_properties)>0){
+                        var special_properties_string = ""
+                        for (var j = 0; j < array_length(special_properties); j++) {
+                            special_properties_string += special_properties[j]
+                            if (j < array_length(special_properties) - 1) {
+                                special_properties_string += ", "
+                            }
                         }
+                        item_desc_tooltip += $"#Properties:#{special_properties_string}#"
                     }
                     break;
                 case "special_description":
