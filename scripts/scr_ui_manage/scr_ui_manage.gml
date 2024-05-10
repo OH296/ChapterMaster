@@ -410,8 +410,8 @@ function scr_ui_manage() {
 			*/			    
 
 			// Draw unit image
-			draw_set_color(c_white);	    	
-			selected_unit.draw_unit_image(1208,210);
+			draw_set_color(c_white);
+			selected_unit.draw_unit_image(1008, 140, 1580, 518);
 
 
 			//TODO implement tooltip explaining potential loyalty hit of demoting a sgt
