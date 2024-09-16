@@ -589,6 +589,7 @@ function scr_initialize_custom() {
 		battle_barges = 1;
 		if (array_contains(obj_creation.adv, "Kings of Space")) battle_barges += 1;
 		strike_cruisers = 6;
+		if (array_contains(obj_creation.adv, "Boarders")) strike_cruisers += 2;
 		gladius = 7;
 		hunters = 3;
 		// obj_controller.fleet_type="Fleet";
@@ -597,6 +598,7 @@ function scr_initialize_custom() {
 		strike_cruisers = 8;
 		gladius = 7;
 		hunters = 3;
+		if (array_contains(obj_creation.adv, "Kings of Space")) battle_barges += 1;
 		// obj_controller.fleet_type="Homeworld";
 	}
 
@@ -1868,7 +1870,7 @@ function scr_initialize_custom() {
 			}],
 		]
 	};
-	if (global.chapter_name == "Salamanders") or(obj_ini.progenitor == 8) { //salamanders squads
+	if (global.chapter_name == "Salamanders") or (array_contains(obj_creation.adv, "Crafters")) { //salamanders squads
 		variable_struct_set(st, "assault_squad", [
 			[roles.assault, {
 				"max": 9,
@@ -1877,6 +1879,7 @@ function scr_initialize_custom() {
 					"required": {
 						"wep1": [wep1[100, 10], 4],
 						"wep2": [wep2[100, 10], 4],
+						"gear": ["Combat Shield", 4]
 					},
 					"option": {
 						"wep1": [
@@ -1973,6 +1976,7 @@ function scr_initialize_custom() {
 				"display_data": $"{roles.tactical} Bike {squad_name}"
 			}]
 		])
+
 		variable_struct_set(st, "tactical_squad", [
 			[roles.tactical, {
 				"max": 9,
@@ -2016,6 +2020,113 @@ function scr_initialize_custom() {
 			}]
 		])
 	}
+	if (global.chapter_name == "Imperial Fists") or (array_contains(obj_creation.adv, "Boarders")) {
+		variable_struct_set(st, "breachers", [
+				[roles.assault, {
+					"max": 9,
+					"min": 4,
+					"loadout": { //assault breacher marine
+						"required": {
+							"wep1":["Chainaxe", 4],
+							"wep2":["Boarding Shield", max],
+							"armour":["MK3 Iron Armour", max],
+							"gear":["Plasma Bomb", 2],
+							"mobi":["", max]
+						},
+						"option": {
+							"wep1": [
+								[
+									["Storm Bolter", "Combiflamer", "Meltagun"], 2,
+								],
+								[
+									["Power Axe", "Power Fist"], 2
+								]
+								
+							]
+									}
+					},
+					"role": $"{roles.assault} Breacher"
+				}],
+				[roles.sergeant, {
+					"max": 1,
+					"min": 1,
+					"loadout": { //sergeant 
+						"required": {
+						"armour":["MK3 Iron Armour", 1],
+						"gear": ["Plasma Bomb", 1]
+						},
+						"option": {
+							"wep1": [
+								[
+									["Power Sword", "Power Axe", "Power Fist", "Thunder Hammer", "Chainsword"], 1
+								]
+							],
+							"wep2": [
+								[
+									["Boarding Shield", "Storm Bolter", "Meltagun"], 1
+								]
+							]
+						}
+					},
+					"role": $"{roles.assault} Breacher {roles.sergeant}"
+				}, ],
+				["type_data", {
+					"display_data": $"{roles.assault} Breacher {squad_name}"
+				}]
+			])
+		}
+		variable_struct_set(st,"assault_squad", [
+			[roles.assault, {
+				"max": 9,
+				"min": 4,
+				"loadout": {
+					"required": {
+						"wep1": [wep1[100, 10], 7],
+						"wep2": [wep2[100, 10], 7],
+					},
+					"option": {
+						"wep1": [
+							[
+								["Eviscerator"], 2
+							],
+						],
+						"wep2": [
+							[
+								["Plasma Pistol", "Flamer"], 2
+							]
+						]
+					}
+				}
+			}],
+			[roles.sergeant, {
+				"max": 1,
+				"min": 1,
+				"role": $"{roles.assault} {roles.sergeant}",
+				"loadout": {
+					"required": {
+						"wep1": ["", 0],
+						"wep2": ["", 0],
+						"gear": ["Combat Shield", 1]
+					},
+					"option": {
+						"wep1": [
+							[
+								weapon_lists.pistols, 1
+							],
+						],
+						"wep2": [
+							[
+								weapon_lists.melee_weapons, 1
+							],
+						],
+					}
+				}
+			}],
+			["type_data", {
+				"display_data": $"{roles.assault} {squad_name}",
+				"formation_options": ["assault"],
+			}]
+		])
 
 	if (global.chapter_name == "Dark Angels") {
 		variable_struct_set(st, "terminator_squad", [
@@ -3203,7 +3314,7 @@ function scr_initialize_custom() {
 				company_unit2 = "assault";
 				company_unit3 = "devastator";
 				dready = 1;
-				if (string_count("Sieged", strin2) > 0) or(obj_creation.custom = 0) then dready = 2;
+				if (string_count("Sieged", strin2) > 0) or (obj_creation.custom = 0) then dready = 2;
 				if (array_contains(obj_creation.adv, "Venerable Ancients")) then dready += 1; 
 				rhinoy = 8;
 				whirly = whirlwind;
@@ -3217,7 +3328,7 @@ function scr_initialize_custom() {
 				company_unit2 = "assault";
 				company_unit3 = "devastator";
 				dready = 1;
-				if (string_count("Sieged", strin2) > 0) or(obj_creation.custom = 0) then dready += 2;
+				if (string_count("Sieged", strin2) > 0) or (obj_creation.custom = 0) then dready += 2;
 				if (array_contains(obj_creation.adv, "Venerable Ancients")) then dready += 1;
 				rhinoy = 8;
 				whirly = whirlwind;
@@ -3231,7 +3342,7 @@ function scr_initialize_custom() {
 				company_unit2 = "";
 				company_unit3 = "";
 				dready = 1;
-				if (string_count("Sieged", strin2) > 0) or(obj_creation.custom = 0) then dready += 2;
+				if (string_count("Sieged", strin2) > 0) or (obj_creation.custom = 0) then dready += 2;
 				if (array_contains(obj_creation.adv, "Venerable Ancients")) then dready += 1;
 				rhinoy = 8;
 				whirly = whirlwind;

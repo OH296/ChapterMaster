@@ -569,11 +569,11 @@ advantage_tooltip[i]="Your chapter is especially trained with ambushing foes; th
 //advantage[i]="Battle Cousins";
 //advantage_tooltip[i]="NOT IMPLEMENTED YET.";i+=1;
 advantage[i]="Boarders";
-advantage_tooltip[i]="Boarding other ships is routine for the chapter.  Your infantry have a bonus to attack when boarding ships.";i+=1;
+advantage_tooltip[i]="Boarding other ships is the specialty of your chapter.  Your chapter is more lethal when boarding ships, have dedicated boarding squads, and two extra strike cruisers.";i+=1;
 advantage[i]="Bolter Drilling";
 advantage_tooltip[i]="Bolter drills are sacred to your chapter; all marines have increased attack with Bolter weaponry.";i+=1;
 advantage[i]="Brothers, All";
-advantage_tooltip[i]="Your chapter places great emphasis on comradely and loyalty.  You start with a well-equip Honour Guard.";i+=1;
+advantage_tooltip[i]="Your chapter places great emphasis on comradely and loyalty.  You start with a well-equipped Honour Guard.";i+=1;
 //advantage[i]="Comrades in Arms";
 //advantage_tooltip[i]="NOT IMPLEMENTED YET.";i+=1;
 advantage[i]="Crafters";

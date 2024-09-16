@@ -1421,7 +1421,7 @@ global.weapons = {
 		"ammo": 4,
 		"range": 2.1,
 		"spli": 3,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["flame", "attached"]
 	},
 	"Combiflamer": {

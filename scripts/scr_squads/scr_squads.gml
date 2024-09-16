@@ -642,8 +642,17 @@ function game_start_squads(){
 		}		
 		last_squad_count = array_length(obj_ini.squads);
 		while (last_squad_count == array_length(obj_ini.squads)){
-			last_squad_count = (array_length(obj_ini.squads) + 1);
-			create_squad("assault_squad", company);
+			if (global.chapter_name == "Imperial Fists") or (array_contains(obj_ini.adv, "Boarders")) {
+				last_squad_count = (array_length(obj_ini.squads) + 1);
+				if(last_squad_count%2 == 0){		
+					create_squad("assault_squad", company);
+				}else{
+					create_squad("breachers", company);
+				}
+			}else{
+				last_squad_count = (array_length(obj_ini.squads) + 1);
+				create_squad("assault_squad", company);
+			}
 		}
 	}
 	company = 1;
