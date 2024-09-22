@@ -513,7 +513,7 @@ color_to_pauldron21="Red";
 
     race_21[i,14]=1;
     role_21[i,14]="Chaplain";
-    wep1_21[i,14]="Power Sword";
+    wep1_21[i,14]="Crozius Arcanum";
     wep2_21[i,14]="Bolt Pistol";
     armour_21[i,14]="Power Armour";
     gear_21[i,14]="Rosarius";
@@ -772,7 +772,7 @@ repeat(3){i+=1;// First is for the correct slot, second is for default
 
     race[i,14]=1;
     role[i,14]="Chaplain";
-    wep1[i,14]="Power Sword";
+    wep1[i,14]="Crozius Arcanum";
     wep2[i,14]="Bolt Pistol";
     armour[i,14]="Power Armour";
     gear[i,14]="Rosarius";
