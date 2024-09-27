@@ -7,10 +7,10 @@ function scr_purge_world(star, planet, action_type, action_score) {
 
 	if ((action_type=2) or (action_type=3)) and (star.p_traitors[planet]=0) and (star.p_chaos[planet]=0) and (obj_controller.turn>=obj_controller.chaos_turn){
 	    if (planet_feature_bool(star.p_feature[planet],P_features.Warlord10) == 1) and (obj_controller.known[10]=0) and (obj_controller.faction_gender[10]=1) then with(obj_drop_select){
-	        var pop;pop=instance_create(0,0,obj_popup);
+	        var pop=instance_create(0,0,obj_popup);
 	        pop.image="chaos_symbol";
 	        pop.title="Concealed Heresy";
-	        pop.text="Your astartes set out and begin to cleanse "+string(star.name)+" "+scr_roman(planet)+" of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";        
+	        pop.text=$"Your astartes set out and begin to cleanse {planet_numeral_name(planet, star)} of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";        
 	        exit;exit;    
 	    }
 	    if (planet_feature_bool(star.p_feature[planet],P_features.Warlord10) == 1) and (obj_controller.known[10]>=2) and (obj_controller.faction_gender[10]=1) then with(obj_drop_select){
@@ -70,7 +70,8 @@ function scr_purge_world(star, planet, action_type, action_score) {
 	        }
 	    }
 	    if (star.p_owner[planet]=3) and (obj_controller.faction_status[3]!="War"){
-	        obj_controller.audiences+=1;obj_controller.audien[obj_controller.audiences]=3;
+	        obj_controller.audiences+=1;
+	        obj_controller.audien[obj_controller.audiences]=3;
 	        obj_controller.audien_topic[obj_controller.audiences]="bombard_angry";
 	        if (star.p_type[planet]="Forge") then obj_controller.disposition[3]-=15;
 	        if (star.p_type[planet]="Ice") then obj_controller.disposition[3]-=7;

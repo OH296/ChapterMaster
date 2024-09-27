@@ -424,17 +424,78 @@ function draw_warp_lanes(){
 		}
 	}
 	var route;
+	static warp_image=-1;
+	warp_image++;
+	if warp_image==58 then warp_image = 0;
 	for (var i = 0;i<array_length(routes);i++){
 		draw_set_color(c_gray);
 		route = routes[i];
-		if (route[1]==4) then draw_set_color(c_yellow);
+
 		var route_coords = route[0];
-		for (var s=0;s<route[1];s++){
-			draw_line(route_coords[0]+(s),route_coords[1]+(s),route_coords[2]+(s),route_coords[3]+(s));
+
+		if (route[1]<4){
+			draw_line(route_coords[0],route_coords[1],route_coords[2],route_coords[3]);
 		}
+		else if (route[1]==4){
+			draw_set_color(c_yellow);
+			//TODO abstract code as a ratio distance function
+			//static debug_c = 0;
+			var direction_x =  route_coords[2] - route_coords[0];
+			var direction_y = route_coords[3] - route_coords[1];
+			var forward = direction_x>=0 ? 1:-1;
+			var downward = direction_y>=0 ? 1:-1;
+			//var grade = direction_x/direction_y;
+			var total_dist = 80;
+			var pythag_dist = sqr(total_dist)
+			var sum = (direction_x*forward)+(direction_y*downward)
+			var x_ratio = direction_x*forward/(sum);
+			var y_ratio = direction_y*downward/(sum);
+			/*if (debug_c<100){
+				show_debug_message($"{x_ratio},{forward},{y_ratio},{downward}");
+			}*/
+			var dist_x = (sqrt(pythag_dist*(x_ratio)))*forward;
+			var dist_y = (sqrt(pythag_dist*(y_ratio)))*downward;
+
+			var warp_width = sprite_get_width(spr_warp_storm)*0.75;
+			var warp_height = sprite_get_height(spr_warp_storm)*0.75;
+
+			for (var s=0;s<route[1];s++){
+				draw_line(route_coords[0],route_coords[1],route_coords[0]+dist_x,route_coords[1]+dist_y);
+			}
+
+			draw_sprite_centered(spr_warp_storm,warp_image,route_coords[0]+dist_x,route_coords[1]+dist_y,0.75,0.75,0,c_white,1);
+
+			var hit_box = [route_coords[0]+dist_x-(warp_width/2),route_coords[1]+dist_y-(warp_height/2), route_coords[0]+dist_x+(warp_width/2) ,route_coords[1]+dist_y+(warp_height/2) ];
+			
+			if (scr_hit(hit_box)){
+				var to = instance_nearest(route_coords[2],route_coords[3], obj_star);
+				tooltip_draw($"Major warp route to {to.name} (4 X travel for warp capable crafts)");
+			}
+
+			for (var s=0;s<route[1];s++){
+				draw_line(route_coords[2]+(s),route_coords[3]+(s),((route_coords[2]-dist_x+(s))),((route_coords[3]+(s)-dist_y)));
+			}
+			draw_sprite_centered(spr_warp_storm,warp_image,(route_coords[2]-dist_x),((route_coords[3]-dist_y)),0.75,0.75,0,c_white,1);
+
+			hit_box = [((route_coords[2]-dist_x))-(warp_width/2) ,((route_coords[3]-dist_y))-(warp_height/2), ((route_coords[2]-dist_x))+(warp_width/2) ,((route_coords[3]-dist_y))+(warp_height/2) ];
+			if (scr_hit(hit_box)){
+				var to = instance_nearest(route_coords[0] ,route_coords[1], obj_star);
+				tooltip_draw($"Major warp route to {to.name} (4 X travel for warp capable crafts)");
+			}
+			//debug_c++;
+		}
+
 	}
 }
+/*function ration_distance(){
 
+}*/
+
+function draw_sprite_centered(sprite, subimg, x, y, xscale, yscale, rot, col, alpha){
+	var width = ((sprite_get_width(sprite)*xscale)/2);
+	var height = ((sprite_get_height(sprite)*yscale)/2);
+	draw_sprite_ext(sprite, subimg, x-width, y-height, xscale, yscale, rot, col, alpha);
+}
 
 
 function star_box_shape(star="none"){
