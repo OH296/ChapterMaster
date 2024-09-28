@@ -276,8 +276,8 @@ for(var i=100; i<103; i++){
     obj_controller.r_wep1[i,16]="Power Axe";
     obj_controller.r_wep2[i,16]="Storm Bolter";
     obj_controller.r_armour[i,16]="Artificer Armour";
-    obj_controller.r_gear[i,16]="Servo Arms";
-    obj_controller.r_mobi[i,16]="";
+    obj_controller.r_gear[i,16]="";
+    obj_controller.r_mobi[i,16]="Servo-arm";
     
     obj_controller.r_role[i,17]="Librarian";
     obj_controller.r_wep1[i,17]="Force Staff";

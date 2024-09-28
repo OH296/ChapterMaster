@@ -31,7 +31,7 @@ for (var i=0;i<array_length(unit_struct);i++){
                 obj_ncombat.apothecaries_alive++;
                 obj_ncombat.apoth+=1;
             }
-            else if (marine_type[i]=obj_ini.role[100][16]) and (marine_gear[i]=="Servo Arms") {
+            else if (marine_type[i]=obj_ini.role[100][16]) and ((marine_mobi[i]=="Servo-arm") || (marine_mobi[i]=="Servo-harness")) {
                 obj_ncombat.techmarines_alive+=1;
                 obj_ncombat.techma+=1;
             }

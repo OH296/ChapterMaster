@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ----------------------------------
-## [example_version]
+## [0.0.0.0]
 
 ### Added:
 - example list
@@ -17,52 +17,64 @@ All notable changes to this project will be documented in this file.
     - example nested list
 
 ### Under The Hood:
-- here go changes that are important only to other developers.
+- here go changes that are important only to other collaborators.
     - everything that a normal player doesn't need to know.
 ----------------------------------
+
 ## [0.9.3.0]
 
+### Added:
+- Warp travel:
+	- Warp hub planets.
+    - Graded warp travel routes.
+	- Ability to cancel warp travel within the same turn you commanded fleet to travel.
+- New Squad type - Breachers.
+- New cheats:
+	- sisterofbattle - spawns 1 Sister of Battle.
+	- skitarii - spawns 1 Skitarii.
+	- flashgit - spawns 1 Flash Git.
+
 ### Changed:
-- warp lane travel drawing abstracted to it's own layer
-- warp lane widths now expand to be more visible when zoomed
-- ork warbosses are now stored in the fleet carge_data area and the struct is transferred directly to a planet
-- advantages tweaks:
-    - "kings of space" advantage now provides +1 battle barge
-    - "Boarders" now provides +2 frigates
-    - display and description text tweaks
-    - "lightning warriors" now increases number of starting biker squads
-- equipment and weapons:
-    - boarding shields now provide advantages to boarders
-    - underslung flamers now have light armour piercing
-- eviscerator and relic blade sprites are now vertical again and support second weapon display
-- deathwing color now is a tiny bit darker
-- lots of artifact and mc weapon and equipmnet values altered (mostly upwards)
+- Warp travel:
+	- Warp lane travel drawing abstracted to it's own layer.
+	- Warp lane widths now expand to be more visible when zoomed.
+- Advantages tweaks:
+    - "Kings of Space" advantage now provides +1 Battle Barge.
+    - "Boarders" now provides +2 Frigates.
+    - "Lightning Warriors" now increases number of starting Biker Squads.
+	- Melee Enthusiast now decreases starting devastators as well as increasing assaults.
+	- Display and description text tweaks.
+- Equipment and weapons:
+    - Boarding Shields now provide advantages to boarders.
+    - Underslung Flamers now have light armour piercing.
+- Visual:
+	- Eviscerator and Relic Blade sprites are now vertical again and can display a second weapon.
+	- Deathwing color now is a tiny bit darker.
+	- Minor Power Spear sprite adjustments.
+- Little Damage Resistance bonus to some Master Crafted and Artifact quality gear pieces.
 
 ### Fixed:
-- travelling without waypoints while pressing shift now fixed
-- melee enthusiast now decreases starting devastators as well as increasing assaults
-- vanguard sergeants, honour guard and dark angels veterans no longer spawn overburdened
-- eviscerator and relic blade sprites display on terminators
-- deathwing knights color scheme
-- crash from inquisitors snooping onplayer bases
-- Force stuff used to gain it's double damage buff twice
-- chaplain duplication error with edge cases (space wolves and Iron Hands)
-- in game wiki fixed
-- equal specialist distribution chapters will now still get their full allowance of dreads on game spawn
-
-### Added:
-- New warp hub planets
-    - new graded warp travel routes
-- new squad type breachers
-- ability to cancel warp travel within the same turn you commanded fleet to travel
-- 3 new cheats:
-	- sisterofbattle - spawns 1 Sister of Battle
-	- skitarii - spawns 1 Skitarii
-	- flashgit - spawns 1 Flash Git
+- Crashes: 
+	- Caused Inquisitors snooping on player bases.
+	- Caused by Chaplain duplication on drop select.
+- Visual:
+	- Eviscerator and Relic Blade sprites display on Terminators properly now.
+	- Deathwing knights color scheme is no longer broken.
+- In-game wiki should now work (kinda).
+- Travelling without waypoints while pressing shift now fixed.
+- Vanguard Sergeants, Honour Guard and Dark Angels Veterans no longer spawn overburdened.
+- No more recruiting Psykers in Psyker Intolerant chapters (all recruiting set to 0 at game start).
+- Advantages Kings of Space and Boarders work properly for both chapter start types.
+- Chaplains equip proper items on game start.
+- 1 Dreadnought to Equal Specialist Distribution custom chapters.
+- Fixed Force Staff getting double damage bonus because of a code mistake.
 
 ### Under The Hood:
-- in game wiki reformatted
-- refactor of drop select
+- Ork Warbosses are now stored in the fleet carge_data area and the struct is transferred directly to a planet.
+- Git: resource_order is now in gitignore.
+- Scripts: is_specialist supports Space Wolves and Iron Hands.
+- Scripts: in-game Wiki refactored (part one).
+- Refactor of drop select
     - alarm_1
     - step_0
     - scr_drop_fiddle

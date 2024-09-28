@@ -35,7 +35,7 @@ function add_data_to_stack (stack_index, weapon, unit_damage=false, head_role=fa
     }
 }
 
-function find_stack_index (weapon_name, unit="none", head_role=false){
+function find_stack_index (weapon_name, head_role=false, unit="none"){
     final_index = -1;
     var allow = false;
     for (var stack_index=1;stack_index<array_length(wep);stack_index++){
@@ -140,7 +140,7 @@ function scr_player_combat_weapon_stacks(){
 	            if (unit.mobility_item()!="Bike") and (unit.mobility_item()!=""){
 	               if (is_struct(mobi_item)){
 	                    if( mobi_item.has_tag("jump")){
-	                        var stack_index = find_stack_index("hammer_of_wrath" , unit, head_role);
+	                        var stack_index = find_stack_index("hammer_of_wrath", head_role, unit);
 	                        if (stack_index>-1){
 	                            add_data_to_stack(stack_index,unit.hammer_of_wrath(),false, head_role,unit);
 	                            ammo[stack_index] = -1;
@@ -195,7 +195,7 @@ function scr_player_combat_weapon_stacks(){
 	            if (marine_casting[g]!=1){
 	                var weapon_stack_index=0;
 	                var primary_ranged = unit.ranged_damage_data[3];//collect unit ranged data
-	                var weapon_stack_index = find_stack_index(primary_ranged.name , unit, head_role);
+	                var weapon_stack_index = find_stack_index(primary_ranged.name, head_role, unit);
 	                if (weapon_stack_index>-1){
 	                    add_data_to_stack(weapon_stack_index,primary_ranged,unit.ranged_damage_data[0], head_role,unit);
 	                    if (head_role){
@@ -205,7 +205,7 @@ function scr_player_combat_weapon_stacks(){
 
 
 	                var primary_melee = unit.melee_damage_data[3];//collect unit melee data
-	                var weapon_stack_index = find_stack_index(primary_melee.name , unit, head_role);
+	                var weapon_stack_index = find_stack_index(primary_melee.name, head_role, unit);
 	                if (weapon_stack_index>-1){
 	                    if (range[weapon_stack_index]>1.9) then continue//creates secondary weapon stack for close combat ranged weaponry use
 	                    primary_melee.range=1;

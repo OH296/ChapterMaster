@@ -124,19 +124,35 @@ global.weapons = {
 	},
 	"Archeotech Laspistol": {
 		"attack": {
-			"standard": 120,
-			"master_crafted": 130,
-			"artifact": 140
+			"standard": 40,
+			"master_crafted": 60,
+			"artifact": 80
 		},
-		"description": "Known as a Lasrod or Gelt Gun, this pistol is an ancient design of Laspistol with much greater range and power.",
+		"description": "Known as a Lasrod or Gelt Gun, this pistol is an ancient design of Laspistol with much greater power.",
 		"abbreviation": "ArchLpstl",
 		"melee_hands": 0,
-		"ranged_hands": 1,
-		"ammo": 0,
+		"ranged_hands": 0.5,
+		"ammo": 30,
 		"range": 3.1,
 		"spli": 0,
 		"arp": 0,
 		"tags": ["pistol", "ancient", "las"],
+	},
+	"Laspistol": {
+		"attack": {
+			"standard": 20,
+			"master_crafted": 30,
+			"artifact": 40
+		},
+		"description": "The Laspistol is the pistol version of the Lasgun and like that weapon fires a coherent beam of energetic photons that can burn through most materials. The Laspistol is powered by a miniature power pack that is usually placed within the grip.",
+		"abbreviation": "Lpstl",
+		"melee_hands": 0,
+		"ranged_hands": 0.25,
+		"ammo": 30,
+		"range": 3.1,
+		"spli": 0,
+		"arp": 0,
+		"tags": ["pistol", "las"],
 	},
 	"Combat Knife": {
 		"abbreviation": "CbKnf",
@@ -441,6 +457,22 @@ global.weapons = {
 		"spli": 4,
 		"arp": 1,
 		"tags": ["power", "fist", "pair"],
+	},
+	"Servo-arm(M)": {
+		"abbreviation": "MchArm",
+		"attack": {
+			"standard": 220,
+			"master_crafted": 330,
+			"artifact": 500
+		},
+		"description": "",
+		"melee_hands": 0,
+		"ranged_hands": 0,
+		"ammo": 0,
+		"range": 1,
+		"spli": 2,
+		"arp": 1,
+		"tags": ["siege"],
 	},
 	"Boltstorm Gauntlet": {
 		"abbreviation": "BlstGnt",
@@ -847,6 +879,22 @@ global.weapons = {
 		"description": "A pistol variant of the plasma gun, this dangerous-to-use weapon has exceptional armor-piercing capabilities.",
 		"melee_hands": 0,
 		"ranged_hands": 1,
+		"ammo": 0,
+		"range": 3.1,
+		"spli": 1,
+		"arp": 1,
+		"tags": ["plasma", "pistol"]
+	},
+	"Plasma Cutter": { // Basically a dual-linked plasma pistol
+		"abbreviation": "PlsmCt",
+		"attack": {
+			"standard": 230,
+			"master_crafted": 260,
+			"artifact": 300
+		},
+		"description": "While actually intended to be used on the battlefield as a tool to repair damaged war machines, the Plasma Cutter is equally adept at slicing through even terminator armour with its intense, constant beam of superheated plasma.",
+		"melee_hands": 0,
+		"ranged_hands": 0,
 		"ammo": 0,
 		"range": 3.1,
 		"spli": 1,
@@ -2139,30 +2187,6 @@ global.gear = {
 			"special_properties": ["Planet Destroyer"],
 			"description": "A weapon of the Emperor, and His divine judgment, this weapon can be placed upon a planet to obliterate it entirely.",
 		},
-		"Servo Arms": {
-			"abbreviation": "SrvArms",
-			"special_properties": ["Integrated Flamer, Repairs Vehicles"],
-			"description": "A pair of powerful mechanical arms. They include several tools that allow trained Astartes to repair vehicles rapidly alongside an integrated flamer to beat back the Emperor's foes.",
-			"melee_hands": 0.25,
-			"ranged_hands": 0.25,
-			"damage_resistance_mod": {
-				"standard": 0, // Adjusted
-				"master_crafted": 5, // Adjusted
-				"artifact": 10 // Adjusted
-			},
-		},
-		"Master Servo Arms": {
-			"abbreviation": "MsSrvArms", // You know, it would be a bit silly to find Master Crafted Master Servo Arms
-			"special_properties": ["Integrated Flamer, Repairs Vehicles"],
-			"description": "This master servo harness includes additional mechanical arms and tools, allowing a greater capacity and rate of repairs.",
-			"melee_hands": 0.25,
-			"ranged_hands": 0.25,
-			"damage_resistance_mod": {
-				"standard": 5, // Adjusted
-				"master_crafted": 10, // Adjusted
-				"artifact": 15 // Adjusted
-			},
-		},
 		"Smoke Launchers": {
 			"description": "Useful for providing concealment in open terrain, these launchers project wide-spectrum concealing smoke to prevent accurate targeting of the vehicle.",
 			"abbreviation": "SmkLnchrs",
@@ -2249,7 +2273,41 @@ global.gear = {
 			},
 			"melee_hands": -1,
 			"ranged_hands": 1,
-		}
+		},
+		"Servo-arm": {
+			"abbreviation": "SrvArm",
+			"special_properties": ["Repairs Vehicles"],
+			"second_profiles": ["Servo-arm(M)"],
+			"description": "A manipulator mechandendrite, also known as a Servo-arm. This artificial limb is a great aid to help trained Techmarines repair damaged vehicles on the battlefield, yet may be used in melee combat, thanks to its considerable crushing power and weight.",
+			"damage_resistance_mod": {
+				"standard": 0, // Adjusted
+				"master_crafted": 5, // Adjusted
+				"artifact": 10 // Adjusted
+			},
+			"melee_hands": -0.25,
+			"ranged_hands": -0.25,
+		},
+		"Servo-harness": {
+			"abbreviation": "SrvHrns",
+			"special_properties": ["Repairs Vehicles"],
+			"second_profiles": ["Servo-arm(M)", "Servo-arm(M)", "Flamer", "Plasma Cutter"],
+			"description": "A Servo-Harness is a special type of augmetic aid, often used by Chapter's Master of the Forge or his senior Techmarines. It consists of many blessed tools, two Servo-arms and a couple of deadly weapons. With it, one can make battlefield repairs on any vehicle, shore up defences, or even assist his battle-brothers in combat.",
+			"damage_resistance_mod": {
+				"standard": 5, // Adjusted
+				"master_crafted": 10, // Adjusted
+				"artifact": 15 // Adjusted
+			},
+			"melee_hands": -0.5,
+			"ranged_hands": -0.5,
+		},
+		"Conversion Beamer Pack": {
+			"abbreviation": "CnvBmr",
+			"second_profiles": ["Conversion Beam Projector"],
+			"description": "The Conversion Beam Projector is a heavy energy weapon that harnesses advanced technology to project a concentrated beam of destructive energy. Armor detonates as the matter that comproises it is transformed into pure energy.",
+			"melee_hands": -0.5,
+			"ranged_hands": -0.5,
+		},
+		
 		// Add more mobility items as needed...
 	}
 }

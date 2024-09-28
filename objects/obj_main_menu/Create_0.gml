@@ -133,9 +133,9 @@ tim4=0;
 tim5=0;
 
 
-
-
-
+var _log_file = file_text_open_write("message_log.log");
+file_text_write_string(_log_file, "Message log:" + "\n");
+file_text_close(_log_file);
 
 
 /* */

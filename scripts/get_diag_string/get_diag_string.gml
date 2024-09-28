@@ -1,14 +1,19 @@
-function get_diag_string(question, maximum, target1, target2, value, cheat) 
+function get_diag_string(_question, _target1, _target2, _cheat) 
 {
     with (obj_popup_dialogue)
-        instance_destroy()
-    var newpopdialogue = instance_create(650, 326, obj_popup_dialogue)
-    newpopdialogue.question = question
-    keyboard_string = ""
-    newpopdialogue.inputing = ""
-    newpopdialogue.maximum = maximum
-    newpopdialogue.target = target1
-    newpopdialogue.target2 = target2
-    newpopdialogue.value_is_string = value
-    newpopdialogue.ischeatcode = cheat
+    {
+        instance_destroy();
+    }
+
+    var newpopdialogue = instance_create(650, 326, obj_popup_dialogue);
+    keyboard_string = "";
+    with (newpopdialogue)
+    {
+        question = _question;
+        inputting = "";
+        target = _target1;
+        target2 = _target2;
+        ischeatcode = _cheat;
+    }
+
 }

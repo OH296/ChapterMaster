@@ -140,9 +140,12 @@ repeat(700){g+=1;
         if (dudes_mobi[g]="Bike") then scr_en_weapon("Twin Linked Bolters",false,1,dudes[g],g);
         if (dudes_mobi[g]!="Bike") and (dudes_mobi[g]!=""){if (string_count("Jump Pack",marine_mobi[g])>0) then scr_en_weapon("hammer_of_wrath",false,1,dudes[g],g);}
         
-        if (dudes_gear[g]="Servo Arms") then scr_en_weapon("Flamer",false,1,dudes[g],g);
-        if (dudes_gear[g]="Master Servo Arms") then scr_en_weapon("Heavy Flamer",false,1,dudes[g],g);
-        
+        if (dudes_mobi[g]="Servo-arm") then scr_en_weapon("Servo-arm(M)",false,1,dudes[g],g);
+        if (dudes_mobi[g]="Servo-harness"){
+            scr_en_weapon("Servo-arm(M)",false,1,dudes[g],g);
+            scr_en_weapon("Flamer",false,1,dudes[g],g);
+            scr_en_weapon("Plasma Cutter",false,1,dudes[g],g);
+        }
         
         /*if (marine_casting[g]>-1){
             var cast_dice;cast_dice=floor(random(100))+1;

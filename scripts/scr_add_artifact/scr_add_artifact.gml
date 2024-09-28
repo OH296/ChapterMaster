@@ -74,7 +74,7 @@ function scr_add_artifact(artifact_type, artifact_tags, is_identified, artifact_
 	    if (rand2<=20){base_type_detail="Rosarius";}
 	    else if (rand2<=45){base_type_detail="Psychic Hood";}
 	    else if (rand2<=80){base_type_detail="Jump Pack";}
-	    else if (rand2<=100){base_type_detail="Servo Arms";}
+	    else if (rand2<=100){base_type_detail="Servo-arm";}
 	}
 
 	if (base_type="Device") and (base_type_detail=""){good=0;
@@ -129,7 +129,7 @@ function scr_add_artifact(artifact_type, artifact_tags, is_identified, artifact_
 	    if (base_type_detail="Bionics") then t5=choose("GOLD","GLOW","RUNE","SOO");// Soothing appearance
 	    if (base_type_detail="Psychic Hood") then t5=choose("FIN","GOLD","BUR","MASK");// fine cloth, gold, ever burning, mask
 	    if (base_type_detail="Jump Pack") then t5=choose("SPIKES","SKRE","WHI","SILENT");// spikes, screaming, white flame, silent
-	    if (base_type_detail="Servo Arms") then t5=choose("GOLD","TENTACLES","GOR","SOO");// gold, tentacles, gorilla build, soothing appearance
+	    if (base_type_detail="Servo-arm" || base_type_detail="Servo-harness") then t5=choose("GOLD","TENTACLES","GOR","SOO");// gold, tentacles, gorilla build, soothing appearance
 	    array_push(tags, t5);
 	}else if (base_type="Device") and (base_type_detail!="Robot"){
 	    t4=choose("GOLD","CRU","GLOW","ADAMANTINE");// skulls, falling angel, thin, tentacle, mindfuck

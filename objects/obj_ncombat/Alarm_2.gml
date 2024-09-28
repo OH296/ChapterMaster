@@ -33,8 +33,8 @@ if (ally>0) and (ally_forces>0){
                         thata.marine_type[ii]="Techpriest";
                         thata.marine_hp[ii]=50;
                         thata.marine_ac[ii]=20;thata.marine_exp[ii]=100;
-                        thata.marine_wep1[ii]="Power Weapon";thata.marine_wep2[ii]="Conversion Beam Projector";
-                        thata.marine_armour[ii]="Dragon Scales";thata.marine_gear[ii]="Servo Arms";
+                        thata.marine_wep1[ii]="Power Axe";thata.marine_wep2[ii]="Laspistol";
+                        thata.marine_armour[ii]="Dragon Scales";thata.marine_gear[ii]=""; thata.marine_mobi[ii]="Servo-arm";
                         thata.ally[ii]=true;thata.marine_dead[ii]=0;ii+=1;thata.men+=1;
                     }
                     repeat(20){

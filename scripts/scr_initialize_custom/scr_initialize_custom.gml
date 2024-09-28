@@ -1301,8 +1301,8 @@ function scr_initialize_custom() {
 		wep1[i, 16] = "Power Axe";
 		wep2[i, 16] = "Bolt Pistol";
 		armour[i, 16] = "Artificer Armour";
-		gear[i, 16] = "Servo Arms";
-		mobi[i, 16] = "";
+		gear[i, 16] = "";
+		mobi[i, 16] = "Servo-arm";
 
 		role[i, 17] = "Librarian";
 		wep1[i, 17] = "Force Staff";
@@ -2501,11 +2501,12 @@ function scr_initialize_custom() {
 	race[company, 2] = 1;
 	loc[company, 2] = home_name;
 	role[company, 2] = "Forge Master";
-	wep1[company, 2] = "Conversion Beam Projector";
+	wep1[company, 2] = "Infernus Pistol";
 	name[company, 2] = obj_creation.fmaster;
-	wep2[company, 2] = "Power Weapon";
+	wep2[company, 2] = "Power Axe";
 	armour[company, 2] = "Artificer Armour";
-	gear[company, 2] = "Master Servo Arms";
+	mobi[company, 2] = "Servo-harness";
+	gear[company, 2] = "";
 	chaos[company, 2] = 0;
 	spawn_unit = TTRPG[company, 2];
 	if (spawn_unit.technology < 40) {
@@ -2635,6 +2636,7 @@ function scr_initialize_custom() {
 		wep1[company][k] = wep1[101, 16];
 		wep2[company][k] = choose_weighted(weapon_weighted_lists.pistols);
 		gear[company][k] = gear[101, 16];
+		mobi[company][k] = mobi[101, 16];
 	}
 
 	// Librarians in the librarium

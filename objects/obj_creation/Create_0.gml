@@ -530,7 +530,8 @@ color_to_pauldron21="Red";
     wep1_21[i,16]="Power Axe";
     wep2_21[i,16]="Storm Bolter";
     armour_21[i,16]="Artificer Armour";
-    gear_21[i,16]="Servo Arms";
+    mobi_21[i,16]="Servo-arm";
+    gear_21[i,16]="";
 
     race_21[i,17]=1;
     role_21[i,17]="Librarian";
@@ -789,7 +790,8 @@ repeat(3){i+=1;// First is for the correct slot, second is for default
     wep1[i,16]="Power Axe";
     wep2[i,16]="Storm Bolter";
     armour[i,16]="Artificer Armour";
-    gear[i,16]="Servo Arms";
+    mobi[i,16]="Servo-arm";
+    gear[i,16]="";
 
     race[i,17]=1;
     role[i,17]="Librarian";

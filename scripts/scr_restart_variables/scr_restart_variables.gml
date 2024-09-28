@@ -199,8 +199,8 @@ function scr_restart_variables(saved_game) {
 			obj_restart_vars.r_wep1[i,16]="Power Axe";
 			obj_restart_vars.r_wep2[i,16]="Storm Bolter";
 	        obj_restart_vars.r_armour[i,16]="Artificer Armour";
-			obj_restart_vars.r_gear[i,16]="Servo Arms";
-			obj_restart_vars.r_mobi[i,16]="";
+			obj_restart_vars.r_gear[i,16]="";
+			obj_restart_vars.r_mobi[i,16]="Servo-arm";
         
 	        obj_restart_vars.r_race[i,17]=1;
 	        obj_restart_vars.r_role[i,17]="Librarian";
@@ -429,8 +429,8 @@ function scr_restart_variables(saved_game) {
 			obj_controller.r_wep1[i,16]="Power Axe";
 			obj_controller.r_wep2[i,16]="Storm Bolter";
 	        obj_controller.r_armour[i,16]="Artificer Armour";
-			obj_controller.r_gear[i,16]="Servo Arms";
-			obj_controller.r_mobi[i,16]="";
+			obj_controller.r_gear[i,16]="";
+			obj_controller.r_mobi[i,16]="Servo-arm";
         
 	        obj_controller.r_race[i,17]=1;
 	        obj_controller.r_role[i,17]="Librarian";
@@ -673,7 +673,8 @@ function scr_restart_variables(saved_game) {
 			wep1[i,16]="Power Axe";
 			wep2[i,16]="Storm Bolter";
 			armour[i,16]="Artificer Armour";
-			gear[i,16]="Servo Arms";
+			gear[i,16]="";
+			mobi[i,16]="Servo-arm";
 	        
 			race[i,17]=1;
 			role[i,17]="Librarian";

@@ -622,16 +622,36 @@ if (shop = "equipment2") {
         item_cost[i] = 0;
     }
 
-    
     i += 1;
     x_mod[i] = 9;
-    item[i] = "Servo Arms";
+    item[i] = "Servo-harness";
+    item_stocked[i] = scr_item_count(item[i]);
+    item_cost[i] = 150;
+    if (rene = 1) {
+        nobuy[i] = 1;
+        item_cost[i] = 0;
+    }
+
+    i += 1;
+    x_mod[i] = 9;
+    item[i] = "Conversion Beamer Pack";
+    item_stocked[i] = scr_item_count(item[i]);
+    item_cost[i] = 180;
+    if (rene = 1) {
+        nobuy[i] = 1;
+        item_cost[i] = 0;
+    }
+
+    i += 1;
+    x_mod[i] = 9;
+    item[i] = "Servo-arm";
     item_stocked[i] = scr_item_count(item[i]);
     item_cost[i] = 30;
     if (rene = 1) {
         nobuy[i] = 1;
         item_cost[i] = 0;
     }
+
     i += 1;
     x_mod[i] = 9;
     item[i] = "Bionics";

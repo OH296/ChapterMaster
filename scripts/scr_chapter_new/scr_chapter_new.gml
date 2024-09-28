@@ -29,7 +29,7 @@ function scr_chapter_new(argument0) {
 	    role[i,12]="Scout";wep1[i,12]="Bolter";wep2[i,12]="Combat Knife";armour[i,12]="Scout Armour";
 	    role[i,14]="Chaplain";wep1[i,14]="Crozius Arcanum";wep2[i,14]="Bolt Pistol";armour[i,14]="Power Armour";gear[i,14]="Rosarius";
 	    role[i,15]="Apothecary";wep1[i,15]="Chainsword";wep2[i,15]="Bolt Pistol";armour[i,15]="Power Armour";gear[i,15]="Narthecium";
-	    role[i,16]="Techmarine";wep1[i,16]="Power Axe";wep2[i,16]="Bolt Pistol";armour[i,16]="Artificer Armour";gear[i,16]="Servo Arms";
+	    role[i,16]="Techmarine";wep1[i,16]="Power Axe";wep2[i,16]="Bolt Pistol";armour[i,16]="Artificer Armour";mobi[i,16]="Servo-arm";gear[i,16]="";
 	    role[i,17]="Librarian";wep1[i,17]="Force Staff";wep2[i,17]="Bolt Pistol";armour[i,17]="Power Armour";gear[i,17]="Psychic Hood";
 		role[i,18]="Sergeant";wep1[i,18]="Chainsword";wep2[i,18]="Bolt Pistol";armour[i,18]="Power Armour";gear[i,18]="";
 		role[i,19]="Veteran Sergeant";wep1[i,19]="Chainsword";wep2[i,19]="Plasma Pistol";armour[i,19]="Power Armour";gear[i,19]="";

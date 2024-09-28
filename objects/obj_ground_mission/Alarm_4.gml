@@ -76,7 +76,7 @@ if (scr_has_adv("Scavengers")){
         ex1_num=choose(1,2);
         ex2="Power Armour";
         ex2_num=choose(2,3,4);
-        ex3=choose("Servo Arms","Bionics");
+        ex3=choose("Servo-arm","Bionics");
         ex3_num=choose(2,3,4);
     }
     if (stah.p_first[num]=5){
