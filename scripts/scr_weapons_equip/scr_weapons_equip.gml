@@ -26,7 +26,7 @@ function scr_weapons_equip() {
 	}
 	var standard_equip = (instance_exists(obj_controller)) and (!instance_exists(obj_mass_equip)) and (instance_exists(obj_popup));
 
-	if (dude<50) and (dude!=6) then dude=1
+	if (dude<50) and (dude!=6) && (dude!=4) then dude=1
 
 // dude=1 for normal infantry gear
 // dude=6 for dread
@@ -59,28 +59,30 @@ function scr_weapons_equip() {
 			} else {
 				i=0
 			    i+=1;item_name[i]="(None)";
-			    i+=1;item_name[i]="Archeotech Laspistol";
-		      i+=1;item_name[i]="Assault Cannon";
+			    // i+=1;item_name[i]="Archeotech Laspistol";
 			   	i+=1;item_name[i]="Bolt Pistol";
 			    i+=1;item_name[i]="Bolter";
 				i+=1;item_name[i]="Stalker Pattern Bolter";
+				i+=1;item_name[i]="Storm Bolter";
+				i+=1;item_name[i]="Heavy Bolter";
 			  	i+=1;item_name[i]="Combiflamer";
 			    i+=1;item_name[i]="Flamer";
-					i+=1;item_name[i]="Heavy Bolter";
 			    i+=1;item_name[i]="Heavy Flamer";
-					i+=1;item_name[i]="Hellrifle";
-			    i+=1;item_name[i]="Incinerator";
-			    i+=1;item_name[i]="Integrated Bolter";
+					// i+=1;item_name[i]="Hellrifle";
+			    // i+=1;item_name[i]="Incinerator";
+			    // i+=1;item_name[i]="Integrated Bolter";
 					i+=1;item_name[i]="Lascannon";
 			    i+=1;item_name[i]="Lascutter";
+				i+=1;item_name[i]="Infernus Pistol";
 			    i+=1;item_name[i]="Meltagun";
-			    i+=1;item_name[i]="Missile Launcher";
 			    i+=1;item_name[i]="Multi-Melta";
+				i+=1;item_name[i]="Plasma Pistol";
+				i+=1;item_name[i]="Plasma Gun";
+				i+=1;item_name[i]="Plasma Cannon";
+				// i+=1;item_name[i]="Assault Cannon";
+				i+=1;item_name[i]="Missile Launcher";
 					i+=1;item_name[i]="Autocannon";
-					i+=1;item_name[i]="Plasma Gun";
-					i+=1;item_name[i]="Plasma Pistol";
 					i+=1;item_name[i]="Sniper Rifle";
-					i+=1;item_name[i]="Storm Bolter";
 					i+=1;item_name[i]="Webber";				
 			}
 		}else if (tb=2){
@@ -114,15 +116,90 @@ function scr_weapons_equip() {
 				i+=1;item_name[i]="Eviscerator";
 				i+=1;item_name[i]="Power Sword";
 				i+=1;item_name[i]="Power Axe";
+				i+=1;item_name[i]="Power Spear";
+				i+=1;item_name[i]="Power Mace";
 				i+=1;item_name[i]="Power Fist";
+				i+=1;item_name[i]="Boltstorm Gauntlet";
+				// i+=1;item_name[i]="Chainfist";
+				i+=1;item_name[i]="Lightning Claw";
+				i+=1;item_name[i]="Force Staff";
+				i+=1;item_name[i]="Thunder Hammer";
+				i+=1;item_name[i]="Heavy Thunder Hammer";
+				i+=1;item_name[i]="Boarding Shield";
+				i+=1;item_name[i]="Storm Shield";
+			}
+		}
+	}
+
+	if (tc<3) and (dude=4){
+		if(tb=1){
+			if (standard_equip){ // Infantry Ranged
+				item_name[1]="(None)";
+				item_name[2]="(any)";
+				var valid=3;
+				for (i=0;i<array_length(obj_ini.equipment);i++){
+					if (obj_popup.master_crafted==1){
+						if (!array_contains(obj_ini.equipment_quality[i],"master_crafted")){
+							continue;
+						}
+					}				
+					equip_data = gear_weapon_data("weapon", obj_ini.equipment[i]);
+					if (is_struct(equip_data) && obj_ini.equipment_number[i]>0){
+						if (equip_data.range>1.1 && !equip_data.has_tag("vehicle")){
+							item_name[valid]=equip_data.name;
+							valid++;
+						}
+					}
+				}
+			} else {
+				i=0
+			    i+=1;item_name[i]="(None)";
+				i+=1;item_name[i]="Storm Bolter";
+				// i+=1;item_name[i]="Heavy Bolter";
+			  	i+=1;item_name[i]="Combiflamer";
+			    i+=1;item_name[i]="Heavy Flamer";
+			    i+=1;item_name[i]="Multi-Melta";
+				i+=1;item_name[i]="Plasma Cannon";
+				i+=1;item_name[i]="Assault Cannon";	
+			}
+		}else if (tb=2){
+			if (standard_equip){
+				item_name[1]="(None)";
+				item_name[2]="(any)";
+				var valid=3;				
+				for (i=0;i<array_length(obj_ini.equipment);i++){
+					if (obj_popup.master_crafted==1){
+						if (!array_contains(obj_ini.equipment_quality[i],"master_crafted")){
+							continue;
+						}
+					}				
+					equip_data = gear_weapon_data("weapon", obj_ini.equipment[i]);
+					if (is_struct(equip_data) && obj_ini.equipment_number[i]>0){
+						if (equip_data.range<=1.1  && !equip_data.has_tag("vehicle")){
+							item_name[valid]=equip_data.name;
+							valid++;
+						}
+					}
+				}
+				if (instance_exists(obj_mass_equip)){
+					item_name[valid]="Company Standard";
+					valid++;
+				}		
+			} else {
+				i=0;
+				i+=1;item_name[i]="Chainaxe";
+				i+=1;item_name[i]="Power Sword";
+				i+=1;item_name[i]="Power Axe";
+				i+=1;item_name[i]="Power Mace";
+				i+=1;item_name[i]="Power Fist";
+				i+=1;item_name[i]="Boltstorm Gauntlet";
 				i+=1;item_name[i]="Chainfist";
 				i+=1;item_name[i]="Lightning Claw";
 				i+=1;item_name[i]="Force Staff";
 				i+=1;item_name[i]="Thunder Hammer";
+				i+=1;item_name[i]="Heavy Thunder Hammer";
 				i+=1;item_name[i]="Boarding Shield";
 				i+=1;item_name[i]="Storm Shield";
-				i+=1;item_name[i]="Bolt Pistol";
-				i+=1;item_name[i]="Bolter";				
 			}
 		}
 	}
@@ -343,7 +420,7 @@ function scr_weapons_equip() {
 	        if (instance_exists(obj_mass_equip)){if (obj_controller.settings=12) then bub=1;}
 	        i+=1;item_name[i]="(None)";
 	        i+=1;item_name[i]="Scout Armour";
-	        i+=1;item_name[i]="Power Armour";
+	        // i+=1;item_name[i]="Power Armour";
 	        i+=1;item_name[i]="MK3 Iron Armour";
 	        i+=1;item_name[i]="MK4 Maximus";
 	        i+=1;item_name[i]="MK5 Heresy";
@@ -360,7 +437,38 @@ function scr_weapons_equip() {
 	    // var bad;bad=0;if (instance_exists(obj_creation_popup)){if ((obj_creation_popup.type-100)!=6) then bad=1;}
 	    // if (bad=0){item_name[i]="Dreadnought";}
 	}
-	if (tc=4) and (dude=1){ // dude=1 for normal infantry gear
+
+	if (tc=3) and (dude=4){ // dude=1 for normal infantry gear
+	    var i=0;
+
+	    if (!instance_exists(obj_creation)) and (!instance_exists(obj_mass_equip)){
+			item_name[1]="(None)";
+			item_name[2]="(any)";
+			var valid=3;		
+			for (i=0;i<array_length(obj_ini.equipment);i++){
+				equip_data = gear_weapon_data("armour", obj_ini.equipment[i]);
+				if (is_struct(equip_data) && obj_ini.equipment_number[i]>0){
+					item_name[valid]=equip_data.name;
+					valid++;
+				}
+			}
+	    }else if (instance_exists(obj_creation)) or (instance_exists(obj_mass_equip)){
+	    	var i=0
+	        var bub=0;
+	        if (instance_exists(obj_creation)){if (type=112) then bub=1;}
+	        if (instance_exists(obj_mass_equip)){if (obj_controller.settings=12) then bub=1;}
+	        i+=1;item_name[i]="(None)";
+	        i+=1;item_name[i]="Terminator Armour";
+	        i+=1;item_name[i]="Tartaros";
+	    }
+
+	    else i+=1;
+
+	    // var bad;bad=0;if (instance_exists(obj_creation_popup)){if ((obj_creation_popup.type-100)!=6) then bad=1;}
+	    // if (bad=0){item_name[i]="Dreadnought";}
+	}
+
+	if (tc=4) and (dude=1 || dude=4){ // dude=1 for normal infantry gear
 		if (!instance_exists(obj_creation)) and (!instance_exists(obj_mass_equip)){
 			item_name[1]="(None)";
 			item_name[2]="(any)";
@@ -376,6 +484,7 @@ function scr_weapons_equip() {
 		    var i=0;
 		    i+=1;item_name[i]="(None)";
 		    // i+=1;item_name[i]="Bionics";
+			i+=1;item_name[i]="Combat Shield";
 		    i+=1;item_name[i]="Iron Halo";
 		    i+=1;item_name[i]="Narthecium";
 		    i+=1;item_name[i]="Psychic Hood";
