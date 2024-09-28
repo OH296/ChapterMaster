@@ -12,7 +12,7 @@ if (action_if_number(obj_saveload, 0, 0) &&
 
         if (!scr_void_click()) then exit;
 
-        if ((obj_controller.zoomed==0) and (m_dist<20)) or ((obj_controller.zoomed==1) and (m_dist<40)) and (obj_controller.cooldown<=0){
+        if ((obj_controller.zoomed==0) and (m_dist<20)) or ((obj_controller.zoomed==1) and (m_dist<60)) and (obj_controller.cooldown<=0){
             // This should prevent overlap with fleet object
             if (mouse_x<=self.x+24) and (mouse_y>=self.y-24){
 

@@ -12,7 +12,9 @@ var m_dist, exi;exi=0;
 m_dist=point_distance(x,y,mouse_x,mouse_y);
 
 
-if (!scr_void_click()) then exit;
+if (!scr_void_click()){
+	exit;
+}
 
 
 if ((obj_controller.zoomed=0) and (mouse_y<__view_get( e__VW.YView, 0 )+60)) or (obj_controller.menu!=0) then exi=1;

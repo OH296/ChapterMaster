@@ -3,5 +3,5 @@
 var rando=0,contin=0;
 
 for(var i=1; i<=planets; i++){
-    ork_ship_production(planet);
+    ork_ship_production(i);
 }

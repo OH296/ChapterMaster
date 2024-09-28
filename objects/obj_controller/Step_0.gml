@@ -1,5 +1,7 @@
 // Handles most logic for main menus, audio and checks if cheats are enabled
 // TODO refactor will wait untill squads PR (#76) is merged
+
+scr_zoom_keys();
 if (double_click>=0) then double_click-=1;
 if (text_bar>0){
     text_bar+=1;
