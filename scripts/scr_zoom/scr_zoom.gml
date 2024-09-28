@@ -23,7 +23,7 @@ function scr_zoom() {
 
 function scr_zoom_keys(){
 //this is cahnges the zoom based on scolling but you can set it how ever you like
-if (press_exclusive(vk_add)){
+if (press_exclusive(vk_add) || press_exclusive(187) || press_exclusive(24)){
     var view_w = camera_get_view_width(view_camera[0]);
     var view_h = camera_get_view_height(view_camera[0]);
     camera_set_view_size(view_camera[0], view_w*1.1, view_h*1.1);
