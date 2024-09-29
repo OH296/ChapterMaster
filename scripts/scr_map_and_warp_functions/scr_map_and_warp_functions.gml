@@ -3,6 +3,27 @@
 function set_warp_point_data(){
 	warp_point_hover = true;
 }
+// Main menu movement
+global.defualt_view_width = 1600;
+global.defualt_view_height = 900;
+
+function main_map_move_keys(){
+	if ((menu==0) and (formating==0)) or (instance_exists(obj_fleet)){
+	    var spd=12,keyb=""; // player move speed on campaign map
+	    if ((!instance_exists(obj_ingame_menu)) and (!instance_exists(obj_ncombat))) or (instance_exists(obj_fleet)){
+	        if keyboard_check(vk_shift){spd*=3;} // shift down, increase speed
+	        var view_w = camera_get_view_width(view_camera[0]);
+	        var view_h = camera_get_view_height(view_camera[0]);
+	        var view_x = mouse_x<=__view_get( e__VW.XView, 0 )+2;
+	        var view_y = mouse_x<=__view_get( e__VW.YView, 0 )+2;
+
+	        if ((keyboard_check(vk_left)) or (mouse_x<=view_x) or (keyboard_check(ord("A")))) and (x>(0.5*view_w)) then x-=spd;
+	        if ((keyboard_check(vk_right)) or (mouse_x>=view_x+(view_w*0.92)) or (keyboard_check(ord("D")))) and (x<(room_width-(0.5*view_w))) then x+=spd;
+	        if ((keyboard_check(vk_up)) or (mouse_y<=view_y) or (keyboard_check(ord("W")))) and (y>(0.5*view_h)) then y-=spd;
+	        if ((keyboard_check(vk_down)) or (mouse_y>=view_x+(view_w*0.92)) or (keyboard_check(ord("S")))) and (y<room_height-(0.5*view_h)) then y+=spd;
+	    }
+	}
+}
 
 function draw_warp_lanes(){
 	static routes = [];

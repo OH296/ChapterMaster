@@ -22,17 +22,24 @@ function scr_zoom() {
 }
 
 function scr_zoom_keys(){
+    var change = 0;
 //this is cahnges the zoom based on scolling but you can set it how ever you like
-if (press_exclusive(vk_add) || press_exclusive(187) || press_exclusive(24)){
-    var view_w = camera_get_view_width(view_camera[0]);
-    var view_h = camera_get_view_height(view_camera[0]);
-    camera_set_view_size(view_camera[0], view_w*1.1, view_h*1.1);
-}
-if (press_exclusive(vk_subtract)){
-    var view_w = camera_get_view_width(view_camera[0]);
-    var view_h = camera_get_view_height(view_camera[0]);
-    camera_set_view_size(view_camera[0], view_w*0.9, view_h*0.9);
-}
+    if (press_exclusive(vk_add) || press_exclusive(187) || press_exclusive(24)){
+        var view_w = camera_get_view_width(view_camera[0]);
+        var view_h = camera_get_view_height(view_camera[0]);
+        camera_set_view_size(view_camera[0], view_w*1.1, view_h*1.1);
+    }
+    if (press_exclusive(vk_subtract)){
+        var view_w = camera_get_view_width(view_camera[0]);
+        var view_h = camera_get_view_height(view_camera[0]);
+        camera_set_view_size(view_camera[0], view_w*0.9, view_h*0.9);
+    }
+    if (change!=0){
+        var view_w = camera_get_view_width(view_camera[0]);
+        var view_h = camera_get_view_height(view_camera[0]);
+        x = clamp(x, (0.5*view_w), room_width-(0.5*view_w));
+        y = clamp(y, (0.5*view_h), room_height-(0.5*view_h));
+    }
 exit;
 zoom_level = clamp(zoom_level + (((mouse_wheel_down() - mouse_wheel_up())) * 0.1), 0.5, 2);
 

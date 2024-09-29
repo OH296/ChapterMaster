@@ -30,7 +30,8 @@ function draw_unit_buttons(position, text,size_mod=[1.5,1.5],colour=c_gray,_hali
 	draw_set_alpha(0.5*alpha_mult);
 	draw_rectangle(position[0]+1,position[1]+1, x2-1,y2-1,1)
 	draw_set_alpha(0.25*alpha_mult);
-	if (point_in_rectangle(mouse_x,mouse_y, position[0],position[1], x2,y2)){
+	var mouse_consts = return_mouse_consts();	
+	if (point_in_rectangle(mouse_consts[0],mouse_consts[1], position[0],position[1], x2,y2)){
 		draw_rectangle(position[0],position[1], x2,y2,0);
 	}
 

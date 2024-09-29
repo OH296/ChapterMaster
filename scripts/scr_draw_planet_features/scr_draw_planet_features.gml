@@ -1,9 +1,6 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
-function point_and_click(rect){
-	return (point_in_rectangle(mouse_x, mouse_y, rect[0], rect[1],rect[2], rect[3]) && mouse_check_button_pressed(mb_left))
-}
 
 
 function feature_selected(Feature) constructor{

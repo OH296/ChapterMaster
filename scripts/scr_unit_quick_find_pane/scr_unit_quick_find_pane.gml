@@ -267,7 +267,7 @@ function scr_unit_quick_find_pane() constructor{
 				hover_count=0;
 				hover_item="none";
 			}else if (hover_item!="none"){
-		    	if point_and_click(hover_item.draw(xx+10, yy+90+(20*hover_item.root_item), "Manage")){
+		    	if point_and_click(hover_item.draw(10, 90+(20*hover_item.root_item), "Manage")){
 					group_selection(garrison_log[$system_names[hover_item.root_item]].units,{
 						purpose:$"{system_names[hover_item.root_item]} Management",
 						purpose_code : "manage",
@@ -282,34 +282,34 @@ function scr_unit_quick_find_pane() constructor{
 		} else if (view_area == "missions"){
 			draw_set_color(c_white);
 			draw_set_halign(fa_center);
-		    draw_text(xx+80, yy+50, "Location");
-		    draw_text(xx+160, yy+50, "Mission");
-		    draw_text(xx+310, yy+50, "Time Remaining");
+		    draw_text(80, 50, "Location");
+		    draw_text(160, 50, "Mission");
+		    draw_text(310, 50, "Time Remaining");
 		    var i = 0;
-		    while(i<array_length(mission_log) && (yy+90+(20*i)+12 +20)<main_panel.YY+yy+main_panel.height)		
+		    while(i<array_length(mission_log) && (90+(20*i)+12 +20)<main_panel.height)		
 			{
 				mission = mission_log[i];
 				entered=false;
-				if (scr_hit(xx+10, yy+90+(20*i),xx+main_panel.width,yy+90+(20*i)+18)){
+				if (scr_hit(10, 90+(20*i),main_panel.width,90+(20*i)+18)){
 					draw_set_color(c_gray);
-					draw_rectangle(xx+10+20, yy+90+(20*i)-2,xx+main_panel.width-20,yy+90+(20*i)+18, 0)
+					draw_rectangle(10+20, 90+(20*i)-2,main_panel.width-20,90+(20*i)+18, 0)
 					draw_set_color(c_white);
 					entered=true;
 				}
 				if (mission.system!=""){
-			    	draw_text(xx+80, yy+90+(20*i), $"{mission.system} {scr_roman_numerals()[mission.planet-1]}" );
+			    	draw_text(80, 90+(20*i), $"{mission.system} {scr_roman_numerals()[mission.planet-1]}" );
 				}
 			    draw_set_halign(fa_left);
 			    if (entered){
-			    	draw_text(xx+160-20, yy+90+(20*i), mission.mission);
+			    	draw_text(160-20, 90+(20*i), mission.mission);
 			    } else {
-			    	draw_text(xx+160-20, yy+90+(20*i), string_truncate(mission.mission,150));
+			    	draw_text(160-20, 90+(20*i), string_truncate(mission.mission,150));
 			    }
 			    draw_set_halign(fa_center);
 			    if (!entered){
-			    	draw_text(xx+310, yy+90+(20*i), mission.time);
+			    	draw_text(310, 90+(20*i), mission.time);
 			    }
-			    if (point_and_click([xx+10, yy+90+(20*i)-2,xx+main_panel.width,yy+90+(20*i)+18])){
+			    if (point_and_click([10, 90+(20*i)-2,main_panel.width,90+(20*i)+18])){
 			    	var star = star_by_name(mission.system);
 			    	if (star!="none")
 			    	travel_target = [star.x, star.y];
@@ -337,33 +337,32 @@ function scr_unit_quick_find_pane() constructor{
 	static draw = function(){
 		if (obj_controller.menu==0 && obj_controller.zoomed==0 ){
 			if (!instance_exists(obj_fleet_select) && !instance_exists(obj_star_select)){
-				var xx=__view_get( e__VW.XView, 0 )+0;
-				var yy=__view_get( e__VW.YView, 0 )+0;
-				var x_draw=xx;
-				var lower_draw = yy+main_panel.height+110;
+
+				var x_draw=0;
+				var lower_draw = main_panel.height+110;
 				if (hide_sequence=30) then hide_sequence=0;
 				if ((hide_sequence>0 && hide_sequence<15) || (hide_sequence>15 && hide_sequence<30)){
 					if (hide_sequence>15){
-						x_draw=(xx-main_panel.width) +((main_panel.width/15)*(hide_sequence-15));
+						x_draw=(main_panel.width) +((main_panel.width/15)*(hide_sequence-15));
 					} else {
-						x_draw=xx-((main_panel.width/15)*hide_sequence);
+						x_draw=((main_panel.width/15)*hide_sequence);
 					}
 					hide_sequence++;
 				}
 				if (hide_sequence>15 || hide_sequence<15){
-					main_panel.draw(x_draw, yy+110, 0.46, 0.75);
-					if(tab_buttons.fleets.draw(x_draw,yy+79, "Fleets")){
+					main_panel.draw(x_draw, 110, 0.46, 0.75);
+					if(tab_buttons.fleets.draw(x_draw,79, "Fleets")){
 					    view_area="fleets";
 					}
-					if (tab_buttons.garrisons.draw(x_draw+115,yy+79, "System Troops")){
+					if (tab_buttons.garrisons.draw(115+x_draw,79, "System Troops")){
 					    view_area="garrisons";
 					    update_garrison_log();
 					}
-					if (tab_buttons.missions.draw(x_draw+230,yy+79, "Missions")){
+					if (tab_buttons.missions.draw(230+x_draw,79, "Missions")){
 					    view_area="missions";
 					    update_garrison_log();
 					}					
-					if (x_draw+280<xx){
+					if (x_draw<0){
 						tab_buttons.hider.draw(xx,lower_draw, "Show")
 					} else {
 						if (tab_buttons.hider.draw(x_draw+280,lower_draw, "Hide")){
@@ -371,11 +370,11 @@ function scr_unit_quick_find_pane() constructor{
 						}					
 					}					
 				} else if (hide_sequence==15){
-					if (tab_buttons.hider.draw(xx,lower_draw, "Show")){
+					if (tab_buttons.hider.draw(0,lower_draw, "Show")){
 					    hide_sequence++;
 					}
 				}
-				/*if (tab_buttons.troops.draw(xx+345,yy+79, "Troops")){
+				/*if (tab_buttons.troops.draw(345,79, "Troops")){
 				    view_area="troops";
 				}*/							
 			}
@@ -389,7 +388,7 @@ function  hover_box() constructor{
 	relative_y=0;
 	location = [0,0,0,0];
 	static draw = function(xx, yy, button_text){
-		location = draw_unit_buttons([xx+relative_x, yy+relative_y], button_text,[1,1], c_green,, fnt_40k_14b, 1);
+		location = draw_unit_buttons([relative_x, relative_y], button_text,[1,1], c_green,, fnt_40k_14b, 1);
 		return location;
 	}
 }
@@ -751,7 +750,7 @@ function planet_selection_action(){
 		}
 	    for (var i = 0;i<target.planets;i++){
 	    	var planet_draw = c_white;
-	        if (point_distance(xx+159+(i*41),yy+287,mouse_x,mouse_y)<=22){
+	        if (point_distance(159+(i*41),287,mouse_x,mouse_y)<=22){
 	            obj_controller.selecting_planet=i+1;
 	            var sel_plan = obj_controller.selecting_planet;
 	            var planet_is_allies = scr_is_planet_owned_by_allies(target, sel_plan);
@@ -943,11 +942,11 @@ function planet_selection_action(){
 	            with (target){
 	            	planet_frame = scr_planet_image_numbers(p_type[sel_plan]);
 	            }
-	            draw_sprite_ext(spr_planets,planet_frame,xx+xxx, yy+287, 1, 1, 0, planet_draw, 0.9)
+	            draw_sprite_ext(spr_planets,planet_frame,xxx, 287, 1, 1, 0, planet_draw, 0.9)
 	            
 	            draw_set_color(global.star_name_colors[target.p_owner[sel_plan]]);
 
-	            draw_text(xx+xxx,yy+255,scr_roman(sel_plan));
+	            draw_text(xxx,255,scr_roman(sel_plan));
 	            
 	        }	                   
 	    }

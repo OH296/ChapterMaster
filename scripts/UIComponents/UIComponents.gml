@@ -408,7 +408,7 @@ function main_menu_button(sprite=spr_ui_but_1, sprite_hover=spr_ui_hov_1, xx=0, 
 		clicked=false;
 		height *=y_scale
 		width *=x_scale;
-		if (point_in_rectangle(mouse_x, mouse_y,xx, yy, xx+width, yy+height)){
+		if (scr_hit(xx, yy, xx+width, yy+height)){
 			if (ossilate>0) then ossilate-=1;
 			if (ossilate<0) then ossilate=0;
 			if (hover_alpha<1) then hover_alpha+=0.42
@@ -417,7 +417,7 @@ function main_menu_button(sprite=spr_ui_but_1, sprite_hover=spr_ui_hov_1, xx=0, 
 			draw_sprite(hover_sprite,0,xx,yy);
 			draw_set_blend_mode(bm_normal);
 			ossilate_down = true;
-			clicked = mouse_check_button_pressed(mb_left);
+			clicked = device_mouse_check_button(0,mb_left);
 		} else {
 			if (ossilate_down){
 				if (ossilate<24)then ossilate+=0.2;
