@@ -297,7 +297,7 @@ if (type=6) and (cooldown<=0){// Actually changing equipment right here
             if (mouse_y>=yy+295) and (mouse_y<yy+315){target_comp=5;cooldown=8000;}
         }
 
-        if ((befi!=target_comp) and (vehicle_equipment!=-1)) or (change_tab=1){
+        if ((befi!=target_comp) and (unit_type!="unknown")) or (change_tab=1){
             var i;i=-1;repeat(40){i+=1;item_name[i]="";}
 
             scr_weapons_equip();
@@ -468,7 +468,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
 
             var endcount=0;
 
-            if (obj_controller.man[i]!="") and (obj_controller.man_sel[i]) and (vehicle_equipment!=-1){
+            if (obj_controller.man[i]!="") and (obj_controller.man_sel[i]) and (unit_type!=unit_type_unknown){
                 var check=0,scout_check=0;
                 unit = obj_controller.display_unit[i];
                 var standard = master_crafted==1?"master_crafted":"any";
@@ -484,7 +484,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
                 } else if (is_array(unit)){
 
                     // NOPE
-                        if (check=0) and (n_armour!=obj_controller.ma_armour[i]) and (n_armour!="Assortment") and (vehicle_equipment!=1) and (vehicle_equipment!=6){ //vehicle wep3
+                        if (check=0) and (n_armour!=obj_controller.ma_armour[i]) and (n_armour!="Assortment") and (unit_is_vehicle){ //vehicle wep3
                             if (obj_controller.ma_armour[i]!="") then scr_add_item(obj_controller.ma_armour[i],1);
                             obj_controller.ma_armour[i]="";
                             obj_ini.veh_wep3[unit[0],unit[1]]="";
@@ -499,7 +499,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
                         if (n_wep1=obj_controller.ma_wep1[i]) or (n_wep1="Assortment") then check=1;
 
                         if (check==0){
-                            if (n_wep1!=obj_controller.ma_wep1[i])  and (n_wep1!="Assortment") and (vehicle_equipment!=1) and (vehicle_equipment!=6){ // vehicle wep1
+                            if (n_wep1!=obj_controller.ma_wep1[i])  and (n_wep1!="Assortment") and (unit_is_vehicle){ // vehicle wep1
                                 if (obj_controller.ma_wep1[i]!="") and (obj_controller.ma_wep1[i]!=n_wep1){
                                     scr_add_item(obj_controller.ma_wep1[i],1);
                                     obj_controller.ma_wep1[i]="";
@@ -518,7 +518,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
 
                         if (n_wep2=obj_controller.ma_wep2[i]) or (n_wep2="Assortment") then check=1;
 
-                        if (check==0) and (n_wep2!=obj_controller.ma_wep2[i]) and (n_wep2!="Assortment") and (vehicle_equipment!=1) and (vehicle_equipment!=6){ // vehicle wep2
+                        if (check==0) and (n_wep2!=obj_controller.ma_wep2[i]) and (n_wep2!="Assortment") and (unit_is_vehicle){ // vehicle wep2
                             if (obj_controller.ma_wep2[i]!="") and (obj_controller.ma_wep2[i]!=n_wep2){
                                 scr_add_item(obj_controller.ma_wep2[i],1);
                                 obj_controller.ma_wep2[i]="";
@@ -534,7 +534,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
 
                         check=0;
 
-                        if (check=0) and (n_gear!=obj_controller.ma_gear[i]) and (n_gear!="Assortment") and (vehicle_equipment!=1) and (vehicle_equipment!=6){ //vehicle upgrade item
+                        if (check=0) and (n_gear!=obj_controller.ma_gear[i]) and (n_gear!="Assortment") and (unit_is_vehicle){ //vehicle upgrade item
                             if (obj_controller.ma_gear[i]!="") then scr_add_item(obj_controller.ma_gear[i],1);
                             obj_controller.ma_gear[i]="";
                             obj_ini.veh_upgrade[unit[0],unit[1]]="";
@@ -547,7 +547,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
                         // End gear and upgrade
 
                         check=0;
-                        if (check=0) and (n_mobi!=obj_controller.ma_mobi[i]) and (n_mobi!="Assortment") and (vehicle_equipment!=1) and (vehicle_equipment!=6){ //vehicle accessory item
+                        if (check=0) and (n_mobi!=obj_controller.ma_mobi[i]) and (n_mobi!="Assortment") and (unit_is_vehicle){ //vehicle accessory item
                             if (obj_controller.ma_mobi[i]!="") then scr_add_item(obj_controller.ma_mobi[i],1);
                             obj_controller.ma_mobi[i]="";
                             obj_ini.veh_acc[unit[0],unit[1]]="";

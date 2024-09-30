@@ -6,6 +6,7 @@ old_x=0;
 old_y=0;
 
 unit_type="";
+unit_is_vehicle=false;
 unit_id=0;
 
 size=0;

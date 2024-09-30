@@ -85,8 +85,8 @@ if (total_role_number>0) and (tab>0){
     
     
     var x3,y3,space,h;h=0;x3=xx+1205;y3=yy+205;space=18;
-    repeat(23){
-        h+=1;draw_set_color(c_gray);
+    for (h=0;h<array_length(item_name);h++){
+        draw_set_color(c_gray);
         if (item_name[h]!=""){
             if (string_width(string_hash_to_newline(item_name[h]))>=140) then draw_text_transformed(x3,y3,string_hash_to_newline(item_name[h]),0.75,1,0);
             if (string_width(string_hash_to_newline(item_name[h]))<140) then draw_text_transformed(x3,y3,string_hash_to_newline(item_name[h]),1,1,0);y3+=space;
@@ -125,7 +125,8 @@ if (total_role_number>0) and (tab>0){
         scr_weapons_equip();tab=told;
         
         var x3,y3,h,space;h=0;x3=xx+1205+146;y3=yy+205;space=18;
-        repeat(23){h+=1;draw_set_color(c_gray);
+        for (h=0;h<array_length(item_name);h++){
+            draw_set_color(c_gray);
             if (item_name[h]!=""){
                 if (string_width(string_hash_to_newline(item_name[h]))>=140) then draw_text_transformed(x3,y3,string_hash_to_newline(item_name[h]),0.75,1,0);
                 if (string_width(string_hash_to_newline(item_name[h]))<140) then draw_text_transformed(x3,y3,string_hash_to_newline(item_name[h]),1,1,0);y3+=space;
