@@ -38,11 +38,12 @@ if (loading=1){
     }
 }
 var click_accepted = (!obj_controller.menu) and (!obj_controller.zoomed) and (!instance_exists(obj_bomb_select)) and (!instance_exists(obj_drop_select)) and (!obj_controller.cooldown);
-if (mouse_check_button(mb_left)){
+if (device_mouse_check_button_pressed(0,mb_left)){
     if (!obj_controller.menu) and (click_accepted){
         var closes=0,sta1=0,sta2=0;
-        sta1=instance_nearest(mouse_x,mouse_y,obj_star);
-        sta2=point_distance(mouse_x,mouse_y,sta1.x,sta1.y);
+        var mouse_consts = return_mouse_consts();
+        sta1=instance_nearest(mouse_consts[0],mouse_consts[1],obj_star);
+        sta2=point_distance(mouse_consts[0],mouse_consts[1],sta1.x,sta1.y);
         closes=true;
         if (sta2>15){
             if (scr_hit(
@@ -56,7 +57,7 @@ if (mouse_check_button(mb_left)){
                 if (scr_hit(
                     main_data_slate.XX-4,
                     165,
-                    main_data_slate.main_data_slate.width,
+                    main_data_slate.YY+main_data_slate.width,
                     165 + main_data_slate.height,
                 )){
                     closes=false;
@@ -64,7 +65,7 @@ if (mouse_check_button(mb_left)){
                 if (scr_hit(
                     garrison_data_slate.XX-4,
                     165,
-                    garrison_data_slate.garrison_data_slate.width,
+                    garrison_data_slate.YY+garrison_data_slate.width,
                     165 + garrison_data_slate.height,
                 )){
                     closes=false
@@ -390,7 +391,7 @@ if (obj_controller.selecting_planet!=0){
                     draw_set_color(0);
                     draw_set_alpha(0.2);
                     draw_rectangle(481,280,716,298,0);
-                    if (obj_controller.cooldown<=0) and (obj_controller.mouse_left=1) and (obj_controller.requisition>=improve_cost){
+                    if (point_and_click([481,282,716,300])){
                         obj_controller.cooldown=8000;
                         obj_controller.requisition-=improve_cost;
                         target.p_fortified[current_planet]+=1;
@@ -626,9 +627,10 @@ if (obj_controller.selecting_planet!=0){
             var doner_length = array_length(potential_doners);
             if (doner_length){
                 //TODO swap this out for an object button with a bound tooltip option
-                if (scr_hit(draw_unit_buttons([20, half_way], "Request Colonists"))){
+                var colonist_coords = draw_unit_buttons([20, half_way], "Request Colonists");
+                if (scr_hit(colonist_coords)){
                     tooltip_draw("Planets with higher populations can provide more recruits both for your chapter and to keep a planets PDF bolstered, however colonists from other planets bring with them their home planets influences and evils /n REQ : 1000");
-                    if (mouse_check_button_pressed(mb_left)){
+                    if (point_and_click(colonist_coords)){
                         var doners = potential_doners[irandom(doner_length-1)];
                         new_colony_fleet(potential_doners[0][0],potential_doners[0][1],target.id,cur_planet,"bolster_population");
                         obj_controller.requisition -= 1000;
@@ -773,7 +775,7 @@ if (debug){
     xx=__view_get( e__VW.XView, 0 )+0;
     yy=__view_get( e__VW.YView, 0 )+0;
     
-    if (scr_hit(274,426,337,451)=true) and (obj_controller.cooldown<=0) and (obj_controller.mouse_left=1){
+    if (point_and_click([274,426,337,451])){
         debug=0;
         obj_controller.cooldown=8000;
         exit;
