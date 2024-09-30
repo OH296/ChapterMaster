@@ -598,7 +598,7 @@ function scr_save(save_part,save_id) {
 	if (save_part=5) or (save_part=0){
 	    ini_open($"save{save_id}.ini");
 	    instance_activate_object(obj_event_log);
-	    ini_write_string("Event", "loglist", ini_encode_and_json(obj_event_log.event));
+	    ini_encode_and_json("Event", "loglist", obj_event_log.event);
 	    obj_saveload.hide=true;
 	    obj_controller.invis=true;
 	    obj_saveload.alarm[2]=2;

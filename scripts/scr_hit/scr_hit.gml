@@ -11,7 +11,11 @@ function scr_hit(x1=0, y1=0, x2=0, y2=0) {
 
 function point_and_click(rect){
 	var mouse_consts = return_mouse_consts();
-	return (point_in_rectangle(mouse_consts[0], mouse_consts[1], rect[0], rect[1],rect[2], rect[3]) && mouse_check_button_pressed(mb_left))
+	if (point_in_rectangle(mouse_consts[0], mouse_consts[1], rect[0], rect[1],rect[2], rect[3])){
+		var click_check = event_number==ev_gui ? device_mouse_check_button(0,mb_left) : mouse_check_button_pressed(mb_left);
+		return click_check;
+	}
+	return false;
 }
 
 function return_mouse_consts(){

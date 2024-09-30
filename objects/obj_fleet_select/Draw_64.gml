@@ -1,8 +1,8 @@
 /// @description Insert description here
 // You can write your code in this editor
 //TODO centralise draw logi
-if ((obj_controller.sel_system_x+obj_controller.sel_system_y=0)) then exit
-if  (obj_controller.selected) and (!obj_controller.zoomed)  and (obj_controller.diplomacy<=0){
+
+if (!obj_controller.zoomed){
 	    var zm=1,tit="",mnz=0;
 
 	    //if (fleet_minimized=0){
