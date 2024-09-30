@@ -228,7 +228,8 @@ n_wep1="";n_wep2="";n_armour="";n_gear="";n_mobi="";
 a_wep1="";a_wep2="";a_armour="";a_gear="";a_mobi="";
 n_good1=1;n_good2=1;n_good3=1;n_good4=1;n_good5=1;
 sel1=0;sel2=0;sel3=0;sel4=0;sel5=0;
-vehicle_equipment=0;warning="";
+unit_type="";warning="";
+unit_is_vehicle=false;
 var i;i=-1;
 repeat(51){
     i+=1;item_name[i]="";

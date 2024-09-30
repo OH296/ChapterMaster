@@ -648,6 +648,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	corruption=0;
 	religion_sub_cult = "none";
 	base_group = "none";
+	unit_class = class;
 	role_history = [];
 	encumbered_ranged=false;
 	encumbered_melee=false;

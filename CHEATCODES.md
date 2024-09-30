@@ -14,12 +14,12 @@ Arguments with stars `(argument*)` can be omitted.
 - `stc (number)` - adds specified amount of STC fragments. 
 - `finishforge` - gives 1 million Forge Points (ending all crafting).
 ### Spawning:
-- `recruit (number*)` - spawns a 20 XP recruit (or amount specified) with 1 month of remaining training.
+- `recruit (number*)` - spawns a new recruit (or amount specified) with 1 month of remaining training and 20 XP.
 - `artifact (type*)` - spawns an artifact of a random type, if unspecified.
     - `(type*)` - possible values: random, random_nodemon, Weapon, Armour, Gear, Device, Robot, Tome, chaos_gift, good. Case sensitive.
 - `artifactpopulate` - spawns artifacts on all planets.
-- `additem (name) (number*) (quality*)` - spawns an item(s) with specified parameters.
-    - `(name)` - item name, as it's written in the game. Case sensitive.
+- `additem "(name)" (number*) (quality*)` - spawns an item(s) with specified parameters.
+    - `"(name)"` - item name in quotes, as it's written in the game. Case sensitive. "Bolter", "Power Axe", etc.
     - `(quality*)` - possible values: standard, master_crafted, artificer, artifact, exemplary. Case insensitive.
 - `newapoth` - spawns an Apothecary (40 points, Needs testing).
 - `newpsyk` - spawns a Librarian (70 points, Needs testing).
