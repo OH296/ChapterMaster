@@ -798,7 +798,7 @@ function planet_selection_action(){
 		}
 	    for (var i = 0;i<target.planets;i++){
 	    	var planet_draw = c_white;
-	        if (point_distance(159+(i*41),287,mouse_x,mouse_y)<=22){
+	        if (mouse_distance_less(159+(i*41),287, 22)){
 	            obj_controller.selecting_planet=i+1;
 	            var sel_plan = obj_controller.selecting_planet;
 	            var planet_is_allies = scr_is_planet_owned_by_allies(target, sel_plan);

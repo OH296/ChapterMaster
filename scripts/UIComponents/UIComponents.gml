@@ -417,7 +417,7 @@ function main_menu_button(sprite=spr_ui_but_1, sprite_hover=spr_ui_hov_1, xx=0, 
 			draw_sprite(hover_sprite,0,xx,yy);
 			draw_set_blend_mode(bm_normal);
 			ossilate_down = true;
-			clicked = device_mouse_check_button(0,mb_left);
+			clicked = device_mouse_check_button_pressed(0,mb_left);
 		} else {
 			if (ossilate_down){
 				if (ossilate<24)then ossilate+=0.2;

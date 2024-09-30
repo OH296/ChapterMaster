@@ -12,7 +12,7 @@ function scr_hit(x1=0, y1=0, x2=0, y2=0) {
 function point_and_click(rect){
 	var mouse_consts = return_mouse_consts();
 	if (point_in_rectangle(mouse_consts[0], mouse_consts[1], rect[0], rect[1],rect[2], rect[3])){
-		var click_check = event_number==ev_gui ? device_mouse_check_button(0,mb_left) : mouse_check_button_pressed(mb_left);
+		var click_check = event_number==ev_gui ? device_mouse_check_button_pressed(0,mb_left) : mouse_check_button_pressed(mb_left);
 		return click_check;
 	}
 	return false;
@@ -28,7 +28,10 @@ function return_mouse_consts(){
 	}
 	return [mouse_const_x,mouse_const_y]
 }
-
+function mouse_distance_less(xx, yy, distance){
+	var mouse_consts = return_mouse_consts();
+	return (point_distance(xx,yy,mouse_consts[0],mouse_consts[1])<=distance)
+}
 function return_mouse_consts_tooltip(){
 	var consts = return_mouse_consts();
 	return [consts[0]+20, consts[1]]
