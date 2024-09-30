@@ -4,8 +4,6 @@ function set_warp_point_data(){
 	warp_point_hover = true;
 }
 // Main menu movement
-global.defualt_view_width = 1600;
-global.defualt_view_height = 900;
 
 function in_camera_view(rect){
 	var x1 = __view_get( e__VW.XView, 0 );

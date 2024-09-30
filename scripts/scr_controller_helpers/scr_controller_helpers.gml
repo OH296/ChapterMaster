@@ -5,6 +5,7 @@
 function scr_menu_clear_up(specific_area_function){
 	var spec_func = specific_area_function;
 	with(obj_controller){
+		set_zoom_to_defualt();
 		var menu_action_allowed = (action_if_number(obj_saveload, 0, 0) &&
 				    action_if_number(obj_drop_select, 0, 0) &&
 				    action_if_number(obj_popup_dialogue, 0, 0) &&
@@ -84,7 +85,7 @@ function scr_menu_clear_up(specific_area_function){
 
 
 function scr_change_menu(specific_area_function){
-	var continue_sequence = false;;
+	var continue_sequence = false;
 	with (obj_controller){
 		continue_sequence = scr_menu_clear_up(function(){
 			if (zoomed==0)  && (diplomacy==0){

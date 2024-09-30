@@ -1,4 +1,4 @@
-
+set_zoom_to_defualt();
 var co,i;co=-1;
 repeat(15){co+=1;i=-1;
     repeat(401){i+=1;
