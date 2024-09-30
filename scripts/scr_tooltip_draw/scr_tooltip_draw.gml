@@ -1,7 +1,7 @@
 
 function tooltip_draw(_tooltip="", _width=350, _coords=return_mouse_consts_tooltip(), _text_color=#50a076, _font=fnt_40k_14, _header="", _header_font=fnt_40k_14b, _force_width=false){
 
-	var scale = camera_get_view_width(view_camera[0])/global.defualt_view_width;
+	var scale = obj_controller.map_scale;
 	if (!instance_exists(obj_tooltip)){
 		instance_create(0,0,obj_tooltip );
 	}
@@ -77,13 +77,14 @@ function tooltip_draw(_tooltip="", _width=350, _coords=return_mouse_consts_toolt
 		// Draw header text if it exists
 		if (_header != "") {
 			draw_set_font(_header_font);
-			draw_text_ext_colour(_rect_x + _text_padding_x, _rect_y + _text_padding_y, _header, DEFAULT_LINE_GAP, _header_w, _text_color, _text_color, _text_color, _text_color, 1);
+			draw_text_ext_transformed_colour(_rect_x + _text_padding_x, _rect_y + _text_padding_y, _header, DEFAULT_LINE_GAP, _header_w, scale,scale,0,_text_color, _text_color, _text_color, _text_color, 1);
 			_rect_y += _header_h + DEFAULT_LINE_GAP; // Adjust y-coordinate for tooltip text
 			_text_padding_y *= 1.6;
 		}
 		// Draw tooltip text
+
 		draw_set_font(_font);
-		draw_text_ext_colour(_rect_x + _text_padding_x, _rect_y + _text_padding_y, _tooltip, DEFAULT_LINE_GAP, _text_w, _text_color, _text_color, _text_color, _text_color, 1);
+		draw_text_ext_transformed_colour(_rect_x + _text_padding_x, _rect_y + _text_padding_y, _tooltip, DEFAULT_LINE_GAP, _text_w, scale,scale,0, _text_color, _text_color, _text_color, _text_color, 1);
 		// Revert global variables
 		draw_set_font(_curr_font);
 		draw_set_color(_curr_color);
