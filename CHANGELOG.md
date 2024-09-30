@@ -34,6 +34,8 @@ All notable changes to this project will be documented in this file.
 	- skitarii - spawns 1 Skitarii.
 	- flashgit - spawns 1 Flash Git.
 
+- zooming on map with either + - keys or mouse wheel
+
 ### Changed:
 - Warp travel:
 	- Warp lane travel drawing abstracted to it's own layer.
@@ -52,6 +54,8 @@ All notable changes to this project will be documented in this file.
 	- Deathwing color now is a tiny bit darker.
 	- Minor Power Spear sprite adjustments.
 - Little Damage Resistance bonus to some Master Crafted and Artifact quality gear pieces.
+- stars will no longer spawn over the top of each other
+- player should now be able to scroll closer to the edge of screen
 
 ### Fixed:
 - Crashes: 
@@ -68,6 +72,7 @@ All notable changes to this project will be documented in this file.
 - Chaplains equip proper items on game start.
 - 1 Dreadnought to Equal Specialist Distribution custom chapters.
 - Fixed Force Staff getting double damage bonus because of a code mistake.
+- stars should no longer spawn very close to the right or bottom edge of the map
 
 ### Under The Hood:
 - Ork Warbosses are now stored in the fleet carge_data area and the struct is transferred directly to a planet.
@@ -78,6 +83,11 @@ All notable changes to this project will be documented in this file.
     - alarm_1
     - step_0
     - scr_drop_fiddle
+
+- obj controller drawing largley removed to the gui layer of drawing
+- fleet select panel moved to the gui layer of drawing
+- point and click updated in function to now work in both the gui layer and standard draw layer and take into acount literal or relative screen loc
+- obj_star_select drawing now removed to the gui_drawing layer
 
 
 ## [0.9.2.4]

@@ -164,10 +164,6 @@ if (obj_controller.disposition[4]>20) and (obj_controller.loyalty>33) and (deman
 
 main_map_move_keys();
 
-if (x<800) then x=800;
-if (y<450) then y=450;
-if (x>(room_width-800)) then x=room_width-800;
-if (y>(room_height-450)) then y=room_height-450;
 // For testing purposes
 if (is_test_map=true) then with(obj_en_fleet){
     if (owner = eFACTION.Imperium){

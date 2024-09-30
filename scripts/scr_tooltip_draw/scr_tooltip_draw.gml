@@ -1,10 +1,12 @@
 
-function tooltip_draw(_tooltip="", _width=350, _coords=[mouse_x+20,mouse_y+20], _text_color=#50a076, _font=fnt_40k_14, _header="", _header_font=fnt_40k_14b, _force_width=false){
+function tooltip_draw(_tooltip="", _width=350, _coords=return_mouse_consts_tooltip(), _text_color=#50a076, _font=fnt_40k_14, _header="", _header_font=fnt_40k_14b, _force_width=false){
 
+	var scale = camera_get_view_width(view_camera[0])/global.defualt_view_width;
 	if (!instance_exists(obj_tooltip)){
 		instance_create(0,0,obj_tooltip );
 	}
 	with (obj_tooltip){
+		var _header_h=0, _header_w=0;
 		// Remember global variables
 		var _curr_font = draw_get_font();
 		var _curr_color = draw_get_color();
@@ -37,10 +39,10 @@ function tooltip_draw(_tooltip="", _width=350, _coords=[mouse_x+20,mouse_y+20], 
 			} else{
 				var _header_w = _width;
 			}
-			var header_h = string_height_ext(_header, DEFAULT_LINE_GAP, _header_w);
+			var _header_h = string_height_ext(_header, DEFAULT_LINE_GAP, _header_w);
 			// Adjust rectangle size
 			_rect_w = max(_header_w, _text_w) + _text_padding_x * 2;
-			_rect_h += header_h;
+			_rect_h += _header_h;
 		}
 		// Get view coordinates
 		var xx = __view_get(e__VW.XView, 0);
@@ -59,6 +61,15 @@ function tooltip_draw(_tooltip="", _width=350, _coords=[mouse_x+20,mouse_y+20], 
 		// Draw the tooltip background
 		// draw_sprite_ext(spr_tooltip1, 0, _rect_x, _rect_y, x_scale, y_scale, 0, c_white, 1);
 		// draw_sprite_ext(spr_tooltip1, 1, _rect_x, _rect_y, x_scale, y_scale, 0, c_white, 1);
+		if (scale!=1 &&  (event_number!=ev_gui)){
+			_rect_w*=scale;
+			_rect_h*=scale;
+			_text_padding_x*=scale;
+			_text_padding_y*=scale;
+			_header_h*=scale;
+			_header_w*=scale;
+		}
+
 		draw_sprite_stretched(spr_data_slate_back, 0, _rect_x, _rect_y, _rect_w, _rect_h);
 		draw_rectangle_color_simple(_rect_x, _rect_y, _rect_w + _rect_x, _rect_h + _rect_y, 1, c_gray);
 		draw_rectangle_color_simple(_rect_x + 1, _rect_y + 1, _rect_w + _rect_x - 1, _rect_h + _rect_y - 1, 1, c_black);
@@ -67,7 +78,7 @@ function tooltip_draw(_tooltip="", _width=350, _coords=[mouse_x+20,mouse_y+20], 
 		if (_header != "") {
 			draw_set_font(_header_font);
 			draw_text_ext_colour(_rect_x + _text_padding_x, _rect_y + _text_padding_y, _header, DEFAULT_LINE_GAP, _header_w, _text_color, _text_color, _text_color, _text_color, 1);
-			_rect_y += header_h + DEFAULT_LINE_GAP; // Adjust y-coordinate for tooltip text
+			_rect_y += _header_h + DEFAULT_LINE_GAP; // Adjust y-coordinate for tooltip text
 			_text_padding_y *= 1.6;
 		}
 		// Draw tooltip text

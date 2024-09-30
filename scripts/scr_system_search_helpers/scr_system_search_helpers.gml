@@ -392,12 +392,3 @@ function PlanetData(planet, system) constructor{
 
 //}
 
-function in_camera_view(rect){
-	var cam = view_get_camera(view_current);
-	var x1 = camera_get_view_x(cam);
-	var y1 = camera_get_view_y(cam);
-	var w = x1 + camera_get_view_width(view_current);
-	var h = y1 + camera_get_view_height(view_current);
-	return rectangle_in_rectangle(rect[0],rect[1],rect[2],rect[3], x1, y1, w, h);
-}
-

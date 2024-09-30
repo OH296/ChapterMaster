@@ -91,7 +91,7 @@ if (mouse_check_button(mb_left)){
             var shutters = [shutter_1, shutter_2, shutter_3, shutter_4];
             for (var i=0; i<4;i++){
                 shutter_button = shutters[i];
-                if (scr_hit(shutter_button.XX,shutter_button.YY,shutter_button.shutter_button.width,shutter_button.shutter_button.height)){
+                if (scr_hit(shutter_button.XX,shutter_button.YY,shutter_button.XX+shutter_button.width,shutter_button.YY+shutter_button.height)){
                     closes=false;
                     break;
                 }
@@ -133,13 +133,13 @@ if (global.cheat_debug && obj_controller.selecting_planet && !loading)
         var rect = [(( 184) - 123), ( 200), (( 184) + 123), ( 226)];
         draw_rectangle(rect[0],rect[1],rect[2],rect[3], false);
         draw_set_color(c_black);
-        draw_text(( 184), ( 204), string_hash_to_newline("Debug"));
+        draw_text(( 184), ( 204), "Debug");
         draw_set_color(c_white);
         draw_set_alpha(0.2);
         if (point_and_click(rect)){
             debug = true;
         }
-        if (scr_hit((( 184) - 123), (( 184) + 123), ( 200), ( 226)) == true){
+        if (scr_hit((( 184) - 123), (( 184) + 123), ( 200), ( 226))){
             draw_rectangle((( 184) - 123), ( 200), (( 184) + 123), ( 226), false);
         }
     }

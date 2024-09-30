@@ -25,8 +25,10 @@ if (storm>0) then draw_sprite_ext(spr_warp_storm,storm_image,x,y,0.75,0.75,0,c_w
 draw_set_halign(fa_center);
 draw_set_font(fnt_cul_14);
 draw_set_alpha(1);
-var scale = obj_controller.zoomed ? 2 : 1;
+
+
 if (!global.load && (obj_controller.zoomed || in_camera_view(star_box_shape()))) {
+    var _scale = camera_get_view_width(view_camera[0])/global.defualt_view_width;
     if (garrison){
         draw_sprite(spr_new_resource,3,x-30,y+15);
         if (scr_hit(x-40,y+10,x-10,y+35)){
@@ -34,7 +36,7 @@ if (!global.load && (obj_controller.zoomed || in_camera_view(star_box_shape())))
         }
     }
     if (point_in_rectangle(mouse_x, mouse_y,x-128,y, x+128, y+80) && obj_controller.zoomed){
-        scale = 3.5;
+        _scale *= 1.5;
     }    
     if (stored_owner != owner || !surface_exists(star_tag_surface)){
         star_tag_surface = surface_create(256, 128);
@@ -73,9 +75,9 @@ if (!global.load && (obj_controller.zoomed || in_camera_view(star_box_shape())))
         draw_text(xx, yy+33, name)
         surface_reset_target();
         stored_owner = owner;
-        draw_surface_ext(star_tag_surface, x-(64*scale), y, scale, scale, 1, c_white, 1);
+        draw_surface_ext(star_tag_surface, x-(64*_scale), y, _scale, _scale, 1, c_white, 1);
     } else {
-        draw_surface_ext(star_tag_surface, x-(64*scale), y, scale, scale, 1, c_white, 1);
+        draw_surface_ext(star_tag_surface, x-(64*_scale), y, _scale, _scale, 1, c_white, 1);
     }
 }
 draw_set_valign(fa_top)

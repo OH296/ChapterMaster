@@ -3,8 +3,9 @@ if (instance_exists(orbiting)) and (obj_controller.is_test_map=true){
     draw_set_color(c_red);
     draw_line_width(x,y,orbiting.x,orbiting.y,1);
 }
-
-var m_dist, within;m_dist=point_distance(x,y,mouse_x,mouse_y);within=0;
+var _scale = obj_controller.map_scale;
+var  within=false;
+var m_dist=point_distance(x,y,mouse_x,mouse_y);within=0;
 if (obj_controller.zoomed=0){
     if (m_dist<=16) and (!instance_exists(obj_ingame_menu)) then within=1;
 }
@@ -30,7 +31,8 @@ if (obj_controller.selecting_planet>0){
 }
 
 var line_width = obj_controller.zoomed ? 6:1;
-var text_size = obj_controller.zoomed ? 2:1;
+var line_width = sqr(obj_controller.map_scale);
+var text_size = sqr(obj_controller.map_scale);
 
 if (action!=""){
     draw_set_halign(fa_left);draw_set_alpha(1);
@@ -40,7 +42,6 @@ if (action!=""){
     draw_set_font(fnt_40k_14b);
 
     draw_text_transformed(x+12,y,string_hash_to_newline("ETA "+string(action_eta)),text_size,text_size,0);
-
     if (array_length(complex_route)>0){
         var next_loc = instance_nearest(action_x,action_y, obj_star);
         for (var i=0;i<array_length(complex_route);i++){
