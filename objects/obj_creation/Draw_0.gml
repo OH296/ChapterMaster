@@ -232,7 +232,6 @@ if (slate4>0){
 }
 
 
-/* */
 
 var yar;yar=0;
 
@@ -332,7 +331,7 @@ if (slide>=2){
     
 }
 
-
+/* Chapter Naming, Points assignment, advantages/disadvantages */
 if (slide=2){
     draw_set_color(38144);
     draw_set_font(fnt_40k_30b);
@@ -816,7 +815,7 @@ if (slide=2){
     
 }
 
-/* */
+/* Homeworld, Flagship, Psychic discipline, Aspirant Trial */
 
 var yar;yar=0;
 
@@ -1146,7 +1145,7 @@ if (slide=3){
 
 
 
-/* */
+/* Livery, Roles */
 
 
 if (slide=4){
@@ -1162,17 +1161,20 @@ if (slide=4){
     draw_text_color_simple(800,80,string_hash_to_newline(string(chapter)),38144);
     var draw_sprites = [spr_mk7_colors, spr_mk4_colors,spr_mk5_colors,spr_beakie_colors,spr_mk8_colors,spr_mk3_colors, spr_terminator3_colors];
     var draw_hem = [spr_generic_sgt_mk7, spr_generic_sgt_mk4,spr_generic_sgt_mk5,spr_generic_sgt_mk6,spr_generic_sgt_mk8,spr_generic_sgt_mk3, spr_generic_terminator_sgt];
-    if (custom>1) then draw_sprite_stretched(spr_creation_arrow,0,444-10,252,32,32);// Left Arrow
-    if (custom>1) then draw_sprite_stretched(spr_creation_arrow,1,444+157+2,242,32,32);// Right Arrow 
-    if (point_and_click([444-10,252,470,280])){
+    
+	var boxx1 = 444; var boxw = 167; var boxx2 = boxx1 + boxw;
+	var boxy1 = 252; var boxh = 232; var boxy2 = boxy1 + boxh;
+	draw_sprite_stretched(spr_creation_arrow,0,boxx1,boxy1,32,32);// Left Arrow
+    draw_sprite_stretched(spr_creation_arrow,1,boxx2-32,boxy1,32,32);// Right Arrow 
+    if (point_and_click([boxx1,boxy1,boxx1+32,boxy1+32])){
         test_sprite++;
         if (test_sprite==array_length(draw_sprites)) then test_sprite=0;
     }   
-    if (point_and_click([444+157+2,242, 450+175, 270])){
+    if (point_and_click([boxx2-32,boxy1,boxx2, boxy1+32])){
         test_sprite--;
         if (test_sprite<0) then test_sprite=(array_length(draw_sprites)-1);
     }
-    draw_rectangle_color_simple(444,252,444+167,252+232,1,38144);
+    draw_rectangle_color_simple(boxx1,boxy1,boxx2,boxy2,1,38144);
     if( shader_is_compiled(sReplaceColor)){
         shader_set(sReplaceColor);
         
@@ -1194,21 +1196,21 @@ if (slide=4){
         //Rejoice!
         tester_sprite = draw_sprites[test_sprite];
         tester_helm = draw_hem[test_sprite];
-        if (col_special=0) then draw_sprite(tester_sprite,10,444,252);
-        if (col_special=1) then draw_sprite(tester_sprite,11,444,252);
-        if (col_special>=2) then draw_sprite(tester_sprite,12,444,252);
+        if (col_special=0) then draw_sprite(tester_sprite,10,boxx1,boxy1 + 8);
+        if (col_special=1) then draw_sprite(tester_sprite,11,boxx1,boxy1 + 8);
+        if (col_special>=2) then draw_sprite(tester_sprite,12,boxx1,boxy1 + 8);
         
-        draw_sprite(tester_sprite,col_special,444,252);
+        draw_sprite(tester_sprite,col_special,boxx1,boxy1 + 8);
         if (col_special<=1){
-            draw_sprite(tester_sprite,6,444,252);
-            draw_sprite(tester_sprite,8,444,252);
+            draw_sprite(tester_sprite,6,boxx1,boxy1 + 8);
+            draw_sprite(tester_sprite,8,boxx1,boxy1 + 8);
         }
         if (col_special>=2){
-            draw_sprite(tester_sprite,6,444,252);
-            draw_sprite(tester_sprite,9,444,252);
+            draw_sprite(tester_sprite,6,boxx1,boxy1 + 8);
+            draw_sprite(tester_sprite,9,boxx1,boxy1 + 8);
         }
-        if (trim=0) and (col_special<=1) then draw_sprite(tester_sprite,4,444,252);
-        if (trim=0) and (col_special>=2) then draw_sprite(tester_sprite,5,444,252);
+        if (trim=0) and (col_special<=1) then draw_sprite(tester_sprite,4,boxx1,boxy1 + 8);
+        if (trim=0) and (col_special>=2) then draw_sprite(tester_sprite,5,boxx1,boxy1 + 8);
         //TODO this can be imprved but for now it's fit for purpose
         if (complex_selection=="Sergeant Markers" && complex_livery){
             var sgt_col_1 = complex_livery_data.sgt.helm_primary;
@@ -1219,7 +1221,7 @@ if (slide=4){
             shader_set_uniform_f_array(colour_to_find2, [200/255,0/255,0/255]);
             shader_set_uniform_f(colour_to_set2, col_r[sgt_col_2]/255, col_g[sgt_col_2]/255, col_b[sgt_col_2]/255);
             shader_set_uniform_f(colour_to_set4, col_r[lens_col]/255, col_g[lens_col]/255, col_b[lens_col]/255);
-            draw_sprite(tester_helm, complex_depth_selection, 444,252);
+            draw_sprite(tester_helm, complex_depth_selection, boxx1,boxy1 + 8);
         }
         else if (complex_selection=="Veteran Sergeant Markers" && complex_livery){
             var sgt_col_1 = complex_livery_data.vet_sgt.helm_primary;
@@ -1230,7 +1232,7 @@ if (slide=4){
             shader_set_uniform_f_array(colour_to_find2, [200/255,0/255,0/255]);
             shader_set_uniform_f(colour_to_set2, col_r[sgt_col_2]/255, col_g[sgt_col_2]/255, col_b[sgt_col_2]/255);
             shader_set_uniform_f(colour_to_set4, col_r[lens_col]/255, col_g[lens_col]/255, col_b[lens_col]/255);
-            draw_sprite(tester_helm, complex_depth_selection, 444,252);
+            draw_sprite(tester_helm, complex_depth_selection, boxx1,boxy1 + 8);
         }
         else if (complex_selection=="Captain Markers" && complex_livery){
             var sgt_col_1 = complex_livery_data.captain.helm_primary;
@@ -1241,7 +1243,7 @@ if (slide=4){
             shader_set_uniform_f_array(colour_to_find2, [200/255,0/255,0/255]);
             shader_set_uniform_f(colour_to_set2, col_r[sgt_col_2]/255, col_g[sgt_col_2]/255, col_b[sgt_col_2]/255);
             shader_set_uniform_f(colour_to_set4, col_r[lens_col]/255, col_g[lens_col]/255, col_b[lens_col]/255);
-            draw_sprite(tester_helm, complex_depth_selection, 444,252);
+            draw_sprite(tester_helm, complex_depth_selection, boxx1,boxy1 + 8);
         } else if (complex_selection=="Veteran Markers" && complex_livery){
             var sgt_col_1 = complex_livery_data.veteran.helm_primary;
             var sgt_col_2 = complex_livery_data.veteran.helm_secondary;
@@ -1251,14 +1253,18 @@ if (slide=4){
             shader_set_uniform_f_array(colour_to_find2, [200/255,0/255,0/255]);
             shader_set_uniform_f(colour_to_set2, col_r[sgt_col_2]/255, col_g[sgt_col_2]/255, col_b[sgt_col_2]/255);
             shader_set_uniform_f(colour_to_set4, col_r[lens_col]/255, col_g[lens_col]/255, col_b[lens_col]/255);
-            draw_sprite(tester_helm, complex_depth_selection, 444,252);
+            draw_sprite(tester_helm, complex_depth_selection, preview_box.x1,preview_box.y1 + 8);
         }                 
         shader_set_uniform_f_array(colour_to_find1, body_colour_find );       
         shader_set_uniform_f_array(colour_to_set1, body_colour_replace );
         shader_set_uniform_f_array(colour_to_find2, secondary_colour_find );       
         shader_set_uniform_f_array(colour_to_set2, secondary_colour_replace ); 
-        shader_set_uniform_f_array(colour_to_set4, lens_colour_replace );              
-        draw_sprite(spr_weapon_colors,0,444,252);
+        shader_set_uniform_f_array(colour_to_set4, lens_colour_replace );
+		if(tester_sprite == spr_terminator3_colors){
+			draw_sprite(spr_weapon_colors,0,444 - 12,252 + 5);
+		} else {
+			draw_sprite(spr_weapon_colors,0,444,252);	
+		}
         shader_reset();
         
     }else{
@@ -1814,7 +1820,7 @@ if (slide=4){
     
 }
 
-/* */
+/* Gene Seed Mutations, Disposition */
 
 
 if (slide=5){
@@ -2014,15 +2020,7 @@ if (slide=5){
     
 }
 
-/* */
-
-
-
-
-
-
-
-
+/* Chapter Master */
 
 if (slide=6){
     draw_set_color(38144);
