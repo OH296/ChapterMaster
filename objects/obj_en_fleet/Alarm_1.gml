@@ -460,6 +460,7 @@ if (navy && action=="") {
 
 	// Go to recruiting grounds
 	if ((guardsmen_unloaded=0) and (guardsmen_ratio<0.5) and ((trade_goods=""))) or (trade_goods="recr"){// determine what sort of planet is needed
+		var maxi = fleet_max_guard();
 	    var guard_wanted=maxi-curr,planet_needed=0;
 	    if (guard_wanted<=50000) then planet_needed=1;// Pretty much any
 	    if (guard_wanted>50000) then planet_needed=2;// Feudal and up
@@ -472,7 +473,7 @@ if (navy && action=="") {
 	        with(obj_star){
 				if (scr_is_star_owned_by_allies(self)) {
 					good=0;o=0;
-		            repeat(4){o+=1;
+		            repeat(planets){o+=1;
 		                if (scr_is_planet_owned_by_allies(self, o)) and (p_type[o]!="Dead") and (p_population[o]>(obj_controller.temp[200]*6)){
 		                    if (p_orks[o]+p_chaos[o]+p_tyranids[o]+p_necrons[o]+p_tau[o]+p_traitors[o]=0) then good=1;
 		                }
@@ -486,7 +487,7 @@ if (navy && action=="") {
 	        with(obj_star) {
 				if (scr_is_star_owned_by_allies(self)) {
 					good=0;o=0;
-			        repeat(4){o+=1;
+			        repeat(planets){o+=1;
 			            if (scr_is_planet_owned_by_allies(self, o)) and ((p_population[o]>(obj_controller.temp[200]*6)) or ((p_large[o]=1) and (p_population[o]>0.1))){
 			                if (p_orks[o]+p_chaos[o]+p_tyranids[o]+p_necrons[o]+p_tau[o]+p_traitors[o]=0) then good=1;
 			            }
@@ -500,7 +501,7 @@ if (navy && action=="") {
 	        with(obj_star) {
 				if (scr_is_star_owned_by_allies(self)) {
 					good=0;o=0;
-			        repeat(4) {
+			        repeat(planets) {
 						o+=1;
 			            if (scr_is_planet_owned_by_allies(self, o)) and ((p_large[o]=1) and (p_population[o]>0.1)){
 			                if (p_orks[o]+p_chaos[o]+p_tyranids[o]+p_necrons[o]+p_tau[o]+p_traitors[o]=0) then good=1;
@@ -519,8 +520,9 @@ if (navy && action=="") {
 	    if (c_plan=orbiting) then trade_goods="recruiting";
 	    if (c_plan!=orbiting){
 	        trade_goods="goto_recruiting";
-	        action_x=c_plan.x;action_y=c_plan.y;
-	        alarm[4]=1;// show_message("E");
+	        action_x=c_plan.x;
+	        action_y=c_plan.y;
+	        set_fleet_movement();
 	    }
     
 	    with(obj_temp_inq){instance_destroy();}exit;
@@ -528,7 +530,7 @@ if (navy && action=="") {
 	// Get recruits
 	if (action="") and (trade_goods="goto_recruiting"){
 	    if (instance_exists(orbiting)){
-	        var o,that,te,te_large;o=0;that=0;te=0;te_large=0;
+	        var o=0,that=0,te=0,te_large=0;
 	        repeat(orbiting.planets){
 	        	o+=1;
 	            if (orbiting.p_owner[o]<=5){
@@ -549,7 +551,8 @@ if (navy && action=="") {
 	            }
 	        }
         
-	        var guard_wanted;guard_wanted=0;guard_wanted=maxi-curr;
+	        var guard_wanted=0;
+	        guard_wanted=fleet_max_guard()-curr;
         
 	        // if (orbiting.p_population[that]<guard_wanted) and (orbiting.p_large[that]=0) then trade_goods="";
 	        if (orbiting.p_population[that]>guard_wanted) or (orbiting.p_large[that]=1){
