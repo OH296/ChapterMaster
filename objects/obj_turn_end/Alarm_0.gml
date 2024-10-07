@@ -89,7 +89,6 @@ if (battles>0) and (current_battle<=battles){
     }*/
     
     if (good=1){// trying to find the star
-        instance_activate_object(obj_star);
         obj_controller.x=ii.x;
         obj_controller.y=ii.y;
         show=current_battle;
@@ -198,7 +197,10 @@ instance_activate_object(obj_star);
 
 
 if (battle[1]=0) or (current_battle>battles){//                         This is temporary for the sake of testing
-    if (battle[1]=0){obj_controller.x=first_x;obj_controller.y=first_y;}
+    if (battle[1]=0){
+        obj_controller.x=first_x;
+        obj_controller.y=first_y;
+    }
     alarm[1]=1;
 }
 
