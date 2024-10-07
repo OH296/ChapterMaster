@@ -291,22 +291,22 @@ function scr_forge_item(item){
     var master_craft_count=0;
     var quality_string="";
     var normal_count=0;
-    for (var s=0;s<forge_queue[i].count;s++){
+    for (var s=0;s<item.count;s++){
         if (master_craft_chance && (irandom(100)<master_craft_chance)){
             master_craft_count++;
         } else {
             normal_count++;
         }
     }
-    scr_add_item(forge_queue[i].name, normal_count);
+    scr_add_item(item.name, normal_count);
     if (master_craft_count>0){
-        scr_add_item(forge_queue[i].name, master_craft_count,"master_crafted");
+        scr_add_item(item.name, master_craft_count,"master_crafted");
         var numerical_string = master_craft_count==1?"was":"were";
         quality_string=$"X{master_craft_count} {numerical_string} Completed to a Master Crafted standard";
     }else {
         quality_string=$"all were completed to a standard STC compliant quality";
     }
-    scr_popup("Forge Completed",$"{forge_queue[i].name} X{forge_queue[i].count} construction finished {quality_string}","","");
+    scr_popup("Forge Completed",$"{item.name} X{item.count} construction finished {quality_string}","","");
 }
 
 function scr_advance_research(research){
@@ -326,9 +326,9 @@ function scr_advance_research(research){
 function scr_evaluate_forge_item_completion(item){
     if (is_string(item.name)){
         var vehicles = ["Rhino","Predator","Land Raider","Whirlwind","Land Speeder"];
-        var is_vehicle =  array_contain(vehicles,item.name);
+        var is_vehicle =  array_contains(vehicles,item.name);
         if (!is_vehicle){
-            scr_forge_item(item.name);
+            scr_forge_item(item);
         } else {
             repeat(item.count){
                 var vehicle = scr_add_vehicle(item.name,9,"standard","standard","standard","standard","standard");
