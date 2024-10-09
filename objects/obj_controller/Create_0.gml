@@ -93,7 +93,8 @@ current_eventing="";
 chaos_rating=0;
 chapter_made = 0;
 obj_cuicons.alarm[1]=1; // Clean up custom icons
-map_scale =1;
+map_scale = 1;
+scale_mod = 1;
 
 diplomacy_pathway = "";
 option_selections=[];

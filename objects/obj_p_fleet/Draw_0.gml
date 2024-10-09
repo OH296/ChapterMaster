@@ -3,7 +3,7 @@ if (instance_exists(orbiting)) and (obj_controller.is_test_map=true){
     draw_set_color(c_red);
     draw_line_width(x,y,orbiting.x,orbiting.y,1);
 }
-scale = 1/obj_controller.map_scale;
+var scale = obj_controller.scale_mod;
 
 if (x<0) or (x>room_width) or (y<0) or (y>room_height) then exit;
 if (image_alpha=0) then exit;

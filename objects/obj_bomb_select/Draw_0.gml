@@ -60,7 +60,7 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
     var sel="";
     sel=(ships_selected);
     var curr_sel_string = $"Current Selection: {sel} ships"
-    draw_text_bold(bomb_window.x1+12, bomb_window.y2-106,curr_sel_string);
+    draw_text_bold(bomb_window.x1+12, bomb_window.y2-76,curr_sel_string);
 
     // Draw the target info
     var hers, influ, poppy;
@@ -70,7 +70,7 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
     if (p_target.p_large[obj_controller.selecting_planet]==1) then poppy=string(p_target.p_population[obj_controller.selecting_planet])+"B";
     if (p_target.p_large[obj_controller.selecting_planet]==0) then poppy=string(scr_display_number(p_target.p_population[obj_controller.selecting_planet]));
     
-    draw_text_bold(bomb_window.x1+12, bomb_window.y2-66,("Population: "+string(poppy)));
+    draw_text_bold(bomb_window.x1+16, bomb_window.y1+90,("Population: "+string(poppy)));
     
     if (p_target.sprite_index!=spr_star_hulk){
         // TODO a centralised point to be able to fetch display names from factions identifying number
@@ -80,7 +80,11 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
                 t_name = "Imperial Forces";
                 break;
             case 2.5:
-                if (p_target.p_owner[obj_controller.selecting_planet] == 8) {t_name = "Gue'la Forces";}
+                if (p_target.p_owner[obj_controller.selecting_planet] == 8) {
+                    t_name = "Gue'la Forces";
+                } else {
+                    t_name = "PDF";
+                }
                 break;
             case 3:
                 t_name = "Mechanicus";
@@ -174,12 +178,30 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
         }
         
         var target_string = "Target: " + string(t_name);
-        draw_text_bold(bomb_window.x1+12, bomb_window.y2-46, target_string);
-        if (targets>1){
-            draw_sprite_ext(spr_arrow,0,bomb_window.x1+12+string_width(target_string), bomb_window.y2-46,0.75,0.75,0,c_white,1);
-            draw_sprite_ext(spr_arrow,1,bomb_window.x1+12+string_width(target_string), bomb_window.y2-46,0.75,0.75,0,c_white,1);
-        }
-        var strength_string = $"Strength: {string(str_string)} ({string(target)})";
+        // draw_text_bold(bomb_window.x1+12, bomb_window.y2-46, target_string);
+        if (point_and_click(draw_unit_buttons([bomb_window.x1+12, bomb_window.y2-56], target_string, [1, 1], 38144, fa_center, fnt_40k_14b))) {
+            if (targets > 1) {
+                var possibleTargets = [];
+                if (imp > 0) array_push(possibleTargets, 2);
+                if (pdf > 0) array_push(possibleTargets, 2.5);
+                if (mechanicus > 0) array_push(possibleTargets, 3);
+                if (sisters > 0) array_push(possibleTargets, 5);
+                if (eldar > 0) array_push(possibleTargets, 6);
+                if (ork > 0) array_push(possibleTargets, 7);
+                if (tau > 0) array_push(possibleTargets, 8);
+                if (tyranids > 0) array_push(possibleTargets, 9);
+                if (max(traitors, chaos) > 0) array_push(possibleTargets, 10);
+                if (necrons > 0) array_push(possibleTargets, 13);
+                
+                // Switch target to the next in the array
+                if (array_length(possibleTargets) > 0) {
+                    var currentIndex = array_get_index(possibleTargets, target);
+                    currentIndex = (currentIndex + 1) mod array_length(possibleTargets);
+                    target = possibleTargets[currentIndex];
+                }
+            }
+        }        
+        var strength_string = $"Strength: {string(str_string)} ({string(str)})";
         draw_text_bold(bomb_window.x1+12, bomb_window.y2-26,strength_string);
         
     }
@@ -198,31 +220,40 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
     }
 }
 
-var ship_index=0,why=0,num="";
+var ship_index = 0;
 var buttonSpacingX = 106; // adjust as needed
 var buttonSpacingY = 21; // adjust as needed
+
 // Iterate over the 6 rows
 for (var row = 0; row < 6; row++) {
     // Iterate over the 4 columns in each row
     for (var col = 0; col < 4; col++) {
-        // Check if the ship at the current index is not empty
-        while (ship_index < array_length(ship) - 1 && ship[ship_index] == "") {
+        // Find the next non-empty ship
+        while (ship_index < array_length(ship) && ship[ship_index] == "") {
             ship_index++;
         }
+
         // Check if ship_index is still within range
-        if (ship_index < array_length(ship)) && ship[ship_index] != "" {
+        if (ship_index < array_length(ship) && ship[ship_index] != "") {
             // Delete the string from the 20th character onwards
-            num = string_delete(ship[ship_index], 20, 999);
+            var num = string_delete(ship[ship_index], 20, 999);
             // Calculate button position based on row and column
             var buttonX = bomb_window.x1 + 20 + col * buttonSpacingX;
             var buttonY = bomb_window.y1 + 110 + row * buttonSpacingY;
-            // Draw the unit buttons
-            if point_and_click(draw_unit_buttons([buttonX, buttonY, buttonX+105, buttonY+20], string_truncate(num, 200), [1,1], ship_all[ship_index]?38144:c_red, fa_center, fnt_40k_10, ship_all[ship_index] ? 1: 0.5)){
+            
+            // Draw the unit buttons and handle selection
+            if (point_and_click(draw_unit_buttons([buttonX, buttonY, buttonX + 105, buttonY + 20], 
+                string_truncate(num, 200), [1, 1], 
+                ship_all[ship_index] ? 38144 : c_red, 
+                fa_center, fnt_40k_10, ship_all[ship_index] ? 1 : 0.5))) {
+
                 ship_all[ship_index] = !ship_all[ship_index];
-                ships_selected = ship_all[ship_index] ? ships_selected++: ships_selected--;
+                ships_selected += ship_all[ship_index] ? 1 : -1;
+                
+                // Ensure ships_selected does not go negative
+                ships_selected = max(ships_selected, 0);
             }
-            ship_index++; // Increment the ship index after each iteration            
+            ship_index++; // Increment the ship index after each iteration
         }
-        // Move to the next ship
     }
 }

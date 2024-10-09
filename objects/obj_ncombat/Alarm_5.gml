@@ -296,6 +296,7 @@ if (defeat=0) and (reduce_power=true){
         // Give some money for killing enemies?
         var reward_table = [0, 5, 10, 20, 40, 80, 160, 320];
         requisition_reward = reward_table[power_fought];
+        obj_controller.requisition += requisition_reward;
 
 		//(¿?) Ramps up threat/enemy presence in case enemy Type == "Daemon" (¿?)
 		//Does the inverse check/var assignment 10 lines above

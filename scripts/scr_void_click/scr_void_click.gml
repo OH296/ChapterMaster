@@ -5,7 +5,7 @@ function scr_void_click() {
 	var xx=__view_get( e__VW.XView, 0 )+0;
 	var yy=__view_get( e__VW.YView, 0 )+0;
 
-	var scale =1/obj_controller.map_scale;
+	var scale = obj_controller.scale_mod;
 	if (obj_controller.cooldown>0) return  false;
 	if (obj_controller.menu!=0) return  false;
 	if (!obj_controller.zoomed){

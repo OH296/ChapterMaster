@@ -1279,7 +1279,9 @@ if (slide=4){
     
     draw_set_font(fnt_40k_30b);
     draw_text_transformed(444,215,string_hash_to_newline("Livelry"),0.6,0.6,0);
-    if (point_and_click(draw_unit_buttons([544,215], complex_livery? "Simple Livery":"Complex Livery",[1,1], 38144,, fnt_40k_14b, 1))){
+    var button_alpha = custom < 2 ? 0.5 : 1;
+    var livery_swap_button = draw_unit_buttons([544,215], complex_livery? "Simple Livery":"Complex Livery",[1,1], 38144,, fnt_40k_14b, button_alpha);
+    if (point_and_click(livery_swap_button) && custom >= 2){
         complex_livery=!complex_livery;
     }
     var str,str_width,hei,x8,y8;x8=0;y8=0;
@@ -1346,12 +1348,13 @@ if (slide=4){
         var button_cords, cur_button;
         for (var i=0;i<array_length(button_data);i++){
             cur_button = button_data[i];
-            button_cords = draw_unit_buttons(cur_button.cords, cur_button.text,[0.5,0.5], 38144,, fnt_40k_30b, 1);
+            var button_alpha = custom < 2 ? 0.5 : 1;
+            button_cords = draw_unit_buttons(cur_button.cords, cur_button.text,[0.5,0.5], 38144,, fnt_40k_30b, button_alpha);
             if (scr_hit(button_cords[0],button_cords[1],button_cords[2],button_cords[3])){
-                 tooltip=cur_button.tooltip;
-                 tooltip2=cur_button.tooltip2;
+                tooltip=cur_button.tooltip;
+                tooltip2=cur_button.tooltip2;
             }
-            if (point_and_click(button_cords)){
+            if (point_and_click(button_cords) && custom >= 2){
                 cooldown=8000;
                 instance_destroy(obj_creation_popup);
                 var pp=instance_create(0,0,obj_creation_popup);
@@ -1610,7 +1613,9 @@ if (slide=4){
                 draw_set_color(38144);draw_text(xxx,yyy,string_hash_to_newline(role[c,role_id]));
                 if (scr_hit(xxx,yyy,1150,yyy+20)) and ((!instance_exists(obj_creation_popup)) || ((instance_exists(obj_creation_popup) and obj_creation_popup.target_gear=0))) {
                     if (custom=2) then draw_set_alpha(0.2);
-                    if (custom<2) then draw_set_alpha(0.1);draw_set_color(c_white);draw_rectangle(xxx,yyy,1150,yyy+20,0);
+                    if (custom<2) then draw_set_alpha(0.1);
+                    draw_set_color(c_white);
+                    draw_rectangle(xxx,yyy,1150,yyy+20,0);
                     draw_set_alpha(1);tooltip=string(role[c,role_id])+" Settings";
                     tooltip2="Click to open the settings for this unit.";
                     if (mouse_left>=1) and (custom>0) and (cooldown<=0) and (custom=2){
