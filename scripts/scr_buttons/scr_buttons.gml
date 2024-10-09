@@ -1,4 +1,4 @@
-function draw_unit_buttons(position, text,size_mod=[1.5,1.5],colour=c_gray,_halign=fa_center, font=fnt_40k_14b, alpha_mult=1, bg=false, bg_color=c_black){
+function draw_unit_buttons(position, text, size_mod=[1.5,1.5],colour=c_gray,_halign=fa_center, font=fnt_40k_14b, alpha_mult=1, bg=false, bg_color=c_black){
 	// TODO: fix halign usage
 	// Store current state of all global vars
 	var cur_alpha = draw_get_alpha();
@@ -13,12 +13,13 @@ function draw_unit_buttons(position, text,size_mod=[1.5,1.5],colour=c_gray,_hali
 
 	var x2;
 	var y2;
+	var _text = string_hash_to_newline(text);
 	if (array_length(position)>2){
 		var x2 = position[2];
 		var y2 = position[3];
 	} else {
-		var text_width = string_width(string_hash_to_newline(text))*size_mod[0];
-		var text_height = string_height(string_hash_to_newline(text))*size_mod[1];
+		var text_width = string_width(_text)*size_mod[0];
+		var text_height = string_height(_text)*size_mod[1];
 		var x2 = position[0]+text_width+(6*size_mod[0]);
 		var y2 = position[1]+text_height+(6*size_mod[1]);
 	}
@@ -28,7 +29,7 @@ function draw_unit_buttons(position, text,size_mod=[1.5,1.5],colour=c_gray,_hali
 		draw_rectangle(position[0], position[1], x2, y2, 0);
 	}
 	draw_set_color(colour);
-	draw_text_transformed((position[0] + x2)/2, (position[1] + y2)/2,string_hash_to_newline(text),size_mod[0],size_mod[1],0);
+	draw_text_transformed((position[0] + x2)/2, (position[1] + y2)/2, _text, size_mod[0], size_mod[1], 0);
 	draw_rectangle(position[0],position[1], x2,y2,1)
 	draw_set_alpha(0.5*alpha_mult);
 	draw_rectangle(position[0]+1,position[1]+1, x2-1,y2-1,1)
