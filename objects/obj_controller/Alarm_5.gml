@@ -15,38 +15,40 @@ var roll=0;
 var novice_type="";
 var unit;
 
-if (known[eFACTION.Chaos]==2) and (faction_defeated[eFACTION.Chaos]==0) then times+=1;
 
-var xx3, yy3, plani, _star;
-xx3=floor(random(room_width))+1;
-yy3=floor(random(room_height))+1;
-_star=instance_nearest(xx3,yy3,obj_star);
-plani=floor(random(_star.planets))+1;
+try_and_report_loop("chaos_spread", function(){
+    if (known[eFACTION.Chaos]==2) and (faction_defeated[eFACTION.Chaos]==0) then times+=1;
+    var xx3, yy3, plani, _star;
+    xx3=floor(random(room_width))+1;
+    yy3=floor(random(room_height))+1;
+    _star=instance_nearest(xx3,yy3,obj_star);
+    plani=floor(random(_star.planets))+1;
 
-// ** Chaos influence / corruption **
-if (faction_gender[eFACTION.Chaos]==1) and (faction_defeated[eFACTION.Chaos]==0) and (turn>=chaos_turn) then repeat(times){
-    if (_star.p_type[plani]!="Dead") and (_star.planets>0) and (turn>=20){
-        var cathedral=0;
-        if (planet_feature_bool(_star.p_feature[plani], P_features.Sororitas_Cathedral)==1) then cathedral=choose(0,1,1);
-    
-        if (cathedral=0){
-            if (_star.p_heresy[plani]>=0) and (_star.p_heresy[plani]<10){
-                _star.p_heresy[plani]+=choose(0,0,0,0,0,0,0,0,5);
-            }else if (_star.p_heresy[plani]>=10) and (_star.p_heresy[plani]<20){
-                _star.p_heresy[plani]+=choose(-2,-2,-2,5,10,15);
-            }else if(_star.p_heresy[plani]>=20) and (_star.p_heresy[plani]<40){
-                _star.p_heresy[plani]+=choose(-2,-1,0,0,0,0,0,0,5,10);
-            }else if(_star.p_heresy[plani]>=40) and (_star.p_heresy[plani]<60){
-                _star.p_heresy[plani]+=choose(-2,-1,0,0,0,0,0,0,5,10,15);
-            }else if(_star.p_heresy[plani]>=60) and (_star.p_heresy[plani]<100){
-                _star.p_heresy[plani]+=choose(-1,0,0,0,0,5,10,15);
+    // ** Chaos influence / corruption **
+    if (faction_gender[eFACTION.Chaos]==1) and (faction_defeated[eFACTION.Chaos]==0) and (turn>=chaos_turn) then repeat(times){
+        if (_star.p_type[plani]!="Dead") and (_star.planets>0) and (turn>=20){
+            var cathedral=0;
+            if (planet_feature_bool(_star.p_feature[plani], P_features.Sororitas_Cathedral)==1) then cathedral=choose(0,1,1);
+        
+            if (cathedral=0){
+                if (_star.p_heresy[plani]>=0) and (_star.p_heresy[plani]<10){
+                    _star.p_heresy[plani]+=choose(0,0,0,0,0,0,0,0,5);
+                }else if (_star.p_heresy[plani]>=10) and (_star.p_heresy[plani]<20){
+                    _star.p_heresy[plani]+=choose(-2,-2,-2,5,10,15);
+                }else if(_star.p_heresy[plani]>=20) and (_star.p_heresy[plani]<40){
+                    _star.p_heresy[plani]+=choose(-2,-1,0,0,0,0,0,0,5,10);
+                }else if(_star.p_heresy[plani]>=40) and (_star.p_heresy[plani]<60){
+                    _star.p_heresy[plani]+=choose(-2,-1,0,0,0,0,0,0,5,10,15);
+                }else if(_star.p_heresy[plani]>=60) and (_star.p_heresy[plani]<100){
+                    _star.p_heresy[plani]+=choose(-1,0,0,0,0,5,10,15);
+                }
             }
+            if (_star.p_heresy[plani]<0) then _star.p_heresy[plani]=0;
         }
-        if (_star.p_heresy[plani]<0) then _star.p_heresy[plani]=0;
     }
-}
 
-instance_activate_object(obj_star);
+    instance_activate_object(obj_star);
+})
 
 // ** Build new Imperial Ships **
 
@@ -705,7 +707,7 @@ var p=0,penitorium=0, unit;
 for(var c=0; c<11; c++){
     for(var e=1; e<=250; e++){
         if (obj_ini.god[c,e]>=10){
-            unit=obj_ini.TTRPG[c][e];
+            unit=fetch_unit([c,e]);
             p+=1;
             penit_co[p]=c;
             penit_id[p]=e;
@@ -730,7 +732,9 @@ if (obj_controller.stc_ships>=6){
 if (turn==5) and (faction_gender[eFACTION.Chaos]==1) {// show_message("Turn 100");
     var xx4=0,yy4=0,plant=0,planet=0,testi=0,fleeta=0;
 
-    with(obj_en_fleet){if (owner != eFACTION.Imperium) then y-=20000;} //this is stupid, just filter and test with a reduce function
+    with(obj_en_fleet){
+        if (owner != eFACTION.Imperium) then y-=20000;
+    } //this is stupid, just filter and test with a reduce function
 	//this won't always work due to randomness
     for(var i=0; i<50; i++){
 		//pick a random star...

@@ -425,27 +425,29 @@ function filter_and_sort_company(type, specific){
 }
 
 function switch_view_company(new_view){
-	if (new_view<1) then exit;
-	filter_mode = false;
-	text_bar=0;
-	if (managing<=10 && managing>=0){
-		if (struct_exists(company_data, "reset_squad_surface")){
-			company_data.reset_squad_surface();
+	with (obj_controller){
+		if (new_view<1) then exit;
+		filter_mode = false;
+		text_bar=0;
+		if (managing<=10 && managing>=0){
+			if (struct_exists(company_data, "reset_squad_surface")){
+				company_data.reset_squad_surface();
+			}
 		}
-	}
-	scr_ui_refresh();
+		scr_ui_refresh();
 
-	managing = new_view;
-	if (new_view != 0 ){
-		with(obj_managment_panel){instance_destroy();}
-	}
-	if (new_view>10){
-		view_squad=false;
-		company_data={};
-		scr_special_view(new_view);
-	} else {
-		scr_company_view(new_view);		
-		company_data = new scr_company_struct(managing);
+		managing = new_view;
+		if (new_view != 0 ){
+			with(obj_managment_panel){instance_destroy();}
+		}
+		if (new_view>10){
+			view_squad=false;
+			company_data={};
+			scr_special_view(new_view);
+		} else {
+			scr_company_view(new_view);		
+			company_data = new scr_company_struct(managing);
+		}
 	}
 }
 function company_manage_actions(){

@@ -6,7 +6,7 @@ function tooltip_draw(_tooltip="", _width=350, _coords=return_mouse_consts_toolt
 	}
 	if (event_number!=ev_gui){
 		_coords[0] = _coords[0] - __view_get( e__VW.XView, 0 );
-		_coords[0] = _coords[0] - __view_get( e__VW.YView, 0 );
+		_coords[1] = _coords[1] - __view_get( e__VW.YView, 0 );
 	} 
 	array_push(obj_tooltip.queue,{
 		tooltip:_tooltip,

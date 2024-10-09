@@ -377,7 +377,7 @@ function unit_squad(squad_type = undefined, company = undefined) constructor{
 				i--;
 				continue;				
 			}
-			squad_fulfilment[$ squad_unit_types[i]] =0;	//create a fulfilment structure to log members of squad
+			squad_fulfilment[$ squad_unit_types[i]] = 0;	//create a fulfilment structure to log members of squad
 		}
 		var member_length = array_length(members);
 		for (var i=0;i<member_length;i++){
@@ -410,6 +410,7 @@ function unit_squad(squad_type = undefined, company = undefined) constructor{
 			}
 		}		
 	}
+
 	static add_member = function(comp, unit_number){
 		array_push(members, [comp, unit_number]);
 		life_members++;

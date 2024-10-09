@@ -40,3 +40,24 @@ function return_mouse_consts_tooltip(){
 	var consts = return_mouse_consts();
 	return [consts[0]+20, consts[1]]
 }
+
+
+function try_and_report_loop(dev_marker="generic crash",func, turn_end=true){
+	try{
+		func();
+	} catch (_exception){
+		if (turn_end || instance_exists(obj_turn_end) ){
+			scr_popup("debug message {dev_marker}", $"please report the following on the debug forum on the game discord {_exception}")
+		} else {
+			pip=instance_create(0,0,obj_popup);
+			pip.title="debug message {dev_marker}";
+			pip.text=$"please report the following on the debug forum on the game discord {_exception}";
+		}
+	}
+}
+
+
+
+
+
+

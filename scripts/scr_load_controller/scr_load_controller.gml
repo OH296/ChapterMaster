@@ -167,25 +167,25 @@ function scr_load_controller(save_id){
 	    if (obj_controller.last_raid_form=0) then obj_controller.last_raid_form=3;
 	    j=0;
 
-	   	obj_controller.bat_formation[j]=return_json_from_ini("Formation","form",array_create(15,""));
-	    obj_controller.bat_formation_type[j]=return_json_from_ini("Formation","form_type",array_create(15,0));
+	   	obj_controller.bat_formation=return_json_from_ini("Formation","form",array_create(15,""));
+	    obj_controller.bat_formation_type=return_json_from_ini("Formation","form_type",array_create(15,0));
         default_bat_formation();
 
-        obj_controller.bat_deva_for[j]=return_json_from_ini("Formation","deva",array_create(15,1));
-        obj_controller.bat_assa_for[j]=return_json_from_ini("Formation","assa",array_create(15,4));
-        obj_controller.bat_tact_for[j]=return_json_from_ini("Formation","tact",array_create(15,2));
-        obj_controller.bat_vete_for[j]=return_json_from_ini("Formation","vete",array_create(15,2));
-        obj_controller.bat_hire_for[j]=return_json_from_ini("Formation","hire",array_create(15,3));
-        obj_controller.bat_libr_for[j]=return_json_from_ini("Formation","libr",array_create(15,3));
-        obj_controller.bat_comm_for[j]=return_json_from_ini("Formation","comm",array_create(15,3));
-        obj_controller.bat_tech_for[j]=return_json_from_ini("Formation","tech",array_create(15,3));
-        obj_controller.bat_term_for[j]=return_json_from_ini("Formation","term",array_create(15,3));
-        obj_controller.bat_hono_for[j]=return_json_from_ini("Formation","hono",array_create(15,3));
-        obj_controller.bat_drea_for[j]=return_json_from_ini("Formation","drea",array_create(15,5));
-        obj_controller.bat_rhin_for[j]=return_json_from_ini("Formation","rhin",array_create(15,6));
-        obj_controller.bat_pred_for[j]=return_json_from_ini("Formation","pred",array_create(15,7));
-        obj_controller.bat_land_for[j]=return_json_from_ini("Formation","land",array_create(15,7));
-        obj_controller.bat_scou_for[j]=return_json_from_ini("Formation","scou",array_create(15,1));
+        obj_controller.bat_deva_for=return_json_from_ini("Formation","deva",array_create(15,1));
+        obj_controller.bat_assa_for=return_json_from_ini("Formation","assa",array_create(15,4));
+        obj_controller.bat_tact_for=return_json_from_ini("Formation","tact",array_create(15,2));
+        obj_controller.bat_vete_for=return_json_from_ini("Formation","vete",array_create(15,2));
+        obj_controller.bat_hire_for=return_json_from_ini("Formation","hire",array_create(15,3));
+        obj_controller.bat_libr_for=return_json_from_ini("Formation","libr",array_create(15,3));
+        obj_controller.bat_comm_for=return_json_from_ini("Formation","comm",array_create(15,3));
+        obj_controller.bat_tech_for=return_json_from_ini("Formation","tech",array_create(15,3));
+        obj_controller.bat_term_for=return_json_from_ini("Formation","term",array_create(15,3));
+        obj_controller.bat_hono_for=return_json_from_ini("Formation","hono",array_create(15,3));
+        obj_controller.bat_drea_for=return_json_from_ini("Formation","drea",array_create(15,5));
+        obj_controller.bat_rhin_for=return_json_from_ini("Formation","rhin",array_create(15,6));
+        obj_controller.bat_pred_for=return_json_from_ini("Formation","pred",array_create(15,7));
+        obj_controller.bat_land_for=return_json_from_ini("Formation","land",array_create(15,7));
+        obj_controller.bat_scou_for=return_json_from_ini("Formation","scou",array_create(15,1));
 
 
 	    obj_controller.useful_info=ini_read_string("Controller","useful_info",""); 
