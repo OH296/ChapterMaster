@@ -1,4 +1,6 @@
 
+
+try_and_report_loop("enemy fleet main end turn action",function(){
 var orb=orbiting;
 
 if (round(owner)!=eFACTION.Imperium) and (navy=1) then owner= noone;
@@ -1064,7 +1066,7 @@ else if (action="move") and (action_eta<5000){
 
 
 
-
+});
 
 /* */
 /*  */

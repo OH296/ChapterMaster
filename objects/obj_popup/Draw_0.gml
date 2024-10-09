@@ -1,5 +1,10 @@
 
+
+//TODO refactor this entire turd of a construct
 if (hide=true) then exit;
+if (image=="debug"){
+    size=3;
+}
 
 var romanNumerals=scr_roman_numerals();
 var xx,yy;
@@ -178,18 +183,19 @@ if ((zoom=0) and (type<=4)) or (type=98){
         draw_sprite_ext(spr_popup_medium,type,xx+((1600-sprite_width)/2),yy+((900-sprite_height)/2),1,y_scale,0,c_white,1);
         if (image!=""){image_wid=100;image_hei=100;}
     }
-    if (size=1){
+    else if (size=1){
         sprite_index=spr_popup_small;
         image_alpha=0;
         widd=sprite_width-10;
         draw_sprite_ext(spr_popup_small,type,xx+((1600-sprite_width)/2),yy+((900-sprite_height)/2),1,y_scale,0,c_white,1);
         if (image!=""){image_wid=150;image_hei=150;}
     }
-    if (size=3){
+    else if (size=3){
         sprite_index=spr_popup_large;
         image_alpha=0;
         widd=sprite_width-50;
-        draw_sprite_ext(spr_popup_large,type,xx+((1600-sprite_width)/2),yy+((900-sprite_height)/2),1,y_scale,0,c_white,1);
+        var draw_y_scale = image=="debug"? y_scale*1.5 : y_scale;
+        draw_sprite_ext(spr_popup_large,type,xx+((1600-sprite_width)/2),yy+((900-sprite_height)/2),1,draw_y_scale,0,c_white,1);
         if (image!=""){image_wid=200;image_hei=200;}
     }
     
@@ -217,13 +223,15 @@ if ((zoom=0) and (type<=4)) or (type=98){
     if (instance_exists(obj_turn_end)){
         if (obj_turn_end.popups>0) then draw_text(x1+20,y1+(sprite_height*0.07),string_hash_to_newline(string(obj_turn_end.current_popup)+"/"+string(obj_turn_end.popups)));
     }
-    
-    if (image=""){
+    if (image=="debug"){
+        draw_text_ext(x1+5,y1+(sprite_height*0.18),string_hash_to_newline(string(text)),-1,sprite_width-10);
+    }
+    else if (image=""){
         if (size=1) then draw_text_ext(x1+5,y1+(sprite_height*0.18),string_hash_to_newline(string(text)),-1,widd);
         if (size!=1) then draw_text_ext(x1+25,y1+(sprite_height*0.18),string_hash_to_newline(string(text)),-1,widd);
         str_h=string_height_ext(string_hash_to_newline(string(text)),-1,widd)+(sprite_height*0.18);
     }
-    if (image!=""){
+    else if (image!=""){
         if (size=1) then draw_text_ext(x1+15+image_wid,y1+(sprite_height*0.18),string_hash_to_newline(string(text)),-1,widd);
         if (size!=1) then draw_text_ext(x1+35+image_wid,y1+(sprite_height*0.18),string_hash_to_newline(string(text)),-1,widd);
         str_h=string_height_ext(string_hash_to_newline(string(text)),-1,widd)+(sprite_height*0.18);

@@ -26,12 +26,20 @@ if (ai_c>=0) then ai_c-=1;
 if (ai_d>=0) then ai_d-=1;
 if (ai_e>=0) then ai_e-=1;
 // Sets up enemy ai beheaviour
-if (ai_a==0) then scr_enemy_ai_a();
-if (ai_b==0) then scr_enemy_ai_b();
-if (ai_c==0) then scr_enemy_ai_c();
-if (ai_d==0) then scr_enemy_ai_d();
+if (ai_a==0){
+    try_and_report_loop("enemy ai a",scr_enemy_ai_a);
+}
+if (ai_b==0) {
+    try_and_report_loop("enemy ai b",scr_enemy_ai_b);
+}
+if (ai_c==0)  {
+    try_and_report_loop("enemy ai c",scr_enemy_ai_c);
+}
+if (ai_d==0) {
+    try_and_report_loop("enemy ai d",scr_enemy_ai_d);
+}
 if (ai_e==0){
-    scr_enemy_ai_e();
+    try_and_report_loop("enemy ai e",scr_enemy_ai_e);
 }
 //big ol temporary way
 system_player_ground_forces = array_reduce(p_player, function(prev, curr) {

@@ -44,7 +44,7 @@ if (instance_number(obj_temp_inq) < target_navy_number){
 	}
     with(obj_star) {
         var sco=0;
-        for(var o=1; o<=4; o++){
+        for(var o=1; o<=planets; o++){
             if (p_type[o]="Hive") then sco+=3;
             if (p_type[o]="Temperate") then sco+=1;
         }

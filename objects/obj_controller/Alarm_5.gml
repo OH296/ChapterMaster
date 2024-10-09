@@ -1,5 +1,7 @@
 // TODO script description: This is the turn management in general 
 // TODO refactor
+
+try_and_report_loop("final end turn alarm 5",function(){
 var times=max(1,round(turn/150));
 var recruit_count=0;
 var random_marine, marine_position;
@@ -19,8 +21,8 @@ var unit;
 try_and_report_loop("chaos_spread", function(){
     if (known[eFACTION.Chaos]==2) and (faction_defeated[eFACTION.Chaos]==0) then times+=1;
     var xx3, yy3, plani, _star;
-    xx3=floor(random(room_width))+1;
-    yy3=floor(random(room_height))+1;
+    xx3=irandom(room_width)+1;
+    yy3=irandom(room_height)+1;
     _star=instance_nearest(xx3,yy3,obj_star);
     plani=floor(random(_star.planets))+1;
 
@@ -48,7 +50,7 @@ try_and_report_loop("chaos_spread", function(){
     }
 
     instance_activate_object(obj_star);
-})
+});
 
 // ** Build new Imperial Ships **
 try_and_report_loop("imperial ship build", function(){
@@ -1304,3 +1306,5 @@ with (obj_p_fleet){
         set_new_player_fleet_course(complex_route);
     }
 }
+
+});
