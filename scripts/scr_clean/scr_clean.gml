@@ -164,8 +164,7 @@ function scr_clean(argument0) {
 					minus = round(minus * (1 - damage_resistance));
 				}
 
-				if (minus < 0) then minus = 0.15;
-				if (minus = 0.15) and(hostile_weapon == "Fleshborer") then minus = 1.5;
+				if (minus < 0) and (hostile_weapon == "Fleshborer") then minus = 1.5;
 				if (hostile_weapon = "Web Spinner") {
 					var webr = floor(random(100)) + 1;
 					var chunk = max(10, 62 - (marine_ac[you] * 2));
@@ -200,11 +199,14 @@ function scr_clean(argument0) {
 					}
 					units_lost++; // marine_type[you]="";
 
-					men -= 1;
-					if (unit.IsSpecialist("dreadnoughts")) then dreads -= 1;
+					if (unit.IsSpecialist("dreadnoughts")){
+						dreads -= 1;
+					} else {
+						men -= 1;
+					}
 					obj_ncombat.player_forces -= 1;
 					marine_dead[you] = 1;
-					if (obj_ncombat.red_thirst = 1) and(marine_type[you] != "Death Company") and((obj_ncombat.player_forces / obj_ncombat.player_max) < 0.9) then obj_ncombat.red_thirst = 2;
+					if (obj_ncombat.red_thirst = 1) and(unit.role() != "Death Company") and((obj_ncombat.player_forces / obj_ncombat.player_max) < 0.9) then obj_ncombat.red_thirst = 2;
 				}
 			}
 		}
@@ -214,7 +216,7 @@ function scr_clean(argument0) {
 		}
 	}
 
-	if (men + veh <= 0) {
+	if (men + veh + dreads<= 0) {
 		var right = instance_nearest(1000, y, obj_pnunit);
 		if (right.id = self.id) then with(obj_pnunit) {
 			x += 10;
