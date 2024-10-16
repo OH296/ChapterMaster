@@ -124,16 +124,19 @@ function scr_clean(argument0) {
 
 		repeat(hostile_shots) {
 			if (men > 0) then you = floor(random(men)) + 1; // Need a max_men / max_veh    for the amount of them initialized
-			repeat(700) { // This gets a different mahreen if it is not valid
-				if (you>=array_length(unit_struct)) then break;
+			repeat(array_length(unit_struct)) { // This gets a different mahreen if it is not valid
+				
 				unit = unit_struct[you];
-				if (!is_struct(unit)) then
-				continue;
+				if (!is_struct(unit)) then continue;
 				if (unit.hp() <= 0) {
-					if (you = 1) then going_up = 1;
+					//TODO have a logic for passing shots off to other places
+					if (you = 0) then going_up = 1;
 					if (going_up = 0) and(you > 0) you -= 1;
-					if (going_up = 1) then you += 1;
-					if (going_up = 1) and(you = 950) then going_up = 0;
+					if (going_up = 1 && you<array_length(unit_struct)) then you ++;
+					if (going_up = 1) and (you == array_length(unit_struct)){
+						going_up = 0;
+						you = 0;
+					}
 				}
 			}
 
