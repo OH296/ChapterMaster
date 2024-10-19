@@ -834,9 +834,13 @@ function scr_initialize_custom() {
 		techs += 6;
 		tenth -= 6;
 	}
-	if scr_has_adv("Melee Enthusiasts") {
+	if scr_has_adv("Assault Doctrine") {
 		assault += 10;
 		devastator -= 10;
+	}
+	if scr_has_adv("Devastator Doctrine") {
+		assault -= 10;
+		devastator += 10;
 	}
 	if scr_has_adv("Siege Masters") {
 		siege = 1;
@@ -1872,7 +1876,7 @@ function scr_initialize_custom() {
 			}],
 		]
 	};
-	if (global.chapter_name == "Salamanders") or (array_contains(obj_creation.adv, "Crafters")) { //salamanders squads
+	if (global.chapter_name == "Salamanders") or (scr_has_adv ("Crafters") and ("Assault Docrine")) { //salamanders squads
 		variable_struct_set(st, "assault_squad", [
 			[roles.assault, {
 				"max": 9,
@@ -4036,13 +4040,13 @@ function scr_initialize_custom() {
 	// if (string_count("Crafter",strin)>0) and (string_count("Enthusi",strin)>0) then equipment_number[1]=20;
 	// if (string_count("Crafter",strin)>0) and (string_count("Enthusi",strin)=0) then equipment_number[2]=20;
 
-	if (string_count("Crafter", strin) > 0) and(string_count("Enthusi", strin) > 0) {
+	if scr_has_adv ("Crafter") and ("Assault Doctrine") {
 		eqi += 1;
 		equipment[eqi] = "MK3 Iron Armour";
 		equipment_number[eqi] = round(random_range(2, 12));
 		equipment_type[eqi] = "armour";
 	}
-	if (string_count("Crafter", strin) > 0) and(string_count("Enthusi", strin) = 0) {
+	if scr_has_adv ("Crafter") and ("Assault Doctrine") {
 		eqi += 1;
 		equipment[eqi] = "MK4 Maximus";
 		equipment_number[eqi] = round(random_range(3, 18));
