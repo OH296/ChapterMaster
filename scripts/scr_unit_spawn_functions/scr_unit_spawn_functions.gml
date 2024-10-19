@@ -393,7 +393,7 @@ function scr_marine_game_spawn_constructions(){
 			if (religion != "cult_mechanicus") {
 				religion_sub_cult = "none";
 			}
-			if (array_contains(obj_ini.adv, "Crafters")) {
+			if scr_has_adv ("Crafters") {
 				if (irandom(2) == 0) {
 					add_trait("crafter");
 				}

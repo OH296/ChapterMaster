@@ -397,7 +397,7 @@ function scr_draw_unit_image(_background=false){
         // Sets up the description for the equipement of current marine            
 
         if (array_contains([UnitSpecialization.Chaplain, UnitSpecialization.WolfPriest, UnitSpecialization.Librarian], unit_specialization) || unit_role=="Chapter Master"){
-            if (array_contains(obj_ini.adv, "Reverent Guardians")){
+            if scr_has_adv("Reverent Guardians"){
                 reverent_guardians=1
             }
         }
@@ -668,7 +668,7 @@ function scr_draw_unit_image(_background=false){
                     dev_trait=1
                 }
                 if (unit_specialization == UnitSpecialization.Techmarine){
-                    if (array_contains(obj_ini.adv,"Tech-Brothers")){
+                    if scr_has_adv("Tech-Brothers") {
                         tech_brothers_trait=0
                     }
 				}
@@ -1165,7 +1165,7 @@ function scr_draw_unit_image(_background=false){
                     var psy_hood_offset_x = 0;
                     var psy_hood_offset_y = 0;
                     robes_hood_bypass = true;
-                    if (array_contains(obj_ini.adv,"Daemon Binders") && blandify==0 && psy_hood<7){
+                    if (scr_has_adv("Daemon Binders") && blandify==0 && psy_hood<7){
 						robes_bypass = true;
                         if (pauldron_trim=1){
 							draw_sprite(spr_gear_hood2,0,x_surface_offset-2,y_surface_offset-11);
@@ -1357,11 +1357,11 @@ function scr_draw_unit_image(_background=false){
                 var helm_ii,o,yep;
                 helm_ii=0;
 				yep=0;
-                if (array_contains(obj_ini.adv,"Tech-Brothers")){
+                if scr_has_adv("Tech-Brothers"){
                     helm_ii=2;
-                }else if (array_contains(obj_ini.adv,"Never Forgive") || obj_ini.progenitor==1){
+                }else if (scr_has_adv("Never Forgive") || obj_ini.progenitor==1){
                     helm_ii=3;
-                } else if (array_contains(obj_ini.adv,"Reverent Guardians")) {
+                } else if scr_has_adv("Reverent Guardians") {
                     helm_ii=4;
                 }
                 draw_sprite(spr_honor_helm,helm_ii,x_surface_offset-2,y_surface_offset-11);     
