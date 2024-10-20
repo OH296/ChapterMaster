@@ -410,7 +410,7 @@ global.trait_list = {
 		weapon_skill : [2,2],
 		display_name : "Duelist",
 		flavour_text:"a superlative duelist favoring traditional dueling weaponry",
-		effect:"Bonus to using swords and advantages in duels",
+		effect:"Bonus to using powered weapons and advantages in duels",
 
 	},
 	"siege_master" : {
@@ -2009,7 +2009,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 					melee_att*=1.1;
 					explanation_string+=$"{global.trait_list.brawler.display_name}: x1.1#";
 				}
-				if (primary_weapon.has_tag("sword") && has_trait("duelist")){
+				if (primary_weapon.has_tag("power") && has_trait("duelist")){
 					melee_att*=1.3;
 					explanation_string+=$"{global.trait_list.duelist.display_name}: x1.3#";
 				}				

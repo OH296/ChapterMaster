@@ -1876,7 +1876,7 @@ function scr_initialize_custom() {
 			}],
 		]
 	};
-	if (global.chapter_name == "Salamanders") or (scr_has_adv ("Crafters") and ("Assault Docrine")) { //salamanders squads
+	if (global.chapter_name == "Salamanders") or scr_has_adv ("Crafters") { //salamanders squads
 		variable_struct_set(st, "assault_squad", [
 			[roles.assault, {
 				"max": 9,
