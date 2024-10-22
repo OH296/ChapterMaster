@@ -2491,24 +2491,38 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
         }
         return item_desc_tooltip
     }
+    static tag_sets = {
+    	"energy" : ["plasma", "las"],
+    	"melee" : ["sword", "spear", "fist", "axe"],
+    }
 
+    static evaluate_tag_set(tag){
+    	var _in_set = false;
+    	if (struct_exists(tag_sets, tag)){
+    		for (var i=0;i<array_length(tag_sets[tag]);i++){
+    			_in_set = has_tag(tag_sets[tag][i]);
+    			if (_in_set) then break;
+    		}
+    	}
+    	return _in_set;
+    }
     static has_tag =  function(tag){
-        return array_contains(tags, tag);
+    	var _has_tag = false;
+        _has_tag =  array_contains(tags, tag);
+        if (!_has_tag){
+        	_has_tag = evaluate_tag_set(tag);
+        }
+        return _has_tag;
     }
 
     static has_tags =  function(search_tags){
         var satisfied=false;
         var wanted_tags_length=array_length(search_tags);
-        for (var i=0;i<array_length(tags);i++){
-            for (var s=0;s<wanted_tags_length;s++){
-                if (search_tags[s]==tags[i]){
-                    satisfied=true;
-                    break;
-                }
-            }
-            if (satisfied) then break;
-        }
-        return satisfied;
+		for (var s=0;s<wanted_tags_length;s++){
+			satisfied = has_tag(search_tags[s]);
+			if (satisfied) then break;
+		}
+		return satisfied;
     }
 
     static has_tags_all = function(search_tags, require_all=false){
@@ -2524,6 +2538,16 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
                         satisfied=true;
                         break;
                     }
+                } else {
+                	if (evaluate_tag_set(search_tags[s])){
+	                    array_delete(search_tags,s,1);
+	                    wanted_tags_length--;
+	                    s--;
+	                    if (wanted_tags_length==0){
+	                        satisfied=true;
+	                        break;
+	                    }                		
+                	}
                 }
             }
             if (satisfied) then break;
