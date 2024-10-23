@@ -104,6 +104,7 @@ if ((messages>0) and (messages_shown<8)) and (messages_shown<=100){
         
         if (message_priority[that]=135) then newline_color="blue";
         if (message_priority[that]=136) then newline_color="blue";
+        if (string_count("lost",newline)>0) then newline_color="red";
         
         scr_newtext();
         messages_shown+=1;

@@ -18,6 +18,7 @@ function scr_clean(target_object, target_is_infantry, hostile_shots, hostile_dam
         var vehicle_hits = 0;
         var man_hits = 0;
         var total_hits = hostile_shots;
+        var targets_hit = [];
 
         // ### Vehicle Damage Processing ###
         if (!target_is_infantry and veh > 0) {
@@ -51,6 +52,7 @@ function scr_clean(target_object, target_is_infantry, hostile_shots, hostile_dam
                     minus = 1;
                 }
                 veh_hp[you] -= minus;
+                array_push(targets_hit, veh_type[you]);
                 vehicle_hits++;
 
                 // Check if the vehicle is destroyed
@@ -75,7 +77,7 @@ function scr_clean(target_object, target_is_infantry, hostile_shots, hostile_dam
 
             // Update flavor messages if required
             if (vehicle_hits > 0) {
-                scr_flavor2(units_lost, "", hostile_range, hostile_weapon, vehicle_hits, hostile_splash);
+                scr_flavor2(units_lost, targets_hit, hostile_range, hostile_weapon, vehicle_hits, hostile_splash);
             }
         }
 
@@ -103,6 +105,7 @@ function scr_clean(target_object, target_is_infantry, hostile_shots, hostile_dam
                 var random_index = array_random_index(valid_marines);
                 var marine_index = valid_marines[random_index];
                 var marine = unit_struct[marine_index];
+                array_push(targets_hit, marine_type[marine_index]);
 
                 // Apply damage
                 var minus = hostile_damage - (2 * marine_ac[marine_index]);
@@ -167,7 +170,7 @@ function scr_clean(target_object, target_is_infantry, hostile_shots, hostile_dam
 
             // After processing, update messages if any hits occurred
             if (man_hits > 0) {
-                scr_flavor2(units_lost, "", hostile_range, hostile_weapon, man_hits, hostile_splash);
+                scr_flavor2(units_lost, targets_hit, hostile_range, hostile_weapon, man_hits, hostile_splash);
             }
         }
 

@@ -15,16 +15,17 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
 	j4 = "your formation";
 	j5 = "your vehicles";
 
-	var _hostile_range, _hostile_weapon, _hostile_shots;
+	var _hostile_range, _hostile_weapon, _hostile_shots, _target_type;
 	_hostile_range = 0;
 	_hostile_weapon = "";
 	_hostile_shots = 0;
+	_target_type = target_type;
 
-	if (target_type != "wall") {
+	if (_target_type != "wall") {
 		_hostile_range = hostile_range;
 		_hostile_weapon = hostile_weapon;
 		_hostile_shots = hostile_shots;
-	} else if (target_type = "wall") and(instance_exists(obj_nfort)) {
+	} else if (_target_type = "wall") and(instance_exists(obj_nfort)) {
 		var hehh;
 		hehh = "the fortification";
 
@@ -37,6 +38,10 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
 		_hostile_range = 999;
 		_hostile_weapon = obj_nfort.hostile_weapon;
 		_hostile_shots = obj_nfort.hostile_shots;
+	}
+
+	if (is_array(_target_type)) {
+		_target_type = array_combine_strings(_target_type);
 	}
 
 	if (_hostile_weapon = "Fleshborer") then _hostile_shots = _hostile_shots * 10;
@@ -271,18 +276,17 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
 
 	if (flavor == 0) {
 		flavor = true;
+		show_debug_message(_target_type);
+		show_debug_message(lost_units_count);
 		if (_hostile_shots == 1) {
-			if (lost_units_count == 0) {
-				m1 += $"{_hostile_weapon} strikes, but fails to inflict any casualties.";
-			} else {
-				m1 += $"{_hostile_weapon} strikes. ";
-			}
+			m1 += $"{_hostile_weapon} strikes at {_target_type}";
 		} else {
-			if (lost_units_count == 0) {
-				m1 += $"{_hostile_shots} {_hostile_weapon}s strike, but fail to inflict any casualties.";
-			} else {
-				m1 += $"{_hostile_shots} {_hostile_weapon}s strike. ";
-			}
+			m1 += $"{_hostile_shots} {_hostile_weapon}s strike at {_target_type}";
+		}
+		if (lost_units_count == 0) {
+			m1 += $", but fails to inflict any casualties.";
+		} else {
+			m1 += $". ";
 		}
 	}
 
@@ -290,7 +294,7 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
 
 	// m2="Blah blah blah";
 
-	if (target_type = "wall") {
+	if (target_type == "wall") {
 		mes = m1 + m2 + m3;
 
 		if (string_length(mes) > 3) {
@@ -394,10 +398,18 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
 		if (lost_units_count = 1) then m2 += " has been incapacitated.";
 	}
 
-	mes = m1 + m2 + m3;
 	// show_message(mes);
 
-	if (string_length(mes) > 3) {
+	if (string_length(m1) > 0) {
+		obj_ncombat.messages += 1;
+		obj_ncombat.message[obj_ncombat.messages] = m1;
+		obj_ncombat.message_sz[obj_ncombat.messages] = lost_units_count + (0.5 - (obj_ncombat.messages / 100));
+		obj_ncombat.message_priority[obj_ncombat.messages] = 0;
+		obj_ncombat.alarm[3] = 2;
+	}
+
+	mes = m2 + m3;
+	if (string_length(mes)) {
 		obj_ncombat.messages += 1;
 		obj_ncombat.message[obj_ncombat.messages] = mes;
 		obj_ncombat.message_sz[obj_ncombat.messages] = lost_units_count + (0.5 - (obj_ncombat.messages / 100));
