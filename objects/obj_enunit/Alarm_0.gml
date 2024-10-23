@@ -11,11 +11,11 @@ var leftest,charge=0,enemy2=0,chapter_fuck=1,unit;
 
 // with(obj_pnunit){if (x<-4000) or (defenses=1) then instance_deactivate_object(id);}
 
-if (flank=0){
+if (!flank){
     leftest=get_leftmost(obj_enunit);// Left most enunit
     enemy=get_rightmost();// Right most enemy
     enemy2=enemy;
-    if (enemy=="none"){
+    if (enemy=="none"||leftest=="none"){
         exit;
     }
     // if (collision_point(x-10,y,obj_pnunit,0,1)) then engaged=1;
@@ -25,9 +25,7 @@ if (flank=0){
     if (leftest.id=self.id) and (!instance_exists(obj_nfort)){
         if (position_empty(x-10,y)) and (point_distance(x,y,enemy.x,enemy.y)>10){
             with(obj_enunit){
-                if (!flank){
-                    move_unit_block("west");
-                }
+                move_unit_block("west");
             }
         }
     }
@@ -37,14 +35,14 @@ if (flank=0){
     // instance_activate_object(obj_cursor);
 }
 else if (flank=1){
-    enemy=get_leftmost(obj_pnunit);// Right most enemy
+    enemy=get_leftmost();
     enemy2=enemy;
     if (enemy=="none"){
         exit;
     }
     // if (collision_point(x+10,y,obj_pnunit,0,1)) then engaged=1;
     // if (!collision_point(x+10,y,obj_pnunit,0,1)) then engaged=0;
-    if (!position_empty(x+10,y)){
+    if (position_empty(x+10,y)){
         move_unit_block("east");
     } else if (!position_empty(x+10,y)){
         engaged=true;// Quick smash
@@ -53,9 +51,9 @@ else if (flank=1){
 }
 
 //In melee check
-engaged = (collision_point(x+10,y,obj_pnunit,0,1) || collision_point(x-10,y,obj_pnunit,0,1));
+engaged = point_distance(x,0,enemy.x,0)<=10 || !position_empty(x+flank?10:-10,y);
 
-
+show_debug_message($"enemy is in melee {engaged}")
 
 if (!engaged){// Shooting
     var i=0,dist=999,block=0;
@@ -139,7 +137,7 @@ if (!engaged){// Shooting
                         }
                     }
                     if (cm_present){
-                        enemy=cm_block);
+                        enemy=cm_block;
                         chapter_fuck=cm_index;
                     }
                 }
@@ -237,7 +235,7 @@ if (!engaged){// Shooting
     }
 }
 
-else if ((engaged=1 || enemy.engaged=1) and target_block_is_valid( enemy,obj_pnunit)){// Melee
+else if ((engaged || enemy.engaged) and target_block_is_valid( enemy,obj_pnunit)){// Melee
     engaged=1;
     var i=0,dist=999,no_ap=1;
     // dist=point_distance(x,y,enemy.x,enemy.y)/10;
@@ -262,25 +260,24 @@ else if ((engaged=1 || enemy.engaged=1) and target_block_is_valid( enemy,obj_pnu
             }                
             dist=get_block_distance(enemy);
         } 
-
-        if (_armour_piercing=1) and (instance_exists(obj_nfort)) and (!flank){// Huff and puff and blow the wall down
-            enemy=instance_nearest(x,y,obj_nfort);
-            scr_shoot(i,enemy,1,"arp","wall");
-            continue;
-        }
         
         
         if (apa[i]=0) or (apa[i]<att[i]) then no_ap+=1;
-        
-        if  (range[i]>=dist) and ((range[i]<=2) or ((floor(range[i])!=range[i]))){// Weapon meets preliminary checks
-            if (apa[i]>att[i]) then _armour_piercing=1;// Determines if it is _armour_piercing or not
-            
+        show_debug_message($"{range[i]},{att[i]},{apa[i]},{wep[i]},{enemy}")
+        if  ((range[i]<=2) or ((floor(range[i])!=range[i]))){// Weapon meets preliminary checks
+            if (apa[i]>0) then _armour_piercing=1;// Determines if it is _armour_piercing or not
+            if (_armour_piercing) and (instance_exists(obj_nfort)) and (!flank){// Huff and puff and blow the wall down
+                enemy=instance_nearest(x,y,obj_nfort);
+                scr_shoot(i,enemy,1,"arp","wall");
+                continue;
+            }            
             if (_armour_piercing){// Check for vehicles
                 var g=0,good=0,enemy2;
                 
                 if (block_has_armour(enemy)){
                     // good=scr_target(enemy,"veh");// First target has vehicles, blow it to hell
                     scr_shoot(i,enemy,1,"arp","melee");
+                    good = true;
                 }
                 if (!good) then _armour_piercing=0;// Fuck it, shoot at infantry
             }

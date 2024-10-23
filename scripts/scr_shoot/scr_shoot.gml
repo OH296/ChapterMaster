@@ -5,6 +5,7 @@ function scr_shoot(weapon_index_position, target_object, target_type, damage_dat
 	// target_type: Target dudes
 	// damage_data: "att" or "arp" or "highest"
 	// melee_or_ranged: melee or ranged
+	show_debug_message(wep[weapon_index_position]);
 
 	// This massive clusterfuck of a script uses the newly determined weapon and target data to attack and assign damage
 	for (var j = 1; j <= 100; j++) {

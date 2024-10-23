@@ -18,6 +18,7 @@ function target_block_is_valid(target, desired_type){
 	}
 	return _is_valid;
 }
+
 function get_rightmost(block_type=obj_pnunit){
 	var rightmost = "none";
 	if (instance_exists(block_type)){
