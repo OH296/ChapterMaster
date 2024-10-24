@@ -23,6 +23,15 @@ global.weapons = {
 		"spli": 3,
 		"tags": ["axe"]
 	},
+	"Venom Claws": {
+		"abbreviation": "VenClaw",
+		"attack": 200,
+		"melee_hands": 1,
+		"range": 1,
+		"spli": 3,
+		"tags": ["claw"],
+		"arp": 0,
+	},	
 	"Snazzgun": {
 		"abbreviation": "Snazz",
 		"attack": {
@@ -526,6 +535,7 @@ global.weapons = {
 		"range": 1,
 		"spli": 15,
 		"arp": 1,
+		"maintenance" : 0.1,
 		"tags": ["power", "vehicle", "dual", "dreadnought", "fist"],
 	},
 	"Thunder Hammer": {
@@ -548,6 +558,7 @@ global.weapons = {
 		"spli": 10,
 		"arp": 1,
 		"tags": ["power", "hammer", "siege"],
+		"maintenance" : 0.1,
 		"req_exp": 100,
 	},
 	"Heavy Thunder Hammer": {
@@ -570,6 +581,7 @@ global.weapons = {
 		"spli": 15,
 		"arp": 1,
 		"tags": ["heavy_melee", "power", "hammer", "siege"],
+		"maintenance" : 0.1,
 		"req_exp": 100,
 	},
 	"Power Mace": {
@@ -679,6 +691,7 @@ global.weapons = {
 		"spli": 8,
 		"arp": 1,
 		"special_properties": ["Parry"],
+		"maintenance" : 0.1,
 		"tags": ["power", "sword"],
 	},
 	"Bolt Pistol": {
@@ -805,7 +818,8 @@ global.weapons = {
 		"range": 1,
 		"spli": 10,
 		"arp": 1,
-		"tags": ["power", "vehicle", "dual", "dreadnought", "fist"]
+		"tags": ["power", "vehicle", "dual", "dreadnought", "fist"],
+		"maintenance" : 0.1,
 	},
 	"Close Combat Weapon": {
 		"abbreviation": "CCW",
@@ -819,7 +833,8 @@ global.weapons = {
 		"range": 1,
 		"spli": 10,
 		"arp": 1,
-		"tags": ["vehicle", "dreadnought", "flame", "fist"]
+		"tags": ["vehicle", "dreadnought", "flame", "fist"],
+		"maintenance" : 0.1,
 	},
 	"Inferno Cannon": {
 		"abbreviation": "InfCann",
@@ -1320,7 +1335,8 @@ global.weapons = {
 		"range": 4.1,
 		"spli": 2,
 		"arp": 1,
-		"tags": ["vehicle", "Sponson", "melta"]
+		"tags": ["vehicle", "Sponson", "melta"],
+		"maintenance" : 0.05,
 	},
 	"Twin Linked Volkite Culverin Sponsons": {
 		"abbreviation": "TwnVlkCulvs",
@@ -1369,7 +1385,8 @@ global.weapons = {
 		"range": 2.1,
 		"spli": 4,
 		"arp": -1,
-		"tags": ["flame", "vehicle", "sponson"]
+		"tags": ["flame", "vehicle", "sponson"],
+		"maintenance" : 0.05,
 	},
 	"Volkite Culverin Sponsons": {
 		"abbreviation": "VlkClvs",
@@ -1417,7 +1434,8 @@ global.weapons = {
 		"range": 10,
 		"spli": 6,
 		"arp": 0,
-		"tags": ["bolt"]
+		"tags": ["bolt"],
+		"maintenance" : 0.03,
 	},
 	"Flamer": {
 		"abbreviation": "Flmr",
@@ -1438,7 +1456,8 @@ global.weapons = {
 		"range": 2.1,
 		"spli": 3,
 		"arp": -1,
-		"tags": ["flame"]
+		"tags": ["flame"],
+		"maintenance" : 0.01,
 	},
 	"Underslung Flamer": {
 		"attack": {
@@ -1508,7 +1527,8 @@ global.weapons = {
 		"spli": 5,
 		"arp": 1,
 		"special_description": "Spell Damage +100%",
-		"tags": ["force", ]
+		"tags": ["force" ],
+		"maintenance" : 0.1,
 	},
 	"Force Sword": {
 		"abbreviation": "FrcSwrd",
@@ -1532,6 +1552,7 @@ global.weapons = {
 		"special_description": "Spell damage +25%",
 		"special_properties": ["Parry"],
 		"tags": ["force", "sword"],
+		"maintenance" : 0.1,
 	},
 	"Force Axe": {
 		"abbreviation": "FrcAxe",
@@ -1746,6 +1767,7 @@ global.gear = {
 			"description": "Terminator Armour is the strongest and most powerful armour designed by humanity, available only to the veterans of the Adeptus Astartes. The Indomitus Pattern is the most widespread and versatile pattern as of M41.",
 			"tags": ["terminator"],
 			"req_exp": 100,
+			"maintenance" : 0.3,
 		},
 		"Dreadnought": {
 			"abbreviation": "Drdnght",
@@ -1768,6 +1790,7 @@ global.gear = {
 			"ranged_hands": 8,
 			"description": "A massive war-machine that can be piloted by an honored Astarte, who otherwise would have fallen in combat. Some of the Astartes consider this a fate worse than death",
 			"tags": ["dreadnought"],
+			"maintenance" : 1,
 		},
 		"Tartaros": {
 			"abbreviation": "Tartrs",
@@ -1791,6 +1814,7 @@ global.gear = {
 			"description": "This pattern is possibly considered the most advanced form of Terminator Armour, providing greater mobility for the wearer compared to the Indomitus with no loss in durability. In the M41 considered to be incredibly rare with wars being fought to secure more suits.",
 			"tags": ["terminator"],
 			"req_exp": 100,
+			"maintenance" : 0.5,
 		},
 		"Cataphractii Pattern Terminator": {
 			"abbreviation": "Catphr",
@@ -1814,6 +1838,7 @@ global.gear = {
 			"description": "Among the first issued to the Space Marine Legions. Having additional plating and shield generators installed within the shoulder pads resulted in severe straining of the suit's exoskeleton and reduced the wearer's maneuverability, leading to its decline among some legions.",
 			"tags": ["terminator"],
 			"req_exp": 100,
+			"maintenance" : 0.75,
 		},
 		"Ork Armour": {
 			"abbreviation": "OrkArm",
@@ -1872,6 +1897,7 @@ global.gear = {
 			},
 			"description": "An ancient set of Power Armor dating back to the early Great Crusade. The Mark III has heavier armor plating but is far heavier then its contemporaries.",
 			"tags": ["power_armour"],
+			"maintenance" : 0.1,
 		},
 		"MK4 Maximus": {
 			"abbreviation": "MK4",
@@ -1892,6 +1918,7 @@ global.gear = {
 			},
 			"description": "Power Armor dating back to the end of the Great Crusade. It is considered the pinnacle of Power Armor by some Astartes. However, the components are no longer reproducible, the knowledge having been lost to time.",
 			"tags": ["power_armour"],
+			"maintenance" : 0.2,
 		},
 		"MK5 Heresy": {
 			"abbreviation": "MK5",
@@ -1912,6 +1939,7 @@ global.gear = {
 			},
 			"description": "A hastily assembled Power Armor that first started appearing during the Horus Heresy to act as a stopgap while new suits were produced and sent to loyalist legions. It excels in close combat but it has limited sensors for ranged combat.",
 			"tags": ["power_armour"],
+			"maintenance" : 0.05,
 		},
 		"MK6 Corvus": {
 			"abbreviation": "MK6",
@@ -1932,6 +1960,7 @@ global.gear = {
 			},
 			"description": "A suit dating back to the Horus Heresy, first tested by the Raven Guard. It contains boosted olfactory and auditory sensors that increase the ranged accuracy of the wearer. This however makes it more fragile to an extent.",
 			"tags": ["power_armour"],
+			"maintenance" : 0.05,
 		},
 		"MK7 Aquila": {
 			"abbreviation": "MK7",
@@ -1952,6 +1981,7 @@ global.gear = {
 			},
 			"description": "The most common power armour of the Adeptus Astartes and the only power armour still widely manufactured by the Imperium.",
 			"tags": ["power_armour"],
+			"maintenance" : 0.01,
 		},
 		"MK8 Errant": {
 			"abbreviation": "MK8",
@@ -1972,6 +2002,7 @@ global.gear = {
 			},
 			"description": "The newest and most advanced of the standard mark power armours as such production has not yet reached maximum capacity creating a supply shortage while chapters rush to get access to them.",
 			"tags": ["power_armour"],
+			"maintenance" : 0.02,
 		},
 		"MK10 Tacticus": {
 			"abbreviation": "MK10",
@@ -2292,368 +2323,6 @@ global.gear = {
 	}
 }
 
-function EquipmentStruct(item_data, core_type,quality="none") constructor{ 
-    //This could be done with 2d arrays [[],[]]
-    var names = ["hp_mod", "description","damage_resistance_mod", "ranged_mod", "melee_mod","armour_value" ,"attack","melee_hands","ranged_hands","ammo","range","spli","arp","special_description", "special_properties", "abbreviation","tags","name","second_profiles","req_exp"];
-    var defaults = [0,"",0,0,0,0,0,0,0,0,0,0,0,"",[],"",[],"",[],0];
-    type = core_type;
-    for (var i=0;i<array_length(names);i++){
-        if (struct_exists(item_data,names[i])){
-            self[$names[i]] = item_data[$names[i]];
-            if (quality!="none"){
-                if (is_struct(self[$names[i]])){
-                    if (struct_exists(self[$names[i]],quality)){
-                        self[$names[i]]=self[$names[i]][$quality];
-                    } else {
-                        self[$names[i]]=self[$names[i]].standard;
-                    }
-                }
-            }            
-        } else {
-            self[$names[i]]=defaults[i];
-        }
-    }
-    variable_struct_set(self, "quality", quality=="none"?"standard":quality);
-
-    static item_tooltip_desc_gen = function(){
-        item_desc_tooltip = "";
-        var stat_order;
-        var item_type = type;
-        if (type==""){
-            if struct_exists(global.gear[$ "armour"],name){
-                item_type = "armour";
-            }
-            else if struct_exists(global.gear[$ "mobility"],name){
-                item_type = "mobility";
-            }
-            else if struct_exists(global.gear[$ "gear"],name){
-                item_type = "gear";
-            }
-            else if struct_exists(global.weapons,name){
-                item_type = "weapon";
-            }
-            else{
-                item_desc_tooltip = "Error: Item not found!";
-                return item_desc_tooltip;
-            }
-        }
-        switch (item_type) {
-            default:
-                stat_order = ["description", "special_description", "quality", "armour_value", "damage_resistance_mod", "hp_mod", "ranged_mod", "melee_mod", "attack", "spli", "range", "ammo", "melee_hands", "ranged_hands", "special_properties", "req_exp", "tags"];
-                break;
-            case "weapon":
-                stat_order = ["description", "special_description", "quality", "attack", "spli", "range", "ammo", "ranged_mod", "melee_mod", "armour_value", "hp_mod", "damage_resistance_mod", "melee_hands", "ranged_hands", "special_properties", "req_exp", "tags"];
-                break;
-            }
-			
-        for (var i = 0; i < array_length(stat_order); i++) {
-            var stat = stat_order[i];
-            switch (stat) {
-                case "description":
-                    if (description!=""){
-                        item_desc_tooltip += $"{description}##"
-                    }
-                    break;
-                case "quality":
-                    if (quality!=""){
-                        item_desc_tooltip += $"Quality: {quality_string_conversion(quality)}##"
-                    }
-                    break;
-                case "armour_value":
-                    if (armour_value!=0){
-                        if item_type = "armour"{
-                            item_desc_tooltip += $"Armour: {armour_value}#"
-                        }
-                        else{
-                            item_desc_tooltip += $"Armour: {format_number_with_sign(armour_value)}#"
-                        }
-                    }
-                    break;
-                case "hp_mod":
-                    if (hp_mod!=0){
-                        item_desc_tooltip += $"Health Mod: {format_number_with_sign(hp_mod)}%#"
-                    }
-                    break;
-                case "damage_resistance_mod":
-                    if (damage_resistance_mod!=0){
-                        item_desc_tooltip += $"Damage Res: {format_number_with_sign(damage_resistance_mod)}%#"
-                    }
-                    break;
-                case "attack":
-                    if (attack!=0){
-                        item_desc_tooltip += $"Damage: {attack}#"
-                    }
-                    break;
-                case "spli":
-                    if (spli>0){
-                        item_desc_tooltip += $"Max Kills: {spli}#"
-                    }
-                    break;
-                case "ranged_mod":
-                    if (ranged_mod!=0){
-                        item_desc_tooltip += $"Ranged Mod: {format_number_with_sign(ranged_mod)}%#"
-                    }
-                    break;
-                case "melee_mod":
-                    if (melee_mod!=0){
-                        item_desc_tooltip += $"Melee Mod: {format_number_with_sign(melee_mod)}%#"
-                    }
-                    break;
-                case "ammo":
-                    if (ammo!=0){
-                        item_desc_tooltip += $"Ammo: {ammo}#"
-                    }
-                    break;
-                case "range":
-                    if (range>1.1){
-                        item_desc_tooltip += $"Range: {range}#"
-                    }
-                    break;
-                case "melee_hands":
-                    if (melee_hands != 0) {
-                        if item_type = "weapon"{
-                            item_desc_tooltip += $"Melee Burden: {melee_hands}#"
-                        }
-                        else{
-                            item_desc_tooltip += $"Melee Burden Cap: {format_number_with_sign(melee_hands)}#"
-                        }
-                    }
-                    break;
-                case "ranged_hands":
-                    if (ranged_hands != 0) {
-                        if item_type = "weapon"{
-                            item_desc_tooltip += $"Ranged Burden: {ranged_hands}#"
-                        }
-                        else{
-                            item_desc_tooltip += $"Ranged Burden Cap: {format_number_with_sign(ranged_hands)}#"
-                        }
-                    }
-                    break;
-                case "special_properties":
-                    var special_properties_array = [];
-                    if (array_length(special_properties)>0){
-                        for (var k = 0; k < array_length(special_properties); k++) {
-                            array_push(special_properties_array, special_properties[k]);
-                        }
-                    }
-                    if (arp>0){
-                        array_push(special_properties_array, "Armour Piercing")
-                    } 
-                    else if (arp<0){
-                        array_push(special_properties_array, "Low Penetration")
-                    }
-                    if (array_length(second_profiles)>0){
-                        for (var h = 0; h < array_length(second_profiles); h++) {
-                            if (string_pos("Integrated", second_profiles[h]) == 0) {
-                                var integrated_member = "Integrated " + second_profiles[h];
-                                array_push(special_properties_array, integrated_member);
-                            }
-                            else{
-                                array_push(special_properties_array, second_profiles[h]);
-                            }
-                        }
-                        //item_desc_tooltip += $"#Properties:#{special_properties_string}#"
-                    }
-                    if (array_length(special_properties_array) > 0){
-                        var special_properties_string = ""
-                        for (var j = 0; j < array_length(special_properties_array); j++) {
-                            special_properties_string += special_properties_array[j]
-                            if (j < array_length(special_properties_array) - 1) {
-                                special_properties_string += ", "
-                            }
-                        }
-                        item_desc_tooltip += $"#Properties:#{special_properties_string}#"
-                    }
-                    break;
-                case "special_description":
-                    if (special_description!=""){
-                        item_desc_tooltip += $"#{special_description}#"
-                    }
-                    break;
-                case "req_exp":
-                    if (req_exp>0){
-                        item_desc_tooltip += $"#Requires {req_exp} EXP#"
-                    }
-                    break;
-                case "tags":
-                    if (array_length(tags)>0){
-                        var tagString = ""
-                        for (var j = 0; j < array_length(tags); j++) {
-                            tagString += tags[j]
-                            if (j < array_length(tags) - 1) {
-                                tagString += ", "
-                            }
-                        }
-                        item_desc_tooltip += $"#Keywords:#{tagString}#"
-                    }
-                    break;
-            }
-        }
-        return item_desc_tooltip
-    }
-
-    static has_tag =  function(tag){
-        return array_contains(tags, tag);
-    }
-
-    static has_tags =  function(search_tags){
-        var satisfied=false;
-        var wanted_tags_length=array_length(search_tags);
-        for (var i=0;i<array_length(tags);i++){
-            for (var s=0;s<wanted_tags_length;s++){
-                if (search_tags[s]==tags[i]){
-                    satisfied=true;
-                    break;
-                }
-            }
-            if (satisfied) then break;
-        }
-        return satisfied;
-    }
-
-    static has_tags_all = function(search_tags, require_all=false){
-        var satisfied=false;
-        var wanted_tags_length=array_length(search_tags);
-        for (var i=0;i<array_length(tags);i++){
-            for (var s=0;s<wanted_tags_length;s++){
-                if (search_tags[s]==tags[i]){
-                    array_delete(search_tags,s,1);
-                    wanted_tags_length--;
-                    s--;
-                    if (wanted_tags_length==0){
-                        satisfied=true;
-                        break;
-                    }
-                }
-            }
-            if (satisfied) then break;
-        }
-        return satisfied;
-    }
-    static owner_data = function(owner){//centralization of bonuses originating from weapon improvements e.g STCs
-        if (owner=="chapter"){
-            if (type=="weapon"){
-                if (obj_controller.stc_bonus[1]>0 && obj_controller.stc_bonus[1]<5){
-                    if (obj_controller.stc_bonus[1]==2 && has_tag("chain")){
-                        attack*=1.07;
-                    } else if (obj_controller.stc_bonus[1]==3 && has_tag("flame")){
-                        attack*=1.1;
-                    }else if (obj_controller.stc_bonus[1]==4 && has_tag("explosive")){
-                        attack*=1.07;
-                    }else if (obj_controller.stc_bonus[1]==1 && has_tag("bolt")){
-                        attack*=1.07;
-                    }
-                }
-                if (obj_controller.stc_bonus[2]>0 && obj_controller.stc_bonus[2]<3){
-                    if (obj_controller.stc_bonus[1]==1 && has_tag("fist")){
-                        attack*=1.1;
-                    } else if (obj_controller.stc_bonus[1]==2 && has_tag("Plasma")){
-                        attack*=1.1;
-                    }                   
-                }
-            }
-        }
-    }      
-}
-function gear_weapon_data(search_area="any",item,wanted_data="all", sub_class=false, quality="standard"){
-    var item_data_set=false;
-    var equip_area=false;
-    gear_areas =  ["gear","armour","mobility"];
-    if (search_area=="any"){
-        data_found=false;
-        for (i=0;i<3;i++){
-           if (struct_exists(global.gear[$ gear_areas[i]],item)){
-                equip_area=global.gear;
-                item_data_set=global.gear[$ gear_areas[i]][$item];
-                data_found=true;
-                search_area=gear_areas[i];
-                break;
-           }
-        }
-        if (!data_found){
-            equip_area=global.weapons;
-            if (struct_exists(equip_area,item)){
-                item_data_set=equip_area[$item];
-                search_area="weapon";
-            }
-        }
-    } else {
-        if (array_contains(gear_areas,search_area)){ 
-            equip_area=global.gear;
-            if (struct_exists(equip_area[$ search_area],item)){
-                item_data_set = equip_area[$ search_area][$ item]
-            }        
-        } else if (search_area=="weapon"){
-           equip_area=global.weapons;
-           if (struct_exists(equip_area,item)){
-                item_data_set=equip_area[$item]
-                search_area="weapon";
-           }
-        }
-    }
-
-    if (is_struct(item_data_set)){
-        if (wanted_data=="all"){
-            item_data_set.name=item;
-            return new EquipmentStruct(item_data_set,search_area,quality);
-        }
-        if (struct_exists(item_data_set, wanted_data)){
-            if (is_struct(item_data_set[$ wanted_data])){
-                if (struct_exists(item_data_set[$ wanted_data], quality)){
-                    return item_data_set[$ wanted_data][$ quality];
-                } else {
-                    if (struct_exists(item_data_set[$ wanted_data],"standard")){
-                        return item_data_set[$ wanted_data][$ "standard"]
-                    } else {
-                        return 0;//default value
-                    }
-                }
-            } else {
-                return item_data_set[$ wanted_data]
-            }
-        } else {
-            return 0;//default value
-        }
-    }    
-    return false;//nothing found
-}
-
-function quality_string_conversion(quality){
-    var quality_conversions = {
-        standard:"Normal",
-        master_crafted:"Master Crafted",
-        artificer:"Articifer",
-        artifact:"Artifact",
-        exemplary:"Exemplary"
-    }
-    if (struct_exists(quality_conversions, quality)){
-        return quality_conversions[$ quality]
-    } else {return "";}
-}
-
-function quality_color(_item_quality){
-    switch(_item_quality){
-        case "standard":
-            return(draw_get_color())
-            break;
-        case "master_crafted":
-            return(#bf9340);
-            break;
-        case "artificer":
-            return(#bf4040);
-            break;
-        case "artifact":
-            return(#40bfbf);
-            break;
-        case "exemplary":
-            return(#80bf40);
-            break;
-    }
-}
-
-function format_number_with_sign(number){
-    return number > 0 ? "+" + string(number) : string(number);
-}
 
 /*
 

@@ -505,6 +505,7 @@
     {"id":{"name":"scr_star_travel_algorithm","path":"scripts/scr_star_travel_algorithm/scr_star_travel_algorithm.yy",},},
     {"id":{"name":"spr_weapon_inferno","path":"sprites/spr_weapon_inferno/spr_weapon_inferno.yy",},},
     {"id":{"name":"spr_cloth_tabbard","path":"sprites/spr_cloth_tabbard/spr_cloth_tabbard.yy",},},
+    {"id":{"name":"scr_equipment_struct","path":"scripts/scr_equipment_struct/scr_equipment_struct.yy",},},
     {"id":{"name":"spr_weapon_relbla","path":"sprites/spr_weapon_relbla/spr_weapon_relbla.yy",},},
     {"id":{"name":"spr_weapon_storm","path":"sprites/spr_weapon_storm/spr_weapon_storm.yy",},},
     {"id":{"name":"spr_weapon_stalker","path":"sprites/spr_weapon_stalker/spr_weapon_stalker.yy",},},

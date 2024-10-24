@@ -8,6 +8,7 @@ function calculate_research_points(turn_end=false){
         var heretics = [], forge_master=-1, notice_heresy=false, forge_point_gen=[], crafters=0, at_forge=0, gen_data={};
         var tech_locations=[]
         var techs = collect_role_group("forge");
+        var cur_tech;
         var total_techs = array_length(techs);
         for (var i=0; i<array_length(techs); i++){
             if (techs[i].IsSpecialist("heads")){
@@ -20,13 +21,14 @@ function calculate_research_points(turn_end=false){
                 continue;
             }
             if (techs[i].technology>40 && techs[i].hp() >0){
-                research_points += techs[i].technology-40;
-                forge_point_gen=techs[i].forge_point_generation(true);
+                var cur_tech = techs[i]
+                research_points += cur_tech.technology-40;
+                forge_point_gen=cur_tech.forge_point_generation(true);
                 gen_data = forge_point_gen[1];
                 if (struct_exists(gen_data,"crafter")) then crafters++;
                 if (struct_exists(gen_data,"at_forge")){
                     at_forge++;
-                    master_craft_chance += (techs[i].experience()/50)
+                    master_craft_chance += (techs[i].experience()/50);
                 }
                 forge_points += forge_point_gen[0];
                 if (techs[i].has_trait("tech_heretic")){
@@ -274,5 +276,46 @@ function research_end(){
     }    
     if (stc_research[$ stc_research.research_focus]>5000*(research_area_limit+1)){
        identify_stc(stc_research.research_focus);  
+    }
+}
+
+
+function apothecary_points_calc(){
+    with (obj_controller){
+        research_points = 0;
+        apoth_points = 0;
+        var heretics = [], forge_master=-1, notice_heresy=false, forge_point_gen=[], crafters=0, at_forge=0, gen_data={};
+        var apoth_locations=[]
+        var apoths = collect_role_group("forge");
+        var total_techs = array_length(techs);
+        for (var i=0; i<array_length(techs); i++){
+            if (techs[i].IsSpecialist("heads")){
+                forge_master=i;
+            }            
+            if (techs[i].in_jail()){
+                array_delete(techs, i, 1);
+                i--;
+                total_techs--;
+                continue;
+            }
+            if (techs[i].technology>40 && techs[i].hp() >0){
+                research_points += techs[i].technology-40;
+                forge_point_gen=techs[i].forge_point_generation(true);
+                gen_data = forge_point_gen[1];
+                if (struct_exists(gen_data,"crafter")) then crafters++;
+                if (struct_exists(gen_data,"at_forge")){
+                    at_forge++;
+                    master_craft_chance += (techs[i].experience()/50)
+                }
+                forge_points += forge_point_gen[0];
+                if (techs[i].has_trait("tech_heretic")){
+                    array_push(heretics, i);
+                }
+            }
+            tech_locations[i] = techs[i].marine_location();
+        }
+        if (forge_master>-1){
+            obj_controller.master_of_forge = techs[forge_master];
+        }
     }
 }

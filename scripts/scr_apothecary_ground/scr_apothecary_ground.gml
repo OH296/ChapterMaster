@@ -8,8 +8,9 @@ function calculate_full_chapter_spread(turn_end=true){
 	var tech_spread = {};
 	var apoth_spread = {};
 	var unit_spread = {};
+	var maintenance_burden=0;
     for(var company=0;company<11;company++){
-    	for (var v=1;v<500;v++){
+    	for (var v=0;v<500;v++){
     		key_val = "";
     		if (obj_ini.name[company][v]=="") then continue;
     		unit = fetch_unit([company, v]);
@@ -21,7 +22,7 @@ function calculate_full_chapter_spread(turn_end=true){
 	    			obj_controller.marines++;
 	    		}
 	    	}
-	                
+	        maintenance_burden += unit.equipment_maintenance_burden();
 		    is_tech = (unit.IsSpecialist("forge") && unit.hp()>=10);
 		    is_healer = (((unit.IsSpecialist("apoth",true) && unit.gear()=="Narthecium") || (unit.role()=="Sister Hospitaler")) && unit.hp()>=10);
 		  	if (mar_loc[2]!="warp"){
@@ -100,7 +101,7 @@ function calculate_full_chapter_spread(turn_end=true){
             }			
 	    }
 	}
-	return [tech_spread,apoth_spread,unit_spread]	
+	return [tech_spread,apoth_spread,unit_spread,maintenance_burden]	
 }
 
 
@@ -110,6 +111,8 @@ function apothecary_simple(turn_end=true){
 	var tech_spread = spreads[0];
 	var apoth_spread = spreads[1];
 	var unit_spread = spreads[2];
+	var tech_points_used = floor(spreads[3]);
+	obj_controller.forge_string += $"Equipment Maintenance : -{tech_points_used}#";
     marines-=1;
 
 	var locations = struct_get_names(unit_spread);
@@ -123,7 +126,6 @@ function apothecary_simple(turn_end=true){
 	var cur_units, cur_apoths, cur_techs, total_heal_points, total_tech_points, veh_health, points_spent, cur_system, features;
 	var p, i, a;
 	var total_bionics = scr_item_count("Bionics");
-	var tech_points_used = 0;
 	for (i=0;i<array_length(locations);i++){
 		cur_system="";
 		if (array_length(unit_spread[$locations[i]]) == 6){

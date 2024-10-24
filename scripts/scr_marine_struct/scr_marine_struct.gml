@@ -2249,7 +2249,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		var reasons = {}
 		var points = 0;
 		if (trained_person){
-			var points = round(technology / 10);
+			var points = round(technology / 5);
 			reasons.trained = points;
 		}
 		if (job!="none"){
@@ -2262,19 +2262,19 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 					points*=2;
 					reasons.at_forge = "x2";
 				}
-				points+=3;
+				points+=6;
 				if (turn_end){
 					add_exp(0.25);
 				}
 			}
 		}
 		if (crafter){
-			points+=3;
-			reasons.crafter = 3;
+			points+=6;
+			reasons.crafter = 6;
 		}
 		if (role()=="Forge Master"){
-			points+=5;
-			reasons.master = 5;
+			points+=10;
+			reasons.master = 10;
 		}
 		return [points,reasons];
 	}
@@ -2432,6 +2432,16 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			};
 		return equip_data;
 	}
+	static equipment_maintenance_burden = function(){
+		var burden = 0.0;
+		burden+=get_armour_data("maintenance");
+		burden+=get_gear_data("maintenance");
+		burden+=get_mobility_data("maintenance");
+		burden+=get_weapon_one_data("maintenance");
+		burden+=get_weapon_two_data("maintenance");
+		return burden;
+	}
+
 	static equipped_artifacts=function(){
 		artis = [
 			weapon_one(true),
