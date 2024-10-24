@@ -111,7 +111,8 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 		// Faction 4 - Inquisition
 			case "Crusader":
 				obj_ini.wep1[target_company][good] = "Power Sword";
-				obj_ini.armuor[target_company][good] = "Power Armour"; // Might want to create "Light Power Armour" that is suited for squishy humans
+				obj_ini.wep2[target_company][good] = "";
+				obj_ini.armour[target_company][good] = "Power Armour"; // Might want to create "Light Power Armour" that is suited for squishy humans
 				obj_ini.gear[target_company][good] = "Combat Shield";
 				obj_ini.experience[target_company][good] = 10;
 				obj_ini.race[target_company][good] = 4;
