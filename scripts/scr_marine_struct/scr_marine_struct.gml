@@ -149,7 +149,7 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			luck : 10, // I don't see the point to make them less lucky than space marines
 			technology : [30,1],
 			skills: {weapons:{"Hellgun":1, "Combat Knife":1}},
-			start_gear:{"armour":"Skitarii Armour", "wep1":"Hellgun", "wep2":"Combat Knife"}, // I need to figure out if I can add a combat knife with this
+			start_gear:{"armour":"Skitarii Armour", "wep1":"Hellgun", "wep2":"Combat Knife"},
 			base_group : "skitarii",
 	},
 	"tech_priest":{
