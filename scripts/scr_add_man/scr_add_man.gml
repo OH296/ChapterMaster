@@ -40,7 +40,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 			switch (man_role) {
 			case "Skitarii":
 				obj_ini.wep1[target_company][good] = "Hellgun";
-				obj_ini.wep2[target_company][good] = ""; // Consider giving the poor fellow a "Combat Knife" or other melee weapon
+				obj_ini.wep2[target_company][good] = "Combat Knife";
 				obj_ini.armour[target_company][good] = "Skitarii Armour";
 				obj_ini.experience[target_company][good] = 10;
 				obj_ini.race[target_company][good] = 3;
