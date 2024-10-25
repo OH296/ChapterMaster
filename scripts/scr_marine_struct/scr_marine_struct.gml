@@ -90,7 +90,7 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			luck :10,
 			technology :[28,3],
 			skills: {weapons:{"bolter":3, "chainsword":3, "ccw":3, "bolt_pistol":3}},
-			start_gear:{"armour":"power_armour", "wep1":"bolter", "wep2":"chainsword"},
+			start_gear:{"armour":"power_armour", "wep1":"bolter", "wep2":"chainsword"}, // Scouts should probably have access only to scout armour, and perhaps some stuff from hirelings
 			base_group : "astartes",
 	},
 	"dreadnought":{
@@ -112,148 +112,190 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			base_group : "astartes",
 			traits:["ancient","slow_and_purposeful","lead_example","zealous_faith",choose("still_standing","beast_slayer","lone_survivor")]
 	},			
+	/* TODO - check and tweak if necessary
+	"chapter_servitor":{
+			title : "Chapter Servitor",
+			strength:[36,4],
+			constitution:[36,3],
+			weapon_skill : [30,2,"max"],
+			ballistic_skill : [30,2,"max"],
+			dexterity:[36,3],
+			intelligence:0,
+			wisdom:0,
+			charisma :[10,1],
+			religion : "imperial_cult",
+			piety : [28,3],
+			luck : 10,
+			technology :[30,3],
+			skills: {weapons:{"Bolter":1, "Chainsword":1, "Combat Knife":1, "Bolt Pistol":1}},
+			start_gear:{"armour":"power_armour", "wep1":"Combat Knife", "gear":"Servo-arm"}, TODO - tweak and check if correct
+			base_group : "astartes",
+			traits:["lobotomized"],
+	},
+	*/
+	// TODO - add more hirelings on the imperial side...
 	"skitarii":{
 			title : "Skitarii",
-			strength:20,
-			constitution:28,
-			weapon_skill : [20,5],
-			ballistic_skill : [20,5],			
-			dexterity:25,
-			intelligence:25,
-			wisdom:10,
-			charisma :5,
+			strength : [12,1], // I don't think skitarii are particularly strong
+			constitution : [15,1],
+			weapon_skill : [12,1],
+			ballistic_skill : [20,1],			
+			dexterity : [25,1],
+			intelligence : [25,1],
+			wisdom : [10,1], // Hm, no, very unwise...
+			charisma : [5,1], // Talking in binary does not help to make many friends
 			religion : "cult_mechanicus",
-			piety : 20,
-			technology :30,
-			luck :5,
-			skills: {weapons:{"hellgun":1,}},	
-			start_gear:{"armour":"skitarii_armour", "wep1":"hellgun"},
+			piety : [20,1],
+			luck : 10, // I don't see the point to make them less lucky than space marines
+			technology : [30,1],
+			skills: {weapons:{"Hellgun":1, "Combat Knife":1}},
+			start_gear:{"armour":"Skitarii Armour", "wep1":"Hellgun", "wep2":"Combat Knife"}, // I need to figure out if I can add a combat knife with this
 			base_group : "skitarii",
 	},
 	"tech_priest":{
-			strength:[12,1],
-			constitution:[30,1],
-			dexterity:[20,1],
-			weapon_skill : [15,5],
-			ballistic_skill : [15,5],				
-			intelligence:[30,3],
-			wisdom:[20,3],
-			charisma :[8,1],
-			religion : "cult_mechanicus",
 			title : "Tech Priest",
+			strength : [15,1],
+			constitution : [30,1],
+			weapon_skill : [15,1],
+			ballistic_skill : [25,3],				
+			dexterity : [25,3],
+			intelligence : [30,3],
+			wisdom : [20,2],
+			charisma : [30,2], // Considering their voicelines in DoW:DC and SS, I'd say they can have charisma
+			religion : "cult_mechanicus",
 			piety : [45,3],
-			luck :6,
-			technology :[55,3],
-			skills: {weapons:{"power_weapon":2,}},	
-			start_gear:{"armour":"dragon_scales", "wep1":"power_weapon"},
+			luck : 10,
+			technology : [55,3],
+			skills: {weapons:{"power_weapon":2,}}, // Does this even work?
+			start_gear:{"armour":"dragon_scales", "wep1":"power_weapon"}, // Gear items are not mentioned here
 			base_group : "tech_priest",
 	},
-	"skitarii_ranger":{
-			title : "Skitarii Ranger",
-			strength:20,
-			constitution:26,
-			weapon_skill : [20,5],
-			ballistic_skill : [20,5],				
-			dexterity:34,
-			intelligence:7,
-			wisdom:2,
-			charisma :2,
-			religion : "cult_mechanicus",
-			piety : 10,
-			technology :8,
-			luck :5,
-			weapon_skill : 35,
-			ballistic_skill : 40,			
-			skills: {weapons:{"ranger_long_rifle":1,}},	
-			start_gear:{"armour":"skitarii_armour", "wep1":"hellgun", "wep2":"shuriken_pistol"},
-			base_group : "skitarii",
+	"skitarii_ranger":{ // TODO rename this
+			title : "Skitarii Ranger", // TODO - that should be Eldar
+			strength : [25,1],
+			constitution : [30,2],
+			weapon_skill : [45,4],
+			ballistic_skill : [45,4],				
+			dexterity : [50,5], // Dexterity should be eldar 'specialization'
+			intelligence : [35,3],
+			wisdom : [50,3],
+			charisma : [20,2], // Arrogance from cultural stuff, supposedly
+			religion : "cult_mechanicus", // TODO - add eldar faith
+			piety : [30,5], // I think eldar rangers can be either - faithful to the path or more cynical
+			luck : 10,
+			technology : [20,1], // Elves in most fiction tend to be kind of bad at technology, right?
+			skills: {
+				weapons:{
+					"Ranger Long Rifle":3, "Shuriken Pistol":3, "Eldar Power Sword":3}}, // TODO - check if these actually work
+			start_gear:{"armour":"Power Armour", "wep1":"Ranger Long Rifle", "wep2":"Eldar Power Sword"}, // TODO - add Eldar Armour
+			base_group : "skitarii", // Might want to rename this
 	},
 	"inquisition_crusader":{
-			title : "Inquisition Crusador",
-			strength:4,
-			constitution:26,
-			dexterity:4,
-			intelligence:3,
-			wisdom:2,
-			charisma :2,
+			title : "Inquisition Crusader",
+			strength : [10,1], // 10 is considered standard for a chad-like Imperial Guardsman
+			constitution : [10,1],
+			weapon_skill : [10,1],
+			ballistic_skill : [10,1],
+			dexterity : [10,1],
+			intelligence : [10,1],
+			wisdom : [12,1], // They may know a bit more than average imperial
+			charisma : [10,1],
 			religion : "imperial_cult",
-			piety : 10,
-			technology :3,
-			luck :4,
-			weapon_skill : 20,
-			ballistic_skill : 14,			
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [30,5], // Supposedly, they can be radical or puritan...
+			luck : 10,
+			technology : [8,1],
+			skills : {}, // TODO consider what skills are needed for this bloke
+			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"}, // TODO - add Light variant of Power Armour
 			base_group : "human",
 	},
+	/* TODO - add psychic capabilities
+	"sanctioned_psyker":{
+			title: "Sanctioned Psyker",
+	}
+	*/
 	"sister_of_battle":{
 			title : "Sister of Battle",
-			strength:5,
-			constitution:28,
-			dexterity:6,
-			intelligence:5,
-			wisdom:5,
-			charisma :2,
+			strength : [10,1],
+			constitution : [10,1], // TODO - consider making it that hireling armour boosts constitution, and possibly other stats
+			weapon_skill : [12,1],
+			ballistic_skill : [12,1],
+			dexterity : [10,1],
+			intelligence : [10,1],
+			wisdom : [10,1],
+			charisma : [10,1],
 			religion : "imperial_cult",
-			piety : 20,
-			technology :3,
-			luck :4,
-			weapon_skill : 25,
-			ballistic_skill : 20,			
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [50,2], // Fanatics, for most part
+			luck : 10,
+			technology : [8,1],
+			skills: {
+				weapons:{
+					"Bolter":1, "Bolt Pistol":1, "Chainsword":1, "Sarissa":1}},
+			start_gear:{"armour":"Power Armour", "wep1":"Bolter", "wep2":"Sarissa"}, // TODO - add Light variants of PA and bolter
 			base_group : "human",
+			// traits:["zealous_faith"],
 	},
 	"sister_hospitaler":{
-			title : "Sister of Battle",
-			strength:5,
-			constitution:28,
-			dexterity:6,
-			intelligence:5,
-			wisdom:5,
-			charisma :5,
+			title : "Sister Hospitaler",
+			strength : [11,1],
+			constitution : [12,1], // We might want to make it that hireling armour boosts constitution
+			weapon_skill : [13,1],
+			ballistic_skill : [13,1],
+			dexterity : [11,1],
+			intelligence : [12,1],
+			wisdom : [11,1],
+			charisma : [10,1],
 			religion : "imperial_cult",
-			piety : 20,
-			technology :3,
-			luck :4,
-			weapon_skill : 25,
-			ballistic_skill : 20,
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [50,2], // Fanatics, for most part
+			luck : 10,
+			technology : [12,1], // They probably know a bit more, due to medical studies
+			skills: {
+				weapons:{
+					"Bolter":2, "Bolt Pistol":2, "Chainsword":2, "Sarissa":2}},
+			start_gear:{"armour":"Power Armour", "wep1":"Bolter", "wep2":"Sarissa", "gear":"Sororitas Medkit"}, // TODO - add Light variants of PA and bolter
 			base_group : "human",
+			// traits:["zealous_faith"],
 	},
-	"ork_sniper":{
+	"ork_sniper":{ // I'm gonna make the stats basically the same as the shoota boy in the stat calculator
 			title : "Ork Sniper",
-			strength:24,
-			constitution:29,
-			dexterity:30,
-			intelligence:10,
-			wisdom:20,
-			charisma :25,
+			strength : [20,2],
+			constitution : [20,2],
+			weapon_skill : [9,1],
+			ballistic_skill : [20,2],
+			dexterity : [6,1],
+			intelligence : [10,1],
+			wisdom : [10,1],
+			charisma : [10,1],
 			religion : "gorkamorka",
-			piety : 20,
-			technology :8,
-			luck :6,
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [20,2], // I'm not sure how would one even properly value this... how attached the ork is to the WAAAGH energy field?
+			luck : 10,
+			technology : [20,2],
+			skills: {
+				weapons:{
+					"Sniper Rifle":1, "Choppa":1}},
+			start_gear:{"armour":"Ork Armour", "wep1":"Sniper Rifle", "wep2":"Choppa"},
 			base_group : "ork",
 	},
-	"flash_git":{
+	"flash_git":{ // For this one, Big shoota ork will be used
 			title : "Flash Git",
-			strength:30,
-			constitution:23,
-			dexterity:15,
-			intelligence:5,
-			wisdom:3,
-			charisma :4,
+			strength : [40,3],
+			constitution : [40,3],
+			weapon_skill : [25,2],
+			ballistic_skill : [40,3],
+			dexterity : [8,1],
+			intelligence : [20,2],
+			wisdom : [20,2],
+			charisma : [14,1],
 			religion : "gorkamorka",
-			piety : 20,
-			technology :2,
-			luck :4,
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [20,2],
+			luck : 10,
+			technology : [30,3],
+			skills: {
+				weapons:{
+					"Sniper Rifle":1, "Snazzgun":2, "Choppa":2}},
+			start_gear:{"armour":"Ork Armour", "wep1":"Snazzgun", "wep2":"Choppa"}, // Consider giving a "Power Klaw" instead of Choppa, and better armour
 			base_group : "ork",
 	}
+	// TODO - add more hireling types
 }
 function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) constructor{
 	constitution=0; strength=0;luck=0;dexterity=0;wisdom=0;piety=0;charisma=0;technology=0;intelligence=0;weapon_skill=0;ballistic_skill=0;size = 0;planet_location=0;
