@@ -800,7 +800,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			scr_recent("honor_promote",name(),company);
 		} else if (new_role==obj_ini.role[100][6]){
 
-            var dread_weapons =["Close Combat Weapon","Force Staff","Lascannon","Assault Cannon","Missile Launcher","Heavy Bolter"];
+            var dread_weapons = ["Close Combat Weapon","Force Staff","Twin Linked Lascannon","Assault Cannon","Missile Launcher","Plasma Cannon", "Multi-Melta", "Twin Linked Heavy Bolter"];
 
             if (!array_contains(dread_weapons,weapon_one())){
                 update_weapon_one("");

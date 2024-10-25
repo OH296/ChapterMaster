@@ -394,7 +394,7 @@ function dreadnought_sprite_components(component){
         "Inferno Cannon": spr_dread_plasma_cannon,
         "Multi-Melta": spr_dread_plasma_cannon,
         "Twin Linked Lascannon": spr_dread_lascannon,
-       "Heavy Conversion Beam Projector": spr_dread_plasma_cannon,
+        "Heavy Conversion Beam Projector": spr_dread_plasma_cannon,
     };
     if (struct_exists(components, component)){
         return components[$ component]

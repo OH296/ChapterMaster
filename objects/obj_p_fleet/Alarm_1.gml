@@ -54,7 +54,7 @@ try_and_report_loop("player alarm 1",function(){
                 if (owner>5) then instance_deactivate_object(id);
                 var enemies = false;
                 for(var i=6;i<13;i++){
-                    if (instance_exists(scr_orbiting_fleet(i))){
+                    if (scr_orbiting_fleet(i)!="none"){
                         enemies =true;
                         break;
                     }

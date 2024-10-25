@@ -323,7 +323,7 @@ function scr_battle_roster(required_location, _target_location, _is_planet) {
                             if (instance_exists(obj_drop_select)) {
                                 world_name = obj_drop_select.p_target.name;
                             }
-                            if (obj_ini.veh_race[company][v] != 0) and(obj_ini.veh_loc[company][v] = world_name) and(unit.planet_location = p_num) then vokay = 2;
+                            if (obj_ini.veh_race[company][v] != 0) and(obj_ini.veh_loc[company][v] = world_name) and(obj_ini.veh_wid[company][v] = p_num) then vokay = 2;
                         }
                         if (!_is_planet) and(obj_ini.veh_lid[company][v] = _target_location) and(obj_ini.veh_hp[company][v] > 0) then vokay = 1;
 
@@ -358,7 +358,7 @@ function scr_battle_roster(required_location, _target_location, _is_planet) {
                                     break;                                    
                             }
 
-                            targ = instance_nearest(col * 10, room_height / 2, obj_pnunit);
+                            targ = instance_nearest(col * 10, 240 / 2, obj_pnunit);
                             targ.veh++;
                             targ.veh_co[targ.veh] = company;
                             targ.veh_id[targ.veh] = v;

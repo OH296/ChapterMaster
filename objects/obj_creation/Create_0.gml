@@ -551,54 +551,54 @@ else if (file_exists("chaptersave#1.ini")=false){
     dis21[4]="Sieged";
     i=100
 	repeat(3){i+=1;// First is for the correct slot, second is for default
-        race_21[i,2]=1;
-        role_21[i,2]="Honour Guard";
-        wep1_21[i,2]="Power Sword";
-        wep2_21[i,2]="Bolter";
-        armour_21[i,2]="Artificer Armour";
-        gear_21[i,2]=""
-        mobi_21[i,2]="";
-        
-        race_21[i,3]=1;
-        role_21[i,3]="Veteran";
-        wep1_21[i,3]="Chainsword";
-        wep2_21[i,3]="Bolter";
-        armour_21[i,3]="Power Armour";
-        gear_21[i,3]=""
-        mobi_21[i,3]="";
-        
-        race_21[i,4]=1;
-        role_21[i,4]="Terminator";
-        wep1_21[i,4]="Power Fist";
-        wep2_21[i,4]="Storm Bolter";
-        armour_21[i,4]="Terminator Armour";
-        gear_21[i,4]=""
-        mobi_21[i,4]="";
-        
-        race_21[i,5]=1;
-        role_21[i,5]="Captain";
-        wep1_21[i,5]="Power Sword";
-        wep2_21[i,5]="Bolt Pistol";
-        armour_21[i,5]="Power Armour";
-        gear_21[i,5]="Iron Halo";
-        mobi_21[i,15]="";
-        
-        
-        race_21[i,6]=1;
-        role_21[i,6]="Dreadnought";
-        wep1_21[i,6]="Close Combat Weapon";
-        wep2_21[i,6]="Lascannon";
-        armour_21[i,6]="Dreadnought";
-        gear_21[i,6]=""
-        mobi_21[i,6]="";
-        
-        race_21[i,7]=1;
-        role_21[i,7]="Champion";
-        wep1_21[i,7]="Power Sword";
-        wep2_21[i,7]="Bolt Pistol";
-        armour_21[i,7]="Power Armour";
-        gear_21[i,7]="Combat Shield"
-        mobi_21[i,7]="";
+	race_21[i,2]=1;
+    role_21[i,2]="Honour Guard";
+    wep1_21[i,2]="Power Sword";
+    wep2_21[i,2]="Bolter";
+    armour_21[i,2]="Artificer Armour";
+	gear_21[i,2]=""
+	mobi_21[i,2]="";
+	
+    race_21[i,3]=1;
+    role_21[i,3]="Veteran";
+    wep1_21[i,3]="Chainsword";
+    wep2_21[i,3]="Bolter";
+    armour_21[i,3]="Power Armour";
+	gear_21[i,3]=""
+	mobi_21[i,3]="";
+	
+    race_21[i,4]=1;
+    role_21[i,4]="Terminator";
+    wep1_21[i,4]="Power Fist";
+    wep2_21[i,4]="Storm Bolter";
+    armour_21[i,4]="Terminator Armour";
+	gear_21[i,4]=""
+	mobi_21[i,4]="";
+	
+    race_21[i,5]=1;
+    role_21[i,5]="Captain";
+    wep1_21[i,5]="Power Sword";
+    wep2_21[i,5]="Bolt Pistol";
+    armour_21[i,5]="Power Armour";
+	gear_21[i,5]="Iron Halo";
+	mobi_21[i,15]="";
+	
+	
+    race_21[i,6]=1;
+    role_21[i,6]="Dreadnought";
+    wep1_21[i,6]="Close Combat Weapon";
+    wep2_21[i,6]="Twin Linked Lascannon";
+    armour_21[i,6]="Dreadnought";
+	gear_21[i,6]=""
+	mobi_21[i,6]="";
+	
+    race_21[i,7]=1;
+    role_21[i,7]="Champion";
+    wep1_21[i,7]="Power Sword";
+    wep2_21[i,7]="Bolt Pistol";
+    armour_21[i,7]="Power Armour";
+	gear_21[i,7]="Combat Shield"
+	mobi_21[i,7]="";
 
         race_21[i,8]=1;
         role_21[i,8]="Tactical Marine";
