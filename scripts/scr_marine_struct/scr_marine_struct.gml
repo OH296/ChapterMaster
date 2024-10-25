@@ -640,15 +640,15 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			technology : [8,1],
 			skills: {
 				weapons:{
-					"Bolter":1, "Bolt Pistol":1, "Chainsword":1, "Sarissa":1}},
-			start_gear:{"armour":"Power Armour", "wep1":"Bolter", "wep2":"Sarissa"}, // TODO - add Light variants of PA and bolter
+					"Light Bolter":1, "Bolt Pistol":1, "Chainsword":1, "Sarissa":1}},
+			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":"Sarissa"},
 			base_group : "human",
 			// traits:["zealous_faith"],
 	},
 	"sister_hospitaler":{
 			title : "Sister Hospitaler",
 			strength : [11,1],
-			constitution : [12,1], // We might want to make it that hireling armour boosts constitution
+			constitution : [12,1], // TODO - consider making it that hireling armour boosts constitution
 			weapon_skill : [13,1],
 			ballistic_skill : [13,1],
 			dexterity : [11,1],
@@ -661,8 +661,8 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			technology : [12,1], // They probably know a bit more, due to medical studies
 			skills: {
 				weapons:{
-					"Bolter":2, "Bolt Pistol":2, "Chainsword":2, "Sarissa":2}},
-			start_gear:{"armour":"Power Armour", "wep1":"Bolter", "wep2":"Sarissa", "gear":"Sororitas Medkit"}, // TODO - add Light variants of PA and bolter
+					"Light Bolter":2, "Bolt Pistol":2, "Chainsword":2, "Sarissa":2}},
+			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":"Sarissa", "gear":"Sororitas Medkit"},
 			base_group : "human",
 			// traits:["zealous_faith"],
 	},

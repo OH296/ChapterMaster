@@ -1681,6 +1681,23 @@ global.weapons = {
 		"arp": 0,
 		"tags": ["vehicle", "turret", "volkite", "ancient"]
 	},
+// Hireling weapons
+	"Light Bolter": {
+		"abbreviation": "LiBltr",
+		"attack": {
+			"standard": 40,
+			"master_crafted": 45,
+			"artifact": 50
+		},
+		"description": "A smaller variant of Bolter, intended to be useable by unaugmented humans.",
+		"melee_hands": 0,
+		"ranged_hands": 1,
+		"ammo": 16,
+		"range": 12,
+		"spli": 3,
+		"arp": 0,
+		"tags": ["bolt"]
+	},
 }
 global.gear = {
 	"armour": {
@@ -2075,6 +2092,27 @@ global.gear = {
 				"artifact": 25
 			},
 			"tags": ["vehicle", "Upgrade"],
+		},
+// Hireling Armour
+		"Light Power Armour": { // According to lore, lack of black carapace makes regular humans less capable to use PAs properly, but this is a concern for th future
+			"abbreviation": "LPArm",
+			"armour_value": {
+				"standard": 20,
+				"master_crafted": 25,
+				"artifact": 30
+			},
+			"ranged_mod": {
+				"standard": 0,
+				"master_crafted": 5,
+				"artifact": 10
+			},
+			"melee_mod": {
+				"standard": 0,
+				"master_crafted": 5,
+				"artifact": 10
+			},
+			"description": "A suit of light power armour, intended to be useable by the regular humans.",
+			"tags": ["power_armour"],
 		}
 	},
 	"gear": {
