@@ -234,7 +234,7 @@ function inquisitor_ship_approaches(){
     var approach_system = instance_nearest(action_x,action_y,obj_star);
     var inquis_string;
     var do_alert = false;
-    if (string_count("fleet",trade_goods)>0){
+    if (string_count("fleet",trade_goods)>0 &&  scr_valid_fleet_target(target)){
         var player_fleet_location = fleets_next_location(target);
         if (player_fleet_location != "none"){
             if (approach_system.name==player_fleet_location.name){
