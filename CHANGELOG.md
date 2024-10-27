@@ -21,6 +21,12 @@ All notable changes to this project will be documented in this file.
     - everything that a normal player doesn't need to know.
 ----------------------------------
 
+## [0.9.4.1]
+
+### Fixed:
+- garrisons crashing and returning the game to map
+- crash during enemy end turn with chaos fleets
+
 ## [0.9.4.0]
 
 ### IMPORTANT:
