@@ -50,7 +50,7 @@ premades=true;
 /// Opt in/out of loading from json vs hardcoded for specific chapters, this way i dont have to do all in one go to test
 use_chapter_object = 0;
 
-livery_picker = new colour_item(100,230);
+livery_picker = new ColourItem(100,230);
 livery_picker.scr_unit_draw_data();
 full_liveries = array_create(21,DeepCloneStruct(livery_picker.map_colour));
 complex_livery=false;

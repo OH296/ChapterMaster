@@ -2,7 +2,7 @@ function coord_relevative_positions(coords, xx, yy){
 	return [coords[0]+xx, coords[1]+yy,coords[2]+xx, coords[3]+yy];
 }
 
-function colour_item(xx,yy) constructor{
+function ColourItem(xx,yy) constructor{
 	self.xx=xx;
 	self.yy=yy;
     static scr_unit_draw_data = function(){

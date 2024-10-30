@@ -989,7 +989,7 @@ if (argument0="Lamenters"){founding=5;points=150;
 
 
 	maxpoints=points;
-	var livery_picker = new colour_item(0,0);
+	var livery_picker = new ColourItem(0,0);
 	livery_picker.scr_unit_draw_data();
 	full_liveries = array_create(21,DeepCloneStruct(livery_picker.map_colour));	
 	return true;
