@@ -35,7 +35,7 @@ function ColourItem(xx,yy) constructor{
             right_backpack : 0,   
             left_backpack : 0,
             weapon_primary : 0,
-            weapon_Secondary : 0,                           
+            weapon_secondary : 0,                           
         }
         return map_colour;
     }
@@ -60,7 +60,7 @@ function ColourItem(xx,yy) constructor{
             right_thorax : 0, 
 
             weapon_primary : 0,
-            weapon_Secondary : 0,
+            weapon_secondary : 0,
 
             left_pauldron :[114,31, 150,67],
             right_pauldron: [19,31, 43,71],
