@@ -11,7 +11,7 @@ function scr_save_chapter(chapter_id){
 	chap.founding = founding;
 	chap.origin = CHAPTER_ORIGIN.CUSTOM;
 	chap.icon = icon;
-	chap.icon_name = "custom";
+	chap.icon_name = obj_creation.icon_name || "da";
 	chap.aspirant_trial = aspirant_trial;
 	chap.fleet_type = fleet_type;
 	chap.strength = strength;

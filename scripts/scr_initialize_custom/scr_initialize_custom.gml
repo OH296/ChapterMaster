@@ -615,7 +615,7 @@ function scr_initialize_custom() {
 	home_name = obj_creation.homeworld_name;
 	fleet_type = obj_creation.fleet_type;
 
-	if (obj_creation.fleet_type != 1) {
+	if (obj_creation.fleet_type != FLEET_TYPE.HOMEWORLD) {
 		battle_barges = 1;
 		if scr_has_adv ("Kings of Space") battle_barges += 1;
 		strike_cruisers = 6;
@@ -626,7 +626,7 @@ function scr_initialize_custom() {
 		
 		// obj_controller.fleet_type="Fleet";
 	}
-	if (obj_creation.fleet_type = 1) {
+	if (obj_creation.fleet_type = FLEET_TYPE.HOMEWORLD) {
 		strike_cruisers = 8;
 		if (array_contains(obj_creation.adv, "Boarders")) strike_cruisers += 2;
 		gladius = 7;
@@ -645,20 +645,20 @@ function scr_initialize_custom() {
 	*/
 	if (obj_creation.custom = 0) {
 		flagship_name = obj_creation.flagship_name;
-		if (obj_creation.fleet_type != 1) {
+		if (obj_creation.fleet_type != FLEET_TYPE.HOMEWORLD) {
 			battle_barges = 4;
 			strike_cruisers = 3;
 			gladius = 7;
 			hunters = 3;
 		}
-		if (obj_creation.fleet_type = 1) {
+		if (obj_creation.fleet_type == FLEET_TYPE.HOMEWORLD) {
 			battle_barges = 2;
 			strike_cruisers = 8;
 			gladius = 7;
 			hunters = 3;
 		}
 
-		if(obj_creation.use_chapter_object == 1){
+		if(obj_creation.use_chapter_object){
 			// json loading
 			battle_barges = battle_barges + obj_creation.extra_ships.battle_barges;
 			strike_cruisers = strike_cruisers + obj_creation.extra_ships.strike_cruisers;
@@ -666,10 +666,10 @@ function scr_initialize_custom() {
 			hunters = hunters + obj_creation.extra_ships.hunters;
 		} else {
 			// hardcoded mode 
-			if (obj_creation.fleet_type != 1) {
+			if (obj_creation.fleet_type != FLEET_TYPE.HOMEWORLD) {
 				if (global.chapter_name = "Soul Drinkers") then gladius -= 4;
 			}
-			if (obj_creation.fleet_type = 1) {
+			if (obj_creation.fleet_type == FLEET_TYPE.HOMEWORLD) {
 				if (global.chapter_name = "Raven Guard") {
 					flagship_name = "Avenger"
 				}
@@ -707,7 +707,7 @@ function scr_initialize_custom() {
 
 				}
 			}
-			if (obj_creation.fleet_type = 3) {
+			if (obj_creation.fleet_type == FLEET_TYPE.PENITENCE) {
 				if (global.chapter_name = "Lamenters") {
 					strike_cruisers = 2;
 					gladius = 2;
@@ -1082,6 +1082,24 @@ function scr_initialize_custom() {
 				case "devastator": devastator = devastator + real(s_val); break;
 			}
 		}
+		// todo untested
+		var c_marines = obj_creation.extra_marines;
+		var c_marines_names = struct_get_names(c_marines);
+		for(var s = 0; s < array_length(c_marines_names); s++){
+			var s_name = c_marines_names[s];
+			var s_val = struct_get(c_marines, s_name);
+			switch(s_name){
+				case "second": second = second + real(s_val); break;
+				case "third": third = third + real(s_val); break;
+				case "fourth": fourth = fourth + real(s_val); break;
+				case "fifth": fifth = fifth + real(s_val); break;
+				case "sixth": sixth = sixth + real(s_val); break;
+				case "seventh": seventh = seventh + real(s_val); break;
+				case "eighth": eighth = eighth + real(s_val); break;
+				case "ninth": ninth = ninth + real(s_val); break;
+				case "tenth": tenth = tenth + real(s_val); break;
+			}
+		}
 	} else {
 		//hardcoded method
 		switch (global.chapter_name) {
@@ -1312,7 +1330,7 @@ function scr_initialize_custom() {
 	load_default_gear(Role.VETERAN_SERGEANT, "Veteran Sergeant", "Chainsword", "Plasma Pistol", "Power Armour", "", "");
  	
 	// Hardcoded method
-	if(obj_creation.use_chapter_object == 0){
+	if(obj_creation.use_chapter_object == false){
 		// 100 is defaults, 101 is the allowable starting equipment // info
 		for (i = 0; i <= 20; i++) {
 			race[100, i] = obj_creation.race[100, i];
@@ -2004,7 +2022,7 @@ function scr_initialize_custom() {
 			}]
 		])
 	}
-	if (global.chapter_name == "White Scars") or (scr_has_adv("Lightning Warriors")) {
+	if (scr_has_adv("Lightning Warriors")) {
 		variable_struct_set(st, "bikers", [
 			[roles.tactical, {
 				"max": 9,
@@ -2393,7 +2411,7 @@ function scr_initialize_custom() {
 	var arti;
 
 	// From json
-	if(obj_creation.use_chapter_object == 1 && struct_exists(obj_creation, "artifact")){
+	if(obj_creation.use_chapter_object && struct_exists(obj_creation, "artifact") && struct_exists(obj_creation.artifact, "name")){
 		arti = obj_ini.artifact_struct[last_artifact];
 		arti.name = obj_creation.artifact.name;
 		arti.custom_description = obj_creation.artifact.description;
@@ -3946,19 +3964,20 @@ function scr_initialize_custom() {
 			if (rhinoy > 0) then repeat(rhinoy) {
 				v += 1;
 				man_size += 10;
-				veh_race[company, v] = 1;
-				veh_loc[company, v] = home_name;
-				veh_role[company, v] = "Rhino";
-				veh_wep1[company, v] = "Storm Bolter";
-				veh_wep2[company, v] = "HK Missile";
-				veh_wep3[company, v] = "";
-				veh_upgrade[company, v] = "";
-				veh_acc[company, v] = "Dozer Blades";
-				veh_hp[company, v] = 100;
-				veh_chaos[company, v] = 0;
-				veh_pilots[company, v] = 0;
-				veh_lid[company, v] = 0;
-				veh_wid[company, v] = 2;
+				scr_add_vehicle("Rhino", company, "standard","standard","standard","standard","standard");
+				// veh_race[company, v] = 1;
+				// veh_loc[company, v] = home_name;
+				// veh_role[company, v] = "Rhino";
+				// veh_wep1[company, v] = "Storm Bolter";
+				// veh_wep2[company, v] = "HK Missile";
+				// veh_wep3[company, v] = "";
+				// veh_upgrade[company, v] = "";
+				// veh_acc[company, v] = "Dozer Blades";
+				// veh_hp[company, v] = 100;
+				// veh_chaos[company, v] = 0;
+				// veh_pilots[company, v] = 0;
+				// veh_lid[company, v] = 0;
+				// veh_wid[company, v] = 2;
 			}
 			if (whirly > 0) then repeat(whirly) {
 				v += 1;
@@ -4081,7 +4100,7 @@ function scr_initialize_custom() {
 	
 	scr_add_item("Bike", 40);
 
-	if(obj_creation.use_chapter_object == 1){
+	if(obj_creation.use_chapter_object){
 		for(var e = 0; e < array_length(obj_creation.extra_equipment); e++){
 			var e_name = obj_creation.extra_equipment[e][0];
 			var e_qty = obj_creation.extra_equipment[e][1];
@@ -4091,22 +4110,27 @@ function scr_initialize_custom() {
 		
 		// if(obj_creation.extra_vehicles.rhino != 0){
 		// 	for(var r = 0; r<obj_creation.extra_vehicles.rhino; r++){
-		// 		scr_add_vehicle("Rhino", 10, "Storm Bolter", "HK Missile","", "","Dozer Blades");
+		// 		scr_add_vehicle("Rhino", 0, "standard", "standard","standard", "standard","standard");
 		// 	}
 		// }
 		// if(obj_creation.extra_vehicles.whirlwind != 0){
 		// 	for(var r = 0; r<obj_creation.extra_vehicles.whirlwind; r++){
-		// 		scr_add_vehicle("Whirlwind", 10, "Whirlwind Missiles", "HK Missile","", "","");
+		// 		scr_add_vehicle("Whirlwind", 0, "standard", "standard","standard", "standard","standard");
 		// 	}
 		// }
 		// if(obj_creation.extra_vehicles.predator != 0){
 		// 	for(var r = 0; r<obj_creation.extra_vehicles.predator; r++){
-		// 		scr_add_vehicle("Predator", 10, "Twin Linked Lascannon Turret", "Lascannon Sponsons","HK Missile", "","Searchlight");
+		// 		scr_add_vehicle("Predator", 0, "standard", "standard","standard", "standard","standard");
 		// 	}
 		// }
 		// if(obj_creation.extra_vehicles.land_raider != 0){
 		// 	for(var r = 0; r<obj_creation.extra_vehicles.land_raider; r++){
-		// 		scr_add_vehicle("Land Raider", 10, "Twin Linked Heavy Bolter Mount", "Twin Linked Lascannon Sponsons","HK Missile", "Heavy Armour","Searchlight");
+		// 		scr_add_vehicle("Land Raider", 0, "standard", "standard","standard", "standard","standard");
+		// 	}
+		// }
+		// if(obj_creation.extra_vehicles.land_speeder != 0){
+		// 	for(var r = 0; r<obj_creation.extra_vehicles.land_raider; r++){
+		// 		scr_add_vehicle("Land Speeder", 0, "standard", "standard","standard", "standard","standard");
 		// 	}
 		// }
 	}
@@ -4178,7 +4202,7 @@ function scr_initialize_custom() {
 
 	var bloo = 0,
 		o = 0;
-	if (array_contains(obj_creation.dis, "Blood Debt")) {
+	if (scr_has_disadv("Blood Debt")) {
 		bloo = 1;
 		if (instance_exists(obj_controller)) {
 			obj_controller.blood_debt = 1;
@@ -4188,7 +4212,7 @@ function scr_initialize_custom() {
 			penitent_end = obj_creation.strength * 48;
 		}
 	} else {
-		if (fleet_type = 3) {
+		if (fleet_type == FLEET_TYPE.PENITENCE) {
 			penitent = 1;
 			penitent_max = (obj_creation.strength * 60);
 			penitent_current = 1;

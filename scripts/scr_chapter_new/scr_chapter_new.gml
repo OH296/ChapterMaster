@@ -16,16 +16,18 @@ function ChapterData() constructor {
 	purity = 0;
 	stability = 0;
 	cooperation = 0;
-	homeword = ""; //e.g. "Death"
+	homeworld = ""; //e.g. "Death"
 	homeworld_name = ""; // e.g. "The Rock"
 	homeworld_exists = 0;
 	recruiting_exists = 0;
 	recruiting = ""; 
+	recruiting_name = "";
 	homeworld_rule = HOMEWORLD_RULE.NONE;
 	flagship_name = "";
 	monastary_name = "";
 	advantages = array_create(9);
 	disadvantages = array_create(9);
+	discipline = "default";
 
 	full_liveries = "none"
 
@@ -128,6 +130,7 @@ function ChapterData() constructor {
 		whirlwind: 0,
 		predator: 0,
 		land_raider: 0,
+		land_speeder: 0,
 	}
 	extra_equipment = [];
 	custom_roles = {};
@@ -168,7 +171,7 @@ function scr_chapter_new(argument0) {
 	full_liveries = "none"; // until chapter objects are in full use kicks off livery propogation
 
 	// argument0 = chapter
-	obj_creation.use_chapter_object = 0; // for the new json testing
+	obj_creation.use_chapter_object = false; // for the new json testing
 	var chapter_id = CHAPTERS.UNKNOWN;
 
 	//1st captain =	honor_captain_name	
@@ -182,9 +185,12 @@ function scr_chapter_new(argument0) {
 	//9th captain =	relic_master_name
 	//10th captain = recruiter_name
 
-	var i;i=-1;
-	repeat(21){i+=1;world[i]="";world_type[i]="";world_feature[i]="";}
-	var i;i=-1;repeat(6){i+=1;adv[i]="";adv_num[i]=0;dis[i]="";dis_num[i]=0;}
+	var i;
+	world = array_create(20, "");
+	world_type = array_create(20, "");
+	world_feature = array_create(20, "");
+	
+
 	points=100;maxpoints=100;custom=0;
 	//Chapter Staff
 	hapothecary=global.name_generator.generate_space_marine_name();
@@ -203,131 +209,44 @@ function scr_chapter_new(argument0) {
 	relmaster=global.name_generator.generate_space_marine_name();
 	recruiter=global.name_generator.generate_space_marine_name();
 	
-	i=99;
-	repeat(3){i+=1;// First is for the correct slot, second is for default
-	    role[i,2]="Honour Guard";wep1[i,2]="Power Sword";wep2[i,2]="Bolter";armour[i,2]="Artificer Armour";
-	    role[i,3]="Veteran";wep1[i,3]="Chainsword";wep2[i,3]="Combiflamer";armour[i,3]="Power Armour";
-	    role[i,4]="Terminator";wep1[i,4]="Power Fist";wep2[i,4]="Storm Bolter";armour[i,4]="Terminator Armour";
-	    role[i,5]="Captain";wep1[i,5]="Power Sword";wep2[i,5]="Bolt Pistol";armour[i,5]="Power Armour";gear[i,5]="Iron Halo";
-	    role[i,6]="Dreadnought";wep1[i,6]="Close Combat Weapon";wep2[i,6]="Twin Linked Lascannon";armour[i,6]="Dreadnought";
-	    role[i,8]="Tactical Marine";wep1[i,8]="Bolter";wep2[i,8]="Combat Knife";armour[i,8]="Power Armour";
-	    role[i,9]="Devastator Marine";wep1[i,9]="Heavy Ranged";wep2[i,9]="Combat Knife";armour[i,9]="Power Armour";mobi[i,9]="Heavy Weapons Pack";
-	    role[i,10]="Assault Marine";wep1[i,10]="Chainsword";wep2[i,10]="Bolt Pistol";armour[i,10]="Power Armour";mobi[i,10]="Jump Pack";
-		role[i,11]="Ancient";wep1[i,11]="Company Standard";wep2[i,11]="Bolt Pistol";armour[i,11]="Power Armour";
-	    role[i,12]="Scout";wep1[i,12]="Bolter";wep2[i,12]="Combat Knife";armour[i,12]="Scout Armour";
-	    role[i,14]="Chaplain";wep1[i,14]="Crozius Arcanum";wep2[i,14]="Bolt Pistol";armour[i,14]="Power Armour";gear[i,14]="Rosarius";
-	    role[i,15]="Apothecary";wep1[i,15]="Chainsword";wep2[i,15]="Bolt Pistol";armour[i,15]="Power Armour";gear[i,15]="Narthecium";
-	    role[i,16]="Techmarine";wep1[i,16]="Power Axe";wep2[i,16]="Bolt Pistol";armour[i,16]="Artificer Armour";mobi[i,16]="Servo-arm";gear[i,16]="";
-	    role[i,17]="Librarian";wep1[i,17]="Force Staff";wep2[i,17]="Bolt Pistol";armour[i,17]="Power Armour";gear[i,17]="Psychic Hood";
-		role[i,18]="Sergeant";wep1[i,18]="Chainsword";wep2[i,18]="Bolt Pistol";armour[i,18]="Power Armour";gear[i,18]="";
-		role[i,19]="Veteran Sergeant";wep1[i,19]="Chainsword";wep2[i,19]="Plasma Pistol";armour[i,19]="Power Armour";gear[i,19]="";
-	}i=100;
+	function load_default_gear(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear){
+		for(var i = 100; i <=102; i++){
+			role[i, _role_id] = _role_name;
+			wep1[i, _role_id] = _wep1;
+			wep2[i, _role_id] = _wep2;
+			armour[i, _role_id] = _armour;
+			mobi[i, _role_id] = _mobi;
+			gear[i, _role_id] = _gear;
+			race[i, _role_id] = 1;
+		}
+	}
+	load_default_gear(Role.HONOUR_GUARD, "Honour Guard", "Power Sword", "Bolter", "Artificer Armour", "", "");
+	load_default_gear(Role.VETERAN, "Veteran", "Chainsword", "Combiflamer", "Power Armour", "", "");
+	load_default_gear(Role.TERMINATOR, "Terminator", "Power Fist", "Storm Bolter", "Terminator Armour", "", "");
+	load_default_gear(Role.CAPTAIN, "Captain", "Power Sword", "Bolt Pistol", "Power Armour", "", "Iron Halo");
+	load_default_gear(Role.DREADNOUGHT, "Dreadnought", "Dreadnought Lightning Claw", "Lascannon", "Dreadnought", "", "");
+	load_default_gear(Role.CHAMPION, "Champion", "Power Sword", "Power Armour", "Power Armour", "", "Combat Shield");
+	load_default_gear(Role.TACTICAL, "Tactical", "Bolter", "Combat Knife", "Power Armour", "", "");
+	load_default_gear(Role.DEVASTATOR, "Devastator", "", "Combat Knife", "Power Armour", "", "");
+	load_default_gear(Role.ASSAULT, "Assault", "Chainsword", "Bolt Pistol", "Power Armour", "Jump Pack", "");
+	load_default_gear(Role.ANCIENT, "Ancient", "Company Standard", "Bolt Pistol", "Power Armour", "", "");
+	load_default_gear(Role.SCOUT, "Scout", "Bolter", "Combat Knife", "Scout Armour", "", "");
+	load_default_gear(Role.CHAPLAIN, "Chaplain", "Crozius Arcanum", "Bolt Pistol", "Power Armour", "", "Rosarius");
+	load_default_gear(Role.APOTHECARY, "Apothecary", "Chainsword", "Bolt Pistol", "Power Armour", "", "Narthecium");
+	load_default_gear(Role.TECHMARINE, "Techmarine", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
+	load_default_gear(Role.LIBRARIAN, "Librarian", "Force Staff", "Bolt Pistol", "Power Armour", "", "Psychic Hood");
+	load_default_gear(Role.SERGEANT, "Sergeant", "Chainsword", "Bolt Pistol", "Power Armour", "", "");
+	load_default_gear(Role.VETERAN_SERGEANT, "Veteran Sergeant", "Chainsword", "Plasma Pistol", "Power Armour", "", "");
 
 
 	for(var c = 0; c < array_length(obj_creation.all_chapters); c++){
 		if(argument0 == obj_creation.all_chapters[c].name && obj_creation.all_chapters[c].json == true){
-			obj_creation.use_chapter_object = 1;
+			obj_creation.use_chapter_object = true;
 			chapter_id = obj_creation.all_chapters[c].id;
 		}
 	}
 
-	if (argument0=="Dark Angels" || argument0 == CHAPTERS.DARK_ANGELS){
-		obj_creation.use_chapter_object = 1;
-		chapter_id = CHAPTERS.DARK_ANGELS;
-
-		#region old data
-		// founding="N/A";points=150;
-	    // selected_chapter=1;chapter=argument0;icon=1;icon_name="da";founding=0;fleet_type=1;strength=10;purity=8;stability=10;cooperation=5;
-	    // homeworld="Dead";homeworld_name="The Rock";recruiting="Death";recruiting_name="Kimmeria";
-	    // homeworld_exists=1;recruiting_exists=1;homeworld_rule=3;aspirant_trial=eTrials.SURVIVAL;
-	    // adv[1]="Enemy: Fallen";dis[1]="Never Forgive";
-	    // // Pauldron2: Left, Pauldron: Right
-	    // color_to_main="Caliban Green";color_to_secondary="Caliban Green";color_to_trim="Grey";
-	    // color_to_pauldron="Caliban Green";color_to_pauldron2="Caliban Green";color_to_lens="Red";
-	    // color_to_weapon="Dark Red";col_special=0;trim=0;
-
-	    // hchaplain="Sapphon";clibrarian="Ezekial";fmaster="Sepharon";hapothecary="Razaek";
-		// honorcapt="Belial";watchmaster="Sammael";arsenalmaster="Astoran";admiral="Korahael";marchmaster="Balthazar";
-		// ritesmaster="Araphil";victualler="Ezekiah";lordexec="Molochi";relmaster="Xerophus";recruiter="Ranaeus";
-	    // battle_cry="Repent!  For tomorow you may die";
-	    // equal_specialists=0;load_to_ships=[2,0,0];successors=9;
-	    // mutations=0;mutations_selected=0;
-	    // preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    // zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    // // disposition[1]=0;// Prog
-	    // disposition[2]=65;disposition[3]=60;disposition[4]=60;disposition[5]=60;
-	    // disposition[6]=50;// Astartes
-	    // disposition[7]=0;// Reserved
-	    // chapter_master_name="Azreal";chapter_master_specialty=2;
-	    // chapter_master_melee=5;chapter_master_ranged=4;
-		
-	    // company_title[1]="Deathwing";
-	    // company_title[2]="Ravenwing";
-	    // company_title[3]="The Unmerciful";
-		// company_title[4]="The Feared";
-		// company_title[5]="The Unrelenting";
-		// company_title[6]="The Resolute";
-		// company_title[7]="The Unbowed";
-		// company_title[8]="The Wrathful";
-		// company_title[9]="The Remorseless";
-		// company_title[10]="The Redeemed";
-		
-		// for(i=100;i<=102;i++){
-		// // role[i,1]="Supreme Grand Master";
-		// role[i,5]="Master";
-		// wep1[i,5]="Power Sword";
-		// role[i,2]="Deathwing Knight"
-	
-		// }
-		#endregion
-
-
-	}
-		if (argument0=="White Scars" || argument0 == CHAPTERS.WHITE_SCARS){
-
-		obj_creation.use_chapter_object = 0;
-		chapter_id = CHAPTERS.WHITE_SCARS;
-		#region data
-		points=150;
-		    selected_chapter=2;chapter=argument0;icon=2;icon_name="ws";founding=0;fleet_type=1;strength=5;purity=10;stability=8;cooperation=5;
-		    homeworld="Feudal";homeworld_name="Chogoris";
-		    homeworld_exists=1;recruiting_exists=0;homeworld_rule=3;aspirant_trial=eTrials.SURVIVAL;discipline="rune Magick";
-			adv[1]="Lightning Warriors";adv[2]="Brothers, All";adv[3]="Melee Enthusiasts";dis[1]="Splintered";
-		    // Pauldron2: Left, Pauldron: Right
-		    color_to_main="White";color_to_secondary="White";color_to_trim="Red";
-		    color_to_pauldron="White";color_to_pauldron2="White";color_to_lens="Red";
-		    color_to_weapon="Black";col_special=0;
-		    hapothecary="Ogholei";hchaplain="Jaghorin";clibrarian="Saghai";fmaster="Khamkar";
-			honorcapt="Jurga";watchmaster="Khajog";arsenalmaster="Kor'sarro";admiral="Joghaten";
-			marchmaster="Suboden";ritesmaster="Seglei";victualler="Dorghai";lordexec="Vorgha";relmaster="Khadajei";
-			recruiter="Jodagha";
-		    battle_cry="For the Emperor and the Khan!";// monastery_name="Quan Zhou";master_name=
-		    equal_specialists=0;load_to_ships=[2,0,0];successors=12;
-		    mutations=0;mutations_selected=0;
-		    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-		    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-		    // disposition[1]=0;// Prog
-		    disposition[2]=50;disposition[3]=50;disposition[4]=50;disposition[5]=50;
-		    disposition[6]=65;// Astartes
-		    disposition[7]=0;// Reserved
-		    chapter_master_name="Jubal Khan";chapter_master_melee=5;
-		    chapter_master_ranged=3;chapter_master_specialty=1;
-		    company_title[1]="The Spearpoint Brotherhood";company_title[2]="The Firefist Brotherhood";company_title[3]="The Eagle Brotherhood";
-		    company_title[4]="The Tulwar Brotherhood";company_title[5]="The Stormwrath Brotherhood";company_title[6]="The Hawkeye Brotherhood";
-			company_title[7]="The Plainstalker Brotherhood";company_title[8]="The Bloodrider Brotherhood";company_title[9]="The Stormbolt Brotherhood";
-			company_title[10]="The Windspeaker Brotherhood";
-			
-			i=99;repeat(3){i+=1;
-			role[i,2]="Keshig";wep1[i,2]="Power Sword";wep2[i,2]="Bolter";armour[i,2]="Terminator Armour";
-			role[i,5]="Khan";wep1[i,5]="Power Sword"
-			role[i,15]="Emchi";
-			role[i,17]="Stormseer";
-			
-			}
-		#endregion
-	}
-
-	if(obj_creation.use_chapter_object == 1){
+	if(obj_creation.use_chapter_object){
 
 		var chapter_obj = new ChapterData();
 		var successfully_loaded = chapter_obj.load_from_json(chapter_id);
@@ -865,9 +784,7 @@ if (argument0="Lamenters"){founding=5;points=150;
 
 
 	if(obj_creation.use_chapter_object){
-		
-		// todo this chunk can go at the bottom of the file after the if/elses once its all working 
-		
+				
 		var chapter_object = global.chapter_creation_object;
 		
 		// * All of this obj_creation setting is just to keep things working 
@@ -883,9 +800,16 @@ if (argument0="Lamenters"){founding=5;points=150;
 		obj_creation.purity = chapter_object.purity;
 		obj_creation.stability = chapter_object.stability;
 		obj_creation.cooperation = chapter_object.cooperation;
+		
 		obj_creation.homeworld_exists = chapter_object.homeworld_exists;
-		obj_creation.recruiting_exists = chapter_object.recruiting_exists;
+		obj_creation.homeworld = chapter_object.homeworld;
+		obj_creation.homeworld_name = chapter_object.homeworld_name;
 		obj_creation.homeworld_rule = chapter_object.homeworld_rule;
+
+		obj_creation.recruiting_exists = chapter_object.recruiting_exists;
+		obj_creation.recruiting = chapter_object.recruiting;
+		obj_creation.recruiting_name = chapter_object.recruiting_name;
+
 		obj_creation.aspirant_trial = trial_map(chapter_object.aspirant_trial);
 		obj_creation.adv = chapter_object.advantages;
 		obj_creation.dis = chapter_object.disadvantages;
@@ -918,6 +842,7 @@ if (argument0="Lamenters"){founding=5;points=150;
 		obj_creation.recruiter  = chapter_object.names.recruiter;
 
 		obj_creation.battle_cry = chapter_object.battle_cry;
+		obj_creation.discipline = chapter_object.discipline;
 
 		var load = chapter_object.load_to_ships;
 		obj_creation.load_to_ships = [load.escort_load, load.split_scouts, load.split_vets];
