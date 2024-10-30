@@ -734,38 +734,41 @@ if (obj_controller.stc_ships>=6){
         if (obj_ini.ship_hp[v]>obj_ini.ship_maxhp[v]) then obj_ini.ship_hp[v]=obj_ini.ship_maxhp[v];
     }
 }
-if (turn==5) and (faction_gender[eFACTION.Chaos]==1) {// show_message("Turn 100");
 
-    var _star_found = false;
-    var _choice_star = noone;
-    var _stars = scr_get_stars(true);
-    for (var i=0;i<array_length(_stars);i++){
-        if (is_dead_star(_stars[i])) then continue;
-        with (_stars[i]){
-            if (owner==eFACTION.Imperium && planets){
-                if (scr_orbiting_fleet(eFACTION.Imperium) != "none"){
-                    _star_found=true;
-                    _choice_star = self.id;
-                    break;
-                }
-            } 
+try_and_report_loop("Secret Chaos Warlord spawn", function(){
+    if (turn==5) and (faction_gender[eFACTION.Chaos]==1) {// show_message("Turn 100");
+
+        var _star_found = false;
+        var _choice_star = noone;
+        var _stars = scr_get_stars(true);
+        for (var i=0;i<array_length(_stars);i++){
+            if (is_dead_star(_stars[i])) then continue;
+            with (_stars[i]){
+                if (owner==eFACTION.Imperium && planets){
+                    if (scr_orbiting_fleet(eFACTION.Imperium) != "none"){
+                        _star_found=true;
+                        _choice_star = self.id;
+                        break;
+                    }
+                } 
+            }
+            if (_star_found){
+                break;
+            }
         }
         if (_star_found){
-            break;
+            var _planet = array_random_element(planets_without_type("Dead",_choice_star));
+            _choice_star.warlord[_planet]=1;
+            array_push(_choice_star.p_feature[_planet], new NewPlanetFeature(P_features.Warlord10));
+
+            var _heresy_inc = _choice_star.p_type[_planet]=="Hive" ? 25 : 10;
+
+            _choice_star.p_heresy[_planet] += _heresy_inc;
+
+            if (_choice_star.p_heresy[_planet]<50) then _choice_star.p_heresy_secret[_planet]=10;        
         }
     }
-    if (_star_found){
-        var _planet = array_random_element(planets_without_type("Dead",_choice_star));
-        _choice_star.warlord[_planet]=1;
-        array_push(_choice_star.p_feature[_planet], new NewPlanetFeature(P_features.Warlord10));
-
-        var _heresy_inc = _choice_star.p_type[_planet]=="Hive" ? 25 : 10;
-
-        _choice_star.p_heresy[_planet] += _heresy_inc;
-
-        if (_choice_star.p_heresy[_planet]<50) then _choice_star.p_heresy_secret[_planet]=10;        
-    }
-}
+});
 // * Blood debt end *
 if (blood_debt==1) and (penitent==1){
     penitent_turn+=1;
