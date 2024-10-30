@@ -48,7 +48,7 @@ skip=false;
 premades=true;
 
 /// Opt in/out of loading from json vs hardcoded for specific chapters, this way i dont have to do all in one go to test
-use_chapter_object = 0;
+use_chapter_object = false;
 
 livery_picker = new colour_item(100,230);
 livery_picker.scr_unit_draw_data();
@@ -107,26 +107,20 @@ chapter_string="Unnamed";
 chapter_year=0;
 icon=1;
 icon_name="da";
+/// @instancevar {Real} custom 0 if premade, 1 if random, 2 if custom
 custom=0;
 founding=1;
 chapter_tooltip="";
 points=0;
 maxpoints=100;
+/// @instancevar {Enum.FLEET_TYPE} fleet_type 
 fleet_type=1;
 strength=5;
 cooperation=5;
 purity=5;
 stability=5;
-adv=[];
-adv_num=[];
-dis=[];
-dis_num=[];
-for(var i=0; i<16; i++){
-    adv[i]="";
-    adv_num[i]=0;
-    dis[i]="";
-    dis_num[i]=0;
-}
+
+
 var i = 9;
 
 homeworld="Temperate";
@@ -738,6 +732,12 @@ for (var i=0;i<array_length(all_disadvantages);i++){
     }
     array_push(obj_creation.all_disadvantages, new_dis);
 }
+
+adv = array_create(8, "");
+dis = array_create(8, "");
+adv_num = array_create(array_length(obj_creation.all_advantages), 0);
+dis_num = array_create(array_length(obj_creation.all_disadvantages), 0);
+
 
 
 

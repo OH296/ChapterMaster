@@ -22,9 +22,13 @@ function scr_creation(slide_num) {
 	    goto_slide=3;
 	    cooldown=8000;
 	    race[100,14]=1;
-	    race[100,17]=1;
-	    if (scr_has_disadv("Psyker Intolerant")) then race[100,17]=0;
-	    if (chapter="Iron Hands") or (chapter="Space Wolves") then race[100,14]=0;
+	    var k,ahuh;k=0;ahuh=0;
+	    repeat(4){
+	    	k+=1;
+	    	if (dis[k]="Psyker Intolerant") then ahuh=1;
+	    }
+	    if (ahuh=1) then race[100,17]=0;
+	    if (chapter_name="Iron Hands") or (chapter_name="Space Wolves") then race[100,14]=0;
 	}
 
 
