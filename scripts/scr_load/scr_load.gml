@@ -200,7 +200,7 @@ function scr_load(save_part, save_id) {
 	    }
 	    var colour_temp = new ColourItem(0,0);
 
-	    obj_ini.full_livery = return_json_from_ini("Ini", "FullLivery",colour_temp.scr_unit_draw_data());
+	    obj_ini.full_liveries = return_json_from_ini("Ini", "FullLivery",colour_temp.scr_unit_draw_data());
 	    //
 	    obj_ini.preomnor=ini_read_real("Ini","preomnor",0);
 	    obj_ini.voice=ini_read_real("Ini","voice",0);

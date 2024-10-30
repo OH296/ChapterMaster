@@ -273,7 +273,7 @@ function scr_save(save_part,save_id) {
 	    ini_write_string("Ini","strin1",obj_ini.strin);
 	    ini_write_string("Ini","strin2",obj_ini.strin2);
 	    ini_write_string("Ini","psy_powers",obj_ini.psy_powers);
-	    ini_encode_and_json("Ini", "FullLivery",obj_ini.full_livery)
+	    ini_encode_and_json("Ini", "FullLivery",obj_ini.full_liveries)
 		ini_write_real("Ini","companies",obj_ini.companies);
 		ini_encode_and_json("Ini", "comp_title", obj_ini.company_title);
 		ini_encode_and_json("Ini", "slave_num_", obj_ini.slave_batch_num);
