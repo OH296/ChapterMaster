@@ -2242,7 +2242,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		return (obj_ini.god[company,marine_number]>=10);
 	}
 
-	static forge_point_generation = unit_forge_point_generation();
+	static forge_point_generation = unit_forge_point_generation;
 
 	static marine_assembling = scr_marine_game_spawn_constructions;
 

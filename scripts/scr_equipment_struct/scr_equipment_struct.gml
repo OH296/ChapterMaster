@@ -21,6 +21,11 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
     }
     variable_struct_set(self, "quality", quality=="none"?"standard":quality);
 
+    if (maintenance == 0){
+        if (has_tags(["heavy_ranged","power", "plasma", "melta"])){
+            maintenance = 0.05;
+        }
+    }  
     static item_tooltip_desc_gen = function(){
         item_desc_tooltip = "";
         var stat_order;
@@ -193,7 +198,7 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
                         item_desc_tooltip += $"#Keywords:#{tagString}#"
                     }
                     break;
-                case "maintenanc":
+                case "maintenance":
                     if (maintenance>0){
                         item_desc_tooltip += $"#Maintenance:#{maintenance} Forge Points#"
                     }
@@ -240,12 +245,6 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
         }
         return satisfied;
     }
-
-    if (maintenance == 0){
-        if (has_tags(["heavy_ranged","power", "plasma", "melta"])){
-            maintenance = 0.05;
-        }
-    }  
 
     static owner_data = function(owner){//centralization of bonuses originating from weapon improvements e.g STCs
         if (owner=="chapter"){

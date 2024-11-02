@@ -20,7 +20,7 @@ function calculate_research_points(turn_end=false){
                 total_techs--;
                 continue;
             }
-            if (techs[i].technology>40 && techs[i].hp() >0){
+            if (techs[i].technology>40 && techs[i].hp() > 0){
                 var cur_tech = techs[i]
                 research_points += cur_tech.technology-40;
                 forge_point_gen=cur_tech.forge_point_generation(true);
@@ -191,7 +191,7 @@ function unit_forge_point_generation(turn_end=false){
     var reasons = {}
     var points = 0;
     if (trained_person){
-        var points = round(technology / 5);
+        var points = technology / 5;
         reasons.trained = points;
     }
     if (job!="none"){
