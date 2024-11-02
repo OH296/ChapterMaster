@@ -158,12 +158,12 @@ function draw_warp_lanes(){
 						tooltip_draw(string(warp_route_tooltip, to.name));
 					}
 
-					// if (array_equals(hover_loc,[route_coords[0] ,route_coords[1]])){
-					// 	hover_time++;
-					// } else {
-					// 	hover_loc = [route_coords[0] ,route_coords[1]];
-					// 	hover_time = 0;
-					// }
+					/* if (array_equals(hover_loc,[route_coords[0] ,route_coords[1]])){
+					 	hover_time++;
+					 } else {
+					 	hover_loc = [route_coords[0] ,route_coords[1]];
+					 	hover_time = 0;
+					 }*/
 
 					if ((mouse_check_button_pressed(mb_left) && keyboard_check(vk_shift)) /* || (instance_exists(obj_fleet_select) && hover_time>=30) */){
 						set_map_pan_to_loc(to);
