@@ -1,1 +1,1 @@
-gc_collect();
+// gc_collect();
