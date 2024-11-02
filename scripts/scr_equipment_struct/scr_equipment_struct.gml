@@ -45,10 +45,10 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
         }
         switch (item_type) {
             default:
-                stat_order = ["description", "special_description", "quality", "armour_value", "damage_resistance_mod", "hp_mod", "ranged_mod", "melee_mod", "attack", "spli", "range", "ammo", "melee_hands", "ranged_hands", "special_properties", "req_exp", "tags"];
+                stat_order = ["description", "special_description", "quality", "armour_value", "damage_resistance_mod", "hp_mod", "ranged_mod", "melee_mod", "attack", "spli", "range", "ammo", "melee_hands", "ranged_hands", "maintenance","special_properties", "req_exp", "tags"];
                 break;
             case "weapon":
-                stat_order = ["description", "special_description", "quality", "attack", "spli", "range", "ammo", "ranged_mod", "melee_mod", "armour_value", "hp_mod", "damage_resistance_mod", "melee_hands", "ranged_hands", "special_properties", "req_exp", "tags"];
+                stat_order = ["description", "special_description", "quality", "attack", "spli", "range", "ammo", "ranged_mod", "melee_mod", "armour_value", "hp_mod", "damage_resistance_mod", "melee_hands", "ranged_hands", "maintenance","special_properties", "req_exp", "tags"];
                 break;
             }
 			
@@ -193,6 +193,10 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
                         item_desc_tooltip += $"#Keywords:#{tagString}#"
                     }
                     break;
+                case "maintenanc":
+                    if (maintenance>0){
+                        item_desc_tooltip += $"#Maintenance:#{maintenance} Forge Points#"
+                    }
             }
         }
         return item_desc_tooltip
@@ -239,7 +243,7 @@ function EquipmentStruct(item_data, core_type,quality="none") constructor{
 
     if (maintenance == 0){
         if (has_tags(["heavy_ranged","power", "plasma", "melta"])){
-            maintenance : 0.05,
+            maintenance = 0.05;
         }
     }  
 

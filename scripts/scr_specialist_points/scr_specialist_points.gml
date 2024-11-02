@@ -112,7 +112,7 @@ function calculate_research_points(turn_end=false){
                                         current_tech.edit_corruption(min(4,charisma_test[1]));
                                     }
 
-                                    // tech takes a piety test to see if tehy break faith with cult mechanicus and become tech heretic
+                                    // tech takes a piety test to see if they break faith with cult mechanicus and become tech heretic
                                     //piety test is augmented by by the techs corruption with the test becoming harder to pass the more
                                     // corrupted the tech is
                                     piety_test = global.character_tester.standard_test(current_tech, "piety", +75 - current_tech.corruption);
@@ -184,6 +184,47 @@ function calculate_research_points(turn_end=false){
         }
     }   
 }
+function unit_forge_point_generation(turn_end=false){
+    var trained_person = IsSpecialist("forge");
+    var crafter = has_trait("crafter");
+    if (!(trained_person || crafter)) then return 0;
+    var reasons = {}
+    var points = 0;
+    if (trained_person){
+        var points = round(technology / 5);
+        reasons.trained = points;
+    }
+    if (job!="none"){
+        if (job.type == "forge"){
+            
+            if (crafter){
+                points*=3;
+                reasons.at_forge = "x3 (Crafter)";
+            } else {
+                points*=2;
+                reasons.at_forge = "x2";
+            }
+            points+=6;
+            if (turn_end){
+                add_exp(0.2);
+            }
+        }
+    }
+    if (crafter){
+        points+=6;
+        reasons.crafter = 6;
+    }
+    if (role()=="Forge Master"){
+        points+=10;
+        reasons.master = 10;
+    }
+    var maintenance = equipment_maintenance_burden();
+    points -= maintenance;
+    reasons.maintenance = $"-{maintenance}";
+    return [points,reasons];
+}
+
+
 function scr_forge_item(item){
     var master_craft_count=0;
     var quality_string="";

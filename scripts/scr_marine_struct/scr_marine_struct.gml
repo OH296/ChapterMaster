@@ -134,6 +134,8 @@ global.trait_list = {
 		technology:[5,2,"max"],
 		display_name:"Tinkerer",
 		flavour_text:"They have a knack for tinkering around with various technological devices and apparatuses, often augmenting and improving their own equipment",
+		effect : "Reduces the maintenance burden of unit equipment by two thirds",
+
 	},
 	"lead_example":{
 		weapon_skill:[2,1,"max"],
@@ -2240,42 +2242,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		return (obj_ini.god[company,marine_number]>=10);
 	}
 
-	static forge_point_generation = function(turn_end=false){
-		var trained_person = IsSpecialist("forge");
-		var crafter = has_trait("crafter");
-		if (!(trained_person || crafter)) then return 0;
-		var reasons = {}
-		var points = 0;
-		if (trained_person){
-			var points = round(technology / 5);
-			reasons.trained = points;
-		}
-		if (job!="none"){
-			if (job.type == "forge"){
-				
-				if (crafter){
-					points*=3;
-					reasons.at_forge = "x3 (Crafter)";
-				} else {
-					points*=2;
-					reasons.at_forge = "x2";
-				}
-				points+=6;
-				if (turn_end){
-					add_exp(0.25);
-				}
-			}
-		}
-		if (crafter){
-			points+=6;
-			reasons.crafter = 6;
-		}
-		if (role()=="Forge Master"){
-			points+=10;
-			reasons.master = 10;
-		}
-		return [points,reasons];
-	}
+	static forge_point_generation = unit_forge_point_generation();
 
 	static marine_assembling = scr_marine_game_spawn_constructions;
 
@@ -2437,6 +2404,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		burden+=get_mobility_data("maintenance");
 		burden+=get_weapon_one_data("maintenance");
 		burden+=get_weapon_two_data("maintenance");
+		if (has_trait("tinkerer")){
+			burden *= 0.33;
+		}
 		return burden;
 	}
 
