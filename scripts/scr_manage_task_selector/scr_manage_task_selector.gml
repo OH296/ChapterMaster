@@ -83,7 +83,7 @@ function scr_manage_task_selector(){
 	                			case "train_forces":
 	                				unit = display_unit[i];
 	                				unit.job = {
-	                					type:purpose_code, 
+	                					type:selection_data.purpose_code, 
 	                					planet:selection_data.planet, 
 	                					location:selection_data.system.name
 	                				};
@@ -111,9 +111,9 @@ function scr_manage_task_selector(){
 	                		calculate_research_points();
 	                		break;
 	                	case "hunt_beast":
-							var problem_slot = find_problem_planet(selection_data.planet, selection_data.purpose_code,selection_data.system);
-							init_beast_hunt_mission(selection_data.planet, selection_data.system,problem_slot);	                		                		
-
+							var problem_slot = selection_data.array_slot;
+							init_beast_hunt_mission(selection_data.planet, selection_data.system,problem_slot);
+							break;                		                		
 	                }
 	                exit_adhoc_manage();
 	                exit;			

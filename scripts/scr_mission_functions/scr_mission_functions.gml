@@ -91,7 +91,7 @@ function init_beast_hunt_mission(planet, star, mission_slot){
         gar_pop.image="";
         gar_pop.cooldown=8;
         obj_controller.cooldown=8;	    
-	    scr_event_log("",$"Beast hunters deployed to {numeral_name} for {mission_length} months.", target.name);
+	    scr_event_log("",$"Beast hunters deployed to {numeral_name} for {mission_length} months.", star.name);
 	}	
 }
 

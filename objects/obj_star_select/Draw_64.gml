@@ -522,6 +522,7 @@ if (obj_controller.selecting_planet!=0){
                     problem_data.f_type = P_features.Mission;
                     problem_data.time = target.p_timer[current_planet][i];
                     problem_data.problem = problems[i];
+                    problem_data.array_position = i;
                     array_push(planet_displays, [mission_string, problem_data]);
                 }
             }
