@@ -94,6 +94,76 @@ function init_beast_hunt_mission(planet, star, mission_slot){
 	    scr_event_log("",$"Beast hunters deployed to {numeral_name} for {mission_length} months.", star.name);
 	}	
 }
+//@mixin obj_star
+function complete_garrison_mission(targ_planet, problem_index){
+	var planet = new PlanetData(targ_planet, self);
+    if (problem_has_key_and_value(targ_planet,garrison_mission,"stage", "active")){
+        if (planet.current_owner == eFACTION.Imperium && system_garrison[targ_planet-1].garrison_force){
+            var _mission_string = $"The garrison on {planet_numeral_name(targ_planet)} has finished the period of garrison support agreed with the planetary governor.";
+            var p_garrison = system_garrison[targ_planet-1];
+            var  result = p_garrison.garrison_disposition_change(id, targ_planet);
+            if (!p_garrison.garrison_leader){
+                p_garrison.find_leader();
+            }
+            if (result == "none"){
+            //TODO make a dedicated plus minus string function if there isn't one already
+            } else if (!result){
+                var effect = result * irandom_range(1,5);
+                dispo[targ_planet] += effect;
+                _mission_string += $"A number of diplomatic incidents occured over the period which had considerable negative effects on our disposition with the planetary governor (disposition -{effect})";
+            } else {
+                var effect = result * irandom_range(1,5);
+                dispo[targ_planet] += result * effect;
+                _mission_string += $"As a diplomatic mission the duration of the stay was a success with our political position with the planet being enhanced greatly (disposition +{effect})";
+            }
+            var tester = global.character_tester;
+            var widom_test = tester.standard_test(p_garrison.garrison_leader, "wisdom",0, ["siege"]);
+            if (widom_test[0]){
+                p_fortified[targ_planet]++;
+                _mission_string+=$"while stationed {p_garrison.garrison_leader.name_role()} makes several notable observations and is able to instruct the planets defense core leaving the world better defended (fortifications++).";
+            }
+            //TODO just generall apply this each turn with a garrison to see if a cult is found
+            if (planet_feature_bool(p_feature[targ_planet], P_features.Gene_Stealer_Cult)){
+                var cult = return_planet_features(planet.features,P_features.Gene_Stealer_Cult)[0];
+                if (cult.hiding){
+                    widom_test = tester.standard_test(p_garrison.garrison_leader, "wisdom",0, ["tyranids"]);
+                    if (widom_test[0]){
+                        cult.hiding = false;
+                        _mission_string+="Most alarmingly signs of a genestealer cult are noted by the garrison. how far the rot has gone will now need to be investigated and the xenos taint purged.";
+                    }
+                }
+            }
+            scr_popup($"Agreed Garrison of {planet_numeral_name(targ_planet)} complete",_mission_string,"","");
+        } else {
+            dispo[targ_planet] -= 20;
+            scr_popup($"Agreed Garrison of {planet_numeral_name(targ_planet)}",$"your agreed garrison of  {planet_numeral_name(targ_planet)} was cut short by your chapter the planetary governor has expressed his displeasure (disposition -20)","","");
+        }
+        remove_planet_problem(targ_planet, "provide_garrison");
+    } else {
+        remove_planet_problem(targ_planet, "provide_garrison");
+    }	
+}
+
+function complete_beast_hunt_mission(targ_planet, problem_index){
+    var planet = new PlanetData(targ_planet, self);
+    if (problem_has_key_and_value(targ_planet,beast_hunt,"stage","active")){
+        _mission_string = "";
+        var man_conditions = {
+            "job": "hunt_beast",
+            "max" : 3,
+        }
+        var _hunters = collect_role_group("all",[name,targ_planet,0], false, man_conditions);
+        var _success = false;
+        var _tester = global.character_tester;
+        for (var i=0;i<array_length(_hunters);i++){
+
+        }
+        scr_popup($"Beast Hunt on {planet_numeral_name(i)} complete story line mission and rewards need work",_mission_string,"","");
+        remove_planet_problem(targ_planet, "hunt_beast");
+    } else {
+        remove_planet_problem(targ_planet, "hunt_beast");
+    }	
+}
 
 //TODO allow most of these functions to be condensed and allow arrays of problems or planets and maybe increase filtering options
 //filtering options could be done via universal methods that all the filters to be passed to many other game systems
