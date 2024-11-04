@@ -133,7 +133,7 @@ function init_beast_hunt_mission(planet, star, mission_slot){
 //@mixin obj_star
 function complete_garrison_mission(targ_planet, problem_index){
 	var planet = new PlanetData(targ_planet, self);
-    if (problem_has_key_and_value(targ_planet,garrison_mission,"stage", "active")){
+    if (problem_has_key_and_value(targ_planet,problem_index,"stage", "active")){
         if (planet.current_owner == eFACTION.Imperium && system_garrison[targ_planet-1].garrison_force){
             var _mission_string = $"The garrison on {planet_numeral_name(targ_planet)} has finished the period of garrison support agreed with the planetary governor.";
             var p_garrison = system_garrison[targ_planet-1];
