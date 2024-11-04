@@ -1,5 +1,39 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
+
+function mission_name_key(mission){
+	var mission_key = {
+		"meeting_trap" : "Chaos Lord Meeting",
+		"meeting" : "Chaos Lord Meeting",
+		"succession" : "War of succession",
+		"spyrer" : "Kill Spyrer for Inquisitor",
+		"mech_raider" : "Provide Land Raider to Mechanicus",
+		"mech_bionics" : "Provide Bionic Augmented marines to study",
+		"mech_mars" : "Send Techmarines to mars",
+		"mech_tomb1": "Explore Mechanicus Tomb",
+		"fallen" : "Find Chapter Fallen",
+		"recon" : "Recon Mission for Inquisitor",
+		"cleanse" : "Cleanse Planet for Inquisitor",
+		"tyranid_org" : "Capture Tyranid for Inquisitor",
+		"recon" : "Recon Mission for Inquisitor",
+		"bomb" : "Bombard World for inquisitor",
+		"great_crusade": "Answer Crusade Muster Call",
+		"harlequins" : "Harlequin presence Report",
+		"artifact_loan" : "Safeguard Artifact for the inquisition",
+		"fund_elder" : "provide assistance to Eldar",
+		"provide_garrison" : "Provision Garrison",
+		"hunt_beast" : "Hunt Beasts",
+		"protect_raiders" : "Protect From Raiders",
+		"join_communion" : "Join Planetary Religious Celebration",
+		"join_parade" : "Join Parade on Planet Surface",
+		"recover_artifacts" : "Recover Artifacts"
+	}
+	if (struct_exists(mission_key, mission)){
+		return mission_key[$ mission];
+	} else{
+		return "none"
+	}  
+}
 function scr_new_governor_mission(planet){
 	problem = "";
 	if p_owner[planet]!=eFACTION.Imperium then exit;
@@ -72,6 +106,8 @@ function init_garrison_mission(planet, star, mission_slot){
 	    scr_event_log("",$"Garrison commited to {numeral_name} for {garrison_length} months.", target.name);
 	}	
 }
+
+
 
 function init_beast_hunt_mission(planet, star, mission_slot){
 	var problems_data = star.p_problem_other_data[planet]
@@ -146,7 +182,7 @@ function complete_garrison_mission(targ_planet, problem_index){
 
 function complete_beast_hunt_mission(targ_planet, problem_index){
     var planet = new PlanetData(targ_planet, self);
-    if (problem_has_key_and_value(targ_planet,beast_hunt,"stage","active")){
+    if (problem_has_key_and_value(targ_planet,problem_index,"stage","active")){
         _mission_string = "";
         var man_conditions = {
             "job": "hunt_beast",
@@ -159,6 +195,10 @@ function complete_beast_hunt_mission(targ_planet, problem_index){
         var _unit;
         var _unit_report_string = "";
         var _deaths = 0;
+        if (!array_length(_hunters)){
+        	remove_planet_problem(targ_planet, "hunt_beast");
+        	return;
+        }
         for (var i=0;i<array_length(_hunters);i++){
         	_unit = _hunters[i];
 			_unit_pass = _tester.standard_test(_unit, weapon_skill,10, "beast");
@@ -276,40 +316,40 @@ function has_problem_planet(planet, problem, star="none"){
 
 //returns the array position of a given problem on a given planet if the specfied time is given
 function has_problem_planet_and_time(planet, problem, time,star="none"){
-	var had_problem = -1;
+	var _had_problem = -1;
 	if (star=="none"){
 		for (var i = 0;i<array_length(p_problem[planet]);i++){
 			if (p_problem[planet][i] == problem){
 				if (p_timer[planet][i] == time){
-					had_problem=i;
+					_had_problem=i;
 				}
 			}
 		}
 	} else {
 		with (star){
-			had_problem=has_problem_planet_and_time(planet, problem, time);
+			_had_problem=has_problem_planet_and_time(planet, problem, time);
 		}
 	}
-	return had_problem;	
+	return _had_problem;	
 }
 
 //returns the array position of a given problem on a given planet if the specfied time is above 0
  function has_problem_planet_with_time(planet, problem,star="none"){
-	var had_problem = -1;
+	var _had_problem = -1;
 	if (star=="none"){
 		for (var i = 0;i<array_length(p_problem[planet]);i++){
 			if (p_problem[planet][i] == problem){
 				if (p_timer[planet][i] >0){
-					had_problem=i;
+					_had_problem=i;
 				}
 			}
 		}
 	} else {
 		with (star){
-			had_problem=has_problem_planet_with_time(planet, problem)
+			_had_problem=has_problem_planet_with_time(planet, problem)
 		}
 	}
-	return had_problem;	
+	return _had_problem;	
 }
 
 
@@ -332,19 +372,19 @@ function find_problem_planet(planet, problem, star="none"){
 
 ///removie all of a given problem from a planet
 function remove_planet_problem(planet, problem, star="none"){
-	var had_problem = -1;
+	var _had_problem = -1;
 	if (star=="none"){
 		for (var i = 0;i<array_length(p_problem[planet]);i++){
 			if (p_problem[planet][i] == problem){
 				p_problem[planet][i]="";
 				p_timer[planet][i]=-1;
 				p_problem_other_data[planet][i]={};
-				had_problem=true;
+				_had_problem=true;
 			}
 		}
 	} else {
 		with (star){
-			had_problem=remove_planet_problem(planet, problem);
+			_had_problem=remove_planet_problem(planet, problem);
 		}
 	}
 	return -1;	

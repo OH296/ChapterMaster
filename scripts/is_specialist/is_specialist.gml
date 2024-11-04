@@ -189,12 +189,26 @@ function is_specialist(unit_role, type="standard", include_trainee=false) {
 	return array_contains(specialists,unit_role);
 }
 
+//TODO write this out with proper formatting when i can be assed
+//Used to quikcly collect groups of marines with given parameters
+// group takes a string relating to options in the role_groups function, to ignore filtering by group use "all"
+	// can also pass an array to filter for mutiple groups
+// location takes wther a string with a system name or an array with 3 parameters [<location name>,<planet number>,<ship number>]
+// if opposite is true then then the roles defined in the group argument are ignored and all others collected
+// search conditions
+	// companies, takes either an int or an arrat to define which companies to search in
+	// any stat allowed by the stat_valuator basically allows you to look for marines whith certain stat lines
+	// job allows you to find marines forfuling certain tasks like garrison or forge etc
+
 function collect_role_group(group="standard", location="", opposite=false, search_conditions = {companies:"all"}){
 	var _units = [], unit, count=0, _add=false, _is_special_group;
 	var _max_count = 0;
 	var _total_count = 0;
 	if (struct_exists(search_conditions, "max")){
 		_max_count =  search_conditions.max;
+	}
+	if (!struct_exists(search_conditions, "companies")){
+		search_conditions.companies = "all";
 	}
 	for (var com=0;com<=10;com++){
     	if (_max_count>0){
@@ -344,7 +358,7 @@ function group_selection(group, selection_data){
             		continue;
             	}
             	unit = group[i];
-            	_add_man_to_manage_arrays(unit);
+            	add_man_to_manage_arrays(unit);
 
                 if (selection_data.purpose_code=="forge_assignment"){
                 	if (unit.job != "none"){

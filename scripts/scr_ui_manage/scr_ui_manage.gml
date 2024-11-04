@@ -730,7 +730,9 @@ function scr_ui_manage() {
 		    		}		    				    		
 		    	}
 		    	if (sel>=array_length(display_unit)) then break;
-		    	while (man[sel]=="hide") and (sel<array_length(display_unit)-1){sel+=1;}
+		    	while (man[sel]=="hide") and (sel<array_length(display_unit)-1){
+		    		sel+=1;
+		    	}
 		    	if (scr_draw_management_unit(sel, yy, xx) == "continue"){
 		    		sel++
 		    		i--;

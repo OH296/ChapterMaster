@@ -394,9 +394,8 @@ function scr_enemy_ai_d() {
     
 	    if ((p_tyranids[i]=3) or (p_tyranids[i]=4)) and (p_population[i]>0){
 	        if (!(has_problem_planet(i, "Hive Fleet"))){
-	            var roll, cont;
-	            roll=irandom_range(100,300);
-	            cont=0;
+	            var roll=irandom_range(100,300);
+	            var cont=0;
         
             
 	            if (p_tyranids[i]=3) and (roll<=5) then cont=1;

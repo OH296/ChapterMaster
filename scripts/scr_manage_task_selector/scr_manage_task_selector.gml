@@ -10,6 +10,7 @@ function scr_manage_task_selector(){
 				exit;
 			}
 		}
+		man_count = array_sum(man_sel);
 		if (selection_data.purpose_code!="manage"){
 			if ((man_count==0 || man_count>selection_data.number)){
 				proceed_button.draw_shutter(xx+1110,yy+70, "Proceed", 0.5, false);
@@ -87,6 +88,7 @@ function scr_manage_task_selector(){
 	                					planet:selection_data.planet, 
 	                					location:selection_data.system.name
 	                				};
+	                				unit.unload(selection_data.planet, selection_data.system);
 	            					break;										
 	                		}		                		
 	                	} else {
