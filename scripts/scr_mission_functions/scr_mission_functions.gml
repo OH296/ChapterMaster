@@ -155,10 +155,48 @@ function complete_beast_hunt_mission(targ_planet, problem_index){
         var _hunters = collect_role_group("all",[name,targ_planet,0], false, man_conditions);
         var _success = false;
         var _tester = global.character_tester;
+        var _unit_pass;
+        var _unit;
+        var _unit_report_string = "";
+        var _deaths = 0;
         for (var i=0;i<array_length(_hunters);i++){
+        	_unit = _hunters[i];
+			_unit_pass = _tester.standard_test(_unit, weapon_skill,10, "beast");
+			if (_unit_pass[0]){
+				if (!_success) then _unit_pass=true;
+			}
+			if (_unit_pass[0]){
+				_unit.add_trait("beast_slayer");
+				_unit_report_string += $"{_unit.name_role()} Has gained the trait {global.trait_list.beast_slayer.display_name}\n";
+			} else {
+				var _tough_check = _unit_pass = _tester.standard_test(_unit, constitution,unit.luck);
+				if (!_tough_check[0]){
+					if (_tough_check[1]<-10){
+						_unit_report_string += $"{_unit.name_role()} Was mauled to death\n";
+						scr_kill_unit(_unit.company, unit.marine_number);
+						_deaths++;
+					} else if (_tough_check[1]>=-10){
+						if (irandom(100)<unit.luck){
+							unit.add_or_sub_health(-100);
+							$"{_unit.name_role()} Was injured (health - 100)\n";
+						} else {
+							unit.add_or_sub_health(-250);
+							$"{_unit.name_role()} Was Badly injured, it is unknown if he will recover (health - 250)\n";
+						}
+					}
+				}
+			}
+        }
+        if (_success){
+        	_mission_string = $"The mission was a success and a great number of beasts rounded up and slain, your marines were able to gain great skills and the prestige of your chapter has increased greatly across the planets populace."
+        	if (_deaths){
+        		$"Unfortunatly {_deaths} of your marines died."
+        	}
+        	_mission_string += $"\n{_unit_report_string}";
+        } else {
 
         }
-        scr_popup($"Beast Hunt on {planet_numeral_name(i)} complete story line mission and rewards need work",_mission_string,"","");
+        scr_popup($"Beast Hunt on {planet_numeral_name(i)}",_mission_string,"","");
         remove_planet_problem(targ_planet, "hunt_beast");
     } else {
         remove_planet_problem(targ_planet, "hunt_beast");

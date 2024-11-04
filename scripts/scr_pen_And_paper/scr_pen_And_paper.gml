@@ -55,6 +55,17 @@ function PenAndPaperSim() constructor{
                 	total_mod+=10;
                 }
 			}
+			else if (tag=="beast"){
+				if (unit.has_trait("tyrannic_vet")){
+                	total_mod+=2;
+                }
+                if (unit.has_trait("beast_slayer")){
+                	total_mod+=10;
+                }
+                if (unit.has_trait("harsh_born")){
+                	total_mod+=3;
+                }                			
+			}
 		}
 		return total_mod;
 	}

@@ -385,11 +385,11 @@ function scr_enemy_ai_d() {
         }
         var garrison_mission = has_problem_planet_and_time(i,"provide_garrison", 0);
         if (garrison_mission>-1){
-            complete_garrison_mission(i,garrison_mission);
+            try_and_report_loop("complete garrison mission", complete_garrison_mission,true, [i,garrison_mission]);
         }
         var beast_hunt = has_problem_planet_and_time(i,"hunt_beast", 0);
         if (beast_hunt>-1){
-            complete_beast_hunt_mission(i, beast_hunt)
+             try_and_report_loop("complete beast hunt mission", complete_beast_hunt_mission,true, [i,beast_hunt]);
         }        
     
 	    if ((p_tyranids[i]=3) or (p_tyranids[i]=4)) and (p_population[i]>0){
