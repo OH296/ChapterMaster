@@ -10,7 +10,7 @@ function calculate_full_chapter_spread(turn_end=true){
 	var unit_spread = {};
 	var maintenance_burden=0;
     for(var company=0;company<11;company++){
-    	for (var v=0;v<500;v++){
+    	for (var v=0; v < array_length(obj_ini.name[company]); v++) {
     		key_val = "";
     		if (obj_ini.name[company][v]=="") then continue;
     		unit = fetch_unit([company, v]);
