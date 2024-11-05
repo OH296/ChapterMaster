@@ -1237,7 +1237,7 @@ function scr_initialize_custom() {
 
 		role[i, 6] = "Dreadnought";
 		wep1[i, 6] = "Dreadnought Lightning Claw";
-		wep2[i, 6] = "Lascannon";
+		wep2[i, 6] = "Twin Linked Lascannon";
 		armour[i, 6] = "Dreadnought";
 		mobi[i, 6] = "";
 		gear[i, 6] = "";

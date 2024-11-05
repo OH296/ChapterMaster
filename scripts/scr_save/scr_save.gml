@@ -320,16 +320,13 @@ function scr_save(save_part,save_id) {
 	    ini_write_string("Ini","lord_name",obj_ini.lord_admiral_name);
 	    ini_write_string("Ini","previous_forge_masters",base64_encode(json_stringify(obj_ini.previous_forge_masters)));
 	    //
-	    var g=0;
-	    for (g=0;g<array_length(obj_ini.equipment);g++){
-	        if (obj_ini.equipment[g]!=""){
-	            ini_write_string("Ini",$"equipment{g}",obj_ini.equipment[g]);
-	            ini_write_string("Ini",$"equipment_type{g}",obj_ini.equipment_type[g]);
-	            ini_write_real("Ini",$"equipment_number{g}",obj_ini.equipment_number[g]);
-	            ini_write_real("Ini",$"equipment_condition{g}",obj_ini.equipment_condition[g]);
-	            ini_write_string("Ini",$"equipment_quality{g}",base64_encode(json_stringify(obj_ini.equipment_quality[g])));
-	        }	    	
-	    }
+
+		ini_encode_and_json("Ini",$"equipment",obj_ini.equipment);
+		ini_encode_and_json("Ini",$"equipment_type",obj_ini.equipment_type);
+		ini_encode_and_json("Ini",$"equipment_number",obj_ini.equipment_number);
+		ini_encode_and_json("Ini",$"equipment_condition",obj_ini.equipment_condition);
+		ini_encode_and_json("Ini",$"equipment_quality",obj_ini.equipment_quality);
+
 	    for (g=0;g<array_length(obj_ini.artifact);g++){
             ini_write_string("Ini","artifact"+string(g),obj_ini.artifact[g]);
             ini_write_string("Ini","artifact_tags"+string(g),base64_encode(json_stringify(obj_ini.artifact_tags[g])));

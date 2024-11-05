@@ -522,7 +522,7 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
             }
             
             // Track the lost unit
-            var existing_index = array_index_of(lost, marine_type[unit_id]);
+            var existing_index = array_get_index(lost, marine_type[unit_id]);
             if (existing_index != -1) {
                 lost_num[existing_index] += 1;
             } else {

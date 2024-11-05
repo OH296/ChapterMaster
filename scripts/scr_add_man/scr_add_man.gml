@@ -132,17 +132,17 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 		// Faction 4.5 - Radical inquisitors, perhaps?
 		// Faction 5 - Sisters of Battle
 			case "Sister of Battle":
-				obj_ini.wep1[target_company][good] = "Bolter"; // Might want to create a "Light Bolter" variant for this one
+				obj_ini.wep1[target_company][good] = "Light Bolter";
 				obj_ini.wep2[target_company][good] = "Sarissa";
-				obj_ini.armour[target_company][good] = "Power Armour"; // Same here, Sororitas are glorified guard
+				obj_ini.armour[target_company][good] = "Light Power Armour";
 				obj_ini.experience[target_company][good] = 60;
 				obj_ini.race[target_company][good] = 5;
 				unit = new TTRPG_stats("adeptus_sororitas", target_company, good, "sister_of_battle");
 				break;
 			case "Sister Hospitaler":
-				obj_ini.wep1[target_company][good] = "Bolter"; // Same here
+				obj_ini.wep1[target_company][good] = "Light Bolter";
 				obj_ini.wep2[target_company][good] = "Sarissa";
-				obj_ini.armour[target_company][good] = "Power Armour"; // Same here
+				obj_ini.armour[target_company][good] = "Light Power Armour";
 				obj_ini.experience[target_company][good] = 100;
 				obj_ini.gear[target_company][good] = "Sororitas Medkit";
 				obj_ini.race[target_company][good] = 5;

@@ -126,7 +126,7 @@ function scr_restart_variables(saved_game) {
 	        obj_restart_vars.r_race[i,6]=1;
 	        obj_restart_vars.r_role[i,6]="Dreadnought";
 			obj_restart_vars.r_wep1[i,6]="Close Combat Weapon";
-			obj_restart_vars.r_wep2[i,6]="Lascannon";
+			obj_restart_vars.r_wep2[i,6]="Twin Linked Lascannon";
 	        obj_restart_vars.r_armour[i,6]="Dreadnought";
 			obj_restart_vars.r_mobi[i,6]="";
 			obj_restart_vars.r_gear[i,6]="";
@@ -363,7 +363,7 @@ function scr_restart_variables(saved_game) {
 	        obj_controller.r_race[i,6]=1;
 	        obj_controller.r_role[i,6]="Dreadnought";
 			obj_controller.r_wep1[i,6]="Close Combat Weapon";
-			obj_controller.r_wep2[i,6]="Lascannon";
+			obj_controller.r_wep2[i,6]="Twin Linked Lascannon";
 	        obj_controller.r_armour[i,6]="Dreadnought";
 			obj_controller.r_mobi[i,6]="";
 			obj_controller.r_gear[i,6]="";
@@ -620,7 +620,7 @@ function scr_restart_variables(saved_game) {
 			race[i,6]=1;
 			role[i,6]="Dreadnought";
 			wep1[i,6]="Close Combat Weapon";
-			wep2[i,6]="Lascannon";
+			wep2[i,6]="Twin Linked Lascannon";
 			armour[i,6]="Dreadnought";
 	        
 			race[i,8]=1;

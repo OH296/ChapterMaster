@@ -256,8 +256,8 @@ function UnitQuickFindPanel() constructor{
     			    if (hover_count==10){
     			    	hover_item = new HoverBox();
     			    	var mouse_consts = return_mouse_consts()
-    			    	hover_item.relative_x = (mouse_consts[0]-xx+(10-10));
-    			    	hover_item.relative_y = (mouse_consts[1]-(yy+90+(20*i)));
+    			    	hover_item.relative_x = (mouse_consts[0]);
+    			    	hover_item.relative_y = (mouse_consts[1]);
     			    	hover_item.root_item=i;
     			    }
     			}

@@ -98,7 +98,8 @@ function scr_player_combat_weapon_stacks() {
     if (defenses=1) then exit;
 
 
-    var i,g=0;men=0;veh=0;dreads=0;
+    var i,g=0;men=0;dreads=0;
+    veh=0
     for (i=1;i<array_length(att);i++) {
         // dudes[i]="";
         dudes_num[i]=0;
@@ -226,10 +227,11 @@ function scr_player_combat_weapon_stacks() {
                 }
             }
         }
-
+    }
+    for (g=0;g<array_length(veh_id);g++) {
         if (veh_id[g]>0) and (veh_hp[g]>0) and (veh_dead[g]!=1){
             if (veh_id[g]>0) and (veh_hp[g]>0) then veh_dead[g]=0;
-            if (veh_hp[g]>0) then veh+=1;
+            if (veh_hp[g]>0) then veh++;
 
             var j=0,good=0,open=0;// Counts the number and types of marines within this object
             if (veh_dead[g]!=1) then repeat(40){j+=1;
@@ -283,9 +285,8 @@ function scr_player_combat_weapon_stacks() {
 
     if (men==1) and (veh==0)and (obj_ncombat.player_forces=1) {
         var i=0,h=0;
-        repeat(500) {
+        for (var i=0;i<array_length(unit_struct);i++) {
             if (h=0) {
-                i+=1;
                 unit = unit_struct[i];
                 if (!is_struct(unit)) then continue;
                 if (unit.hp()>0) and (marine_dead[i]=0){

@@ -9,6 +9,11 @@ function set_fleet_target(targ_x, targ_y, final_target){
 }
 
 function scr_valid_fleet_target(){
+	if (target==noone) then return false;
+	if (is_string(target)){
+		target=noone;
+		return false;
+	}
 	var valid = instance_exists(target);
 	if (valid){
 		valid = (target.object_index == obj_p_fleet || target.object_index == obj_en_fleet);
