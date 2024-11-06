@@ -6,30 +6,60 @@ All notable changes to this project will be documented in this file.
 
 ### New:
 - example list
-    - example nested list
+  - example nested list
 
 ### Changed:
 - example list
-    - example nested list
+  - example nested list
 
 ### Fixed:
 - example list
-    - example nested list
+  - example nested list
 
 ### Under The Hood:
 - here go changes that are important only to other collaborators.
-    - everything that a normal player doesn't need to know.
+  - everything that a normal player doesn't need to know.
 ----------------------------------
 ## [0.10.0.0]
 
 
 ## [0.9.4.1]
 
+### Changed:
+- Build Date is displayed in the main menu.
+- Error logging edits:
+  - Error logs now have the pre-built title for the bug report on their first most line. You can just cut and paste it into the title.
+  - Errors now display a system message and not an in-game popup, as there are some unintended consequences with popup.
+  - Error message itself is edited a bit, for clarity and to include new instructions.
+  - Error itself is now wrapped in markdown codeblock.
+  - Error logs now also display Build Date, for when there are different builds of the same version.
+
 ### Fixed:
-- garrisons crashing and returning the game to map
-- crash during enemy end turn with chaos fleets
-- fix crash from trying to spawn chaos warlord with poor methods
-- fix crash from bombarding due to old planet name methods
+- Crashes:
+  - Garrisons crashing and returning the game to star map.
+  - Crash during enemy end turn with chaos fleets.
+  - Crash from trying to spawn chaos warlord with poor methods.
+  - Crash from bombarding due to old planet name methods.
+  - Crash when entering company management screen (`tooltip_text`).
+  - Battle crashes related to `obj_pnunt` (#29).
+  - Unknown amount of crashes caused by garbage collector (GC).
+  - Crash cause by GC on the role equipment slide of creation screen.
+  - Crash when calculation fleet speed (#39).
+- Inquisitor inspection target fleet getting invalid (#36).
+- Most of the librarium artifact list bugs should be fixed (#32).
+- Duplicate inquisition inspection (#33).
+- Health values going over 100% (#43).
+- Bombard target planet display name (#46).
+
+### Under The Hood:
+- `obj_ini.experience` deprecated in favour of unit struct `experience` variable (#37).
+- Game Version and Build Date are now handled through an external json file.
+- Game Version is tracked through `global.game_version`, Build Date through `global.build_date`.
+- New functions: 
+  - `array_to_string_list()` - renamed `format_stacktrace()`, array into a string, with each element on a newline.
+  - `json_to_gamemaker()` - accepts path to json file and outputs a struct or a dslist.
+  - `markdown_codeblock()` - accepts a string and wraps it with markdown codeblock symbols.
+  - `handle_exception()` - accepts an exception struct, usually from a try-catch loop, displays an error and creates an error log.
 
 ## [0.9.4.0]
 

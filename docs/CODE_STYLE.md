@@ -40,11 +40,13 @@ All variable names, function names, etc., should use `snake_case` unless otherwi
 - Use `&&` and `||` instead of `and` and `or` to ensure compatibility with JavaScript formatters.
 - Indentation should be 4 spaces (avoid tabs).
 - End simple statements with semicolons.
-- For string interpolation, use `$"text {variable}"` as it’s least error-prone and applies `string()` to `{variables}` automatically.
+- For string interpolation choose one of these methods: 
+  - For big strings - [template strings](https://manual.gamemaker.io/beta/en/index.htm#t=GameMaker_Language%2FGML_Reference%2FStrings%2FStrings.htm) (`$"text {variable}"`), as they are easier to read, less typo-prone and convert `{variables}` to strings automatically.
+  - For small strings - [string()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Strings/string.htm) function (`string("text {0}", value_to_insert)`), as it may be easier to read in some cases.
 - Use parentheses to clarify conditions with mixed `&&` and `||` operators, ensuring consistent behavior across platforms.
-   - Example (recommended for mixed operators): `if ((condition1 && condition2) || (condition3 && condition4))`
-   - Simple sequences of the same operator (like `&&` alone) don’t need extra parentheses: `if (condition1 && condition2 && condition3)`
-   - Avoid wrapping each condition individually when using the same operator: `if ((condition1) && (condition2) && (condition3))`
+  - Example (recommended for mixed operators): `if ((condition1 && condition2) || (condition3 && condition4))`
+  - Simple sequences of the same operator (like `&&` alone) don’t need extra parentheses: `if (condition1 && condition2 && condition3)`
+  - Avoid wrapping each condition individually when using the same operator: `if ((condition1) && (condition2) && (condition3))`
 - Use `++`/`--` instead of `+=1`/`-=1`.
 
 ### Formatters:
