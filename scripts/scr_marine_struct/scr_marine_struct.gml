@@ -559,8 +559,8 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			piety : [20,1],
 			luck : 10, // I don't see the point to make them less lucky than space marines
 			technology : [30,1],
-			skills: {weapons:{"Hellgun":1, "Combat Knife":1}},
-			start_gear:{"armour":"Skitarii Armour", "wep1":"Hellgun", "wep2":"Combat Knife"},
+			skills: {weapons:{"Hellgun":1,}},
+			start_gear:{"armour":"Skitarii Armour", "wep1":"Hellgun"},
 			base_group : "skitarii",
 	},
 	"tech_priest":{
@@ -616,7 +616,7 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			luck : 10,
 			technology : [8,1],
 			skills : {}, // TODO consider what skills are needed for this bloke
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"}, // TODO - add Light variant of Power Armour
+			start_gear:{"armour":"Light Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"}, // TODO - add Light variant of Power Armour
 			base_group : "human",
 	},
 	/* TODO - add psychic capabilities
