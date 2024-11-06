@@ -1,15 +1,32 @@
-function calculate_research_points(turn_end=false){
-    with (obj_controller){
+
+
+function SpecialistPointHandler() constructor{
+
+    static chapter_spread = calculate_full_chapter_spread;
+    static healing_and_point_use = apothecary_simple;
+
+    static calculate_research_points = function(turn_end=false){
+        self.turn_end=turn_end;
         research_points = 0;
         forge_points = 0;
         master_craft_chance = 0;
-        if (tech_status == "heretics") then master_craft_chance+=5;
+        apoth_points_used = 0;
+        tech_points_used = 0;
+        crafters=0;
+        at_forge = 0;
+
+        if (obj_controller.tech_status == "heretics") then master_craft_chance+=5;
+
+        techs = [];
+        heretics = [];
+
         forge_string = $"Forge Production Rate#";
-        var heretics = [], forge_master=-1, notice_heresy=false, forge_point_gen=[], crafters=0, at_forge=0, gen_data={};
-        var tech_locations=[]
-        var techs = collect_role_group("forge");
-        var cur_tech;
-        var total_techs = array_length(techs);
+        forge_master=-1,
+        healing_and_point_use(turn_end);
+        var _noticed_heresy=false, at_forge=0;
+        var _tech_locations=[]
+        var _cur_tech;
+        total_techs = array_length(techs);
         for (var i=0; i<array_length(techs); i++){
             if (techs[i].IsSpecialist("heads")){
                 forge_master=i;
@@ -20,30 +37,14 @@ function calculate_research_points(turn_end=false){
                 total_techs--;
                 continue;
             }
-            if (techs[i].technology>40 && techs[i].hp() > 0){
-                var cur_tech = techs[i]
-                research_points += cur_tech.technology-40;
-                forge_point_gen=cur_tech.forge_point_generation(true);
-                gen_data = forge_point_gen[1];
-                if (struct_exists(gen_data,"crafter")) then crafters++;
-                if (struct_exists(gen_data,"at_forge")){
-                    at_forge++;
-                    master_craft_chance += (techs[i].experience()/50);
-                }
-                forge_points += forge_point_gen[0];
-                if (techs[i].has_trait("tech_heretic")){
-                    array_push(heretics, i);
-                }
-            }
-            tech_locations[i] = techs[i].marine_location();
+            _tech_locations[i] = techs[i].marine_location();
         }
         if (forge_master>-1){
             obj_controller.master_of_forge = techs[forge_master];
         }
         forge_string += $"Techmarines: +{floor(forge_points)}#";
-        var used_points = apothecary_simple(turn_end);
-        forge_string += $"Vehicle Repairs: -{floor(used_points)}#";
-        forge_points-=used_points;        
+        forge_string += $"Vehicle Repairs: -{floor(tech_points_used)}#";
+        forge_points-=tech_points_used;        
         var forge_veh_maintenance={};
         for (var comp=0;comp<=10;comp++){
             for (var veh=0;veh<=100;veh++){
@@ -70,107 +71,13 @@ function calculate_research_points(turn_end=false){
             forge_string += $"Forges: +{5*player_forge_data.player_forges}#";
         }
         forge_points = floor(forge_points);
-        var tech_test, charisma_test, piety_test, met_non_heretic, heretics_pursuade_chances, new_pursuasion;
         //in this instance tech heretics are techmarines with the "tech_heretic" trait
         if (turn_end){
             if (array_length(techs)==0) then scr_loyalty("Upset Machine Spirits","+");
-            if (array_length(heretics)>0 && turn>75){
-                var heretic_location, same_location, current_heretic, current_tech;
-                //iterate through tech heretics;
-                for (var heretic=0; heretic<array_length(heretics); heretic++){
-                    heretic_location = tech_locations[heretics[heretic]];
-                    current_heretic = techs[heretics[heretic]];
-                    if (current_heretic.in_jail()) then continue;
-                    heretics_pursuade_chances = (floor(current_heretic.charisma/5) - 3)
-                    //iterate through rest of techs
-                    pursuasions =[];
-                    met_non_heretic = false;
-                    for (var i=0; i<array_length(techs) && heretics_pursuade_chances>0; i++){
-                        same_location=false;
-                        new_pursuasion = irandom(array_length(techs)-1);
-                        //if tech is also heretic skip
-                        if (array_contains(heretics,new_pursuasion)) then continue;
-                        if (array_contains(pursuasions,new_pursuasion)) then continue;
-                        heretics_pursuade_chances--;
-                        current_tech = techs[new_pursuasion];
 
-                        // find out if heretic is in same location as techmarine
-                        if (same_locations(heretic_location,tech_locations[new_pursuasion])){
-                            met_non_heretic=true;
-                            //if so do a an opposed technology test of techmarine vs tech  heretic techmarine
-                            tech_test = global.character_tester.oppposed_test(current_heretic,current_tech, "technology");
+            tech_ideology_spread()
+            new_tech_heretic_spawn();
 
-
-                            if (tech_test[0]==1){
-                                // if heretic wins do an opposed charisma test
-                                charisma_test =  global.character_tester.oppposed_test(current_heretic,current_tech, "charisma", -15+current_tech.corruption);                           
-                                if (charisma_test[0]==1){
-                                    // if heretic win tech is corrupted
-                                    //tech is corrupted by half the pass margin of the heretic
-                                    //this means high charisma heretics will spread corruption more quickly and more often
-                                    if (current_heretic.corruption>current_tech.corruption){
-                                        current_tech.edit_corruption(min(4,charisma_test[1]));
-                                    }
-
-                                    // tech takes a piety test to see if they break faith with cult mechanicus and become tech heretic
-                                    //piety test is augmented by by the techs corruption with the test becoming harder to pass the more
-                                    // corrupted the tech is
-                                    piety_test = global.character_tester.standard_test(current_tech, "piety", +75 - current_tech.corruption);
-
-                                    // if tech fails piety test tech also becomes tech heretic
-                                    if (piety_test[0] == false && choose(true,false)){
-                                        current_tech.add_trait("tech_heretic");
-                                    }
-                                } else if (charisma_test[0]==2){
-                                    if (charisma_test[1] > 40 && notice_heresy=false){
-                                        scr_alert("purple","Tech Heresy",$"{current_tech.name_role()} contacts you concerned of Tech Heresy in the Armentarium");
-                                        notice_heresy=true;
-                                    }
-                                }
-                            }
-                            if (new_pursuasion==forge_master){
-                                // if tech is the forge master then forge master takes a wisdom in this case doubling as a perception test
-                                // if forge master passes tech heresy is noted and chapter master notified
-                                if (global.character_tester.standard_test(current_tech, "wisdom", - 40)[0] && !notice_heresy){
-                                    notice_heresy=true;
-                                    scr_event_log("purple",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
-                                    scr_alert("purple","Tech Heresy",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
-                                    //pip=instance_create(0,0,obj_popup);
-                                }
-                            }
-                        }
-                    }
-                    if (!met_non_heretic){
-                        if (irandom(4)==0){
-                            current_heretic.edit_corruption(1);
-                        }
-                    }
-                    //add check to see if tech heretic is anywhere near mechanicus forge if so maybe do stuff??
-                    /*if (heretic_location==location_types.planet){
-                        if 
-                    }*/
-                }
-                if (array_length(techs)>array_length(heretics)){
-                    if (array_length(heretics)/array_length(techs)>=0.35){
-                        if (irandom(9)==0){
-                            /*var text_string = "You Recive an Urgent Transmision from";
-                            if (forge_master>-1){
-    
-                            }*/
-                            scr_popup("Technical Differences!","You Recive an Urgent Transmision A serious breakdown in culture has coccured causing believers in tech heresy to demand that they are given preseidence and assurance to continue their practises","tech_uprising","");
-                        }
-                    }
-                }
-            }
-            possibility_of_heresy = 8;
-            if (array_contains(obj_ini.dis,"Tech-Heresy")) then possibility_of_heresy = 6;
-            if (irandom(power(possibility_of_heresy,(array_length(heretics)+2.2))) == 0 && array_length(techs)>0){
-                var current_tech = techs[irandom(array_length(techs)-1)];
-               if  (!global.character_tester.standard_test(current_tech, "piety")[0]){
-                   current_tech.add_trait("tech_heretic");
-                   current_tech.edit_corruption(20+irandom(15));
-               }
-            }
             if (forge_master==-1){ 
                 var tech_count = scr_role_count(obj_ini.role[100][16]);
                 if (tech_count>1){
@@ -182,8 +89,166 @@ function calculate_research_points(turn_end=false){
             }
             forge_queue_logic();       
         }
-    }   
+        obj_controller.research_points = 0;
+        obj_controller.forge_points = 0;
+        obj_controller.master_craft_chance = 0;
+        obj_controller.forge_string = forge_string;
+    }
+
+    static new_tech_heretic_spawn = function(){
+        var _possibility_of_heresy = 8;
+        if (array_contains(obj_ini.dis,"Tech-Heresy")) then _possibility_of_heresy = 6;
+        if (irandom(power(_possibility_of_heresy,(array_length(heretics)+2.2))) == 0 && array_length(techs)>0){
+            var _current_tech = techs[irandom(array_length(techs)-1)];
+           if  (!global.character_tester.standard_test(_current_tech, "piety")[0]){
+               _current_tech.add_trait("tech_heretic");
+               _current_tech.edit_corruption(20+irandom(15));
+           }
+        }
+    }
+
+    static add_forge_points_to_stack(unit){
+        array_push(techs, _unit);
+        if (unit.technology>40 && unit.hp() > 0){
+            var _cur_tech = unit
+            research_points += _cur_tech.technology-40;
+            var _forge_point_gen=_cur_tech.forge_point_generation(true);
+            var _unit_forge_gen_data = _forge_point_gen[1];
+            if (struct_exists(_unit_forge_gen_data,"crafter")) then crafters++;
+            if (struct_exists(_unit_forge_gen_data,"at_forge")){
+                at_forge++;
+                master_craft_chance += (unit.experience()/50);
+            }
+            forge_points += _forge_point_gen[0];
+            if (unit.has_trait("tech_heretic")){
+                array_push(heretics, array_length(techs)-1);
+            }
+        }
+    }
+
+    static tech_ideology_spread = function(){
+        var tech_test, charisma_test, piety_test, met_non_heretic, heretics_pursuade_chances, new_pursuasion;
+        if (array_length(heretics)>0 && turn>75){
+            var _heretic_location, _same_location, _current_heretic, _current_tech;
+            //iterate through tech heretics;
+            for (var heretic=0; heretic<array_length(heretics); heretic++){
+                _heretic_location = _tech_locations[heretics[heretic]];
+                _current_heretic = techs[heretics[heretic]];
+                if (_current_heretic.in_jail()) then continue;
+                heretics_pursuade_chances = (floor(_current_heretic.charisma/5) - 3)
+                //iterate through rest of techs
+                pursuasions =[];
+                met_non_heretic = false;
+                for (var i=0; i<array_length(techs) && heretics_pursuade_chances>0; i++){
+                    _same_location=false;
+                    new_pursuasion = irandom(array_length(techs)-1);
+                    //if tech is also heretic skip
+                    if (array_contains(heretics,new_pursuasion)) then continue;
+                    if (array_contains(pursuasions,new_pursuasion)) then continue;
+                    heretics_pursuade_chances--;
+                    _current_tech = techs[new_pursuasion];
+
+                    // find out if heretic is in same location as techmarine
+                    if (same_locations(_heretic_location,_tech_locations[new_pursuasion])){
+                        met_non_heretic=true;
+                        //if so do a an opposed technology test of techmarine vs tech  heretic techmarine
+                        tech_test = global.character_tester.oppposed_test(_current_heretic,_current_tech, "technology");
+
+
+                        if (tech_test[0]==1){
+                            // if heretic wins do an opposed charisma test
+                            charisma_test =  global.character_tester.oppposed_test(_current_heretic,_current_tech, "charisma", -15+_current_tech.corruption);                           
+                            if (charisma_test[0]==1){
+                                // if heretic win tech is corrupted
+                                //tech is corrupted by half the pass margin of the heretic
+                                //this means high charisma heretics will spread corruption more quickly and more often
+                                if (_current_heretic.corruption>_current_tech.corruption){
+                                    _current_tech.edit_corruption(min(4,charisma_test[1]));
+                                }
+
+                                // tech takes a piety test to see if they break faith with cult mechanicus and become tech heretic
+                                //piety test is augmented by by the techs corruption with the test becoming harder to pass the more
+                                // corrupted the tech is
+                                piety_test = global.character_tester.standard_test(_current_tech, "piety", +75 - _current_tech.corruption);
+
+                                // if tech fails piety test tech also becomes tech heretic
+                                if (piety_test[0] == false && choose(true,false)){
+                                    _current_tech.add_trait("tech_heretic");
+                                }
+                            } else if (charisma_test[0]==2){
+                                if (charisma_test[1] > 40 && _noticed_heresy=false){
+                                    scr_alert("purple","Tech Heresy",$"{_current_tech.name_role()} contacts you concerned of Tech Heresy in the Armentarium");
+                                    _noticed_heresy=true;
+                                }
+                            }
+                        }
+                        if (new_pursuasion==forge_master){
+                            // if tech is the forge master then forge master takes a wisdom in this case doubling as a perception test
+                            // if forge master passes tech heresy is noted and chapter master notified
+                            if (global.character_tester.standard_test(_current_tech, "wisdom", - 40)[0] && !_noticed_heresy){
+                                _noticed_heresy=true;
+                                scr_event_log("purple",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
+                                scr_alert("purple","Tech Heresy",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
+                                //pip=instance_create(0,0,obj_popup);
+                            }
+                        }
+                    }
+                }
+                if (!met_non_heretic){
+                    if (irandom(4)==0){
+                        _current_heretic.edit_corruption(1);
+                    }
+                }
+                //add check to see if tech heretic is anywhere near mechanicus forge if so maybe do stuff??
+                /*if (_heretic_location==location_types.planet){
+                    if 
+                }*/
+            }
+            if (array_length(techs)>array_length(heretics)){
+                if (array_length(heretics)/array_length(techs)>=0.35){
+                    if (!irandom(9)){
+                        /*var text_string = "You Recive an Urgent Transmision from";
+                        if (forge_master>-1){
+
+                        }*/
+                        scr_popup("Technical Differences!","You Recive an Urgent Transmision A serious breakdown in culture has coccured causing believers in tech heresy to demand that they are given preseidence and assurance to continue their practises","tech_uprising","");
+                    }
+                }
+            }
+        }   
+    }
+
+
+    static forge_queue_logic = function(){
+        if (forge_points>0){
+            var _reduction_points = forge_points;
+            if (array_length(forge_queue)>0 && forge_points>0){
+                var forging_length = array_length(forge_queue);
+                for (var i=0;i<forging_length;i++){
+                    if (forge_queue[i].forge_points<=_reduction_points){
+                        _reduction_points-=forge_queue[i].forge_points;
+
+                        scr_evaluate_forge_item_completion(forge_queue[i]);
+
+                        array_delete(forge_queue, i, 1);
+                        i--;
+                        forging_length--;
+                    } else {
+                        forge_queue[i].forge_points -= _reduction_points;
+                        _reduction_points=0;
+                    }
+                    if (_reduction_points<=0) then break;
+                }
+            }
+        } 
+    }
+
+    static apothecary_points_calc(){
+
+    }
 }
+
+
 function unit_forge_point_generation(turn_end=false){
     var trained_person = IsSpecialist("forge");
     var crafter = has_trait("crafter");
@@ -263,8 +328,8 @@ function scr_advance_research(research){
 
 function scr_evaluate_forge_item_completion(item){
     if (is_string(item.name)){
-        var vehicles = ["Rhino","Predator","Land Raider","Whirlwind","Land Speeder"];
-        var is_vehicle =  array_contains(vehicles,item.name);
+        var _vehicles = ["Rhino","Predator","Land Raider","Whirlwind","Land Speeder"];
+        var is_vehicle =  array_contains(_vehicles,item.name);
         if (!is_vehicle){
             scr_forge_item(item);
         } else {
@@ -281,31 +346,9 @@ function scr_evaluate_forge_item_completion(item){
         scr_advance_research(item);
     }
 }
-function forge_queue_logic(){
-    if (forge_points>0){
-        var reduction_points = forge_points;
-        if (array_length(forge_queue)>0 && forge_points>0){
-            var forging_length = array_length(forge_queue);
-            for (var i=0;i<forging_length;i++){
-                if (forge_queue[i].forge_points<=reduction_points){
-                    reduction_points-=forge_queue[i].forge_points;
 
-                    scr_evaluate_forge_item_completion(forge_queue[i]);
-
-                    array_delete(forge_queue, i, 1);
-                    i--;
-                    forging_length--;
-                } else {
-                    forge_queue[i].forge_points -= reduction_points;
-                    reduction_points=0;
-                }
-                if (reduction_points<=0) then break;
-            }
-        }
-    } 
-}
 function research_end(){
-    calculate_research_points(true);
+    specialist_point_handler.calculate_research_points(true);
     stc_research[$ stc_research.research_focus] += research_points;
     var research_area_limit;
     if (stc_research.research_focus=="vehicles"){
@@ -321,11 +364,15 @@ function research_end(){
 }
 
 
+function unit_apothecary_point_generation(){
+
+}
+
 function apothecary_points_calc(){
     with (obj_controller){
         research_points = 0;
         apoth_points = 0;
-        var heretics = [], forge_master=-1, notice_heresy=false, forge_point_gen=[], crafters=0, at_forge=0, gen_data={};
+        var heretics = [], forge_master=-1, _noticed_heresy=false, _forge_point_gen=[], crafters=0, at_forge=0, _unit_forge_gen_data={};
         var apoth_locations=[]
         var apoths = collect_role_group("forge");
         var total_techs = array_length(techs);
@@ -341,19 +388,19 @@ function apothecary_points_calc(){
             }
             if (techs[i].technology>40 && techs[i].hp() >0){
                 research_points += techs[i].technology-40;
-                forge_point_gen=techs[i].forge_point_generation(true);
-                gen_data = forge_point_gen[1];
-                if (struct_exists(gen_data,"crafter")) then crafters++;
-                if (struct_exists(gen_data,"at_forge")){
+                _forge_point_gen=techs[i].forge_point_generation(true);
+                _unit_forge_gen_data = _forge_point_gen[1];
+                if (struct_exists(_unit_forge_gen_data,"crafter")) then crafters++;
+                if (struct_exists(_unit_forge_gen_data,"at_forge")){
                     at_forge++;
                     master_craft_chance += (techs[i].experience()/50)
                 }
-                forge_points += forge_point_gen[0];
+                forge_points += _forge_point_gen[0];
                 if (techs[i].has_trait("tech_heretic")){
                     array_push(heretics, i);
                 }
             }
-            tech_locations[i] = techs[i].marine_location();
+            _tech_locations[i] = techs[i].marine_location();
         }
         if (forge_master>-1){
             obj_controller.master_of_forge = techs[forge_master];

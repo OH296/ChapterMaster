@@ -110,7 +110,7 @@ function scr_manage_task_selector(){
 	                }
 	                switch(selection_data.purpose_code){
 	                	case "forge_assignment":
-	                		calculate_research_points();
+	                		specialist_point_handler.calculate_research_points();
 	                		break;
 	                	case "hunt_beast":
 							var problem_slot = selection_data.array_slot;

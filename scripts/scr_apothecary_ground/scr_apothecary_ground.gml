@@ -4,40 +4,42 @@
 function calculate_full_chapter_spread(turn_end=true){
  	obj_controller.command=0;
  	obj_controller.marines=0;	
-	var mar_loc,is_healer,is_tech,key_val,veh_location,array_slot,unit;
-	var tech_spread = {};
-	var apoth_spread = {};
-	var unit_spread = {};
-	var maintenance_burden=0;
+	var _mar_loc,is_healer,_is_tech,key_val,veh_location,array_slot,_unit;
+	var _tech_spread = {};
+	var _apoth_spread = {};
+	var _unit_spread = {};
     for(var company=0;company<11;company++){
     	for (var v=0; v < array_length(obj_ini.name[company]); v++) {
     		key_val = "";
     		if (obj_ini.name[company][v]=="") then continue;
-    		unit = fetch_unit([company, v]);
-    		mar_loc = unit.marine_location();
-    		if (unit.base_group=="astartes"){
-	    		if (unit.IsSpecialist()){
+    		_unit = fetch_unit([company, v]);
+    		_mar_loc = _unit.marine_location();
+    		if (_unit.base_group=="astartes"){
+	    		if (_unit.IsSpecialist()){
 	    			obj_controller.command++;
 	    		} else {
 	    			obj_controller.marines++;
 	    		}
 	    	}
-	        maintenance_burden += unit.equipment_maintenance_burden();
-		    is_tech = (unit.IsSpecialist("forge") && unit.hp()>=10);
-		    is_healer = (((unit.IsSpecialist("apoth",true) && unit.gear()=="Narthecium") || (unit.role()=="Sister Hospitaler")) && unit.hp()>=10);
-		  	if (mar_loc[2]!="warp"){
-  	    		if (mar_loc[0]=location_types.planet){
-  	    			array_slot = mar_loc[1];
-  	    		} else if (mar_loc[0] == location_types.ship){
+	        tech_points_used += _unit.equipment_tech_points_used();
+		    _is_tech = (_unit.IsSpecialist("forge") && _unit.hp()>=10);
+		    if (_is_tech){
+		    	add_forge_points_to_stack(_unit);
+		    }
+		    is_healer = (((_unit.IsSpecialist("apoth",true) && _unit.gear()=="Narthecium") || (_unit.role()=="Sister Hospitaler")) && _unit.hp()>=10);
+		  	if (_mar_loc[2]!="warp"){
+  	    		if (_mar_loc[0]=location_types.planet){
+  	    			array_slot = _mar_loc[1];
+  	    		} else if (_mar_loc[0] == location_types.ship){
   	    			array_slot=0;
   	    		}
-  	    		key_val = mar_loc[2];
-  	    	} else if (mar_loc[0] == location_types.ship){
+  	    		key_val = _mar_loc[2];
+  	    	} else if (_mar_loc[0] == location_types.ship){
   	    		if instance_exists(obj_p_fleet){
   	    			with (obj_p_fleet){
-  	    				if (array_contains(capital_num, mar_loc[1]) ||
-  	    					array_contains(frigate_num, mar_loc[1])||
-  	    					array_contains(escort_num, mar_loc[1])
+  	    				if (array_contains(capital_num, _mar_loc[1]) ||
+  	    					array_contains(frigate_num, _mar_loc[1])||
+  	    					array_contains(escort_num, _mar_loc[1])
   	    				){
   	    					key_val=string(id);
   	    					array_slot=0;
@@ -47,17 +49,17 @@ function calculate_full_chapter_spread(turn_end=true){
   	    		}
   	    	}
   	    	if (key_val!=""){
-				if (! struct_exists(unit_spread, key_val)){
-					unit_spread[$key_val] = [[],[],[],[],[]];
-					tech_spread[$key_val]  = [[],[],[],[],[]];
-					apoth_spread[$key_val]  = [[],[],[],[],[]];
+				if (! struct_exists(_unit_spread, key_val)){
+					_unit_spread[$key_val] = [[],[],[],[],[]];
+					_tech_spread[$key_val]  = [[],[],[],[],[]];
+					_apoth_spread[$key_val]  = [[],[],[],[],[]];
 				}
-				array_push(unit_spread[$key_val][array_slot] ,unit);
-				if (is_tech){
-					array_push(tech_spread[$key_val][array_slot] ,unit);
+				array_push(_unit_spread[$key_val][array_slot] ,_unit);
+				if (_is_tech){
+					array_push(_tech_spread[$key_val][array_slot] ,_unit);
 				}
 				if (is_healer)	{
-					array_push(apoth_spread[$key_val][array_slot] ,unit);
+					array_push(_apoth_spread[$key_val][array_slot] ,_unit);
 				}		
 			}
 			key_val="";
@@ -90,102 +92,102 @@ function calculate_full_chapter_spread(turn_end=true){
 						}     		
 	            	}
 	  	    		if (key_val!=""){
-						if (! struct_exists(unit_spread, key_val)){
-							unit_spread[$key_val] = [[],[],[],[],[]];
-							tech_spread[$key_val]  = [[],[],[],[],[]];
-							apoth_spread[$key_val]  = [[],[],[],[],[]];
+						if (! struct_exists(_unit_spread, key_val)){
+							_unit_spread[$key_val] = [[],[],[],[],[]];
+							_tech_spread[$key_val]  = [[],[],[],[],[]];
+							_apoth_spread[$key_val]  = [[],[],[],[],[]];
 						}
-						array_push(unit_spread[$key_val][array_slot] ,[company,v]);	  	    		
+						array_push(_unit_spread[$key_val][array_slot] ,[company,v]);	  	    		
 	            	}
 	            }           	
             }			
 	    }
 	}
-	return [tech_spread,apoth_spread,unit_spread,maintenance_burden]	
+	return [_tech_spread,_apoth_spread,_unit_spread]	
 }
 
 
 function apothecary_simple(turn_end=true){
-	var  unit;
-	var spreads = calculate_full_chapter_spread();
-	var tech_spread = spreads[0];
-	var apoth_spread = spreads[1];
-	var unit_spread = spreads[2];
-	var tech_points_used = floor(spreads[3]);
+	var  _unit;
+	var _spreads = chapter_spread();
+	var _tech_spread = _spreads[0];
+	var _apoth_spread = _spreads[1];
+	var _unit_spread = _spreads[2];
+	var apoth_points_used = 0;
 	obj_controller.forge_string += $"Equipment Maintenance : -{tech_points_used}#";
-    marines-=1;
+    //marines-=1;
 
-	var locations = struct_get_names(unit_spread);
+	var _locations = struct_get_names(_unit_spread);
 	with (obj_star){
-		for (var i=0;i<array_length(locations);i++){
-			if (locations[i] == name){
-				array_push(unit_spread[$ locations[i]], self)
+		for (var i=0;i<array_length(_locations);i++){
+			if (_locations[i] == name){
+				array_push(_unit_spread[$ _locations[i]], self)
 			}
 		}
 	}
-	var cur_units, cur_apoths, cur_techs, total_heal_points, total_tech_points, veh_health, points_spent, cur_system, features;
+	var cur_units, cur_apoths, cur_techs, total_heal_points, veh_health, points_spent, cur_system, features;
 	var total_bionics = scr_item_count("Bionics");
-	for (i=0;i<array_length(locations);i++){
+	for (i=0;i<array_length(_locations);i++){
 		cur_system="";
-		if (array_length(unit_spread[$locations[i]]) == 6){
-			cur_system = unit_spread[$locations[i]][5];
+		if (array_length(_unit_spread[$_locations[i]]) == 6){
+			cur_system = _unit_spread[$_locations[i]][5];
 		}		
 		for (var p=0;p<5;p++){
 			total_heal_points=0;
-			total_tech_points=0;
-			if (array_length(unit_spread[$locations[i]][p]) == 0) then continue;
-			cur_units = unit_spread[$locations[i]][p];
-			cur_apoths = apoth_spread[$locations[i]][p];
-			cur_techs = tech_spread[$locations[i]][p];
+			forge_points=0;
+			if (array_length(_unit_spread[$_locations[i]][p]) == 0) then continue;
+			cur_units = _unit_spread[$_locations[i]][p];
+			cur_apoths = _apoth_spread[$_locations[i]][p];
+			cur_techs = _tech_spread[$_locations[i]][p];
 			for (var a=0;a<array_length(cur_apoths);a++){
-				unit = cur_apoths[a];
-				total_heal_points+=((unit.technology/2)+(unit.wisdom/2)+unit.intelligence)/8;
+				_unit = cur_apoths[a];
+				total_heal_points+=((_unit.technology/2)+(_unit.wisdom/2)+_unit.intelligence)/8;
 			}
 			for (var a=0;a<array_length(cur_techs);a++){
-				unit = cur_techs[a];
-				total_tech_points += unit.forge_point_generation()[0];
+				_unit = cur_techs[a];
+				forge_points += _unit.forge_point_generation(true)[0];
 			}
 			for (var a=0;a<array_length(cur_units);a++){
 				points_spent = 0;
-				unit = cur_units[a];
-				if (is_array(unit) && total_tech_points>0){
-					if (array_length(unit)>1){
-						while (points_spent<10 && obj_ini.veh_hp[unit[0]][unit[1]]<100 && total_tech_points>0){
+				_unit = cur_units[a];
+				if (is_array(_unit) && forge_points>0){
+					if (array_length(_unit)>1){
+						while (points_spent<10 && obj_ini.veh_hp[_unit[0]][_unit[1]]<100 && forge_points>0){
 							points_spent++;
 							if (turn_end){
-								obj_ini.veh_hp[unit[0]][unit[1]]++;
+								obj_ini.veh_hp[_unit[0]][_unit[1]]++;
 							}
-							total_tech_points--;
+							forge_points--;
 							tech_points_used++;
 						}
 					}
-				} else if (is_struct(unit)){
-					if  (unit.hp() < unit.max_health()){
-						if (unit.armour() != "Dreadnought"){
-							if (unit.hp()>0){
+				} else if (is_struct(_unit)){
+					if  (_unit.hp() < _unit.max_health()){
+						if (_unit.armour() != "Dreadnought"){
+							if (_unit.hp()>0){
 			        			if (total_heal_points >0){
 			        				if (turn_end){
-			        					unit.healing(true);
+			        					_unit.healing(true);
 			        				}
 			        				total_heal_points--;
 			        			} else {
 			        				if (turn_end){
-			        					unit.healing(false);
+			        					_unit.healing(false);
 			        				}
 			        			}	
-							} else if (total_heal_points>0 && total_tech_points>=3 && unit.bionics<10){
-								unit.add_bionics();
+							} else if (total_heal_points>0 && forge_points>=3 && _unit.bionics<10){
+								_unit.add_bionics();
 								total_heal_points--;
-								total_tech_points-=3;
+								forge_points-=3;
 								tech_points_used+=tech_points_used
 							}			
 						} else {
-							if (total_heal_points>0 && total_tech_points>=3 && unit.hp()>0){
+							if (total_heal_points>0 && forge_points>=3 && _unit.hp()>0){
 		        				if (turn_end){
-		        					unit.healing(true);
+		        					_unit.healing(true);
 		        				}
 								total_heal_points--;
-								total_tech_points-=3;
+								forge_points-=3;
 								tech_points_used+=3							
 							}
 						}
@@ -280,7 +282,6 @@ function apothecary_simple(turn_end=true){
 		    }		
 		}
 	}
-	return tech_points_used;
 }
 
 

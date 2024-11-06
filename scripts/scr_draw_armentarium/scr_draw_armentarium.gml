@@ -18,7 +18,7 @@ function set_up_armentarium(){
         click=1;
         temp[36]=scr_role_count(obj_ini.role[100][16],"");
         temp[37]=temp[36]+scr_role_count(string(obj_ini.role[100][16])+" Aspirant","");
-        calculate_research_points();
+        specialist_point_handler.calculate_research_points();
         in_forge=false
         forge_button = new ShutterButton();
         stc_flashes = new GlowDot();
@@ -529,16 +529,16 @@ function scr_draw_armentarium(){
         var total_eta=0;
         static top_point=0;
         for (var i=top_point; i<13; i++){
-            if (i+1>array_length(forge_queue)) then break;
+            if (i+1>array_length(specialist_point_handler.forge_queue)) then break;
             draw_set_color(c_gray);
             if point_in_rectangle(mouse_x, mouse_y, xx + 359,yy +item_gap, xx + 886, yy +item_gap+20){
                 draw_set_color(c_white)
             }
-            if (is_string(forge_queue[i].name)){
-                draw_text(xx+359,yy + item_gap,string_hash_to_newline(forge_queue[i].name));
-                draw_text(xx+525,yy + item_gap,string_hash_to_newline(forge_queue[i].count));
-                if (forge_queue[i].ordered==obj_controller.turn){
-                    if (forge_queue[i].count>1){
+            if (is_string(specialist_point_handler.forge_queue[i].name)){
+                draw_text(xx+359,yy + item_gap,string_hash_to_newline(specialist_point_handler.forge_queue[i].name));
+                draw_text(xx+525,yy + item_gap,string_hash_to_newline(specialist_point_handler.forge_queue[i].count));
+                if (specialist_point_handler.forge_queue[i].ordered==obj_controller.turn){
+                    if (specialist_point_handler.forge_queue[i].count>1){
                          draw_unit_buttons([xx+500 , yy + item_gap],"-",[0.75,0.75],c_red);
                          if (point_in_rectangle(
                             mouse_x,
@@ -549,12 +549,12 @@ function scr_draw_armentarium(){
                             yy + item_gap+3+(0.75*string_height("-")), 
                             ) && mouse_check_button_pressed(mb_left)
                         ){
-                            var unit_cost = forge_queue[i].forge_points/forge_queue[i].count;
-                            forge_queue[i].count--;
-                            forge_queue[i].forge_points-=unit_cost;
+                            var unit_cost = specialist_point_handler.forge_queue[i].forge_points/specialist_point_handler.forge_queue[i].count;
+                            specialist_point_handler.forge_queue[i].count--;
+                            specialist_point_handler.forge_queue[i].forge_points-=unit_cost;
                          }               
                     }
-                    if (forge_queue[i].count<100){
+                    if (specialist_point_handler.forge_queue[i].count<100){
                         draw_unit_buttons([xx+545 , yy + item_gap],"+",[0.75,0.75],c_green);
                          if (point_in_rectangle(
                             mouse_x,
@@ -565,19 +565,19 @@ function scr_draw_armentarium(){
                             yy + item_gap+3+(0.75*string_height("+")) 
                             ) && mouse_check_button_pressed(mb_left) && current_target==false
                         ){
-                            var unit_cost = forge_queue[i].forge_points/forge_queue[i].count;
-                            forge_queue[i].count++;
-                            forge_queue[i].forge_points+=unit_cost;
+                            var unit_cost = specialist_point_handler.forge_queue[i].forge_points/specialist_point_handler.forge_queue[i].count;
+                            specialist_point_handler.forge_queue[i].count++;
+                            specialist_point_handler.forge_queue[i].forge_points+=unit_cost;
                          }                  
                     }
                 }
-            } else if (is_array(forge_queue[i].name)){
-                if (forge_queue[i].name[0]  == "research"){
-                    draw_text(xx+359,yy + item_gap,string_hash_to_newline(forge_queue[i].name[1]));
+            } else if (is_array(specialist_point_handler.forge_queue[i].name)){
+                if (specialist_point_handler.forge_queue[i].name[0]  == "research"){
+                    draw_text(xx+359,yy + item_gap,string_hash_to_newline(specialist_point_handler.forge_queue[i].name[1]));
                 }
             }
-            draw_text(xx+630,yy + item_gap,string_hash_to_newline(forge_queue[i].forge_points));
-            total_eta += ceil(forge_queue[i].forge_points/forge_points);
+            draw_text(xx+630,yy + item_gap,string_hash_to_newline(specialist_point_handler.forge_queue[i].forge_points));
+            total_eta += ceil(specialist_point_handler.forge_queue[i].forge_points/forge_points);
             draw_text(xx+735,yy+ item_gap,string_hash_to_newline(total_eta) + " turns");        
             forge_buttons= [xx+850, yy + item_gap, 0, 0]
             draw_unit_buttons([forge_buttons[0] , forge_buttons[1]],"X",[0.75,0.75],c_red);
@@ -592,7 +592,7 @@ function scr_draw_armentarium(){
                 forge_buttons[3]
                 ) && mouse_check_button_pressed(mb_left)
             ){
-                array_delete(forge_queue, i, 1);
+                array_delete(specialist_point_handler.forge_queue, i, 1);
              }                     
             item_gap +=20
         }
