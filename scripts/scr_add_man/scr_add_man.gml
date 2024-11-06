@@ -90,7 +90,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 			switch (man_role) {
 			case "Skitarii":
 				obj_ini.wep1[target_company][good] = "Hellgun";
-				obj_ini.wep2[target_company][good] = "Combat Knife";
+				obj_ini.wep2[target_company][good] = ""; // I should consider implementing a "Light Combat Knife", which is human-sized
 				obj_ini.armour[target_company][good] = "Skitarii Armour";
 				spawn_exp = 10;
 				obj_ini.race[target_company][good] = 3;
@@ -111,7 +111,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 			case "Crusader":
 				obj_ini.wep1[target_company][good] = "Power Sword";
 				obj_ini.wep2[target_company][good] = "";
-				obj_ini.armour[target_company][good] = "Power Armour"; // Might want to create "Light Power Armour" that is suited for squishy humans
+				obj_ini.armour[target_company][good] = "Light Power Armour";
 				obj_ini.gear[target_company][good] = "Combat Shield";
 				spawn_exp = 10;
 				obj_ini.race[target_company][good] = 4;
