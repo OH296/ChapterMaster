@@ -1,9 +1,15 @@
 /// @mixin obj_creation
-function scr_creation(argument0) {
+function scr_creation(slide_num) {
 
+	// 1 = chapter select
+	// 2 = Chapter Naming, Points assignment, advantages/disadvantages
+	// 3 = Homeworld, Flagship, Psychic discipline, Aspirant Trial
+	// 4 = Livery, Roles
+	// 5 = Gene Seed Mutations, Disposition
+	// 6 = Chapter Master
 	
-	show_debug_message($"calling scr_creation with input {argument0}");
-	if (argument0=2) and (custom>0){
+	show_debug_message($"calling scr_creation with input {slide_num}");
+	if (slide_num=2) and (custom>0){
 	    if (name_bad=1){cooldown=8000;/*(sound_play(bad);*/}
 	    if (name_bad=0){
 	        change_slide=1;goto_slide=3;cooldown=8000;race[100,17]=1;
@@ -11,21 +17,21 @@ function scr_creation(argument0) {
 	    }
 	}
 
-	if (argument0=2) and (custom=0){
+	if (slide_num=2) and (custom=0){
 	    change_slide=1;
 	    goto_slide=3;
 	    cooldown=8000;
 	    race[100,14]=1;
 	    race[100,17]=1;
 	    if (scr_has_disadv("Psyker Intolerant")) then race[100,17]=0;
-	    if (chapter="Iron Hands") or (chapter="Space Wolves") then race[100,14]=0;
+	    if (chapter_name="Iron Hands") or (chapter_name="Space Wolves") then race[100,14]=0;
 	}
 
 
-	if (floor(argument0)==3) and (recruiting_name!=homeworld_name){
+	if (floor(slide_num)==3) and (recruiting_name!=homeworld_name){
 	    change_slide=1;goto_slide=4;cooldown=8000;alarm[0]=1;
     
-	    if (argument0=3.5){
+	    if (slide_num=3.5){
 
 			if (array_length(col)>0){
 			    if (color_to_main!=""){
@@ -90,7 +96,7 @@ function scr_creation(argument0) {
 	    }
 	}
      
-	if (argument0=4){
+	if (slide_num=4){
 	    if (hapothecary!="") and (hchaplain!="") and (clibrarian!="") and (fmaster!="") and (recruiter!="") and (admiral!="") and (battle_cry!=""){
 	        change_slide=1;
 	        goto_slide=5;
@@ -185,12 +191,12 @@ function scr_creation(argument0) {
 	}
 
 	// 5 to 6
-	if (argument0=5){
+	if (slide_num=5){
 	    if (custom=0) or (mutations<=mutations_selected){change_slide=1;goto_slide=6;cooldown=8000;}
 	}
 
 	// 6 to finish
-	if (argument0=6){
+	if (slide_num=6){
 	    if (chapter_master_name!="") and (chapter_master_melee!=0) and (chapter_master_ranged!=0) and (chapter_master_specialty!=0){
 	        global.icon_name=obj_creation.icon_name;
 	        cooldown=9999;instance_create(0,0,obj_ini);audio_stop_all();

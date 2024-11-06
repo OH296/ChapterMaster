@@ -574,7 +574,7 @@ if (turn=240) and (global.chapter_name="Lamenters"){
 }
 */
 // ** Battlefield Loot **
-if (array_contains(obj_ini.adv,"Scavengers")){
+if (array_contains(obj_ini.adv,"Tech-Scavengers")){
     var lroll1,lroll2,loot="";
     lroll1=floor(random(100))+1;
     lroll2=floor(random(100))+1;

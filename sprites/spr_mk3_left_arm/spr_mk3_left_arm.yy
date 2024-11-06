@@ -23,10 +23,10 @@
     {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"70832485-9952-435e-b897-efeee5506dc1","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
-  "origin": 0,
+  "origin": 9,
   "parent": {
-    "name": "mk3_complex",
-    "path": "folders/Sprites/Marine Viewer/body_types/mk3_complex.yy",
+    "name": "mk_3_complex",
+    "path": "folders/Sprites/Marine Viewer/body_types/mk_3_complex.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {
@@ -59,7 +59,7 @@
     ],
     "visibleRange": null,
     "volume": 1.0,
-    "xorigin": 0,
+    "xorigin": -2,
     "yorigin": 0,
   },
   "swatchColours": null,

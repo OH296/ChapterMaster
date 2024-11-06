@@ -39,7 +39,6 @@ function scr_image(path, image_id, x1, y1, width, height) {
 		
 		// Draws the red box with a X through it
 		if(is_undefined(drawing_sprite) || !sprite_exists(drawing_sprite)){
-			debugl($"No drawing sprite exists from args {path} id {image_id}");
 			draw_set_alpha(1);draw_set_color(0);
 	        draw_rectangle(x1,y1,x1+width,y1+height,0);
 	        draw_set_color(c_red);

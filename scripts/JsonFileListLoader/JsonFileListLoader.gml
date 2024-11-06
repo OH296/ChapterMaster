@@ -1,6 +1,6 @@
 function JsonFileListLoader() constructor {
 
-    load_list_from_json_file = function(relative_file_path, properties_to_read) {
+    load_list_from_json_file = function(relative_file_path, properties_to_read, app_data_dir = false) {
         var file_buffer = undefined;
         var result = {
             is_success: false,
@@ -66,7 +66,10 @@ function JsonFileListLoader() constructor {
         return result;
     }
 
-    load_struct_from_json_file = function(relative_file_path, property_to_read){
+    /// @param {String} relative_file_path the file path and file name e.g. "main/data/file.json"
+    /// @param {String} property_to_read the key which is the struct to pull out
+    /// @param {Bool} app_data_dir if set to true, will read from %AppData%/Local/ChapterMaster instead of %GameInstallDir%/datafiles
+    load_struct_from_json_file = function(relative_file_path, property_to_read, app_data_dir = false){
         var file_buffer = undefined;
         var result = {
             is_success: false,
@@ -82,7 +85,12 @@ function JsonFileListLoader() constructor {
 
         try {
 			var item_total = 0;
-            var file_path = working_directory + relative_file_path;
+            var file_path;
+            if(app_data_dir == true){
+                file_path = relative_file_path;
+            } else {
+                file_path = working_directory + relative_file_path;
+            }
             if(file_exists(file_path) == false){
                 debugl($"File does not exist at path {file_path}");
                 return result;
@@ -107,7 +115,7 @@ function JsonFileListLoader() constructor {
 
             result.is_success = true;
 
-            debugl($"Successfully loaded {property} value from {relative_file_path}");
+            // debugl($"Successfully loaded {property} value from {relative_file_path}");
         } catch (_ex) {
             debugl($"Could not load data from {relative_file_path}: {_ex}.");
             result.value = {}; // do not return incomplete/invalid data

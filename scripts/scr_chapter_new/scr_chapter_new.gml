@@ -16,11 +16,16 @@ function ChapterData() constructor {
 	purity = 0;
 	stability = 0;
 	cooperation = 0;
+	homeword = ""; //e.g. "Death"
+	homeworld_name = ""; // e.g. "The Rock"
 	homeworld_exists = 0;
 	recruiting_exists = 0;
+	recruiting = ""; 
 	homeworld_rule = HOMEWORLD_RULE.NONE;
-	advantages = [];
-	disadvantages = [];
+	flagship_name = "";
+	monastary_name = "";
+	advantages = array_create(9);
+	disadvantages = array_create(9);
 
 	full_liveries = "none"
 
@@ -38,20 +43,20 @@ function ChapterData() constructor {
 		trim_on: 0,
 	};
 	names = {
-		hchaplain: "",
-		clibrarian: "",
-		fmaster: "",
-		hapothecary: "",
-		honorcapt: "",
-		watchmaster: "",
-		arsenalmaster: "",
-		admiral: "",
-		marchmaster: "",
-		ritesmaster: "",
-		victualler: "",
-		lordexec: "",
-		relmaster: "",
-		recruiter: "",
+		hchaplain: global.name_generator.generate_imperial_name(),
+		clibrarian: global.name_generator.generate_imperial_name(),
+		fmaster: global.name_generator.generate_imperial_name(),
+		hapothecary: global.name_generator.generate_imperial_name(),
+		recruiter: global.name_generator.generate_imperial_name(),
+		admiral: global.name_generator.generate_imperial_name(),
+		honorcapt: global.name_generator.generate_imperial_name(),
+		watchmaster: global.name_generator.generate_imperial_name(),
+		arsenalmaster: global.name_generator.generate_imperial_name(),
+		marchmaster: global.name_generator.generate_imperial_name(),
+		ritesmaster: global.name_generator.generate_imperial_name(),
+		victualler: global.name_generator.generate_imperial_name(),
+		lordexec: global.name_generator.generate_imperial_name(),
+		relmaster: global.name_generator.generate_imperial_name(),
 	};
 	mutations = {
 		preomnor: 0,
@@ -68,7 +73,7 @@ function ChapterData() constructor {
 		occulobe: 0,
 		mucranoid: 0,
 	};
-	battle_cry = "For the Emperor!";
+	battle_cry = "For the Emperor";
 	equal_specialists = 0;
 	load_to_ships = {
 		escort_load: 0,
@@ -85,18 +90,65 @@ function ChapterData() constructor {
 		ranged: 0,
 		specialty: CM_SPECIALTY.NONE,
 		/// @type {Array<String>}
-		traits: []
+		traits: [],
+		gear: "",
+		mobi: ""
 	};
+	extra_ships = {
+		battle_barges: 0,
+		gladius: 0,
+		strike_cruisers: 0,
+		hunters: 0
+	};
+	extra_specialists = {
+		chaplains: 0,
+		techmarines: 0,
+		apothecary: 0,
+		epistolary: 0,
+		codiciery: 0,
+		lexicanum: 0,
+		terminator: 0,
+		assault: 0,
+		veteran: 0,
+		devastator: 0,
+	};
+	extra_marines = {
+		second: 0,
+		third: 0,
+		fourth: 0,
+		fifth: 0,
+		sixth: 0,
+		seventh: 0,
+		eighth: 0,
+		ninth: 0,
+		tenth: 0,
+	};
+	extra_vehicles = {
+		rhino: 0,
+		whirlwind: 0,
+		predator: 0,
+		land_raider: 0,
+	}
+	extra_equipment = [];
+	custom_roles = {};
+	squad_name = "Squad";
+	custom_squads = {};
 
-	/// @desc Returns true if loaded successfully, false if not. Should probably crash the game if false
+
+	/// @desc Returns true if loaded successfully, false if not.
 	/// @param {Enum.CHAPTERS} chapter_id 
+	/// @param {Bool} use_app_data if set to true will read from %AppData%/Local/ChapterMaster instead of /datafiles
 	/// @returns {Bool} 
-	function load_from_json(chapter_id){
+	function load_from_json(chapter_id, use_app_data = false){
 		var file_loader = new JsonFileListLoader();
-
-		var load_result = file_loader.load_struct_from_json_file($"main\\chapters\\{chapter_id}.json", "chapter");
+		var load_result;
+		if(use_app_data){
+			load_result = file_loader.load_struct_from_json_file($"chaptersave#{chapter_id}.json", "chapter", true);
+		} else {
+			 load_result = file_loader.load_struct_from_json_file($"main\\chapters\\{chapter_id}.json", "chapter", false);
+		}
 		if(!load_result.is_success){
-			debugl($"No chapter json exits for chapter_id {chapter_id}");
+			// debugl($"No chapter json exits for chapter_id {chapter_id}");
 			return false;
 		}
 		var json_chapter = load_result.value.chapter;
@@ -240,7 +292,7 @@ function scr_chapter_new(argument0) {
 		    selected_chapter=2;chapter=argument0;icon=2;icon_name="ws";founding=0;fleet_type=1;strength=5;purity=10;stability=8;cooperation=5;
 		    homeworld="Feudal";homeworld_name="Chogoris";
 		    homeworld_exists=1;recruiting_exists=0;homeworld_rule=3;aspirant_trial=eTrials.SURVIVAL;discipline="rune Magick";
-			adv[1]="Lightning Warriors";adv[2]="Brothers, All";adv[3]="Melee Enthusiasts";dis[1]="Splintered";
+			adv[1]="Lightning Warriors";adv[2]="Brothers, All";adv[3]="Assault Doctrine";dis[1]="Splintered";
 		    // Pauldron2: Left, Pauldron: Right
 		    color_to_main="White";color_to_secondary="White";color_to_trim="Red";
 		    color_to_pauldron="White";color_to_pauldron2="White";color_to_lens="Red";
@@ -363,7 +415,7 @@ function scr_chapter_new(argument0) {
 
 	if (argument0="Space Wolves"){points=150;
 	    selected_chapter=3;chapter=argument0;icon=3;icon_name="sw";founding=0;fleet_type=1;strength=10;purity=8;stability=5;cooperation=4;
-	    adv[1]="Melee Enthusiasts";dis[1]="Black Rage";dis[2]="Suspicious";
+	    adv[1]="Assault Doctrine";dis[1]="Black Rage";dis[2]="Suspicious";
 	    homeworld="Ice";homeworld_name="Fenris";
 	    homeworld_exists=1;recruiting_exists=0;homeworld_rule=2;aspirant_trial=eTrials.EXPOSURE;discipline="rune Magick";
 	    // Pauldron2: Left, Pauldron: Right
@@ -412,7 +464,7 @@ function scr_chapter_new(argument0) {
 
 	if (argument0="Blood Angels"){points=150;
 	    selected_chapter=5;chapter=argument0;icon=5;icon_name="ba";founding=0;fleet_type=1;strength=5;purity=9;stability=9;cooperation=7;
-	    adv[1]="Melee Enthusiasts";dis[1]="Black Rage";
+	    adv[1]="Assault Doctrine";dis[1]="Black Rage";
 	    homeworld="Desert";homeworld_name="Baal";
 	    homeworld_exists=1;recruiting_exists=0;homeworld_rule=3;aspirant_trial=eTrials.BLOODDUEL;
 	    // Pauldron2: Left, Pauldron: Right
@@ -447,7 +499,7 @@ function scr_chapter_new(argument0) {
 
 	if (argument0="Iron Hands"){points=150;
 	    selected_chapter=6;chapter=argument0;icon=6;icon_name="ih";founding=0;fleet_type=1;strength=5;purity=8;stability=8;cooperation=2;
-	    adv[1]="Tech-Brothers";adv[2]="Slow and Purposeful";dis[1]="Splintered";dis[2]="Suspicious";
+	    adv[1]="Tech-Brothers";adv[2]="Devastator Doctrine";dis[1]="Splintered";dis[2]="Suspicious";
 	    homeworld="Lava";homeworld_name="Medusa";homeworld_exists=1;recruiting_exists=0;
 	    homeworld_rule=3;aspirant_trial=eTrials.KNOWLEDGE;
 	    // Pauldron2: Left, Pauldron: Right
@@ -484,7 +536,7 @@ function scr_chapter_new(argument0) {
 
 	if (argument0="Salamanders"){points=150;
 	    selected_chapter=8;chapter=argument0;icon=8;icon_name="sl";founding=0;fleet_type=1;strength=2;purity=8;stability=8;cooperation=10;
-	    adv[1]="Crafters";adv[2]="Slow and Purposeful";
+	    adv[1]="Crafters";adv[2]="Devastator Doctrine";
 	    homeworld="Lava";homeworld_name="Nocturne";homeworld_exists=1;recruiting_exists=0;
 	    homeworld_rule=1;aspirant_trial=eTrials.APPRENTICESHIP;discipline="pyromancy";
 	    // Pauldron2: Left, Pauldron: Right
@@ -519,7 +571,7 @@ function scr_chapter_new(argument0) {
 
 	if (argument0="Raven Guard"){points=150;
 		selected_chapter=9;chapter=argument0;icon=9;icon_name="rg";founding=0;fleet_type=1;strength=5;purity=8;stability=4;cooperation=5;
-	    adv[1]="Ambushers";adv[2]="Melee Enthusiasts";dis[1]="Splintered";
+	    adv[1]="Ambushers";adv[2]="Assault Doctrine";dis[1]="Splintered";
 	    homeworld="Dead";homeworld_name="Deliverance";homeworld_exists=1;recruiting_exists=1;
 	    homeworld_rule=1;aspirant_trial=eTrials.EXPOSURE;
 	    // Pauldron2: Left, Pauldron: Right
@@ -553,7 +605,7 @@ function scr_chapter_new(argument0) {
 		if (argument0="Black Templars"){founding=4;points=200;
 	    selected_chapter=10;chapter=argument0;icon=10;icon_name="bt";founding=4;
 	    fleet_type=3;strength=5;purity=7;stability=10;cooperation=5;
-	    adv[1]="Melee Enthusiasts";adv[2]="Kings of Space";adv[3]="Reverent Guardians";adv[4]="Brothers, All";dis[1]="Psyker Intolerant";dis[2]="Suspicious";
+	    adv[1]="Assault Doctrine";adv[2]="Kings of Space";adv[3]="Reverent Guardians";adv[4]="Brothers, All";dis[1]="Psyker Intolerant";dis[2]="Suspicious";
 	    homeworld_exists=0;recruiting_exists=1;
 	    recruiting_name=global.name_generator.generate_star_name();
 		aspirant_trial=eTrials.APPRENTICESHIP;
@@ -617,7 +669,7 @@ if (argument0="Minotaurs"){founding=10;points=450;
 		founding=10;points=100;
 	    selected_chapter=12;chapter=argument0;icon=12;icon_name="br";
 	    fleet_type=2;strength=5;purity=10;stability=6;cooperation=7;
-	    adv[1]="Scavengers";adv[2]="Psyker Abundance";dis[1]="Suspicious";
+	    adv[1]="Tech-Scavengers";adv[2]="Psyker Abundance";dis[1]="Suspicious";
 	    hapothecary="Galan";hchaplain="Mikelus";clibrarian="Jonah Orion";fmaster="Martellus";
 		honorcapt="Apollo Diomedes";watchmaster="Yriel Rikarius";marchmaster="Aramus";
 		ritesmaster="Tarkus";victualler="Atanaxis";lordexec="Thaddeus";relmaster="Avitus";recruiter="Cyrus";
@@ -673,7 +725,7 @@ if (argument0="Crimson Fists"){founding=4;points=150;
 if (argument0="Lamenters"){founding=5;points=150;
 	    selected_chapter=14;chapter=argument0;icon=14;icon_name="cd";
 	    fleet_type=3;strength=5;purity=8;stability=4;cooperation=5;
-	    adv[1]="Melee Enthusiasts";adv[2]="Boarders";dis[1]="Suspicious";
+	    adv[1]="Assault Doctrine";adv[2]="Boarders";dis[1]="Suspicious";
 	    homeworld="Dead";homeworld_name="Lacrima Vex";
 	    homeworld_exists=0;recruiting_exists=1;
 	    recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
@@ -698,7 +750,7 @@ if (argument0="Lamenters"){founding=5;points=150;
 	if (argument0="Carcharodons"){founding=9;points=100;
 	    selected_chapter=15;chapter=argument0;icon=15;icon_name="cd";
 	    fleet_type=2;strength=5;purity=8;stability=4;cooperation=5;
-	    adv[1]="Melee Enthusiasts";adv[2]="Boarders";adv[3]="Kings of Space";dis[1]="Splintered";dis[2]="Suspicious";
+	    adv[1]="Assault Doctrine";adv[2]="Boarders";adv[3]="Kings of Space";dis[1]="Splintered";dis[2]="Suspicious";
 	    homeworld_exists=0;recruiting_exists=0;flagship_name="Nicor";
 	    recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
 	    homeworld_rule=0;aspirant_trial=eTrials.CHALLENGE;
@@ -731,7 +783,7 @@ if (argument0="Lamenters"){founding=5;points=150;
 	if (argument0="Soul Drinkers"){points=200;
 	    selected_chapter=16;chapter=argument0;icon=14;icon_name="sd";founding= 4;
 	    fleet_type=2;strength=2;purity=10;stability=2;cooperation=2;
-	    adv[1]="Melee Enthusiasts";adv[2]="Kings of Space";adv[3]="Boarders";adv[4]="Daemon Binders";dis[1]="Suspicious";
+	    adv[1]="Assault Doctrine";adv[2]="Kings of Space";adv[3]="Boarders";adv[4]="Daemon Binders";dis[1]="Suspicious";
 	    homeworld="Dead";homeworld_name="Entymion";
 	    homeworld_exists=0;recruiting_exists=1;
 	    recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
@@ -796,92 +848,17 @@ if (argument0="Lamenters"){founding=5;points=150;
 
 	#region Custom Chapter
 	//generates custom chapter if it exists
-	if (argument0=chapter21){
-		points=100;
-	    selected_chapter=21;chapter=argument0;icon=icon21;icon_name=icon_name21;founding=founding21;
-	    fleet_type=fleet_type21;
-		strength=strength21;
-		purity=purity21;
-		stability=stability21;
-		cooperation=cooperation21;
-	    homeworld=homeworld21;
-	    homeworld_name=homeworld_name21;
-	    recruiting=recruiting_world21;
-	    recruiting_name=recruiting_name21;
-	    homeworld_exists=homeworld_rule21;
-	    recruiting_exists=recruiting_exists21;
-	    homeworld_rule=homeworld_rule21;
-	    aspirant_trial=aspirant_trial21;
-	    discipline=discipline21;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main=color_to_main21;
-		color_to_secondary=color_to_secondary21;
-		color_to_trim=color_to_trim21;
-	    color_to_pauldron2=color_to_pauldron2_21;
-	    color_to_paulrdon=color_to_pauldron21;
-	    color_to_lens=color_to_lens21;
-	    color_to_weapon=color_to_weapon21;
-	    col_special=col_special21;trim=trim21;
-	    hapothecary=hapothecary21;
-	    hchaplain=hchaplain21;
-	    clibrarian=clibrarian21;
-	    fmaster=fmaster21;
-	    admiral=admiral21
-		recruiter=recruiter21
-	    battle_cry=battle_cry_21
-		load_to_ships=[2,0,0];
-		complex_livery_data = complex_livery21;
-		
-		for (var i=1;i<=20;i++){
-		    role[100][i] = role_21[i];
-			wep1[100][i]=wep1_21[i]
-			wep2[100][i]=wep2_21[i]
-			armour[100][i]=armour_21[i]
-			gear[100][i]=gear_21[i]
-			mobi[100][i]=mobi_21[i]
+	if (is_real(argument0) && argument0 >= CHAPTERS.CUSTOM_1 && argument0 <= CHAPTERS.CUSTOM_10){
+		obj_creation.use_chapter_object = true;
+		var chapter_obj = new ChapterData();
+		var successfully_loaded = chapter_obj.load_from_json(argument0, true);
+		if(!successfully_loaded){
+			var issue = $"No json file exists for chapter id {argument0} and name {argument0}";
+			debugl (issue);
+			scr_popup("Error Loading Chapter", issue, "debug");
+			return false;
 		}
-	
-		
-		//monastery_name=monastery_name21;
-		//master_name=master_name21
-	    equal_specialists=equal_specialists21
-    
-	    load_to_ships=[2,0,0];
-	    // load_to_ships=0;
-    
-	    successors=successors;
-	    mutations=mutations21;
-		mutations_selected=mutations_selected21;
-		
-	    preomnor=preomnor21;
-		voice=voice21;
-		doomed=doomed21;
-		lyman=lyman21;
-		omophagea=omophagea21;
-		ossmodula=ossmodula21;
-		membrane=membrane21;
-	    zygote=zygote21;
-		betchers=betchers21;
-		catalepsean=catalepsean21;
-		secretions=secretions;
-		occulobe=occulobe;
-		mucranoid=mucranoid21;
-	    disposition[1]=disposition21[1];// Prog
-	    disposition[2]=disposition21[2];
-		disposition[3]=disposition21[3];
-		disposition[4]=disposition21[4];
-		disposition[5]=disposition21[5];
-	    disposition[6]=disposition21[6];// Astartes
-	    disposition[7]=disposition21[7];// Reserved
-	    chapter_master_name=chapter_master_name21;
-		chapter_master_melee=chapter_master_melee21;
-	    chapter_master_ranged=chapter_master_ranged21;
-		chapter_master_specialty=chapter_master_specialty21;
-    
-		for(var i = 1; i <= 8; i++){
-	    	adv[i]=adv21[i];
-			dis[i]=dis21[i];
-		}
+		global.chapter_creation_object = chapter_obj;
 	}
 	#endregion
 
@@ -1012,7 +989,7 @@ if (argument0="Lamenters"){founding=5;points=150;
 
 
 	maxpoints=points;
-	var livery_picker = new colour_item(0,0);
+	var livery_picker = new ColourItem(0,0);
 	livery_picker.scr_unit_draw_data();
 	full_liveries = array_create(21,DeepCloneStruct(livery_picker.map_colour));	
 	return true;

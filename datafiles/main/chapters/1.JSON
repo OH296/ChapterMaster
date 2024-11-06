@@ -17,6 +17,11 @@
         "homeworld_exists": 1, // 1 = true
         "recruiting_exists": 1, // 1 = true
         "homeworld_rule": 1, // 1 = Govenor, 2 = Countries, 3 = Personal Rule
+        "homeworld": "Dead", // "Lava" "Desert" "Forge" "Hive" "Death" "Agri" "Feudal" "Temperate" "Ice" "Dead" "Shrine"
+        "homeworld_name": "The Rock",
+        "recruiting": "Death", //"Lava" "Desert" "Forge" "Hive" "Death" "Agri" "Feudal" "Temperate" "Ice" "Dead" "Shrine"
+        "recruiting_name": "",
+        "discipline": "default", // one of 'default' 'biomancy' 'pyromancy' 'telekinesis' 'rune Magick'
         "aspirant_trial": "SURVIVAL", // ? need to find the best way to do this
         "advantages": [ //TODO something with these after rework of adv organisation
             "",

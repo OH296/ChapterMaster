@@ -21,7 +21,7 @@ function load_marine_struct(company, marine){
 
 function scr_load(save_part, save_id) {
 	var unit;
-	var rang=0,i=0,g=0,stars=0,pfleets=0,efleets=0;
+	var rang=0,stars=0,pfleets=0,efleets=0;
 
 
 
@@ -156,7 +156,7 @@ function scr_load(save_part, save_id) {
 
 	    // obj_ini
 	    //TODO allow methods to be passed as teh defualt to return_json_from_ini to optomise load speed
-	    var livery_picker = new colour_item(0,0);
+	    var livery_picker = new ColourItem(0,0);
 		livery_picker.scr_unit_draw_data();
 	    obj_ini.full_liveries = return_json_from_ini("Ini", "full_liveries",array_create(21,DeepCloneStruct(livery_picker.map_colour)));
 	    obj_ini.home_name=ini_read_string("Ini","home_name","Error");
@@ -198,9 +198,9 @@ function scr_load(save_part, save_id) {
 	    	//TODO centralise and initialisation method for this other reference place is obj_creation create
 			obj_ini.complex_livery_data = complex_livery_default();	    	
 	    }
-	    var colour_temp = new colour_item(0,0);
+	    var colour_temp = new ColourItem(0,0);
 
-	    obj_ini.full_livery = return_json_from_ini("Ini", "FullLivery",colour_temp.scr_unit_draw_data());
+	    obj_ini.full_liveries = return_json_from_ini("Ini", "FullLivery",colour_temp.scr_unit_draw_data());
 	    //
 	    obj_ini.preomnor=ini_read_real("Ini","preomnor",0);
 	    obj_ini.voice=ini_read_real("Ini","voice",0);
@@ -259,7 +259,7 @@ function scr_load(save_part, save_id) {
 
 
 	    if (global.restart=0){
-	        var g;g=-1;repeat(200){g+=1;
+	        var g = -1;repeat(200){g+=1;
 	            obj_ini.ship[g]=ini_read_string("Ships","shi"+string(g),"");
 	            obj_ini.ship_uid[g]=ini_read_real("Ships","shi_uid"+string(g),0);
 	            obj_ini.ship_class[g]=ini_read_string("Ships","shi_class"+string(g),"");
@@ -319,7 +319,6 @@ function scr_load(save_part, save_id) {
 	    good=0;coh=100;mah=-1;
 
 	    if (global.restart=0){
-	        var coh,mah,good;
 	        good=0;coh=10;mah=205;
 	        repeat(2255){
 	            if (good=0){
@@ -351,7 +350,6 @@ function scr_load(save_part, save_id) {
 	            }
 	        }
 
-	        var coh,mah,good;
 	        good=0;coh=100;mah=-1;
 	        repeat(31){mah+=1;
 	            obj_ini.race[coh,mah]=ini_read_real("Mar","co"+string(coh)+"."+string(mah),0);

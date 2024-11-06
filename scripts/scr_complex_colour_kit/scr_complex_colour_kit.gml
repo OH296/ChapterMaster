@@ -2,7 +2,7 @@ function coord_relevative_positions(coords, xx, yy){
 	return [coords[0]+xx, coords[1]+yy,coords[2]+xx, coords[3]+yy];
 }
 
-function colour_item(xx,yy) constructor{
+function ColourItem(xx,yy) constructor{
 	self.xx=xx;
 	self.yy=yy;
     static scr_unit_draw_data = function(){
@@ -35,7 +35,7 @@ function colour_item(xx,yy) constructor{
             right_backpack : 0,   
             left_backpack : 0,
             weapon_primary : 0,
-            weapon_Secondary : 0,                           
+            weapon_secondary : 0,                           
         }
         return map_colour;
     }
@@ -60,7 +60,7 @@ function colour_item(xx,yy) constructor{
             right_thorax : 0, 
 
             weapon_primary : 0,
-            weapon_Secondary : 0,
+            weapon_secondary : 0,
 
             left_pauldron :[114,31, 150,67],
             right_pauldron: [19,31, 43,71],
@@ -245,7 +245,7 @@ function colour_item(xx,yy) constructor{
 }
 
 
-function setup_complex_livery_shader(setup_role){
+function setup_complex_livery_shader(setup_role, game_setup=false){
     shader_reset();
     var data_set = obj_ini.full_liveries[0];
     for (var i=0;i<=20;i++){
@@ -254,10 +254,10 @@ function setup_complex_livery_shader(setup_role){
             break;
         }
     }
+    show_debug_message(data_set);
     shader_set(full_livery_shader);
     var spot_names = struct_get_names(data_set);
     for (var i=0;i<array_length(spot_names);i++){
-        if (spot_names[i]=="is_changed") then continue;
         var colour = data_set[$ spot_names[i]];
         var colour_set = [obj_controller.col_r[colour]/255, obj_controller.col_g[colour]/255, obj_controller.col_b[colour]/255];
         shader_set_uniform_f_array(shader_get_uniform(full_livery_shader, spot_names[i]), colour_set);

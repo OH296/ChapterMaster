@@ -30,6 +30,7 @@ custom_icon=0;
 global.chapter_icon_sprite = spr_icon_chapters;
 global.chapter_icon_frame = 0;
 global.chapter_icon_path = "";
+global.chapter_id = 0;
 
 
 audio_stop_all();
@@ -49,7 +50,7 @@ premades=true;
 /// Opt in/out of loading from json vs hardcoded for specific chapters, this way i dont have to do all in one go to test
 use_chapter_object = 0;
 
-livery_picker = new colour_item(100,230);
+livery_picker = new ColourItem(100,230);
 livery_picker.scr_unit_draw_data();
 full_liveries = array_create(21,DeepCloneStruct(livery_picker.map_colour));
 complex_livery=false;
@@ -195,6 +196,9 @@ chapter_master_melee=1;
 chapter_master_ranged=1;
 chapter_master_specialty=2;
 
+chapter_made = false;
+
+
 enum CHAPTERS {
     UNKNOWN = 0,
     DARK_ANGELS = 1,
@@ -225,6 +229,11 @@ enum CHAPTERS {
     CUSTOM_3 = 23,
     CUSTOM_4 = 24,
     CUSTOM_5 = 25,
+    CUSTOM_6 = 26,
+    CUSTOM_7 = 27,
+    CUSTOM_8 = 28,
+    CUSTOM_9 = 29,
+    CUSTOM_10 = 30
 }
 enum CHAPTER_ORIGIN {
     NONE,
@@ -250,6 +259,7 @@ function ChapterDataLite(_id, _origin,_progenitor, _name , _tooltip) constructor
     tooltip = _tooltip;
     disabled = false;
     json = false;
+    loaded = true;
     icon = _id;
     splash = _id;
 }
@@ -279,27 +289,54 @@ all_chapters = [
     new ChapterDataLite(CHAPTERS.EMPERORS_NIGHTMARE, CHAPTER_ORIGIN.NON_CANON,0, "Emperor’s Nightmare","The Emperor's Nightmare bear the curse of a bizarre mutation within their gene-seed. The Catalepsean Node is in a state of decay and thus do not sleep for months at a time until falling asleep suddenly. They prefer shock and awe tactics with stealth."),
     new ChapterDataLite(CHAPTERS.STAR_KRAKENS, CHAPTER_ORIGIN.NON_CANON,0, "Star Krakens","In darkness, they dwell in The Deep. The Star Krakens stand divided in individual companies but united in the form of the Ten-Flag Council. They utilize boarding tactics and are the sole guardians of the ancient sensor array called “The Lighthouse”."),
     new ChapterDataLite(CHAPTERS.CONSERVATORS, CHAPTER_ORIGIN.NON_CANON,0, "Conservators","Hailing from the Asharn Marches and having established their homeworld on the planet Dekara, these proud sons of Dorn suffer from an extreme lack of supplies, Ork raids, and more. Though under strength and lacking equipment, they managed to forge an interstellar kingdom loyal to both Emperor and Imperium."),
-    new ChapterDataLite(CHAPTERS.CUSTOM_1, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter", "")
-    // new ChapterDataLite(CHAPTERS.CUSTOM_2, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter",),
-    // new ChapterDataLite(CHAPTERS.CUSTOM_3, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter",),
-    // new ChapterDataLite(CHAPTERS.CUSTOM_4, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter",),
-    // new ChapterDataLite(CHAPTERS.CUSTOM_5, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter",),
+    new ChapterDataLite(CHAPTERS.CUSTOM_1, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_2, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_3, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_4, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_5, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_6, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_7, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_8, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_9, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
+    new ChapterDataLite(CHAPTERS.CUSTOM_10, CHAPTER_ORIGIN.CUSTOM,0,"Custom","Your Chapter"),
 ]
-// for now the extra custom chapters are messing with the UI too much
 
-var missing_splash = 100;
-var custom_splash = 98;
+var missing_splash = 99;
+var custom_splash = 97;
 all_chapters[CHAPTERS.EMPERORS_NIGHTMARE].splash = missing_splash;
 all_chapters[CHAPTERS.CARCHARODONS].splash = missing_splash;
 all_chapters[CHAPTERS.CONSERVATORS].splash = missing_splash;
 all_chapters[CHAPTERS.CUSTOM_1].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_2].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_3].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_4].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_5].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_6].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_7].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_8].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_9].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_10].loaded = false;
+all_chapters[CHAPTERS.CUSTOM_2].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_3].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_4].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_5].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_6].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_7].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_8].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_9].splash = custom_splash;
+all_chapters[CHAPTERS.CUSTOM_10].splash = custom_splash;
+
 
 
 global.normal_icons_count = 0;
 // Load from files to overwrite hardcoded ones
-for(var c = 0; c < 30; c++){
+for(var c = 0; c < 40; c++){
+    var use_app_data = false;
+    if(c < array_length(all_chapters) && all_chapters[c].origin == CHAPTER_ORIGIN.CUSTOM){
+        use_app_data = true;
+    }
     var json_chapter = new ChapterData();
-    var success = json_chapter.load_from_json(c); 
+    var success = json_chapter.load_from_json(c, use_app_data); 
     if(success){
         all_chapters[c] = new ChapterDataLite(
             json_chapter.id,
@@ -311,18 +348,18 @@ for(var c = 0; c < 30; c++){
         all_chapters[c].json = true;
         all_chapters[c].icon = json_chapter.icon;
         all_chapters[c].splash = json_chapter.splash;
+        all_chapters[c].loaded = true;
+        all_chapters[c].disabled = false;
     }
-
+    
     var icon = file_exists($"{working_directory}\\images\\creation\\chapters\\icons\\{c}.png");
-    if(icon) {global.normal_icons_count += 1;}
+    if(icon) {
+        show_debug_message($"icon {c}.png exists");
+        global.normal_icons_count += 1;
+    }
 }
 
 global.chapters_count = array_length(all_chapters);
-
-// test_chap = all_chapters[CHAPTERS.BLOOD_ANGELS];
-// show_debug_message(test_chap);
-// test_chap2 = all_chapters[CHAPTERS.BLACK_TEMPLARS];
-// show_debug_message(test_chap2);
 
 /** 
  * * Not all Chapters are implemented yet, disable the ones that arent, remove a line if the chapter gets made
@@ -337,356 +374,6 @@ all_chapters[CHAPTERS.CONSERVATORS].disabled = true;
 // all_chapters[CHAPTERS.CUSTOM_3].disabled = true;
 // all_chapters[CHAPTERS.CUSTOM_4].disabled = true;
 // all_chapters[CHAPTERS.CUSTOM_5].disabled = true;
-
-
-// TODO refactor into a script which converts these static arrays to dynamic struct arrays
-
-chapter_id[21]= "Custom";
-chapter_tooltip[21]="Your Chapter";
-
-//Stores info for custom chapter
-
-
-
-
-chaptersave  = "chaptersave#1.ini"
-
-chapter21 ="Custom";
-if(file_exists("chaptersave#1.ini")=true){
-	chapter_made=1;
-}
-else if (file_exists("chaptersave#1.ini")=false){
-	chapter_made=0;
-}
-
-
-
-
-if((file_exists("chaptersave#1.ini")=true) and (chapter_made=1)){
-	ini_open("chaptersave#1.ini")
-		all_chapters[CHAPTERS.CUSTOM_1].name= ini_read_string("Save","chapter_id","Custom");
-		chapter21 = ini_read_string("Save","chapter_name",chapter_name);
-		icon21= ini_read_real("Save","icon#",icon);
-	   	icon_name21= ini_read_string("Save","icon_name","custom");
-	   	strength21 = ini_read_real("Save","strength",strength);
-	    purity21 = ini_read_real("Save","purity",purity);
-	   	stability21= ini_read_real("Save","stability",stability);
-		cooperation21=ini_read_real("Save","cooperation",cooperation);
-		founding21 = ini_read_real("Save","founding",1);
-		
-		fleet_type21=ini_read_real("Save","fleet_type",1);
-		homeworld21 = ini_read_string("Save","homeworld",homeworld);
-		homeworld_name21 = ini_read_string("Save","homeworld_name",homeworld_name);
-		 recruiting_world21= ini_read_string("Save","recruiting",recruiting);
-		recruiting_name21 = ini_read_string("Save","recruiting_name",recruiting_name);
-		homeworld_exists21 = ini_read_real("Save","home_worldexists",homeworld_exists);
-		recruiting_exists21= ini_read_real("Save","recruiting_exists",recruiting_exists);
-		homeworld_rule21= ini_read_real("Save","home_world_rule",homeworld_rule);
-		aspirant_trial21=ini_read_real("Save","aspirant_trial",aspirant_trial);
-		discipline21=ini_read_string("Save","discipline",discipline);
-		
-		color_to_main21= ini_read_string("Controller","main_color","Red");
-	    color_to_secondary21= ini_read_string("Controller","secondary_color","Red");
-	    color_to_trim21 = ini_read_string("Controller","main_trim","Red");
-	   color_to_pauldron2_21 = ini_read_string("Controller","left_pauldron","Red");
-	    color_to_pauldron21 = ini_read_string("Controller","right_pauldron","Red")
-	   color_to_lens21 = ini_read_string("Controller","lens_color","Lime");
-	   color_to_weapon21 = ini_read_string("Controller","weapon_color","Red");
-	   col_special21 = ini_read_real("Controller","col_special",col_special);
-	   trim21 = ini_read_real("Controller","trimmed",trim);
-	   equal_specialists21 = ini_read_real("Controller","equal_specialists",1);
-		
-	
-	
-	
-		preomnor21= ini_read_real("Creation","preomnor",preomnor);
-	    voice21 = ini_read_real("Creation","voice",voice);
-	    doomed21 = ini_read_real("Creation","doomed",doomed);
-	    lyman21 = ini_read_real("Creation","lyman",lyman);
-	    omophagea21 = ini_read_real("Creation","omophagea",omophagea);
-	    ossmodula21 = ini_read_real("Creation","ossmodula",ossmodula);
-	    membrane21 = ini_read_real("Creation","membrane",membrane);
-	    zygote21 = ini_read_real("Creation","zygote",zygote);
-	    betchers21= ini_read_real("Creation","betchers",betchers);
-	    catalepsean21 = ini_read_real("Creation","catalepsean",catalepsean);
-	    secretions21= ini_read_real("Creation","secretions",secretions);
-	    occulobe21 = ini_read_real("Creation","occulobe",occulobe);
-	    mucranoid21=ini_read_real("Creation","mucranoid",mucranoid)
-		battle_cry_21 = ini_read_string("Creation","battle_cry","For The Emperor");
-		
-		recruiter21= ini_read_string("Creation","recruiter_name",recruiter);
-		mutations21= ini_read_string("Creation","mutation",mutations);
-		mutations_selected21=ini_read_real("Creation","mutations_selected",2);
-	    successors21= ini_read_real("Creation","successors",successors);
-	    disposition21[1]= ini_read_real("Creation","progenitor_disposition",disposition[1]);
-	    disposition21[2]=ini_read_real("Creation","imperium_disposition",disposition[2]);
-	    disposition21[3]=ini_read_real("Creation","admech_disposition",disposition[3]);
-		disposition21[6]=ini_read_real("Creation","astartes_disposition",disposition[6]);
-		disposition21[4]=ini_read_real("Creation","inquisition_disposition",disposition[4]);
-		disposition21[5]=ini_read_real("Creation","ecclesiarchy_disposition",disposition[5]);
-		disposition21[7]=ini_read_real("Creation","reserved_disposition",disposition[7]);
-		complex_livery21 = return_json_from_ini("Creation","complex_livery", complex_livery_default());
-		
-		
-		
-	    clibrarian21= ini_read_string("Creation","chief_name",clibrarian);
-	    hchaplain21 = ini_read_string("Creation","high_name",hchaplain);
-	    hapothecary21=ini_read_string("Creation","high2_name",hapothecary);
-	    fmaster21= ini_read_string("Creation","forgey_name",fmaster);
-	    admiral21=ini_read_string("Creation","lord_name",admiral);
-		chapter_master_name21 = ini_read_string("Creation","master_name",chapter_master_name);
-		chapter_master_melee21 = ini_read_real("Creation","chapter_master_melee",chapter_master_melee);
-		chapter_master_ranged21= ini_read_string("Creation","master_ranged",chapter_master_ranged);
-		chapter_master_specialty21=ini_read_string("Creation","master_specialty",chapter_master_specialty);
-		adv21=[1,2,3,4,5,6,7,8];
-		dis21=[1,2,3,4,5,6,7,8];
-		for(var i =1;i<=8;i++){
-			
-			adv21[i]=ini_read_string("Creation","adv21"+string(i),"")
-			dis21[i]=ini_read_string("Creation","dis21"+string(i),"")
-		}
-		
-		for(var i=0;i<=22;i++){
-		    role_21[i]= ini_read_string("Save","role_21"+string(i),"Tactical");
-			wep1_21[i]= ini_read_string("Save","wep1_21"+string(i),"Combat Knife");
-			wep2_21[i]=ini_read_string("Save","wep2_21"+string(i),"Bolter")
-			armour_21[i]= ini_read_string("Save","armour_21"+string(i),"Power Armour");
-			 gear_21[i]= ini_read_string("Save","gear_21"+string(i),"");
-			mobi_21[i]= ini_read_string("Save","mobi_21"+string(i),"");
-		}
-stage = 6;
-ini_close();
-}
-
-
-else if (file_exists("chaptersave#1.ini")=false){
-    adv21 = [1,2,3,4,5,6,7,8]
-    dis21 =[1,2,3,4,5,6,7,8]
-    disposition21 = [1,2,3,4,5,6,7]
-    founding21=4;
-
-    icon21=4;
-    icon_name21="if";
-    fleet_type21=1;
-    strength21=2;
-    purity21=5;
-    stability21=5;
-    cooperation21=2;
-    homeworld21=1
-    homeworld_name21="World"
-    recruiting_world21=homeworld_name21
-    recruiting_name21=homeworld_name21
-    homeworld_exists21=1;
-    recruiting_exists21=1;
-    homeworld_rule21=2;
-    aspirant_trial21=2;
-    role_21= []
-    race_21=[]
-    wep1_21=[]
-    wep2_21=[]
-    armour_21=[]
-    gear_21=[]
-    mobi_21=[];
-
-    // Pauldron2: Left, Pauldron: Right
-    color_to_main21="Red"
-    color_to_secondary21="";
-    color_to_trim21="Red";
-    color_to_pauldron21="Red"; 
-    color_to_pauldron2_21="Red";
-    color_to_lens21="Red";
-    color_to_weapon21="Red";
-    col_special21="Red";
-    trim21=1;
-    hapothecary21="Doc";
-    hchaplain21="Warg";
-    clibrarian21="Witch";
-    fmaster21="Smith";
-    admiral21="Sailor";
-    recruiter21="Sarge";
-    battle_cry_21="WAAAGH";
-    monastery_name21="Okay";
-    master_name21="SHH";
-    equal_specialists21=1;
-
-    load_to_ships=[2,0,0];
-    // load_to_ships=0;
-
-    successors21=4;
-    mutations21=2;
-    mutations_selected21=2;
-    preomnor21=0;
-    voice21=0;
-    doomed21=0;
-    lyman21=0;
-    omophagea21=0;
-    ossmodula21=0;
-    membrane21=1;
-    zygote21=0;
-    betchers21=1;
-    catalepsean21=0;
-    secretions21=0;
-    occulobe21=0;
-    mucranoid21=0;
-    disposition21[1]=20;// Prog
-    disposition21[2]=20;
-    disposition21[3]=20;
-    disposition21[4]=20;
-    disposition21[5]=20;
-    disposition21[6]=20;// Astartes
-    disposition21[7]=20;// Reserved
-    chapter_master_name21="Git smacka";
-    chapter_master_melee21=1;
-    chapter_master_ranged21=1;
-    chapter_master_specialty21=1;
-
-    adv21[1]="Ambushers";
-    adv21[2]="Boarders";
-    adv21[3]="Crafters";
-    adv21[4]="Enemy; Orks";
-
-    dis21[1]="Suspicious";
-    dis21[2]="Tolerant";
-    dis21[3]="Blood Debt";
-    dis21[4]="Sieged";
-    i=100
-	repeat(3){i+=1;// First is for the correct slot, second is for default
-	race_21[i,2]=1;
-    role_21[i,2]="Honour Guard";
-    wep1_21[i,2]="Power Sword";
-    wep2_21[i,2]="Bolter";
-    armour_21[i,2]="Artificer Armour";
-	gear_21[i,2]=""
-	mobi_21[i,2]="";
-	
-    race_21[i,3]=1;
-    role_21[i,3]="Veteran";
-    wep1_21[i,3]="Chainsword";
-    wep2_21[i,3]="Bolter";
-    armour_21[i,3]="Power Armour";
-	gear_21[i,3]=""
-	mobi_21[i,3]="";
-	
-    race_21[i,4]=1;
-    role_21[i,4]="Terminator";
-    wep1_21[i,4]="Power Fist";
-    wep2_21[i,4]="Storm Bolter";
-    armour_21[i,4]="Terminator Armour";
-	gear_21[i,4]=""
-	mobi_21[i,4]="";
-	
-    race_21[i,5]=1;
-    role_21[i,5]="Captain";
-    wep1_21[i,5]="Power Sword";
-    wep2_21[i,5]="Bolt Pistol";
-    armour_21[i,5]="Power Armour";
-	gear_21[i,5]="Iron Halo";
-	mobi_21[i,15]="";
-	
-	
-    race_21[i,6]=1;
-    role_21[i,6]="Dreadnought";
-    wep1_21[i,6]="Close Combat Weapon";
-    wep2_21[i,6]="Twin Linked Lascannon";
-    armour_21[i,6]="Dreadnought";
-	gear_21[i,6]=""
-	mobi_21[i,6]="";
-	
-    race_21[i,7]=1;
-    role_21[i,7]="Champion";
-    wep1_21[i,7]="Power Sword";
-    wep2_21[i,7]="Bolt Pistol";
-    armour_21[i,7]="Power Armour";
-	gear_21[i,7]="Combat Shield"
-	mobi_21[i,7]="";
-
-        race_21[i,8]=1;
-        role_21[i,8]="Tactical Marine";
-        wep1_21[i,8]="Bolter";
-        wep2_21[i,8]="Combat Knife";
-        armour_21[i,8]="Power Armour";
-        gear_21[i,8]=""
-        mobi_21[i,8]="";
-
-        race_21[i,9]=1;
-        role_21[i,9]="Devastator Marine";
-        wep1_21[i,9]="";
-        wep2_21[i,9]="Combat Knife";
-        armour_21[i,9]="Power Armour";
-        gear_21[i,9]=""
-        mobi_21[i,9]="";
-
-        race_21[i,10]=1;
-        role_21[i,10]="Assault Marine";
-        wep1_21[i,10]="Chainsword";
-        wep2_21[i,10]="Bolt Pistol";
-        armour_21[i,10]="Power Armour";
-        gear_21[i,10]=""
-        mobi_21[i,10]="Jump Pack";
-
-        race_21[i,11]=1;
-        role_21[i,11]="Ancient";
-        wep1_21[i,11]="Company Standard";
-        wep2_21[i,11]="Power Sword";
-        armour_21[i,11]="Power Armour";
-        gear_21[i,11]=""
-        mobi_21[i,11]="";
-
-        race_21[i,12]=1;
-        role_21[i,12]="Scout";
-        wep1_21[i,12]="Sniper Rifle";
-        wep2_21[i,12]="Combat Knife";
-        armour_21[i,12]="Scout Armour";
-        gear_21[i,12]=""
-        mobi_21[i,12]="";
-
-        race_21[i,14]=1;
-        role_21[i,14]="Chaplain";
-        wep1_21[i,14]="Crozius Arcanum";
-        wep2_21[i,14]="Bolt Pistol";
-        armour_21[i,14]="Power Armour";
-        gear_21[i,14]="Rosarius";
-
-        race_21[i,15]=1;
-        role_21[i,15]="Apothecary";
-        wep1_21[i,15]="Chainsword";
-        wep2_21[i,15]="Bolt Pistol";
-        armour_21[i,15]="Power Armour";
-        gear_21[i,15]="Narthecium";
-
-        race_21[i,16]=1;
-        role_21[i,16]="Techmarine";
-        wep1_21[i,16]="Power Axe";
-        wep2_21[i,16]="Storm Bolter";
-        armour_21[i,16]="Artificer Armour";
-        mobi_21[i,16]="Servo-arm";
-        gear_21[i,16]="";
-
-        race_21[i,17]=1;
-        role_21[i,17]="Librarian";
-        wep1_21[i,17]="Force Staff";
-        wep2_21[i,17]="Storm Bolter";
-        armour_21[i,17]="Power Armour";
-        gear_21[i,17]="Psychic Hood";
-
-        race_21[i,18]=1;
-        role_21[i,18]="Sergeant";
-        wep1_21[i,18]="Chainsword";
-        wep2_21[i,18]="Combiflamer";
-        armour_21[i,18]="Power Armour";
-        mobi_21[i,18]="";
-        gear_21[i,18]="";
-
-        race_21[i,19]=1;
-        role_21[i,19]="Veteran Sergeant";
-        wep1_21[i,19]="Chainsword";
-        wep2_21[i,19]="Combiflamer";
-        armour_21[i,19]="Power Armour";
-        mobi_21[i,19]="";
-        gear_21[i,19]="";
-	}
-	stage = 6;
-}
 
 
 // TODO refactor into struct constructors stored in which are struct arrays 
@@ -707,7 +394,7 @@ function ChapterTrait(_id, _name, _description, _points_cost, _meta = []) constr
         for (var i=0;i<array_length(meta);i++){
             array_push(obj_creation.chapter_trait_meta, meta[i]);
         }
-        show_debug_message($"Meta updated: {meta}");
+        show_debug_message($"Meta updated, added: {meta}, all meta: {obj_creation.chapter_trait_meta}");
 
     }
     static remove_meta = function(){
@@ -721,7 +408,7 @@ function ChapterTrait(_id, _name, _description, _points_cost, _meta = []) constr
                 }
             }
         }
-        show_debug_message($"Meta updated: {meta}");
+        show_debug_message($"Meta updated, removed: {meta}, all meta: {obj_creation.chapter_trait_meta}");
     }
 
     static print_meta = function(){
@@ -811,16 +498,17 @@ var all_advantages = [
         {
             name : "Boarders",
             description : "Boarding other ships is the specialty of your chapter.  Your chapter is more lethal when boarding ships, have dedicated boarding squads, and two extra strike cruisers.",
-            value : 20,
+            value : 30,
         },
         {
             name : "Bolter Drilling",
             description : "Bolter drills are sacred to your chapter; all marines have increased attack with Bolter weaponry.",
             value : 25,
+            meta : ["Weapon Specialty"]
         },
         {
-            name : "Brothers",
-            description : "Your chapter places great emphasis on comradely and loyalty.  You start with a well-equipped Honour Guard.",
+            name : "Retinue of Renown",
+            description : "Your chapter master is guarded by renown heroes of the chapter.  You start with a larger well-equipped Honour Guard.",
             value : 20,
         },
         {
@@ -873,7 +561,7 @@ var all_advantages = [
             name : "Kings of Space",
             description : "Veterans of naval combat, your chapter fleet has bonuses to offense, defence, an additional battle barge, and may always be controlled regardless of whether or not the Chapter Master is present.",
             value : 40,
-            meta : [],
+            meta : ["Naval"],
         },
         {
             name : "Lightning Warriors",
@@ -891,19 +579,19 @@ var all_advantages = [
             name : "Psyker Abundance",
             description : "The Psyker mutation runs rampant in your chapter.  Librarians train in 60% the normal time and receive bonus experience.",
             value : 30,
-            meta : ["Psyker Views"],
+            meta : ["Psyker Views","Specialists"],
         }, 
         {
             name : "Reverent Guardians",
             description : "Your chapter places great faith in the Imperial Cult; you start with more Chaplains and any Ecclesiarchy disposition increases are enhanced.",
             value : 10,
-            meta : ["Faith","Imperium Trust"],
+            meta : ["Faith","Imperium Trust","Specialists"],
         },
         {
             name : "Tech-Brothers",
             description : "Your chapter has better ties to the mechanicus; you have more techmarines and higher mechanicus disposition.",
             value : 25,
-            meta : ["Mechanicus Faith"],
+            meta : ["Mechanicus Faith","Specialists"],
         }, 
         {
             name : "Tech-Scavengers",
@@ -916,28 +604,35 @@ var all_advantages = [
             value : 15,
         },
         {
-            name : "Slow and Purposeful",
-            description : "Careful and steady is your chapters doctrine; all infantry have slightly less attack but boosted defences.",
-            value : 15,
+            name : "Devastator Doctrine",
+            description : "The steady advance of overwhelming firepower is your chapters combat doctrine each company has an additional Devastator squad, all infantry have boosted defence, and heavy weapons have increased attack.",
+            value : 30,
             meta : ["Doctrine"],
         },
         {
-            name : "Melee Enthusiasts",
-            description : "Rip and tear! Each Company has an additional Assault Squad.  Your marines and dreadnoughts also have boosted attack with melee weapons.",
-            value : 15,
+            name : "Assault Doctrine",
+            description : "Your chapter prefers quick close quarter assaults on the enemy each Company has an additional Assault Squad and your marines are more skilled in melee.",
+            value : 20,
             meta : ["Doctrine"],
         },
         {
             name : "Venerable Ancients",
             description : "Even in death they still serve. Your chapter places a staunch reverence for its forebears and has a number of additional venerable dreadnoughts in service.",
-            value : 25,
+            value : 40,
             meta : ["Doctrine"],
         },
         {
             name : "Medicae Primacy",
             description : "Your chapter reveres its Apothecarion above all of it's specialist; You start with more Apothecaries.",
             value : 25,
-        },                                                                                                                                                                              
+            meta : ["Specialists"]
+        },
+        {
+            name : "Ryzan Patronage",
+            description : "Your chapter has strong ties to the Forgeworld of Ryza as a result your Techmarines are privy to the secrets of their Techpriests enhancing your Plasma and Las weaponry.",
+            value : 25,
+            meta : ["Weapon Specialty"] 
+        },                                                                                                                                                                             
     ]
 
 
@@ -1023,7 +718,13 @@ var all_disadvantages = [
         name : "Psyker Intolerant",
         description : "Witches are hated by your chapter.  You cannot create Librarians but gain a little bonus attack against psykers.",
         value : 20,
-        meta : ["Psyker Views"]
+        meta : ["Psyker Views"],
+    },
+    {
+        name : "Obliterated",
+        description : "A recent string of unfortunate events has left your chapter decimated. You have very little left, will your story continue?",
+        value : 60,
+        meta : ["Status"],
     },                  
 ]
 
@@ -1037,8 +738,6 @@ for (var i=0;i<array_length(all_disadvantages);i++){
     }
     array_push(obj_creation.all_disadvantages, new_dis);
 }
-show_debug_message(obj_creation.all_advantages);
-show_debug_message(obj_creation.all_disadvantages);
 
 
 
@@ -1057,7 +756,6 @@ for(var slot = 99; slot <= 103; slot++){
         armour[slot,i]="";
         gear[slot,i]="";
         mobi[slot,i]="";
-        experience[y,i]=0;
     }
 }
 
@@ -1077,7 +775,7 @@ load_default_gear(Role.VETERAN, "Veteran", "Chainsword", "Combiflamer", "Power A
 load_default_gear(Role.TERMINATOR, "Terminator", "Power Fist", "Storm Bolter", "Terminator Armour", "", "");
 load_default_gear(Role.CAPTAIN, "Captain", "Power Sword", "Bolt Pistol", "Power Armour", "", "Iron Halo");
 load_default_gear(Role.DREADNOUGHT, "Dreadnought", "Dreadnought Lightning Claw", "Lascannon", "Dreadnought", "", "");
-load_default_gear(Role.CHAMPION, "Champion", "Power Sword", "Power Armour", "Power Armour", "", "Combat Shield");
+load_default_gear(Role.CHAMPION, "Champion", "Power Sword", "Bolt Pistol", "Power Armour", "", "Combat Shield");
 load_default_gear(Role.TACTICAL, "Tactical", "Bolter", "Combat Knife", "Power Armour", "", "");
 load_default_gear(Role.DEVASTATOR, "Devastator", "", "Combat Knife", "Power Armour", "", "");
 load_default_gear(Role.ASSAULT, "Assault", "Chainsword", "Bolt Pistol", "Power Armour", "Jump Pack", "");
@@ -1107,44 +805,6 @@ if (global.restart>0){
     scr_restart_variables(4);
     with(obj_restart_vars){instance_destroy();}
     global.restart=0;
-}
-
-
-if (skip=true){
-    fade_in=-1;
-    slate1=-1;
-    slate=22;
-    slate3=22;
-    slate4=50;
-    
-    change_slide=0;
-    slide=6;
-    slide_show=slide;
-    
-    icon_name="ih";
-    icon=6;founding=6;
-    
-    chapter_name="Sons of Duke";
-    custom=2;
-    battle_cry="The flesh is weak!  The flesh is weak!  The flesh is weak!  The flesh is weak!  The flesh is weak";
-    
-    purity=5;
-    
-    /*main_color=5;secondary_color=5;main_trim=2;
-    left_pauldron=5;// Left pauldron
-    right_pauldron=5;// Right pauldron
-    lens_color=7;weapon_color=2;col_special=0;*/
-    
-    main_color=7;
-    secondary_color=5;
-    main_trim=5;
-    left_pauldron=5;// Left pauldron
-    right_pauldron=5;// Right pauldron
-    lens_color=6;
-    weapon_color=4;
-    col_special=0;
-    
-    scr_chapter_new("Doom Benefactors");
 }
 
 /* */
@@ -1231,4 +891,3 @@ scr_colors_initialize();
 action_set_alarm(30, 1);
 /*  */
 
-	

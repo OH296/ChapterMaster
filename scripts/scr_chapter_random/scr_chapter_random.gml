@@ -1,26 +1,29 @@
+/// @mixin obj_creation
 function scr_chapter_random(argument0) {
 
-
+	// argument0 = 0 = create custom 
+	// argument0 = 1 = create random
 
 	// if argument0=0 then it just gives a name
 	var i;i=-1;
-	repeat(21){i+=1;
-	    world[i]="";
-	    world_type[i]="";
-	    world_feature[i]="";
-	}
+	world = array_create(21, "");
+	world_type = array_create(21, "");
+	world_feature = array_create(21, "");
+	company_title = array_create(11, "");
+	adv = array_create(9, "");
+	dis = array_create(9, "");
+	adv_num = array_create(9, 0);
+	dis_num = array_create(9, 0);
 
-	company_title[0]="";var i;i=0;repeat(40){i+=1;company_title[i]="";}
 
 	var ran1, ran2, phrase1, phrase2, main, secondary, lens, weapon, found_secret;
 	phrase1="";phrase2="";
 
-	chapter="Unnamed";chapter_string="Unnamed";
+	chapter_name="Unnamed";chapter_string="Unnamed";
 	icon=1;icon_name="da";
 	founding=1;found_secret=0;
 	points=0;maxpoints=100;
 	fleet_type=1;strength=5;cooperation=5;purity=5;stability=5;
-	var i;i=-1;repeat(6){i+=1;adv[i]="";adv_num[i]=0;dis[i]="";dis_num[i]=0;}
 	homeworld="Temperate";homeworld_name=global.name_generator.generate_star_name();
 	recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
 	flagship_name=global.name_generator.generate_imperial_ship_name();
@@ -40,22 +43,27 @@ function scr_chapter_random(argument0) {
 	color_to_lens="";
 	color_to_weapon="";
 
-	hapothecary=global.name_generator.generate_space_marine_name();hchaplain=global.name_generator.generate_space_marine_name();clibrarian=global.name_generator.generate_space_marine_name();
-	fmaster=global.name_generator.generate_space_marine_name();recruiter=global.name_generator.generate_space_marine_name();admiral=global.name_generator.generate_space_marine_name();
+	hapothecary=global.name_generator.generate_space_marine_name();
+	hchaplain=global.name_generator.generate_space_marine_name();
+	clibrarian=global.name_generator.generate_space_marine_name();
+	fmaster=global.name_generator.generate_space_marine_name();
+	recruiter=global.name_generator.generate_space_marine_name();
+	admiral=global.name_generator.generate_space_marine_name();
 
 	equal_specialists=0;load_to_ships=[2,0,0];successors=0;
 
 	mutations=0;mutations_selected=0;
 	preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
 	zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	disposition[0]=0;
-	disposition[1]=0;// Prog
-	disposition[2]=0;// Imp
-	disposition[3]=0;// Mech
-	disposition[4]=0;// Inq
-	disposition[5]=0;// Ecclesiarchy
-	disposition[6]=0;// Astartes
-	disposition[7]=0;// Reserved
+	disposition = array_create(8, 0);
+	// disposition[0]=0;
+	// disposition[1]=0;// Prog
+	// disposition[2]=0;// Imp
+	// disposition[3]=0;// Mech
+	// disposition[4]=0;// Inq
+	// disposition[5]=0;// Ecclesiarchy
+	// disposition[6]=0;// Astartes
+	// disposition[7]=0;// Reserved
 	chapter_master_name=global.name_generator.generate_space_marine_name();
 	chapter_master_melee=1;
 	chapter_master_ranged=1;
@@ -69,7 +77,7 @@ function scr_chapter_random(argument0) {
 
 
 
-
+	// create random
 	if (argument0=1){
 	    strength=choose(2,3,4,5,6,7,8);
 	    purity=choose(2,3,4,5,6,7,8);if (strength<5) then purity+=2;
@@ -90,6 +98,7 @@ function scr_chapter_random(argument0) {
 	ran2=floor(random(95))+1;
 	ran3=floor(random(9))+1;
 
+	//create random
 	if (argument0=1){
 	    mutations=0;mutations_selected=0;mutation="";
 	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
@@ -98,9 +107,9 @@ function scr_chapter_random(argument0) {
     
 	    if (found_secret=1){adv[1]="Enemy: Fallen";dis[1]="Never Forgive";}
 	    if (found_secret=2) then adv[1]="Lightning Warriors";
-	    if (found_secret=3){adv[1]="Melee Enthusiasts";dis[1]="Suspicious";}
+	    if (found_secret=3){adv[1]="Assault Doctrine";dis[1]="Suspicious";}
 	    if (found_secret=4){adv[1]="Bolter Drilling";betchers=1;membrane=1;mutations_selected+=2;mutations+=2;mutat=2;}
-	    if (found_secret=5){adv[1]="Melee Enthusiasts";dis[1]="Black Rage";disadvantage1=1;}
+	    if (found_secret=5){adv[1]="Assault Doctrine";dis[1]="Black Rage";disadvantage1=1;}
 	    if (found_secret=6){adv[1]="Tech-Brothers";dis[1]="Psyker Intolerant";}
 	    // if (found_secret=7) then founding="Ultramarines";
 	    if (found_secret=8){adv[1]="Crafters";dis[1]="Tolerant";secretions=1;mutations+=1;mutations_selected+=1;mutat+=1;}
@@ -338,13 +347,13 @@ function scr_chapter_random(argument0) {
 	color_to_weapon=col_weapon;
 	trim=choose(0,1);
 
-	chapter=string(phrase1)+" "+string(phrase2);chapter_string=chapter;
+	chapter_name=string(phrase1)+" "+string(phrase2);chapter_string=chapter_name;
 
-
+	monastery_name = "";
 	if (argument0=1){
 	    homeworld_rule=choose(1,1,1,2,2,3,3);
-	    chapter=string(phrase1)+" "+string(phrase2);
-	    chapter_string=chapter;
+	    chapter_name=string(phrase1)+" "+string(phrase2);
+	    chapter_string=chapter_name;
 	    fleet_type=choose(1,2,3);
     
 	    // if (fleet_type=2) then monastery_name=string(phrase1)+" Hold";
@@ -363,6 +372,7 @@ function scr_chapter_random(argument0) {
 	if (argument0=1) then other1=founding;
 	if (argument0=0) then fleet_type=choose(1,2);
 
+	
 	cooldown=8000;
 
 
