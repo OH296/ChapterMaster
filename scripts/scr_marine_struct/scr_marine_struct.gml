@@ -187,7 +187,7 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			skills: {
 				weapons:{
 					"Ranger Long Rifle":3, "Shuriken Pistol":3, "Eldar Power Sword":3}}, // TODO - check if these actually work
-			start_gear:{"armour":"Power Armour", "wep1":"Ranger Long Rifle", "wep2":"Eldar Power Sword"}, // TODO - add Eldar Armour
+			start_gear:{"armour":"Ranger Armour", "wep1":"Ranger Long Rifle", "wep2":"Eldar Power Sword"}, // TODO - add Eldar Armour
 			base_group : "skitarii", // Might want to rename this
 	},
 	"inquisition_crusader":{
