@@ -135,7 +135,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 				obj_ini.wep1[target_company][good] = "Light Bolter";
 				obj_ini.wep2[target_company][good] = "Sarissa";
 				obj_ini.armour[target_company][good] = "Light Power Armour";
-				obj_ini.experience[target_company][good] = 60;
+				obj_ini.experience[target_company][good] = 20;
 				obj_ini.race[target_company][good] = 5;
 				unit = new TTRPG_stats("adeptus_sororitas", target_company, good, "sister_of_battle");
 				break;
@@ -143,7 +143,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 				obj_ini.wep1[target_company][good] = "Light Bolter";
 				obj_ini.wep2[target_company][good] = "Sarissa";
 				obj_ini.armour[target_company][good] = "Light Power Armour";
-				obj_ini.experience[target_company][good] = 100;
+				obj_ini.experience[target_company][good] = 50;
 				obj_ini.gear[target_company][good] = "Sororitas Medkit";
 				obj_ini.race[target_company][good] = 5;
 				unit = new TTRPG_stats("adeptus_sororitas", target_company, good, "sister_hospitaler");
@@ -164,9 +164,9 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 		// Faction 6 - Eldar
 			case "Ranger":
 				obj_ini.wep1[target_company][good] = "Ranger Long Rifle";
-				obj_ini.wep2[target_company][good] = "Shuriken Pistol";
-				obj_ini.armour[target_company][good] = ""; // I should add "Eldar Armour" to the fellow too
-				obj_ini.experience[target_company][good] = 80;
+				obj_ini.wep2[target_company][good] = "Eldar Power Sword";
+				obj_ini.armour[target_company][good] = "Ranger Armour"; // I should add "Eldar Armour" to the fellow too
+				obj_ini.experience[target_company][good] = 180; // They should have much more EXP (like 250 or more) as they have quite the lifespan
 				obj_ini.race[target_company][good] = 6
 				unit = new TTRPG_stats("mechanicus", target_company, good, "skitarii_ranger"); // TODO - add aeldari religion in relevant gml files
 				break;
