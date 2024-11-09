@@ -19,4 +19,5 @@
 - head-branch: ['^perf', 'perf', 'performance']
 
 "PR: JSON":
-- all-globs-to-all-files: ['**/*.json']
+- changed-files:
+  - all-globs-to-all-files: ['**/*.json']
