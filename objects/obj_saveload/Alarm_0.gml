@@ -43,7 +43,11 @@ if (load_part=6){
     txt="Praise to the Machine God";if (global.restart>0) then txt="Praise be to the Emperor";
     with(obj_controller){
         scr_load(5,global.load);
+        // **sets up starting forge_points
+        specialist_point_handler = new SpecialistPointHandler();
         specialist_point_handler.calculate_research_points();
+
+        //** sets up marine_by_location view
         location_viewer = new UnitQuickFindPanel();
         with(obj_controller){
             global.star_name_colors[1] = make_color_rgb(body_colour_replace[0],body_colour_replace[1],body_colour_replace[2]);
