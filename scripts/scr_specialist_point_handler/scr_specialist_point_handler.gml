@@ -15,7 +15,7 @@ function SpecialistPointHandler() constructor{
     apothecary_training_points = 0;
     forge_points = 0;
 
-    static add_to_armoury_repair(item, count=1){
+    static add_to_armoury_repair = function(item, count=1){
         if (!struct_exists(armoury_repairs, item)){
             armoury_repairs[$ item] = count;
         } else {

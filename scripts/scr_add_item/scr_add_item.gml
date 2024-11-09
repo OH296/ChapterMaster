@@ -30,7 +30,9 @@ function scr_add_item(item_name, number_of_items, quality="any", from_marine=fal
 	    		obj_ini.equipment_quality[match_slot][q]=quality;
 	    	}
 	    	// this is to make sure people can't de=equip items to get around maintenance values
-	    	obj_controller.specialist_point_handler.add_to_armoury_repair(item_name, number_of_items);
+	    	if (instance_exists(obj_controller)){
+	    		obj_controller.specialist_point_handler.add_to_armoury_repair(item_name, number_of_items);
+	    	}
 	    } else if (number_of_items<0){
 	    	if (start_count==0) then return "no_item";
 	    	var end_count = obj_ini.equipment_number[match_slot];

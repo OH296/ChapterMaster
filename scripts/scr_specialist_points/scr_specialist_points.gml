@@ -30,7 +30,7 @@ function unit_forge_point_generation(turn_end=false){
             } else {
                 points*=2;
                 reasons.at_forge = "x2";
-            }s
+            }
             points+=6;
             if (turn_end){
                 add_exp(0.2);
