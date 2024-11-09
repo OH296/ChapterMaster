@@ -8,12 +8,18 @@ function SpecialistPointHandler() constructor{
     techs = [];
     forge_master=-1;
     master_craft_chance = 0;
+    forge_string = "";
+    at_forge = 0;
+    apothecary_points = 0;
     static calculate_research_points = function(turn_end=false){
         self.turn_end=turn_end;
         research_points = 0;
         forge_points = 0;
         master_craft_chance = 0;
+
         apoth_points_used = 0;
+        apothecary_points = 0;
+
         tech_points_used = 0;
         crafters=0;
         at_forge = 0;
@@ -31,20 +37,12 @@ function SpecialistPointHandler() constructor{
         var _cur_tech;
         total_techs = array_length(techs);
         for (var i=0; i<array_length(techs); i++){
-            if (techs[i].IsSpecialist("heads")){
-                forge_master=i;
-            }            
-            if (techs[i].in_jail()){
-                array_delete(techs, i, 1);
-                i--;
-                total_techs--;
-                continue;
-            }
             _tech_locations[i] = techs[i].marine_location();
         }
         if (forge_master>-1){
             obj_controller.master_of_forge = techs[forge_master];
         }
+        //TODO extract to the apothecary simple script
         forge_string += $"Techmarines: +{floor(forge_points)}#";
         forge_string += $"Vehicle Repairs: -{floor(tech_points_used)}#";
         forge_points-=tech_points_used;        
@@ -93,18 +91,19 @@ function SpecialistPointHandler() constructor{
             }
             forge_queue_logic();       
         }
-        obj_controller.research_points = 0;
-        obj_controller.forge_points = 0;
-        obj_controller.master_craft_chance = 0;
+        obj_controller.research_points = research_points;
+        obj_controller.forge_points = forge_points;
+        obj_controller.master_craft_chance = master_craft_chance;
         obj_controller.forge_string = forge_string;
     }
 
     static new_tech_heretic_spawn = function(){
+        var _tester = global.character_tester;
         var _possibility_of_heresy = 8;
         if (array_contains(obj_ini.dis,"Tech-Heresy")) then _possibility_of_heresy = 6;
         if (irandom(power(_possibility_of_heresy,(array_length(heretics)+2.2))) == 0 && array_length(techs)>0){
             var _current_tech = array_random_element(techs);
-           if  (!global.character_tester.standard_test(_current_tech, "piety")[0]){
+           if  (!_tester.standard_test(_current_tech, "piety")[0]){
                _current_tech.add_trait("tech_heretic");
                _current_tech.edit_corruption(20+irandom(15));
            }
@@ -112,6 +111,9 @@ function SpecialistPointHandler() constructor{
     }
 
     static add_forge_points_to_stack = function(unit){
+        if (unit.in_jail()) {
+            return;
+        }
         array_push(techs, unit);
         if (unit.technology>40 && unit.hp() > 0){
             var _cur_tech = unit
@@ -124,15 +126,22 @@ function SpecialistPointHandler() constructor{
                 master_craft_chance += (unit.experience()/50);
             }
             forge_points += _forge_point_gen[0];
+            var _tech_array_id = array_push(heretics, array_length(techs)-1);
             if (unit.has_trait("tech_heretic")){
-                array_push(heretics, array_length(techs)-1);
+                array_push(heretics, _tech_array_id);
             }
+            if (unit.IsSpecialist("heads")){
+                forge_master=_tech_array_id;
+            }  
         }
     }
 
+
+    //handles tech heretic idealology rot
     static tech_ideology_spread = function(){
         var tech_test, charisma_test, piety_test, met_non_heretic, heretics_pursuade_chances, new_pursuasion;
-        if (array_length(heretics)>0 && turn>75){
+        var _tester = global.character_tester;
+        if (array_length(heretics)>0 && obj_controller.turn>75){
             var _heretic_location, _same_location, _current_heretic, _current_tech;
             //iterate through tech heretics;
             for (var heretic=0; heretic<array_length(heretics); heretic++){
@@ -156,12 +165,12 @@ function SpecialistPointHandler() constructor{
                     if (same_locations(_heretic_location,_tech_locations[new_pursuasion])){
                         met_non_heretic=true;
                         //if so do a an opposed technology test of techmarine vs tech  heretic techmarine
-                        tech_test = global.character_tester.oppposed_test(_current_heretic,_current_tech, "technology");
+                        tech_test = _tester.oppposed_test(_current_heretic,_current_tech, "technology");
 
 
                         if (tech_test[0]==1){
                             // if heretic wins do an opposed charisma test
-                            charisma_test =  global.character_tester.oppposed_test(_current_heretic,_current_tech, "charisma", -15+_current_tech.corruption);                           
+                            charisma_test =  _tester.oppposed_test(_current_heretic,_current_tech, "charisma", -15+_current_tech.corruption);                           
                             if (charisma_test[0]==1){
                                 // if heretic win tech is corrupted
                                 //tech is corrupted by half the pass margin of the heretic
@@ -173,7 +182,7 @@ function SpecialistPointHandler() constructor{
                                 // tech takes a piety test to see if they break faith with cult mechanicus and become tech heretic
                                 //piety test is augmented by by the techs corruption with the test becoming harder to pass the more
                                 // corrupted the tech is
-                                piety_test = global.character_tester.standard_test(_current_tech, "piety", +75 - _current_tech.corruption);
+                                piety_test = _tester.standard_test(_current_tech, "piety", +75 - _current_tech.corruption);
 
                                 // if tech fails piety test tech also becomes tech heretic
                                 if (piety_test[0] == false && choose(true,false)){
@@ -189,7 +198,7 @@ function SpecialistPointHandler() constructor{
                         if (new_pursuasion==forge_master){
                             // if tech is the forge master then forge master takes a wisdom in this case doubling as a perception test
                             // if forge master passes tech heresy is noted and chapter master notified
-                            if (global.character_tester.standard_test(_current_tech, "wisdom", - 40)[0] && !_noticed_heresy){
+                            if (_tester.standard_test(_current_tech, "wisdom", - 40)[0] && !_noticed_heresy){
                                 _noticed_heresy=true;
                                 scr_event_log("purple",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
                                 scr_alert("purple","Tech Heresy",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
@@ -351,7 +360,6 @@ function SpecialistPointHandler() constructor{
 function unit_forge_point_generation(turn_end=false){
     var trained_person = IsSpecialist("forge");
     var crafter = has_trait("crafter");
-    if (!(trained_person || crafter)) then return 0;
     var reasons = {}
     var points = 0;
     if (trained_person){
@@ -385,6 +393,9 @@ function unit_forge_point_generation(turn_end=false){
     var maintenance = equipment_maintenance_burden();
     points -= maintenance;
     reasons.maintenance = $"-{maintenance}";
+    if (has_trait("tinkerer")){
+        reasons.maintenance += "\n    X0.5";
+    }    
     return [points,reasons];
 }
 

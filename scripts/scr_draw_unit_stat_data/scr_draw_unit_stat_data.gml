@@ -247,7 +247,7 @@ function scr_draw_unit_stat_data(manage=false){
 			data_entry.tooltip+=$"Crafter: +{gen_reasons.crafter}\n";
 		}
 		if (struct_exists(gen_reasons, "maintenance")){
-			data_entry.tooltip+=$"Maintenance: +{gen_reasons.maintenance}\n";
+			data_entry.tooltip+=$"Maintenance: +{gen_reasons.maintenance}";
 		}			
 		array_push(data_lines, data_entry);
 

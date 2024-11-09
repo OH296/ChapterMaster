@@ -131,10 +131,11 @@ function apothecary_simple(){
 		cur_system="";
 		if (array_length(_unit_spread[$_locations[i]]) == 6){
 			cur_system = _unit_spread[$_locations[i]][5];
-		}		
+		}
+		var _loc_forge_points = 0;		
 		for (var p=0;p<5;p++){
 			total_heal_points=0;
-			forge_points=0;
+			_loc_forge_points=0;
 			if (array_length(_unit_spread[$_locations[i]][p]) == 0) then continue;
 			cur_units = _unit_spread[$_locations[i]][p];
 			cur_apoths = _apoth_spread[$_locations[i]][p];
@@ -145,19 +146,20 @@ function apothecary_simple(){
 			}
 			for (var a=0;a<array_length(cur_techs);a++){
 				_unit = cur_techs[a];
-				forge_points += _unit.forge_point_generation(true)[0];
+				var tech_gen = _unit.forge_point_generation(true)[0];
+				_loc_forge_points += tech_gen;
 			}
 			for (var a=0;a<array_length(cur_units);a++){
 				points_spent = 0;
 				_unit = cur_units[a];
-				if (is_array(_unit) && forge_points>0){
+				if (is_array(_unit) && _loc_forge_points>0){
 					if (array_length(_unit)>1){
-						while (points_spent<10 && obj_ini.veh_hp[_unit[0]][_unit[1]]<100 && forge_points>0){
+						while (points_spent<10 && obj_ini.veh_hp[_unit[0]][_unit[1]]<100 && _loc_forge_points>0){
 							points_spent++;
 							if (turn_end){
 								obj_ini.veh_hp[_unit[0]][_unit[1]]++;
 							}
-							forge_points--;
+							_loc_forge_points--;
 							tech_points_used++;
 						}
 					}
@@ -175,19 +177,17 @@ function apothecary_simple(){
 			        					_unit.healing(false);
 			        				}
 			        			}	
-							} else if (total_heal_points>0 && forge_points>=3 && _unit.bionics<10){
+							} else if (total_heal_points>0 && _loc_forge_points>=3 && _unit.bionics<10){
 								_unit.add_bionics();
 								total_heal_points--;
-								forge_points-=3;
 								tech_points_used+=tech_points_used
 							}			
 						} else {
-							if (total_heal_points>0 && forge_points>=3 && _unit.hp()>0){
+							if (total_heal_points>0 && _loc_forge_points>=3 && _unit.hp()>0){
 		        				if (turn_end){
 		        					_unit.healing(true);
 		        				}
 								total_heal_points--;
-								forge_points-=3;
 								tech_points_used+=3							
 							}
 						}
