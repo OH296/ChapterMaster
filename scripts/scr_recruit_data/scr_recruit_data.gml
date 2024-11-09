@@ -10,12 +10,12 @@ enum eTrials{
 }
 
 // to be run in teh scope of the PlanetData struct
-function planet_training_sequence(){
+function planet_training_sequence(local_apothecary_points){
 
     var thirdpop = max_population / 3;
     var halfpop = max_population / 2;	
 
-	if (planet_feature_bool(features, P_features.Recruiting_World) == 1) and(obj_controller.gene_seed > 0) and(current_owner <= 5) and(obj_controller.faction_status[current_owner] != "War") {
+	if (planet_feature_bool(features, P_features.Recruiting_World)) and(obj_controller.gene_seed > 0) and(current_owner <= 5) and(obj_controller.faction_status[current_owner] != "War") {
         var _planet_population = population;
         if (large_population) {
             _planet_population *= 1000000000;
@@ -34,7 +34,7 @@ function planet_training_sequence(){
 	        var onceh = 0;
 	        var recruit_chance_array = [0, 250, 200, 150, 125, 100, 75];
 	        if (obj_controller.recruiting>0){
-	            recruit_chance = irandom(recruit_chance_array[obj_controller.recruiting]) + 1;
+	            recruit_chance = array_random_element(recruit_chance_array)*4;
 	        }
 
 	        // 135; recruiting
@@ -42,21 +42,21 @@ function planet_training_sequence(){
 	        // by default it takes 72 turns (6 years) to train
 
 	        var planet_type_recruit_chance = {
-	            "Hive" : 40,
+	            "Hive" : 30,
 	            "Temperate" : 20,
 	            "Feudal" : 20,
 	            "Forge" : 15,
 	            "Shrine" : 15,
 	            "Desert" : 15,
 	            "Ice" : 15,
-	            "Agri" : 10,
-	            "Death" : 10,
-	            "Lava" : 7,
+	            "Agri" : 15,
+	            "Death" : 15,
+	            "Lava" : 15,
 	        }
 
 	        var recruit_chance_total = 0;
 	        if (struct_exists(planet_type_recruit_chance, planet_type)){
-	            recruit_chance_total = planet_type_recruit_chance[$ planet_type];
+	            recruit_chance_total = planet_type_recruit_chance[$ planet_type]+local_apothecary_points;
 	            if (struct_exists(recruit_type, "recruit_count_modifier")){
 	                var modded=false;
 	                var count_mod = recruit_type.recruit_count_modifier;

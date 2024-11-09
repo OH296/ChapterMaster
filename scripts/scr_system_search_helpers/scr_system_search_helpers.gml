@@ -331,6 +331,14 @@ function PlanetData(planet, system) constructor{
     fortification_level  = system.p_fortified[planet];
     star_station = system.p_station[planet];
 
+    static name = function(){
+    	var _name="";
+    	with (system){
+    		_name =  planet_numeral_name(planet);
+    	}
+    	return _name;
+    }
+
     // Whether or not player forces are on the planet
     player_forces = system.p_player[planet];
     defence_lasers = system.p_lasers[planet];

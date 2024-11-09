@@ -9,7 +9,8 @@ function calculate_full_chapter_spread(){
 	var _apoth_spread = {};
 	var _unit_spread = {};
     for(var company=0;company<11;company++){
-    	for (var v=0; v < array_length(obj_ini.name[company]); v++) {
+    	var _company_length = (array_length(obj_ini.name[company]));
+    	for (var v=0; v < _company_length; v++) {
     		key_val = "";
     		if (obj_ini.name[company][v]=="") then continue;
     		_unit = fetch_unit([company, v]);
@@ -27,6 +28,9 @@ function calculate_full_chapter_spread(){
 		    	add_forge_points_to_stack(_unit);
 		    }
 		    is_healer = (((_unit.IsSpecialist("apoth",true) && _unit.gear()=="Narthecium") || (_unit.role()=="Sister Hospitaler")) && _unit.hp()>=10);
+		    if (is_healer){
+		    	add_apoth_points_to_stack(_unit);
+		    }
 		  	if (_mar_loc[2]!="warp"){
   	    		if (_mar_loc[0]=location_types.planet){
   	    			array_slot = _mar_loc[1];
@@ -113,19 +117,31 @@ function apothecary_simple(){
 	var _tech_spread = _spreads[0];
 	var _apoth_spread = _spreads[1];
 	var _unit_spread = _spreads[2];
-	var apoth_points_used = 0;
 	forge_string += $"Equipment Maintenance : -{tech_points_used}#";
     //marines-=1;
 
 	var _locations = struct_get_names(_unit_spread);
+	var cur_apoths;
 	with (obj_star){
+		var marines_present = false;
 		for (var i=0;i<array_length(_locations);i++){
 			if (_locations[i] == name){
-				array_push(_unit_spread[$ _locations[i]], self)
+				array_push(_unit_spread[$ _locations[i]], self);
+				marines_present=true;
+			}
+		}
+		if (!marines_present){
+			if (obj_controller.gene_seed == 0) and (obj_controller.recruiting > 0) {
+				var _training_ground = system_feature_bool(self, P_features.Recruiting_World);
+				if (_training_ground){
+                    obj_controller.recruiting = 0;
+                    obj_controller.income_recruiting = 0;
+                    scr_alert("red", "recruiting", "The Chapter has run out of gene-seed!", 0, 0);		
+				}
 			}
 		}
 	}
-	var cur_units, cur_apoths, cur_techs, total_heal_points, veh_health, points_spent, cur_system, features;
+	var cur_units, cur_techs, _loc_heal_points, veh_health, points_spent, cur_system, features;
 	var total_bionics = scr_item_count("Bionics");
 	for (i=0;i<array_length(_locations);i++){
 		cur_system="";
@@ -133,8 +149,8 @@ function apothecary_simple(){
 			cur_system = _unit_spread[$_locations[i]][5];
 		}
 		var _loc_forge_points = 0;		
-		for (var p=0;p<5;p++){
-			total_heal_points=0;
+		for (var p=0; p<5; p++){
+			_loc_heal_points=0;
 			_loc_forge_points=0;
 			if (array_length(_unit_spread[$_locations[i]][p]) == 0) then continue;
 			cur_units = _unit_spread[$_locations[i]][p];
@@ -142,11 +158,11 @@ function apothecary_simple(){
 			cur_techs = _tech_spread[$_locations[i]][p];
 			for (var a=0;a<array_length(cur_apoths);a++){
 				_unit = cur_apoths[a];
-				total_heal_points+=((_unit.technology/2)+(_unit.wisdom/2)+_unit.intelligence)/8;
+				_loc_heal_points+=_unit.apothecary_point_generation(turn_end)[0];
 			}
 			for (var a=0;a<array_length(cur_techs);a++){
 				_unit = cur_techs[a];
-				var tech_gen = _unit.forge_point_generation(true)[0];
+				var tech_gen = _unit.forge_point_generation(turn_end)[0];
 				_loc_forge_points += tech_gen;
 			}
 			for (var a=0;a<array_length(cur_units);a++){
@@ -167,38 +183,42 @@ function apothecary_simple(){
 					if  (_unit.hp() < _unit.max_health()){
 						if (_unit.armour() != "Dreadnought"){
 							if (_unit.hp()>0){
-			        			if (total_heal_points >0){
+			        			if (_loc_heal_points >0){
 			        				if (turn_end){
 			        					_unit.healing(true);
 			        				}
-			        				total_heal_points--;
+			        				_loc_heal_points--;
+			        				apothecary_points_used--;
 			        			} else {
 			        				if (turn_end){
 			        					_unit.healing(false);
 			        				}
 			        			}	
-							} else if (total_heal_points>0 && _loc_forge_points>=3 && _unit.bionics<10){
+							} else if (_loc_heal_points>0 && _loc_forge_points>=3 && _unit.bionics<10){
 								_unit.add_bionics();
-								total_heal_points--;
+								_loc_heal_points--;
+								apothecary_points_used--;
 								tech_points_used+=tech_points_used
 							}			
 						} else {
-							if (total_heal_points>0 && _loc_forge_points>=3 && _unit.hp()>0){
+							if (_loc_heal_points>0 && _loc_forge_points>=3 && _unit.hp()>0){
 		        				if (turn_end){
 		        					_unit.healing(true);
 		        				}
-								total_heal_points--;
+								_loc_heal_points--;
+								apothecary_points_used--;
 								tech_points_used+=3							
 							}
 						}
 					}
 				}
 			}
-			if (cur_system!="" && p>0 && turn_end){
+			if (cur_system!="" && p>0){
 				with (cur_system){
 		 			if (array_length(p_feature[p])!=0){
+		 				var _planet_data = new PlanetData(run, self);
 			        	var engineer_count=array_length(cur_techs);
-						if (planet_feature_bool(p_feature[p],P_features.Starship)==1 && engineer_count>0){
+						if (planet_feature_bool(p_feature[p],P_features.Starship)==1 && engineer_count>0 && turn_end){
 							//TODO allow total tech point usage here
 			                var starship = p_feature[p][search_planet_features(p_feature[p],P_features.Starship)[0]];
 			                var engineer_score_start = starship.engineer_score;
@@ -277,6 +297,24 @@ function apothecary_simple(){
 			                    scr_popup($"Ancient Ship Restored",$"The ancient ship within the ruins of {locy} has been fully repaired.  It is determined to be a Slaughtersong vessel and is bristling with golden age weaponry and armour.  Your {string(obj_ini.role[100][16])}s are excited; the Slaughtersong is ready for it's maiden voyage, at your command.","","");                
 			                }
 			            }
+			            if (planet_feature_bool(_planet_data.features, P_features.Recruiting_World)){
+				            if (obj_controller.gene_seed == 0) and (obj_controller.recruiting > 0) {
+				            	if (turn_end){
+				                    obj_controller.recruiting = 0;
+				                    obj_controller.income_recruiting = 0;
+				                    scr_alert("red", "recruiting", "The Chapter has run out of gene-seed!", 0, 0);
+			                	}
+				            }else if (obj_controller.recruiting > 0){
+				            	if (_loc_heal_points>0){
+				            		if (turn_end){
+			                   			_planet_data.marine_training(_loc_heal_points);
+			                   		}
+			                   		apothecary_training_points += _loc_heal_points;
+			                	} else {
+			                		scr_alert("red", "recruiting", $"Recruitment on {_planet_data.name()} halted due to insufficient apothecary rescources", 0, 0);
+			                	}
+			                }
+			        	}
 			        }
 			    }
 		    }		
