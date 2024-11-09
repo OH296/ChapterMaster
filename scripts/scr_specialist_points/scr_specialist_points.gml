@@ -11,6 +11,15 @@ function SpecialistPointHandler() constructor{
     forge_string = "";
     at_forge = 0;
     apothecary_points = 0;
+    armoury_repairs = {};
+
+    static add_to_armoury_repair(item, count=1){
+        if (!struct_exists(armoury_repairs, item)){
+            armoury_repairs[$ item] = count;
+        } else {
+            armoury_repairs[$ item]+=count;
+        }
+    }
     static calculate_research_points = function(turn_end=false){
         self.turn_end=turn_end;
         research_points = 0;
@@ -72,6 +81,14 @@ function SpecialistPointHandler() constructor{
             forge_points += 5*_forge_data.player_forges;
             forge_string += $"Forges: +{5*_forge_data.player_forges}#";
         }
+        var _armoury_maintenance_names = struct_get_names(armoury_repairs);
+        var _name_length = array_length(_armoury_maintenance_names);
+
+        for (var i=0;i<_name_length;i++){
+            var _maintain_item = _armoury_maintenance_names[i];
+            forge_points -= gear_weapon_data("any", _maintain_item, "maintenance") * armoury_repairs[$ _maintain_item];
+
+        }
         forge_points = floor(forge_points);
         //in this instance tech heretics are techmarines with the "tech_heretic" trait
         if (turn_end){
@@ -95,6 +112,9 @@ function SpecialistPointHandler() constructor{
         obj_controller.forge_points = forge_points;
         obj_controller.master_craft_chance = master_craft_chance;
         obj_controller.forge_string = forge_string;
+        if (turn_end){
+            armoury_repairs = {};
+        }
     }
 
     static new_tech_heretic_spawn = function(){

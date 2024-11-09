@@ -72,7 +72,7 @@ function scr_update_unit_armour(new_armour, from_armoury=true, to_armoury=true, 
 			if (!is_string(armour(true))){
 				obj_ini.artifact_equipped[armour(true)]=false;
 			} else {	
-				scr_add_item(change_armour,1,armour_quality);
+				scr_add_item(change_armour,1,armour_quality, true);
 			}
 		}
 		var portion = hp_portion();
@@ -147,7 +147,7 @@ function scr_update_unit_weapon_one(new_weapon,from_armoury=true, to_armoury=tru
 		if (!is_string(weapon_one(true))){
 			obj_ini.artifact_equipped[weapon_one(true)]=false;
 		} else {			
-			scr_add_item(change_wep,1, weapon_one_quality);
+			scr_add_item(change_wep,1, weapon_one_quality, true);
 		}
 	}       	
     obj_ini.wep1[company][marine_number] = new_weapon;
@@ -183,7 +183,7 @@ function scr_update_unit_weapon_two(new_weapon,from_armoury=true, to_armoury=tru
 			if (!is_string(weapon_two(true))){
 				obj_ini.artifact_equipped[weapon_two(true)]=false;
 			}else {
-				scr_add_item(change_wep,1, weapon_two_quality);
+				scr_add_item(change_wep,1, weapon_two_quality, true);
 			}		
 		}      	
     	obj_ini.wep2[company][marine_number] = new_weapon;
@@ -227,7 +227,7 @@ function scr_update_unit_gear(new_gear,from_armoury=true, to_armoury=true, quali
 		if (!is_string(gear(true))){
 			obj_ini.artifact_equipped[gear(true)]=false;
 		} else {			
-			scr_add_item(change_gear,1,gear_quality);
+			scr_add_item(change_gear,1,gear_quality, true);
 		}
 	}  			
 	obj_ini.gear[company][marine_number] = new_gear;
@@ -289,7 +289,7 @@ function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, t
 		if (!is_string(mobility_item(true))){
 			obj_ini.artifact_equipped[mobility_item(true)]=false;
 		} else {
-			scr_add_item(change_mob,1,mobility_item_quality );
+			scr_add_item(change_mob,1,mobility_item_quality, true );
 		}
 	}
 	obj_ini.mobi[company][marine_number] = new_mobility_item;
