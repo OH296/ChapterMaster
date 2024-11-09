@@ -157,12 +157,11 @@ if (_parsed_json != undefined) {
     _build_date = string_replace(_build_date, "BS", "");
     _build_date = string_replace(_build_date, "BE", "");
     var _version = _parsed_json[$ "version"];
-    _version = string_replace(_version, "V", "");
+    _version = string_replace(_version, "VSv", "");
     _version = string_replace(_version, "VE", "");
     global.build_date = _build_date;
     global.game_version = _version;
 }
-
 
 /* */
 action_set_alarm(1, 3);
