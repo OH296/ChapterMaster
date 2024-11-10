@@ -166,8 +166,12 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			piety : [45,3],
 			luck : 10,
 			technology : [55,3],
-			skills: {weapons:{"power_weapon":2,}}, // Does this even work?
-			start_gear:{"armour":"dragon_scales", "wep1":"power_weapon"}, // Gear items are not mentioned here
+			skills: {
+				weapons:{
+					"Power Axe":2, "Laspistol":2, "Hellgun":1,
+				} // TODO - add skills for Servo-arm(m)
+			},
+			start_gear:{"armour":"Dragon Scales", "wep1":"Power Axe", "wep2":"Laspistol", "mobi":"Servo-arm"}, 
 			base_group : "tech_priest",
 	},
 	"skitarii_ranger":{ // TODO rename this
