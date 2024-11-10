@@ -1675,17 +1675,17 @@ global.weapons = {
 		"abbreviation": "HllGun",
 		"attack": {
 			"standard": 30,
-			"master_crafted": 34,
-			"artifact": 38
+			"master_crafted": 35,
+			"artifact": 40
 		},
-		"ammo": 10,
-		"range": 6.1,
+		"description": "Known as a Hellgun or Hot-shot Lasgun, these high-energy weapons are more potent and destructive than common Lasguns, drawing more power for a more penetrative shot, but also more complex, requiring reinforced barrels, thermal-cooling cells and gyro-stabilized power packs.",
+		"ammo": 20,
+		"range": 12,
 		"spli": 3,
 		"arp": 0,
-		"tags": [],
+		"tags": ["las"],
+		"melee_hands": 0,
 		"ranged_hands": 1,
-		// "tags": ["arcane"], - how is it supposed to be arcane?
-		// ... (other attributes)
 	},
 	"Laspistol": {
 		"attack": {
