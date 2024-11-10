@@ -189,13 +189,13 @@ try_and_report_loop("imperial ship build", function(){
 // * Apothecary *
 recruit_count=0;
 var training_points_values = [ 0, 0.8, 0.9, 1, 1.5, 2, 4 ];
-apothecary_points += training_points_values[training_apothecary]
+apothecary_recruit_points += training_points_values[training_apothecary]
 
 novice_type = string("{0} Aspirant",obj_ini.role[100][15])
 if (training_apothecary>0){
     recruit_count=scr_role_count(novice_type,"");
 
-    if (apothecary_points>=48){
+    if (apothecary_recruit_points>=48){
         if (recruit_count>0){
             random_marine=scr_random_marine(novice_type,0);
             // show_message(marine_position);
@@ -203,7 +203,7 @@ if (training_apothecary>0){
             if (random_marine != "none"){
                 marine_position=random_marine[1];
                 marine_company=random_marine[0];
-                apothecary_points-=48;
+                apothecary_recruit_points-=48;
                 unit = fetch_unit(random_marine);
                 scr_alert("green","recruitment",unit.name_role()+" has finished training.",0,0);
                 unit.update_role(obj_ini.role[100][15]);
@@ -228,9 +228,9 @@ if (training_apothecary>0){
                 with(obj_ini){scr_company_order(0);}
             }
         } else {
-            apothecary_points=0;
+            apothecary_recruit_points=0;
         }
-    }else if (apothecary_points>=4) and (recruit_count==0){
+    }else if (apothecary_recruit_points>=4) and (recruit_count==0){
         random_marine=scr_random_marine([obj_ini.role[100][8],obj_ini.role[100][18],obj_ini.role[100][10],obj_ini.role[100][9]],60,{"stat":[["technology", 30, "more"],["intelligence", 45, "more"]]});
 
         if (random_marine != "none"){

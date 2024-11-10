@@ -1383,7 +1383,7 @@ global.custom=1;
 
 // ** Sets up base training level and trainees at game start **
 training_apothecary=0;
-apothecary_points=0;
+apothecary_recruit_points=0;
 apothecary_aspirant=0;
 training_chaplain=0;
 chaplain_points=0;

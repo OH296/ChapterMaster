@@ -118,6 +118,7 @@ previous_forge_masters = [];
 recruit_trial = 0;
 recruiting_type="Death";
 
+gene_slaves = [];
 /* if (global.load=0){
     if (obj_creation.custom>0) then scr_initialize_custom();
     if (obj_creation.custom=0) then scr_initialize_standard();
