@@ -29,8 +29,8 @@ if (highlight2!=highlight){
     if (obj_ncombat.enemy = 1) {
         var variety, variety_num, stop, sofar, compl, vas;
         stop = 0;
-        variety = 0;
-        variety_num = 0;
+        variety = [];
+        variety_num = [];
         sofar = 0;
         compl = "";
         vas = "";
