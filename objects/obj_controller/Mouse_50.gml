@@ -358,8 +358,8 @@ if (menu==20) and (diplomacy>0) or ((diplomacy<-5) and (diplomacy>-6)) and (cool
                 trade_disp[1]=30;
                 trade_disp[2]=20;
                 trade_disp[3]=40;
-                trade_disp[4]=30;
-                trade_disp[5]=60;
+                trade_disp[4]=25;
+                trade_disp[5]=55;
             }
             // Inquisition trade goods
             if (diplomacy==4){
@@ -373,7 +373,7 @@ if (menu==20) and (diplomacy>0) or ((diplomacy<-5) and (diplomacy>-6)) and (cool
                 trade_disp[1]=20;
                 trade_disp[2]=30;
                 trade_disp[3]=20;
-                trade_disp[4]=30;
+                trade_disp[4]=25;
                 trade_disp[5]=40;
                 trade_disp[6]=60;
             }
@@ -388,8 +388,8 @@ if (menu==20) and (diplomacy>0) or ((diplomacy<-5) and (diplomacy>-6)) and (cool
                 trade_disp[1]=20;
                 trade_disp[2]=30;
                 trade_disp[3]=30;
-                trade_disp[4]=50;
-                trade_disp[5]=50;
+                trade_disp[4]=40;
+                trade_disp[5]=45;
             }
             // Eldar trade goods
             if (diplomacy==6){
