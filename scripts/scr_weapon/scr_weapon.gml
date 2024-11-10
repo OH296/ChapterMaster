@@ -1705,20 +1705,21 @@ global.weapons = {
 	},
 	// Other imperials
 	"Light Bolter": {
-		"abbreviation": "LiBltr",
+		"abbreviation": "LghtBltr",
 		"attack": {
-			"standard": 40,
-			"master_crafted": 45,
-			"artifact": 50
+			"standard": 35,
+			"master_crafted": 40,
+			"artifact": 45
 		},
 		"description": "A smaller variant of Bolter, intended to be useable by unaugmented humans.",
 		"melee_hands": 0,
 		"ranged_hands": 1,
 		"ammo": 16,
-		"range": 12,
-		"spli": 3,
+		"range": 10,
+		"spli": 2,
 		"arp": 0,
-		"tags": ["bolt"]
+		"tags": ["bolt"],
+		"second_profiles": ["Sarissa"]
 	},
 	"Sarissa": {
 		"abbreviation": "Saris",
