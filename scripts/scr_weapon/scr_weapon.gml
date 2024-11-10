@@ -1611,20 +1611,20 @@ global.weapons = {
 		"tags": ["axe"],
 	},
 	"Hellrifle": {
-		"description": "Normally used by Radical Inquisitors, it appears an antiquated rifle but fires razor-sharp shards of Daemonic matter.",
+		"description": "Extremely effective and intricate weapons frowned upon by more Puritanical Inquisitors. Fire shards of an unknown material. Speculated to be daemonic
+in origin.",
 		"abbreviation": "HllRifle",
 		"attack": {
-			"standard": 150,
-			"master_crafted": 160,
-			"artifact": 170
+			"standard": 200,
+			"master_crafted": 250,
+			"artifact": 300
 		},
 		"ammo": 10,
-		"range": 6.1,
-		"spli": 3,
+		"range": 20,
+		"spli": 0,
 		"arp": 0,
 		"tags": ["rifle", "arcane"],
 		"ranged_hands": 1,
-		// ... (other attributes)
 	},
 	// Eldar weapons
 	"Ranger Long Rifle": {
