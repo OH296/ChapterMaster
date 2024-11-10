@@ -2089,11 +2089,11 @@ global.gear = {
 		},
 	// Sororitas and other imperials
 		"Light Power Armour": { // According to lore, lack of black carapace makes regular humans less capable to use PAs properly, but this is a concern for the future
-			"abbreviation": "LPArm",
+			"abbreviation": "LPwrArm",
 			"armour_value": {
-				"standard": 20,
-				"master_crafted": 25,
-				"artifact": 30
+				"standard": 14,
+				"master_crafted": 16,
+				"artifact": 18
 			},
 			"ranged_mod": {
 				"standard": 0,
