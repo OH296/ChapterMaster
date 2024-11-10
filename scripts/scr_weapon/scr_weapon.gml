@@ -1724,18 +1724,18 @@ global.weapons = {
 	"Sarissa": {
 		"abbreviation": "Saris",
 		"attack": {
-			"standard": 40,
-			"master_crafted": 45,
-			"artifact": 50
+			"standard": 25,
+			"master_crafted": 30,
+			"artifact": 35
 		},
 		"description": "A vicious combat attachment that is attached to Bolters, in order to allow them to be used in melee combat.",
 		"melee_hands": 0,
 		"ranged_hands": 0,
 		"ammo": 0,
 		"range": 1,
-		"spli": 2,
+		"spli": 1,
 		"arp": 0,
-		"tags": ["sword"],
+		"tags": ["axe"],
 	},
 	"Hellrifle": {
 		"description": "Normally used by Radical Inquisitors, it appears an antiquated rifle but fires razor-sharp shards of Daemonic matter.",
