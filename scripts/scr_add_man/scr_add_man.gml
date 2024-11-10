@@ -132,7 +132,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 		// Faction 5 - Sisters of Battle
 			case "Sister of Battle":
 				obj_ini.wep1[target_company][good] = "Light Bolter";
-				obj_ini.wep2[target_company][good] = "Sarissa";
+				obj_ini.wep2[target_company][good] = "";
 				obj_ini.armour[target_company][good] = "Light Power Armour";
 				spawn_exp = 60;
 				obj_ini.race[target_company][good] = 5;
@@ -140,7 +140,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 				break;
 			case "Sister Hospitaler":
 				obj_ini.wep1[target_company][good] = "Light Bolter";
-				obj_ini.wep2[target_company][good] = "Sarissa";
+				obj_ini.wep2[target_company][good] = "";
 				obj_ini.armour[target_company][good] = "Light Power Armour";
 				spawn_exp = 100;
 				obj_ini.gear[target_company][good] = "Sororitas Medkit";
@@ -150,7 +150,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 			/* TODO - if we get to recruiting allied or other leaders, lot of stuff needs to be implemented
 			case "Prioress":
 				obj_ini.wep1[target_company][good] = "Bolter"; TODO - give a cool weapon
-				obj_ini.wep2[target_company][good] = "Sarissa"; TODO - same
+				obj_ini.wep2[target_company][good] = ""; TODO - same
 				obj_ini.armour[target_company][good] = "Power Armour"; TODO - Give cool armour
 				obj_ini.experience[target_company][good] = 200;
 				obj_ini.gear[target_company][good] = "Sororitas Medkit"; TODO - give cool gear
