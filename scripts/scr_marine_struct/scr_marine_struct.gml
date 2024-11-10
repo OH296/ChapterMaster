@@ -230,8 +230,8 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			skills: {
 				weapons:{
 					"Light Bolter":1, "Bolt Pistol":1, "Chainsword":1, "Sarissa":1}},
-			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":"Sarissa"},
 			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":""},
+			base_group : "human",
 			// traits:["zealous_faith"],
 	},
 	"sister_hospitaler":{
@@ -251,8 +251,8 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			skills: {
 				weapons:{
 					"Light Bolter":2, "Bolt Pistol":2, "Chainsword":2, "Sarissa":2}},
-			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":"Sarissa", "gear":"Sororitas Medkit"},
 			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":"", "gear":"Sororitas Medkit"},
+			base_group : "human",
 			// traits:["zealous_faith"],
 	},
 	"ork_sniper":{ // I'm gonna make the stats basically the same as the shoota boy in the stat calculator
