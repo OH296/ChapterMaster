@@ -1611,8 +1611,7 @@ global.weapons = {
 		"tags": ["axe"],
 	},
 	"Hellrifle": {
-		"description": "Extremely effective and intricate weapons frowned upon by more Puritanical Inquisitors. Fire shards of an unknown material. Speculated to be daemonic
-in origin.",
+		"description": "Extremely effective and intricate weapons frowned upon by more Puritanical Inquisitors. Fire shards of an unknown material. Speculated to be daemonic in origin.",
 		"abbreviation": "HllRifle",
 		"attack": {
 			"standard": 200,
