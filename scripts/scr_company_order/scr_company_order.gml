@@ -1,6 +1,6 @@
 	//stashes varibles for marine reordering
 function temp_marine_variables(co, unit_num){
-		var unit = TTRPG[co][unit_num];
+		var unit = fetch_unit([co, unit_num]);
 		if (unit.squad != "none"){
 			var squad_member;
 			var found = false;
@@ -292,7 +292,7 @@ function scr_company_order(company) {
 	        age[co][i]=temp_age[i];
 	        spe[co][i]=temp_spe[i];
 	        god[co][i]=temp_god[i];
-			unit = fetch_unit(co, i);
+			unit = fetch_unit([co, i]);
 			unit.load_json_data(json_parse(temp_struct[i]))
 			unit.company = co;
 			unit.marine_number = i;
