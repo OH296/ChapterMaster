@@ -2073,13 +2073,19 @@ global.gear = {
 			},
 		},
 		"Dragon Scales": {
-			"abbreviation": "DrgnArm",
-			"description": "Dragon Scales are an advanced armour ulitized by tech priests, it is remarkably lightweight for the protection it affords and is often greatly modified by it's wearer while also being designed to directly interface with the user's cybernetic body.",
+			"abbreviation": "DrgnScl",
+			"description": "Dragon Scales are an advanced armour utilized by tech priests, it is remarkably lightweight for the protection it affords and is often greatly modified by it's wearer while also being designed to directly interface with the user's cybernetic body.",
 			"armour_value": {
-				"standard": 12, // Might want to buff this
-				"master_crafted": 14, // Augmented
-				"artifact": 16 // Augmented
-			}, // Considering the description, it should probably give other buffs, like extra hands and/or stats
+				"standard": 16,
+				"master_crafted": 18,
+				"artifact": 20
+			},
+			"melee_mod": {
+				"standard": 0,
+				"master_crafted": 5,
+				"artifact": 10
+			},
+			"tags": ["power_armour"],
 		},
 	// Sororitas and other imperials
 		"Light Power Armour": { // According to lore, lack of black carapace makes regular humans less capable to use PAs properly, but this is a concern for the future
