@@ -32,7 +32,7 @@ function planet_training_sequence(local_apothecary_points){
 	        var months_to_neo = 72;
 	        var dista = 0;
 	        var onceh = 0;
-	        var recruit_chance_array = [0, 250, 200, 150, 125, 100, 75];
+	        var recruit_chance_array = [0, 1000, 900, 800, 700, 600, 500];
 	        if (obj_controller.recruiting>0){
 	            recruit_chance = array_random_element(recruit_chance_array)*4;
 	        }
