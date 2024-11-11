@@ -84,6 +84,15 @@ function PlanetData(planet, system) constructor{
     static has_feature(feature){
     	return planet_feature_bool(features, feature);
     }
+
+    static get_features = function(request_feature){
+    	var _array_positions = search_planet_features(features,request_feature);
+    	var _select_features = [];
+  		for (var i=0;i<array_length(_array_positions);i++){
+  			array_push(_select_features, features[_array_positions[i]]);
+  		}
+  		return _select_features;
+    }
     static planet_training = function(local_screening_points){
     	var _training_happend = false;
 	    if (has_feature(P_features.Recruiting_World)){
@@ -105,6 +114,50 @@ function PlanetData(planet, system) constructor{
 	        }
 		}
 		return _training_happend;   	
+    }
+
+    static recover__starship = function(techs){
+		var engineer_count=array_length(techs_taken);
+		if (_planet_data.has_feature(P_features._Starship) && engineer_count>0 && turn_end){
+			//TODO allow total tech point usage here
+	        var _starship = get_features(,P_features._Starship)[0];
+
+	        var _engineer_score_start = _starship.engineer_score;
+	    	if (_starship.engineer_score<2000){
+	        	for (var v=0;v<engineer_count;v++){
+	        		_starship.engineer_score += (techs_taken[v].technology/2);
+	        	}
+	        	scr_alert("green","owner",$"Ancient ship repairs {min((_starship.engineer_score/2000)*100, 100)}% complete",x,y);
+	    	}
+
+	        var _maxr=0,_requisition_spend=0,_target_spend=10000;
+
+	        _maxr=floor(obj_controller.requisition/50);
+	        _requisition_spend=min(_maxr*50,array_length(techs_taken)*50,_target_spend-_starship.funds_spent);
+	        obj_controller.requisition-=_requisition_spend;
+	        _starship.funds_spent+=_requisition_spend;
+	    
+	        if (_requisition_spend>0 && _starship.funds_spent<_target_spend){
+	            scr_alert("green","owner",$"{_requisition_spend} Requision spent on Ancient Ship repairs in materials and outfitting (outfitting {(_starship.funds_spent/_target_spend)*100}%)",x,y);
+	        }
+	        if (_starship.funds_spent>=_target_spend && _starship.engineer_score>=2000){// u2=tar;
+	        	//TODO refactor into general new ship logic
+	            delete_features(cur_system.p_feature[p],P_features._Starship);
+	        
+	            var locy=$"{name} {scr_roman_numerals()[p-1]}";
+	        
+	            var flit=instance_create(cur_system.x,cur_system.y,obj_p_fleet);
+	      
+	        	var _slaughter = new_player_ship("Gloriana", name, "Slaughtersong");
+	            flit.capital[1]=obj_ini.ship[_slaughter];
+	            flit.capital_number=1;
+	            flit.capital_num[1]=_slaughter;
+	            flit.capital_uid[1]=obj_ini.ship_uid[_slaughter];
+	            flit.oribiting = cur_system.id;
+	        
+	            scr_popup($"Ancient Ship Restored",$"The ancient ship within the ruins of {locy} has been fully repaired.  It is determined to be a Slaughtersong vessel and is bristling with golden age weaponry and armour.  Your {string(obj_ini.role[100][16])}s are excited; the Slaughtersong is ready for it's maiden voyage, at your command.","","");                
+	        }
+	    }    	
     }
 
 }
