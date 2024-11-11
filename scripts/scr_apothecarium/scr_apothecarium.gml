@@ -134,15 +134,14 @@ function scr_apothecarium(){
     draw_set_alpha(1);
     if (obj_controller.gene_seed <= 0) or(obj_ini.zygote = 1) then draw_set_alpha(0.5);
     draw_set_color(c_gray);
-    draw_rectangle(xx + 407, yy + 788, xx + 529, yy + 811, 0);
     draw_set_color(c_black);
-    if (scr_item_count("Gene  Pod")){
-        if (point_and_click(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave"))){
+    if (scr_item_count("Gene Pod")){
+        if (point_and_click(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave",[0.75,0.75],c_green))){
             if (gene_seed>0) and (obj_ini.zygote==0) {
                 var _added = false;
                 if (array_length(_slave_length)){
                     var _last_set = obj_ini.gene_slaves[_slave_length-1];
-                    if (_last_set.turn = obj_controller.turn){
+                    if (_last_set.turn == obj_controller.turn){
                         _last_set.num++;
                         _added=true;
                     }
@@ -153,11 +152,15 @@ function scr_apothecarium(){
                         eta : 120,
                         harvested_once : false,
                         turn : obj_controller.turn,
-                        assigned_apothecaries : [];
+                        assigned_apothecaries : [],
                     });
                 }
                 scr_add_item("Gene Pod", -1);
             }
+        }
+    } else {
+        if (scr_hit(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave",[0.75,0.75],c_grey))){
+            tooltip_draw("No available Gene Pods, Build more Gene Pods in the forge");
         }
     }
 
@@ -168,7 +171,7 @@ function scr_apothecarium(){
     draw_set_color(c_gray);
     draw_rectangle(xx + 659, yy + 788, xx + 838, yy + 811, 0);
     draw_set_color(c_black);
-    var _destroy_button = draw_unit_buttons([xx + 664, yy + 793], "Destroy All Incubators");
+    var _destroy_button = draw_unit_buttons([xx + 664, yy + 793], "Destroy All Incubators", [0.75,0.75],c_red);
     if (_slave_length > 0 && scr_hit(_destroy_button)) {
         draw_set_alpha(0.2);
         draw_set_color(c_gray);

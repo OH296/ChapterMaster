@@ -148,8 +148,12 @@ function apothecary_simple(){
 		if (array_length(_unit_spread[$_locations[i]]) == 6){
 			cur_system = _unit_spread[$_locations[i]][5];
 		}
+		if (cur_system!=""){
+			point_breakdown.systems[$cur_system.name] = [{},{},{},{},{}];
+		}
 		var _loc_forge_points = 0;		
 		for (var p=0; p<5; p++){
+			var _point_breakdown = point_breakdown.systems[$cur_system.name];
 			_loc_heal_points=0;
 			_loc_forge_points=0;
 			if (array_length(_unit_spread[$_locations[i]][p]) == 0) then continue;
@@ -165,6 +169,8 @@ function apothecary_simple(){
 				var tech_gen = _unit.forge_point_generation(turn_end)[0];
 				_loc_forge_points += tech_gen;
 			}
+			_point_breakdown.heal_points = _loc_heal_points;
+			_point_breakdown.forge_points = _loc_forge_points;
 			for (var a=0;a<array_length(cur_units);a++){
 				points_spent = 0;
 				_unit = cur_units[a];
@@ -198,7 +204,8 @@ function apothecary_simple(){
 								_unit.add_bionics();
 								_loc_heal_points--;
 								apothecary_points_used--;
-								tech_points_used+=tech_points_used
+								tech_points_used++;
+								_loc_forge_points--;
 							}			
 						} else {
 							if (_loc_heal_points>0 && _loc_forge_points>=3 && _unit.hp()>0){
@@ -207,16 +214,19 @@ function apothecary_simple(){
 		        				}
 								_loc_heal_points--;
 								apothecary_points_used--;
-								tech_points_used+=3							
+								tech_points_used+=3;
+								_loc_forge_points-=3;							
 							}
 						}
 					}
 				}
 			}
+			_point_breakdown.heal_points_use = _point_breakdown.heal_points - _loc_heal_points;
+			_point_breakdown.forge_points_use = _point_breakdown.forge_points - ;			
 			if (cur_system!="" && p>0){
 				with (cur_system){
 		 			if (array_length(p_feature[p])!=0){
-		 				var _planet_data = new PlanetData(run, self);
+		 				var _planet_data = new PlanetData(p, self);
 			        	var engineer_count=array_length(cur_techs);
 						if (planet_feature_bool(p_feature[p],P_features.Starship)==1 && engineer_count>0 && turn_end){
 							//TODO allow total tech point usage here

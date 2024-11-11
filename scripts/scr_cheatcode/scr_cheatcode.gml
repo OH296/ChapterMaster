@@ -47,7 +47,7 @@ function scr_cheatcode(argument0) {
 					}
 					break;
 				case "newapoth":
-					obj_controller.apothecary_points = 50;
+					obj_controller.apothecary_training_points = 50;
 					break;
 				case "newpsyk":
 					obj_controller.psyker_points = 70;

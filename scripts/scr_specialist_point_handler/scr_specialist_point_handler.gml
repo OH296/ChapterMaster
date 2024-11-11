@@ -14,6 +14,7 @@ function SpecialistPointHandler() constructor{
     apothecary_string = "";
     apothecary_training_points = 0;
     forge_points = 0;
+    point_breakdown = {};
     // ** Gene-seed Test-Slaves **
     static add_to_armoury_repair = function(item, count=1){
         if (!struct_exists(armoury_repairs, item)){
@@ -22,8 +23,9 @@ function SpecialistPointHandler() constructor{
             armoury_repairs[$ item]+=count;
         }
     }
-    static calculate_research_points = function(turn_end=false){
-        self.turn_end=turn_end;
+
+    static pre_error_wrapped_research_points = function(){
+
         research_points = 0;
         forge_points = 0;
         master_craft_chance = 0;
@@ -43,6 +45,11 @@ function SpecialistPointHandler() constructor{
 
         techs = [];
         heretics = [];
+
+        point_breakdown = {
+            fleets : {},
+            systems : {},
+        };
 
         forge_string = $"Forge Production Rate#";
         forge_master=-1;
@@ -67,6 +74,7 @@ function SpecialistPointHandler() constructor{
         forge_string += $"Vehicle Repairs: -{floor(tech_points_used)}#";
         forge_points-=tech_points_used;        
         var forge_veh_maintenance={};
+
         for (var comp=0;comp<=10;comp++){
             for (var veh=0;veh<=100;veh++){
                 if (obj_ini.veh_role[comp][veh]=="Land Raider"){
@@ -128,6 +136,11 @@ function SpecialistPointHandler() constructor{
         if (turn_end){
             armoury_repairs = {};
         }
+    }
+
+    static calculate_research_points = function(turn_end){
+        self.turn_end=turn_end;
+        try_and_report_loop("Specialist points logic", pre_error_wrapped_research_points);
     }
 
     static new_tech_heretic_spawn = function(){
@@ -384,7 +397,7 @@ function SpecialistPointHandler() constructor{
         }
         scr_alert("","test-slaves",_lost_inc_string ,0,0);
         if(_lost_gene_slaves>0){
-            scr_alert("","test-slaves",$"{_lost_gene_slaves} gene slaves lost due to geneseed instability" Gene-Seed.",0,0);
+            scr_alert("","test-slaves",$"{_lost_gene_slaves} gene slaves lost due to geneseed instability",0,0);
         }
     }    
     static scr_forge_item = function(item){
