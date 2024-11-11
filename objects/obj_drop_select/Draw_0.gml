@@ -878,7 +878,7 @@ if (menu=0) and (purge>=2){
             if (purge=2){var i;i=0;
                 repeat(50){i+=1;
                     if (ship[i]!="") and (ship_all[i]>0){
-                        if (obj_ini.ship_class[ship_ide[i]]="Slaughtersong") then purge_score+=3;
+                        if (obj_ini.ship_class[ship_ide[i]]="Gloriana") then purge_score+=3;
                         if (obj_ini.ship_class[ship_ide[i]]="Battle Barge") then purge_score+=3;
                         if (obj_ini.ship_class[ship_ide[i]]="Strike Cruiser") then purge_score+=1;
                     }

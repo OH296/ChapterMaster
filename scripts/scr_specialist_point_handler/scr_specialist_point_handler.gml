@@ -314,7 +314,7 @@ function SpecialistPointHandler() constructor{
     static draw_forge_queue = function(xx,yy){
         var _box_width = 527;
         draw_set_color(c_gray);
-        draw_rectangle(xx, yy , xx + _box_width, yy + 20, 0);
+        draw_rectangle(xx, yy , xx + _box_width, yy + 15, 0);
         draw_set_alpha(1);
         draw_set_font(fnt_40k_14);
         draw_set_color(0);

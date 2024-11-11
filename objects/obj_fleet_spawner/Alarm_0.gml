@@ -52,7 +52,7 @@ if (number=1){
     
         if (obj_fleet.column_num[col]>0){// Start ship creation
             if (obj_fleet.column[col]="Capital"){hei=160;sizz=3;}
-            // if (column[col]="Slaughtersong"){hei=200;sizz=3;}
+            // if (column[col]="Gloriana"){hei=200;sizz=3;}
             if (obj_fleet.column[col]="Strike Cruiser"){hei=96;sizz=2;}
             if (obj_fleet.column[col]="Gladius"){hei=64;sizz=1;}
             if (obj_fleet.column[col]="Hunter"){hei=64;sizz=1;}

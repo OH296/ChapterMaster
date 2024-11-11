@@ -49,7 +49,7 @@ if (class="Battle Barge"){turrets=3;weapons=5;shield_size=3;sprite_index=spr_shi
     weapon_facing[5]="most";weapon_dam[5]=16;weapon_range[5]=300;weapon_cooldown[5]=30;
 }
 
-if (class="Slaughtersong"){turrets=3;weapons=5;shield_size=3;sprite_index=spr_ship_song;
+if (class="Gloriana"){turrets=3;weapons=5;shield_size=3;sprite_index=spr_ship_song;
     weapon_facing[1]="most";weapon_dam[1]=16;weapon_range[1]=550;weapon_cooldown[1]=26;
     weapon_facing[2]="most";weapon_dam[2]=16;weapon_range[2]=550;weapon_cooldown[2]=26;
     weapon_facing[3]="most";weapon_dam[3]=16;weapon_range[3]=550;weapon_cooldown[3]=26;

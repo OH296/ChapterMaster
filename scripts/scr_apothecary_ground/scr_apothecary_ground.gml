@@ -259,52 +259,12 @@ function apothecary_simple(){
 			                    var locy=$"{name} {scr_roman_numerals()[p-1]}";
 		                    
 			                    var flit=instance_create(cur_system.x,cur_system.y,obj_p_fleet);
-			                    var s=0,ship_names="",new_name="",last_ship=0;
-			                    for(s=1;s<=40;s++){
-			                        if (last_ship=0) and (obj_ini.ship[s]="") then last_ship=s;
-			                    };
-		                    
-			                    new_name="Slaughtersong";
-		                    	//TODO extract ot it's own area
-			                    obj_ini.ship[last_ship]=new_name;
-			                    obj_ini.ship_uid[last_ship]=floor(random(99999999))+1;
-			                    obj_ini.ship_owner[last_ship]=1;
-			                    obj_ini.ship_size[last_ship]=3;
-			                    obj_ini.ship_location[last_ship]=name;
-			                    obj_ini.ship_leadership[last_ship]=100;
-		                    
-			                    obj_ini.ship_class[last_ship]="Slaughtersong";
-		                    
-			                    obj_ini.ship_hp[last_ship]=2400;
-			                    obj_ini.ship_maxhp[last_ship]=2400;
-			                    obj_ini.ship_conditions[last_ship]="";
-			                    obj_ini.ship_speed[last_ship]=25;
-			                    obj_ini.ship_turning[last_ship]=60;
-			                    obj_ini.ship_front_armour[last_ship]=8;
-			                    obj_ini.ship_other_armour[last_ship]=8;
-			                    obj_ini.ship_weapons[last_ship]=4;
-			                    obj_ini.ship_shields[last_ship]=24;
-			                    obj_ini.ship_wep[last_ship,1]="Lance Battery";
-			                    ship_wep_facing[last_ship,1]="most";
-			                    obj_ini.ship_wep_condition[last_ship,1]="";
-			                    obj_ini.ship_wep[last_ship,2]="Lance Battery";
-								ship_wep_facing[last_ship,2]="most";
-			                    obj_ini.ship_wep_condition[last_ship,2]="";
-			                    obj_ini.ship_wep[last_ship,3]="Lance Battery";
-			                    ship_wep_facing[last_ship,3]="most";
-			                    obj_ini.ship_wep_condition[last_ship,3]="";
-			                    obj_ini.ship_wep[last_ship,4]="Plasma Cannon";
-			                    ship_wep_facing[last_ship,4]="front";
-			                    obj_ini.ship_wep_condition[last_ship,4]="";
-			                    obj_ini.ship_capacity[last_ship]=800;
-			                    obj_ini.ship_carrying[last_ship]=0;
-			                    obj_ini.ship_contents[last_ship]="";
-			                    obj_ini.ship_turrets[last_ship]=8;
-		                    
-			                    flit.capital[1]=obj_ini.ship[last_ship];
+		                  
+		                    	var _slaughter = new_player_ship("Gloriana", name, "Slaughtersong");
+			                    flit.capital[1]=obj_ini.ship[_slaughter];
 			                    flit.capital_number=1;
-			                    flit.capital_num[1]=last_ship;
-			                    flit.capital_uid[1]=obj_ini.ship_uid[last_ship];
+			                    flit.capital_num[1]=_slaughter;
+			                    flit.capital_uid[1]=obj_ini.ship_uid[_slaughter];
 			                    flit.oribiting = cur_system.id;
 		                    
 			                    scr_popup($"Ancient Ship Restored",$"The ancient ship within the ruins of {locy} has been fully repaired.  It is determined to be a Slaughtersong vessel and is bristling with golden age weaponry and armour.  Your {string(obj_ini.role[100][16])}s are excited; the Slaughtersong is ready for it's maiden voyage, at your command.","","");                

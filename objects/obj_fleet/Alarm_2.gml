@@ -54,7 +54,7 @@ repeat(5){// Start repeat
 
 if (column_num[col]>0){// Start ship creation
     if (column[col]="Capital"){hei=160;sizz=3;}
-    // if (column[col]="Slaughtersong"){hei=200;sizz=3;}
+    // if (column[col]="Gloriana"){hei=200;sizz=3;}
     if (column[col]="Strike Cruiser"){hei=96;sizz=2;}
     if (column[col]="Gladius"){hei=64;sizz=1;}
     if (column[col]="Hunter"){hei=64;sizz=1;}

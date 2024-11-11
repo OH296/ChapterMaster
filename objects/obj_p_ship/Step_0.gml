@@ -28,7 +28,7 @@ if (instance_exists(obj_en_ship)){
 
 if (hp<=0) and (x>-5000){
     // obj_fleet.fighting[self.ship_id]=-5;
-    if (class="Battle Barge") or (class="Slaughtersong"){
+    if (class="Battle Barge") or (class="Gloriana"){
         obj_fleet.capital-=1;
         obj_fleet.capital_lost+=1;
     }
@@ -73,7 +73,7 @@ if (hp>0) and (instance_exists(target)){
     if (cooldown[3]>0) then cooldown[3]-=1;
     if (cooldown[4]>0) then cooldown[4]-=1;
 
-    if (class="Apocalypse Class Battleship") or (class="Slaughtersong"){
+    if (class="Apocalypse Class Battleship") or (class="Gloriana"){
         o_dist=500;
         action="attack";
     }
