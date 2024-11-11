@@ -1,7 +1,25 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
+function scr_destroy_gene_slave_batch(batch_id, recover_gene=true){
+    var _cur_slave = obj_ini.gene_slaves[batch_id];
+    if (revover_gene){
+        obj_controller.gene_seed+=_cur_slave.num;
+        scr_add_item("Gene Pod", _cur_slave.num);
+    }
+    delete _cur_slave;
+    array_delete(obj_ini.gene_slaves,batch_id, 1);
+}
 
+function destroy_all_gene_slaves(recover_gene=true){
+    var _slave_length = array_length(obj_ini.gene_slaves);
+         if (_slave_length>0){
+            for (var i=_slave_length-1; i>=0; i--){
+                scr_destroy_gene_slave_batch(i,recover_gene);
+            }
+            obj_ini.gene_slaves = [];
+        }   
+}
 
 function scr_apothecarium(){
 	draw_sprite(spr_rock_bg, 0, xx, yy);
@@ -77,15 +95,15 @@ function scr_apothecarium(){
     draw_text_ext(xx + 336 + 16, yy + 130, string_hash_to_newline(string(blurp)), -1, 536);
 
     var blurp2 = "";
-
-    if (obj_ini.zygote = 0) {
-        if (obj_controller.marines + obj_controller.gene_seed <= 300) and(obj_ini.slave_batch_num[1] = 0) {
+    var _slave_length = array_length(obj_ini.gene_slaves);
+    if (!obj_ini.zygote) {
+        if (obj_controller.marines + obj_controller.gene_seed <= 300) and(_slave_length = 0) {
             blurp2 = "Our Chapter is disasterously low in number- it is strongly advised that we make use of test-slaves to breed new gene-seed.  Give me the word andwe can begin installing gestation pods.";
         }
-        if (obj_controller.marines + obj_controller.gene_seed > 300) and(obj_ini.slave_batch_num[1] = 0) {
+        else if (obj_controller.marines + obj_controller.gene_seed > 300) and(_slave_length = 0) {
             blurp2 = "Our Chapter is capable of using test-slaves to breed new gene-seed.  Should our number of astartes ever plummet this may prove a valuable method of rapidly bringing our chapter back up to size.";
         }
-        if (obj_ini.slave_batch_num[1] > 0) {
+        else if (_slave_length > 0) {
             blurp2 = "Our Test-Slave Incubators are working optimally.  As soon as a batch fully matures a second progenoid gland they will be harvested and prepared for use.";
         }
     }
@@ -100,7 +118,7 @@ function scr_apothecarium(){
     draw_set_font(fnt_40k_14);
     draw_text_ext(xx + 336 + 16, yy + 477, string_hash_to_newline(string(blurp2)), -1, 536);
 
-    var _slave_length = array_length(obj_ini.gene_slaves);
+    ;
     var _slave_index_shown = 0;
     var _cur_slave;
     for (var i = 0; i < _slave_length; i++) { // TODO why go through all batches if we can only display 10?
@@ -110,7 +128,7 @@ function scr_apothecarium(){
             draw_text(xx + 336 + 16, yy + 513 + (_slave_index_shown * 20), $"Batch {_slave_index_shown}" );
             draw_text(xx + 336 + 16.5, yy + 513.5 + (_slave_index_shown * 20), $"Batch {_slave_index_shown}");
             draw_text(xx + 536, yy + 513 + (_slave_index_shown * 20), $"Eta: {_cur_slave.eta} months");
-            draw_text(xx + 756, yy + 513 + (_slave_index_shown * 20), $"{_cur_slave.num} pods"));
+            draw_text(xx + 756, yy + 513 + (_slave_index_shown * 20), $"{_cur_slave.num} pods");
         }
     }
     draw_set_alpha(1);
@@ -118,23 +136,27 @@ function scr_apothecarium(){
     draw_set_color(c_gray);
     draw_rectangle(xx + 407, yy + 788, xx + 529, yy + 811, 0);
     draw_set_color(c_black);
-    if (point_and_click(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave"))){
-        if (gene_seed>0) and (obj_ini.zygote==0) {
-            var _added = false;
-            if (array_length(_slave_length)){
-                var _last_set = obj_ini.gene_slaves[_slave_length-1];
-                if (_last_set.turn = obj_controller.turn){
-                    _last_set.num++;
-                    _added=true;
+    if (scr_item_count("Gene  Pod")){
+        if (point_and_click(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave"))){
+            if (gene_seed>0) and (obj_ini.zygote==0) {
+                var _added = false;
+                if (array_length(_slave_length)){
+                    var _last_set = obj_ini.gene_slaves[_slave_length-1];
+                    if (_last_set.turn = obj_controller.turn){
+                        _last_set.num++;
+                        _added=true;
+                    }
                 }
-            }
-            if (!_added){
-                array_push(obj_ini.gene_slaves, {
-                    num : 1,
-                    eta : 120,
-                    harvested_once : false,
-                    turn : obj_controller.turn,
-                });
+                if (!_added){
+                    array_push(obj_ini.gene_slaves, {
+                        num : 1,
+                        eta : 120,
+                        harvested_once : false,
+                        turn : obj_controller.turn,
+                        assigned_apothecaries : [];
+                    });
+                }
+                scr_add_item("Gene Pod", -1);
             }
         }
     }
@@ -153,9 +175,8 @@ function scr_apothecarium(){
         draw_rectangle(xx + 659, yy + 788, xx + 838, yy + 811, 0);
         if (point_and_click(_destroy_button)){
             if (_slave_length>0){
-                for (var i=0; i<_slave_length; i++){
-                    _cur_slave = obj_ini.gene_slaves[i];
-                    delete _cur_slave;
+                for (var i=_slave_length-1; i>=0; i--){
+                    scr_destroy_gene_slave_batch(i);
                 }
                 obj_ini.gene_slaves = [];
             }

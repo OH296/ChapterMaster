@@ -276,8 +276,8 @@ function scr_save(save_part,save_id) {
 	    ini_encode_and_json("Ini", "FullLivery",obj_ini.full_liveries)
 		ini_write_real("Ini","companies",obj_ini.companies);
 		ini_encode_and_json("Ini", "comp_title", obj_ini.company_title);
-		ini_encode_and_json("Ini", "slave_num_", obj_ini.slave_batch_num);
-		ini_encode_and_json("Ini", "slave_eta_", obj_ini.slave_batch_eta);
+
+		ini_encode_and_json("Ini", "gene_slaves", obj_ini.gene_slaves);
 
 	    ini_write_string("Ini","battle_cry",obj_ini.battle_cry);
 

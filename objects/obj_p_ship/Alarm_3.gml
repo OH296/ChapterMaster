@@ -9,10 +9,7 @@ if (hp<maxhp) and (ship_id!=0){
     
         if (obj_controller.und_gene_vaults=0){
             obj_controller.gene_seed=0;
-            var w=0;
-            repeat(120){
-                w+=1;
-                if (obj_ini.slave_batch_num[w]>0){obj_ini.slave_batch_num[w]=0;obj_ini.slave_batch_eta[w]=0;}}
+            destroy_all_gene_slaves(false);
         }
         if (obj_controller.und_gene_vaults>0){
             obj_controller.gene_seed-=floor(obj_controller.gene_seed/10);

@@ -188,8 +188,8 @@ function scr_load(save_part, save_id) {
 
 	    obj_ini.companies=ini_read_real("Ini","companies",10);
 		obj_ini.company_title = return_json_from_ini("Ini","comp_title",array_create(21,""));
-		obj_ini.slave_batch_num = return_json_from_ini("Ini","slave_num_",array_create(121,""));
-		obj_ini.slave_batch_eta = return_json_from_ini("Ini","slave_eta_",array_create(121,""));
+
+		obj_ini.gene_slaves = return_json_from_ini("Ini","gene_slaves",[]);
 	
 	    obj_ini.complex_livery_data=ini_read_string("Ini","complex_livery","");
 	    if (obj_ini.complex_livery_data!=""){

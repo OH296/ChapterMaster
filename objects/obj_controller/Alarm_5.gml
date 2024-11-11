@@ -555,18 +555,6 @@ if (recruits_finished==1){
 
 recruits=total_recruits;
 
-// ** Gene-seed Test-Slaves **
-for(var i=1; i<=120; i++){
-    if (obj_ini.slave_batch_num[i]>0){
-        obj_ini.slave_batch_eta[i]-=1;
-        if (obj_ini.slave_batch_eta[i]==0){
-            obj_ini.slave_batch_eta[i]=60;
-            obj_controller.gene_seed+=obj_ini.slave_batch_num[i];
-            // color / type / text /x/y
-            scr_alert("green","test-slaves","Test-Slave Incubators Batch "+string(i)+" harvested for "+string(obj_ini.slave_batch_num[i])+" Gene-Seed.",0,0);
-        }
-    }
-}
 /* TODO implement Lamenters get Black Rage and story
 if (turn=240) and (global.chapter_name="Lamenters"){
     obj_ini.strin2+="Black Rage";

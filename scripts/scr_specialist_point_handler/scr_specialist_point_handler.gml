@@ -14,7 +14,7 @@ function SpecialistPointHandler() constructor{
     apothecary_string = "";
     apothecary_training_points = 0;
     forge_points = 0;
-
+    // ** Gene-seed Test-Slaves **
     static add_to_armoury_repair = function(item, count=1){
         if (!struct_exists(armoury_repairs, item)){
             armoury_repairs[$ item] = count;
@@ -117,7 +117,9 @@ function SpecialistPointHandler() constructor{
                     scr_role_count(obj_ini.role[100][16],"","units")[0].update_role("Forge Master");
                 }
             }
-            forge_queue_logic();       
+            forge_queue_logic();
+
+            gene_slave_logic();     
         }
         obj_controller.research_points = research_points;
         obj_controller.forge_points = forge_points;
@@ -350,6 +352,41 @@ function SpecialistPointHandler() constructor{
             item_gap +=20
         }        
     }
+    static gene_slave_logic = function(){
+        var _slave_length = array_length(obj_ini.gene_slaves);
+        var _slaves = obj_ini.gene_slaves;
+        var _cur_slave;
+        var _lost_gene_slaves = 0
+        var _stack_lost_incubators = [];
+        for(var i=0; i<_slave_length; i++){
+            _cur_slave = _slaves[i];
+            if (_cur_slave.num>0){
+                _cur_slave.eta--;
+                if (irandom(100000)<obj_ini.stability*_cur_slave.num){
+                    _cur_slave.num--;
+                    _lost_gene_slaves++;
+                }
+                if (_cur_slave.eta==0 && _cur_slave.num>0){
+                    _cur_slave.eta=60;
+                    obj_controller.gene_seed+=_cur_slave.num;
+                    // color / type / text /x/y
+                    scr_alert("green","test-slaves","Test-Slave Incubators Batch {i} harvested for {_cur_slave.num} Gene-Seed.",0,0);
+                } else if (_cur_slave.num==0){
+                    array_push(_stack_lost_incubators, i);
+                }
+            }
+        }
+        var _lost_inc_string = "Incubators Batch no longer has gene slaves and has been removed : ";
+        for (var i=array_length(_stack_lost_incubators)-1;i>=0;i--){
+            scr_destroy_gene_slave_batch(_stack_lost_incubators[i]);
+            _lost_inc_string += $"{i},";
+
+        }
+        scr_alert("","test-slaves",_lost_inc_string ,0,0);
+        if(_lost_gene_slaves>0){
+            scr_alert("","test-slaves",$"{_lost_gene_slaves} gene slaves lost due to geneseed instability" Gene-Seed.",0,0);
+        }
+    }    
     static scr_forge_item = function(item){
         var master_craft_count=0;
         var quality_string="";

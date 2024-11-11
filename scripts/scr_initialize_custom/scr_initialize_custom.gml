@@ -4190,16 +4190,8 @@ function scr_initialize_custom() {
 		equipment_type[eqi] = "armour";
 	}
 
-
-    for (var i = 0; i < 121; i += 1) {
-        slave_batch_num[i] = 0;
-        slave_batch_eta[i] = 0;
-    }
-
-
-
-
-
+    gene_slaves = [];
+    
 	var bloo = 0,
 		o = 0;
 	if (array_contains(obj_creation.dis, "Blood Debt")) {

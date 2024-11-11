@@ -2357,6 +2357,10 @@ global.gear = {
 			},
 			"tags": ["vehicle"],
 		},
+		"Gene Pod" : {
+			"abbreviation": "GenePod",
+			"description": "Required to house gene slaves in order to generate new gene seed for the chapter.",
+		}
 	},
 	"mobility": {
 		"Bike": {

@@ -753,13 +753,8 @@ if (obj_ini.fleet_type != ePlayerBase.home_world) and (defeat==1) and (dropping=
 	    endline=0;
 
 	    if (obj_controller.und_gene_vaults=0){
-	        obj_controller.gene_seed=0;
-            for (var w=0;w<array_length(obj_ini.slave_batch_num);w++){
-                if (obj_ini.slave_batch_num[w]>0){
-                    obj_ini.slave_batch_num[w]=0;
-                    obj_ini.slave_batch_eta[w]=0;
-                }
-            }
+            //all gene pods and gene seed are lost
+	        destroy_all_gene_slaves(false);
 	    }
 	    if (obj_controller.und_gene_vaults>0) then obj_controller.gene_seed-=floor(obj_controller.gene_seed/10);
 	}
