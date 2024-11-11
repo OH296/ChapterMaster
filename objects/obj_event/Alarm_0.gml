@@ -42,12 +42,12 @@ if (obj_controller.fest_type="Great Feast"){
     if (obj_controller.fest_feature2 == 1){
         var boozer_type = 1;
         if (
-            (global.chapter_name="Space Wolves") || (obj_ini.progenitor == PROGENITOR.SPACE_WOLVES)
+            (global.chapter_name="Space Wolves") || (obj_ini.progenitor == ePROGENITOR.SPACE_WOLVES)
         ) {
             boozer_type = 2;
         }
         if (
-            (global.chapter_name="Blood Angels") || (obj_ini.progenitor == PROGENITOR.BLOOD_ANGELS)
+            (global.chapter_name="Blood Angels") || (obj_ini.progenitor == ePROGENITOR.BLOOD_ANGELS)
         ) {
             boozer_type = 3;
         }

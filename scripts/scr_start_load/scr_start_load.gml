@@ -60,7 +60,7 @@ function scr_start_load(fleet, load_from_star, load_options) {
 	var ship_has_space =true;
 
 	//thread for now defunct splinter fleets new algorithm just sorts marines into ships and ship location determines splinter status
-    if (string_count("Splinter", obj_ini.strin2) > 0) then splinter = 1;
+    if (scr_has_disadv("Splintered")) then splinter = 1;
 	
 		//loop through companies. try and load whole company onto single ship else spread company across largest ships with remaining space
 	var ship_loop_start = 1;

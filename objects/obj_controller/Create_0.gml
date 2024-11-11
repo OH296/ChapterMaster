@@ -934,7 +934,7 @@ trade_mnum[4]=0;
 requisition=500;
 if (instance_exists(obj_ini)){
     if (
-        (obj_ini.progenitor == PROGENITOR.NONE) &&
+        (obj_ini.progenitor == ePROGENITOR.NONE) &&
         (global.chapter_name != "Doom Benefactors")
     ) {
         requisition=2000;
@@ -1280,7 +1280,7 @@ trim=0;
 // ** Sets up names, progenitor, successors and mutations ** 
 adept_name="";
 recruiter_name="";
-progenitor=PROGENITOR.NONE;
+progenitor=ePROGENITOR.NONE;
 successor_chapters=0;
 mutation="";
 

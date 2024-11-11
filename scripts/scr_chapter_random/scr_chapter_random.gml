@@ -347,6 +347,61 @@ function scr_chapter_random(argument0) {
 	color_to_weapon=col_weapon;
 	trim=choose(0,1);
 
+    if (color_to_main!=""){
+        main_color = max(array_find_value(col,color_to_main),0);
+        color_to_main = "";
+    }
+    if (color_to_secondary!=""){
+        secondary_color = max(array_find_value(col,color_to_secondary),0);
+        color_to_secondary = "";
+    }
+    if (color_to_trim!=""){
+        main_trim = max(array_find_value(col,color_to_trim),0);
+        color_to_trim = "";
+    }
+    if (color_to_pauldron!=""){
+        right_pauldron = max(array_find_value(col,color_to_pauldron),0);
+        color_to_pauldron = "";  
+    }
+    if (color_to_pauldron2!=""){
+        left_pauldron = max(array_find_value(col,color_to_pauldron2),0);
+        color_to_pauldron2 = "";
+    }
+    if (color_to_lens!=""){
+        lens_color = max(array_find_value(col,color_to_lens),0);
+        color_to_lens = ""; 
+    }
+    if (color_to_weapon!=""){
+        weapon_color = max(array_find_value(col,color_to_weapon),0);
+        color_to_weapon = "";
+    }
+
+    //TODO add some funcky stuff for custom random complex livery
+    var struct_cols = {
+        main_color :main_color,
+        secondary_color:secondary_color,
+        main_trim:main_trim,
+        right_pauldron:right_pauldron,
+        left_pauldron:left_pauldron,
+        lens_color:lens_color,
+        weapon_color:weapon_color
+    }
+    obj_creation.livery_picker = new ColourItem(100,230);
+    obj_creation.livery_picker.scr_unit_draw_data();
+    obj_creation.livery_picker.set_defualt_armour(struct_cols,col_special);
+    obj_creation.full_liveries = array_create(21,DeepCloneStruct(obj_creation.livery_picker.map_colour)); 			    
+    obj_creation.full_liveries[eROLE.Librarian] = obj_creation.livery_picker.set_defualt_librarian(struct_cols);
+
+    obj_creation.full_liveries[eROLE.Chaplain] = obj_creation.livery_picker.set_defualt_chaplain(struct_cols);
+
+    obj_creation.full_liveries[eROLE.Apothecary] = obj_creation.livery_picker.set_defualt_apothecary(struct_cols);
+
+    obj_creation.full_liveries[eROLE.Techmarine] = obj_creation.livery_picker.set_defualt_techmarines(struct_cols);
+    obj_creation.livery_picker.scr_unit_draw_data();
+    obj_creation.livery_picker.set_defualt_armour(struct_cols,col_special); 			
+
+	obj_creation.livery_picker.map_colour = full_liveries[0];
+	obj_creation.livery_picker.role_set = 0; 
 	chapter_name=string(phrase1)+" "+string(phrase2);chapter_string=chapter_name;
 
 	monastery_name = "";

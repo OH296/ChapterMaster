@@ -1204,7 +1204,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 					"technophobe", 
 					[99,98],
 					{
-						"progenitor":[PROGENITOR.IRON_HANDS,[1000,999]],
+						"progenitor":[ePROGENITOR.IRON_HANDS,[1000,999]],
 						recruit_world_type : [
 							["Ice", -5],
 							["Death", -2],
@@ -1286,7 +1286,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 				],
 				["flesh_is_weak",[1000,999],{
 						chapter_name:["Iron Hands",[1000,600],"required"],
-						progenitor:[PROGENITOR.IRON_HANDS,[1000,800],"required"],
+						progenitor:[ePROGENITOR.IRON_HANDS,[1000,800],"required"],
 						recruit_world_type: [
 							["Forge", -300],
 							["Lava", -15],
@@ -1420,11 +1420,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			}
 
 
-			if (global.chapter_name=="Space Wolves") or (obj_ini.progenitor == PROGENITOR.SPACE_WOLVES) {
+			if (global.chapter_name=="Space Wolves") or (obj_ini.progenitor == ePROGENITOR.SPACE_WOLVES) {
 				religion_sub_cult = "The Allfather";
-			} else if(global.chapter_name=="Salamanders") or (obj_ini.progenitor == PROGENITOR.SALAMANDERS) {
+			} else if(global.chapter_name=="Salamanders") or (obj_ini.progenitor == ePROGENITOR.SALAMANDERS) {
 				religion_sub_cult = "The Promethean Cult";
-			} else if (global.chapter_name=="Iron Hands" || obj_ini.progenitor == PROGENITOR.IRON_HANDS) {
+			} else if (global.chapter_name=="Iron Hands" || obj_ini.progenitor == ePROGENITOR.IRON_HANDS) {
 				religion_sub_cult = "The Cult of Iron";
 			} 
 
@@ -1435,7 +1435,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 						body[$"head"].hood = 1;
 					}
 				}
-			}else if(global.chapter_name == "Dark Angels" || obj_ini.progenitor == PROGENITOR.DARK_ANGELS){
+			}else if(global.chapter_name == "Dark Angels" || obj_ini.progenitor == ePROGENITOR.DARK_ANGELS){
 				body[$"torso"].robes = choose(0,0,0,1,2);
 				if (body[$"torso"].robes == 0 && irandom(1) == 0){
 					body[$"head"].hood = 1;
@@ -1620,7 +1620,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	}
 
 	weapon_one_data={quality:"standard"};
-  weapon_one_quality = "standard";
+  	weapon_one_quality = "standard";
 
 	static weapon_viable = function(new_weapon,quality){
 		viable = true;
@@ -2315,29 +2315,29 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			// case "Forge Master":
 			// case "Master of Sanctity":
 			// case "Master of the Apothecarion":
-			// case obj_ini.role[100][Role.HONOUR_GUARD]:
+			// case obj_ini.role[100][eROLE.HonourGuard]:
 			// case "Codiciery":
 			// case "Lexicanum":
 			// 1st company only
-			// case obj_ini.role[100][Role.VETERAN]:
-			// case obj_ini.role[100][Role.TERMINATOR]:
-			// case obj_ini.role[100][Role.VETERAN_SERGEANT]:
+			// case obj_ini.role[100][eROLE.Veteran]:
+			// case obj_ini.role[100][eROLE.Terminator]:
+			// case obj_ini.role[100][eROLE.VeteranSergeant]:
 			// Command Squads
-			// case obj_ini.role[100][Role.CAPTAIN]:
-			// case obj_ini.role[100][Role.CHAMPION]:
-			// case obj_ini.role[100][Role.ANCIENT]:
+			// case obj_ini.role[100][eROLE.Captain]:
+			// case obj_ini.role[100][eROLE.Champion]:
+			// case obj_ini.role[100][eROLE.Ancient]:
 			// Command Squads and HQ
-			// case obj_ini.role[100][Role.CHAPLAIN]:
-			// case obj_ini.role[100][Role.APOTHECARY]:
-			// case obj_ini.role[100][Role.TECHMARINE]:
-			// case obj_ini.role[100][Role.LIBRARIAN]:
+			// case obj_ini.role[100][eROLE.Chaplain]:
+			// case obj_ini.role[100][eROLE.Apothecary]:
+			// case obj_ini.role[100][eROLE.Techmarine]:
+			// case obj_ini.role[100][eROLE.Librarian]:
 			// Company marines
-			// case obj_ini.role[100][Role.DREADNOUGHT]:
-			// case obj_ini.role[100][Role.TACTICAL]:
-			// case obj_ini.role[100][Role.DEVASTATOR]:
-			// case obj_ini.role[100][Role.ASSAULT]:
-			// case obj_ini.role[100][Role.SERGEANT]:
-			// case obj_ini.role[100][Role.SCOUT]:
+			// case obj_ini.role[100][eROLE.Dreadnought]:
+			// case obj_ini.role[100][eROLE.Tactical]:
+			// case obj_ini.role[100][eROLE.Devastator]:
+			// case obj_ini.role[100][eROLE.Assault]:
+			// case obj_ini.role[100][eROLE.Sergeant]:
+			// case obj_ini.role[100][eROLE.Scout]:
 			// 	break;
 		// }
 
@@ -2510,6 +2510,8 @@ function jsonify_marine_struct(company, marine){
 	return json_stringify(new_marine);
 }
 
+/// @param {Array<Real>} unit where unit[0] is company and unit[1] is the position
+/// @returns {Struct.TTRPG_stats} unit
 function fetch_unit(unit){
 	return obj_ini.TTRPG[unit[0]][unit[1]];
 }

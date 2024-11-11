@@ -353,13 +353,13 @@ function scr_random_event(execute_now) {
         
 		//this bit should be improved, idk what duke was checking for here
 		//TODO make craft chance reflective of crafters skill, rewards players for having skilled tech area
-        if (string_count("Shit",obj_ini.strin2)>0) {
+        if (scr_has_disadv("Shitty Luck")) {
 			craft_roll+=20;
 		}
-        if (string_count("Tech-Heresy",obj_ini.strin2)>0) {
+        if (scr_has_disadv("Tech-Heresy")) {
 			craft_roll+=20;
 		}
-		if (string_count("Crafter",obj_ini.strin)>0) {
+		if (scr_has_adv("Crafter")) {
             if (craft_roll>80) {
 				craft_roll-=10;
 			}

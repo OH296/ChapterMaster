@@ -20,13 +20,13 @@
         "homeworld": "Dead", // "Lava" "Desert" "Forge" "Hive" "Death" "Agri" "Feudal" "Temperate" "Ice" "Dead" "Shrine"
         "homeworld_name": "The Rock",
         "recruiting": "Death", //"Lava" "Desert" "Forge" "Hive" "Death" "Agri" "Feudal" "Temperate" "Ice" "Dead" "Shrine"
-        "recruiting_name": "",
+        "recruiting_name": "Kimmeria",
         "discipline": "default", // one of 'default' 'biomancy' 'pyromancy' 'telekinesis' 'rune Magick'
         "aspirant_trial": "SURVIVAL", // ? need to find the best way to do this
         "advantages": [ //TODO something with these after rework of adv organisation
             "",
             "Enemy: Fallen",
-            "",
+            "Reverent Guardians",
             "",
             "",
             "",
@@ -54,7 +54,7 @@
             "lens": "Red",
             "weapon": "Dark Red",
             "special": 0, // 0 - normal, 1 - Breastplate, 2 - Vertical, 3 - Quadrant
-            "trim_on": 0 // 0 no, 1 yes for special trim colours // todo update ref for new name
+            //"trim_on": 0 // 0 no, 1 yes for special trim colours // todo update ref for new name
         },
         "names": {
             //Chapter Staff
@@ -164,7 +164,7 @@
         * Stacks with advantages/disadvantages
         */
         "extra_specialists": {
-            "chaplains": 4,
+            "chaplains": 0,
             "techmarines": 0,
             "apothecary": 0,
             "epistolary": 0,
@@ -215,7 +215,8 @@
         "custom_roles": {
             "honour_guard": {
                 "name": "Deathwing Knight",
-                "wep1": "Mace of Absolution"
+                "wep1": "Mace of Absolution",
+                "armour": "Terminator Armour"
             },
             "captain": {
                 "name": "Master",

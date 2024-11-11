@@ -214,15 +214,15 @@ function ColourItem(xx,yy) constructor{
 		}
 		//draw_sprite(sprite_index, 0, x, y);
 		draw_sprite(spr_mk7_complex_backpack, 0, xx, yy);
+        draw_sprite(spr_mk7_right_arm, 0, xx, yy);
+        draw_sprite(spr_mk7_right_trim, 2, xx, yy);
+        draw_sprite(spr_mk7_left_arm, 0, xx, yy);
+        draw_sprite(spr_mk7_left_trim, 2, xx, yy);          
 		draw_sprite(spr_mk7_complex, 0, xx, yy);
         draw_sprite(spr_mk7_leg_variants, 1, xx, yy);
         draw_sprite(spr_mk7_chest_variants, 1, xx, yy);           	
         draw_sprite(spr_mk7_mouth_variants, 1, xx, yy);
-        draw_sprite(spr_mk7_thorax_variants, 1, xx, yy);            
-		draw_sprite(spr_mk7_right_arm, 0, xx, yy);
-        draw_sprite(spr_mk7_right_trim, 1, xx, yy);
-        draw_sprite(spr_mk7_left_arm, 0, xx, yy);
-        draw_sprite(spr_mk7_left_trim, 1, xx, yy);        
+        draw_sprite(spr_mk7_thorax_variants, 1, xx, yy);                  
     	//draw_sprite(xx,yy,2,spr_mk7_full_colour);
     	//draw_sprite(xx,yy,3,spr_mk7_full_colour);
     	shader_reset();

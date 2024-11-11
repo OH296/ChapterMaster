@@ -272,7 +272,7 @@ function scr_draw_unit_stat_data(manage=false){
 				draw_set_halign(fa_left);
 				var x2 = x1 - string_width(trait_name);
 				var y2 = y1 + string_height(trait_name);
-				array_push(trait_tool_tips, [x1, y1, x2, y2, trait_description + trait_effect]);
+				array_push(trait_tool_tips, [x1, y1, x2, y2, trait_description + "#" + trait_effect]);
 			}
 		} else {
 			draw_set_halign(fa_right);

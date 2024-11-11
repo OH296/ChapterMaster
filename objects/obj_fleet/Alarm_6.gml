@@ -96,38 +96,6 @@ if (betchers=1) then global_melee=global_melee*0.95;
 if (catalepsean=1){global_attack=global_attack*0.95;}
 // if (occulobe=1){if (time=5) or (time=6) then global_attack=global_attack*0.7;global_defense=global_defense*0.9;}
 
-/*if (global.chapter_name="Dark Angels") or (obj_ini.main_color="Dark Green") then color_index=0;
-if (global.chapter_name="White Scars") or (obj_ini.main_color="White") then color_index=1;
-if (global.chapter_name="Space Wolves") or (obj_ini.main_color="Light Blue") then color_index=2;
-if (global.chapter_name="Imperial Fists") or (obj_ini.main_color="Yellow") then color_index=3;
-if (global.chapter_name="Blood Angels") or (obj_ini.main_color="Red") or (obj_ini.main_color="Dark Red") then color_index=4;
-if (global.chapter_name="Iron Hands") then color_index=5;
-if (global.chapter_name="Ultramarines") or (obj_ini.main_color="Blue") then color_index=6;
-if (global.chapter_name="Salamanders") or (obj_ini.main_color="Green") then color_index=7;
-if (global.chapter_name="Iron Hands") then color_index=7;
-if (global.chapter_name="Black Templars") or (obj_ini.main_color="Black") then color_index=8;
-if (global.chapter_name="Minotaurs") or (obj_ini.main_color="Brown") then color_index=9;
-if (global.chapter_name="Soul Drinkers") or (obj_ini.main_color="Purple") then color_index=10;
-if (global.chapter_name="Lamenters") then color_index=11;
-if (global.chapter_name="Emperor's Nightmares") then color_index=12;
-if (global.chapter_name="Angry Marines") then color_index=13;
-if (global.chapter_name="Star Krakens") then color_index=14;
-if (obj_ini.main_color="Pink") then color_index=15;*/
-
-
-
-
-
-/*
-global.chapter_name=5;
-obj_ini.main_color=obj_creation.main_color;
-obj_ini.secondary_color=obj_creation.secondary_color;
-obj_ini.lens_color=obj_creation.lens_color;
-obj_ini.weapon_color=obj_creation.weapon_color;
-*/
-
-
-
 // More prep for player
 
 var i, k, onceh;i=0;k=0;onceh=0;

@@ -166,7 +166,7 @@ if (ticked=1){// Select a random marine and have them perform an action
             if (
                 (
                     (global.chapter_name="Space Wolves") ||
-                    (obj_ini.progenitor == PROGENITOR.SPACE_WOLVES)
+                    (obj_ini.progenitor == ePROGENITOR.SPACE_WOLVES)
                 ) &&
                 (obj_controller.fest_feature2 > 0) &&
                 activity != "drink"
@@ -198,7 +198,7 @@ if (ticked=1){// Select a random marine and have them perform an action
     }
     if (activity="eat"){
         var eater_type=1;
-        if (global.chapter_name="Space Wolves" || obj_ini.progenitor == PROGENITOR.SPACE_WOLVES) { eater_type=2; }
+        if (global.chapter_name="Space Wolves" || obj_ini.progenitor == ePROGENITOR.SPACE_WOLVES) { eater_type=2; }
         
         if (stage=5) and (eater_type=1){rando=choose(1,2,3);
             if (rando=1) then textt=unit.name_role()+" digs into the food and begins to eat.";
@@ -239,8 +239,8 @@ if (ticked=1){// Select a random marine and have them perform an action
     }
     if (activity="drink"){
         var eater_type;eater_type=1;
-        if (global.chapter_name="Space Wolves" || obj_ini.progenitor == PROGENITOR.SPACE_WOLVES) then eater_type=2;
-        if (global.chapter_name="Blood Angels" || obj_ini.progenitor == PROGENITOR.BLOOD_ANGELS) then eater_type=3;
+        if (global.chapter_name="Space Wolves" || obj_ini.progenitor == ePROGENITOR.SPACE_WOLVES) then eater_type=2;
+        if (global.chapter_name="Blood Angels" || obj_ini.progenitor == ePROGENITOR.BLOOD_ANGELS) then eater_type=3;
         
         if (eater_type=1){
             if (attend_drunk[ide]<=0) then textt=unit.name_role()+" hails a serf and has "+choose("him","her")+" pour some Amasec.";

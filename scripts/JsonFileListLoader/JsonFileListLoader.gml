@@ -92,7 +92,7 @@ function JsonFileListLoader() constructor {
                 file_path = working_directory + relative_file_path;
             }
             if(file_exists(file_path) == false){
-                debugl($"File does not exist at path {file_path}");
+                result.value = $"File does not exist at path {file_path}";
                 return result;
             }
             file_buffer = buffer_load(file_path);

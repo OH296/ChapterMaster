@@ -207,40 +207,33 @@ if (array_length(col)>0){
     if (color_to_main!=""){
         main_color = max(array_find_value(col,color_to_main),0);
         color_to_main = "";
-        full_liveries = "none";
     }
     if (color_to_secondary!=""){
         secondary_color = max(array_find_value(col,color_to_secondary),0);
         color_to_secondary = "";
-        full_liveries = "none";
     }
     if (color_to_trim!=""){
         main_trim = max(array_find_value(col,color_to_trim),0);
         color_to_trim = "";
-        full_liveries = "none";
     }
     if (color_to_pauldron!=""){
         right_pauldron = max(array_find_value(col,color_to_pauldron),0);
-        color_to_pauldron = "";  
-        full_liveries = "none";   
+        color_to_pauldron = "";   
     }
     if (color_to_pauldron2!=""){
         left_pauldron = max(array_find_value(col,color_to_pauldron2),0);
         color_to_pauldron2 = "";
-        full_liveries = "none";
     }
     if (color_to_lens!=""){
         lens_color = max(array_find_value(col,color_to_lens),0);
         color_to_lens = ""; 
-        full_liveries = "none"; 
     }
     if (color_to_weapon!=""){
         weapon_color = max(array_find_value(col,color_to_weapon),0);
         color_to_weapon = "";
-        full_liveries = "none";
     }
 }
-if (full_liveries == "none"){
+if (full_liveries == ""){
     var struct_cols = {
         main_color :main_color,
         secondary_color:secondary_color,
@@ -253,13 +246,13 @@ if (full_liveries == "none"){
     livery_picker.scr_unit_draw_data();
     livery_picker.set_defualt_armour(struct_cols,col_special);
     full_liveries = array_create(21,DeepCloneStruct(livery_picker.map_colour));
-    full_liveries[Role.LIBRARIAN] = livery_picker.set_defualt_librarian(struct_cols);
+    full_liveries[eROLE.Librarian] = livery_picker.set_defualt_librarian(struct_cols);
 
-    full_liveries[Role.CHAPLAIN] = livery_picker.set_defualt_chaplain(struct_cols);
+    full_liveries[eROLE.Chaplain] = livery_picker.set_defualt_chaplain(struct_cols);
 
-    full_liveries[Role.APOTHECARY] = livery_picker.set_defualt_apothecary(struct_cols);
+    full_liveries[eROLE.Apothecary] = livery_picker.set_defualt_apothecary(struct_cols);
 
-    full_liveries[Role.TECHMARINE] = livery_picker.set_defualt_techmarines(struct_cols);
+    full_liveries[eROLE.Techmarine] = livery_picker.set_defualt_techmarines(struct_cols);
     livery_picker.scr_unit_draw_data();
     livery_picker.set_defualt_armour(struct_cols,col_special);    
 }

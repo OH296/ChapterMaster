@@ -78,12 +78,12 @@ function role_groups(group){
 			break;
 		case "captain_candidates":
 			role_list = [
-				roles[Role.SERGEANT], //sergeant
-				roles[Role.VETERAN_SERGEANT],
-				roles[Role.CHAMPION],				
-				roles[Role.CAPTAIN],								
-				roles[Role.TERMINATOR],				
-				roles[Role.VETERAN],
+				roles[eROLE.Sergeant], //sergeant
+				roles[eROLE.VeteranSergeant],
+				roles[eROLE.Champion],				
+				roles[eROLE.Captain],								
+				roles[eROLE.Terminator],				
+				roles[eROLE.Veteran],
 				 obj_ini.role[100][11],			
 			];
 			break;

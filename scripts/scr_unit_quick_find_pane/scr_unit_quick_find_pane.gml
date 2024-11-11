@@ -18,6 +18,7 @@ function UnitQuickFindPanel() constructor{
 	    garrison_log = {};
 	    for (var co=0;co<11;co++){
 	    	for (var u=0;u<array_length(obj_ini.TTRPG[co]);u++){
+				/// @type {Struct.TTRPG_stats}
 	    		unit = fetch_unit([co, u]);
 	    		if (unit.name() == "") then continue;
 	    		unit_location = unit.marine_location();

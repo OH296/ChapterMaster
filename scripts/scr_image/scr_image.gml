@@ -547,7 +547,8 @@ function scr_image(path, image_id, x1, y1, width, height) {
 	}}
 }
 
-
+/// @description Use this to load the image at given path and id into the image cache so it can be 
+/// referenced in a different function to scr_image. Obtain the image later with `obj_img.image_cache[$path][image_id]`
 function scr_image_cache(path, image_id){
 	var drawing_sprite;
 	var cache_arr_exists = struct_exists(obj_img.image_cache, path);
@@ -580,7 +581,7 @@ function scr_image_cache(path, image_id){
 			array_set(obj_img.image_cache[$path], image_id, drawing_sprite);
 		} else {
 			drawing_sprite = -1;
-			debugl($"No directory/file found matching {dir}");
+			// debugl($"No directory/file found matching {dir}"); // too much noise
 		}
 	}
 	return drawing_sprite;

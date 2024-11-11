@@ -51,10 +51,6 @@ if (slate4>0){
 		draw_text_transformed(440,custom_y,string_hash_to_newline("Custom Chapters"),0.75,0.75,0);
         draw_text_transformed(440,other_y,string_hash_to_newline("Other"),0.75,0.75,0);
 
-        var founding_chapters = array_filter(all_chapters, function(item){ return item.origin == CHAPTER_ORIGIN.FOUNDING});
-        var successor_chapters = array_filter(all_chapters, function(item){ return item.origin == CHAPTER_ORIGIN.SUCCESSOR});
-        var custom_chapters = array_filter(all_chapters, function(item){ return item.origin == CHAPTER_ORIGIN.CUSTOM});
-        var other_chapters = array_filter(all_chapters, function(item){ return item.origin == CHAPTER_ORIGIN.NON_CANON});
 
         
 
@@ -288,10 +284,10 @@ if (slate4>0){
             draw_set_color(0);
             draw_set_halign(fa_left);
             
-            if (highlight<=25){
+            if (highlight<=array_length(all_chapters)){
                 var chap = all_chapters[highlight];
                 tooltip=chap.name;
-                if(chap.progenitor != 0) {tooltip += "  - Progenitor Chapter: " + all_chapters[chap.progenitor].name};
+                if(chap.progenitor != 0 && chap.progenitor <10) {tooltip += "  - Progenitor: " + all_chapters[chap.progenitor].name};
                 tooltip2=chap.tooltip;
             }
             if (highlight=1001) then tooltip="Custom";
@@ -962,26 +958,26 @@ if (slide=3){
     
     
     
-    var fleet_type_text = fleet_type==1?"Homeworld":"Flagship";
+    var fleet_type_text = fleet_type==eFLEET_TYPES.HOMEWORLD ? "Homeworld" : "Flagship";
     draw_text_transformed(644,218,fleet_type_text,0.6,0.6,0);
 
     var eh,eh2;eh=0;eh2=0;name_bad=0;
     
-    if (homeworld="Lava") then eh=0;
-    if (homeworld="Desert") then eh=2;
-    if (homeworld="Forge") then eh=3;
-    if (homeworld="Hive") then eh=4;
-    if (homeworld="Death") then eh=5;
-    if (homeworld="Agri") then eh=6;
-    if (homeworld="Feudal") then eh=7;
-    if (homeworld="Temperate") then eh=8;
-    if (homeworld="Ice") then eh=9;
-    if (homeworld="Dead") then eh=10;
-    if (homeworld="Shrine") then eh=16;
-    if (fleet_type!=1) then eh=15;
+    if (homeworld="Lava") then eh=2;
+    if (homeworld="Desert") then eh=3;
+    if (homeworld="Forge") then eh=4;
+    if (homeworld="Hive") then eh=5;
+    if (homeworld="Death") then eh=6;
+    if (homeworld="Agri") then eh=7;
+    if (homeworld="Feudal") then eh=8;
+    if (homeworld="Temperate") then eh=9;
+    if (homeworld="Ice") then eh=10;
+    if (homeworld="Dead") then eh=11;
+    if (homeworld="Shrine") then eh=17;
+    if (fleet_type!=1) then eh=16;
     
-    if (fleet_type=1){
-        scr_image("planet",eh,580,244,128,128);
+    if (fleet_type == eFLEET_TYPES.HOMEWORLD){
+        scr_image("ui/planet",eh,580,244,128,128);
         // draw_sprite(spr_planet_splash,eh,580,244);
         
         draw_text_transformed(644,378,string_hash_to_newline(string(homeworld)),0.5,0.5,0);
@@ -1024,9 +1020,9 @@ if (slide=3){
             }
         }
     }
-    if (fleet_type!=1){
+    if (fleet_type != eFLEET_TYPES.HOMEWORLD){
         // draw_sprite(spr_planet_splash,eh,580,244);
-        scr_image("planet",eh,580,244,128,128);
+        scr_image("ui/planet",eh,580,244,128,128);
         
         draw_text_transformed(644,378,string_hash_to_newline("Battle Barge"),0.5,0.5,0);
         // draw_text_transformed(644,398,string(homeworld_name),0.5,0.5,0);
@@ -1051,7 +1047,7 @@ if (slide=3){
     
     
     
-    if (fleet_type!=3){
+    if (fleet_type!=eFLEET_TYPES.PENITENCE){
         if (fleet_type!=1) or (custom<2) then draw_set_alpha(0.5);
         yar=0;if (recruiting_exists=1) then yar=1;draw_sprite(spr_creation_check,yar,858,221);yar=0;
         if (scr_hit(858,221,858+32,221+32)) and (cooldown<=0) and (mouse_left>=1) and (custom>1) and (fleet_type=1){cooldown=8000;var onceh;onceh=0;
@@ -1061,17 +1057,17 @@ if (slide=3){
         draw_set_alpha(1);draw_text_transformed(644+333,218,string_hash_to_newline("Recruiting World"),0.6,0.6,0);
         
         if (recruiting_exists=1){
-            if (recruiting="Lava") then eh2=0;
-            if (recruiting="Desert") then eh2=2;
-            if (recruiting="Forge") then eh2=3;
-            if (recruiting="Hive") then eh2=4;
-            if (recruiting="Death") then eh2=5;
-            if (recruiting="Agri") then eh2=6;
-            if (recruiting="Feudal") then eh2=7;
-            if (recruiting="Temperate") then eh2=8;
-            if (recruiting="Ice") then eh2=9;
-            if (recruiting="Dead") then eh2=10;
-            if (recruiting="Shrine") then eh2=16;
+            if (recruiting="Lava") then eh2=2;
+            if (recruiting="Desert") then eh2=3;
+            if (recruiting="Forge") then eh2=4;
+            if (recruiting="Hive") then eh2=5;
+            if (recruiting="Death") then eh2=6;
+            if (recruiting="Agri") then eh2=7;
+            if (recruiting="Feudal") then eh2=8;
+            if (recruiting="Temperate") then eh2=9;
+            if (recruiting="Ice") then eh2=10;
+            if (recruiting="Dead") then eh2=11;
+            if (recruiting="Shrine") then eh2=17;
             
             if (custom>1) then draw_sprite_stretched(spr_creation_arrow,0,865,285,32,32);// Left Arrow
             if (scr_hit(865,285,865+32,285+32)) and (mouse_left>=1) and (cooldown<=0) and (custom>1){
@@ -1105,7 +1101,7 @@ if (slide=3){
             }
             
             // draw_sprite(spr_planet_splash,eh2,580+333,244);
-            scr_image("planet",eh2,580+333,244,128,128);
+            scr_image("ui/planet",eh2,580+333,244,128,128);
             
             draw_text_transformed(644+333,378,string_hash_to_newline(string(recruiting)),0.5,0.5,0);
             // draw_text_transformed(644+333,398,string(recruiting_name),0.5,0.5,0);
@@ -1127,9 +1123,9 @@ if (slide=3){
         }
     }
     
-    if (recruiting_exists=0) and (homeworld_exists=1){
+    if (recruiting_exists==0 && homeworld_exists==1){
         // draw_sprite(spr_planet_splash,eh,580+333,244);
-        scr_image("planet",eh,580+333,244,128,128);
+        scr_image("ui/planet",eh,580+333,244,128,128);
         
         draw_set_alpha(0.5);
         draw_text_transformed(644+333,378,string_hash_to_newline(string(homeworld)),0.5,0.5,0);
@@ -1139,8 +1135,8 @@ if (slide=3){
     
     
     if (scr_hit(575,216,710,242)){
-        if (fleet_type!=1){tooltip="Battle Barge";tooltip2="The name of your Flagship Battle Barge.";}
-        if (fleet_type=1){tooltip="Homeworld";tooltip2="The world that your Chapter's Fortress Monastery is located upon.  More civilized worlds are more easily defensible but the citizens may pose a risk or be a nuisance.";}
+        if (fleet_type!=eFLEET_TYPES.HOMEWORLD){tooltip="Battle Barge";tooltip2="The name of your Flagship Battle Barge.";}
+        if (fleet_type==eFLEET_TYPES.HOMEWORLD){tooltip="Homeworld";tooltip2="The world that your Chapter's Fortress Monastery is located upon.  More civilized worlds are more easily defensible but the citizens may pose a risk or be a nuisance.";}
     }
     if (scr_hit(895,216,1075,242)){
         tooltip="Recruiting World";tooltip2="The world that your Chapter selects recruits from.  More harsh worlds provide recruits with more grit and warrior mentality.  If you are a homeworld-based Chapter, you may uncheck 'Recruiting World' to recruit from your homeworld instead.";
@@ -1155,7 +1151,7 @@ if (slide=3){
     
     draw_set_halign(fa_left);
     
-    if (fleet_type=1){
+    if (fleet_type == eFLEET_TYPES.HOMEWORLD){
         if (custom<2) then draw_set_alpha(0.5);
         draw_text_transformed(445,480,"Homeworld Rule",0.6,0.6,0);
         draw_text_transformed(485,512,"Planetary Governer",0.5,0.5,0);
@@ -1618,7 +1614,7 @@ if (slide=6){
     
     //adds "Save Chapter" button if custom chapter in a save slot
 
-    if(custom>0 && global.chapter_id != CHAPTERS.UNKNOWN){
+    if(custom>0 && global.chapter_id != eCHAPTERS.UNKNOWN){
         draw_rectangle(1000,135,1180,170,1)
         draw_text_transformed(1090,140,string("Save Chapter"),0.6,0.6,0);draw_set_font(fnt_40k_14b);
 	    if (scr_hit(1000,135,1180,170)) {
@@ -1765,12 +1761,19 @@ if (slide>=2) or (goto_slide>=2){
 
 
 
-if (tooltip!="") and (tooltip2!="") and (change_slide<=0){
+if (tooltip!="" && tooltip2!="" && change_slide<=0){
     draw_set_alpha(1);
-    draw_set_font(fnt_40k_14);draw_set_halign(fa_left);draw_set_color(0);
-    draw_rectangle(mouse_x+18,mouse_y+20,mouse_x+string_width_ext(string_hash_to_newline(tooltip2),-1,500)+24,mouse_y+44+string_height_ext(string_hash_to_newline(tooltip2),-1,500),0);
+    draw_set_color(0);
+    draw_set_halign(fa_left);
+    draw_set_font(fnt_40k_14b);
+    var _width1 = string_width_ext(string_hash_to_newline(tooltip),-1,500);
+    draw_set_font(fnt_40k_14);
+    var _width2 = string_width_ext(string_hash_to_newline(tooltip2),-1,500);
+    var _height = string_height_ext(string_hash_to_newline(tooltip2),-1,500);
+   
+    draw_rectangle(mouse_x+18,mouse_y+20,mouse_x+max(_width1, _width2)+24,mouse_y+44+_height,0);
     draw_set_color(38144);
-    draw_rectangle(mouse_x+18,mouse_y+20,mouse_x+string_width_ext(string_hash_to_newline(tooltip2),-1,500)+24,mouse_y+44+string_height_ext(string_hash_to_newline(tooltip2),-1,500),1);
+    draw_rectangle(mouse_x+18,mouse_y+20,mouse_x+max(_width1, _width2)+24,mouse_y+44+_height,1);
     draw_set_font(fnt_40k_14b);
     draw_text(mouse_x+22,mouse_y+22,string_hash_to_newline(string(tooltip)));
     draw_set_font(fnt_40k_14);

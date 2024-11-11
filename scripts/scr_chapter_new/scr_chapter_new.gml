@@ -1,33 +1,38 @@
 /// @description Constructor for loading Chapter data from JSON and providing type completion
+/// see the actual json files for extended documentation on each property
 function ChapterData() constructor {
-	id = CHAPTERS.UNKNOWN;
+	id = eCHAPTERS.UNKNOWN;
 	name = "";
 	points = 0;
 	flavor = "";
-	origin = CHAPTER_ORIGIN.NONE;
-	founding = CHAPTERS.UNKNOWN;
+	origin = eCHAPTER_ORIGINS.NONE;
+	founding = eCHAPTERS.UNKNOWN;
 	successors = 0;
 	splash = 0;
 	icon = 0;
-	icon_name = "";
+	icon_name = "aa";
 	aspirant_trial = eTrials.BLOODDUEL;
-	fleet_type = FLEET_TYPE.NONE;
+	fleet_type = eFLEET_TYPES.NONE;
 	strength = 0;
 	purity = 0;
 	stability = 0;
 	cooperation = 0;
-	homeword = ""; //e.g. "Death"
-	homeworld_name = ""; // e.g. "The Rock"
+	homeworld = "Hive"; //e.g. "Death"
+	homeworld_name = global.name_generator.generate_star_name(); // e.g. "The Rock"
 	homeworld_exists = 0;
 	recruiting_exists = 0;
-	recruiting = ""; 
-	homeworld_rule = HOMEWORLD_RULE.NONE;
-	flagship_name = "";
+	recruiting = "Death"; 
+	recruiting_name = global.name_generator.generate_star_name();
+	homeworld_rule = eHOMEWORLD_RULE.NONE;
+	flagship_name = global.name_generator.generate_imperial_ship_name();
 	monastary_name = "";
 	advantages = array_create(9);
 	disadvantages = array_create(9);
+	discipline = "default"; // todo convert to enum
 
-	full_liveries = "none"
+	full_liveries = "";
+	complex_livery_data = complex_livery_default();
+
 
 	colors = {
 		main: "Grey",
@@ -40,23 +45,23 @@ function ChapterData() constructor {
 		/// 0 - normal, 1 - Breastplate, 2 - Vertical, 3 - Quadrant
 		special: 0,
 		/// 0 no, 1 yes for special trim colours
-		trim_on: 0,
+		//trim_on: 0,
 	};
 	names = {
-		hchaplain: global.name_generator.generate_imperial_name(),
-		clibrarian: global.name_generator.generate_imperial_name(),
-		fmaster: global.name_generator.generate_imperial_name(),
-		hapothecary: global.name_generator.generate_imperial_name(),
-		recruiter: global.name_generator.generate_imperial_name(),
-		admiral: global.name_generator.generate_imperial_name(),
-		honorcapt: global.name_generator.generate_imperial_name(),
-		watchmaster: global.name_generator.generate_imperial_name(),
-		arsenalmaster: global.name_generator.generate_imperial_name(),
-		marchmaster: global.name_generator.generate_imperial_name(),
-		ritesmaster: global.name_generator.generate_imperial_name(),
-		victualler: global.name_generator.generate_imperial_name(),
-		lordexec: global.name_generator.generate_imperial_name(),
-		relmaster: global.name_generator.generate_imperial_name(),
+		hchaplain: global.name_generator.generate_space_marine_name(),
+		clibrarian: global.name_generator.generate_space_marine_name(),
+		fmaster: global.name_generator.generate_space_marine_name(),
+		hapothecary: global.name_generator.generate_space_marine_name(),
+		recruiter: global.name_generator.generate_space_marine_name(),
+		admiral: global.name_generator.generate_space_marine_name(),
+		honorcapt: global.name_generator.generate_space_marine_name(),
+		watchmaster: global.name_generator.generate_space_marine_name(),
+		arsenalmaster: global.name_generator.generate_space_marine_name(),
+		marchmaster: global.name_generator.generate_space_marine_name(),
+		ritesmaster: global.name_generator.generate_space_marine_name(),
+		victualler: global.name_generator.generate_space_marine_name(),
+		lordexec: global.name_generator.generate_space_marine_name(),
+		relmaster: global.name_generator.generate_space_marine_name(),
 	};
 	mutations = {
 		preomnor: 0,
@@ -81,18 +86,19 @@ function ChapterData() constructor {
 		split_vets: 0,
 	};
 	/// @type {Array<Real>} 
-	disposition = [];
+	disposition = array_create(10, 0);
 	/// @type {Array<String>} 
-	company_titles = [];
+	company_titles = array_create(11, "");
 	chapter_master = {
-		name: "",
+		name: global.name_generator.generate_space_marine_name(),
 		melee: 0,
 		ranged: 0,
-		specialty: CM_SPECIALTY.NONE,
+		specialty: eCM_SPECIALTY.NONE,
 		/// @type {Array<String>}
 		traits: [],
 		gear: "",
-		mobi: ""
+		mobi: "",
+		armour: "",
 	};
 	extra_ships = {
 		battle_barges: 0,
@@ -128,6 +134,7 @@ function ChapterData() constructor {
 		whirlwind: 0,
 		predator: 0,
 		land_raider: 0,
+		land_speeder: 0,
 	}
 	extra_equipment = [];
 	custom_roles = {};
@@ -136,7 +143,7 @@ function ChapterData() constructor {
 
 
 	/// @desc Returns true if loaded successfully, false if not.
-	/// @param {Enum.CHAPTERS} chapter_id 
+	/// @param {Enum.eCHAPTERS} chapter_id 
 	/// @param {Bool} use_app_data if set to true will read from %AppData%/Local/ChapterMaster instead of /datafiles
 	/// @returns {Bool} 
 	function load_from_json(chapter_id, use_app_data = false){
@@ -156,6 +163,14 @@ function ChapterData() constructor {
 		for(var i = 0; i < array_length(keys); i++){
 			var key = keys[i];
 			var val = struct_get(json_chapter, key);
+
+			// Treat incoming empty vals as 'use default' and don't overwrite
+			// a value if it was already set in the chapter constructor
+			if (struct_exists(self, key)){
+				if(self[key] != "" && val == ""){
+					continue;
+				}
+			}
 			struct_set(self, key, val);
 		}
 		return true;
@@ -163,13 +178,15 @@ function ChapterData() constructor {
 }
 
 /// @mixin obj_creation
+/// @description called when a chapter's icon is clicked on the first page after the main menu.
+/// used to set up initialise the data that is later fed into `scr_initialize_custom` when the game starts
 function scr_chapter_new(argument0) {
 
-	full_liveries = "none"; // until chapter objects are in full use kicks off livery propogation
+	full_liveries = ""; // until chapter objects are in full use kicks off livery propogation
 
 	// argument0 = chapter
-	obj_creation.use_chapter_object = 0; // for the new json testing
-	var chapter_id = CHAPTERS.UNKNOWN;
+	obj_creation.use_chapter_object = false; // for the new json testing
+	var chapter_id = eCHAPTERS.UNKNOWN;
 
 	//1st captain =	honor_captain_name	
 	//2nd captain =	watch_master_name	
@@ -182,158 +199,58 @@ function scr_chapter_new(argument0) {
 	//9th captain =	relic_master_name
 	//10th captain = recruiter_name
 
-	var i;i=-1;
-	repeat(21){i+=1;world[i]="";world_type[i]="";world_feature[i]="";}
-	var i;i=-1;repeat(6){i+=1;adv[i]="";adv_num[i]=0;dis[i]="";dis_num[i]=0;}
-	points=100;maxpoints=100;custom=0;
-	//Chapter Staff
-	hapothecary=global.name_generator.generate_space_marine_name();
-	hchaplain=global.name_generator.generate_space_marine_name();
-	clibrarian=global.name_generator.generate_space_marine_name();
-	fmaster=global.name_generator.generate_space_marine_name();
-	//Company Captains
-	honorcapt=global.name_generator.generate_space_marine_name();
-	watchmaster=global.name_generator.generate_space_marine_name();
-	arsenalmaster=global.name_generator.generate_space_marine_name();
-	admiral=global.name_generator.generate_space_marine_name();
-	marchmaster=global.name_generator.generate_space_marine_name();
-	ritesmaster=global.name_generator.generate_space_marine_name();
-	victualler=global.name_generator.generate_space_marine_name();
-	lordexec=global.name_generator.generate_space_marine_name();
-	relmaster=global.name_generator.generate_space_marine_name();
-	recruiter=global.name_generator.generate_space_marine_name();
+	var i = 0;
+	world = array_create(20, "");
+	world_type = array_create(20, "");
+	world_feature = array_create(20, "");
 	
-	i=99;
-	repeat(3){i+=1;// First is for the correct slot, second is for default
-	    role[i,2]="Honour Guard";wep1[i,2]="Power Sword";wep2[i,2]="Bolter";armour[i,2]="Artificer Armour";
-	    role[i,3]="Veteran";wep1[i,3]="Chainsword";wep2[i,3]="Combiflamer";armour[i,3]="Power Armour";
-	    role[i,4]="Terminator";wep1[i,4]="Power Fist";wep2[i,4]="Storm Bolter";armour[i,4]="Terminator Armour";
-	    role[i,5]="Captain";wep1[i,5]="Power Sword";wep2[i,5]="Bolt Pistol";armour[i,5]="Power Armour";gear[i,5]="Iron Halo";
-	    role[i,6]="Dreadnought";wep1[i,6]="Close Combat Weapon";wep2[i,6]="Twin Linked Lascannon";armour[i,6]="Dreadnought";
-	    role[i,8]="Tactical Marine";wep1[i,8]="Bolter";wep2[i,8]="Combat Knife";armour[i,8]="Power Armour";
-	    role[i,9]="Devastator Marine";wep1[i,9]="Heavy Ranged";wep2[i,9]="Combat Knife";armour[i,9]="Power Armour";mobi[i,9]="Heavy Weapons Pack";
-	    role[i,10]="Assault Marine";wep1[i,10]="Chainsword";wep2[i,10]="Bolt Pistol";armour[i,10]="Power Armour";mobi[i,10]="Jump Pack";
-		role[i,11]="Ancient";wep1[i,11]="Company Standard";wep2[i,11]="Bolt Pistol";armour[i,11]="Power Armour";
-	    role[i,12]="Scout";wep1[i,12]="Bolter";wep2[i,12]="Combat Knife";armour[i,12]="Scout Armour";
-	    role[i,14]="Chaplain";wep1[i,14]="Crozius Arcanum";wep2[i,14]="Bolt Pistol";armour[i,14]="Power Armour";gear[i,14]="Rosarius";
-	    role[i,15]="Apothecary";wep1[i,15]="Chainsword";wep2[i,15]="Bolt Pistol";armour[i,15]="Power Armour";gear[i,15]="Narthecium";
-	    role[i,16]="Techmarine";wep1[i,16]="Power Axe";wep2[i,16]="Bolt Pistol";armour[i,16]="Artificer Armour";mobi[i,16]="Servo-arm";gear[i,16]="";
-	    role[i,17]="Librarian";wep1[i,17]="Force Staff";wep2[i,17]="Bolt Pistol";armour[i,17]="Power Armour";gear[i,17]="Psychic Hood";
-		role[i,18]="Sergeant";wep1[i,18]="Chainsword";wep2[i,18]="Bolt Pistol";armour[i,18]="Power Armour";gear[i,18]="";
-		role[i,19]="Veteran Sergeant";wep1[i,19]="Chainsword";wep2[i,19]="Plasma Pistol";armour[i,19]="Power Armour";gear[i,19]="";
-	}i=100;
+
+	points=100;maxpoints=100;custom=0;
+	
+	function load_default_gear(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear){
+		for(var i = 100; i <=102; i++){
+			obj_creation.role[i][_role_id] = _role_name;
+			obj_creation.wep1[i][_role_id] = _wep1;
+			obj_creation.wep2[i][_role_id] = _wep2;
+			obj_creation.armour[i][_role_id] = _armour;
+			obj_creation.mobi[i][_role_id] = _mobi;
+			obj_creation.gear[i][_role_id] = _gear;
+			obj_creation.race[i][_role_id] = 1;
+		}
+	}
+	load_default_gear(eROLE.HonourGuard, "Honour Guard", "Power Sword", "Bolter", "Artificer Armour", "", "");
+	load_default_gear(eROLE.Veteran, "Veteran", "Chainsword", "Combiflamer", "Power Armour", "", "");
+	load_default_gear(eROLE.Terminator, "Terminator", "Power Fist", "Storm Bolter", "Terminator Armour", "", "");
+	load_default_gear(eROLE.Captain, "Captain", "Power Sword", "Bolt Pistol", "Power Armour", "", "Iron Halo");
+	load_default_gear(eROLE.Dreadnought, "Dreadnought", "Dreadnought Lightning Claw", "Lascannon", "Dreadnought", "", "");
+	load_default_gear(eROLE.Champion, "Champion", "Power Sword", "Power Armour", "Power Armour", "", "Combat Shield");
+	load_default_gear(eROLE.Tactical, "Tactical", "Bolter", "Combat Knife", "Power Armour", "", "");
+	load_default_gear(eROLE.Devastator, "Devastator", "", "Combat Knife", "Power Armour", "", "");
+	load_default_gear(eROLE.Assault, "Assault", "Chainsword", "Bolt Pistol", "Power Armour", "Jump Pack", "");
+	load_default_gear(eROLE.Ancient, "Ancient", "Company Standard", "Bolt Pistol", "Power Armour", "", "");
+	load_default_gear(eROLE.Scout, "Scout", "Bolter", "Combat Knife", "Scout Armour", "", "");
+	load_default_gear(eROLE.Chaplain, "Chaplain", "Crozius Arcanum", "Bolt Pistol", "Power Armour", "", "Rosarius");
+	load_default_gear(eROLE.Apothecary, "Apothecary", "Chainsword", "Bolt Pistol", "Power Armour", "", "Narthecium");
+	load_default_gear(eROLE.Techmarine, "Techmarine", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
+	load_default_gear(eROLE.Librarian, "Librarian", "Force Staff", "Bolt Pistol", "Power Armour", "", "Psychic Hood");
+	load_default_gear(eROLE.Sergeant, "Sergeant", "Chainsword", "Bolt Pistol", "Power Armour", "", "");
+	load_default_gear(eROLE.VeteranSergeant, "Veteran Sergeant", "Chainsword", "Plasma Pistol", "Power Armour", "", "");
 
 
 	for(var c = 0; c < array_length(obj_creation.all_chapters); c++){
 		if(argument0 == obj_creation.all_chapters[c].name && obj_creation.all_chapters[c].json == true){
-			obj_creation.use_chapter_object = 1;
+			obj_creation.use_chapter_object = true;
 			chapter_id = obj_creation.all_chapters[c].id;
 		}
 	}
 
-	if (argument0=="Dark Angels" || argument0 == CHAPTERS.DARK_ANGELS){
-		obj_creation.use_chapter_object = 1;
-		chapter_id = CHAPTERS.DARK_ANGELS;
-
-		#region old data
-		// founding="N/A";points=150;
-	    // selected_chapter=1;chapter=argument0;icon=1;icon_name="da";founding=0;fleet_type=1;strength=10;purity=8;stability=10;cooperation=5;
-	    // homeworld="Dead";homeworld_name="The Rock";recruiting="Death";recruiting_name="Kimmeria";
-	    // homeworld_exists=1;recruiting_exists=1;homeworld_rule=3;aspirant_trial=eTrials.SURVIVAL;
-	    // adv[1]="Enemy: Fallen";dis[1]="Never Forgive";
-	    // // Pauldron2: Left, Pauldron: Right
-	    // color_to_main="Caliban Green";color_to_secondary="Caliban Green";color_to_trim="Grey";
-	    // color_to_pauldron="Caliban Green";color_to_pauldron2="Caliban Green";color_to_lens="Red";
-	    // color_to_weapon="Dark Red";col_special=0;trim=0;
-
-	    // hchaplain="Sapphon";clibrarian="Ezekial";fmaster="Sepharon";hapothecary="Razaek";
-		// honorcapt="Belial";watchmaster="Sammael";arsenalmaster="Astoran";admiral="Korahael";marchmaster="Balthazar";
-		// ritesmaster="Araphil";victualler="Ezekiah";lordexec="Molochi";relmaster="Xerophus";recruiter="Ranaeus";
-	    // battle_cry="Repent!  For tomorow you may die";
-	    // equal_specialists=0;load_to_ships=[2,0,0];successors=9;
-	    // mutations=0;mutations_selected=0;
-	    // preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    // zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    // // disposition[1]=0;// Prog
-	    // disposition[2]=65;disposition[3]=60;disposition[4]=60;disposition[5]=60;
-	    // disposition[6]=50;// Astartes
-	    // disposition[7]=0;// Reserved
-	    // chapter_master_name="Azreal";chapter_master_specialty=2;
-	    // chapter_master_melee=5;chapter_master_ranged=4;
-		
-	    // company_title[1]="Deathwing";
-	    // company_title[2]="Ravenwing";
-	    // company_title[3]="The Unmerciful";
-		// company_title[4]="The Feared";
-		// company_title[5]="The Unrelenting";
-		// company_title[6]="The Resolute";
-		// company_title[7]="The Unbowed";
-		// company_title[8]="The Wrathful";
-		// company_title[9]="The Remorseless";
-		// company_title[10]="The Redeemed";
-		
-		// for(i=100;i<=102;i++){
-		// // role[i,1]="Supreme Grand Master";
-		// role[i,5]="Master";
-		// wep1[i,5]="Power Sword";
-		// role[i,2]="Deathwing Knight"
-	
-		// }
-		#endregion
-
-
-	}
-		if (argument0=="White Scars" || argument0 == CHAPTERS.WHITE_SCARS){
-
-		obj_creation.use_chapter_object = 0;
-		chapter_id = CHAPTERS.WHITE_SCARS;
-		#region data
-		points=150;
-		    selected_chapter=2;chapter=argument0;icon=2;icon_name="ws";founding=0;fleet_type=1;strength=5;purity=10;stability=8;cooperation=5;
-		    homeworld="Feudal";homeworld_name="Chogoris";
-		    homeworld_exists=1;recruiting_exists=0;homeworld_rule=3;aspirant_trial=eTrials.SURVIVAL;discipline="rune Magick";
-			adv[1]="Lightning Warriors";adv[2]="Brothers, All";adv[3]="Assault Doctrine";dis[1]="Splintered";
-		    // Pauldron2: Left, Pauldron: Right
-		    color_to_main="White";color_to_secondary="White";color_to_trim="Red";
-		    color_to_pauldron="White";color_to_pauldron2="White";color_to_lens="Red";
-		    color_to_weapon="Black";col_special=0;
-		    hapothecary="Ogholei";hchaplain="Jaghorin";clibrarian="Saghai";fmaster="Khamkar";
-			honorcapt="Jurga";watchmaster="Khajog";arsenalmaster="Kor'sarro";admiral="Joghaten";
-			marchmaster="Suboden";ritesmaster="Seglei";victualler="Dorghai";lordexec="Vorgha";relmaster="Khadajei";
-			recruiter="Jodagha";
-		    battle_cry="For the Emperor and the Khan!";// monastery_name="Quan Zhou";master_name=
-		    equal_specialists=0;load_to_ships=[2,0,0];successors=12;
-		    mutations=0;mutations_selected=0;
-		    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-		    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-		    // disposition[1]=0;// Prog
-		    disposition[2]=50;disposition[3]=50;disposition[4]=50;disposition[5]=50;
-		    disposition[6]=65;// Astartes
-		    disposition[7]=0;// Reserved
-		    chapter_master_name="Jubal Khan";chapter_master_melee=5;
-		    chapter_master_ranged=3;chapter_master_specialty=1;
-		    company_title[1]="The Spearpoint Brotherhood";company_title[2]="The Firefist Brotherhood";company_title[3]="The Eagle Brotherhood";
-		    company_title[4]="The Tulwar Brotherhood";company_title[5]="The Stormwrath Brotherhood";company_title[6]="The Hawkeye Brotherhood";
-			company_title[7]="The Plainstalker Brotherhood";company_title[8]="The Bloodrider Brotherhood";company_title[9]="The Stormbolt Brotherhood";
-			company_title[10]="The Windspeaker Brotherhood";
-			
-			i=99;repeat(3){i+=1;
-			role[i,2]="Keshig";wep1[i,2]="Power Sword";wep2[i,2]="Bolter";armour[i,2]="Terminator Armour";
-			role[i,5]="Khan";wep1[i,5]="Power Sword"
-			role[i,15]="Emchi";
-			role[i,17]="Stormseer";
-			
-			}
-		#endregion
-	}
-
-	if(obj_creation.use_chapter_object == 1){
+	if(obj_creation.use_chapter_object){
 
 		var chapter_obj = new ChapterData();
 		var successfully_loaded = chapter_obj.load_from_json(chapter_id);
 		if(!successfully_loaded){
 			var issue = $"No json file exists for chapter id {chapter_id} and name {argument0}";
-			debugl (issue);
+			// debugl (issue);
 			scr_popup("Error Loading Chapter", issue, "debug");
 			return false;
 		}
@@ -343,512 +260,9 @@ function scr_chapter_new(argument0) {
 
 	}
 
-
-	#region V1 Chapter Initialised factions
-
-	if (argument0="Ultramarines"){points=150;
-	    selected_chapter=7;chapter=argument0;icon=7;icon_name="um";founding=0;fleet_type=1;strength=5;purity=10;stability=10;cooperation=10;
-	    homeworld="Temperate";homeworld_name="Macragge";recruiting="Death";recruiting_name="Parmenio";
-	    homeworld_exists=1;recruiting_exists=1;homeworld_rule=3;aspirant_trial=eTrials.EXPOSURE;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Dark Ultramarine";color_to_secondary="Dark Ultramarine";color_to_trim="Gold";
-	    color_to_pauldron="Dark Ultramarine";color_to_pauldron2="Dark Ultramarine";color_to_lens="Red";
-	    color_to_weapon="Red";col_special=0;
-	    hapothecary="Corpus Helix";hchaplain="Ortan Cassius";clibrarian="Varro Tigurius";fmaster="Fennias Maxim";
-		honorcapt="Severus Agemman";watchmaster="Cato Sicarius";arsenalmaster="Mikael Fabian";admiral="Uriel Ventris";
-		marchmaster="Caito Galenus";ritesmaster="Maximus Epathus";victualler="Gerad Ixion";lordexec="Numitor";relmaster="Sinon";
-		recruiter="Antilochus";
-	    battle_cry="Courage and honor";// monastery_name="Fortress of Hera";master_name=
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=27;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    // disposition[1]=0;// Prog
-	    disposition[2]=80;disposition[3]=65;disposition[4]=65;disposition[5]=65;
-	    disposition[6]=65;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Marneus Calgar";chapter_master_melee=1;
-	    chapter_master_ranged=1;chapter_master_specialty=1;
-	    company_title[1]="Warriors of Ultramar"; company_title[2]="Guardians of the Temple"; company_title[3]="Scourge of the Xenos";
-	    company_title[4]="Defenders of Ultramar"; company_title[5]="Wardens of the Eastern Fringe"; company_title[6]="Brethren of the Forge";
-		company_title[7]="Defenders of Caeserean"; company_title[8]="Honourblades"; company_title[9]="Stormbringers";
-		company_title[10]="The Scions of Ultramar";
-
-	}
-	//Waiting on new disadv to give anymore adv.
-  if (argument0="Imperial Fists"){points=150;
-		selected_chapter=4;chapter=argument0;icon=4;icon_name="if";founding=0;fleet_type=1;strength=6;purity=7;stability=10;cooperation=8;
-		adv[1]="Bolter Drilling";adv[2]="Siege Masters";
-		homeworld="Ice";homeworld_name="Inwit";recruiting="Hive";recruiting_name="Necromunda";
-		homeworld_exists=1;recruiting_exists=1;homeworld_rule=2;aspirant_trial=eTrials.SURVIVAL;discipline="telekinesis";
-
-		color_to_main="Gold";color_to_secondary="Gold";color_to_trim="Red";color_to_pauldron="Gold"
-		color_to_pauldron2="Gold";color_to_lens="Red";color_to_weapon="Black"
-		hapothecary="Dyserna";hchaplain="Guaron";clibrarian="Vidos Harn";fmaster="Atornus Geis";
-		admiral="Kyne Phasn";honorcapt="Darnath Lysander";watchmaster="Helion";arsenalmaster="Tor Garadon";;marchmaster="Maluan";
-		ritesmaster="Antaros";victualler="Jonas";lordexec="Chalosa";relmaster="Kaheron";recruiter="Taelos";
-
-		battle_cry="Primarch-Progenitor, to your glory and the glory of him on earth!";
-	        equal_specialists=0;load_to_ships=[2,0,0];
-			successors=21;
-	        mutations=2;mutations_selected=2;
-	        preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=1;
-	        zygote=0;betchers=1;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	        // disposition[1]=0;// Prog
-	        disposition[2]=75;disposition[3]=60;disposition[4]=50;disposition[5]=60;
-	        disposition[6]=60;// Astartes
-	        disposition[7]=0;// Reserved
-	        chapter_master_name="Vorn Hagen";chapter_master_melee=4;
-	        chapter_master_ranged=7;chapter_master_specialty=1;
-
-	        company_title[1]="The Fists of Dorn";company_title[2]="The Scions of Redemption";company_title[3]="The Sentinels of Terra";
-	        company_title[4]="The Reductors";company_title[5]="The Heralds of Truth";company_title[6]="The Siege Hammers";
-	        company_title[7]="Guardians of Phalanx";company_title[8]="Dorn's Huscarls";company_title[9]="The Wardens";
-	        company_title[10]="The Eyes of Dorn";
-
-	    i=99;repeat(3){
-	    	i+=1;
-	        role[i,2]="Huscarl";wep1[i,2]="Power Sword";wep2[i,2]="Storm Shield";armour[i,2]="Power Armour";
-		}
-	}
-
-
-	if (argument0="Space Wolves"){points=150;
-	    selected_chapter=3;chapter=argument0;icon=3;icon_name="sw";founding=0;fleet_type=1;strength=10;purity=8;stability=5;cooperation=4;
-	    adv[1]="Assault Doctrine";dis[1]="Black Rage";dis[2]="Suspicious";
-	    homeworld="Ice";homeworld_name="Fenris";
-	    homeworld_exists=1;recruiting_exists=0;homeworld_rule=2;aspirant_trial=eTrials.EXPOSURE;discipline="rune Magick";
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Fenrisian Grey";color_to_secondary="Fenrisian Grey";color_to_trim="Dark Gold";
-	    color_to_pauldron="Dark Gold";color_to_pauldron2="Dark Gold";color_to_lens="Red";
-	    color_to_weapon="Dark Gold";col_special=0;trim=0;
-	    hapothecary="Ulstvan Morkaison";hchaplain="Ulrik the Slayer";clibrarian="Njal Stormcaller";fmaster="Krom Dragongaze";
-		honorcapt="Bran Redmaw";watchmaster="Engir Krakendoom";arsenalmaster="Erik Morkai";admiral="Gunnar Red Moon";marchmaster="Harald Deathwolf";
-		ritesmaster="Bjorn Stormwolf";victualler="Vorek Gnarlfist";lordexec="Krom Dragongaze";relmaster="Ragnar Blackmane";recruiter="Sven Bloodhowl";
-	    battle_cry="For Russ and the Allfather";// monastery_name="The Fang";master_name=
-	    equal_specialists=1;load_to_ships=[2,0,0];successors=1;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    // disposition[1]=0;// Prog
-	    disposition[2]=50;disposition[3]=40;disposition[4]=15;disposition[5]=15;
-	    disposition[6]=40;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Logan Grimnar";chapter_master_melee=6;
-	    chapter_master_ranged=1;chapter_master_specialty=2;
-		
-		//Weird since they have 13 companies if the hard coding changes in the future this will as well
-	    /*company_title[0]="Champions of Fenris";*/company_title[1]="The Bloodmaws";company_title[2]="The Seawolves";
-	    company_title[3]="The Sons of Morkai";company_title[4]="The Red Moons";company_title[5]="The Deathwolves";
-	    company_title[6]="The Stormwolves";company_title[7]="The Ironwolves";company_title[8]="The Drakeslayers";
-	    company_title[9]="The Blackmanes";/*company_title[10]="The Firehowlers";company_title[12]="The Grimbloods";
-	    company_title[13]="The Wulfen";*/
-    
-	    i=99;repeat(3){i+=1;
-	        role[i,2]="Wolf Guard";wep1[i,2]="Power Axe";wep2[i,2]="Bolter";armour[i,2]="Power Armour";
-	        role[i,3]="Veteran";wep1[i,3]="Chainaxe";
-	        role[i,5]="Wolf Lord";role[i,8]="Grey Hunter";role[i,9]="Long Fang";
-	        role[i,10]="Blood Claw";wep1[i,10]="Chainaxe";
-	        role[i,12]="Wolf Scout";wep1[i,12]="Sniper Rifle";wep2[i,12]="Chainaxe";
-	        race[i,14]=0;role[i,14]="Wolf Priest";wep1[i,14]="Power Axe";
-	        role[i,15]="Wolf Priest";wep1[i,15]="Power Axe";
-	        role[i,16]="Iron Priest";wep1[i,16]="Power Axe";
-	        role[i,17]="Rune Priest";wep1[i,17]="Force Staff";
-			role[i,18]="Pack Leader";wep1[i,18]="Chainaxe";
-			role[i,19]="Wolf Guard Pack Leader";wep1[i,19]="Chainaxe";
-	    }
-	}
-
-
-
-
-	if (argument0="Blood Angels"){points=150;
-	    selected_chapter=5;chapter=argument0;icon=5;icon_name="ba";founding=0;fleet_type=1;strength=5;purity=9;stability=9;cooperation=7;
-	    adv[1]="Assault Doctrine";dis[1]="Black Rage";
-	    homeworld="Desert";homeworld_name="Baal";
-	    homeworld_exists=1;recruiting_exists=0;homeworld_rule=3;aspirant_trial=eTrials.BLOODDUEL;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Sanguine Red";color_to_secondary="Sanguine Red";color_to_trim="Lighter Black";
-	    color_to_pauldron="Sanguine Red";color_to_pauldron2="Sanguine Red";color_to_lens="Lime";
-	    color_to_weapon="Black";col_special=0;trim=0;
-	    hchaplain="Astorath the Grim";clibrarian="Mephiston";fmaster="Incarael";hapothecary="Corbulo";
-		honorcapt="Areno Karlaen";watchmaster="Donatos Aphael";arsenalmaster="Machiavi";admiral="Castigon";marchmaster="Sendini";
-		ritesmaster="Raxiatel";victualler="Phaeton";lordexec="Zedrenael";relmaster="Sendroth";recruiter="Borgio";
-	    battle_cry="For the Emperor and Sanguinius! Death! DEATH";// monastery_name="Fortress of Hera";master_name=
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=3;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    // disposition[1]=0;// Prog
-	    disposition[2]=75;disposition[3]=60;disposition[4]=50;disposition[5]=60;
-	    disposition[6]=60;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Dante";chapter_master_melee=6;
-	    chapter_master_ranged=2;chapter_master_specialty=2;
-	    company_title[1]="Archangels";company_title[2]="The Blooded";company_title[3]="Ironhelms";
-	    company_title[4]="Knights of Baal";company_title[5]="Daemonbanes";company_title[6]="Eternals";
-	    company_title[7]="Unconquerables";company_title[8]="Bloodbanes";company_title[9]="Sunderers";
-	    company_title[10]="Redeemers";
-    
-	    i=99;repeat(3){i+=1;
-	        role[i,2]="Sanguinary Guard";wep1[i,2]="Power Axe";wep2[i,2]="Bolt Pistol";mobi[i,2]="Jump Pack";
-	        role[i,15]="Sanguinary Priest";wep1[i,15]="Power Axe";
-	    }
-	}
-
-
-	if (argument0="Iron Hands"){points=150;
-	    selected_chapter=6;chapter=argument0;icon=6;icon_name="ih";founding=0;fleet_type=1;strength=5;purity=8;stability=8;cooperation=2;
-	    adv[1]="Tech-Brothers";adv[2]="Devastator Doctrine";dis[1]="Splintered";dis[2]="Suspicious";
-	    homeworld="Lava";homeworld_name="Medusa";homeworld_exists=1;recruiting_exists=0;
-	    homeworld_rule=3;aspirant_trial=eTrials.KNOWLEDGE;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Black";color_to_secondary="Black";color_to_trim="Silver";
-	    color_to_pauldron="Black";color_to_pauldron2="Black";color_to_lens="Dark Red";
-	    color_to_weapon="Silver";col_special=0;trim=0;
-	    hchaplain="Jorggir Shidd";clibrarian="Lydriik";fmaster="Feirros";hapothecary="Anaar Telech";
-		honorcapt="Caanok Var";watchmaster="Eutuun Hes";arsenalmaster="Sind Grolvoch";admiral="Maarkul Rumann";marchmaster="Tyrrod";
-		ritesmaster="Golloth";victualler="Raan";lordexec="Doroor Hesh";relmaster="Verrox";recruiter="Telavech";
-	    battle_cry="The flesh is weak";// monastery_name="Fortress of Hera";master_name=
-	    equal_specialists=1;load_to_ships=[2,0,0];successors=6;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    // disposition[1]=0;// Prog
-	    disposition[2]=30;disposition[3]=80;disposition[4]=35;disposition[5]=30;
-	    disposition[6]=50;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Kardan Stronos";chapter_master_melee=4;
-	    chapter_master_ranged=3;chapter_master_specialty=2;
-    
-	    company_title[1]="Clan Avernii";company_title[2]="Clan Garrsak";company_title[3]="Clan Raukaan";
-	    company_title[4]="Clan Kaargul";company_title[5]="Clan Haarmek";company_title[6]="Clan Sorrgol";
-	    company_title[7]="Clan Borrgos";company_title[8]="Clan Morlaag";company_title[9]="Clan Vurgaan";
-	    company_title[10]="Clan Dorrvok";
-    
-	   for(i=100;i<=102;i++){
-	        race[i,14]=0;role[i,14]="Iron Father";role[i,16]="Iron Father";
-			role[i,5]="Iron Captain";wep1[i,5]="Power Axe";
-	    }
-	}
-
-
-
-	if (argument0="Salamanders"){points=150;
-	    selected_chapter=8;chapter=argument0;icon=8;icon_name="sl";founding=0;fleet_type=1;strength=2;purity=8;stability=8;cooperation=10;
-	    adv[1]="Crafters";adv[2]="Devastator Doctrine";
-	    homeworld="Lava";homeworld_name="Nocturne";homeworld_exists=1;recruiting_exists=0;
-	    homeworld_rule=1;aspirant_trial=eTrials.APPRENTICESHIP;discipline="pyromancy";
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Firedrake Green";color_to_secondary="Firedrake Green";color_to_trim="Dark Gold";
-	    color_to_pauldron="Black";color_to_pauldron2="Black";color_to_lens="Red";
-	    color_to_weapon="Black";col_special=0;trim=0;
-	    fmaster="Argos";clibrarian="Velcona";hapothecary="Harath Shen";hchaplain="Leotrak Esar";
-		watchmaster="Pellas Mir'San";arsenalmaster="Adrax Agatone" admiral="Dac'tyr";
-		marchmaster="Mulcebor";ritesmaster="Ur'zan Draakgard";recruiter="Sol Ba'ken";
-	    battle_cry="Into the fires of battle!  Unto the anvil of war";// monastery_name="Fortress of Hera";master_name=
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=2;
-	    mutations=1;mutations_selected=1;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=1;occulobe=0;mucranoid=0;
-	    // disposition[1]=0;// Prog
-	    disposition[2]=80;disposition[3]=65;disposition[4]=65;disposition[5]=60;
-	    disposition[6]=60;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Tu'Shan";chapter_master_melee=4;
-	    chapter_master_ranged=2;chapter_master_specialty=2;
-		
-	    company_title[1]="The Firedrakes";company_title[2]="Defenders of Nocturne";company_title[3]="The Pyroclasts";
-		company_title[4]="The Branded";company_title[5]="The Drake Hunters";company_title[6]="The Flamehammers";
-		company_title[10]="Sons of Nocturne";
-	
-		    for(i=100;i<=102;i++){
-	        role[i,3]="Firedrake";wep1[i,3]="Power Sword";
-			role[i,19]="Firedrake Master";wep1[i,3]="Power Sword";
-			}
-	}
-
-
-	if (argument0="Raven Guard"){points=150;
-		selected_chapter=9;chapter=argument0;icon=9;icon_name="rg";founding=0;fleet_type=1;strength=5;purity=8;stability=4;cooperation=5;
-	    adv[1]="Ambushers";adv[2]="Assault Doctrine";dis[1]="Splintered";
-	    homeworld="Dead";homeworld_name="Deliverance";homeworld_exists=1;recruiting_exists=1;
-	    homeworld_rule=1;aspirant_trial=eTrials.EXPOSURE;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Black";color_to_secondary="Black";color_to_trim="Silver";
-	    color_to_pauldron="Black";color_to_pauldron2="Black";color_to_lens="Dark Red";
-	    color_to_weapon="Black";col_special=0;trim=0;
-	    hchaplain="Jolaran Tael";fmaster="Saar Laeron";clibrarian="Taalis Shraek";hapothecary="Vynda Aason"
-	    honorcapt="Vykar Kaed";watchmaster="Aaja Solari";arsenalmaster="Vordin Krayn";admiral="Aethon Shaan";marchmaster="Kyrin Solaq";
-		ritesmaster="Syras Colfaen";victualler="Aervar Qeld";lordexec="Reszasz Krevaan";relmaster="Vos Delorn";recruiter="Kalae Korvydae";
-	    battle_cry="Victorus aut Mortis";// monastery_name="Fortress of Hera";master_name=
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=8;
-	    mutations=2;mutations_selected=2;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=1;catalepsean=0;secretions=0;occulobe=0;mucranoid=1;
-	    // disposition[1]=0;// Prog
-	    disposition[2]=80;disposition[3]=50;disposition[4]=50;disposition[5]=50;
-	    disposition[6]=60;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Kayvaan Shrike";chapter_master_melee=2;
-	    chapter_master_ranged=1;chapter_master_specialty=1;
-		
-	    company_title[1]="The Blackwings";company_title[2]="The Shadowborne";company_title[3]="The Ghoststalkers";
-		company_title[4]="The Silent";company_title[5]="The Watchful";company_title[6]="The Darkened Blades";
-		company_title[7]="The Whisperclaws";company_title[8]="The Unseen";company_title[9]="The Dirgesingers";company_title[10]="The Subtle";
-		for(i=100;i<=102;i++){
-		role[i,5]="Shadow Captain";wep1[i,5]="Lightning Claw";
-		role[i,2]="Shadow Warden";mobi[i,2]="Jump Pack";
-		}
-	}
-	
-		if (argument0="Black Templars"){founding=4;points=200;
-	    selected_chapter=10;chapter=argument0;icon=10;icon_name="bt";founding=4;
-	    fleet_type=3;strength=5;purity=7;stability=10;cooperation=5;
-	    adv[1]="Assault Doctrine";adv[2]="Kings of Space";adv[3]="Reverent Guardians";adv[4]="Brothers, All";dis[1]="Psyker Intolerant";dis[2]="Suspicious";
-	    homeworld_exists=0;recruiting_exists=1;
-	    recruiting_name=global.name_generator.generate_star_name();
-		aspirant_trial=eTrials.APPRENTICESHIP;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Black";color_to_secondary="Black";color_to_trim="Silver";
-	    color_to_pauldron2="White";color_to_pauldron="White";color_to_lens="Dark Red";
-	    color_to_weapon="Black";col_special=0;trim=0;
-	    battle_cry="No Pity! No Remorse! No Fear";
-	    equal_specialists=1;load_to_ships=[2,0,0];successors=0;
-	    mutations=2;mutations_selected=2;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=1;
-	    zygote=0;betchers=1;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-		hchaplain="Grimaldus"; fmaster="Jurisian"; recruiter="Emrik";
-		admiral="Stenheir";hapothecary="Colber";
-	   disposition[1]=50;// Prog
-	    disposition[2]=60;//Imperium
-		disposition[3]=40;//Admech
-		disposition[4]=30;//Inquisition
-		disposition[5]=80;//Ecclesiarchy
-	    disposition[6]=35;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Helbrecht";chapter_master_melee=5;
-	    chapter_master_ranged=2;chapter_master_specialty=2;
-		role[i,5]="Marshall";wep1[i,5]="Power Sword";
-		role[i,3]="Sword Brother";
-	}
-	
-if (argument0="Minotaurs"){founding=10;points=450;
-	    selected_chapter=11;chapter=argument0;icon=11;icon_name="min";founding=10;
-	    fleet_type=2;strength=5;purity=10;stability=10;cooperation=2;
-	    adv[1]="Paragon";adv[2]="Siege Masters";adv[3]="Boarders";adv[4]="Enemy: Fallen";dis[1]="Suspicious";
-	    homeworld_exists=0;recruiting_exists=1;
-	    recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
-	    homeworld_rule=0;aspirant_trial=eTrials.CHALLENGE;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Lightest Brown";color_to_secondary="Lightest Brown";color_to_trim="Light Brown";
-	    color_to_pauldron2="Dark Red";color_to_pauldron="Dark Red";color_to_lens="Red";
-	    color_to_weapon="Dark Red";col_special=0;trim=1;
-		hchaplain="Ivanus Enkomi"; 
-		fmaster="Varro Crag";clibrarian="Lykos Gorgon";hapothecary="Raze Korthos"
-	    recruiter="Axion Eurytos";admiral="Thoul Brontes";
-	    battle_cry="...";
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=0;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    disposition[1]=0;// Prog
-	    disposition[2]=100;//Imperium
-		disposition[3]=50;//Admech
-		disposition[4]=60;//Inquisition
-		disposition[5]=25;//Ecclesiarchy
-	    disposition[6]=30;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Asterion Moloc";chapter_master_melee=5;
-	    chapter_master_ranged=7;chapter_master_specialty=2;
-	}
-
-	
-	
-	if (argument0="Blood Ravens"){
-		founding=10;points=100;
-	    selected_chapter=12;chapter=argument0;icon=12;icon_name="br";
-	    fleet_type=2;strength=5;purity=10;stability=6;cooperation=7;
-	    adv[1]="Tech-Scavengers";adv[2]="Psyker Abundance";dis[1]="Suspicious";
-	    hapothecary="Galan";hchaplain="Mikelus";clibrarian="Jonah Orion";fmaster="Martellus";
-		honorcapt="Apollo Diomedes";watchmaster="Yriel Rikarius";marchmaster="Aramus";
-		ritesmaster="Tarkus";victualler="Atanaxis";lordexec="Thaddeus";relmaster="Avitus";recruiter="Cyrus";
-	    homeworld="Dead";homeworld_name="Aurelia";flagship_name="Omnis Arcanum";
-	    homeworld_exists=0;recruiting_exists=1;
-	    recruiting="Death";recruiting_name="Trontiux";
-	    homeworld_rule=0;aspirant_trial=eTrials.KNOWLEDGE;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Sanguine Red";color_to_secondary="Sanguine Red";color_to_trim="Lighter Black";
-	    color_to_pauldron2="Bone";color_to_pauldron="Bone";color_to_lens="Lime";
-	    color_to_weapon="Black";col_special=0;trim=1;
-	    battle_cry=choose("None shall find us wanting.","Knowledge is power, guard it well");
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=0;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    disposition[1]=50;// Prog
-	    disposition[2]=40;disposition[3]=30;disposition[4]=45;disposition[5]=25;
-	    disposition[6]=35;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Gabriel Angelos";chapter_master_melee=4;
-	    chapter_master_ranged=3;chapter_master_specialty=1;
-	}
-
-if (argument0="Crimson Fists"){founding=4;points=150;
-		selected_chapter=13;chapter=argument0;icon=4;icon_name="cf";fleet_type=1;strength=2;purity=7;stability=10;cooperation=8;
-		adv[1]="Bolter Drilling";adv[2]="Enemy: Orks";dis[1]="Sieged";
-		homeworld="Agri";homeworld_name="Rynn's World";
-		homeworld_exists=1;recruiting_exists=0;homeworld_rule=1;aspirant_trial=eTrials.CHALLENGE
-		color_to_main="Blue";color_to_secondary="Blue";color_to_trim="White";color_to_pauldron="Blue"
-		color_to_pauldron2="Blue";color_to_lens="Red";color_to_weapon="Black"
-		hapothecary="Curien Droga";hchaplain="Marqol Tomasi";clibrarian="Eustace Mendoza";fmaster="Javier Adon";
-		honorcapt="Alessio Cortez";watchmaster="Steffan Hios";arsenalmaster="Faradis Anto";admiral="Isidore Haleous";
-		marchmaster="Balthazar";recruiter="Ishmael Icario"
-		battle_cry="There is only the Emperor!  He is our shield and our protector!";
-	        equal_specialists=0;load_to_ships=[2,0,0];successors=0;
-	        mutations=2;mutations_selected=2;
-	        preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=1;
-	        zygote=0;betchers=1;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	        disposition[1]=60;// Prog
-	        disposition[2]=80;disposition[3]=50;disposition[4]=50;disposition[5]=50;
-	        disposition[6]=60;// Astartes
-	        disposition[7]=0;// Reserved
-	        chapter_master_name="Pedro Kantor";chapter_master_melee=1;
-	        chapter_master_ranged=1;chapter_master_specialty=1;
-
-	        company_title[1]="The Righteous Crusaders";company_title[2]="The Shieldwall";company_title[3]="The Red Lightning";
-	        company_title[4]="The Crimson Lancers";company_title[5]="The War Riders";company_title[6]="Iron Guardians";
-	        company_title[7]="The Wardens of Rynn";company_title[8]="The Red Path";company_title[9]="The Fists of Rynn";
-	        company_title[10]="The Wayfinders";
-
-}
-if (argument0="Lamenters"){founding=5;points=150;
-	    selected_chapter=14;chapter=argument0;icon=14;icon_name="cd";
-	    fleet_type=3;strength=5;purity=8;stability=4;cooperation=5;
-	    adv[1]="Assault Doctrine";adv[2]="Boarders";dis[1]="Suspicious";
-	    homeworld="Dead";homeworld_name="Lacrima Vex";
-	    homeworld_exists=0;recruiting_exists=1;
-	    recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
-	    homeworld_rule=0;aspirant_trial=eTrials.CHALLENGE;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Yellow";color_to_secondary="Yellow";color_to_trim="Dark Gold";
-	    color_to_pauldron2="Yellow";color_to_pauldron="Yellow";color_to_lens="Red";
-	    color_to_weapon="Black";col_special=0;trim=0;
-	    battle_cry="For those we cherish, we die in Glory";
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=0;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    disposition[1]=60;// Prog
-	    disposition[2]=15;disposition[3]=20;disposition[4]=10;disposition[5]=25;
-	    disposition[6]=50;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Malakim Phoros";chapter_master_melee=3;
-	    chapter_master_ranged=2;chapter_master_specialty=2;
-	}
-	
-	if (argument0="Carcharodons"){founding=9;points=100;
-	    selected_chapter=15;chapter=argument0;icon=15;icon_name="cd";
-	    fleet_type=2;strength=5;purity=8;stability=4;cooperation=5;
-	    adv[1]="Assault Doctrine";adv[2]="Boarders";adv[3]="Kings of Space";dis[1]="Splintered";dis[2]="Suspicious";
-	    homeworld_exists=0;recruiting_exists=0;flagship_name="Nicor";
-	    recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
-	    homeworld_rule=0;aspirant_trial=eTrials.CHALLENGE;
-	    color_to_main="Codex Grey";color_to_secondary="Codex Grey";color_to_trim="Copper";
-	    color_to_pauldron2="Dark Grey";color_to_pauldron="Dark Grey";color_to_lens="Red";
-	    color_to_weapon="Black";col_special=0;trim=1;
-		hapothecary="Tamaron";hchaplain="Niko'manu";clibrarian="Te Kahurangi";fmaster="Uthulu";
-		honorcapt="Tagaloa";watchmaster="Akamu";arsenalmaster="Akia";admiral="Mannfor";marchmaster="Fa'atiu";
-		ritesmaster="Mafui'e";victualler="Aleki";lordexec="Atonga";relmaster="Enele";recruiter="Bail Sharr"
-	    battle_cry="Silence";
-	    equal_specialists=0;load_to_ships=[2,1,1];successors=0;
-	    mutations=1;mutations_selected=1;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=1;
-	    disposition[1]=30;// Prog
-	    disposition[2]=40;disposition[3]=40;disposition[4]=40;disposition[5]=30;
-	    disposition[6]=30;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Tyberos";chapter_master_melee=2;
-	    chapter_master_ranged=1;chapter_master_specialty=2;
-		role[i,4]="Red Brother";
-		role[i,5]="Company Master";wep1[i,5]="Eviscerator";
-		role[i,19]="Veteran Strike Leader";wep1[i,19]="Power Axe";
-		role[i,18]="Strike Leader";wep1[i,18]="Chainaxe";
-		role[i,8]="Void Brother";wep2[i,8]="Chainaxe";
-		role[i,10]="Devourer";wep1[i,10]="Chainaxe";
-		
-	}
-	
-	if (argument0="Soul Drinkers"){points=200;
-	    selected_chapter=16;chapter=argument0;icon=14;icon_name="sd";founding= 4;
-	    fleet_type=2;strength=2;purity=10;stability=2;cooperation=2;
-	    adv[1]="Assault Doctrine";adv[2]="Kings of Space";adv[3]="Boarders";adv[4]="Daemon Binders";dis[1]="Suspicious";
-	    homeworld="Dead";homeworld_name="Entymion";
-	    homeworld_exists=0;recruiting_exists=1;
-	    recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
-	    homeworld_rule=0;aspirant_trial=eTrials.CHALLENGE;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Purple";color_to_secondary="Purple";color_to_trim="Dark Gold";
-	    color_to_pauldron2="Purple";color_to_pauldron="Purple";color_to_lens="Red";
-	    color_to_weapon="Purple";col_special=0;trim=1;
-	    battle_cry="Cold and Hard, Soul Drinkers";
-	    equal_specialists=0;load_to_ships=[2,0,0];successors=0;
-	    mutations=1;mutations_selected=1;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=1;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    disposition[1]=60;// Prog
-	    disposition[2]=15;disposition[3]=20;disposition[4]=10;disposition[5]=25;
-	    disposition[6]=50;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Sarpedon";chapter_master_melee=8;
-	    chapter_master_ranged=3;chapter_master_specialty=3;
-	}
-
-
-	if (argument0="Doom Benefactors"){points=100;
-	    selected_chapter=135;chapter=argument0;icon=0;icon_name="eye";founding=0;scr_icon("");
-	    fleet_type=1;strength=1;purity=10;stability=7;cooperation=8;
-	    homeworld="Forge";homeworld_name="Ariana Prime";recruiting="Death";recruiting_name=global.name_generator.generate_star_name();
-	    homeworld_exists=1;recruiting_exists=1;homeworld_rule=2;aspirant_trial=eTrials.APPRENTICESHIP;
-	    // Pauldron2: Left, Pauldron: Right
-	    color_to_main="Dark Red";color_to_secondary="Black";color_to_trim="Copper";
-	    color_to_pauldron="Black";color_to_pauldron2="Black";color_to_lens="Sanguine Red";
-	    color_to_weapon="Black";col_special=0;trim=1;
-	    hapothecary="Vaylund";
-	    hchaplain="Eli";
-	    clibrarian="Dagoth";
-	    fmaster="Mjenzi";
-	    admiral=global.name_generator.generate_space_marine_name();
-	    battle_cry="Death to the enemy!  DEATH";// monastery_name="Fortress of Hera";master_name=
-	    equal_specialists=0;
-    
-	    load_to_ships=[2,0,0];
-	    // load_to_ships=0;
-    
-	    successors=0;
-	    mutations=0;mutations_selected=0;
-	    preomnor=0;voice=0;doomed=0;lyman=0;omophagea=0;ossmodula=0;membrane=0;
-	    zygote=0;betchers=0;catalepsean=0;secretions=0;occulobe=0;mucranoid=0;
-	    disposition[1]=60;// Prog
-	    disposition[2]=50;disposition[3]=40;disposition[4]=25;disposition[5]=40;
-	    disposition[6]=50;// Astartes
-	    disposition[7]=0;// Reserved
-	    chapter_master_name="Duke Sacerdos";chapter_master_melee=7;
-	    chapter_master_ranged=3;chapter_master_specialty=3;
-    
-	    adv[1]="Paragon";
-	    adv[2]="Reverent Guardians";
-	    adv[3]="Crafters";
-	    dis[1]="First In, Last Out";
-    
-	    stage=6;
-	}
-	#endregion
-
 	#region Custom Chapter
 	//generates custom chapter if it exists
-	if (is_real(argument0) && argument0 >= CHAPTERS.CUSTOM_1 && argument0 <= CHAPTERS.CUSTOM_10){
+	if (is_real(argument0) && argument0 >= eCHAPTERS.CUSTOM_1 && argument0 <= eCHAPTERS.CUSTOM_10){
 		obj_creation.use_chapter_object = true;
 		var chapter_obj = new ChapterData();
 		var successfully_loaded = chapter_obj.load_from_json(argument0, true);
@@ -865,9 +279,7 @@ if (argument0="Lamenters"){founding=5;points=150;
 
 
 	if(obj_creation.use_chapter_object){
-		
-		// todo this chunk can go at the bottom of the file after the if/elses once its all working 
-		
+				
 		var chapter_object = global.chapter_creation_object;
 		
 		// * All of this obj_creation setting is just to keep things working 
@@ -883,41 +295,103 @@ if (argument0="Lamenters"){founding=5;points=150;
 		obj_creation.purity = chapter_object.purity;
 		obj_creation.stability = chapter_object.stability;
 		obj_creation.cooperation = chapter_object.cooperation;
+		
 		obj_creation.homeworld_exists = chapter_object.homeworld_exists;
-		obj_creation.recruiting_exists = chapter_object.recruiting_exists;
+		obj_creation.homeworld = chapter_object.homeworld;
 		obj_creation.homeworld_rule = chapter_object.homeworld_rule;
+
+		obj_creation.recruiting_exists = chapter_object.recruiting_exists;
+		obj_creation.recruiting = chapter_object.recruiting;
+		obj_creation.recruiting_name = chapter_object.recruiting_name;
+
 		obj_creation.aspirant_trial = trial_map(chapter_object.aspirant_trial);
 		obj_creation.adv = chapter_object.advantages;
 		obj_creation.dis = chapter_object.disadvantages;
 
 		obj_creation.full_liveries = chapter_object.full_liveries;
+		obj_creation.complex_livery_data = chapter_object.complex_livery_data;
+		if (obj_creation.full_liveries!=""){
+			obj_creation.livery_picker.map_colour = full_liveries[0];
+			obj_creation.livery_picker.role_set = 0;   		
+		}
 
 		obj_creation.color_to_main = chapter_object.colors.main;
 		obj_creation.color_to_secondary = chapter_object.colors.secondary;
-		obj_creation.color_to_pauldron = chapter_object.colors.pauldron_r;
-		obj_creation.color_to_pauldron2 = chapter_object.colors.pauldron_l;
+		obj_creation.color_to_pauldron = chapter_object.colors.pauldron_l;
+		obj_creation.color_to_pauldron2 = chapter_object.colors.pauldron_r;
 		obj_creation.color_to_trim = chapter_object.colors.trim;
 		obj_creation.color_to_lens = chapter_object.colors.lens;
 		obj_creation.color_to_weapon = chapter_object.colors.weapon;
 		obj_creation.col_special = chapter_object.colors.special;
-		obj_creation.trim = chapter_object.colors.trim_on;
+		//obj_creation.trim = chapter_object.colors.trim_on;
+		with (obj_creation){
+			if (array_length(col)>0){
+			    if (color_to_main!=""){
+			        main_color = max(array_find_value(col,color_to_main),0);
+			        color_to_main = "";
+			    }
+			    if (color_to_secondary!=""){
+			        secondary_color = max(array_find_value(col,color_to_secondary),0);
+			        color_to_secondary = "";
+			    }
+			    if (color_to_trim!=""){
+			        main_trim = max(array_find_value(col,color_to_trim),0);
+			        color_to_trim = "";
+			    }
+			    if (color_to_pauldron2!=""){
+			        right_pauldron = max(array_find_value(col,color_to_pauldron2),0);
+			        color_to_pauldron2 = "";  
+			    }
+			    if (color_to_pauldron!=""){
+			        left_pauldron = max(array_find_value(col,color_to_pauldron),0);
+			        color_to_pauldron = "";
+			    }
+			    if (color_to_lens!=""){
+			        lens_color = max(array_find_value(col,color_to_lens),0);
+			        color_to_lens = ""; 
+			    }
+			    if (color_to_weapon!=""){
+			        weapon_color = max(array_find_value(col,color_to_weapon),0);
+			        color_to_weapon = "";
+			    }
+			}
+			if (obj_creation.full_liveries==""){
+			    var struct_cols = {
+			        main_color :main_color,
+			        secondary_color:secondary_color,
+			        main_trim:main_trim,
+			        right_pauldron:right_pauldron,
+			        left_pauldron:left_pauldron,
+			        lens_color:lens_color,
+			        weapon_color:weapon_color
+			    }
+			    obj_creation.livery_picker = new ColourItem(100,230);
+			    obj_creation.livery_picker.scr_unit_draw_data();
+			    obj_creation.livery_picker.set_defualt_armour(struct_cols,col_special);
+			    obj_creation.full_liveries = array_create(21,DeepCloneStruct(obj_creation.livery_picker.map_colour)); 			    
+			    obj_creation.full_liveries[eROLE.Librarian] = obj_creation.livery_picker.set_defualt_librarian(struct_cols);
 
-		obj_creation.hchaplain = chapter_object.names.hchaplain;
-		obj_creation.clibrarian = chapter_object.names.clibrarian;
-		obj_creation.fmaster = chapter_object.names.fmaster;
-		obj_creation.hapothecary = chapter_object.names.hapothecary;
-		obj_creation.honorcapt = chapter_object.names.honorcapt;
-		obj_creation.watchmaster = chapter_object.names.watchmaster;
-		obj_creation.arsenalmaster = chapter_object.names.arsenalmaster;
-		obj_creation.admiral = chapter_object.names.admiral;
-		obj_creation.marchmaster = chapter_object.names.marchmaster;
-		obj_creation.ritesmaster = chapter_object.names.ritesmaster;
-		obj_creation.victualler = chapter_object.names.victualler;
-		obj_creation.lordexec = chapter_object.names.lordexec;
-		obj_creation.relmaster = chapter_object.names.relmaster;
-		obj_creation.recruiter  = chapter_object.names.recruiter;
+			    obj_creation.full_liveries[eROLE.Chaplain] = obj_creation.livery_picker.set_defualt_chaplain(struct_cols);
+
+			    obj_creation.full_liveries[eROLE.Apothecary] = obj_creation.livery_picker.set_defualt_apothecary(struct_cols);
+
+			    obj_creation.full_liveries[eROLE.Techmarine] = obj_creation.livery_picker.set_defualt_techmarines(struct_cols);
+			    obj_creation.livery_picker.scr_unit_draw_data();
+			    obj_creation.livery_picker.set_defualt_armour(struct_cols,col_special); 			
+			}
+			obj_creation.livery_picker.map_colour = full_liveries[0];
+			obj_creation.livery_picker.role_set = 0;  			 			
+		}
+		// handles making sure blank names are generated properly and only 
+		// actual values being set in the json will overwrite them
+		struct_foreach(chapter_object.names, function(key, val){
+			if(val != ""){
+				struct_set(obj_creation, key, val);
+			}
+		});
 
 		obj_creation.battle_cry = chapter_object.battle_cry;
+		obj_creation.discipline = chapter_object.discipline;
 
 		var load = chapter_object.load_to_ships;
 		obj_creation.load_to_ships = [load.escort_load, load.split_scouts, load.split_vets];
@@ -934,8 +408,10 @@ if (argument0="Lamenters"){founding=5;points=150;
 		obj_creation.disposition = chapter_object.disposition;
 
 		obj_creation.chapter_master = chapter_object.chapter_master;
-		
-		obj_creation.chapter_master_name = chapter_object.chapter_master.name;
+
+		if(chapter_object.chapter_master.name != ""){
+			obj_creation.chapter_master_name = chapter_object.chapter_master.name;
+		}
 		obj_creation.chapter_master_melee = chapter_object.chapter_master.melee;
 		obj_creation.chapter_master_ranged = chapter_object.chapter_master.ranged;
 		obj_creation.chapter_master_specialty = chapter_object.chapter_master.specialty;
@@ -989,28 +465,25 @@ if (argument0="Lamenters"){founding=5;points=150;
 
 
 	maxpoints=points;
-	var livery_picker = new ColourItem(0,0);
-	livery_picker.scr_unit_draw_data();
-	full_liveries = array_create(21,DeepCloneStruct(livery_picker.map_colour));	
 	return true;
 }
 
 
-enum FLEET_TYPE {
+enum eFLEET_TYPES {
 	NONE = 0,
 	HOMEWORLD = 1,
 	FLEET_BASED,
 	PENITENCE,
 }
 
-enum HOMEWORLD_RULE {
+enum eHOMEWORLD_RULE {
 	NONE = 0,
 	GOVERNOR = 1,
 	COUNTRY,
 	PERSONAL,
 }
 
-enum CM_SPECIALTY {
+enum eCM_SPECIALTY {
 	NONE = 0,
 	LEADER = 1,
 	CHAMPION,
