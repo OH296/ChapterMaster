@@ -231,7 +231,7 @@ function apothecary_simple(){
 		 			if (array_length(p_feature[p])!=0){
 		 				var _planet_data = new PlanetData(p, self);
 			        	var engineer_count=array_length(cur_techs);
-						if (planet_feature_bool(p_feature[p],P_features.Starship)==1 && engineer_count>0 && turn_end){
+						if (_planet_data.has_feature(P_features.Starship) && engineer_count>0 && turn_end){
 							//TODO allow total tech point usage here
 			                var starship = p_feature[p][search_planet_features(p_feature[p],P_features.Starship)[0]];
 			                var engineer_score_start = starship.engineer_score;
@@ -270,31 +270,15 @@ function apothecary_simple(){
 			                    scr_popup($"Ancient Ship Restored",$"The ancient ship within the ruins of {locy} has been fully repaired.  It is determined to be a Slaughtersong vessel and is bristling with golden age weaponry and armour.  Your {string(obj_ini.role[100][16])}s are excited; the Slaughtersong is ready for it's maiden voyage, at your command.","","");                
 			                }
 			            }
-			            if (planet_feature_bool(_planet_data.features, P_features.Recruiting_World)){
-				            if (obj_controller.gene_seed == 0) and (obj_controller.recruiting > 0) {
-				            	if (turn_end){
-				                    obj_controller.recruiting = 0;
-				                    obj_controller.income_recruiting = 0;
-				                    scr_alert("red", "recruiting", "The Chapter has run out of gene-seed!", 0, 0);
-			                	}
-				            }else if (obj_controller.recruiting > 0){
-				            	if (_loc_heal_points>0){
-				            		if (turn_end){
-			                   			_planet_data.marine_training(_loc_heal_points);
-			                   		}
-			                   		apothecary_training_points += _loc_heal_points;
-			                	} else {
-			                		scr_alert("red", "recruiting", $"Recruitment on {_planet_data.name()} halted due to insufficient apothecary rescources", 0, 0);
-			                	}
-			                }
-			        	}
+			            if (_planet_data.planet_training(_loc_heal_points)){
+
+			            }
 			        }
 			    }
 		    }		
 		}
 	}
 }
-
 
 
 
