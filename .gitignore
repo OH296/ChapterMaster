@@ -5,10 +5,13 @@
 .vscode/
 
 # Mac folder info
-.DS_Store
+**/.DS_Store
 
 # Gamemaker stuff
 ChapterMaster.resource_order
+<<<<<<< HEAD
 
 tmp/
 stitch.config.json
+=======
+>>>>>>> etty/compile/main

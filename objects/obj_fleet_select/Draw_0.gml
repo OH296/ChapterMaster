@@ -54,6 +54,9 @@ if (player_fleet.just_left){
         }
     }
 }
+if (!currently_entered){
+    currently_entered =  keyboard_check(vk_shift);
+}
 
 if (owner  == eFACTION.Player) and (player_fleet.action==""){
     var xx = __view_get( e__VW.XView, 0 );
@@ -155,8 +158,8 @@ if (owner  == eFACTION.Player) and (player_fleet.action==""){
     }
 }
 
-if (mouse_check_button_pressed(mb_left)){
-    if (!currently_entered && point_distance(mouse_x,mouse_y,player_fleet.x,player_fleet.y)>32){
+if (mouse_check_button_pressed(mb_left) ){
+    if (!currently_entered && point_distance(mouse_x,mouse_y,player_fleet.x,player_fleet.y)>32 && !keyboard_check(vk_shift)){
         instance_destroy();
     }
 }

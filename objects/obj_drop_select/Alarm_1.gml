@@ -53,42 +53,45 @@ if (arright=false) then formation_current=formation_possible[1];
 
 // show_message("Star: "+string(p_target.name)+", Planet: "+string(planet_number));
 
-var co,i,unit;co=-1;i=0;
-repeat(11){co+=1;i=0;
-    repeat(300){i+=1;
-        if (i<=100){if (obj_ini.veh_loc[co][i]=p_target.name) and (obj_ini.veh_wid[co][i]=planet_number) and (attack=1){
-            if (obj_ini.veh_role[co][i]="Land Speeder") then l_speeders+=1;
-            if (obj_ini.veh_role[co][i]="Rhino") then l_rhinos+=1;
-            if (obj_ini.veh_role[co][i]="Whirlwind") then l_whirls+=1;
-            if (obj_ini.veh_role[co][i]="Predator") then l_predators+=1;
-            if (obj_ini.veh_role[co][i]="Land Raider") then l_raiders+=1;
-        }}
-        unit=obj_ini.TTRPG[co][i];
-        if (unit.name()=="") then continue;
-        if (obj_ini.loc[co][i]=p_target.name) and (unit.planet_location==planet_number){
-            if ((attack=0) and (string_count("Bike",obj_ini.role[co][i])=0)) or (attack=1){
-                if (unit.role()="Chapter Master") then l_master+=1;
-                if (unit.role()=obj_ini.role[100][2]) then l_honor+=1;
-                if (unit.role()=obj_ini.role[100][5]) then l_capts+=1;
-                if (unit.role()="Champion") then l_champions+=1;
-                
-                if (string_count("Bike",obj_ini.role[co][i])=0) or (attack=0){
-                    if (obj_ini.role[co][i]=obj_ini.role[100][11]) then l_mahreens+=1;
+var unit;
+for (var co = 0; co <= 10; co++) {
+    for (var i = 0; i <= 300; i++) {
+        if (i <= 100) {
+            if (obj_ini.veh_loc[co][i] = p_target.name) && (obj_ini.veh_wid[co][i] = planet_number) && (attack = 1) {
+                if (obj_ini.veh_role[co][i] = "Land Speeder") then l_speeders += 1;
+                if (obj_ini.veh_role[co][i] = "Rhino") then l_rhinos += 1;
+                if (obj_ini.veh_role[co][i] = "Whirlwind") then l_whirls += 1;
+                if (obj_ini.veh_role[co][i] = "Predator") then l_predators += 1;
+                if (obj_ini.veh_role[co][i] = "Land Raider") then l_raiders += 1;
+            }
+        }
+        unit = obj_ini.TTRPG[co][i];
+        if (unit.name() == "") then
+        continue;
+        if (obj_ini.loc[co][i] = p_target.name) && (unit.planet_location == planet_number) {
+            if ((attack = 0) && (string_count("Bike", obj_ini.role[co][i]) = 0)) || (attack = 1) {
+                if (unit.role() = "Chapter Master") then l_master += 1;
+                if (unit.role() = obj_ini.role[100][2]) then l_honor += 1;
+                if (unit.role() = obj_ini.role[100][5]) then l_capts += 1;
+                if (unit.role() = "Champion") then l_champions += 1;
+
+                if (string_count("Bike", obj_ini.role[co][i]) = 0) || (attack = 0) {
+                    if (obj_ini.role[co][i] = obj_ini.role[100][11]) then l_mahreens += 1;
                     if (unit.IsSpecialist("rank_and_file")) then l_mahreens++
-                    if (obj_ini.role[co][i]=obj_ini.role[100][3]) then l_veterans+=1;
+                    if (obj_ini.role[co][i] = obj_ini.role[100][3]) then l_veterans += 1;
                 }
-                if (string_count("Bike",obj_ini.role[co][i])>0) and (attack=1){
-                    if (obj_ini.role[co][i]=obj_ini.role[100][11]) then l_bikes+=1;
+                if (string_count("Bike", obj_ini.role[co][i]) > 0) && (attack = 1) {
+                    if (obj_ini.role[co][i] = obj_ini.role[100][11]) then l_bikes += 1;
                     if (unit.IsSpecialist("rank_and_file")) then l_bikes++
-                    if (obj_ini.role[co][i]=obj_ini.role[100][3]) then l_bikes+=1;
+                    if (obj_ini.role[co][i] = obj_ini.role[100][3]) then l_bikes += 1;
                 }
-                
-                if (unit.role()=obj_ini.role[100][4]) then l_terminators+=1;
-                if (unit.role()=obj_ini.role[100][6]) then l_dreads+=1;
-                if (unit.IsSpecialist("chap", true)) then l_chaplains+=1;
-                if (unit.IsSpecialist("libs", true)) then l_psykers+=1;
-                if (unit.IsSpecialist("apoth", true)) then l_apothecaries+=1;
-                if (unit.IsSpecialist("forge", true)) then l_techmarines+=1;
+
+                if (unit.role() = obj_ini.role[100][4]) then l_terminators += 1;
+                if (unit.role() = obj_ini.role[100][6]) then l_dreads += 1;
+                if (unit.IsSpecialist("chap", true)) then l_chaplains += 1;
+                if (unit.IsSpecialist("libs", true)) then l_psykers += 1;
+                if (unit.IsSpecialist("apoth", true)) then l_apothecaries += 1;
+                if (unit.IsSpecialist("forge", true)) then l_techmarines += 1;
             }
         }
     }

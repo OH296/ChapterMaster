@@ -689,8 +689,8 @@ function game_start_squads(){
 	}
 
 	with (obj_ini){
-		for (var i=0;i<11;i++){
-			scr_company_order(i)
+		for (var i = 0; i <= 10; i++){
+			scr_company_order(i);
 		}
 	}
 }

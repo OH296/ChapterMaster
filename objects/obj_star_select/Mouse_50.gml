@@ -27,7 +27,7 @@ if (debug!=0) then exit;
 
     //TODO centralise this logic
     if (instance_exists(obj_fleet_select)){
-         if (obj_fleet_select.currently_entered) then exit;
+         if (obj_fleet_select.currently_entered)  then exit;
     }
 
 

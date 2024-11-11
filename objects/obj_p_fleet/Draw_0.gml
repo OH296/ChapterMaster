@@ -26,26 +26,28 @@ if (obj_controller.zoomed=1){
         within=1;      
     } 
 }
+
 var select_instance = instance_exists(obj_fleet_select);
 if (!select_instance) then selected=0;
-if (within){
-    if (mouse_check_button_pressed(mb_left) && obj_controller.menu==0 && !selected){
-        alarm[3]=1;
-    }  
-} else (mouse_check_button_pressed(mb_left)){
-    if (selected){
-        if (select_instance){
-            if (instance_exists(obj_fleet_select.player_fleet)){
-                if !(obj_fleet_select.player_fleet.id == self.id && !obj_fleet_select.currently_entered){
-                    selected=0;
+if ( !keyboard_check(vk_shift)){
+    if (within){
+        if (mouse_check_button_pressed(mb_left) && obj_controller.menu==0 && !selected){
+            alarm[3]=1;
+        }  
+    } else (mouse_check_button_pressed(mb_left)){
+        if (selected){
+            if (select_instance){
+                if (instance_exists(obj_fleet_select.player_fleet)){
+                    if !(obj_fleet_select.player_fleet.id == self.id && !obj_fleet_select.currently_entered){
+                        selected=0;
+                    }
                 }
             }
+        } else {
+            selected=0;
         }
-    } else {
-        selected=0;
     }
 }
-
 // if (obj_controller.selected!=0) and (selected=1) then within=1;
 
 if (obj_controller.selecting_planet>0){

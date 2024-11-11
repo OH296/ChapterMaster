@@ -495,9 +495,10 @@ if (scr_hit(xx+954,yy+556,xx+1043,yy+579)=true){
         
         // Iterates through all selected "ships" (max 30), including the planet (Local on the drop menu), 
         // and fills the battle roster with any marines found.
-        var i;i=-1;ships_selected=0;
-        repeat(31){
-            i+=1;if (ship_all[i]!=0) then scr_battle_roster(ship[i],ship_ide[i],false);
+        ships_selected=0;
+        var ships_len = array_length(ship_all);
+        for (var i = 0; i < ships_len; i++) {
+            if (ship_all[i]!=0) then scr_battle_roster(ship[i],ship_ide[i],false);
         }
 		//ship_all[500] equals "Local" status on the drop menu
 		if (ship_all[500]=1) and (attack=1) then scr_battle_roster(p_target.name,planet_number,true);
@@ -527,11 +528,18 @@ if (menu=0) and (purge=1){
     draw_set_halign(fa_center);
     draw_set_font(fnt_40k_30b);
     
-    draw_set_color(c_gray);draw_rectangle(xx+740,yy+558,xx+860,yy+585,0);
-    draw_set_color(0);draw_text_transformed(xx+800,yy+559,string_hash_to_newline("Cancel"),0.75,0.75,0);
-    if (scr_hit(xx+740,yy+558,xx+860,yy+585)=true){
-        draw_set_alpha(0.2);draw_set_color(0);draw_rectangle(xx+740,yy+558,xx+860,yy+585,0);draw_set_alpha(1);
-        if (mouse_left>=1){obj_controller.cooldown=8000;instance_destroy();}
+    draw_set_color(c_gray);
+    draw_rectangle(xx + 740, yy + 558, xx + 860, yy + 585, 0);
+    draw_set_color(0);
+    draw_text_transformed(xx + 800, yy + 559, string_hash_to_newline("Cancel"), 0.75, 0.75, 0);
+    if (scr_hit(xx + 740, yy + 558, xx + 860, yy + 585)) {
+        draw_set_alpha(0.2);
+        draw_set_color(0);
+        draw_rectangle(xx + 740, yy + 558, xx + 860, yy + 585, 0);
+        draw_set_alpha(1);
+        if (scr_click_left()) {
+            instance_destroy();
+        }
     }
     
     var hih,x5,y5,iy,r,nup;

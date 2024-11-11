@@ -1,8 +1,8 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
-function set_warp_point_data(){
-	warp_point_hover = true;
-}
+// function set_warp_point_data(){
+// 	warp_point_hover = true;
+// }
 // Main menu movement
 
 function in_camera_view(rect){
@@ -94,8 +94,8 @@ function draw_warp_lanes(){
 	static warp_image=-1;
 	warp_image+=0.5;
 	if warp_image==58 then warp_image = 0;
-	if (!warp_point_hover) then hover_time=0;
-	warp_point_hover = false;
+	// if (!warp_point_hover) then hover_time=0;
+	// warp_point_hover = false;
 	for (var i = 0;i<array_length(routes);i++){
 		draw_set_color(c_gray);
 		route = routes[i];
@@ -137,9 +137,14 @@ function draw_warp_lanes(){
 			var hit_box = [route_coords[0]+dist_x-(warp_width/2),route_coords[1]+dist_y-(warp_height/2), route_coords[0]+dist_x+(warp_width/2) ,route_coords[1]+dist_y+(warp_height/2) ];
 			
 			var allow_tooltips = (!instance_exists(obj_star_select))
+
 			if (allow_tooltips && instance_exists(obj_fleet_select)){
-				allow_tooltips = !obj_fleet_select.currently_entered;
+
+				var mouse_consts = return_mouse_consts();
+
+				allow_tooltips = !obj_fleet_select.currently_entered || (mouse_consts[0] - __view_get( e__VW.XView, 0 ) > 300);
 			}
+			var warp_route_tooltip = "Major warp route to {0} (x4 travel speed for warp capable crafts)\n\nHold Shift and click Left Mouse Button to see destination.";
 			if (scr_hit(hit_box)){
 				//TODO centralise this for efficiency so it's only run once at the beggingin of step sequence
 				var star_overlap = false;
@@ -151,19 +156,20 @@ function draw_warp_lanes(){
 				}
 				if (!star_overlap){
 					var to = instance_nearest(route_coords[2],route_coords[3], obj_star);
+					// warp_point_hover = true;
+
 					if (allow_tooltips){
-						tooltip_draw($"Major warp route to {to.name} (4 X travel for warp capable crafts, click to see destination)");
-					}
-					warp_point_hover = true;
-
-					if (array_equals(hover_loc,[route_coords[0] ,route_coords[1]])){
-						hover_time++;
-					} else {
-						hover_loc = [route_coords[0] ,route_coords[1]];
-						hover_time = 0;
+						tooltip_draw(string(warp_route_tooltip, to.name));
 					}
 
-					if (mouse_check_button_pressed(mb_left) || (instance_exists(obj_fleet_select) && hover_time>=15)){
+					/* if (array_equals(hover_loc,[route_coords[0] ,route_coords[1]])){
+					 	hover_time++;
+					 } else {
+					 	hover_loc = [route_coords[0] ,route_coords[1]];
+					 	hover_time = 0;
+					 }*/
+
+					if ((mouse_check_button_pressed(mb_left) && keyboard_check(vk_shift)) /* || (instance_exists(obj_fleet_select) && hover_time>=30) */){
 						set_map_pan_to_loc(to);
 					}
 				}
@@ -183,19 +189,22 @@ function draw_warp_lanes(){
 						break;
 					}
 				}
-				if (!star_overlap){				
-					var to = instance_nearest(route_coords[0] ,route_coords[1], obj_star);
+				if (!star_overlap){
+					var to = instance_nearest(route_coords[0], route_coords[1], obj_star);
+					// warp_point_hover = true;
+
 					if (allow_tooltips){
-						tooltip_draw($"Major warp route to {to.name} (4 X travel for warp capable crafts, click to see destination)");
+						tooltip_draw(string(warp_route_tooltip, to.name));
 					}
-					warp_point_hover = true;
-					if (array_equals(hover_loc,[route_coords[2], route_coords[3]])){
-						hover_time++;
-					} else {
-						hover_loc = [route_coords[2], route_coords[3]];
-						hover_time = 0;
-					}
-					if (mouse_check_button_pressed(mb_left) || (instance_exists(obj_fleet_select) && hover_time>=15)){
+
+					// if (array_equals(hover_loc,[route_coords[2] ,route_coords[3]])){
+					// 	hover_time++;
+					// } else {
+					// 	hover_loc = [route_coords[2] ,route_coords[3]];
+					// 	hover_time = 0;
+					// }
+
+					if ((mouse_check_button_pressed(mb_left) && keyboard_check(vk_shift))/*  || (instance_exists(obj_fleet_select) && hover_time>=30) */){
 						set_map_pan_to_loc(to);
 					}
 				}
