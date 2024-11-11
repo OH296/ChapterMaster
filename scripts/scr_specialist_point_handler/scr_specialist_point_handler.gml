@@ -314,7 +314,7 @@ function SpecialistPointHandler() constructor{
     static draw_forge_queue = function(xx,yy){
         var _box_width = 527;
         draw_set_color(c_gray);
-        draw_rectangle(xx, yy , xx + _box_width, yy + 50, 0);
+        draw_rectangle(xx, yy , xx + _box_width, yy + 20, 0);
         draw_set_alpha(1);
         draw_set_font(fnt_40k_14);
         draw_set_color(0);
@@ -344,7 +344,7 @@ function SpecialistPointHandler() constructor{
                         }               
                     }
                     if (forge_queue[i].count<100){
-                        if (point_and_click(draw_unit_buttons([xx+545 , yy + item_gap],"+",[0.75,0.75],c_green))){
+                        if (point_and_click(draw_unit_buttons([xx+180 , yy + item_gap],"+",[0.75,0.75],c_green))){
                             var unit_cost = forge_queue[i].forge_points/forge_queue[i].count;
                             forge_queue[i].count++;
                             forge_queue[i].forge_points+=unit_cost;

@@ -149,11 +149,11 @@ function apothecary_simple(){
 			cur_system = _unit_spread[$_locations[i]][5];
 		}
 		if (cur_system!=""){
-			point_breakdown.systems[$cur_system.name] = [{},{},{},{},{}];
+			point_breakdown.systems[$ cur_system.name] = [{},{},{},{},{}];
 		}
 		var _loc_forge_points = 0;		
 		for (var p=0; p<5; p++){
-			var _point_breakdown = point_breakdown.systems[$cur_system.name];
+			var _point_breakdown = {};
 			_loc_heal_points=0;
 			_loc_forge_points=0;
 			if (array_length(_unit_spread[$_locations[i]][p]) == 0) then continue;
@@ -222,7 +222,10 @@ function apothecary_simple(){
 				}
 			}
 			_point_breakdown.heal_points_use = _point_breakdown.heal_points - _loc_heal_points;
-			_point_breakdown.forge_points_use = _point_breakdown.forge_points - ;			
+			_point_breakdown.forge_points_use = _point_breakdown.forge_points - _loc_forge_points;	
+			if (cur_system!=""){
+				point_breakdown.systems[$ cur_system.name][p] = _point_breakdown;
+			}		
 			if (cur_system!="" && p>0){
 				with (cur_system){
 		 			if (array_length(p_feature[p])!=0){

@@ -296,7 +296,7 @@ function scr_draw_armentarium(){
         }else if (stc_research.research_focus=="ships"){
             research_area_limit = stc_ships;
         }
-        var research_progress = ceil(((5000*(research_area_limit+1))-stc_research[$ stc_research.research_focus])/research_points);
+        var research_progress = ceil(((5000*(research_area_limit+1))-stc_research[$ stc_research.research_focus])/specialist_point_handler.research_points);
 		static research_drop_down = false;
         var research_eta_message = $"Based on current progress it will be {research_progress} months until next significant research step is complete";
         draw_text_ext(xx + 336 + 16, y_offset+25, string_hash_to_newline(research_eta_message), -1, 536);        
