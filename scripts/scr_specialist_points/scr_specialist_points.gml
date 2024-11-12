@@ -54,6 +54,8 @@ function unit_forge_point_generation(turn_end=false){
     return [points,reasons];
 }
 
+
+
 function scr_advance_research(research){
     if (research.name[0]=="research"){
         var tier_depth = array_length(research.name[2]);

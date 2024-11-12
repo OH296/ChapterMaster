@@ -23,7 +23,7 @@ function calculate_full_chapter_spread(){
 	    		}
 	    	}
 	        tech_points_used += _unit.equipment_maintenance_burden();
-		    _is_tech = (_unit.IsSpecialist("forge") && _unit.hp()>=10);
+		    _is_tech = (_unit.IsSpecialist("forge"));
 		    if (_is_tech){
 		    	add_forge_points_to_stack(_unit);
 		    }

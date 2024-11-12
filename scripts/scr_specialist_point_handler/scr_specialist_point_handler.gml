@@ -7,6 +7,9 @@ function SpecialistPointHandler() constructor{
     apoths = [];
     forge_master=-1;
     master_craft_chance = 0;
+
+    forge.reasons = {};
+    
     forge_string = "";
     at_forge = 0;
     apothecary_points = 0;
