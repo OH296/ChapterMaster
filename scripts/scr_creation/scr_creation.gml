@@ -125,39 +125,37 @@ function scr_creation(slide_num) {
 	                disposition[3]-=(6-cooperation);
 	                disposition[2]-=(6-cooperation)*2;
 	            }
+            //TODO encode this logic into advantage/disadvantage structs to be more maintainable and less hardcoded
+	            var ahuh,k;ahuh=0;k=0;
+	            repeat(8){k+=1;if (adv[k]="Crafters") then ahuh=1;}
+	            if (ahuh=1) then disposition[3]+=2;ahuh=0;k=0;
             
-	            if(scr_has_adv("Crafters")){
-					disposition[3]+=2;
-				}
-				if(scr_has_adv("Tech-Brothers")){
-					disposition[3]+=10;
-				}
-				if(scr_has_disadv("Psyker Intolerant")){
-					disposition[4]+=5;
-				}
-				if(scr_has_adv("Daemon Binders")){
-					disposition[3]-=8;
-				}
-				if(scr_has_disadv("Sieged")){
-					disposition[6]+=5;
-				}
-				if(scr_has_disadv("Suspicious")){
-					disposition[4]-=15;
-				}
-				if(scr_has_disadv("Tech-Heresy")){
-					disposition[3]-=8;
-				}
-				if(scr_has_adv("Psyker Abundance")){
-					disposition[4]-=4;
-				}
-				if(scr_has_disadv("Tolerant")){
-	                disposition[1]-=5;
-					disposition[2]-=5;
-	                disposition[3]-=5;
-					disposition[4]-=5;
-					disposition[5]-=5;
-					disposition[6]-=5;
-				}
+	            repeat(8){k+=1;if (adv[k]="Tech-Brothers") then ahuh=1;}
+	            if (ahuh=1) then disposition[3]+=10;ahuh=0;k=0;
+            
+	            repeat(8){k+=1;if (adv[k]="Psyker Intolerant") then ahuh=1;}
+	            if (ahuh=1) then disposition[4]+=5;ahuh=0;k=0;
+            
+	            repeat(8){k+=1;if (adv[k]="Daemon Binders") then ahuh=1;}
+	            if (ahuh=1) then disposition[3]-=8;ahuh=0;k=0;
+            
+	            repeat(8){k+=1;if (adv[k]="Sieged") then ahuh=1;}
+	            if (ahuh=1) then disposition[6]+=5;ahuh=0;k=0;
+            
+	            repeat(8){k+=1;if (adv[k]="Suspicious") then ahuh=1;}
+	            if (ahuh=1) then disposition[4]-=15;ahuh=0;k=0;
+            
+	            repeat(8){k+=1;if (adv[k]="Tech-Heresy") then ahuh=1;}
+	            if (ahuh=1) then disposition[3]-=8;ahuh=0;k=0;
+            
+	            repeat(8){k+=1;if (adv[k]="Psyker Abundance") then ahuh=1;}
+	            if (ahuh=1) then disposition[4]-=4;ahuh=0;k=0;
+            
+	            repeat(8){k+=1;if (dis[k]="Tolerant") then ahuh=1;}
+	            if (ahuh=1){
+	                disposition[1]-=5;disposition[2]-=5;disposition[4]-=5;
+	                disposition[3]-=5;disposition[5]-=5;disposition[6]-=5;
+	            }ahuh=0;k=0;
 	        }
 	    }
 	}

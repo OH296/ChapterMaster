@@ -1,7 +1,49 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
+function squeeze_map_forces(){
+	var _player_front_row=get_rightmost();
+	var _enemy_front =  get_leftmost(obj_enunit, false);
+    if (_player_front_row!="none" && _enemy_front!="none"){
+        if (!collision_point(_player_front_row.x+10,_player_front_row.y,obj_enunit,0,1)){
+            var _enemy_front =  get_leftmost(obj_enunit, false);
+            if (_enemy_front!="none"){
+                var _move_distance = calculate_block_distances(_player_front_row, _enemy_front) -2;
+                with (obj_pnunit){
+                    move_unit_block("east", _move_distance, true);
+                }
+            }
+        }
+    }
 
+   /* var _enemy_front =  get_leftmost(obj_enunit, false);
+    if (_enemy_front!="none"){
+        var _player_front_row=get_rightmost();
+        if (_player_front_row!="none"){
+            var _move_distance = calculate_block_distances(_player_front_row, _enemy_front) -1;
+            with (obj_enunit){
+                 if (!flank && _player_front_row.x<x){
+                    move_unit_block("west", _move_distance);
+                 }
+            }
+        }
+    }*/
+
+    var _player_rear = get_leftmost();
+    if (_player_rear!="none"){
+        var _enemy_flank =  get_rightmost(obj_enunit, true, false);
+        if (_enemy_flank!="none"){
+           if (_enemy_flank.flank){
+                var _move_distance = calculate_block_distances(_player_rear, _enemy_flank) -1;
+                with (obj_enunit){
+                    if (flank && _player_rear.x>x){
+                        move_unit_block("east", _move_distance, true);
+                    }
+                }
+           }
+        }
+    }	
+}
 function target_block_is_valid(target, desired_type){
 	var _is_valid = false
 	if (target=="none") then return false;
@@ -19,15 +61,19 @@ function target_block_is_valid(target, desired_type){
 	return _is_valid;
 }
 
-function get_rightmost(block_type=obj_pnunit){
+function get_rightmost(block_type=obj_pnunit,include_flanking=true, include_main_force=true){
 	var rightmost = "none";
 	if (instance_exists(block_type)){
 		with (block_type){
+		if (!include_flanking && flank) then continue;
+		if (!include_main_force && !flank) then continue;			
 			if x<=0 then continue;
-			if (men+veh+dreads<=0){
-				x=-5000;
-				instance_deactivate_object(id);
-				continue;
+			if (block_type==obj_pnunit){
+				if (men+veh+dreads<=0){
+					x=-5000;
+					instance_deactivate_object(id);
+					continue;
+				}
 			}
 			if(rightmost=="none" && x >0){
 				rightmost=block_type.id;
@@ -51,10 +97,12 @@ function get_leftmost(block_type=obj_pnunit, include_flanking=true){
 		with (block_type){
 			if (!include_flanking && flank) then continue;
 			if x<=0 then continue;
-			if (men+veh+dreads<=0){
-				x=-5000;
-				instance_deactivate_object(id);
-				continue;
+			if (block_type==obj_pnunit){
+				if (men+veh+dreads<=0){
+					x=-5000;
+					instance_deactivate_object(id);
+					continue;
+				}
 			}			
 			if(left_most=="none" && x >0){
 				left_most=block_type.id;
@@ -70,12 +118,44 @@ function get_leftmost(block_type=obj_pnunit, include_flanking=true){
 function get_block_distance(block){
 	return point_distance(x,y,block.x,block.y)/10;
 }
-function move_unit_block(direction="east", blocks=1){
+
+function calculate_block_distances(first_block, second_block){
+	if (first_block.x==second_block.x){
+		return 0;
+	} else {
+		if (first_block.x<second_block.x){
+			var _temp_holder = second_block;
+			second_block =  first_block;
+			first_block = _temp_holder;
+		}
+	}
+	return floor(floor(((first_block.x - second_block.x))/10));
+}
+
+function block_position_collision(position_x, position_y){
+	return collision_point(position_x, position_y,obj_enunit,0,1) || collision_point(position_x, position_y,obj_pnunit,0,1);
+}
+
+function move_unit_block(direction="east", blocks=1, allow_collision=false, allow_passing=false){
 	distance = 10*blocks;
 	if (direction=="east"){
-		x+=distance;
+		var _new_pos = x+distance;
+		if (allow_collision=false){
+			if (!block_position_collision(_new_pos, y)){
+				x=_new_pos;
+			}
+		} else {
+			x=_new_pos;
+		}
 	}
 	else if (direction=="west"){
-		x-=distance;
+		var _new_pos = x-distance;
+		if (allow_collision=false){
+			if (!block_position_collision(_new_pos, y)){
+				x=_new_pos;
+			}
+		} else {
+			x=_new_pos;
+		}
 	}
 }
