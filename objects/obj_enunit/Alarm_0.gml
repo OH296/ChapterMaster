@@ -11,13 +11,16 @@ var leftest,charge=0,enemy2=0,chapter_fuck=1,unit;
 
 // with(obj_pnunit){if (x<-4000) or (defenses=1) then instance_deactivate_object(id);}
 
+var _local_fort = instance_exists(obj_nfort);
 if (!flank){
     enemy=get_rightmost();// Right most enemy
     enemy2=enemy;
     if (enemy=="none"){
         exit;
     }
-    move_unit_block("west");
+    if (!_local_fort){
+        move_unit_block("west");
+    }
     
     //if (point_distance(x,0,enemy.x,0)<5) then x+=10;
     // instance_activate_object(obj_cursor);
@@ -30,7 +33,10 @@ else if (flank=1){
     }
     // if (collision_point(x+10,y,obj_pnunit,0,1)) then engaged=1;
     // if (!collision_point(x+10,y,obj_pnunit,0,1)) then engaged=0;
-    move_unit_block("east");
+    if (!_local_fort){
+        move_unit_block("east");
+    }
+    
     // instance_activate_object(obj_cursor);
 }
 
