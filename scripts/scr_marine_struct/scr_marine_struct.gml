@@ -820,6 +820,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	};
 	static add_or_sub_health = function(health_augment){
 		unit_health+=health_augment;
+		unit_health = min(unit_health, max_health());
 	}
 	static healing = function(apoth){
 		if (hp()<=0) then exit;
