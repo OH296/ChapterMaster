@@ -50,16 +50,24 @@ turrets=0;
 fighters=0;
 bombers=0;
 thunderhawks=0;
-boarders=0;board_cooldown=0;
+boarders=0;
+board_cooldown=0;
 
 var i;i=-1;
 repeat(8){i+=1;
-    weapon[i]="";weapon_facing[i]="";weapon_cooldown[i]=0;weapon_hp[i]=0;weapon_dam[i]=0;weapon_ammo[i]=999;weapon_range[i]=0;weapon_minrange[i]=0;
+    weapon[i]="";
+    weapon_facing[i]="";
+    weapon_cooldown[i]=0;
+    weapon_hp[i]=0;
+    weapon_dam[i]=0;
+    weapon_ammo[i]=999;
+    weapon_range[i]=0;
+    weapon_minrange[i]=0;
 }
 
 i=-1;
-repeat(2001){i+=1;
-    board_co[i]=0;board_id[i]=0;board_location[i]=0;board_raft[i]=0;
-}
-
+board_co=[];
+board_id=[];
+board_location=[];
+board_raft=[];
 action_set_alarm(1, 0);

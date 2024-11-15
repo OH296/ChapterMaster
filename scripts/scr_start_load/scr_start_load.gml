@@ -66,7 +66,7 @@ function scr_start_load(fleet, load_from_star, load_options) {
 
 	
 		//loop through companies. try and load whole company onto single ship else spread company across largest ships with remaining space
-	var ship_loop_start = =;
+	var ship_loop_start = 0;
 	for (_comp = 0; _comp<10;_comp++){
 		if ((split_vets == 1 && _comp == 1) || (!comp_has_units[_comp])) then continue;
 		if (ship_loop_start>=array_length(obj_ini.ship_carrying)){
