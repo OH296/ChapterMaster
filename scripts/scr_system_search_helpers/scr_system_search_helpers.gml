@@ -113,10 +113,17 @@ function scr_star_has_planet_with_owner(star, owner){
 	return scr_get_planet_with_owner(star,owner) != -1;
 }
 
-function scr_get_stars(shuffled=false) {
+function scr_get_stars(shuffled=false, ownership=[]) {
 	var stars = [];
+	var _owner_sort = array_length(ownership);
 	with(obj_star){
-		array_push(stars,id);
+		if (!_owner_sort){
+			array_push(stars,id);
+		} else {
+			if (array_contains(ownership,owner)){
+				array_push(stars,id);
+			}
+		}
 	}
 	if (shuffled){
 		stars = array_shuffle(stars);

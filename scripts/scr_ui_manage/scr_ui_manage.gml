@@ -1183,7 +1183,7 @@ function scr_ui_manage() {
 
         draw_text(xx + 800, yy + 74, $"{global.chapter_name} {fx}");
 
-        if (managing >= 0) {
+        if (managing >= 0 && managing <= 10) {
             if (obj_ini.company_title[managing] != "") {
                 draw_set_font(fnt_fancy);
                 draw_text(xx + 800, yy + 110, string_hash_to_newline($"''{obj_ini.company_title[managing]}''"));

@@ -64,7 +64,7 @@ function scr_add_artifact(artifact_type, artifact_tags, is_identified, artifact_
 	    if (rand2<=70){
 	    	base_type_detail=global.power_armour[irandom(array_length(global.power_armour)-1)];
 	    }
-	    else if (rand2<=80){base_type_detail=choose("Terminator Armour","Tartaros","Cataphractii Pattern Terminator",);}
+	    else if (rand2<=80){base_type_detail=choose("Terminator Armour","Tartaros");}
 	    else if (rand2<=90){base_type_detail="Dreadnought Armour";}
 	    else if (rand2<=100){base_type_detail="Artificer Armour";}
 	}
@@ -174,7 +174,7 @@ function scr_add_artifact(artifact_type, artifact_tags, is_identified, artifact_
 			artifact_location = obj_ini.home_name;
 			ship_id = 2;
 		} else {
-			artifact_location = obj_ini.ship[1];
+			artifact_location = obj_ini.ship[0];
 			ship_id = 501;
 		}
 	}

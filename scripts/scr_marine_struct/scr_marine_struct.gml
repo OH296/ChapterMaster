@@ -896,16 +896,23 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		}
 		return max_h;
 	};	
+
 	static increase_max_health = function(increase){
 		return max_health() + (increase*(1+((constitution - 40)*0.025))); //calculate the effect of unit_health buffs
 	};		
+
 	// used both to load unit data from save and to add preset base_stats
 	static load_json_data = function(data){							//this also allows us to create a pre set of anysort for a marine
-		 var names = variable_struct_get_names(data);
-		 for (var i = 0; i < array_length(names); i++) {
-            variable_struct_set(self, names[i], variable_struct_get(data, names[i]))
-        }
+		try {
+				var names = variable_struct_get_names(data);
+				for (var i = 0; i < array_length(names); i++) {
+					variable_struct_set(self, names[i], variable_struct_get(data, names[i]))
+				}
+		} catch (_exception) {
+			handle_exception(_exception);
+		}
 	};
+
 	traits = [];			//marine trait list	
 	feats = [];
 	allegiance =faction;	//faction alligience defaults to the chapter

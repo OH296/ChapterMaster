@@ -64,7 +64,7 @@ function UnitQuickFindPanel() constructor{
 		    				array_push(garrison_log[$ unit_location].units, unit);
 		    				garrison_log[$ unit_location].vehicles++;
 		    			}
-		    		} else if (obj_ini.veh_lid[co][u]>0){
+		    		} else if (obj_ini.veh_lid[co][u]>-1){
 		    			obj_ini.ship_carrying[obj_ini.veh_lid[co][u]]+=scr_unit_size("",obj_ini.veh_role[co][u],true);
 		    		}
 		    	}
@@ -455,7 +455,7 @@ function toggle_selection_borders(){
         	if (is_struct(display_unit[p])){
                 var unit=display_unit[p];
                 var mar_id = unit.marine_number;
-                if (unit.ship_location>0) and (obj_ini.loc[unit.company][mar_id]!="Mechanicus Vessel"){
+                if (unit.ship_location>-1) and (obj_ini.loc[unit.company][mar_id]!="Mechanicus Vessel"){
                 	unit.is_boarder = !unit.is_boarder;
                 }
             }

@@ -1323,7 +1323,9 @@ if (instance_exists(obj_ini)){
             stc_bonus[3]=3;
         }
         if (global.chapter_name=="Blood Ravens"){
-            for(var i=0; i<3; i++){scr_add_artifact("random_nodemon","",0,obj_ini.ship[1],501);}
+            for(var i=0; i<3; i++){
+                scr_add_artifact("random_nodemon","",0,obj_ini.ship[0],501);
+            }
         }
         // TODO should add special bonus to different chapters based on lore
         adept_name=global.name_generator.generate_space_marine_name();
@@ -1643,7 +1645,7 @@ temp[62]="##Your fleet contains ";
 var bb=0,sk=0,glad=0,hunt=0,ships=0,bb_names=[],sk_names=[],glad_names=[],hunt_names=[];
 
 codex[0]="";codex_discovered[0]=0;
-for(var mm=0; mm<=30; mm++){
+for(var mm=0; mm<array_length(obj_ini.ship); mm++){
     if (obj_ini.ship[mm]!=""){
         ships++;
         if (obj_ini.ship_class[mm] == "Battle Barge") {
@@ -1666,10 +1668,11 @@ for(var mm=0; mm<=30; mm++){
     codex[mm]="";
     codex_discovered[mm]=0;
 }
+
 temp[62]+=string(ships)+$" {string_plural("warship")}-\n";
 
 if (obj_ini.fleet_type != ePlayerBase.home_world || bb == 1) {
-    temp[62] += $"Your flagship, Battle Barge {obj_ini.ship[1]}.";
+    temp[62] += $"Your flagship, Battle Barge {obj_ini.ship[0]}.";
     temp[62] += "\n";
     bb--;
 }

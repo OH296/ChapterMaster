@@ -9,9 +9,6 @@
 
 # Gamemaker stuff
 ChapterMaster.resource_order
-<<<<<<< HEAD
 
 tmp/
 stitch.config.json
-=======
->>>>>>> etty/compile/main

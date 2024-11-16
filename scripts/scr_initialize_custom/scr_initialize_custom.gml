@@ -702,10 +702,9 @@ function scr_initialize_custom() {
 	show_debug_message(ship_summary_str);
 
 	if (battle_barges>=1){
-	 	for (var v=1;v<=battle_barges;v++){
-	 		var new_ship = new_player_ship("Battle Barge", "home")
-		    if (flagship_name!="") and (v=1) then ship[new_ship]=flagship_name;
-		    if (flagship_name="") or (v>1) then ship[new_ship]=global.name_generator.generate_imperial_ship_name();
+	 	for (v=0;v<battle_barges;v++){
+	 		var new_ship = new_player_ship("Battle Barge", "home");
+		    if (flagship_name!="") and (v=0) then ship[new_ship]=flagship_name;
 		}
 	}
 
@@ -720,15 +719,6 @@ function scr_initialize_custom() {
 
 	for(var i=0;i<hunters;i++){
 		new_player_ship("Hunter");
-	}
-
-	var j = 0,
-		f = 0;
-	var total_ship_count = battle_barges + strike_cruisers + gladius + hunters;
-	for (f = 1; f <= total_ship_count; f++) {
-		for (j = 1; j <= 30; j++) {
-			if (ship_uid[f] == ship_uid[j]) and(f != j) then ship_uid[j] = floor(random(99999999)) + 1;
-		}
 	}
 
 
@@ -3202,7 +3192,7 @@ function scr_initialize_custom() {
 		scr_add_item("Power Weapon", 12);
 		scr_add_item("Rosarius", 4);
 	}
-	if (scr_has_disadv("Sieged") == false) {
+	if (!scr_has_disadv("Sieged")) {
 		scr_add_item("Dreadnought", 6);
 		scr_add_item("Close Combat Weapon", 6);
 	}
@@ -3272,7 +3262,7 @@ function add_veh_to_company(name, company, slot, wep1, wep2, wep3, upgrade, acce
 	obj_ini.veh_hp[company, slot] = 100;
 	obj_ini.veh_chaos[company, slot] = 0;
 	obj_ini.veh_pilots[company, slot] = 0;
-	obj_ini.veh_lid[company, slot] = 0;
+	obj_ini.veh_lid[company, slot] = -1;
 	obj_ini.veh_wid[company, slot] = 2;
 }
 

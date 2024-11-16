@@ -1,15 +1,15 @@
 #macro STR_error_message_head $"Your game just encountered and caught an error :("
 #macro STR_error_message_head2 $"Your game just encountered a critical error :("
 #macro STR_error_message_head3 $"Your game just encountered and caught an error ({0}) :("
-#macro MSG_error_message $"The error log is automatically copied into your clipboard and a copy is created at: \nC:>Users>(UserName)>AppData>Local>ChapterMaster>ErrorLogs\n\nPlease, follow these steps:\n1) Report on our 'Chapter Master Discord' server.\n2) Press CTRL+V to paste the error log.\n3) Title the report with the error log's first line.\n4) If the log isn't pasted, locate and attach the latest error log file.\n\nThank you!"
+#macro MSG_error_message $"The error log is automatically copied into your clipboard and a copy is created at: \nC:>Users>(UserName)>AppData>Local>ChapterMaster>logs\n\nPlease, follow these steps:\n1) Create a bug report on our 'Chapter Master Discord' server.\n2) Press CTRL+V to paste the error log.\n3) Title the report with the error log's first line.\n4) If the log isn't pasted, locate and attach the latest error log file.\n\nThank you!"
 #macro MSG_error_message_ps $"P.S. You can ALT-TAB and try to continue playing, though it’s recommended to wait for a response in the bug-report forum."
 
 /// @description Logs the _message into a file in the ErrorLogs folder.
 /// @param {string} _message - The message to log.
 function log_into_file(_message) {
     if (string_length(_message) > 0) {
-        var _date_time = $"{current_day}-{current_month}-{current_year}_{current_hour}{current_minute}{current_second}";
-        var _log_file = file_text_open_write($"ErrorLogs/error_{_date_time}.log");
+        var _date_time = $"{START_DATE_TIME_1}";
+        var _log_file = file_text_open_write("logs/" + $"{_date_time}_error.log");
         file_text_write_string(_log_file, _message);
         file_text_close(_log_file);
     }

@@ -69,7 +69,7 @@ function calculate_full_chapter_spread(){
 			key_val="";
             if (v<array_length(obj_ini.veh_hp[company]) && company>0){
             	if (obj_ini.veh_race[company][v]!=0){
-            		if(obj_ini.veh_lid[company][v]>0){
+            		if(obj_ini.veh_lid[company][v]>-1){
 	            		veh_location = obj_ini.veh_lid[company][v];
 	            		if (obj_ini.ship_location[veh_location] == "warp"){
 			  	    		if instance_exists(obj_p_fleet){

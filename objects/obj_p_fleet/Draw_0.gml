@@ -90,9 +90,9 @@ if (action!=""){
 if (within=1) or (selected>0){
     var ppp;
     if (owner  = eFACTION.Player) then ppp=global.chapter_name;
-    if (capital_number=1) and (frigate_number=0) and (escort_number=0) then ppp=capital[1];
-    if (capital_number=0) and (frigate_number=1) and (escort_number=0) then ppp=frigate[1];
-    if (capital_number=0) and (frigate_number=0) and (escort_number=1) then ppp=escort[1];
+    if (capital_number=1) and (frigate_number=0) and (escort_number=0) then ppp=capital[0];
+    if (capital_number=0) and (frigate_number=1) and (escort_number=0) then ppp=frigate[0];
+    if (capital_number=0) and (frigate_number=0) and (escort_number=1) then ppp=escort[0];
     // ppp=acted;
     // 
     draw_set_color(38144);

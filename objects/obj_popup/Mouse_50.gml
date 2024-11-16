@@ -183,19 +183,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1576) and (mouse_y<y
                         obj_ini.veh_lid[target_comp][vehi]=obj_ini.veh_lid[veh_data[0]][veh_data[1]];
                         obj_ini.veh_wid[target_comp][vehi]=obj_ini.veh_wid[veh_data[0]][veh_data[1]];
 
-                        obj_ini.veh_race[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_loc[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_role[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_wep1[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_wep2[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_wep3[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_upgrade[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_acc[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_hp[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_chaos[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_pilots[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_lid[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_wid[veh_data[0]][veh_data[1]]=0;
+                        destroy_vehicle(veh_data[0],veh_data[1]);
 
                         vehi++;
                     }
