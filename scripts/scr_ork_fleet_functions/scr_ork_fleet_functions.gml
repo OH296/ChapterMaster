@@ -1,8 +1,5 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
-function scr_ork_fleet_functions(){
-
-}
 
 function new_ork_fleet(xx,yy){
     fleet=instance_create(xx,yy,obj_en_fleet);
@@ -65,38 +62,36 @@ function build_new_ork_ships_to_fleet(star, planet){
 
 
 function ork_fleet_move(){
-    var bad = is_dead_star(instance_nearest(x,y,obj_star));
     
-    if (bad){
-        var hides=choose(1,2,3);
-        
-        repeat(hides){
-            instance_deactivate_object(instance_nearest(x,y,obj_star));
-        }
-        
-        with(obj_star){
-            if (is_dead_star() || owner=eFACTION.Ork || scr_orbiting_fleet(eFACTION.Ork) !="none") then instance_deactivate_object(id);
-        }
-        var nex=instance_nearest(x,y,obj_star);
-        action_x=nex.x;
-        action_y=nex.y;
-        action="";
-        set_fleet_movement();
 
-        instance_activate_object(obj_star);
-        exit;
-    }    
+    var hides=choose(1,2,3);
+    
+    repeat(hides){
+        instance_deactivate_object(instance_nearest(x,y,obj_star));
+    }
+    
+    with(obj_star){
+        if (is_dead_star() || owner=eFACTION.Ork || scr_orbiting_fleet(eFACTION.Ork) !="none") then instance_deactivate_object(id);
+    }
+    var nex=instance_nearest(x,y,obj_star);
+    action_x=nex.x;
+    action_y=nex.y;
+    action="";
+    set_fleet_movement();
+
+    instance_activate_object(obj_star);
+    exit;
+  
 }
 
 function ork_fleet_arrive_target(){
 
     instance_activate_object(obj_en_fleet);
     var boat=instance_nearest(x,y,obj_en_fleet);
-
     var aler=0;
 
-    if (present_fleet[1]+present_fleet[2]=0) and (present_fleet[7]>0) and (boat.owner = eFACTION.Ork) and (boat.action=="") and (planets>0){
-        var landi=0,t1=0,l=0;
+    if (present_fleet[eFACTION.Player]+present_fleet[eFACTION.Imperium]=0) and (present_fleet[7]>0) and (boat.owner = eFACTION.Ork) and (boat.action=="") and (planets>0){
+        var _allow_landing=true,t1=0,l=0;
     
         repeat(planets){
             l+=1;
@@ -115,8 +110,8 @@ function ork_fleet_arrive_target(){
             }
         }
         
-        landi = !is_dead_star();
-        if (!landi){
+        _allow_landing = !is_dead_star();
+        if (_allow_landing){
             for (var i=1;i<=planets;i++){
                 if ((p_guardsmen[i]+p_pdf[i]+p_player[i]+p_traitors[i]+p_tau[i]>0) or ((p_owner[i]!=7) and (p_orks[i]<=0))){
                     if (p_type[i]!="Dead") and (p_orks[i]<4) and (i<=planets) and (instance_exists(boat)){
@@ -136,10 +131,12 @@ function ork_fleet_arrive_target(){
                 } else {
                     var new_wagh_star = distance_removed_star(x,y, choose(2,3,4,5));
                     if (instance_exists(new_wagh_star)){
-                        action_x=new_wagh_star.x;
-                        action_y=new_wagh_star.y;
-                        action = "";
-                        set_fleet_movement();
+                        with (boat){
+                            action_x=new_wagh_star.x;
+                            action_y=new_wagh_star.y;
+                            action = "";
+                            set_fleet_movement();
+                        }
                     }                    
                 }
             }
@@ -148,7 +145,32 @@ function ork_fleet_arrive_target(){
         if (aler>0) then scr_alert("green","owner",$"Ork ships have crashed across the {name} system.",x,y);
 
 
-    }// End landing portion of code
+    }// End _allow_landingng portion of code
 
+}
+
+
+//TOSO provide logic for fleets to attack each other
+function merge_ork_fleets(){
+    var _stars_with_ork_fleets = {};
+    with (obj_en_fleet){
+        if (!owner != eFACTION.Ork) then continue;
+        if (is_orbiting()){
+            if (struct_exists(_stars_with_ork_fleets, orbiting.name)){
+                array_push(_stars_with_ork_fleets[$orbiting.name],id);
+            } else {
+                _stars_with_ork_fleets[$ orbiting.name] = [id];
+            }
+        }
+    }
+    var _star_names = struct_get_names(_stars_with_ork_fleets);
+    for (var i =0;i<array_length(_star_names);i++){
+        var _fleets = _stars_with_ork_fleets[$_star_names[i]];
+        if (array_length(_fleets) <= 1) then continue;
+        var _base_fleet = _fleets[0];
+        for (var f=1;f<array_length(_fleets);f++){
+            merge_fleets(_base_fleet, _fleets[f]);
+        }
+    }
 }
 

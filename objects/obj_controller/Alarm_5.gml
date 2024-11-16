@@ -1294,7 +1294,7 @@ if (fest_scheduled>0) and (fest_repeats>0){
 //research and forge related actions
 research_end();
 apothecary_simple();
-
+merge_ork_fleets();
 //complex route plotting for player fleets
 with (obj_p_fleet){
     if (array_length(complex_route)>0  && action == ""){
