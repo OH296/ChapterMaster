@@ -87,23 +87,23 @@ function player_fleet_ship_spawner(){
 		    	hei=96;
 		    	sizz=2;
 		    }
-		    if (column[col]=="Gladius"){
+		    else if (column[col]=="Gladius"){
 		    	hei=64;
 		    	sizz=1;
-		    }else sizz
-		    if (column[col]=="Hunter"){
+		    }else if (column[col]=="Hunter"){
 		    	hei=64;
 		    	sizz=1;
 		    }
-		    if (column[col]=="escort"){hei=64;sizz=1;}
+		    else if (column[col]=="escort"){hei=64;sizz=1;}
 
 		    temp1=column_num[col]*hei;
 		    temp2=((room_height/2)-(temp1/2))+64;
 		    if (column_num[col]=1) then temp2+=20;
 		    
 		    // show_message(string(column_num[col])+" "+string(column[col])+" X:"+string(x2));
-		    for (var k = 0;k<array_length(ship_class);k++){
+		    for (var k = 0;k<array_length(ship_id);k++){
 		        if (ship_class[k]==column[col] || (player_ships_class(ship_id[k])==column[col])){
+		        	man=-1;
 		            if (sizz>=3 && ship_class[k]!="") {
 		            	man=instance_create(x2,temp2,obj_p_capital);
 		            	man.ship_id=ship_id[k];
@@ -119,16 +119,18 @@ function player_fleet_ship_spawner(){
 		            	man.ship_id=ship_id[k];
 		            	temp2+=hei;
 		            }
+		            if (instance_exists(man)){
+			            with (man){
+			            	setup_player_combat_ship();
+			            }
+			        }
 		        }
-		    }
-		    with (obj_p_fleet){
-		    	setup_player_combat_ship();
 		    }
 		    
 
 		}// End ship creation
 
-	}// End repeat	
+	}// End repeat		
 }
 
 
@@ -157,50 +159,46 @@ function setup_player_combat_ship(){
 	turrets=0;
 	ship_colour=obj_controller.body_colour_replace;
 
-	weapon[1]=obj_ini.ship_wep[ship_id,1];
-	weapon_facing[1]="";
-	weapon_cooldown[1]=0;
-	weapon_hp[1]=hp/4;
-	weapon_dam[1]=0;
-	weapon_ammo[1]=999;
-	weapon_range[1]=0;
-	weapon_minrange[1]=0;
+    weapon = obj_ini.ship_wep[ship_id];
+    
+    weapon_facing[1]="";
+    weapon_cooldown[1]=0;
+    weapon_hp[1]=hp/4;
+    weapon_dam[1]=0;
+    weapon_ammo[1]=999;
+    weapon_range[1]=0;
+    weapon_minrange[1]=0;
+    weapon_facing[2]="";
+    weapon_cooldown[2]=0;
+    weapon_hp[2]=hp/4;
+    weapon_dam[2]=0;
+    weapon_ammo[2]=999;
+    weapon_range[2]=0;
+    weapon_minrange[2]=0;
 
-	weapon[2]=obj_ini.ship_wep[ship_id,2];
-	weapon_facing[2]="";
-	weapon_cooldown[2]=0;
-	weapon_hp[2]=hp/4;
-	weapon_dam[2]=0;
-	weapon_ammo[2]=999;
-	weapon_range[2]=0;
-	weapon_minrange[2]=0;
+    weapon_facing[3]="";
+    weapon_cooldown[3]=0;
+    weapon_hp[3]=hp/4;
+    weapon_dam[3]=0;
+    weapon_ammo[3]=999;
+    weapon_range[3]=0;
+    weapon_minrange[3]=0;
 
-	weapon[3]=obj_ini.ship_wep[ship_id][3];
-	weapon_facing[3]="";
-	weapon_cooldown[3]=0;
-	weapon_hp[3]=hp/4;
-	weapon_dam[3]=0;
-	weapon_ammo[3]=999;
-	weapon_range[3]=0;
-	weapon_minrange[3]=0;
+    weapon_facing[4]="";
+    weapon_cooldown[4]=0;
+    weapon_hp[4]=hp/4;
+    weapon_dam[4]=0;
+    weapon_ammo[4]=999;
+    weapon_range[4]=0;
+    weapon_minrange[4]=0;
 
-	weapon[4]=obj_ini.ship_wep[ship_id][4];
-	weapon_facing[4]="";
-	weapon_cooldown[4]=0;
-	weapon_hp[4]=hp/4;
-	weapon_dam[4]=0;
-	weapon_ammo[4]=999;
-	weapon_range[4]=0;
-	weapon_minrange[4]=0;
-
-	weapon[5]=obj_ini.ship_wep[ship_id][5];
-	weapon_facing[5]="";
-	weapon_cooldown[5]=0;
-	weapon_hp[5]=hp/4;
-	weapon_dam[5]=0;
-	weapon_ammo[5]=999;
-	weapon_range[5]=0;
-	weapon_minrange[5]=0;
+    weapon_facing[5]="";
+    weapon_cooldown[5]=0;
+    weapon_hp[5]=hp/4;
+    weapon_dam[5]=0;
+    weapon_ammo[5]=999;
+    weapon_range[5]=0;
+    weapon_minrange[5]=0;
 
 
 
@@ -233,7 +231,7 @@ function setup_player_combat_ship(){
 	    weapon_cooldown[5]=30;
 	}
 
-	if (class="Slaughtersong"){turrets=3;
+	else if (class="Slaughtersong"){turrets=3;
 		weapons=5;shield_size=3;sprite_index=spr_ship_song;
 	    weapon_facing[1]="most";
 	    weapon_dam[1]=16;
@@ -254,7 +252,7 @@ function setup_player_combat_ship(){
 	}
 
 
-	if (class="Strike Cruiser"){turrets=1;
+	else if (class="Strike Cruiser"){turrets=1;
 		weapons=4;shield_size=1;sprite_index=spr_ship_stri;
 	    weapon_facing[1]="left";
 	    weapon_dam[1]=8;
@@ -274,7 +272,7 @@ function setup_player_combat_ship(){
 	    weapon_cooldown[4]=30;
 	}
 
-	if (class="Hunter"){turrets=1;
+	else if (class="Hunter"){turrets=1;
 		weapons=2;
 		shield_size=1;sprite_index=spr_ship_hunt;
 	    weapon_facing[1]="front";
@@ -288,7 +286,7 @@ function setup_player_combat_ship(){
 	    weapon_cooldown[2]=60;
 	}
 
-	if (class="Gladius"){
+	else if (class="Gladius"){
 		turrets=1;
 		weapons=2;
 		shield_size=1;
@@ -301,8 +299,12 @@ function setup_player_combat_ship(){
 
 
 	// STC Bonuses
-	if (obj_controller.stc_bonus[5]=5){armour_front=round(armour_front*1.1);armour_other=round(armour_other*1.1);}
-	if (obj_controller.stc_bonus[6]=2){armour_front=round(armour_front*1.1);armour_other=round(armour_other*1.1);}
+	if (obj_controller.stc_bonus[5]=5){
+		armour_front=round(armour_front*1.1);armour_other=round(armour_other*1.1);
+	}
+	if (obj_controller.stc_bonus[6]=2){
+		armour_front=round(armour_front*1.1);armour_other=round(armour_other*1.1);
+	}
 
 
 	var i=0, unit, b=0;

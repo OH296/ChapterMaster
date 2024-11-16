@@ -23,8 +23,8 @@ action="";
     weapons=obj_ini.ship_weapons[ship_id];
     turrets=0;
     ship_colour=obj_controller.body_colour_replace;
-
-    weapon[1]=obj_ini.ship_wep[ship_id,1];
+    weapon = obj_ini.ship_wep[ship_id]
+    
     weapon_facing[1]="";
     weapon_cooldown[1]=0;
     weapon_hp[1]=hp/4;
@@ -32,8 +32,6 @@ action="";
     weapon_ammo[1]=999;
     weapon_range[1]=0;
     weapon_minrange[1]=0;
-
-    weapon[2]=obj_ini.ship_wep[ship_id,2];
     weapon_facing[2]="";
     weapon_cooldown[2]=0;
     weapon_hp[2]=hp/4;
@@ -42,7 +40,6 @@ action="";
     weapon_range[2]=0;
     weapon_minrange[2]=0;
 
-    weapon[3]=obj_ini.ship_wep[ship_id][3];
     weapon_facing[3]="";
     weapon_cooldown[3]=0;
     weapon_hp[3]=hp/4;
@@ -51,7 +48,6 @@ action="";
     weapon_range[3]=0;
     weapon_minrange[3]=0;
 
-    weapon[4]=obj_ini.ship_wep[ship_id][4];
     weapon_facing[4]="";
     weapon_cooldown[4]=0;
     weapon_hp[4]=hp/4;
@@ -60,7 +56,6 @@ action="";
     weapon_range[4]=0;
     weapon_minrange[4]=0;
 
-    weapon[5]=obj_ini.ship_wep[ship_id][5];
     weapon_facing[5]="";
     weapon_cooldown[5]=0;
     weapon_hp[5]=hp/4;
