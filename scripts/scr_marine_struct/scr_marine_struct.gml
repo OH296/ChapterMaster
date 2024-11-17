@@ -560,7 +560,13 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			luck : 10, // I don't see the point to make them less lucky than space marines
 			technology : [30,1],
 			skills: {weapons:{"Hellgun":1,}},
-			start_gear:{"armour":"Skitarii Armour", "wep1":"Hellgun"},
+			start_gear:{
+					wep2 : "",
+					wep1 : "Hellgun",
+					armour : "Skitarii Armour",
+					gear : "",
+					mobi : "",
+				},
 			base_group : "skitarii",
 	},
 	"tech_priest":{
@@ -585,8 +591,8 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			start_gear:{"armour":"Dragon Scales", "wep1":"Power Axe", "wep2":"Laspistol", "mobi":"Servo-arm"}, 
 			base_group : "tech_priest",
 	},
-	"skitarii_ranger":{ // TODO rename this
-			title : "Skitarii Ranger", // TODO - that should be Eldar
+	"eldar_ranger":{ // TODO rename this
+			title : "Eldar Ranger", // TODO - that should be Eldar
 			strength : [25,1],
 			constitution : [30,2],
 			weapon_skill : [45,4],
@@ -620,7 +626,7 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			luck : 10,
 			technology : [8,1],
 			skills : {}, // TODO consider what skills are needed for this bloke
-			start_gear:{"armour":"Light Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"}, // TODO - add Light variant of Power Armour
+			start_gear:{"armour":"Light Power Armour", "wep1":"Power Sword", "wep2":"Combat Shield"}, // TODO - add Light variant of Power Armour
 			base_group : "human",
 	},
 	/* TODO - add psychic capabilities
@@ -1013,7 +1019,27 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	};
 
 	static distribute_traits = scr_marine_trait_spawning;
-	
+
+	static alter_equipment = alter_unit_equipment;
+	static stat_display = scr_draw_unit_stat_data;
+	static draw_unit_image = scr_draw_unit_image;
+	static display_wepaons = scr_ui_display_weapons;
+	static unit_profile_text = scr_unit_detail_text;
+	static unit_equipment_data= function(){
+		var armour_data=get_armour_data()
+		var gear_data=get_gear_data()
+		var mobility_data=get_mobility_data()
+		var weapon_one_data=get_weapon_one_data()
+		var weapon_two_data=get_weapon_two_data()
+		var equip_data = {
+				armour_data:armour_data,
+				gear_data:gear_data,
+				mobility_data:mobility_data,
+				weapon_one_data:weapon_one_data,
+				weapon_two_data:weapon_two_data
+			};
+		return equip_data;
+	}	
 	//takes dict and plumbs dict values into unit struct
 	if (array_contains(variable_struct_get_names(global.base_stats), class)){
 		load_json_data(global.base_stats[$ class]);
@@ -1098,6 +1124,15 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		}
 		return false;
 	}
+
+	if (struct_exists(self,start_gear)){
+		if (base_group!="marine"){
+			alter_equipment(start_gear,false,false);
+		} else {
+			alter_equipment(start_gear,true,true);
+		}
+	}
+			
 	/*ey so i got this concept where basically take away luck, ballistic_skill and weapon_skill 
 	there are 8 other stats each of which will have more attached aspects and game play elements 
 	they effect as time goes on, so that means between the 8 other stats if you had a choice of two 
@@ -2427,47 +2462,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			quality);
 		}
 	}
-	static alter_equipment = function(update_equipment, from_armoury=true, to_armoury=true, quality="any"){
-		var equip_areas = struct_get_names(update_equipment);
-		for (var i=0;i<array_length(equip_areas);i++){
-			switch(equip_areas[i]){
-				case "wep1":
-					update_weapon_one(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "wep2":
-					update_weapon_two(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "mobi":
-					update_mobility_item(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "armour":
-					update_armour(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "gear":
-					update_gear(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;								
-			}
-		}
-	}
-	static stat_display = scr_draw_unit_stat_data;
-	static draw_unit_image = scr_draw_unit_image;
-	static display_wepaons = scr_ui_display_weapons;
-	static unit_profile_text = scr_unit_detail_text;
-	static unit_equipment_data= function(){
-		var armour_data=get_armour_data()
-		var gear_data=get_gear_data()
-		var mobility_data=get_mobility_data()
-		var weapon_one_data=get_weapon_one_data()
-		var weapon_two_data=get_weapon_two_data()
-		var equip_data = {
-				armour_data:armour_data,
-				gear_data:gear_data,
-				mobility_data:mobility_data,
-				weapon_one_data:weapon_one_data,
-				weapon_two_data:weapon_two_data
-			};
-		return equip_data;
-	}
+
 	static equipped_artifacts=function(){
 		artis = [
 			weapon_one(true),
