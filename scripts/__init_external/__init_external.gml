@@ -13,13 +13,16 @@ function __init_external() {
     if (file_exists("message_log.log")) {
         file_delete("message_log.log");
     }
+    if (directory_exists("logs")) {
+        directory_destroy("logs");
+    }
     // ========================
 
-    if (!directory_exists("logs")) {
-        directory_create("logs");
+    if (!directory_exists("Logs")) {
+        directory_create("Logs");
     }
 
-    #macro PATH_last_messages $"logs/last_messages.log"
+    #macro PATH_last_messages $"Logs/last_messages.log"
 
     var _log_file = file_text_open_write(PATH_last_messages);
     file_text_close(_log_file);
