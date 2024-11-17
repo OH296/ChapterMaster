@@ -10,6 +10,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 	// That should be sufficient to add stuff in a highly modifiable fashion
 
 	var non_marine_roles = ["Skitarii", "Techpriest", "Crusader", "Sister of Battle", "Sister Hospitaler", "Ranger", "Ork Sniper", "Flash Git"]; // if adding new hirelings, don't forget to update this list
+	var _gear = {};
 	var i = 0,
 		e = 0,
 		good = 0,
@@ -23,14 +24,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 	good = find_company_open_slot(target_company);
 
 	if (good != -1) {
-		obj_ini.race[target_company][good] = 1;
-		obj_ini.role[target_company][good] = man_role;
-		obj_ini.wep1[target_company][good] = "";
-		obj_ini.wep2[target_company][good] = "";
-		obj_ini.armour[target_company][good] = "";
-		obj_ini.spe[target_company][good] = "";
-		obj_ini.god[target_company][good] = 0;
-
+		scr_wipe_unit(target_company,good);
 		if (other_gear = true) {
 	// Factions 1-5 are part of Imperial family
 		// Faction 1 - Space Marine
@@ -87,21 +81,14 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 				break;
 			*/
 		// Faction 3 - Adeptus Mechanicus
-			switch (man_role) {
+		switch (man_role) {
 			case "Skitarii":
-				obj_ini.wep1[target_company][good] = "Hellgun";
-				obj_ini.wep2[target_company][good] = ""; // I should consider implementing a "Light Combat Knife", which is human-sized
-				obj_ini.armour[target_company][good] = "Skitarii Armour";
 				spawn_exp = 10;
 				obj_ini.race[target_company][good] = 3;
 				unit = new TTRPG_stats("mechanicus", target_company, good, "skitarii");
 				break;
 			case "Techpriest":
-				obj_ini.wep1[target_company][good] = "Power Axe";
-				obj_ini.wep2[target_company][good] = "Laspistol";
-				obj_ini.armour[target_company][good] = "Dragon Scales";
-				obj_ini.gear[target_company][good] = "";
-				obj_ini.mobi[target_company][good] = "Servo-arm";
+
 				spawn_exp = 100;
 				obj_ini.race[target_company][good] = 3;
 				unit = new TTRPG_stats("mechanicus", target_company, good, "tech_priest");
@@ -109,10 +96,6 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 		// Faction 3.5 - Dark mechanicum?
 		// Faction 4 - Inquisition
 			case "Crusader":
-				obj_ini.wep1[target_company][good] = "Power Sword";
-				obj_ini.wep2[target_company][good] = "";
-				obj_ini.armour[target_company][good] = "Light Power Armour";
-				obj_ini.gear[target_company][good] = "Combat Shield";
 				spawn_exp = 10;
 				obj_ini.race[target_company][good] = 4;
 				unit = new TTRPG_stats("inquisition", target_company, good, "inquisition_crusader");
@@ -131,19 +114,12 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 		// Faction 4.5 - Radical inquisitors, perhaps?
 		// Faction 5 - Sisters of Battle
 			case "Sister of Battle":
-				obj_ini.wep1[target_company][good] = "Light Bolter";
-				obj_ini.wep2[target_company][good] = "";
-				obj_ini.armour[target_company][good] = "Light Power Armour";
-				spawn_exp = 60;
+				spawn_exp = 20;
 				obj_ini.race[target_company][good] = 5;
 				unit = new TTRPG_stats("adeptus_sororitas", target_company, good, "sister_of_battle");
 				break;
 			case "Sister Hospitaler":
-				obj_ini.wep1[target_company][good] = "Light Bolter";
-				obj_ini.wep2[target_company][good] = "";
-				obj_ini.armour[target_company][good] = "Light Power Armour";
-				spawn_exp = 100;
-				obj_ini.gear[target_company][good] = "Sororitas Medkit";
+				spawn_exp = 50;
 				obj_ini.race[target_company][good] = 5;
 				unit = new TTRPG_stats("adeptus_sororitas", target_company, good, "sister_hospitaler");
 				break;
@@ -162,29 +138,20 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 	// End of Imperials
 		// Faction 6 - Eldar
 			case "Ranger":
-				obj_ini.wep1[target_company][good] = "Ranger Long Rifle";
-				obj_ini.wep2[target_company][good] = "Eldar Power Sword";
-				obj_ini.armour[target_company][good] = "Ranger Armour"; // I should add "Eldar Armour" to the fellow too
-				obj_ini.experience[target_company][good] = 180; // They should have much more EXP (like 250 or more) as they have quite the lifespan
+				spawn_exp = 180; // They should have much more EXP (like 250 or more) as they have quite the lifespan
 				obj_ini.race[target_company][good] = 6
-				unit = new TTRPG_stats("mechanicus", target_company, good, "skitarii_ranger"); // TODO - add aeldari religion in relevant gml files
+				unit = new TTRPG_stats("Eldari", target_company, good, "eldar_ranger"); // TODO - add aeldari religion in relevant gml files
 				break;
 		// Faction 6.5 - Dark Eldar?
 		// Faction 7 - Orks
 			case "Ork Sniper":
-				obj_ini.wep1[target_company][good] = "Sniper Rifle";
-				obj_ini.wep2[target_company][good] = "Choppa";
-				obj_ini.armour[target_company][good] = "Ork Armour";
 				spawn_exp = 20;
-				obj_ini.race[target_company][good] = 7;
+				obj_ini.race[target_company][good] = eFACTION.Ork;
 				unit = new TTRPG_stats("ork", target_company, good, "ork_Sniper");
 				break;
 			case "Flash Git":
-				obj_ini.wep1[target_company][good] = "Snazzgun";
-				obj_ini.wep2[target_company][good] = "Choppa";
-				obj_ini.armour[target_company][good] = "Ork Armour";
 				spawn_exp = 40;
-				obj_ini.race[target_company][good] = 7;
+				obj_ini.race[target_company][good] = eFACTION.Ork;
 				unit = new TTRPG_stats("ork", target_company, good, "flash_git");
 				break;
 			/* TODO - up for consideration of recruiting faction leaders
@@ -235,6 +202,8 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 			}
 		}
 
+		unit.add_exp(spawn_exp);
+
 		obj_ini.age[target_company][good] = ((obj_controller.millenium * 1000) + obj_controller.year); // Age here // Note: age for marines is generated later with roll_age(), this is left here as a fallback
 
 		if (spawn_name = "") or(spawn_name = "imperial") then obj_ini.name[target_company][good] = global.name_generator.generate_space_marine_name();
@@ -245,124 +214,42 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 
 		//TODO bring this inline with the rest of the code base
 
-		// Weapons
-		if (man_role = obj_ini.role[100][12]) {
-			wep2 = obj_ini.wep2[100, 12];
-			wep1 = obj_ini.wep1[100, 12];
-			arm = obj_ini.armour[100, 12];
-			choice_gear = obj_ini.gear[100, 12];
-			mobility_items = obj_ini.mobi[100, 12];
-		}
-
-		var good1, good2, good3, good4;
-		good1 = 0;
-		good2 = 0;
-		good3 = 0;
-		good4 = 0;
-
-		if (other_gear = false) {
-			e = 0;
-			if (wep1 != "") then repeat(100) { // First Weapon
-				e += 1;
-				if (e <= 100) {
-					if (obj_ini.equipment[e] = wep1) {
-						obj_ini.equipment_number[e] -= 1;
-						obj_ini.wep1[target_company][good] = obj_ini.equipment[e];
-						if (obj_ini.equipment_number[e] = 0) {
-							obj_ini.equipment[e] = "";
-							obj_ini.equipment_type[e] = "";
-						}
-						e = 1000;
-					}
-				}
-			}
-			e = 0;
-			if (wep2 != "") then repeat(100) { // Second Weapon
-				e += 1;
-				if (e <= 100) {
-					if (obj_ini.equipment[e] = wep2) {
-						obj_ini.equipment_number[e] -= 1;
-						obj_ini.wep2[target_company][good] = obj_ini.equipment[e];
-						if (obj_ini.equipment_number[e] = 0) {
-							obj_ini.equipment[e] = "";
-							obj_ini.equipment_type[e] = "";
-						}
-						e = 1000;
-					}
-				}
-			}
-			e = 0;
-
-			// show_message(arm);
-
-			if (arm != "") then repeat(100) { // Armour
-				e += 1;
-				if (e <= 100) {
-					if (obj_ini.equipment[e] = arm) {
-						obj_ini.equipment_number[e] -= 1;
-						obj_ini.armour[target_company][good] = arm;
-						if (obj_ini.equipment_number[e] = 0) {
-							obj_ini.equipment[e] = "";
-							obj_ini.equipment_type[e] = "";
-						}
-						e = 1000;
-					}
-				}
-			}
-
-			// show_message(obj_ini.armour[target_company][good]);
-
-			e = 0;
-			if (choice_gear != "") then repeat(100) { // Gear
-				e += 1;
-				if (e <= 100) {
-					if (obj_ini.equipment[e] = choice_gear) {
-						obj_ini.equipment_number[e] -= 1;
-						obj_ini.gear[target_company][good] = choice_gear;
-						if (obj_ini.equipment_number[e] = 0) {
-							obj_ini.equipment[e] = "";
-							obj_ini.equipment_type[e] = "";
-						}
-						e = 1000;
-					}
-				}
-			}
-			e = 0;
-			if (mobility_items != "") then repeat(100) { // Mobility
-				e += 1;
-				if (e <= 100) {
-					if (obj_ini.equipment[e] = mobility_items) {
-						obj_ini.equipment_number[e] -= 1;
-						obj_ini.mobi[target_company][good] = mobility_items;
-						if (obj_ini.equipment_number[e] = 0) {
-							obj_ini.equipment[e] = "";
-							obj_ini.equipment_type[e] = "";
-						}
-						e = 1000;
-					}
-				}
-			}
-
-			if (obj_ini.wep1[target_company][good] != wep1) and(wep1 != "") then missing = 1;
-			if (obj_ini.wep2[target_company][good] != wep2) and(wep2 != "") then missing = 1;
-			if (obj_ini.armour[target_company][good] != arm) and(arm != "") then missing = 1;
-			if (obj_ini.gear[target_company][good] != choice_gear) and(choice_gear != "") then missing = 1;
-			if (obj_ini.mobi[target_company][good] != mobility_items) and(mobility_items != "") then missing = 1;
-
-			//if (man_role=obj_ini.role[100][12]) and (corruption>=13) then obj_ini.god[target_company][good]=2;// Khorne!!!1 XDDDDDDD
-
-			if (missing = 1) and(man_role == obj_ini.role[100][12]) {
-				if (string_count("has joined the X Company", obj_turn_end.alert_text[obj_turn_end.alerts])) {
-					scr_alert("red", $"recruiting", "Not enough {obj_ini.role[100][12]} equipment in the armoury!", 0, 0);
-				}
-			}
-		}
 
 		if (!array_contains(non_marine_roles, man_role)) {
+			// Weapons
+			if (man_role == obj_ini.role[100][12]) {
+				_gear = {
+					wep2 : obj_ini.wep2[100, 12],
+					wep1 : obj_ini.wep1[100, 12],
+					armour : obj_ini.armour[100, 12],
+					gear : obj_ini.gear[100, 12],
+					mobi : obj_ini.mobi[100, 12],
+				}
+			};
+
 			unit = new TTRPG_stats("chapter", target_company, good, "scout", other_data);
 			unit.corruption = corruption
 			unit.roll_age(); // Age here
+			unit.add_exp(spawn_exp);
+			unit.alter_unit_equipment(_gear);
 			marines += 1;
+
+			if (!other_gear) {
+
+				if (obj_ini.wep1[target_company][good] != _gear.wep1) and(wep1 != "") then missing = 1;
+				if (obj_ini.wep2[target_company][good] != _gear.wep2) and(wep2 != "") then missing = 1;
+				if (obj_ini.armour[target_company][good] != _gear.armour) and(arm != "") then missing = 1;
+				if (obj_ini.gear[target_company][good] != _gear.gear) and(choice_gear != "") then missing = 1;
+				if (obj_ini.mobi[target_company][good] != _gear.mobi) and(mobility_items != "") then missing = 1;
+
+				//if (man_role=obj_ini.role[100][12]) and (corruption>=13) then obj_ini.god[target_company][good]=2;// Khorne!!!1 XDDDDDDD
+
+				if (missing = 1) and(man_role == obj_ini.role[100][12]) {
+					if (string_count("has joined the X Company", obj_turn_end.alert_text[obj_turn_end.alerts])) {
+						scr_alert("red", $"recruiting", "Not enough {obj_ini.role[100][12]} equipment in the armoury!", 0, 0);
+					}
+				}
+			}			
 		}
 		obj_ini.TTRPG[target_company][good] = unit;
 		unit.add_exp(spawn_exp);
