@@ -87,10 +87,12 @@ function ork_fleet_move(){
 function ork_fleet_arrive_target(){
 
     instance_activate_object(obj_en_fleet);
-    var boat=instance_nearest(x,y,obj_en_fleet);
+    var boat=scr_orbiting_fleet(eFACTION.Ork);
+    if (boat=="none") then return;
     var aler=0;
 
-    if (present_fleet[eFACTION.Player]+present_fleet[eFACTION.Imperium]=0) and (present_fleet[7]>0) and (boat.owner = eFACTION.Ork) and (boat.action=="") and (planets>0){
+    var _imperial_ship = scr_orbiting_fleet([eFACTION.Player, eFACTION.Imperium]);
+    if (_imperial_ship == "none" && boat!="none" && planets>0){
         var _allow_landing=true,t1=0,l=0;
     
         repeat(planets){
@@ -155,6 +157,10 @@ function merge_ork_fleets(){
     var _stars_with_ork_fleets = {};
     with (obj_en_fleet){
         if (!owner != eFACTION.Ork) then continue;
+        if (capital_number+frigate_number+escort_number <= 0){
+            instance_destroy();
+            continue;
+        }
         if (is_orbiting()){
             if (struct_exists(_stars_with_ork_fleets, orbiting.name)){
                 array_push(_stars_with_ork_fleets[$orbiting.name],id);
