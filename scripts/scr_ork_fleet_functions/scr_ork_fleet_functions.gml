@@ -101,7 +101,7 @@ function ork_fleet_arrive_target(){
         }
         if (t1>0) then p_tyranids[t1]-=_ork_fleet.capital_number+(_ork_fleet.frigate_number/2);
         if (p_tyranids[t1]<=0){
-            if (planet_feature_bool(p_feature[t1], P_features.Gene_Stealer_Cult)==1){
+            if (planet_feature_bool(p_feature[t1], P_features.Gene_Stealer_Cult)){
                 delete_features(p_feature[t1], P_features.Gene_Stealer_Cult);
                 adjust_influence(eFACTION.Tyranids, -25, t1);
                 var nearest_imperial = nearest_star_with_ownership(x,y,eFACTION.Imperium, self.id);

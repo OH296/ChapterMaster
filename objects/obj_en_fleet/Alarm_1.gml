@@ -1009,10 +1009,6 @@ if (action=="" && _is_orbiting){
             instance_activate_object(obj_star);
         }
     }
-    
-    if (owner=eFACTION.Ork) and (action==""){// Should fix orks converging on useless planets
-        ork_fleet_move();
-    }
 }
 
 
