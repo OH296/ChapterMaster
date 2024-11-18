@@ -1260,13 +1260,14 @@ if (owner != eFACTION.Eldar) and (owner != eFACTION.Necrons){
 
 bridge=maxhp;
 
-
-// if (obj_fleet.enemy=2){hp=hp*0.75;
-    maxhp=hp;
-shields=shields*0.75;
-maxshields=shields;
+/* 
+if (obj_fleet.enemy == 2) {
+	hp = hp * 0.75;
+	maxhp = hp;
+	shields = shields * 0.75;
+	maxshields = shields;
 }
-
+ */
 // hp=1;
 shields=1;
 

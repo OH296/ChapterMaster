@@ -1,5 +1,6 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
+/// @mixin
 function scr_fleet_advisor(){
 	//TODO swap this xx yy stuff out for a surface
 	var xx = __view_get(e__VW.XView, 0) + 0;
@@ -76,9 +77,6 @@ function scr_fleet_advisor(){
     // TODO: Probably a good idea to turn this whole interactive list/sheet generating logic into a constructor, that can be reused on many screens.
     // I have no passion for this atm.
     if (instance_exists(cn)) {
-        var _header_offset = 80;
-        var _row_height = 20;
-        var _row_gap = 2;
         var _columns = {
             name: {
                 w: 176,
@@ -108,6 +106,7 @@ function scr_fleet_advisor(){
         };
 
         var _column_x = xx + 953; 
+        var _header_offset = 80;
         var _columns_array = ["name", "class", "location", "hp", "carrying"];
 
         for (var i = 0; i < array_length(_columns_array); i++) {
@@ -135,10 +134,12 @@ function scr_fleet_advisor(){
         }
         draw_set_halign(fa_left);
 
+        var _row_height = 20;
+        var _row_gap = 2;
         for (var i = ship_current; i < ship_current + 34; i++) {
             if (i>= array_length(obj_ini.ship)) then continue;
             if (obj_ini.ship[i] != "") {
-                var _row_y = yy + _header_offset + (i * (_row_height + _row_gap));
+                var _row_y = _columns[$ "name"].y1 + _row_height + (i * (_row_height + _row_gap));
                 draw_rectangle(xx + 950, _row_y, xx + 1546, _row_y + _row_height, 1);
 
                 var _goto_button = {
@@ -183,7 +184,7 @@ function scr_fleet_advisor(){
                     }
                 }
 
-                if scr_hit(xx + 950, _row_y, xx + 1546, yy + 100 + (i * (_row_height + _row_gap))) {
+                if scr_hit(xx + 950, _row_y, xx + 1546, _row_y + _row_height) {
                     if (cn.temp[101] != obj_ini.ship[i]) {
                         cn.temp[101] = obj_ini.ship[i];
                         cn.temp[102] = obj_ini.ship_class[i];

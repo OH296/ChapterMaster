@@ -99,6 +99,7 @@ ships_damaged=0;
 
 marines_lost=0;
 
+en_mutation=[];
 en_mutation[0]="";
 en_mutation[1]="";
 en_mutation[2]="";
