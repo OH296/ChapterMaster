@@ -532,6 +532,7 @@ function scr_load(save_part, save_id) {
 	        fla.orbiting=ini_read_real("Fleet",$"ef{i}orb",0);
 	        fla.navy=ini_read_real("Fleet",$"ef{i}navy",0);
 	        fla.guardsmen_unloaded=ini_read_real("Fleet",$"ef{i}unl",0);
+	        fla.turns_static=ini_read_real("Fleet",$"ef{i}turns_static",0);
 	        fla.inquisitor=ini_read_real("Fleet",$"ef{i}inquis",-1);
 	        fla.complex_route = return_json_from_ini("Fleet", $"ef{i}complex_route", []);
 

@@ -6,8 +6,9 @@ var orb=orbiting;
 if (round(owner)!=eFACTION.Imperium) and (navy=1) then owner= noone;
 
 //TODO centralise orbiting logic
+var _is_orbiting = is_orbiting();
 if (orbiting != 0 && action=="" && owner!=noone){
-    var orbiting_found=instance_exists(orbiting);
+    var orbiting_found=_is_orbiting;
     if (orbiting_found){
         orbiting_found = variable_instance_exists(orbiting, "present_fleet");
         if (orbiting_found){
@@ -24,7 +25,12 @@ if ((trade_goods="Khorne_warband") or (trade_goods="Khorne_warband_landing_force
     khorne_fleet_cargo();
 }
 
-if (instance_exists(orbiting)) {
+if (_is_orbiting) {
+	turns_static++;
+	if (turns_static>15 && owner==eFACTION.Ork){
+		ork_fleet_move();
+		_is_orbiting=false;
+	}
     if (instance_exists(obj_crusade)) 
 	and (orbiting.owner <= eFACTION.Ecclesiarchy) 
 	and (owner = eFACTION.Imperium) 
@@ -114,19 +120,17 @@ if (instance_exists(orbiting)) {
 }
 
 if (navy && action=="") {
-	var orbit = instance_nearest(x,y, obj_star);
-	orbiting = point_distance(x,y,orbit.x,orbit.y)<50?orbit:false;
 	if trade_goods != "player_hold" {
 
 
-	if (trade_goods="") and (instance_exists(orbiting)){
+	if (trade_goods="") and (_is_orbiting){
 	    if (orbiting.present_fleet[20]>0) then exit;
 	}
 
 
 	// Check if the ground battle is victorious or not
 	if (obj_controller.faction_status[eFACTION.Imperium]="War") and (trade_goods="invading_player") and (guardsmen_unloaded=1) {
-	    if (instance_exists(orbiting)) {
+	    if (_is_orbiting) {
 			
 			//slightly more verbose than the last way, but reduces reliance on fixed array sizes
 	        var tar = array_reduce(orbiting.p_guardsmen, function(prev, curr, idx) {
@@ -154,7 +158,7 @@ if (navy && action=="") {
 	// Invade the player homeworld as needed
 	navy_attack_player_world();
 	// Bombard the shit out of the player homeworld
-	if (obj_controller.faction_status[eFACTION.Imperium]="War") and (trade_goods="") and (guardsmen_unloaded=0) and (instance_exists(orbiting)){
+	if (obj_controller.faction_status[eFACTION.Imperium]="War") and (trade_goods="") and (!guardsmen_unloaded) and (_is_orbiting){
         var bombard=false;
 	    if (orbiting!=noone){
             if (orbiting.object_index==obj_star) then bombard=true;
@@ -259,7 +263,7 @@ if (navy && action=="") {
 
 	if (obj_controller.faction_status[eFACTION.Imperium]="War") and (action="") and (trade_goods="") and (guardsmen_unloaded=0) {
 	    var hold = false;
-	    if (is_orbiting()){
+	    if (_is_orbiting){
 			var player_owns_planet = scr_get_planet_with_owner(orbiting, eFACTION.Player);	    	
 	        hold = player_owns_planet or (orbiting.present_fleet[eFACTION.Player] > 0)
 	    }
@@ -323,7 +327,7 @@ if (navy && action=="") {
 	            if (fleet_distance<homeworld_distance) and (fleet_distance<7000) and (fleet_distance>40) and (instance_exists(obj_temp7)) {// Go towards that fleet
 	                planet_nearby=instance_nearest(fleet_nearby.x,fleet_nearby.y,obj_star);
                 
-	                if (instance_exists(planet_nearby)) and (instance_exists(orbiting)){
+	                if (instance_exists(planet_nearby)) and (_is_orbiting){
 						if (fleet_distance<=500) and (planet_nearby!=orbiting){// Case 1; really close, wait for them to make the move
 	                        with(obj_temp7){instance_destroy();}
 	                        with(obj_temp8){instance_destroy();}
@@ -387,7 +391,7 @@ if (navy && action=="") {
 
 
 
-	if (action="") and (instance_exists(orbiting)) and (guardsmen_unloaded=1){// Move from one planet to another
+	if (action="") and (_is_orbiting) and (guardsmen_unloaded=1){// Move from one planet to another
 	    var o=0,that=0,highest=0,cr=0;
 	    o=0;that=0;highest=0;cr=0;
     
@@ -436,14 +440,14 @@ if (navy && action=="") {
 		send_navy_to_forge();
 	}
 	// Bombard the shit out of things when able
-	 else if (trade_goods=="") and (instance_exists(orbiting)) and (action=""){
+	 else if (trade_goods=="") and (_is_orbiting) and (action=""){
 	    imperial_navy_bombard();
 	}
 
 
 	// If the guardsmen all die then move on
 	var o=0;
-	if (guardsmen_unloaded=1) and (instance_exists(orbiting)){
+	if (guardsmen_unloaded=1) and (_is_orbiting){
 	    var o=0,guardsmen_alive=1;
 	    repeat(orbiting.planets){
             o+=1;
@@ -525,14 +529,18 @@ if (navy && action=="") {
 	        trade_goods="goto_recruiting";
 	        action_x=c_plan.x;
 	        action_y=c_plan.y;
-	        set_fleet_movement();
+	        set_fleet_movement()	        
+	        _is_orbiting=false;
 	    }
     
-	    with(obj_temp_inq){instance_destroy();}exit;
+	    with(obj_temp_inq){
+	    	instance_destroy();
+		}
+		exit;
 	}
 	// Get recruits
 	if (action="") and (trade_goods="goto_recruiting"){
-	    if (instance_exists(orbiting)){
+	    if (_is_orbiting){
 	        var o=0,that=0,te=0,te_large=0;
 	        repeat(orbiting.planets){
 	        	o+=1;
@@ -580,25 +588,22 @@ if (navy && action=="") {
 	}
 }
 
-var  dir;dir=0;
-var ret;ret=0;
+var dir=0;
+var ret=0;
 
 
-if (action==""){
-    if (instance_exists(orbiting)){orbiting=orbiting;}// orbiting.present_fleet[owner]+=1;
-    else{orbiting=instance_nearest(x,y,obj_star);orbiting=orbiting;}
-    var max_dis;max_dis=400;
+if (action=="" && _is_orbiting){
+    var max_dis=400;
     
-    if (instance_exists(orbiting)){
-        if (orbiting.owner=eFACTION.Player) and (obj_controller.faction_status[eFACTION.Imperium]="War") and (owner=eFACTION.Imperium){
-            var i;i=0;
-            repeat(4){i+=1;
-                if (orbiting.p_owner[i]=1) then orbiting.p_pdf[i]-=capital_number*50000;
-                if (orbiting.p_owner[i]=1) then orbiting.p_pdf[i]-=frigate_number*10000;
-                if (orbiting.p_pdf[i]<0) then orbiting.p_pdf[i]=0;
-            }
+
+    if (orbiting.owner=eFACTION.Player) and (obj_controller.faction_status[eFACTION.Imperium]="War") and (owner=eFACTION.Imperium){
+        for (var i=1;i<=orbiting.planets;i++){
+            if (orbiting.p_owner[i]=1) then orbiting.p_pdf[i]-=capital_number*50000;
+            if (orbiting.p_owner[i]=1) then orbiting.p_pdf[i]-=frigate_number*10000;
+            if (orbiting.p_pdf[i]<0) then orbiting.p_pdf[i]=0;
         }
     }
+
     
     // 1355;
     
@@ -918,7 +923,7 @@ if (action==""){
         }*/
     }
     
-    if (owner = eFACTION.Tyranids) {// Juggle bio-resources
+    if (owner == eFACTION.Tyranids) {// Juggle bio-resources
         if (capital_number*2>frigate_number){
             capital_number-=1;frigate_number+=2;
         }
@@ -1005,7 +1010,7 @@ if (action==""){
         }
     }
     
-    if (owner=eFACTION.Ork) and (action=""){// Should fix orks converging on useless planets
+    if (owner=eFACTION.Ork) and (action==""){// Should fix orks converging on useless planets
         ork_fleet_move();
     }
 }

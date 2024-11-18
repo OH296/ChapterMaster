@@ -113,8 +113,8 @@ function get_largest_player_fleet(){
 function is_orbiting(){
 	if (action != "") then return false;
 	var nearest = instance_nearest(x,y,obj_star);
-	if (point_distance(x,y,nearest.x, nearest.y)<50){
-		orbiting =  nearest;
+	if (point_distance(x,y,nearest.x, nearest.y)<10 && nearest.name != ""){
+		orbiting = nearest.id;
 		return true
 	}
 	orbiting=false;
@@ -126,6 +126,7 @@ function set_fleet_movement(fastest_route = true){
 	action = "";
 
 	if (action==""){
+		turns_static = 0;
 	    var sys, mine, fleet;
 	    var connected=0,cont=0,target_dist=0;
 	    if (fastest_route){
@@ -732,7 +733,7 @@ function fleet_arrival_logic(){
     
     if (cur_star.x=old_x) and (cur_star.y=old_y) and (cur_star.owner=self.owner) and (cur_star.action="") and ((owner = eFACTION.Tau) or (owner = eFACTION.Chaos)) and (mergus=10) and (trade_goods!="csm") and (trade_goods!="Khorne_warband"){// Move somewhere new
         var stue, stue2;stue=0;stue2=0;
-        var goood;goood=0;
+        var goood=0;
         
         with(obj_star){if (planets=1) and (p_type[1]="Dead") then instance_deactivate_object(id);}
         stue=instance_nearest(x,y,obj_star);
@@ -762,7 +763,11 @@ function fleet_arrival_logic(){
     
     
     if (owner = eFACTION.Ork){
-        
+    	if (is_orbiting()){
+    		with (orbiting){
+    			ork_fleet_arrive_target();
+    		}
+    	}
         var kay, temp5, temp6, temp7;
         kay=0;temp5=0;temp6=0;temp7=0;
 
@@ -831,6 +836,25 @@ function choose_fleet_sprite_image(){
     else if (owner == eFACTION.Tyranids) { sprite_index=spr_fleet_tyranid;}
     else if (owner == eFACTION.Chaos) { sprite_index=spr_fleet_chaos;}
     image_speed=0;	
+}
+
+
+
+function merge_fleets(main_fleet, merge_fleet){
+	main_fleet.capital_number += merge_fleet.capital_number;
+	main_fleet.frigate_number += merge_fleet.frigate_number;
+	main_fleet.escort_number += merge_fleet.escort_number;
+	var _merge_cargo = struct_get_names(merge_fleet.cargo_data);
+	//TODO custom merge stuff
+	for (var i=0;i<array_length(_merge_cargo);i++){
+		if (!struct_exists(main_fleet.cargo_data, _merge_cargo[i])){
+			main_fleet.cargo_data[$ _merge_cargo[i]] = merge_fleet.cargo_data[$ _merge_cargo[i]];
+		}
+	}
+	with(merge_fleet){
+		instance_destroy();
+	}
+
 }
 
 

@@ -233,6 +233,7 @@ function scr_save(save_part,save_id) {
 	        ini_write_real("Fleet",$"ef{i}orb",instance_array[i].orbiting);
 	        ini_write_real("Fleet",$"ef{i}navy",instance_array[i].navy);
 	        ini_write_real("Fleet",$"ef{i}unl",instance_array[i].guardsmen_unloaded);
+	        ini_write_real("Fleet",$"ef{i}turns_static",instance_array[i].turns_static);
 	        var e
 	        if (instance_array[i].navy=1){e=-1;
 	            repeat(20){e+=1;
