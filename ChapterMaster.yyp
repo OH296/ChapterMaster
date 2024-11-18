@@ -649,6 +649,7 @@
     {"id":{"name":"spr_pack_brazier2","path":"sprites/spr_pack_brazier2/spr_pack_brazier2.yy",},},
     {"id":{"name":"spr_popup","path":"sprites/spr_popup/spr_popup.yy",},},
     {"id":{"name":"spr_attacked","path":"sprites/spr_attacked/spr_attacked.yy",},},
+    {"id":{"name":"scr_unit_traits","path":"scripts/scr_unit_traits/scr_unit_traits.yy",},},
     {"id":{"name":"scr_marine_struct","path":"scripts/scr_marine_struct/scr_marine_struct.yy",},},
     {"id":{"name":"spr_raid","path":"sprites/spr_raid/spr_raid.yy",},},
     {"id":{"name":"spr_purge_1","path":"sprites/spr_purge_1/spr_purge_1.yy",},},
