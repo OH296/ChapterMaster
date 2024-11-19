@@ -682,7 +682,7 @@ global.astartes_trait_dist = [
 				]						
 			}
 		],	
-		{
+		[
 			"siege_master",
 			[299,297],
 			{
@@ -692,7 +692,7 @@ global.astartes_trait_dist = [
 					["ice", 1],
 				]
 			}
-		}			
+		]		
 	];
 
 
