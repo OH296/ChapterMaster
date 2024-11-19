@@ -70,7 +70,8 @@ function get_complex_set(set = eARMOUR_SET.MK7){
         set_pieces.left_arm = spr_mk5_left_arm;
         set_pieces.right_arm = spr_mk5_right_arm;
         set_pieces.left_trim = spr_mk7_left_trim;
-        set_pieces.right_trim = spr_mk7_right_trim;        
+        set_pieces.right_trim = spr_mk7_right_trim;
+		set_pieces.head = spr_mk5_head_variants;
     }else if (set == eARMOUR_SET.MK4){
         set_pieces.chest_variants = spr_mk4_chest_variants;
         set_pieces.armour = spr_mk4_complex;
@@ -1334,6 +1335,15 @@ function scr_draw_unit_image(_background=false){
                         }
                     }
                 }
+				
+				// Librarian Details
+                if (unit_specialization == UnitSpecialization.Librarian) {
+                    if (armour_type == ArmourType.Normal) {
+                        draw_sprite(spr_gear_librarian, 0, x_surface_offset, y_surface_offset);
+                    } else if (armour_type == ArmourType.Terminator) {
+						draw_sprite(spr_gear_librarian, 0, x_surface_offset-14, y_surface_offset-14);
+					}
+                }
             
                 // Hood
                 if (psy_hood>0){
@@ -1363,13 +1373,11 @@ function scr_draw_unit_image(_background=false){
 
                 //Chaplain head and Terminator version
                 if (skull_mask>0){
-                    if (unit_armour!="Terminator"){
-                      //if (_armour_type==ArType.Tart || _armour_type==ArType.Term) then draw_sprite(spr_terminator_chap,1,0-2,0-11);
-                    }
-                    shader_reset();
-                    if (armour_type == ArmourType.Normal || unit_armour=="Terminator Armour") then draw_sprite(spr_chaplain_skull_helm,0,x_surface_offset,y_surface_offset);
-                    if (unit_armour=="Tartaros") then draw_sprite(spr_chaplain_skull_helm,0,x_surface_offset,y_surface_offset);
-                    shader_set(sReplaceColor);
+                    if (armour_type == ArmourType.Normal) {
+						draw_sprite(spr_chaplain_skull_helm,0,x_surface_offset,y_surface_offset);
+					} else if (armour_type == ArmourType.Terminator) {
+						draw_sprite(spr_chaplain_skull_helm,1,x_surface_offset,y_surface_offset);
+					}
                 }
             }
             //purity seals/decorations
