@@ -118,7 +118,7 @@ function PlanetData(planet, system) constructor{
 
     static recover_starship = function(techs){
     	try {
-			var engineer_count=array_length(techs_taken);
+			var engineer_count=array_length(techs);
 			if (_planet_data.has_feature(P_features.Starship) && engineer_count>0 && turn_end){
 				//TODO allow total tech point usage here
 		        var _starship = get_features(,P_features.Starship)[0];
@@ -126,7 +126,7 @@ function PlanetData(planet, system) constructor{
 		        var _engineer_score_start = _starship.engineer_score;
 		    	if (_starship.engineer_score<2000){
 		        	for (var v=0;v<engineer_count;v++){
-		        		_starship.engineer_score += (techs_taken[v].technology/2);
+		        		_starship.engineer_score += (techs[v].technology/2);
 		        	}
 		        	scr_alert("green","owner",$"Ancient ship repairs {min((_starship.engineer_score/2000)*100, 100)}% complete",x,y);
 		    	}
@@ -134,7 +134,7 @@ function PlanetData(planet, system) constructor{
 		        var _maxr=0,_requisition_spend=0,_target_spend=10000;
 
 		        _maxr=floor(obj_controller.requisition/50);
-		        _requisition_spend=min(_maxr*50,array_length(techs_taken)*50,_target_spend-_starship.funds_spent);
+		        _requisition_spend=min(_maxr*50,array_length(techs)*50,_target_spend-_starship.funds_spent);
 		        obj_controller.requisition-=_requisition_spend;
 		        _starship.funds_spent+=_requisition_spend;
 		    
