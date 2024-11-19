@@ -19,6 +19,20 @@
 */
 global.stat_list = ["constitution", "strength", "luck", "dexterity", "wisdom", "piety", "charisma", "technology","intelligence", "weapon_skill", "ballistic_skill"];
 
+global.stat_shorts = {
+	"constitution":"CON", 
+	"strength":"STR", 
+	"luck":"LCK", 
+	"dexterity":"DEX", 
+	"wisdom":"WIS", 
+	"piety":"PTY", 
+	"charisma":"CHA", 
+	"technology":"TEC",
+	"intelligence":"INT", 
+	"weapon_skill":"WS", 
+	"ballistic_skill":"BS",
+}
+
 // will swap these out for enums or some better method as i develop where this is going
 global.body_parts = ["left_leg", "right_leg", "torso", "right_arm", "left_arm", "left_eye", "right_eye", "throat", "jaw","head"];
 global.body_parts_display = ["Left Leg", "Right Leg", "Torso", "Right Arm", "Left Arm", "Left Eye", "Right Eye", "Throat", "Jaw","Head"];
@@ -180,7 +194,7 @@ global.trait_list = {
 		strength:4,
 		wisdom:3,
 		charisma:1,
-		display_name:"Lone Survivor",
+		display_name:"Beast Slayer",
 		flavour_text :"Defeated a huge beast in single combat, this proves their toughness and their great ability to overcome powerful enemies of the imperium",
 
 	},	
@@ -2460,6 +2474,22 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			}
 		}
 		return has_tag;
+	}
+
+	static get_stat_line = function(){
+		return {
+			"constitution":constitution, 
+			"strength":strength, 
+			"luck":luck, 
+			"dexterity":dexterity, 
+			"wisdom":wisdom, 
+			"piety":piety, 
+			"charisma":charisma, 
+			"technology":technology,
+			"intelligence":intelligence, 
+			"weapon_skill":weapon_skill, 
+			"ballistic_skill":ballistic_skill
+		}
 	}
 
 	static movement_after_math = function(end_company=company, end_slot=marine_number){

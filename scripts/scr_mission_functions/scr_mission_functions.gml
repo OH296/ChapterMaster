@@ -206,8 +206,11 @@ function complete_beast_hunt_mission(targ_planet, problem_index){
 				if (!_success) then _success=true;
 			}
 			if (_unit_pass[0]){
+				var _start_stats = DeepCloneStruct(_unit.get_stat_line());
 				_unit.add_trait("beast_slayer");
-				_unit_report_string += $"{_unit.name_role()} Has gained the trait {global.trait_list.beast_slayer.display_name}\n";
+				var end_stat = _unit.get_stat_line();
+				var _stat_diff = compare_stats(end_stat,_start_stats);
+				_unit_report_string += $"{_unit.name_role()} Has gained the trait {global.trait_list.beast_slayer.display_name}, {(print_stat_diffs(_stat_diff))}\n";
 			} else {
 				var _tough_check = _tester.standard_test(_unit, "constitution",_unit.luck);
 				if (!_tough_check[0]){
