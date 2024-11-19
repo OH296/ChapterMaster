@@ -319,6 +319,7 @@ function scr_trial_data(wanted=-1){
 			var train_traits = find_favoured_training_traits(i);
 			data[i].favoured_traits = train_traits[1];
 			data[i].disfavoured_traits = train_traits[0];
+			data[i].stat_diffs = train_traits[2];
 		}
 		return data;
 	}
@@ -331,6 +332,11 @@ function find_favoured_training_traits(training_enum){
 	var favoured_traits = [];
 	var trait_id ="";
 	var stat_diffs = {};
+	var _stat_names = global.stat_list
+	for (var i=0;i<array_length(_stat_names);i++){
+		stat_diffs[$_stat_names[i]] = 0;
+	}
+
 	for (var i=0;i<array_length(_traits);i++){
 		_trait_data = _traits[i];
 		trait_id = _trait_data[0]
@@ -341,18 +347,34 @@ function find_favoured_training_traits(training_enum){
 					var _trial_spawn_mods = _trait_spawn_mods.recruit_trial;
 					for (var s=0;s<array_length(_trial_spawn_mods);s++){
 						if (_trial_spawn_mods[s][0] == training_enum){
+							var _trait_spawn_chance = _trial_spawn_mods[s][1];
+							var _spawn_percent = (_trait_spawn_chance/_trait_data[1][0])*-1;
 							if (_trial_spawn_mods[s][1]){
 								array_push(disfavoured_traits, trait_id);
 							} else {
 								array_push(favoured_traits, trait_id);
 							}
+							if (_spawn_percent!=0){
+								var _trait_stats = global.trait_list[$ trait_id];
+								for (var stat_i = 0;stat_i<array_length(_stat_names);stat_i++){
+									var stat = _stat_names[stat_i];
+									if (struct_exists(_trait_stats,stat)){
+										var _stat_value = _trait_stats[$stat];
+										if (is_array(_stat_value)){
+											_stat_value = _stat_value[0];
+										}
+										stat_diffs[$ stat] += _stat_value*_spawn_percent;
+									}
+								}
+							}
+							break;
 						}
 					}
 				}
 			}
 		}
 	}
-	return [disfavoured_traits, favoured_traits];
+	return [disfavoured_traits, favoured_traits,stat_diffs];
 }
 function scr_compile_trial_bonus_string(trial_data){
 	var bonus_string = "";
@@ -428,11 +450,31 @@ function scr_compile_trial_bonus_string(trial_data){
 			var _disfavoured_trait = trial_data.disfavoured_traits[i];
 			bonus_string += $"{_traits[$ _disfavoured_trait].display_name}, ";
 		}
-		bonus_string+="\n";
-	}			
+		bonus_string+="\n\n";
+	}
+	if (struct_exists(trial_data,"stat_diffs")){
+		bonus_string+=$"{trial_data.stat_diffs}\n";
+	}		
 	return bonus_string;
 }
+function StatDistributionUnit(data) constructor{
+	data_upper_end = 0;
+	data_lower_end =0;
+	var _stat_names = global.stat_list;
+	for (var i=0;i<array_length(_stat_names);i++){
+		var _stat = _stat_names[i];
+		if (data[$_stat]<data_lower_end){
+			data_lower_end=data[$_stat];
+		}
+		if (data[$data_upper_end]>data_upper_end){
+			data_lower_end=data[$_stat];
+		}
+	}
+	data_upper_end = 
+	static draw = function(){
 
+	}
+}
 function set_up_recruitment_view(){
 	with (obj_controller){
 	    menu=15;

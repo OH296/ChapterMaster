@@ -801,6 +801,7 @@
     {"id":{"name":"spr_melta","path":"sprites/spr_melta/spr_melta.yy",},},
     {"id":{"name":"spr_carrion_breath","path":"sprites/spr_carrion_breath/spr_carrion_breath.yy",},},
     {"id":{"name":"spr_bullet","path":"sprites/spr_bullet/spr_bullet.yy",},},
+    {"id":{"name":"Sprite544","path":"sprites/Sprite544/Sprite544.yy",},},
     {"id":{"name":"spr_tech_area_pad","path":"sprites/spr_tech_area_pad/spr_tech_area_pad.yy",},},
     {"id":{"name":"spr_bolt","path":"sprites/spr_bolt/spr_bolt.yy",},},
     {"id":{"name":"spr_pulse","path":"sprites/spr_pulse/spr_pulse.yy",},},

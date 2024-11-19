@@ -210,7 +210,7 @@ global.trait_list = {
 		piety:[-6,4,"min"],
 		wisdom:1,
 		display_name:"Skeptic",
-		flavour_text:"Have a skeptical outlook and put little thought in trivial matters like religion and faith",
+		flavour_text:"Skeptical outlook and put little thought in trivial matters like religion and faith",
 	},
 	"scholar":{
 		intelligence:[4,2,"max"],
@@ -218,7 +218,7 @@ global.trait_list = {
 		technology:2,
 		stength:-1,
 		display_name:"Scholar",
-		flavour_text:"Have a keen mind and enjoy reading and training it whenever possible",
+		flavour_text:"Keen mind and enjoys reading and training it whenever possible",
 	},
 	"brute":{
 		strength:[4,2,"max"],
