@@ -749,7 +749,6 @@
     {"id":{"name":"spr_ship_razorfiend","path":"sprites/spr_ship_razorfiend/spr_ship_razorfiend.yy",},},
     {"id":{"name":"spr_mk7_right_arm","path":"sprites/spr_mk7_right_arm/spr_mk7_right_arm.yy",},},
     {"id":{"name":"scr_wait_and_execute","path":"scripts/scr_wait_and_execute/scr_wait_and_execute.yy",},},
-    {"id":{"name":"spr_mk7_right_arm","path":"sprites/spr_mk7_right_arm/spr_mk7_right_arm.yy",},},
     {"id":{"name":"spr_ship_stalker","path":"sprites/spr_ship_stalker/spr_ship_stalker.yy",},},
     {"id":{"name":"spr_weapon_plasc","path":"sprites/spr_weapon_plasc/spr_weapon_plasc.yy",},},
     {"id":{"name":"spr_ba_mk5_helm","path":"sprites/spr_ba_mk5_helm/spr_ba_mk5_helm.yy",},},

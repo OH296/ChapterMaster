@@ -310,10 +310,49 @@ function scr_trial_data(wanted=-1){
 		},						
 	]
 	if (wanted>-1){
+		var train_traits = find_favoured_training_traits(wanted);
+		data[wanted].favoured_traits = train_traits[1];
+		data[wanted].disfavoured_traits = train_traits[0];
 		return data[wanted];
 	} else {
+		for (var i=0;i<array_length(data);i++){
+			var train_traits = find_favoured_training_traits(i);
+			data[i].favoured_traits = train_traits[1];
+			data[i].disfavoured_traits = train_traits[0];
+		}
 		return data;
 	}
+}
+
+function find_favoured_training_traits(training_enum){
+	var _traits = global.astartes_trait_dist;
+	var _trait_data;
+	var disfavoured_traits = [];
+	var favoured_traits = [];
+	var trait_id ="";
+	var stat_diffs = {};
+	for (var i=0;i<array_length(_traits);i++){
+		_trait_data = _traits[i];
+		trait_id = _trait_data[0]
+		if (array_length(_trait_data) >= 3){
+			var _trait_spawn_mods = _trait_data[2];
+			if (is_struct(_trait_spawn_mods)){
+				if (struct_exists(_trait_spawn_mods,"recruit_trial")){
+					var _trial_spawn_mods = _trait_spawn_mods.recruit_trial;
+					for (var s=0;s<array_length(_trial_spawn_mods);s++){
+						if (_trial_spawn_mods[s][0] == training_enum){
+							if (_trial_spawn_mods[s][1]){
+								array_push(disfavoured_traits, trait_id);
+							} else {
+								array_push(favoured_traits, trait_id);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return [disfavoured_traits, favoured_traits];
 }
 function scr_compile_trial_bonus_string(trial_data){
 	var bonus_string = "";
@@ -373,7 +412,24 @@ function scr_compile_trial_bonus_string(trial_data){
 			}
 		}
 		bonus_string+= "\n";
-	}	
+	}
+	var _traits = global.trait_list;
+	if (struct_exists(trial_data,"favoured_traits")){
+		bonus_string += "Favoured Traits:"
+		for (var i=0;i<array_length(trial_data.favoured_traits);i++){
+			var _favoured_trait = trial_data.favoured_traits[i];
+			bonus_string += $"{_traits[$ _favoured_trait].display_name}, ";
+		}
+		bonus_string+="\n\n";
+	}
+	if (struct_exists(trial_data,"disfavoured_traits")){
+		bonus_string += "Dis-Favoured Traits:"
+		for (var i=0;i<array_length(trial_data.disfavoured_traits);i++){
+			var _disfavoured_trait = trial_data.disfavoured_traits[i];
+			bonus_string += $"{_traits[$ _disfavoured_trait].display_name}, ";
+		}
+		bonus_string+="\n";
+	}			
 	return bonus_string;
 }
 

@@ -81,7 +81,7 @@ function PlanetData(planet, system) constructor{
 
     static marine_training = planet_training_sequence;
 
-    static has_feature(feature){
+    static has_feature = function(feature){
     	return planet_feature_bool(features, feature);
     }
 
@@ -116,11 +116,11 @@ function PlanetData(planet, system) constructor{
 		return _training_happend;   	
     }
 
-    static recover__starship = function(techs){
+    static recover_starship = function(techs){
 		var engineer_count=array_length(techs_taken);
-		if (_planet_data.has_feature(P_features._Starship) && engineer_count>0 && turn_end){
+		if (_planet_data.has_feature(P_features.Starship) && engineer_count>0 && turn_end){
 			//TODO allow total tech point usage here
-	        var _starship = get_features(,P_features._Starship)[0];
+	        var _starship = get_features(,P_features.Starship)[0];
 
 	        var _engineer_score_start = _starship.engineer_score;
 	    	if (_starship.engineer_score<2000){
@@ -142,7 +142,7 @@ function PlanetData(planet, system) constructor{
 	        }
 	        if (_starship.funds_spent>=_target_spend && _starship.engineer_score>=2000){// u2=tar;
 	        	//TODO refactor into general new ship logic
-	            delete_features(cur_system.p_feature[p],P_features._Starship);
+	            delete_features(cur_system.p_feature[p],P_features.Starship);
 	        
 	            var locy=$"{name} {scr_roman_numerals()[p-1]}";
 	        

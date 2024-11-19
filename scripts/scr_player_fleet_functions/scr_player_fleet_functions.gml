@@ -426,7 +426,7 @@ function new_player_ship_defualts(){
 
 
 function new_player_ship(type, start_loc="home", new_name=""){
-    var ship_names="",new_name="",index=0;
+    var ship_names="",index=0;
     var index = new_player_ship_defualts();
     
     for(var k=0; k<=200; k++){

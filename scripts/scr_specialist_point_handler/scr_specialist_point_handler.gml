@@ -8,7 +8,7 @@ function SpecialistPointHandler() constructor{
     forge_master=-1;
     master_craft_chance = 0;
 
-    forge.reasons = {};
+    forge_reasons = {};
     
     forge_string = "";
     at_forge = 0;
