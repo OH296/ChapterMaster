@@ -788,7 +788,7 @@ if (shop = "equipment2") {
 
     i += 1;
     x_mod[i] = 9;
-    item[i] = "Gene Pod";
+    item[i] = "Gene Pod Incubator";
     item_stocked[i] = scr_item_count(item[i]);
     nobuy[i] = 1;
     item_cost[i] = 0;   

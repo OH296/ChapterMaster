@@ -759,7 +759,7 @@ if (obj_ini.fleet_type != ePlayerBase.home_world) and (defeat==1) and (dropping=
 	    endline=0;
 
 	    if (obj_controller.und_gene_vaults=0){
-            //all gene pods and gene seed are lost
+            //all Gene Pod Incubators and gene seed are lost
 	        destroy_all_gene_slaves(false);
 	    }
 	    if (obj_controller.und_gene_vaults>0) then obj_controller.gene_seed-=floor(obj_controller.gene_seed/10);

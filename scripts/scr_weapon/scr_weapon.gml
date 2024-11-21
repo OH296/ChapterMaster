@@ -2357,7 +2357,7 @@ global.gear = {
 			},
 			"tags": ["vehicle"],
 		},
-		"Gene Pod" : {
+		"Gene Pod Incubator" : {
 			"abbreviation": "GenePod",
 			"description": "Required to house gene slaves in order to generate new gene seed for the chapter.",
 		}

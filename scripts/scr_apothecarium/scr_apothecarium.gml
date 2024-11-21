@@ -5,7 +5,7 @@ function scr_destroy_gene_slave_batch(batch_id, recover_gene=true){
     var _cur_slave = obj_ini.gene_slaves[batch_id];
     if (revover_gene){
         obj_controller.gene_seed+=_cur_slave.num;
-        scr_add_item("Gene Pod", _cur_slave.num);
+        scr_add_item("Gene Pod Incubator", _cur_slave.num);
     }
     delete _cur_slave;
     array_delete(obj_ini.gene_slaves,batch_id, 1);
@@ -135,7 +135,7 @@ function scr_apothecarium(){
     if (obj_controller.gene_seed <= 0) or(obj_ini.zygote = 1) then draw_set_alpha(0.5);
     draw_set_color(c_gray);
     draw_set_color(c_black);
-    if (scr_item_count("Gene Pod")){
+    if (scr_item_count("Gene Pod Incubator")){
         if (point_and_click(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave",[0.75,0.75],c_green))){
             if (gene_seed>0) and (obj_ini.zygote==0) {
                 var _added = false;
@@ -155,12 +155,12 @@ function scr_apothecarium(){
                         assigned_apothecaries : [],
                     });
                 }
-                scr_add_item("Gene Pod", -1);
+                scr_add_item("Gene Pod Incubator", -1);
             }
         }
     } else {
         if (scr_hit(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave",[0.75,0.75],c_grey))){
-            tooltip_draw("No available Gene Pods, Build more Gene Pods in the forge");
+            tooltip_draw("No available Gene Pod Incubators, Build more Gene Pod Incubators in the forge");
         }
     }
 

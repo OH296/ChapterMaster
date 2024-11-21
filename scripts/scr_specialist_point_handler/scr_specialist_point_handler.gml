@@ -56,7 +56,7 @@ function SpecialistPointHandler() constructor{
 
         forge_string = $"Forge Production Rate#";
         forge_master=-1;
-        
+
         healing_and_point_use();
 
         var _noticed_heresy=false, at_forge=0;
@@ -376,13 +376,14 @@ function SpecialistPointHandler() constructor{
         var _cur_slave;
         var _lost_gene_slaves = 0
         var _stack_lost_incubators = [];
-        for(var i=0; i<_slave_length; i++){
+        for (var i=0; i<_slave_length; i++){
             _cur_slave = _slaves[i];
             if (_cur_slave.num>0){
                 _cur_slave.eta--;
                 if (irandom(100000)<obj_ini.stability*_cur_slave.num){
                     _cur_slave.num--;
                     _lost_gene_slaves++;
+                    scr_add_item("Gene Pod Incubator");
                 }
                 if (_cur_slave.eta==0 && _cur_slave.num>0){
                     _cur_slave.eta=60;
@@ -394,15 +395,17 @@ function SpecialistPointHandler() constructor{
                 }
             }
         }
-        var _lost_inc_string = "Incubators Batch no longer has gene slaves and has been removed : ";
-        for (var i=array_length(_stack_lost_incubators)-1;i>=0;i--){
-            scr_destroy_gene_slave_batch(_stack_lost_incubators[i]);
-            _lost_inc_string += $"{i},";
+        if (array_length(_stack_lost_incubators)){
+            var _lost_inc_string = "Incubators Batch no longer has gene slaves and has been removed : ";
+            for (var i=array_length(_stack_lost_incubators)-1;i>=0;i--){
+                scr_destroy_gene_slave_batch(_stack_lost_incubators[i]);
+                _lost_inc_string += $"{i},";
 
+            }
+            scr_alert("","test-slaves",_lost_inc_string ,0,0);
         }
-        scr_alert("","test-slaves",_lost_inc_string ,0,0);
         if(_lost_gene_slaves>0){
-            scr_alert("","test-slaves",$"{_lost_gene_slaves} gene slaves lost due to geneseed instability",0,0);
+            scr_alert("","test-slaves",$"{_lost_gene_slaves} gene slaves lost due to geneseed instability their incubators have been returned to the armoury",0,0);
         }
     }    
     static scr_forge_item = function(item){
