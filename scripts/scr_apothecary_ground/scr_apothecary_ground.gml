@@ -181,8 +181,10 @@ function apothecary_simple(){
 				heal_points_use:0,
 				forge_points_use:0,
 			};
+
 			_loc_heal_points=0;
 			_loc_forge_points=0;
+
 			if (array_length(_unit_spread[$_locations[i]][p]) == 0) then continue;
 			cur_units = _unit_spread[$_locations[i]][p];
 			cur_apoths = _apoth_spread[$_locations[i]][p];
@@ -201,8 +203,18 @@ function apothecary_simple(){
 			for (var a=0;a<array_length(cur_units);a++){
 				points_spent = 0;
 				_unit = cur_units[a];
-				if (is_array(_unit) && _loc_forge_points>0){
+				if (is_array(_unit) && _loc_forge_points>0){				
 					if (array_length(_unit)>1){
+						var _role = obj_ini.veh_role[_unit[0]][_unit[1]];
+		                if (_role=="Land Raider"){
+		                    forge_veh_maintenance.land_raider = struct_exists(forge_veh_maintenance, "land_raider") ?forge_veh_maintenance.land_raider + 1 : 1;
+							_loc_forge_points--;
+							tech_points_used++;		                    
+		                } else if (array_contains(["Rhino","Predator", "Whirlwind"],_role)){
+		                    forge_veh_maintenance.small_vehicles = struct_exists(forge_veh_maintenance, "small_vehicles") ?forge_veh_maintenance.small_vehicles + 0.2 :0.2;
+		                    _loc_forge_points-=0.2;
+		                    tech_points_used+=0.2;
+		                }							
 						while (points_spent<10 && obj_ini.veh_hp[_unit[0]][_unit[1]]<100 && _loc_forge_points>0){
 							points_spent++;
 							if (turn_end){
@@ -213,6 +225,7 @@ function apothecary_simple(){
 						}
 					}
 				} else if (is_struct(_unit)){
+					_loc_forge_points -= _unit.equipment_maintenance_burden();
 					if  (_unit.hp() < _unit.max_health()){
 						if (_unit.armour() != "Dreadnought"){
 							if (_unit.hp()>0){

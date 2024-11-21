@@ -8,7 +8,49 @@ enum eTrials{
 	APPRENTICESHIP,
 	num
 }
-
+function find_recruit_success_chance(local_apothecary_points, planet_type){
+	var recruit_type = scr_trial_data(obj_controller.recruit_trial);
+	var recruit_chance_array = [0, 1000, 900, 800, 700, 600, 500];
+    var planet_type_recruit_chance = {
+        "Hive" : 30,
+        "Temperate" : 20,
+        "Feudal" : 20,
+        "Forge" : 15,
+        "Shrine" : 15,
+        "Desert" : 15,
+        "Ice" : 15,
+        "Agri" : 15,
+        "Death" : 15,
+        "Lava" : 15,
+    }
+    recruit_chance = 0;
+    if (obj_controller.recruiting>0){
+        var recruit_chance = recruit_chance_array[obj_controller.recruiting];
+    }    
+     var recruit_chance_total = 0;
+    if (struct_exists(planet_type_recruit_chance, planet_type)){
+        recruit_chance_total = planet_type_recruit_chance[$ planet_type]+local_apothecary_points;
+        if (struct_exists(recruit_type, "recruit_count_modifier")){
+            var modded=false;
+            var count_mod = recruit_type.recruit_count_modifier;
+            if (struct_exists(count_mod, "planets")){
+                if (struct_exists(count_mod.planets, planet_type)){
+                    recruit_chance_total*=(count_mod.planets[$planet_type]);
+                    modded=true;
+                }
+            }
+            if (!modded && struct_exists(count_mod, "base")){
+                recruit_chance_total*=count_mod.base;
+            }
+        }
+    }
+    if (recruit_chance!=0){
+		var _success_chance = recruit_chance_total/recruit_chance;   	
+    } else{
+    	_success_chance = 0;
+    }
+    return _success_chance;
+}
 // to be run in teh scope of the PlanetData struct
 function planet_training_sequence(local_apothecary_points){
 
@@ -32,49 +74,9 @@ function planet_training_sequence(local_apothecary_points){
 	        var months_to_neo = 72;
 	        var dista = 0;
 	        var onceh = 0;
-	        var recruit_chance_array = [0, 1000, 900, 800, 700, 600, 500];
-	        if (obj_controller.recruiting>0){
-	            recruit_chance = array_random_element(recruit_chance_array)*4;
-	        }
-
-	        // 135; recruiting
-	        // new_recruit_corruption isn't really relevant as corruption in marines doesn't matter
-	        // by default it takes 72 turns (6 years) to train
-
-	        var planet_type_recruit_chance = {
-	            "Hive" : 30,
-	            "Temperate" : 20,
-	            "Feudal" : 20,
-	            "Forge" : 15,
-	            "Shrine" : 15,
-	            "Desert" : 15,
-	            "Ice" : 15,
-	            "Agri" : 15,
-	            "Death" : 15,
-	            "Lava" : 15,
-	        }
-
-	        var recruit_chance_total = 0;
-	        if (struct_exists(planet_type_recruit_chance, planet_type)){
-	            recruit_chance_total = planet_type_recruit_chance[$ planet_type]+local_apothecary_points;
-	            if (struct_exists(recruit_type, "recruit_count_modifier")){
-	                var modded=false;
-	                var count_mod = recruit_type.recruit_count_modifier;
-	                if (struct_exists(count_mod, "planets")){
-	                    if (struct_exists(count_mod.planets, planet_type)){
-	                        recruit_chance_total*=(count_mod.planets[$planet_type]);
-	                        modded=true;
-	                    }
-	                }
-	                if (!modded && struct_exists(count_mod, "base")){
-	                    recruit_chance_total*=count_mod.base;
-	                }
-	            }
-	        }
-
-	        if (recruit_chance<=recruit_chance_total){
-	            aspirant = true;
-	        }
+	        
+	        var _recruit_chance = find_recruit_success_chance(local_apothecary_points, planet_type)
+	        aspirant = random(1)<_recruit_chance;
 
 	        // if a planet type has less than half it's max pop, you get 20% less spacey marines
 	        if (_planet_population <= halfpop) {

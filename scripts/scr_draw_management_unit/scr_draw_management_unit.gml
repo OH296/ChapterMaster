@@ -337,7 +337,7 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
     var no_location = (selecting_location=="");
     var wrong_location = false;
     if (!no_location){
-    	if (selecting_ship>0){
+    	if (selecting_ship>-1){
     		if (ma_lid[selected]==0){
     			wrong_location=true;
     		} else {

@@ -56,7 +56,7 @@ function SpecialistPointHandler() constructor{
 
         forge_string = $"Forge Production Rate#";
         forge_master=-1;
-
+        forge_veh_maintenance={};
         healing_and_point_use();
 
         var _noticed_heresy=false, at_forge=0;
@@ -76,27 +76,15 @@ function SpecialistPointHandler() constructor{
         apothecary_points -= apothecary_training_points;
         //TODO extract to the apothecary simple script
         forge_string += $"Techmarines: +{floor(forge_points)}#";
-        forge_string += $"Vehicle Repairs: -{floor(tech_points_used)}#";
         forge_points-=tech_points_used;        
-        var forge_veh_maintenance={};
-
-        for (var comp=0;comp<=10;comp++){
-            for (var veh=0;veh<=100;veh++){
-                if (obj_ini.veh_role[comp][veh]=="Land Raider"){
-                    forge_veh_maintenance.land_raider = struct_exists(forge_veh_maintenance, "land_raider") ?forge_veh_maintenance.land_raider + 1 : 1;
-                } else if (array_contains(["Rhino","Predator", "Whirlwind"],obj_ini.veh_role[comp][veh])){
-                    forge_veh_maintenance.small_vehicles = struct_exists(forge_veh_maintenance, "small_vehicles") ?forge_veh_maintenance.small_vehicles + 0.2 :0.2;
-                }
-            }
-        }
-
+        forge_string += $"Vehicle Repairs:#";
         if (struct_exists(forge_veh_maintenance, "land_raider")){
-            forge_string += $"Land Raider Maintenance: -{forge_veh_maintenance.land_raider}#";
+            forge_string += $"   Land Raider Maintenance: -{forge_veh_maintenance.land_raider}#";
             forge_points-=forge_veh_maintenance.land_raider;
         }
         if (struct_exists(forge_veh_maintenance, "small_vehicles")){
             if (floor(forge_veh_maintenance.small_vehicles)>0){
-                forge_string += $"Small Vehicle Maintenance: -{floor(forge_veh_maintenance.small_vehicles)}#";
+                forge_string += $"   Small Vehicle Maintenance: -{floor(forge_veh_maintenance.small_vehicles)}#";
                 forge_points-=floor(forge_veh_maintenance.small_vehicles);
             }
         }
