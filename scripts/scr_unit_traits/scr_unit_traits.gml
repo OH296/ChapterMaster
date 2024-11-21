@@ -854,7 +854,7 @@ function scr_marine_trait_spawning(distribution_set){
 					dist_rate=[0,0];
 				}
 			}
-			if (struct_exists(spawn_data, "recruit_data")){
+			if (struct_exists(dist_modifiers, "recruit_data")){
 				var recruit_world_data = spawn_data.recruit_data;
 				if (struct_exists(dist_modifiers, "recruit_world_type")){
 					var type_data = dist_modifiers.recruit_world_type;
