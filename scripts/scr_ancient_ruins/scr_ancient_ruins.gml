@@ -147,7 +147,7 @@ function scr_explore_ruins(){
     var arti=instance_create(star.x,star.y,obj_ground_mission);
     arti.explore_feature = self;
     arti.num=planet;
-    arti.loc=obj_controller.selecting_location;
+    arti.loc=star.name;
     arti.battle_loc=star.name;
     arti.manag=obj_controller.managing;
     arti.obj=star;
