@@ -1467,7 +1467,8 @@ squads = false;
 specialist_point_handler = new SpecialistPointHandler();
 specialist_point_handler.calculate_research_points();
 
-//** sets up marine_by_location view
+
+//** sets up marine_by_location views
 location_viewer = new UnitQuickFindPanel();
 
 // ** Sets up the number of marines per company **

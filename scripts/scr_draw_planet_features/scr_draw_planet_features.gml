@@ -302,7 +302,7 @@ function DataSlateMKTwo()constructor{
 	width=0;
 	XX=0;
 	YY=0;
-	static draw = function(xx,yy,x_scale, y_scale){
+	static draw = function(xx,yy,x_scale=1, y_scale=1){
 		XX=xx;
 		YY=yy;
 		height = 250*y_scale;

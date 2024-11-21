@@ -2,6 +2,7 @@
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 function UnitQuickFindPanel() constructor{
 	main_panel = new DataSlate();
+	garrison_log = {};
 	tab_buttons = {
 	    "fleets":new MainMenuButton(spr_ui_but_3, spr_ui_hov_3),
 	    "garrisons":new MainMenuButton(spr_ui_but_3, spr_ui_hov_3),
@@ -9,14 +10,19 @@ function UnitQuickFindPanel() constructor{
 	    "missions":new MainMenuButton(spr_ui_but_3, spr_ui_hov_3),
 	}
 
+	static detail_slate = new DataSlateMKTwo();
+
 	view_area = "fleets";
-	update_garrison_log = function(){
-		for (var i = 0;i<=200; i++){
+	static update_garrison_log = function(){
+		for (var i = 0;i<array_length(obj_ini.ship_carrying); i++){
 			obj_ini.ship_carrying[i]=0
 		};
 		var unit, unit_location, group;
+		delete garrison_log;
 	    garrison_log = {};
-	    for (var co=0;co<11;co++){
+	    obj_controller.specialist_point_handler.calculate_research_points(false);
+	    show_debug_message(obj_controller.specialist_point_handler.point_breakdown);
+	    for (var co=0;co<=obj_ini.companies;co++){
 	    	for (var u=0;u<array_length(obj_ini.TTRPG[co]);u++){
 				/// @type {Struct.TTRPG_stats}
 	    		unit = fetch_unit([co, u]);
@@ -183,9 +189,11 @@ function UnitQuickFindPanel() constructor{
 				hover_entered = scr_hit(loc[0],loc[1],loc[2],loc[3]);
 			}		    
 		    while(i<array_length(system_names) && (yy+90+(20*i)+12 +20)<main_panel.YY+yy+main_panel.height){
-		    	system_data = garrison_log[$system_names[i]];
+		    	var _sys_name = system_names[i];
+		    	system_data = garrison_log[$_sys_name];
 		    	registered_hover=false;
-				if (scr_hit(xx+10, yy+90+(20*i),xx+main_panel.width,yy+90+(20*i)+18)){
+		    	var _sys_item_y = yy+90+(20*i)+18;
+				if (scr_hit(xx+10, yy+90+(20*i),xx+main_panel.width,_sys_item_y)){
 					if (!hover_entered){
 						draw_set_color(c_gray);
 						draw_rectangle(xx+10+20, yy+90+(20*i)-2,xx+main_panel.width-20,yy+90+(20*i)+18, 0);
@@ -201,6 +209,32 @@ function UnitQuickFindPanel() constructor{
 						if (hover_item.root_item == i){
 							draw_rectangle(xx+10+20, yy+90+(20*i)-2,xx+main_panel.width-20,yy+90+(20*i)+18, 0);
 						}
+					}
+					detail_slate.draw(xx+main_panel.width-10,_sys_item_y-20, 1.5, 1.5);
+					var _special_points = obj_controller.specialist_point_handler.point_breakdown.systems;
+					if (struct_exists(_special_points,_sys_name)){
+						var _system_point_data = _special_points[$ _sys_name];
+						var _xx = xx+main_panel.width-10;
+						var _yy = _sys_item_y-20;
+						draw_text(_xx+200, _yy+10,"forge point total");
+						draw_text( _xx+300, _yy+10,"forge point use");
+						draw_text( _xx+400, _yy+10,"apothecary points total");
+						draw_text(_xx+500, _yy+10,"apothecary points use");
+						draw_text(_xx+60, _yy+30,"Orbiting");
+						draw_text( _xx+60, _yy+50,"I");
+						draw_text(_xx+60, _yy+70,"II");
+						draw_text(_xx+60, _yy+90,"III");
+						draw_text(_xx+60, _yy+110,"IV");
+						var _y_line = _yy+30;
+						for (var o=0;o<5;o++){
+							var _area_item = _system_point_data[o];
+							draw_text(_xx+200, _y_line,_area_item.forge_points);
+							draw_text(_xx+300, _y_line,_area_item.forge_points_use);
+							draw_text(_xx+400, _y_line , _area_item.heal_points);
+							draw_text(_xx+500, _y_line, _area_item.heal_points_use);
+							_y_line+=50;						
+						}
+
 					}
 				}
 			    draw_text(xx+80, yy+90+(20*i), system_names[i]);

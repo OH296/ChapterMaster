@@ -1,6 +1,11 @@
 
-
-
+enum eSystemLoc {
+	orbit,
+	planet1,
+	planet2,
+	planet3,
+	planet4
+}
 function calculate_full_chapter_spread(){
  	obj_controller.command=0;
  	obj_controller.marines=0;	
@@ -35,7 +40,7 @@ function calculate_full_chapter_spread(){
   	    		if (_mar_loc[0]=location_types.planet){
   	    			array_slot = _mar_loc[1];
   	    		} else if (_mar_loc[0] == location_types.ship){
-  	    			array_slot=0;
+  	    			array_slot=eSystemLoc.orbit;
   	    		}
   	    		key_val = _mar_loc[2];
   	    	} else if (_mar_loc[0] == location_types.ship){
@@ -46,7 +51,7 @@ function calculate_full_chapter_spread(){
   	    					array_contains(escort_num, _mar_loc[1])
   	    				){
   	    					key_val=string(id);
-  	    					array_slot=0;
+  	    					array_slot=eSystemLoc.orbit;
   	    					break;
   	    				}
   	    			}
@@ -79,13 +84,13 @@ function calculate_full_chapter_spread(){
 			  	    					array_contains(escort_num, veh_location)
 			  	    				){
 			  	    					key_val=string(id);
-			  	    					array_slot=0;
+			  	    					array_slot=eSystemLoc.orbit;
 			  	    					break;
 			  	    				}
 			  	    			}
 			  	    		}
 			  	    	} else if (obj_ini.ship_location[veh_location] != ""){
-			  	    		array_slot=0;
+			  	    		array_slot=eSystemLoc.orbit;
 			  	    		key_val=obj_ini.ship_location[veh_location];
 			  	    	}
 		            }            	
@@ -109,7 +114,21 @@ function calculate_full_chapter_spread(){
 	}
 	return [_tech_spread,_apoth_spread,_unit_spread]	
 }
-
+function system_point_data_spawn(){
+	var _single_point_pos = {
+		heal_points_use : 0,
+		heal_points : 0,
+		forge_points_use : 0,
+		forge_points : 0,					
+	},
+ 	return [
+				DeepCloneStruct(_single_point_pos),
+				DeepCloneStruct(_single_point_pos),
+				DeepCloneStruct(_single_point_pos),
+				DeepCloneStruct(_single_point_pos),
+				DeepCloneStruct(_single_point_pos),
+			];
+}
 
 function apothecary_simple(){
 	var  _unit;
@@ -122,6 +141,7 @@ function apothecary_simple(){
 
 	var _locations = struct_get_names(_unit_spread);
 	var cur_apoths;
+
 	with (obj_star){
 		var marines_present = false;
 		for (var i=0;i<array_length(_locations);i++){
@@ -141,6 +161,7 @@ function apothecary_simple(){
 			}
 		}
 	}
+
 	var cur_units, cur_techs, _loc_heal_points, veh_health, points_spent, cur_system, features;
 	var total_bionics = scr_item_count("Bionics");
 	for (i=0;i<array_length(_locations);i++){
@@ -149,11 +170,17 @@ function apothecary_simple(){
 			cur_system = _unit_spread[$_locations[i]][5];
 		}
 		if (cur_system!=""){
-			point_breakdown.systems[$ cur_system.name] = [{},{},{},{},{}];
+			point_breakdown.systems[$ cur_system.name] = system_point_data_spawn();
 		}
-		var _loc_forge_points = 0;		
+		var _loc_forge_points = 0;	
+		var _point_breakdown = {};	
 		for (var p=0; p<5; p++){
-			var _point_breakdown = {};
+			_point_breakdown = {
+				heal_points:0,
+				forge_points:0,
+				heal_points_use:0,
+				forge_points_use:0,
+			};
 			_loc_heal_points=0;
 			_loc_forge_points=0;
 			if (array_length(_unit_spread[$_locations[i]][p]) == 0) then continue;
@@ -224,10 +251,10 @@ function apothecary_simple(){
 			_point_breakdown.heal_points_use = _point_breakdown.heal_points - _loc_heal_points;
 			_point_breakdown.forge_points_use = _point_breakdown.forge_points - _loc_forge_points;	
 			if (cur_system!=""){
-				point_breakdown.systems[$ cur_system.name][p] = _point_breakdown;
+				point_breakdown.systems[$ cur_system.name][p] = DeepCloneStruct(_point_breakdown);
 			}		
 			
-			if (cur_system!="" && p>0){
+			if (cur_system!="" && p>0 && turn_end){
 				with (cur_system){
 		 			if (array_length(p_feature[p])!=0){
 		 				var _planet_data = new PlanetData(p, self);

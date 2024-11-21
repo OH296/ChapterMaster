@@ -470,7 +470,7 @@ function StatDistributionUnit(data) constructor{
 			data_lower_end=data[$_stat];
 		}
 	}
-	data_upper_end = 
+	//data_upper_end = 
 	static draw = function(){
 
 	}

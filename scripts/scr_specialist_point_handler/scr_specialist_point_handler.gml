@@ -48,7 +48,7 @@ function SpecialistPointHandler() constructor{
 
         techs = [];
         heretics = [];
-
+        delete point_breakdown;
         point_breakdown = {
             fleets : {},
             systems : {},
@@ -56,7 +56,9 @@ function SpecialistPointHandler() constructor{
 
         forge_string = $"Forge Production Rate#";
         forge_master=-1;
-        healing_and_point_use(turn_end);
+        
+        healing_and_point_use();
+
         var _noticed_heresy=false, at_forge=0;
         var _tech_locations=[]
         var _cur_tech;

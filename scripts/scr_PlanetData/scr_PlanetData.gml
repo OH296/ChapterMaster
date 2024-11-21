@@ -105,11 +105,11 @@ function PlanetData(planet, system) constructor{
 	        }else if (obj_controller.recruiting > 0){
 	        	if (local_screening_points>0){
 	        		if (turn_end){
-	           			_planet_data.marine_training(local_screening_points);
+	           			marine_training(local_screening_points);
 	           		}
 	           		_training_happend = true;
 	        	} else {
-	        		scr_alert("red", "recruiting", $"Recruitment on {_planet_data.name()} halted due to insufficient apothecary rescources", 0, 0);
+	        		scr_alert("red", "recruiting", $"Recruitment on {name()} halted due to insufficient apothecary rescources", 0, 0);
 	        	}
 	        }
 		}
@@ -119,7 +119,7 @@ function PlanetData(planet, system) constructor{
     static recover_starship = function(techs){
     	try {
 			var engineer_count=array_length(techs);
-			if (_planet_data.has_feature(P_features.Starship) && engineer_count>0 && turn_end){
+			if (has_feature(P_features.Starship) && engineer_count>0 && turn_end){
 				//TODO allow total tech point usage here
 		        var _starship = get_features(,P_features.Starship)[0];
 
