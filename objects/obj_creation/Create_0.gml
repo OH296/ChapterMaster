@@ -2,7 +2,7 @@
  * * obj_creation is used as part of the main menu new game and chapter creation logic
  * It contains data and logic for setting up custom chapters as well as populating the new game menu with data for pre-existing chapters.
  */
-
+// show_debug_overlay(true);
 keyboard_string="";
 
 #region Global Settings: volume, fullscreen etc

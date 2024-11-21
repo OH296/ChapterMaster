@@ -35,6 +35,9 @@ function point_and_click(rect, cooldown = 60) {
 	if (controller_exist && click_check) {
 		obj_controller.cooldown = cooldown * delta_time/1000000;
 	}
+	if(is_debug_overlay_open()){
+		show_debug_message($"mouse coords x: {mouse_consts[0]} y: {mouse_consts[1]}")
+	}
 	return click_check;
 }
 

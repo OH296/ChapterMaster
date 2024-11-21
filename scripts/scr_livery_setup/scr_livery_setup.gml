@@ -658,6 +658,14 @@ function scr_livery_setup(){
                 }
                 if (text_selected="capoth") then hapothecary=keyboard_string;
                 draw_rectangle(600-1,575-1,785,575+hei,1);
+                
+                var _refresh_capoth_name_btn =[794, 574, 794+20, 574+20];
+                draw_unit_buttons(_refresh_capoth_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+                if(point_and_click(_refresh_capoth_name_btn)){
+                    var _new_capoth_name = global.name_generator.generate_space_marine_name();
+                    show_debug_message($"regen name of hapothecary from {hapothecary} to {_new_capoth_name}");
+                    hapothecary = _new_capoth_name;
+                }
             }
         }
         
@@ -673,6 +681,14 @@ function scr_livery_setup(){
                 }
                 if (text_selected="chap") then hchaplain=keyboard_string;
                 draw_rectangle(600-1,597-1,785,597+hei,1);
+
+                var _refresh_chap_name_btn =[794, 597, 794+20, 597+20];
+                draw_unit_buttons(_refresh_chap_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+                if(point_and_click(_refresh_chap_name_btn)){
+                    var _new_chap_name = global.name_generator.generate_space_marine_name();
+                    show_debug_message($"regen name of hchaplain from {hchaplain} to {_new_chap_name}");
+                    hchaplain = _new_chap_name;
+                }
             }
         }
         
@@ -688,6 +704,14 @@ function scr_livery_setup(){
                 }
                 if (text_selected="libra") then clibrarian=keyboard_string;
                 draw_rectangle(600-1,619-1,785,619+hei,1);
+
+                var _refresh_libra_name_btn =[794, 619, 794+20, 619+20];
+                draw_unit_buttons(_refresh_libra_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+                if(point_and_click(_refresh_libra_name_btn)){
+                    var _new_libra_name = global.name_generator.generate_space_marine_name();
+                    show_debug_message($"regen name of clibrarian from {clibrarian} to {_new_libra_name}");
+                    clibrarian = _new_libra_name;
+                }
             }
         }
         
@@ -703,6 +727,14 @@ function scr_livery_setup(){
                 }
                 if (text_selected="forge") then fmaster=keyboard_string;
                 draw_rectangle(600-1,641-1,785,641+hei,1);
+
+                var _refresh_forge_name_btn =[794, 641, 794+20, 641+20];
+                draw_unit_buttons(_refresh_forge_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+                if(point_and_click(_refresh_forge_name_btn)){
+                    var _new_forge_name = global.name_generator.generate_space_marine_name();
+                    show_debug_message($"regen name of fmaster from {fmaster} to {_new_forge_name}");
+                    fmaster = _new_forge_name;
+                }
             }
         }
         
@@ -717,6 +749,14 @@ function scr_livery_setup(){
             }
             if (text_selected="recr") then recruiter=keyboard_string;
             draw_rectangle(600-1,663-1,785,663+hei,1);
+            
+            var _refresh_recr_name_btn =[794, 663, 794+20, 663+20];
+            draw_unit_buttons(_refresh_recr_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+            if(point_and_click(_refresh_recr_name_btn)){
+                var _new_recr_name = global.name_generator.generate_space_marine_name();
+                show_debug_message($"regen name of recruiter from {recruiter} to {_new_recr_name}");
+                recruiter = _new_recr_name;
+            }
         }
         
         draw_set_color(38144);if (admiral="") then draw_set_color(c_red);
@@ -730,6 +770,14 @@ function scr_livery_setup(){
             }
             if (text_selected="admi") then admiral=keyboard_string;
             draw_rectangle(600-1,685-1,785,685+hei,1);
+
+            var _refresh_admi_name_btn =[794, 685, 794+20, 685+20];
+            draw_unit_buttons(_refresh_admi_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+            if(point_and_click(_refresh_admi_name_btn)){
+                var _new_admi_name = global.name_generator.generate_space_marine_name();
+                show_debug_message($"regen name of admiral from {admiral} to {_new_admi_name}");
+                admiral = _new_admi_name;
+            }
         }
         
         

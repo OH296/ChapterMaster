@@ -377,7 +377,8 @@ global.trait_list = {
 
 	},
 	"siege_master" : {
-		display_name : "Sige Master",
+
+		display_name : "Siege Master",
 		wisdom : [2,2,"max"],
 		constitution : [2,2],
 		flavour_text:"Understands the ins and outs of defences both in building them and in taking them appart",

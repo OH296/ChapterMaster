@@ -994,6 +994,13 @@ if (slide=3){
             draw_set_alpha(0.75);
             draw_rectangle(525,398,760,418,1);
             draw_set_alpha(1);
+            var _refresh_hw_name_btn =[770, 398, 790, 418];
+            draw_unit_buttons(_refresh_hw_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+            if(point_and_click(_refresh_hw_name_btn)){
+                var _new_hw_name = global.name_generator.generate_star_name();
+                show_debug_message($"regen name of homeworld from {homeworld_name} to {_new_hw_name}");
+                homeworld_name = _new_hw_name;
+            }
         }
         
         if (custom>1) then draw_sprite_stretched(spr_creation_arrow,0,525,285,32,32);// Left Arrow
@@ -1040,6 +1047,13 @@ if (slide=3){
             }
             if (text_selected="flagship_name") then flagship_name=keyboard_string;
             draw_set_alpha(0.75);draw_rectangle(525,398,760,418,1);draw_set_alpha(1);
+            var _refresh_fs_name_btn =[770, 398, 790, 418];
+            draw_unit_buttons(_refresh_fs_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+            if(point_and_click(_refresh_fs_name_btn)){
+                var _new_fs_name = global.name_generator.generate_imperial_ship_name();
+                show_debug_message($"regen name of flagship_name from {flagship_name} to {_new_fs_name}");
+                flagship_name = _new_fs_name;
+            }
         }
     }
     
@@ -1119,6 +1133,14 @@ if (slide=3){
                 }
                 if (text_selected="recruiting_name") then recruiting_name=keyboard_string;
                 draw_set_alpha(0.75);draw_rectangle(525+333,398,760+333,418,1);draw_set_alpha(1);
+
+                var _refresh_rec_name_btn =[1103, 398, 1103+20, 398+20];
+                draw_unit_buttons(_refresh_rec_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+                if(point_and_click(_refresh_rec_name_btn)){
+                    var _new_rec_name = global.name_generator.generate_star_name();
+                    show_debug_message($"regen name of recruiting_name from {recruiting_name} to {_new_rec_name}");
+                    recruiting_name = _new_rec_name;
+                }
             }
         }
     }
@@ -1500,6 +1522,14 @@ if (slide=6){
         }
         if (text_selected="cm") then chapter_master_name=keyboard_string;
         draw_rectangle(580-2,144-2,582+400,146+hei,1);
+
+        var _refresh_cm_name_btn =[993, 142, 997+hei, 146+hei];
+        draw_unit_buttons(_refresh_cm_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+        if(point_and_click(_refresh_cm_name_btn)){
+            var _new_cm_name = global.name_generator.generate_space_marine_name();
+            show_debug_message($"regen name of chapter_master_name from {chapter_master_name} to {_new_cm_name}");
+            chapter_master_name = _new_cm_name;
+        }
     }
     
     draw_line(445,200,1125,200);
