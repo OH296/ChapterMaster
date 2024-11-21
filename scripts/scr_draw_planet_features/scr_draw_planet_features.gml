@@ -190,7 +190,7 @@ function FeatureSelected(Feature, system, planet) constructor{
 					_spare_apoth_points = _point_data.heal_points - _point_data.heal_points_use;
 				}
 				title = "Marine Recruitment";
-				body  = $"There are {_spare_apoth_points} available for recruit screening\n"
+				body  = $"There are {_spare_apoth_points} apothecary rescource points available for recruit screening\n"
 				var _recruit_find_chance = find_recruit_success_chance(_spare_apoth_points, _star.p_type[_planet]);
 
 				body += $"there is a {_recruit_find_chance*100}% of producing a successful recruit this month on the basis of the available apothecary time to screen candidates and the chances of the aspirants passing their trials to an acceptable standard\n"
