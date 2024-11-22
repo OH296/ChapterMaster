@@ -67,7 +67,7 @@ function scr_apothecarium(){
     if (training_apothecary = 0) then blurp += "Our Brothers are currently not assigned to train further " + string(obj_ini.role[100, 15]) + "; no more can be trained until Apothcarium funds are increased.";
     //
     if (training_apothecary > 0) then blurp += "Our Brothers assigned to the training of future " + string(obj_ini.role[100, 15]) + "s have taken up a ";
-    if (training_apothecary >= 1 && training_apothecary <= 6) then blurp += recruitment_rates[training_apothecary - 1];
+    if (training_apothecary >= 1 && training_apothecary <= 6) then blurp += RECRUIT_rates()[training_apothecary - 1];
     if (training_apothecary > 0) then blurp += " pace and expect to graduate an additional " + string(obj_ini.role[100, 15]) + " in ";
     // 
     if (training_apothecary = 1) then eta = floor((47 - apothecary_recruit_points) / 0.8) + 1;

@@ -4,14 +4,6 @@ function scr_ui_advisors() {
     var xx, yy, blurp, eta, va;
     var romanNumerals;
     romanNumerals = scr_roman_numerals();
-    var recruitment_rates = [
-        "sluggish",
-        "slow",
-        "moderate",
-        "fast",
-        "frenetic",
-        "hereticly fast"
-    ];
 
     var recruitment_pace = [
         " is currently halted.",
@@ -101,27 +93,27 @@ function scr_ui_advisors() {
         if (global.chapter_name != "Space Wolves") and(global.chapter_name != "Iron Hands") {
             blurp += "##Currently, we are training additional " + string(obj_ini.role[100, 14]) + " at a ";
             if (training_chaplain = 1) {
-                blurp += recruitment_rates[training_chaplain - 1];
+                blurp += RECRUIT_rates()[training_chaplain - 1];
                 eta = floor((47 - chaplain_points) / 0.8) + 1;
             }
             if (training_chaplain = 2) {
-                blurp += recruitment_rates[training_chaplain - 1];
+                blurp += RECRUIT_rates()[training_chaplain - 1];
                 eta = floor((47 - chaplain_points) / 0.9) + 1;
             }
             if (training_chaplain = 3) {
-                blurp += recruitment_rates[training_chaplain - 1];
+                blurp += RECRUIT_rates()[training_chaplain - 1];
                 eta = floor((47 - chaplain_points) / 1) + 1;
             }
             if (training_chaplain = 4) {
-                blurp += recruitment_rates[training_chaplain - 1];
+                blurp += RECRUIT_rates()[training_chaplain - 1];
                 eta = floor((47 - chaplain_points) / 1.5) + 1;
             }
             if (training_chaplain = 5) {
-                blurp += recruitment_rates[training_chaplain - 1];
+                blurp += RECRUIT_rates()[training_chaplain - 1];
                 eta = floor((47 - chaplain_points) / 2) + 1;
             }
             if (training_chaplain = 6) {
-                blurp += recruitment_rates[training_chaplain - 1];
+                blurp += RECRUIT_rates()[training_chaplain - 1];
                 eta = floor((47 - chaplain_points) / 4) + 1;
             }
             // 
