@@ -426,7 +426,7 @@ if (unload>0){
     var unit,company, unit_id;
     for(var q=0; q<array_length(display_unit); q++){
         if (man[q]=="man") and (ma_loc[q]==selecting_location) and (ma_wid[q]<1) and (man_sel[q]!=0){
-            if (b==0) then b=ma_lid[q];
+            if (b==-1) then b=ma_lid[q];
             unit=display_unit[q];
             if (!is_struct(unit)) then continue;
             if (unit.name()=="") then continue;
@@ -438,7 +438,7 @@ if (unload>0){
             obj_ini.uid[company][unit_id]=0;
             
             ma_loc[q]=obj_ini.ship_location[b];
-            ma_lid[q]=0;
+            ma_lid[q]=-1;
             ma_wid[q]=unload;
         }
         else if (man[q]=="vehicle") and (ma_loc[q]==selecting_location)  and (ma_wid[q]<1) and(man_sel[q]!=0){
@@ -451,7 +451,7 @@ if (unload>0){
             obj_ini.veh_uid[company][unit_id]=0;
             
             ma_loc[q]=obj_ini.ship_location[b];
-            ma_lid[q]=0;
+            ma_lid[q]=-1;
             ma_wid[q]=unload;
         }
     }
@@ -468,11 +468,11 @@ if (unload>0){
     with(obj_star_select){instance_destroy();}
 }
 // Resets selections
-if (managing>0) and (man_size==0) and ((selecting_location!="") or (selecting_types!="") or (selecting_planet!=0) or (selecting_ship!=0)){
+if (managing>0) and (man_size==0) and ((selecting_location!="") or (selecting_types!="") or (selecting_planet!=0) or (selecting_ship!=-1)){
     selecting_location="";
     selecting_types="";
     selecting_planet=0;
-    selecting_ship=0;
+    selecting_ship=-1;
 }
 
 if (marines<=0) and (alarm[7]=-1) and (!instance_exists(obj_fleet_controller)) and (!instance_exists(obj_ncombat)) then alarm[7]=15;

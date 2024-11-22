@@ -209,7 +209,11 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1576) and (mouse_y<y
 
         with(obj_controller){
             // man_current=0;
-            var i=-1;man_size=0;selecting_location="";selecting_types="";selecting_ship=0;
+            var i=-1;
+            man_size=0
+            ;selecting_location="";
+            selecting_types="";
+            selecting_ship=-1;
             
             if (obj_controller.managing>0){
                 reset_manage_arrays();
@@ -411,7 +415,7 @@ if (point_in_rectangle(mouse_x, mouse_y, xx+1465, yy+499,xx+1576,yy+518)){// Pro
             // man_current=0;
             var man_size=0;selecting_location="";
             selecting_types="";
-            selecting_ship=0;
+            selecting_ship=-1;
             reset_manage_arrays();
             alll=0;
             update_general_manage_view();

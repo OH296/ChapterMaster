@@ -552,8 +552,8 @@ if (type = 8) and (instance_exists(obj_controller)) {
             */
             
             draw_text_transformed(unit_x+271,unit_y+151,string_hash_to_newline(string(temp2)),1,1,0);
-            if (obj_controller.man[sel]="man") and (obj_controller.ma_lid[sel]=0) then draw_text_transformed(unit_x+271,unit_y+151,string_hash_to_newline(string(temp2)),1,1,0);
-            if (obj_controller.man[sel]="vehicle") and (obj_controller.ma_lid[sel]=0) then draw_text_transformed(unit_x+271,unit_y+151,string_hash_to_newline(string(temp2)),1,1,0);
+            if (obj_controller.man[sel]="man") and (obj_controller.ma_lid[sel]=-1) then draw_text_transformed(unit_x+271,unit_y+151,string_hash_to_newline(string(temp2)),1,1,0);
+            if (obj_controller.man[sel]="vehicle") and (obj_controller.ma_lid[sel]=-1) then draw_text_transformed(unit_x+271,unit_y+151,string_hash_to_newline(string(temp2)),1,1,0);
             
             if (temp3="CRITICAL") then draw_set_color(c_red);
             draw_text_transformed(unit_x+400,unit_y+151,string_hash_to_newline(string(temp3)),1,1,0);

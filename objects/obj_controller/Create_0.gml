@@ -542,7 +542,7 @@ progenitor_visuals=0;
 
 // ** Default menu items **
 selecting_planet=0;
-selecting_ship=0;
+selecting_ship=-1;
 fleet_minimized=0;
 fleet_all=1;
 tolerant=0;
@@ -565,7 +565,6 @@ forge_points = 0;
 master_craft_chance = 0;
 tech_status = "Cult Mechanicus";
 forge_string="";
-forge_queue=[];
 player_forge_data = {
     player_forges : 0,
     vehicle_hanger : [],
@@ -680,7 +679,7 @@ for(var i=0; i<501; i++){
     man[i]="";
     ide[i]=0;
     man_sel[i]=0;
-    ma_lid[i]=0;
+    ma_lid[i]=-1;
     ma_wid[i]=0;
     ma_promote[i]=0;
     ma_race[i]=0;
@@ -1381,7 +1380,7 @@ global.custom=1;
 
 // ** Sets up base training level and trainees at game start **
 training_apothecary=0;
-apothecary_points=0;
+apothecary_recruit_points=0;
 apothecary_aspirant=0;
 training_chaplain=0;
 chaplain_points=0;
@@ -1461,13 +1460,15 @@ if (global.chapter_name=="Soul Drinkers") then gene_seed=60;
 
 //   ** sets up the starting squads**
 squads = true;
-game_start_squads()
+game_start_squads();
 squads = false;
 
 // **sets up starting forge_points
-calculate_research_points()
+specialist_point_handler = new SpecialistPointHandler();
+specialist_point_handler.calculate_research_points();
 
-//** sets up marine_by_location view
+
+//** sets up marine_by_location views
 location_viewer = new UnitQuickFindPanel();
 
 // ** Sets up the number of marines per company **

@@ -250,8 +250,6 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
 		draw_text(xx+430+8,yy+66,truncatedLocation);// LOC
 	    draw_set_alpha(1);
 	
-	    // ma_lid[i]=0;ma_wid[i]=0;
-	
 	    if (ma_loc[selected]=="Mechanicus Vessel"){
 	    	draw_sprite(spr_loc_icon,2,xx+427+8,yy+66);
 	    } else {
@@ -337,7 +335,7 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
     var no_location = (selecting_location=="");
     var wrong_location = false;
     if (!no_location){
-    	if (selecting_ship>0){
+    	if (selecting_ship>-1){
     		if (ma_lid[selected]==0){
     			wrong_location=true;
     		} else {

@@ -619,7 +619,12 @@ if (image="ancient_ruins" && woopwoopwoop && move_to_next_stage()) {
         obj_controller.menu=1;
         // obj_controller.managing=manag;
         with(obj_controller){
-            var i;i=-1;man_size=0;selecting_location="";selecting_types="";selecting_ship=0;sel_uid=0;
+            var i=-1;
+            man_size=0;
+            selecting_location="";
+            selecting_types="";
+            selecting_ship=-1;
+            sel_uid=0;
             reset_manage_arrays();
             alll=0;
             update_general_manage_view();
