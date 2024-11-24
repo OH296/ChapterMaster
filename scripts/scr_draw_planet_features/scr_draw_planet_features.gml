@@ -271,7 +271,7 @@ function FeatureSelected(Feature, system, planet) constructor{
 				
 				if (button_text!="none"){
 					if (point_and_click(draw_unit_buttons([xx+((area_width/2)-(string_width(button_text)/2)), yy+40+text_body_height+10], button_text))){
-						if (is_method(button_function)){
+						if (is_callable(button_function)){
 							button_function();
 							destroy=true;
 						} else {
@@ -566,7 +566,7 @@ function DataSlate() constructor{
 		width = 860*scale_x;
 		height = 850*scale_y;
 		draw_sprite_ext(spr_data_slate,1, xx,yy, scale_x, scale_y, 0, c_white, 1);
-		if (is_method(inside_method)){
+		if (is_callable(inside_method)){
 			inside_method();
 		}
 	    if (static_line<=10) then draw_set_alpha(static_line/10);
@@ -603,7 +603,7 @@ function DataSlate() constructor{
 		draw_sprite_part_ext(spr_data_slate,1, 0, 752, 850, 98, XX, YY+(69+683*((middle_percent/100)))*scale_y, scale_x, scale_y, c_white, 1);
 		width = 860*scale_x;
 		height = (69+(683*(middle_percent/100))+98 )*scale_y;
-		if (is_method(inside_method)){
+		if (is_callable(inside_method)){
 			inside_method();
 		}		
 	}
