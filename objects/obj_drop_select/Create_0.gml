@@ -85,7 +85,6 @@ if (action_if_number(obj_saveload, 0, 0)){
     roster = new Roster();
     if (instance_exists(p_target)){
         roster.roster_location = p_target.name;
-        roster.ships = get_player_ships(p_target.name);
     }
 
     roster.roster_planet = planet_number;

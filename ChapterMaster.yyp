@@ -1304,6 +1304,7 @@
     {"id":{"name":"obj_popup","path":"objects/obj_popup/obj_popup.yy",},},
     {"id":{"name":"obj_popup_dialogue","path":"objects/obj_popup_dialogue/obj_popup_dialogue.yy",},},
     {"id":{"name":"obj_event","path":"objects/obj_event/obj_event.yy",},},
+    {"id":{"name":"scr_roster","path":"scripts/scr_roster/scr_roster.yy",},},
     {"id":{"name":"obj_event_log","path":"objects/obj_event_log/obj_event_log.yy",},},
     {"id":{"name":"scr_get_diag_string","path":"scripts/scr_get_diag_string/scr_get_diag_string.yy",},},
     {"id":{"name":"spr_apoth_area_pad","path":"sprites/spr_apoth_area_pad/spr_apoth_area_pad.yy",},},
