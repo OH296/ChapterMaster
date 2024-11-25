@@ -1,13 +1,21 @@
 function Roster() constructor{
     full_roster_units = [];
-    selected_unit = [];
+    selected_units = [];
     full_roster = {};
     selected_roster = {};
     ships = [];
     roster_location = "";
     roster_planet = 0;
     roster_string = "";
-    select_buttons = []
+    squad_buttons = [];
+    local_button = new ToggleButton();
+        local_button.str1 = "Local Forces";
+        local_button.text_halign = fa_center;
+        local_button.text_color = CM_GREEN_COLOR;
+        local_button.button_color = CM_GREEN_COLOR;
+        local_button.width = string_width(local_button.str1)+10;
+        local_button.active = false;
+
     static format_roster_string = function(){
         roster_string = "";
         var _roster_types = struct_get_names(selected_roster);
@@ -18,56 +26,51 @@ function Roster() constructor{
             }
         }
     }
+    static update_roster = function(){
+    	for (var i=0;i<array_length(selected_units);i++){
+    		array_push(full_roster_units, selected_units[i]);
+    	}
+    	selected_units = [];
+    	var _valid_ship = [];
+    	for (var i=0;i<array_length(ships);i++){
+    		if (ships[i].active){
+    			array_push(_valid_ship, ships[i].ship_id);
+    		}
+    	}	
+    	var _valid_squad_types = [];
+    	for (var i=0;i<array_length(squad_buttons);i++){
+    		if (squad_buttons[i].active){
+    			array_push(_valid_squad_types, squad_buttons[i].squad);
+    		}
+    	}
+    	for (var i=array_length(full_roster_units)-1;i>=0;i--){
+    		var _unit = full_roster_units[i]
+    		var _valid_type = array_contains(_valid_squad_types,_unit.squad_type());
+    		if (_unit.ship_location>-1){
+	    	 	if (array_contains(_valid_ship ,_unit.ship_location) && _valid_type){
+	                array_push(selected_units,_unit);
+	                array_delete(full_roster_units, i, 1);    	 		
+	    	 	}
+	    	 } else if (local_button.active && _valid_type){
+                array_push(selected_units,_unit);
+                array_delete(full_roster_units, i, 1); 
+	    	 }
 
-    static alter_by_ship = function(ship_id, add){
-        if (add){
-            for (var i=array_length(full_roster_units)-1;i>=0;i--){
-                var _unit = full_roster_units[i];
-                if (_unit.squad_type() == squad_id){
-                    array_push(selected_unit,_unit[i]);
-                    array_delete(_unit, i, 1);
-                }
-            }
-        } else {
-            for (var i=array_length(selected_unit)-1;i>=0;i--){
-                var _unit = selected_unit[i];
-                if (selected_unit.squad_type() == squad_id){
-                    array_push(_unit,selected_unit[i]);
-                    array_delete(selected_unit, i, 1);
-                }
-            }            
-        }
+    	 }
+
+    	format_roster_string();
     }
 
-    static alter_by_squad = function(squad_id, add){
-        if (add){
-            for (var i=array_length(full_roster_units)-1;i>=0;i--){
-                var _unit = full_roster_units[i];
-                if (_unit.squad_type() == squad_id){
-                    array_push(selected_unit,_unit[i]);
-                    array_delete(_unit, i, 1);
-                }
-            }
-        } else {
-            for (var i=array_length(selected_unit)-1;i>=0;i--){
-                var _unit = selected_unit[i];
-                if (selected_unit.squad_type() == squad_id){
-                    array_push(_unit,selected_unit[i]);
-                    array_delete(selected_unit, i, 1);
-                }
-            }            
-        }
-    }
-    static new_select_button = function(display, squad_id){
+    static new_squad_button = function(display, squad_id){
         var _button = new ToggleButton();
         _button.str1 = display;
         _button.text_halign = fa_center;
         _button.text_color = CM_GREEN_COLOR;
         _button.button_color = CM_GREEN_COLOR;
-        _button.width = string_width(display);
+        _button.width = string_width(display) + 10;
         _button.active = true;
         _button.squad = squad_id;
-        array_push(select_buttons, _button);
+        array_push(squad_buttons, _button);
     }
     static new_ship_button = function(display, ship_id){
         var _button = new ToggleButton();
@@ -75,9 +78,9 @@ function Roster() constructor{
         _button.text_halign = fa_center;
         _button.text_color = CM_GREEN_COLOR;
         _button.button_color = CM_GREEN_COLOR;
-        _button.width = string_width(display);
-        _button.active = true;
-        _button.squad = ship_id;
+        _button.width = string_width(display)+10;
+        _button.active = false;
+        _button.ship_id = ship_id;
         array_push(ships, _button);
     }
 
@@ -106,7 +109,7 @@ function Roster() constructor{
                         if (_squad_type!="none"){
                             if (!array_contains(_squads, _squad_type)){
                                 array_push(_squads, _squad_type);
-                                new_select_button(obj_ini.squads[_unit.squad].display_name);
+                                new_squad_button(obj_ini.squads[_unit.squad].display_name);
                             }
                          }
                     }

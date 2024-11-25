@@ -55,34 +55,28 @@ function drop_select_draw(){
         var add_ground = 0;
 
         // Local force button;
-/*             if (ship_max[500] > 0) and (attack = 1) {
-            if (ship_all[e] = 0) then draw_set_alpha(0.35);
-            draw_set_color(c_gray);
-            draw_rectangle(x8, y8, x8 + 160, y8 + 16, 0);
-            draw_set_color(c_black);
-            draw_text_transformed(x8 + 2, y8, $"Local ({ship_use[e]}/{ship_max[e]})", 0.8, 0.8, 0);
-            if (point_and_click([x8, y8, x8 + 160, y8 + 16])) {
-                refresh_raid = 1;
-                if (ship_all[e] = 0) {
-                    add_ground = 1;
-                }
-                if (ship_all[e] = 1) {
-                    add_ground = -1;
-                }
-            }
-            y8 += 18;
-            sip += 1;
-            
-        } */
 
         // Ship buttons;
+        var _local_button = roster.local_button;
+        _local_button.x1 = x8
+        _local_button.y1 = y8
+        _local_button.update();
+        _local_button.draw();
+        y8 += 21;
+
         for (var e=0;e<array_length(roster.ships);e++) {
             var _ship_button = roster.ships[e];
             _ship_button.x1 = x8
-            _ship_button.x1 = y8
+            _ship_button.y1 = y8
+            _ship_button.update();
+            _ship_button.draw();           
             if (_ship_button.clicked()) {
-                _ship_button.active = !_ship_button.active;
-                roster.alter_by_ship(_ship_button.squad,_ship_button.active);
+                roster.update_roster();
+            }
+            y8 += 21;
+            if (e%12 == 0 && e>0){
+                y8 = 299;
+                x8 = 650;
             }
         }
 
@@ -99,107 +93,22 @@ function drop_select_draw(){
             y1: y2 - 180
         };
         draw_text(_squads_box.x1, _squads_box.y1, _squads_box.header);
-        for (var i = 0; i < array_length(roster.select_buttons); i++) {
-            var _button = roster.select_buttons[i];
-            _button.x1 = (_squads_box.x1) + round((i % 4) * 96);
-            _button.y1 = (_squads_box.y1 + string_height(_squads_box.header) + 10) + floor(i / 4) * 28;
+        var _x_offset = 0;
+        var _row = 0
+        for (var i = 0; i < array_length(roster.squad_buttons); i++) {
+            var _button = roster.squad_buttons[i];
+            if (_x_offset + _button.width > 590){
+                _row++;
+                _x_offset = 0;
+            }
+            _button.x1 = (_squads_box.x1) + _x_offset;
+            _button.y1 = (_squads_box.y1 + string_height(_squads_box.header) + 10) + _row * 28;
             _button.update();
             _button.draw();
             if (_button.clicked()) {
-                _button.active = !_button.active;
-                roster.alter_by_squad(_button.squad,_button.active);
-                
+                roster.update_roster();  
             }
-        }
-
-        // Select all button;
-        draw_set_color(c_gray);
-        draw_set_alpha(1);
-/*             yar = 2;
-        if (all_sel = 1) then yar = 3;
-        draw_sprite(spr_creation_check, yar, 770, 270);
-        yar = 0;
-        if (point_and_click([770, 270, 770 + 32, 270 + 32])) {
-            for (var i = 0; i <= 50; i++) {
-                if (ship[i] != "") {
-                    ship_all[i] = !ship_all[i];
-                    scr_drop_fiddle(ship_ide[i], true, i, attack);
-                }
-                if (attack == 1) {
-                    if (ship_all[500] = 0) then add_ground = 1;
-                    else if (ship_all[500] = 1) then add_ground = -1;
-                }
-            }
-            all_sel = !all_sel;
-            refresh_raid = 1;
-        }
-        draw_set_halign(fa_left);
-        draw_text_transformed(770 + 30, 270 + 4, string_hash_to_newline("Select All"), 1, 1, 0); */
-
-        var smin, smax;
-        var w;
-        w = -1;
-        smin = 0;
-        smax = 0;
-
-        // if (purge=2){repeat(61){w+=1;if (ship[w]!="") and (ship_size[w]>1){smax+=1;if (ship_all[w]>0) then smin+=1;}}}
-
-        // Add units to the pool
-        if (add_ground = 1) {
-            ships_selected += 1;
-            remove_local = -1;
-            /*master+=local_forces.master;honor+=local_forces.honor;
-            capts+=local_forces.captains;mahreens+=l_mahreens;
-            veterans+=l_veterans;terminators+=l_terminators;
-            dreads+=l_dreads;chaplains+=l_chaplains;
-            psykers+=l_psykers;apothecaries+=l_apothecaries;
-            techmarines+=l_techmarines;champions+=l_champions;*/
-
-            bikes += l_bikes;
-            rhinos += l_rhinos;
-            whirls += l_whirls;
-            predators += l_predators;
-            raiders += l_raiders;
-            speeders += l_speeders;
-
-            refresh_raid = 1;
-            ship_all[500] = 1;
-            ship_use[500] = ship_max[500];
-        } else if (add_ground = -1) { // Remove units from the pool
-            ships_selected -= 1;
-            remove_local = 1;
-            /*master-=local_forces.master;honor-=local_forces.honor;
-            capts-=local_forces.captains;mahreens-=l_mahreens;
-            veterans-=l_veterans;terminators-=l_terminators;
-            dreads-=l_dreads;chaplains-=l_chaplains;
-            psykers-=l_psykers;apothecaries-=l_apothecaries;
-            techmarines-=l_techmarines;champions-=l_champions;*/
-
-            // Fuck me
-
-            bikes -= l_bikes;
-            rhinos -= l_rhinos;
-            whirls -= l_whirls;
-            predators -= l_predators;
-            raiders -= l_raiders;
-            speeders -= l_speeders;
-
-            refresh_raid = 1;
-            ship_all[500] = 0;
-            ship_use[500] = 0;
-        }
-        add_ground = 0;
-
-        for (var w=0;w<array_length(obj_ini.ship);w++){
-            if (ship[w] != "") {
-                smax += ship_max[w];
-                if (ship_all[w] > 0) then smin += ship_use[w];
-            }
-        }
-
-        if (ship_max[500] > 0) and(ship_all[500] > 0) {
-            smax += ship_max[500];
-            smin += ship_max[500];
+            _x_offset += _button.width +10;
         }
 
         // draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));
@@ -260,7 +169,7 @@ function drop_select_draw(){
         btn_attack.y1 = btn_back.y1;
         if (attack = 0) then btn_attack.str1 = "RAID!";
         if (attack = 1) then btn_attack.str1 = "ATTACK!";
-        btn_attack.active = (array_length(roster.selected_unit) > 0 && race_quantity > 0);
+        btn_attack.active = (array_length(roster.selected_units) > 0 && race_quantity > 0);
         btn_attack.update();
         btn_attack.draw();
         if (btn_attack.clicked()) {
