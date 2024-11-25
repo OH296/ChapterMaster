@@ -13,8 +13,13 @@ yy=__view_get( e__VW.YView, 0 );
 
 
 var i;i=-1;ships_selected=0;
-repeat(31){i+=1;if (ship_all[i]!=0) and (ship[i]!="") then ships_selected+=1;
-}if (ship_all[500]!=0) then ships_selected+=1;
+repeat(31){
+    i+=1;
+    if (ship_all[i]!=0) and (ship[i]!=""){
+        ships_selected+=1;
+    }
+}
+if (ship_all[500]!=0) then ships_selected+=1;
 
 
 
@@ -112,9 +117,9 @@ if (obj_controller.cooldown <= 0) {
 
 if (add_ground = 1) {
     ships_selected += 1;
-    master += l_master;
-    honor += l_honor;
-    capts += l_capts;
+    master += local_forces.master;
+    honor += local_forces.honor;
+    capts += local_forces.captains;
     mahreens += l_mahreens;
     veterans += l_veterans;
     terminators += l_terminators;
@@ -134,9 +139,9 @@ if (add_ground = 1) {
 }
 if (add_ground = -1) {
     ships_selected -= 1;
-    master -= l_master;
-    honor -= l_honor;
-    capts -= l_capts;
+    master -= local_forces.master;
+    honor -= local_forces.honor;
+    capts -= local_forces.captains;
     mahreens -= l_mahreens;
     veterans -= l_veterans;
     terminators -= l_terminators;

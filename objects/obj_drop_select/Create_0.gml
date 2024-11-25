@@ -45,7 +45,6 @@ if (action_if_number(obj_saveload, 0, 0)){
 
     ship_names="";
     sh_target=0;
-    p_target=0;
     max_ships=0;
     ships_selected=0;
 
@@ -83,52 +82,18 @@ if (action_if_number(obj_saveload, 0, 0)){
 
 
 
-    master=0;
-    honor=0;
-    capts=0;
-    mahreens=0;
-    veterans=0;
-    terminators=0;
-    dreads=0;
-    chaplains=0;
-    champions=0;
-    psykers=0;
-    apothecaries=0;
-    techmarines=0;
-    // Attack
-    bikes=0;
-    rhinos=0;
-    whirls=0;
-    predators=0;
-    raiders=0;
-    speeders=0;
-
-    // These should be set to a negative value; that is, effectively, how much when it is selected (i.e. *-1)
-    local_forces = {
-        l_master=0;
-        l_honor=0;
-        l_capts=0;
-        l_mahreens=0;
-        l_veterans=0;
-        l_terminators=0;
-        l_dreads=0;
-        l_chaplains=0;
-        l_psykers=0;
-        l_apothecaries=0;
-        l_techmarines=0;
-        l_champions=0;
-        l_size=0;
-        // Attack
-        l_bikes=0;
-        l_rhinos=0;
-        l_whirls=0;
-        l_predators=0;
-        l_raiders=0;
-        l_speeders=0;       
+    roster = new Roster();
+    if (instance_exists(p_target)){
+        roster.roster_location = p_target.name;
+        roster.ships = get_player_ships(p_target.name);
     }
 
+    roster.roster_planet = planet_number;
+    roster.determine_full_roster();
 
+    local_forces = new Roster();
 
+    // These should be set to a negative value; that is, effectively, how much when it is selected (i.e. *-1)
 
     attacking=0;
     sisters=0;
@@ -166,19 +131,4 @@ btn_back.str1 = "BACK";
 btn_back.text_color = CM_GREEN_COLOR;
 btn_back.button_color = CM_GREEN_COLOR;
 btn_back.width = 90;
-
-var captions = ["Tactical", "Veteran", "Assault", "Devastator", "Scout", "Terminator", "Specialist", "Wounded"];
-squad_buttons = [];
-for (var i = 0; i < 8; i++) {
-    var button = new ToggleButton();
-    squad_buttons[i] = button;
-    button.str1 = captions[i];
-    button.text_halign = fa_center;
-    button.text_color = CM_GREEN_COLOR;
-    button.button_color = CM_GREEN_COLOR;
-    button.width = 90;
-}
-
-collect_local_units();
-
 

@@ -617,5 +617,21 @@ function get_valid_player_ship(location="", name=""){
 	return -1;
 }
 
+function get_player_ships(location="", name=""){
+	var _ships = [];
+	for (var i = 0;i<array_length(obj_ini.ship);i++){
+		if (obj_ini.ship[i] != ""){
+			if (location == ""){
+				array_push(_ships, i);
+			} else {
+				if (obj_ini.ship_location[i] == location){
+					array_push(_ships, i);
+				}
+			}
+		}
+	}
+	return _ships;
+}
+
 
 

@@ -104,46 +104,7 @@ function drop_select_draw(){
         draw_set_color(c_gray);
         draw_set_alpha(1);
 
-        // Selected units list;
-        var sel = "";
-        sel = "";
-        if (master = 1) then sel += "Chapter Master " + string(obj_ini.master_name) + ", ";
-        if (honor > 1) then sel += string(honor) + " Honour Guard, ";
-        if (honor = 1) then sel += "1 Honour Guard, ";
-        if (capts > 1) then sel += string(capts) + " Captains, ";
-        if (capts = 1) then sel += "1 Captain, ";
-        if (champions > 1) then sel += string(champions) + " Champions, ";
-        if (champions = 1) then sel += "1 Champion, ";
-        if (chaplains > 1) then sel += string(chaplains) + " Chaplains, ";
-        if (chaplains = 1) then sel += "1 Chaplain, ";
-        if (apothecaries > 1) then sel += string(apothecaries) + " Apothecaries, ";
-        if (apothecaries = 1) then sel += "1 Apothecary, ";
-        if (psykers > 1) then sel += string(psykers) + " Psykers, ";
-        if (psykers = 1) then sel += "1 Psyker, ";
-        if (techmarines > 1) then sel += string(techmarines) + " Techmarines, ";
-        if (techmarines = 1) then sel += "1 Techmarine, ";
-        if (terminators > 1) then sel += string(terminators) + " Terminators, ";
-        if (terminators = 1) then sel += "1 Terminator, ";
-        if (veterans > 1) then sel += string(veterans) + " Veteran, ";
-        if (veterans = 1) then sel += "1 Veteran, ";
-        if (mahreens > 1) then sel += string(mahreens) + " Marines, ";
-        if (mahreens = 1) then sel += "1 Marine, ";
-        if (dreads > 1) then sel += string(dreads) + " Dreadnought, ";
-        if (dreads = 1) then sel += "1 Dreadnought, ";
-        // Attacking
-        if (bikes > 1) then sel += string(bikes) + " Bikes, ";
-        if (bikes = 1) then sel += "1 Bike, ";
-        if (speeders > 1) then sel += string(speeders) + " Land Speeders, ";
-        if (speeders = 1) then sel += "1 Land Speeder, ";
-        if (rhinos > 1) then sel += string(rhinos) + " Rhinos, ";
-        if (rhinos = 1) then sel += "1 Rhino, ";
-        if (whirls > 1) then sel += string(whirls) + " Whirlwinds, ";
-        if (whirls = 1) then sel += "1 Whirlwind, ";
-        if (predators > 1) then sel += string(predators) + " Predators, ";
-        if (predators = 1) then sel += "1 Predator, ";
-        if (raiders > 1) then sel += string(raiders) + " Land Raider, ";
-        if (raiders = 1) then sel += "1 Land Raider, ";
-        draw_text_ext(x1 + 40, 438, string_hash_to_newline(string(sel)), -1, 590);
+        draw_text_ext(x1 + 40, 438, roster.roster_string, -1, 590);
 
         // Unit types buttons;
         var _squads_box = {
@@ -152,40 +113,16 @@ function drop_select_draw(){
             y1: y2 - 180
         };
         draw_text(_squads_box.x1, _squads_box.y1, _squads_box.header);
-        for (var i = 0; i < array_length(squad_buttons); i++) {
-            squad_buttons[i].x1 = (_squads_box.x1) + round((i % 4) * 96);
-            squad_buttons[i].y1 = (_squads_box.y1 + string_height(_squads_box.header) + 10) + floor(i / 4) * 28;
-            squad_buttons[i].update();
-            squad_buttons[i].draw();
+        for (var i = 0; i < array_length(roster.select_buttons); i++) {
+            var _button = roster.select_buttons[i];
+            _button.x1 = (_squads_box.x1) + round((i % 4) * 96);
+            _button.y1 = (_squads_box.y1 + string_height(_squads_box.header) + 10) + floor(i / 4) * 28;
+            _button.update();
+            _button.draw();
             if (squad_buttons[i].clicked()) {
-                switch (i) {
-                case 0:
-                    raid_tact = !raid_tact;
-                    break;
-                case 1:
-                    raid_vet = !raid_vet;
-                    break;
-                case 2:
-                    raid_assa = !raid_assa;
-                    break;
-                case 3:
-                    raid_deva = !raid_deva;
-                    break;
-                case 4:
-                    raid_scou = !raid_scou;
-                    break;
-                case 5:
-                    raid_term = !raid_term;
-                    break;
-                case 6:
-                    raid_spec = !raid_spec;
-                    break;
-                case 7:
-                    raid_wounded = !raid_wounded;
-                    obj_controller.select_wounded = raid_wounded
-                    break;
-                }
-                refresh_raid = 1;
+                _button.active = !_button;
+                roster.alter_by_squad(_button.squad,_button.active);
+                
             }
         }
 
@@ -225,8 +162,8 @@ function drop_select_draw(){
         if (add_ground = 1) {
             ships_selected += 1;
             remove_local = -1;
-            /*master+=l_master;honor+=l_honor;
-            capts+=l_capts;mahreens+=l_mahreens;
+            /*master+=local_forces.master;honor+=local_forces.honor;
+            capts+=local_forces.captains;mahreens+=l_mahreens;
             veterans+=l_veterans;terminators+=l_terminators;
             dreads+=l_dreads;chaplains+=l_chaplains;
             psykers+=l_psykers;apothecaries+=l_apothecaries;
@@ -245,8 +182,8 @@ function drop_select_draw(){
         } else if (add_ground = -1) { // Remove units from the pool
             ships_selected -= 1;
             remove_local = 1;
-            /*master-=l_master;honor-=l_honor;
-            capts-=l_capts;mahreens-=l_mahreens;
+            /*master-=local_forces.master;honor-=local_forces.honor;
+            capts-=local_forces.captains;mahreens-=l_mahreens;
             veterans-=l_veterans;terminators-=l_terminators;
             dreads-=l_dreads;chaplains-=l_chaplains;
             psykers-=l_psykers;apothecaries-=l_apothecaries;
@@ -337,7 +274,7 @@ function drop_select_draw(){
         btn_attack.y1 = btn_back.y1;
         if (attack = 0) then btn_attack.str1 = "RAID!";
         if (attack = 1) then btn_attack.str1 = "ATTACK!";
-        btn_attack.active = (string_length(sel) > 0 && race_quantity > 0);
+        btn_attack.active = (array_length(roster.selected_unit) > 0 && race_quantity > 0);
         btn_attack.update();
         btn_attack.draw();
         if (btn_attack.clicked()) {
@@ -375,9 +312,9 @@ function drop_select_draw(){
             if (obj_ncombat.battle_object.space_hulk = 1) then obj_ncombat.battle_special = "space_hulk";
             if (planet_feature_bool(_planet, P_features.Warlord6) == 1) and(obj_ncombat.enemy = 6) and(obj_controller.faction_defeated[6] = 0) then obj_ncombat.leader = 1;
             if (obj_ncombat.enemy = 7) and(obj_controller.faction_defeated[7] <= 0) {
-                if (planet_feature_bool(_planet, P_features.OrkWarboss) == 1) {
+                if (planet_feature_bool(_planet, P_features.OrkWarboss)) {
                     obj_ncombat.leader = 1;
-                    obj_ncombat.Warlord = _planet[search_planet_features(_planet, P_features.OrkWarboss)[0]]
+                    obj_ncombat.Warlord = _planet[search_planet_features(_planet, P_features.OrkWarboss)[0]];
                 }
             }
 
@@ -874,9 +811,9 @@ function drop_select_draw(){
                 }
 
                 if (add_ground = 1) {
-                    master += l_master;
-                    honor += l_honor;
-                    capts += l_capts;
+                    master += local_forces.master;
+                    honor += local_forces.honor;
+                    capts += local_forces.captains;
                     mahreens += l_mahreens;
                     veterans += l_veterans;
                     terminators += l_terminators;
@@ -888,9 +825,9 @@ function drop_select_draw(){
                     champions += l_champions;
                 }
                 if (add_ground = -1) {
-                    master -= l_master;
-                    honor -= l_honor;
-                    capts -= l_capts;
+                    master -= local_forces.master;
+                    honor -= local_forces.honor;
+                    capts -= local_forces.captains;
                     mahreens -= l_mahreens;
                     veterans -= l_veterans;
                     terminators -= l_terminators;
@@ -1006,48 +943,8 @@ function collect_local_units(){
 		//
 	// I think this script is used to count local forces. l_ meaning local.
 	//
-	local_forces = {
-		l_master=0;
-		l_honor=0;
-		l_capts=0;
-		l_mahreens=0;
-		l_veterans=0;
-		l_terminators=0;
-		l_dreads=0;
-		l_chaplains=0;
-		l_psykers=0;
-		l_apothecaries=0;
-		l_techmarines=0;
-		l_champions=0;
-		l_size=0;
-		// Attack
-		l_bikes=0;
-		l_rhinos=0;
-		l_whirls=0;
-		l_predators=0;
-		l_raiders=0;
-		l_speeders=0;		
+	local_forces = {		
 	}
-	l_master=0;
-	l_honor=0;
-	l_capts=0;
-	l_mahreens=0;
-	l_veterans=0;
-	l_terminators=0;
-	l_dreads=0;
-	l_chaplains=0;
-	l_psykers=0;
-	l_apothecaries=0;
-	l_techmarines=0;
-	l_champions=0;
-	l_size=0;
-	// Attack
-	l_bikes=0;
-	l_rhinos=0;
-	l_whirls=0;
-	l_predators=0;
-	l_raiders=0;
-	l_speeders=0;
 
 	max_ships=0;
 
@@ -1059,9 +956,11 @@ function collect_local_units(){
 
 	// Formation check
 	var i,is,arright;i=0;formation_current=0;is=0;arright=false;
-	repeat(12){i+=1;formation_possible[i]=0;
+	repeat(12){
+        formation_possible[i]=0;
 	    if (obj_controller.bat_formation[i]!="") and (attack=1) and (obj_controller.bat_formation_type[i]=1){
-	        is+=1;formation_possible[is]=i;
+	        is+=1;
+            formation_possible[is]=i;
 	    }
 	    if (obj_controller.bat_formation[i]!="") and (attack=0) and (obj_controller.bat_formation_type[i]=2){
 	        is+=1;formation_possible[is]=i;// show_message("formation possible "+string(is)+" is set to "+string(i));
@@ -1103,9 +1002,9 @@ function collect_local_units(){
 	        continue;
 	        if (obj_ini.loc[co][i] = p_target.name) && (unit.planet_location == planet_number) {
 	            if ((attack = 0) && (string_count("Bike", obj_ini.role[co][i]) = 0)) || (attack = 1) {
-	                if (unit.role() = "Chapter Master") then l_master += 1;
-	                if (unit.role() = obj_ini.role[100][2]) then l_honor += 1;
-	                if (unit.role() = obj_ini.role[100][5]) then l_capts += 1;
+	                if (unit.role() = "Chapter Master") then local_forces.master += 1;
+	                if (unit.role() = obj_ini.role[100][2]) then local_forces.honor += 1;
+	                if (unit.role() = obj_ini.role[100][5]) then local_forces.captains += 1;
 	                if (unit.role() = "Champion") then l_champions += 1;
 
 	                if (string_count("Bike", obj_ini.role[co][i]) = 0) || (attack = 0) {
@@ -1131,9 +1030,9 @@ function collect_local_units(){
 	}
 
 
-	l_size+=l_master;
-	l_size+=l_honor;
-	l_size+=l_capts;
+	l_size+=local_forces.master;
+	l_size+=local_forces.honor;
+	l_size+=local_forces.captains;
 	l_size+=l_mahreens;
 	l_size+=l_veterans;
 	l_size+=l_terminators;
@@ -1344,6 +1243,92 @@ function collect_local_units(){
 
 	}
 }
+function Roster() constructor{
+    full_roster_units = [];
+    selected_unit = [];
+    full_roster = {};
+    selected_roster = {};
+    ships = [];
+    roster_location = "";
+    roster_planet = 0;
+    roster_string = "";
+    select_buttons = []
+    static format_roster_string = function(){
+        roster_string = "";
+        var _roster_types = struct_get_names(selected_roster);
+        for (var i=0;i<array_length(_roster_types);i++){
+            var _roster_type_name = _roster_types[i];
+            if (selected_roster[$_roster_type_name] == 1){
+                roster_string += $"1 {_roster_type_name}{i==array_length(_roster_types)-1?"":","}";
+            }
+        }
+    }
 
+    static alter_by_squad = function(squad_id, add){
+        if (add){
+            for (var i=array_length(full_roster_units)-1;i>=0;i--){
+                var _unit = full_roster_units[i];
+                if (full_roster_units.squad_type() == squad_id){
+                    array_push(selected_unit,full_roster_units[i]);
+                    array_delete(full_roster_units, i, 1);
+                }
+            }
+        } else {
+            for (var i=array_length(selected_unit)-1;i>=0;i--){
+                var _unit = selected_unit[i];
+                if (selected_unit.squad_type() == squad_id){
+                    array_push(full_roster_units,selected_unit[i]);
+                    array_delete(selected_unit, i, 1);
+                }
+            }            
+        }
+    }
+    static new_select_button = function(display, squad_id){
+        var _button = new ToggleButton();
+        _button.str1 = display;
+        _button.text_halign = fa_center;
+        _button.text_color = CM_GREEN_COLOR;
+        _button.button_color = CM_GREEN_COLOR;
+        _button.width = 90;
+        _button.active = true;
+        _button.squad = squad_id;
+        array_push(select_buttons, _button);
+    }
+
+    static determine_full_roster  = function(){
+        var _squads = [];
+        for (var co=0;co<obj_ini.companies;co++){
+            for (var i=0;i<array_length(obj_ini.role[co]);i++){
+                var _allow = false;
+                var _unit = fetch_unit([co, i]);
+                if (_unit.name() == "" || _unit.role() == "") then continue;
+                if (_unit.is_at_location(roster_location,roster_planet)){
+                    _allow = true;
+                }
+                if (_allow){
+                    array_push(full_roster_units, _unit);
+                    if (struct_exists(full_roster, _unit.role())){
+                        full_roster[$_unit.role()]++;
+                    } else {
+                        full_roster[$_unit.role()] = 1;
+                    }
+                    if (_unit.squad!="none"){
+                        var _squad_type = _unit.squad_type();
+                        if (_squad_type!=""){
+                            if !(array_contains(_squads, _squad_type)){
+                                array_push(_squads, _squad_type);
+                                new_select_button(obj_ini.squads[_unit.squad].display_name);
+                            }
+                         }
+                    }
+                }
+            }
+        }
+    }
+
+}
+function add_role_to_roster(){
+
+}
 
 

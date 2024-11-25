@@ -1448,6 +1448,17 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 				squad = "none"
 			}
 		}
+
+		static squad_type = function(){
+			var _type = "none";
+			if (squad != "none"){
+				if (squad < array_length(obj_ini.squads)){
+					return obj_ini.squads[squad].type;
+				}
+			}
+			return _type;
+		}
+
 		static marine_location = function(){
 			var location_id,location_name;
 			var location_type = planet_location;
@@ -1575,17 +1586,17 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	}
 
 
-	static is_at_location = function(location, planet, ship){
+	static is_at_location = function(location="", planet=0, ship=-1){
 		var is_at_loc = false;
 		if (planet>0){
 			if (obj_ini.loc[company][marine_number]==location && planet_location=planet){
 				is_at_loc=true;
 			}
-		} else if (ship>0){
+		} else if (ship>-1){
 			if (ship_location==ship){
 				is_at_loc=true;
 			}
-		} else if (ship==0 && planet==0){
+		} else if (ship==-1 && planet==0){
 			if (ship_location>0){
 				if (obj_ini.ship_location[ship_location]==location){
 					is_at_loc=true;
