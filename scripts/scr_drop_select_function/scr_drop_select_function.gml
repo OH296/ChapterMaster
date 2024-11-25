@@ -74,17 +74,15 @@ function drop_select_draw(){
                 roster.update_roster();
             }
             y8 += 21;
-            if (e%12 == 0 && e>0){
-                y8 = 299;
-                x8 = 650;
+            if (e%9 == 0 && e!=0){
+                y8 = 320;
+                x8 = 700;
             }
         }
 
         draw_set_font(fnt_40k_14);
         draw_set_color(c_gray);
         draw_set_alpha(1);
-
-        draw_text_ext(x1 + 40, 438, roster.roster_string, -1, 590);
 
         // Unit types buttons;
         var _squads_box = {

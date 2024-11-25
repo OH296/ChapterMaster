@@ -22,11 +22,29 @@ function Roster() constructor{
         for (var i=0;i<array_length(_roster_types);i++){
             var _roster_type_name = _roster_types[i];
             if (selected_roster[$_roster_type_name] == 1){
-                roster_string += $"1 {_roster_type_name}{i==array_length(_roster_types)-1?"":","}";
+                roster_string += $"1 {_roster_type_name}{i==array_length(_roster_types)-1?"":", "}";
+            } else {
+            	roster_string += $"{selected_roster[$_roster_type_name]} {string_plural(_roster_type_name)}{i==array_length(_roster_types)-1?"":", "}";
             }
         }
     }
+     static add_role_to_roster = function(role){
+        if (struct_exists(full_roster, role)){
+            full_roster[$role]++;
+        } else {
+            full_roster[$role] = 1;
+        }
+    }
+     static add_role_to_selected_roster = function(role){
+        if (struct_exists(selected_roster, role)){
+            selected_roster[$role]++;
+        } else {
+            selected_roster[$role] = 1;
+        }
+    }
+
     static update_roster = function(){
+    	selected_roster = {};
     	for (var i=0;i<array_length(selected_units);i++){
     		array_push(full_roster_units, selected_units[i]);
     	}
@@ -44,16 +62,23 @@ function Roster() constructor{
     		}
     	}
     	for (var i=array_length(full_roster_units)-1;i>=0;i--){
-    		var _unit = full_roster_units[i]
-    		var _valid_type = array_contains(_valid_squad_types,_unit.squad_type());
+    		var _add = false;
+    		var _unit = full_roster_units[i];
+    		var _valid_type = true;
+    		if (_unit.squad_type()!= "none"){
+    			var _valid_type = array_contains(_valid_squad_types,_unit.squad_type());
+    		}
     		if (_unit.ship_location>-1){
 	    	 	if (array_contains(_valid_ship ,_unit.ship_location) && _valid_type){
-	                array_push(selected_units,_unit);
-	                array_delete(full_roster_units, i, 1);    	 		
+	    	 		_add = true;  	 		
 	    	 	}
 	    	 } else if (local_button.active && _valid_type){
+	    	 	_add = true;
+	    	 }
+	    	 if (_add){
                 array_push(selected_units,_unit);
-                array_delete(full_roster_units, i, 1); 
+                array_delete(full_roster_units, i, 1);
+                add_role_to_selected_roster(_unit.role()) 	; 	
 	    	 }
 
     	 }
@@ -63,6 +88,10 @@ function Roster() constructor{
 
     static new_squad_button = function(display, squad_id){
         var _button = new ToggleButton();
+        display = string_replace(display, " Squad", "");
+        if (display != "Command"){
+        	display = string_plural(display);
+        }
         _button.str1 = display;
         _button.text_halign = fa_center;
         _button.text_color = CM_GREEN_COLOR;
@@ -84,13 +113,6 @@ function Roster() constructor{
         array_push(ships, _button);
     }
 
-    static add_role_to_roster = function(role){
-        if (struct_exists(full_roster, role)){
-            full_roster[$role]++;
-        } else {
-            full_roster[$role] = 1;
-        }
-    }
     static determine_full_roster  = function(){
         var _squads = [];
         for (var co=0;co<obj_ini.companies;co++){
@@ -109,7 +131,7 @@ function Roster() constructor{
                         if (_squad_type!="none"){
                             if (!array_contains(_squads, _squad_type)){
                                 array_push(_squads, _squad_type);
-                                new_squad_button(obj_ini.squads[_unit.squad].display_name);
+                                new_squad_button(obj_ini.squads[_unit.squad].display_name, _squad_type);
                             }
                          }
                     }
