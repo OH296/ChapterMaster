@@ -76,6 +76,9 @@ function drop_select_draw(){
             if (_ship_button.clicked()) {
                 roster.update_roster();
             }
+            if (_ship_button.hover()){
+                roster.update_local_string(_ship_button.ship_id);
+            }
             y8 += 21;
             if (e%9 == 0 && e!=0){
                 y8 = 320;
