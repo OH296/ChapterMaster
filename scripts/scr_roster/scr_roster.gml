@@ -84,7 +84,7 @@ function Roster() constructor{
 		   		if (_vehic_lid>-1){
 		    	 	if (array_contains(_valid_ship ,_vehic_lid)){
 		    	 		_add = true;  	 		
-		    	 	}} else if (local_button.active){
+		    	 	} else if (local_button.active){
 		    	 		_add = true;
 		    	 	}
 		   		}
@@ -138,21 +138,27 @@ function Roster() constructor{
     	var possible_local_roster = {};
     	for (var i=0;i<array_length(selected_units);i++){
     		var _unit = selected_units[i];
-    		var __role =  (is_struct(_unit)) ? _unit.role() : obj_ini.veh_role[_unit[0]][_unit[1]];
-	        if (struct_exists(selected_local_roster, _role)){
-	            selected_local_roster[$role]++;
-	        } else {
-	            selected_local_roster[$role] = 1;
-	        }    		
+    		var _ship_loc = (is_struct(_unit)) ? _unit.ship_location : obj_ini.veh_lid[_unit[0]][_unit[1]];
+    		if (_ship_loc == ship_id){
+	    		var _role =  (is_struct(_unit)) ? _unit.role() : obj_ini.veh_role[_unit[0]][_unit[1]];
+		        if (struct_exists(selected_local_roster, _role)){
+		            selected_local_roster[$_role]++;
+		        } else {
+		            selected_local_roster[$_role] = 1;
+		        }
+		    }  		
     	}
     	for (var i=0;i<array_length(full_roster_units);i++){
     		var _unit = full_roster_units[i];
-    		var __role =  (is_struct(_unit)) ? _unit.role() : obj_ini.veh_role[_unit[0]][_unit[1]];
-	        if (struct_exists(possible_local_roster, _role)){
-	            possible_local_roster[$role]++;
-	        } else {
-	            possible_local_roster[$role] = 1;
-	        }    		
+    		var _ship_loc = (is_struct(_unit)) ? _unit.ship_location : obj_ini.veh_lid[_unit[0]][_unit[1]];
+    		if (_ship_loc == ship_id){
+	    		var _role =  (is_struct(_unit)) ? _unit.role() : obj_ini.veh_role[_unit[0]][_unit[1]];
+		        if (struct_exists(possible_local_roster, _role)){
+		            possible_local_roster[$_role]++;
+		        } else {
+		            possible_local_roster[$_role] = 1;
+		        }
+		    } 		
     	} 
         roster_local_string = "Selected\n";
         var _roster_types = struct_get_names(selected_local_roster);
@@ -198,7 +204,7 @@ function Roster() constructor{
                 var _allow = false;
                 var _unit = fetch_unit([co, i]);
                 if (_unit.name() == "" || _unit.role() == "") then continue;
-                if (unit.hp()<=0 || unit.in_jail()) then continue;
+                if (_unit.hp()<=0 || _unit.in_jail()) then continue;
                 if (_unit.is_at_location(roster_location)){
                     _allow = true;
                     if (_unit.planet_location>0){
