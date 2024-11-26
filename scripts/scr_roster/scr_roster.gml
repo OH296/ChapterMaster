@@ -120,6 +120,7 @@ function Roster() constructor{
                 var _allow = false;
                 var _unit = fetch_unit([co, i]);
                 if (_unit.name() == "" || _unit.role() == "") then continue;
+                if (unit.hp()<=0 || unit.in_jail()) then continue;
                 if (_unit.is_at_location(roster_location)){
                     _allow = true;
                 }

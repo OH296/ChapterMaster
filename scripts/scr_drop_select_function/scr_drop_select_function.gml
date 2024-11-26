@@ -62,6 +62,9 @@ function drop_select_draw(){
         _local_button.y1 = y8
         _local_button.update();
         _local_button.draw();
+        if (_local_button.clicked()) {
+            roster.update_roster();
+        }        
         y8 += 21;
 
         for (var e=0;e<array_length(roster.ships);e++) {
