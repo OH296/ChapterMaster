@@ -1103,7 +1103,7 @@ function scr_ui_manage() {
 			if (cn.temp[120].name()!="") and (cn.temp[120].race()!=0){
 				draw_set_alpha(1);
 				var xx=__view_get( e__VW.XView, 0 )+0, yy=__view_get( e__VW.YView, 0 )+0
-		        if ((point_in_rectangle(mouse_x, mouse_y, xx+1208, yy+210, xx+1374, yy+210+272) || obj_controller.unit_profile) && !instance_exists(obj_temp3) && !instance_exists(obj_popup)) {
+		        if (scr_hit(xx+1208, yy+210, xx+1374, yy+210+272) || obj_controller.unit_profile) && !instance_exists(obj_temp3) && !instance_exists(obj_popup) {
 					stats_displayed = true;
 		        	selected_unit.stat_display(true);
 		       		//tooltip_draw(stat_x, stat_y+string_height(stat_display),0,0,100,17);

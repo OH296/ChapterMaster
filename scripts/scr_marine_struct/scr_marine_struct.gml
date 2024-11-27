@@ -2098,6 +2098,15 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 				squad = "none"
 			}
 		}
+		static add_to_squad = function(new_squad){
+			if (squad != "none"){
+				if (new_squad==squad) then exit;
+				remove_from_squad();
+			}
+			squad = new_squad;
+			var _squad = fetch_squad(squad);
+			_squad.add_member(company, marine_number);
+		}
 		static marine_location = function(){
 			var location_id,location_name;
 			var location_type = planet_location;
