@@ -22,7 +22,7 @@ function scr_ruins_suprise_attack_player(){
 		instance_activate_object(obj_ini);
 		instance_activate_object(obj_star);
 		var _star = star_by_name(obj_ground_mission.loc);
-		var _planet = planet;
+		var _planet = obj_ground_mission.num;
 		
 		instance_create(0,0,obj_ncombat);
 		
