@@ -196,7 +196,7 @@ function scr_company_order(company) {
 			}
 			//if no new sergeants are found for squad someone gets promoted
 			//find a new_sergeant
-			var _sarge = _roles[18]
+			var _sarge = _roles[Role.SERGEANT]
 			if (struct_exists(squad.required, _sarge)){
 				if (squad.required[$ _sarge] > 0){
 					squad.new_sergeant();
@@ -237,13 +237,13 @@ function scr_company_order(company) {
 
 	var squad_builder = [
 		["tactical_squad",_roles[Role.TACTICAL],5],
-		["devastator_squad",_roles[9],5],
-		["sternguard_veteran_squad",_roles[3],5],
-		["vanguard_veteran_squad",_roles[3],5],
-		["terminator_squad",_roles[4],4],
-		["terminator_assault_squad",_roles[4],4],
-		["assault_squad",_roles[10],5],
-		["scout_squad",_roles[12],5],
+		["devastator_squad",_roles[Role.DEVASTATOR],5],
+		["sternguard_veteran_squad",_roles[Role.VETERAN],5],
+		["vanguard_veteran_squad",_roles[Role.VETERAN],5],
+		["terminator_squad",_roles[Role.TERMINATOR],4],
+		["terminator_assault_squad",_roles[Role.TERMINATOR],4],
+		["assault_squad",_roles[Role.ASSAULT],5],
+		["scout_squad",_roles[Role.SCOUT],5],
 	]
 	
 	for (i=0;i<array_length(squad_builder);i++){
@@ -314,7 +314,7 @@ function scr_company_order(company) {
 	//position 2 in role order
 	/*if (global.chapter_name!="Space Wolves") and (global.chapter_name!="Iron Hands"){
 	i=0;repeat(300){i+=1;
-	    if (role[co][i]=_roles[14]){v+=1;
+	    if (role[co][i]=_roles[Roles.CHAPLAIN]){v+=1;
 	        temp_marine_variables(co, i ,v);
 	    }
 	}*/
@@ -366,35 +366,35 @@ function role_hierarchy(){
 			"Forge Master",
 			"Master of Sanctity",
 			"Master of the Apothecarion",
-			string("Chief {0}",_roles[17]),
-			_roles[2],
-			_roles[5],
-			_roles[14],
-			string("{0} Aspirant",_roles[14]),
+			string("Chief {0}",_roles[Role.LIBRARIAN]),
+			_roles[Role.HONOUR_GUARD],
+			_roles[Role.CAPTAIN],
+			_roles[Role.CHAPLAIN],
+			string("{0} Aspirant",_roles[Role.CHAPLAIN]),
 			"Death Company",
-			_roles[16],
-			string("{0} Aspirant",_roles[16]),
+			_roles[Role.TECHMARINE],
+			string("{0} Aspirant",_roles[Role.TECHMARINE]),
 			"Techpriest",
-			_roles[15],
-			string("{0} Aspirant",_roles[15]),
+			_roles[Role.APOTHECARY],
+			string("{0} Aspirant",_roles[Role.APOTHECARY]),
 			"Sister Hospitaler",
-			_roles[17],
+			_roles[Role.LIBRARIAN],
 			"Codiciery",
 			"Lexicanum",
-			string("{0} Aspirant",_roles[17]),
-			_roles[11],
-			_roles[7],
+			string("{0} Aspirant",_roles[Role.LIBRARIAN]),
+			_roles[Role.ANCIENT],
+			_roles[Role.CHAMPION],
 			"Death Company",
 			_roles[Role.VETERAN_SERGEANT],
 			_roles[Role.SERGEANT],		
-			_roles[4],
-			_roles[3],
-			_roles[8],
-			_roles[10],
-			_roles[9],
-			_roles[12],
-			$"Venerable {_roles[6]}",
-			_roles[6],
+			_roles[Role.TERMINATOR],
+			_roles[Role.VETERAN],
+			_roles[Role.TACTICAL],
+			_roles[Role.ASSAULT],
+			_roles[Role.DEVASTATOR],
+			_roles[Role.SCOUT],
+			$"Venerable {_roles[Role.DREADNOUGHT]}",
+			_roles[Role.DREADNOUGHT],
 			"Skitarii",
 			"Crusader",
 			"Ranger",
