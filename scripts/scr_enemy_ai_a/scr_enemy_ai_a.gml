@@ -222,11 +222,15 @@ function scr_enemy_ai_a() {
 	    	var pdf_mod;
 	    	var defence_mult = p_fortified[_run]*0.1;
 
-	    	if (pdf_with_player){//if player supports give garrison bonus
-		    	pdf_score=determine_pdf_defence(p_pdf[_run],garrison,p_fortified[_run])[0];
-	    	} else{
-	    		pdf_score=determine_pdf_defence(p_pdf[_run],,p_fortified[_run])[0];
-	    	}
+	    	try {
+		    	if (pdf_with_player){//if player supports give garrison bonus
+			    	pdf_score=determine_pdf_defence(p_pdf[_run],garrison,p_fortified[_run])[0];
+		    	} else{
+		    		pdf_score=determine_pdf_defence(p_pdf[_run],,p_fortified[_run])[0];
+		    	}
+	    	}catch(_exception) {
+			    handle_exception(_exception,,,,_run);
+			}
 	        // 
 	        // if (p_eldar[_run]>0) and (p_owner[_run]!=6) then pdf_attack="eldar";
 	        if (p_tyranids[_run]>=4) then pdf_attack="tyranids";
