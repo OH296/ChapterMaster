@@ -90,9 +90,9 @@ if (action_if_number(obj_saveload, 0, 0)){
     }
 
     roster.roster_planet = planet_number;
+    roster.attack_type = attack;
     roster.determine_full_roster();
 
-    local_forces = new Roster();
 
     // These should be set to a negative value; that is, effectively, how much when it is selected (i.e. *-1)
 

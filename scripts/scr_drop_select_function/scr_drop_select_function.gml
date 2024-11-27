@@ -206,7 +206,8 @@ function drop_select_draw(){
             obj_ncombat.enemy = attacking;
             obj_ncombat.formation_set = formation_possible[formation_current];
             obj_ncombat.defending = false;
-            if (ship_all[500] = 1) then obj_ncombat.local_forces = 1;
+            obj_ncombat.local_forces = roster.local_button.active
+
             var _planet = obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id]
             if (obj_ncombat.battle_object.space_hulk = 1) then obj_ncombat.battle_special = "space_hulk";
             if (planet_feature_bool(_planet, P_features.Warlord6) == 1) and(obj_ncombat.enemy = 6) and(obj_controller.faction_defeated[6] = 0) then obj_ncombat.leader = 1;
@@ -307,6 +308,7 @@ function drop_select_draw(){
 
             scr_battle_allies();
 
+            roster.add_to_battle();
             for (var company_i = 0; company_i <= 10; company_i++) {
                 for (var unit_i = 0; unit_i <= 300; unit_i++) {
                     if (fighting[company_i][unit_i] != 0) {

@@ -743,14 +743,25 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		return false;
 	}
 
-	if (struct_exists(self,start_gear)){
+	if (struct_exists(self,"start_gear")){
 		if (base_group!="marine"){
 			alter_equipment(start_gear,false,false);
 		} else {
 			alter_equipment(start_gear,true,true);
 		}
 	}
-			
+	static equipment_maintenance_burden = function(){
+		var burden = 0.0;
+		burden+=get_armour_data("maintenance");
+		burden+=get_gear_data("maintenance");
+		burden+=get_mobility_data("maintenance");
+		burden+=get_weapon_one_data("maintenance");
+		burden+=get_weapon_two_data("maintenance");
+		if (has_trait("tinkerer")){
+			burden *= 0.33;
+		}
+		return burden;
+	}			
 	/*ey so i got this concept where basically take away luck, ballistic_skill and weapon_skill 
 	there are 8 other stats each of which will have more attached aspects and game play elements 
 	they effect as time goes on, so that means between the 8 other stats if you had a choice of two 
