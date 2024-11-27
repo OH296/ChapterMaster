@@ -341,21 +341,12 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	experience = 0;
 	turn_stat_gains = {};
 
-	static set_exp = function(new_val){
+	static update_exp = function(new_val){
 		experience = new_val
-		var _powers_learned = 0;
-
-		if (IsSpecialist("libs")) { 
-			_powers_learned = update_powers();
-		}
-
-		// 0 is returned to have the same return format as in add_exp, to avoid confusion;
-		return [0, _powers_learned];
 	}//change exp
 
 	static add_exp = function(add_val){
 		var instace_stat_point_gains = {};
-		var _powers_learned = 0;
 		stat_point_exp_marker += add_val;
 		experience += add_val;
 		if (base_group == "astartes"){
@@ -363,10 +354,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 				var stat_gains = choose("weapon_skill", "ballistic_skill", "wisdom");
 				var special_stat = irandom(3);
 				if (IsSpecialist("forge") && special_stat==0) then stat_gains = "technology";
-				if (IsSpecialist("libs")) {
-					if (special_stat==0) then stat_gains = "intelligence";
-					_powers_learned = update_powers();
-				}
+				if (IsSpecialist("libs") && special_stat==0) then stat_gains = "intelligence";
 				if (IsSpecialist("chap") && special_stat==0) then stat_gains = "charisma";
 				if (IsSpecialist("apoth") && special_stat==0) then stat_gains = "intelligence";
 				if (role()=="Champion" && stat_gains!="weapon_skill" && special_stat==0) then stat_gains = "weapon_skill";
@@ -390,7 +378,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			}
 			assign_reactionary_traits();
 		}
-		return [instace_stat_point_gains, _powers_learned];
+		return instace_stat_point_gains;
 	}
 	static armour = function(raw=false){
 		var wep = obj_ini.armour[company][marine_number];

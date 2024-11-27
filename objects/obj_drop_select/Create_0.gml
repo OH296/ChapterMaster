@@ -22,9 +22,9 @@ main_slate.inside_method = draw;
 roster_slate = new DataSlate();
 local_content_slate = new DataSlate();
 var i=-1;
-formation_current=0;
+formation_current=-1;
 via =  array_create(100, 0);
-formation_possible = array_create(13, 0);
+formation_possible = [];
 force_present = array_create(51, 0);
 
 r_master=0;
@@ -107,6 +107,43 @@ if (action_if_number(obj_saveload, 0, 0)){
     necrons=0;
     demons=0;
 
+    // Formation check
+    var i=0,is=0,arright=false;
+    var _formations = obj_controller.bat_formation;
+    var _formation_types = obj_controller.bat_formation_type;
+
+    for (var i=0;i<array_length(_formations);i++){
+        if (_formations[i]!="") and (attack=1) and (_formation_types[i]==1){
+            array_push(formation_possible, i);
+        }
+        if (_formations[i]!="") and (attack=0) and (_formation_types[i]==2){
+            array_push(formation_possible, i);
+        }
+    }
+
+
+    if (attack=0){
+        formation_current=obj_controller.last_raid_form;
+       for (var i=0;i<array_length(formation_possible);i++){
+            if (formation_possible[i]=formation_current){
+                formation_current=i;
+                break;
+            }
+        }
+    }
+    else if (attack=1){
+        formation_current=obj_controller.last_attack_form;
+         for (var i=0;i<array_length(formation_possible);i++){
+            if (formation_possible[i]=formation_current){
+                formation_current=i;
+                break;
+            }
+        }
+    }
+    if (formation_current==-1){
+        formation_current=0;
+    }
+
     fighting = array_create(11, array_create(501));
     veh_fighting = array_create(11, array_create(501));
 }
@@ -132,4 +169,50 @@ btn_back.str1 = "BACK";
 btn_back.text_color = CM_GREEN_COLOR;
 btn_back.button_color = CM_GREEN_COLOR;
 btn_back.width = 90;
+
+if (purge ==0){
+sisters=p_target.p_sisters[planet_number];
+    eldar=p_target.p_eldar[planet_number];
+    ork=p_target.p_orks[planet_number];
+    tau=p_target.p_tau[planet_number];
+    tyranids=p_target.p_tyranids[planet_number];
+    csm=p_target.p_chaos[planet_number];
+    traitors=p_target.p_traitors[planet_number];
+    necrons=p_target.p_necrons[planet_number];
+    demons=p_target.p_demons[planet_number];
+
+    if (p_target.p_player[planet_number]>0) then max_ships+=1;
+
+    var bes,bes_score;bes=0;bes_score=0;
+    if (sisters>0) and (obj_controller.faction_status[eFACTION.Ecclesiarchy]="War"){bes=5;bes_score=sisters;}
+    if (eldar>bes_score){bes=6;bes_score=eldar;}
+    if (ork>bes_score){bes=7;bes_score=ork;}
+    if (tau>bes_score){bes=8;bes_score=tau;}
+    if (tyranids>bes_score){bes=9;bes_score=tyranids;}
+    if (traitors>bes_score){bes=10;bes_score=traitors;}
+    if (csm>bes_score){bes=11;bes_score=csm;}
+    if (necrons>bes_score){bes=13;bes_score=necrons;}
+    if (demons>0){bes=12;bes_score=demons;}
+    if (bes_score>0) then attacking=bes;
+
+    var spesh;spesh=false;
+    if (planet_feature_bool(p_target.p_feature[planet_number],P_features.Warlord10)==1) and (obj_controller.faction_defeated[10]=0) and (obj_controller.faction_gender[10]=1) and (obj_controller.known[eFACTION.Chaos]>0) and (obj_controller.turn>=obj_controller.chaos_turn) then spesh=true;
+        
+
+    if (has_problem_planet(planet_number, "tyranid_org", p_target)){
+        tyranids=2;
+        attacking=9;
+    }
+
+    var forces,t_attack;forces=0;t_attack=0;
+    if (sisters>0){forces+=1;force_present[forces]=5;}
+    if (eldar>0){forces+=1;force_present[forces]=6;}
+    if (ork>0){forces+=1;force_present[forces]=7;}
+    if (tau>0){forces+=1;force_present[forces]=8;}
+    if (tyranids>0){forces+=1;force_present[forces]=9;}
+    if (traitors>0) or ((traitors=0) and (spesh=true)){forces+=1;force_present[forces]=10;}
+    if (csm>0){forces+=1;force_present[forces]=11;}
+    if (demons>0){forces+=1;force_present[forces]=12;}
+    if (necrons>0){forces+=1;force_present[forces]=13;}   
+}
 

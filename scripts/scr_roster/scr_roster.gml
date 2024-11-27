@@ -8,6 +8,7 @@ function Roster() constructor{
     roster_planet = 0;
     roster_string = "";
     squad_buttons = [];
+    company_buttons = [];
     roster_local_string = "";
     local_button = new ToggleButton();
         local_button.str1 = "Local Forces";
@@ -62,12 +63,26 @@ function Roster() constructor{
     			array_push(_valid_squad_types, squad_buttons[i].squad);
     		}
     	}
+        var _valid_vehicles = [];
+        for (var i=0;i<array_length(vehicle_buttons);i++){
+            if (vehicle_buttons[i].active){
+                array_push(_valid_vehicles, vehicle_buttons[i].vehic_id);
+            }
+        } 
+
+        var _valid_companies = [];
+        for (var i=0;i<array_length(company_buttons);i++){
+            if (company_buttons[i].active){
+                array_push(_valid_companies, company_buttons[i].company_id);
+            }
+        }        
     	for (var i=array_length(full_roster_units)-1;i>=0;i--){
     		var _add = false;
     		var _unit = full_roster_units[i];
     		var _valid_type = true;
     		var is_unit = is_struct(_unit);
     		if (is_unit){
+                if (!array_contains(_valid_companies, _unit.company)) then continue;
 	    		if (_unit.squad_type()!= "none"){
 	    			var _valid_type = array_contains(_valid_squad_types,_unit.squad_type());
 	    		}
@@ -80,14 +95,18 @@ function Roster() constructor{
 		    	 	_add = true;
 		    	 }
 		   	} else {
+                 if (!array_contains(_valid_companies, _unit[0])) then continue;
+                var _role = obj_ini.veh_role[_unit[0]][_unit[1]];
 		   		var _vehic_lid = obj_ini.veh_lid[_unit[0]][_unit[1]];
-		   		if (_vehic_lid>-1){
-		    	 	if (array_contains(_valid_ship ,_vehic_lid)){
-		    	 		_add = true;  	 		
-		    	 	} else if (local_button.active){
-		    	 		_add = true;
-		    	 	}
-		   		}
+                if (array_contains(_valid_vehicles, _role)){
+    		   		if (_vehic_lid>-1){
+    		    	 	if (array_contains(_valid_ship ,_vehic_lid)){
+    		    	 		_add = true;  	 		
+    		    	 	} else if (local_button.active){
+    		    	 		_add = true;
+    		    	 	}
+    		   		}
+                }
 		   	}
 
 
@@ -192,14 +211,16 @@ function Roster() constructor{
         _button.text_color = CM_GREEN_COLOR;
         _button.button_color = CM_GREEN_COLOR;
         _button.width = string_width(display)+10;
-        _button.active = false;
+        _button.active = true;
         _button.vehic_id = vehicle_type;
         array_push(vehicle_buttons, _button);
     }
     static determine_full_roster  = function(){
         var _squads = [];
         var _vehicles = [];
+        var _company_present = false;
         for (var co=0;co<obj_ini.companies;co++){
+            _company_present = false;
             for (var i=0;i<array_length(obj_ini.role[co]);i++){
                 var _allow = false;
                 var _unit = fetch_unit([co, i]);
@@ -213,6 +234,7 @@ function Roster() constructor{
                
                 }
                 if (_allow){
+                    _company_present = true;
                     array_push(full_roster_units, _unit);
                     add_role_to_roster(_unit.role());
                     if (_unit.squad!="none"){
@@ -226,35 +248,53 @@ function Roster() constructor{
                     }
                 }
             }
-            for (var i=0;i<array_length(obj_ini.veh_race[co]);i++){
-            	var _allow = false;
-            	 if (obj_ini.veh_race[co][i] == 0) then continue;
-            	 if (obj_ini.veh_loc[co][i] == roster_location){
-            	 	 if (obj_ini.veh_wid[co][i]>0){
-            	 	 	 if (obj_ini.veh_wid[co][i] ==roster_planet){
-            	 	 	 	_allow=true;
-            	 	 	 }
-            	 	 }
-            	 }
-				if (obj_ini.veh_lid[co][i]>-1){
-        	 	 	if (obj_ini.veh_lid[co][i]>= array_length(obj_ini.ship_location)){
-        	 	 		obj_ini.veh_lid[co][i] = 0;
-        	 	 	}
-        	 	 	if (obj_ini.ship_location[obj_ini.veh_lid[co][i]] == roster_location){
-        	 	 		_allow=true;
-        	 	 	}
-        	 	}
-        	 	if (_allow){
-        	 		array_push(full_roster_units, [co, i]);
-        	 		if (!array_contains(_vehicles, obj_ini.veh_role[co][i])){
-        	 			new_vehicle_button(obj_ini.veh_role[co][i],obj_ini.veh_role[co][i]);
-        	 		}
-        	 	}
+            if (obj_drop_select.attack){
+                for (var i=0;i<array_length(obj_ini.veh_race[co]);i++){
+                	var _allow = false;
+                	 if (obj_ini.veh_race[co][i] == 0) then continue;
+                	 if (obj_ini.veh_loc[co][i] == roster_location){
+                	 	 if (obj_ini.veh_wid[co][i]>0){
+                	 	 	 if (obj_ini.veh_wid[co][i] ==roster_planet){
+                	 	 	 	_allow=true;
+                	 	 	 }
+                	 	 }
+                	 }
+    				if (obj_ini.veh_lid[co][i]>-1){
+            	 	 	if (obj_ini.veh_lid[co][i]>= array_length(obj_ini.ship_location)){
+            	 	 		obj_ini.veh_lid[co][i] = 0;
+            	 	 	}
+            	 	 	if (obj_ini.ship_location[obj_ini.veh_lid[co][i]] == roster_location){
+            	 	 		_allow=true;
+            	 	 	}
+            	 	}
+            	 	if (_allow){
+                        _company_present = true;
+            	 		array_push(full_roster_units, [co, i]);
+            	 		if (!array_contains(_vehicles, obj_ini.veh_role[co][i])){
+                            array_push(_vehicles, obj_ini.veh_role[co][i]);
+            	 			new_vehicle_button(obj_ini.veh_role[co][i],obj_ini.veh_role[co][i]);
+            	 		}
+            	 	}
+                }
             }
+            var _button = new ToggleButton();
+            var _col = _company_present ? CM_GREEN_COLOR : c_red;
+            var _display = co ? scr_roman_numerals()[co-1] : "HQ";
+            _button.str1 = _display;
+            _button.text_halign = fa_center;
+            _button.text_color = _col;
+            _button.button_color = _col;
+            _button.width = string_width(_display)+10;
+            _button.active = _company_present;
+            _button.company_id = co;
+            _button.company_present = _company_present    
+            array_push(company_buttons,_button);
         }
         var _ships = get_player_ships(roster_location);
         for (var s=0;s<array_length(_ships);s++){
-        	new_ship_button(obj_ini.ship[_ships[s]],_ships[s]);
+            if (obj_ini.ship_carrying[s]>0){
+                new_ship_button(obj_ini.ship[_ships[s]],_ships[s]);
+            }
         }
     }
 
@@ -366,7 +406,7 @@ function add_unit_to_battle(unit,meeting){
         }
     }
 
-    if (unit.role() = obj_ini.role[100, 15]) or(unit.role() = obj_ini.role[100, 14]) or(string_count("Aspirant", unit.role()) > 0) {
+    if (unit.role() = obj_ini.role[100, 15]) or(unit.role() = obj_ini.role[100, 14]) or (string_count("Aspirant", unit.role()) > 0) {
         if (unit.role() = string(obj_ini.role[100, 14]) + " Aspirant") {
             col = obj_controller.bat_tactical_column;
             new_combat.tacticals++;
