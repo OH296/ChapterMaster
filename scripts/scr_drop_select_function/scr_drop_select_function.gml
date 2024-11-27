@@ -1,6 +1,6 @@
 function drop_select_draw(){
 	with (obj_drop_select){
-	if (!purge) {
+	if (!purge || purge >= 3) {
         w = 660;
         h = 520;
         // Center of the screen
@@ -256,15 +256,10 @@ function drop_select_draw(){
                 }
             }
 
-            if (obj_ncombat.enemy = 5) then obj_ncombat.threat = sisters;
-            if (obj_ncombat.enemy = 6) then obj_ncombat.threat = eldar;
-            if (obj_ncombat.enemy = 7) then obj_ncombat.threat = ork;
-            if (obj_ncombat.enemy = 8) then obj_ncombat.threat = tau;
-            if (obj_ncombat.enemy = 9) then obj_ncombat.threat = tyranids;
-            if (obj_ncombat.enemy = 10) then obj_ncombat.threat = traitors;
-            if (obj_ncombat.enemy = 11) then obj_ncombat.threat = csm;
-            if (obj_ncombat.enemy = 12) then obj_ncombat.threat = demons;
-            if (obj_ncombat.enemy = 13) then obj_ncombat.threat = necrons;
+            var _threats = [0,0,0,0,0,sisters,eldar,ork,tau, tyranids, traitors,csm, demons, necrons];
+            if (obj_ncombat.enemy >=5 && obj_ncombat.enemy<=13){
+                obj_ncombat.threat = _threats[obj_ncombat.enemy];
+            }
 
             if (obj_ncombat.enemy = 8) {
                 var eth;
@@ -272,7 +267,7 @@ function drop_select_draw(){
                 eth = scr_quest(4, "ethereal_capture", 8, 0);
                 if (eth > 0) and(obj_ncombat.battle_object.p_owner[obj_ncombat.battle_id] = 8) {
                     var rolli;
-                    rolli = floor(random(100)) + 1;
+                    rolli = irandom_range(1, 100)
                     if (obj_ncombat.threat = 6) and(rolli <= 80) then obj_ncombat.ethereal = 1;
                     if (obj_ncombat.threat = 5) and(rolli <= 65) then obj_ncombat.ethereal = 1;
                     if (obj_ncombat.threat = 4) and(rolli <= 50) then obj_ncombat.ethereal = 1;
@@ -286,7 +281,7 @@ function drop_select_draw(){
             if (obj_ncombat.threat < 1) then obj_ncombat.threat = 1;
             if (obj_ncombat.enemy = 10) and(obj_ncombat.battle_object.p_type[obj_ncombat.battle_id] = "Daemon") then obj_ncombat.threat = 7;
 
-            if ((attacking = 0) or(attacking = 10) or(attacking = 11)) and(obj_ncombat.battle_object.p_traitors[obj_ncombat.battle_id] = 0) and(obj_ncombat.battle_object.p_chaos[obj_ncombat.battle_id] = 0) {
+            if ((attacking = 0) or (attacking = 10) or(attacking = 11)) and(obj_ncombat.battle_object.p_traitors[obj_ncombat.battle_id] = 0) and(obj_ncombat.battle_object.p_chaos[obj_ncombat.battle_id] = 0) {
                 if (planet_feature_bool(obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id], P_features.Warlord10) == 1) and(obj_controller.known[eFACTION.Chaos] = 0) and(obj_controller.faction_gender[10] = 1) and(obj_controller.turn >= obj_controller.chaos_turn) {
                     var pop;
                     pop = instance_create(0, 0, obj_popup);
@@ -334,7 +329,7 @@ function drop_select_draw(){
             }
 
             scr_battle_allies();
-
+            setup_battle_formations();
             roster.add_to_battle();
         }
     }
@@ -351,7 +346,7 @@ function drop_select_draw(){
             draw_set_color(c_gray);
             draw_rectangle(740, 558, 860, 585, 0);
             draw_set_color(0);
-            draw_text_transformed(800, 559, string_hash_to_newline("Cancel"), 0.75, 0.75, 0);
+            draw_text_transformed(800, 559, "Cancel", 0.75, 0.75, 0);
             if (scr_hit(740, 558, 860, 585)) {
                 draw_set_alpha(0.2);
                 draw_set_color(0);
@@ -512,70 +507,23 @@ function drop_select_draw(){
             e = 1;
 
             if (purge = 2) { // Bombard
-                repeat(50) {
-                    if (ship[e] != "") and(ship_size[e] > 1) {
-                        draw_set_alpha(1);
-                        if (ship_all[e] = 0) then draw_set_alpha(0.35);
-                        draw_set_color(c_gray);
-                        draw_rectangle(x8, y8, x8 + 160, y8 + 16, 0); // 160
-                        draw_set_color(c_black);
-                        draw_text_transformed(x8 + 2, y8, string_hash_to_newline(string(ship[e]) + " (" + string(ship_size[e]) + ")"), 0.8, 0.8, 0);
-                        if (point_and_click([x8, y8, x8 + 160, y8 + 16])) {
-                            var onceh;
-                            onceh = 0;
-                            if (onceh = 0) and(ship_all[e] = 0) {
-                                onceh = 1;
-                                ship_all[e] = 1;
-                                ships_selected += 1;
-                            }
-                            if (onceh = 0) and(ship_all[e] = 1) {
-                                onceh = 1;
-                                ship_all[e] = 0;
-                                ships_selected -= 1;
-                            }
-                        }
-                        y8 += 18;
-                        sip += 1;
-
-                        if (y8 >= y2 + 105 + 180) {
-                            y8 = y2 + 105;
-                            x8 += 168;
-                        }
+                for (var e=0;e<array_length(roster.ships);e++) {
+                    var _ship_button = roster.ships[e];
+                    _ship_button.x1 = x8
+                    _ship_button.y1 = y8
+                    _ship_button.update();
+                    _ship_button.draw();           
+                    if (_ship_button.clicked()) {
+                        //roster.update_roster();
                     }
-                    e += 1;
-                }
-            }
-
-            if (purge >= 3) { // Anything not bombardment
-                repeat(50) {
-                    if (ship[e] != "") and(ship_max[e] > 0) {
-                        draw_set_alpha(1);
-                        if (ship_all[e] = 0) then draw_set_alpha(0.35);
-                        draw_set_color(c_gray);
-                        draw_rectangle(x8, y8, x8 + 160, y8 + 16, 0); // 160
-                        draw_set_color(c_black);
-                        draw_text_transformed(x8 + 2, y8, string_hash_to_newline(string(ship[e]) + " (" + string(ship_use[e]) + "/" + string(ship_max[e]) + ")"), 0.8, 0.8, 0);
-                        if (point_and_click([x8, y8, x8 + 160, y8 + 16])) {
-                            var onceh;
-                            onceh = 0;
-                            if (onceh = 0) and(ship_all[e] = 0) {
-                                onceh = 1;
-                                scr_drop_fiddle(ship_ide[e], true, e, attack);
-                            }
-                            if (onceh = 0) and(ship_all[e] = 1) {
-                                onceh = 1;
-                                scr_drop_fiddle(ship_ide[e], false, e, attack);
-                            }
-                        }
-                        y8 += 18;
-                        sip += 1;
-
-                        if (y8 >= y2 + 105 + 180) {
-                            y8 = y2 + 105;
-                            x8 += 168;
-                        }
+                    if (_ship_button.hover()){
+                        //roster.update_local_string(_ship_button.ship_id);
                     }
-                    e += 1;
+                    y8 += 21;
+                    if (e%9 == 0 && e!=0){
+                        y8 = 320;
+                        x8 = 700;
+                    }
                 }
             }
 
@@ -677,7 +625,7 @@ function drop_select_draw(){
             smin = 0;
             smax = 0;
 
-            if (purge = 2) {
+            if (purge == 2) {
                 repeat(61) {
                     w += 1;
                     if (ship[w] != "") and(ship_size[w] > 1) {
@@ -687,79 +635,9 @@ function drop_select_draw(){
                 }
             }
 
-            if (purge >= 3) {
-                repeat(61) {
-                    w += 1;
-                    if (ship[w] != "") {
-                        smax += ship_max[w];
-                        if (ship_all[w] > 0) then smin += ship_use[w];
-                    }
-                }
-                if (ship_max[500] > 0) and(ship_all[500] > 0) {
-                    smax += ship_max[500];
-                    smin += ship_max[500];
-                }
-
-                if (add_ground = 1) {
-                    master += local_forces.master;
-                    honor += local_forces.honor;
-                    capts += local_forces.captains;
-                    mahreens += l_mahreens;
-                    veterans += l_veterans;
-                    terminators += l_terminators;
-                    dreads += l_dreads;
-                    chaplains += l_chaplains;
-                    psykers += l_psykers;
-                    apothecaries += l_apothecaries;
-                    techmarines += l_techmarines;
-                    champions += l_champions;
-                }
-                if (add_ground = -1) {
-                    master -= local_forces.master;
-                    honor -= local_forces.honor;
-                    capts -= local_forces.captains;
-                    mahreens -= l_mahreens;
-                    veterans -= l_veterans;
-                    terminators -= l_terminators;
-                    dreads -= l_dreads;
-                    chaplains -= l_chaplains;
-                    psykers -= l_psykers;
-                    apothecaries -= l_apothecaries;
-                    techmarines -= l_techmarines;
-                    champions -= l_champions;
-                }
-            }
 
             draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));
 
-            var sel;
-            sel = "";
-            if (purge > 2) {
-                if (master = 1) then sel += "Chapter Master " + string(obj_ini.master_name) + ", ";
-                if (honor > 1) then sel += string(honor) + " " + string(obj_ini.role[100][2]) + "s, ";
-                if (honor = 1) then sel += "1 " + string(obj_ini.role[100][2]) + ", ";
-                if (capts > 1) then sel += string(capts) + " " + string(obj_ini.role[100][5]) + "s, ";
-                if (champions > 1) then sel += string(capts) + " Champions, ";
-                if (champions = 1) then sel += "1 Champion, ";
-                if (capts = 1) then sel += "1 " + string(obj_ini.role[100][5]) + ", ";
-                if (chaplains > 1) then sel += string(chaplains) + " " + string(obj_ini.role[100][14]) + "s, ";
-                if (chaplains = 1) then sel += "1 " + string(obj_ini.role[100][14]) + ", ";
-                if (apothecaries > 1) then sel += string(apothecaries) + " " + string(obj_ini.role[100][15]) + "s, ";
-                if (apothecaries = 1) then sel += "1 " + string(obj_ini.role[100][15]) + ", ";
-                if (psykers > 1) then sel += string(psykers) + " Psykers, ";
-                if (psykers = 1) then sel += "1 Psyker, ";
-                if (techmarines > 1) then sel += string(techmarines) + " " + string(obj_ini.role[100][16]) + "s, ";
-                if (techmarines = 1) then sel += "1 " + string(obj_ini.role[100][16]) + ", ";
-                if (terminators > 1) then sel += string(terminators) + " " + string(obj_ini.role[100][4]) + "s, ";
-                if (terminators = 1) then sel += "1 " + string(obj_ini.role[100][4]) + ", ";
-                if (veterans > 1) then sel += string(veterans) + " " + string(obj_ini.role[100][3]) + "s, ";
-                if (veterans = 1) then sel += "1 " + string(obj_ini.role[100][3]) + ", ";
-                if (mahreens > 1) then sel += string(mahreens) + " Marines, ";
-                if (mahreens = 1) then sel += "1 Marine, ";
-                if (dreads > 1) then sel += string(dreads) + " " + string(obj_ini.role[100][6]) + ", ";
-                if (dreads = 1) then sel += "1 " + string(obj_ini.role[100][6]) + ", ";
-                sel = string_delete(sel, string_length(sel) - 1, 2);
-            }
             // draw_text_ext(xx+310,yy+234,string(sel),-1,206);
 
             // Back / Purge buttons
@@ -786,26 +664,22 @@ function drop_select_draw(){
                 draw_rectangle(954, 556, 1043, 579, 0);
                 draw_set_alpha(1);
                 if (scr_click_left()) {
-                    if (purge = 2) {
-                        var i;
-                        i = 0;
-                        repeat(50) {
-                            i += 1;
-                            if (ship[i] != "") and(ship_all[i] > 0) {
-                                if (obj_ini.ship_class[ship_ide[i]] = "Gloriana") then purge_score += 4;
-                                if (obj_ini.ship_class[ship_ide[i]] = "Battle Barge") then purge_score += 3;
-                                if (obj_ini.ship_class[ship_ide[i]] = "Strike Cruiser") then purge_score += 1;
+                    if (purge == 2) {
+                        for (var i=0;i<array_length(roster.ships);i++){
+                            if (roster.ships[i].active){
+                                var _id = ships[i].ship_id;
+                                if (obj_ini.ship_class[_id] = "Gloriana") then purge_score += 4;
+                                if (obj_ini.ship_class[_id] = "Battle Barge") then purge_score += 3;
+                                if (obj_ini.ship_class[_id] = "Strike Cruiser") then purge_score += 1;                            
                             }
-                        }
-                    }
+                        }  
+                    }                  
+
                     if (purge >= 3) {
                         var i;
                         i = -1;
                         purge_score = 0;
-                        repeat(51) {
-                            i += 1;
-                            if (ship_all[i] != 0) then purge_score += ship_use[i];
-                        }
+                        purge_score = array_length(roster.selected_units);
                     }
 
                     scr_purge_world(p_target, planet_number, purge - 1, purge_score);

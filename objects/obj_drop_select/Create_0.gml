@@ -46,7 +46,6 @@ r_bikes=0;
 if (action_if_number(obj_saveload, 0, 0)){
 
     ship_names="";
-    sh_target=0;
     max_ships=0;
     ships_selected=0;
 

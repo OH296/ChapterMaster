@@ -1693,7 +1693,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 				is_at_loc=true;
 			}
 		} else if (ship==-1 && planet==0){
-			if (ship_location>0){
+			if (ship_location>-1){
 				if (obj_ini.ship_location[ship_location]==location){
 					is_at_loc=true;
 				}
