@@ -218,7 +218,7 @@ function drop_select_draw(){
                 sh_target.acted += 1;
             }
 
-            if (attacking == 10) or(attacking == 11) {
+            if (attacking == 10) or (attacking == 11) {
                 remove_planet_problem(planet_number, "meeting", p_target);
                 remove_planet_problem(planet_number, "meeting_trap", p_target);
             }

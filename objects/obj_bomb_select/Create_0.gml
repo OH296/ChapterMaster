@@ -1,6 +1,5 @@
 // Resets vars and also checks if target can be bombarded
 ship_names="";
-sh_target=0;
 p_target=0;
 max_ships=0;
 ships_selected=0;
