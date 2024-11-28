@@ -10,12 +10,14 @@ if (instance_number(obj_ncombat) == 0) {
 
         draw_set_halign(fa_center);
         roster_slate.inside_method = function(){
-            var _xx = roster_slate.XX+(roster_slate.width/2)
-            var _yy  = roster_slate.YY+40;
-            draw_text_transformed(_xx, _yy, "Battle Roster", 2, 2, 0);
-            _yy+=30;            
-            draw_text_ext(_xx, _yy, roster.roster_string, -1, roster_slate.width-30);
-            draw_text_ext(_xx+0.1, _yy+0.1, roster.roster_string, -1, roster_slate.width-30);
+            if (purge==0){
+                var _xx = roster_slate.XX+(roster_slate.width/2)
+                var _yy  = roster_slate.YY+40;
+                draw_text_transformed(_xx, _yy, "Battle Roster", 2, 2, 0);
+                _yy+=30;            
+                draw_text_ext(_xx, _yy, roster.roster_string, -1, roster_slate.width-30);
+                draw_text_ext(_xx+0.1, _yy+0.1, roster.roster_string, -1, roster_slate.width-30);
+            }
         }   
         roster_slate.draw(_x_center+665, _y_center, (300/860),(520/850));
 

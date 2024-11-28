@@ -21,6 +21,8 @@ if (nope!=1){audio_sound_gain(snd_battle,0.25*obj_controller.master_volume*obj_c
 
 //limit on the size of the players forces allowed
 man_size_limit = 0;
+man_limit_reached = false;
+man_size_count = 0;
 fack=0;
 cd=0;
 owner  = eFACTION.Player;

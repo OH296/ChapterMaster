@@ -18,6 +18,14 @@ function Roster() constructor{
         local_button.width = string_width(local_button.str1)+10;
         local_button.active = false;
 
+    select_all_ships = new ToggleButton();
+        local_button.str1 = "All Ships";
+        local_button.text_halign = fa_center;
+        local_button.text_color = CM_GREEN_COLOR;
+        local_button.button_color = CM_GREEN_COLOR;
+        local_button.width = string_width(local_button.str1)+10;
+        local_button.active = false;
+
     static format_roster_string = function(){
         roster_string = "";
         var _roster_types = struct_get_names(selected_roster);
@@ -362,30 +370,31 @@ function add_unit_to_battle(unit,meeting){
     obj_drop_select.fighting[company][v] = true;
 
     var col = 0,targ = 0,moov = 0;
-    _u_role = unit.role();
+    _unit_role = unit.role();
 
     if (new_combat.battle_special == "space_hulk") then new_combat.player_starting_dudes++;
-    if (unit.role() = obj_ini.role[100][18]) {
+
+    if (_unit_role = obj_ini.role[100][18]) {
         col = obj_controller.bat_tactical_column;                   //sergeants
         new_combat.sgts++;
-    }else if (unit.role() = obj_ini.role[100, 19]){
+    }else if (_unit_role = obj_ini.role[100, 19]){
         col = obj_controller.bat_veteran_column;
         new_combat.vet_sgts++;                        
     }
-    if (unit.role() = obj_ini.role[100, 12]) {              //scouts
+    if (_unit_role = obj_ini.role[100, 12]) {              //scouts
         col = obj_controller.bat_scout_column;
         new_combat.scouts++;
 
-    }else if (array_contains( [obj_ini.role[100][8], $"{obj_ini.role[100, 15]} Aspirant", $"{obj_ini.role[100, 14]} Aspirant"] , unit.role())) {
+    }else if (array_contains( [obj_ini.role[100][8], $"{obj_ini.role[100, 15]} Aspirant", $"{obj_ini.role[100, 14]} Aspirant"] , _unit_role)) {
         col = obj_controller.bat_tactical_column;                   //tactical_marines
         new_combat.tacticals++;
-    }else if (unit.role() = obj_ini.role[100, 3]){          //veterans and veteran sergeants
+    }else if (_unit_role = obj_ini.role[100, 3]){          //veterans and veteran sergeants
         col = obj_controller.bat_veteran_column;
         new_combat.veterans++;
-    }else if (unit.role() = obj_ini.role[100, 9]) {         //devastators
+    }else if (_unit_role = obj_ini.role[100, 9]) {         //devastators
         col = obj_controller.bat_devastator_column;
         new_combat.devastators++;
-    }else if(unit.role() = obj_ini.role[100, 10]){          //assualt marines
+    }else if(_unit_role = obj_ini.role[100, 10]){          //assualt marines
         col = obj_controller.bat_assault_column;
         new_combat.assaults++;
 
@@ -395,18 +404,18 @@ function add_unit_to_battle(unit,meeting){
         col = obj_controller.bat_librarian_column;                  //librarium
         new_combat.librarians++;
         moov = 1;
-    }else if (unit.role() = obj_ini.role[100, 16]) {            //techmarines
+    }else if (_unit_role = obj_ini.role[100, 16]) {            //techmarines
         col = obj_controller.bat_techmarine_column;
         new_combat.techmarines++;
         moov = 2;
-    } else if (unit.role() = obj_ini.role[100, 2]) {            //honour guard
+    } else if (_unit_role = obj_ini.role[100, 2]) {            //honour guard
         col = obj_controller.bat_honor_column;
         new_combat.honors++;
 
     } else if (unit.IsSpecialist("dreadnoughts")){
         col = obj_controller.bat_dreadnought_column;                //dreadnoughts
         new_combat.dreadnoughts++;
-    }else if (unit.role() = obj_ini.role[100][4]) {         //terminators
+    }else if (_unit_role = obj_ini.role[100][4]) {         //terminators
         col = obj_controller.bat_terminator_column;
         new_combat.terminators++;
     }
@@ -414,21 +423,21 @@ function add_unit_to_battle(unit,meeting){
     if (moov > 0) {
         if ((moov = 1) and(obj_controller.command_set[8] = 1)) or((moov = 2) and(obj_controller.command_set[9] = 1)) {
             if (company >= 2) then col = obj_controller.bat_tactical_column;
-            if (company = 10) then col = obj_controller.bat_scout_column;
+            if (company == 10) then col = obj_controller.bat_scout_column;
             if (obj_ini.mobi[cooh][va] = "Jump Pack") {
                 col = obj_controller.bat_assault_column;
             }
         }
     }
 
-    if (unit.role() = obj_ini.role[100, 15]) or(unit.role() = obj_ini.role[100, 14]) or (string_count("Aspirant", unit.role()) > 0) {
-        if (unit.role() = string(obj_ini.role[100, 14]) + " Aspirant") {
+    if (_unit_role = obj_ini.role[100, 15]) or (_unit_role = obj_ini.role[100, 14]) or (unit.IsSpecialist("trainee")) {
+        if (_unit_role = string(obj_ini.role[100, 14]) + " Aspirant") {
             col = obj_controller.bat_tactical_column;
             new_combat.tacticals++;
         }
 
-        if (unit.role() = obj_ini.role[100, 15]) then new_combat.apothecaries++;
-        if (unit.role() = obj_ini.role[100, 14]) {
+        if (_unit_role = obj_ini.role[100, 15]) then new_combat.apothecaries++;
+        if (_unit_role = obj_ini.role[100, 14]) {
             new_combat.chaplains++;
             if (new_combat.big_mofo > 5) then new_combat.big_mofo = 5;
         }
@@ -440,13 +449,13 @@ function add_unit_to_battle(unit,meeting){
         if (company = 10) then col = obj_controller.bat_scout_column;
     }
 
-    if (unit.role() = obj_ini.role[100, 5]) or(unit.role() = obj_ini.role[100][11]) or(unit.role() = obj_ini.role[100, 7]) {
-        if (unit.role() = obj_ini.role[100, 5]) {
+    if (_unit_role = obj_ini.role[100, 5]) or(_unit_role = obj_ini.role[100][11]) or(_unit_role = obj_ini.role[100, 7]) {
+        if (_unit_role = obj_ini.role[100, 5]) {
             new_combat.captains++;
             if (new_combat.big_mofo > 5) then new_combat.big_mofo = 5;
         }
-        if (unit.role() = obj_ini.role[100][11]) then new_combat.standard_bearers++;
-        if (unit.role() = obj_ini.role[100, 7]) then new_combat.champions++;
+        if (_unit_role = obj_ini.role[100][11]) then new_combat.standard_bearers++;
+        if (_unit_role = obj_ini.role[100, 7]) then new_combat.champions++;
 
         //if (company = 1) {
         //    col = obj_controller.bat_veteran_column;
@@ -458,7 +467,7 @@ function add_unit_to_battle(unit,meeting){
         if (obj_ini.mobi[cooh][va] = "Jump Pack") then col = obj_controller.bat_assault_column;
     }
 
-    if (unit.role() = "Chapter Master") {
+    if (_unit_role = "Chapter Master") {
         col = obj_controller.bat_command_column;
         new_combat.important_dudes++;
         new_combat.big_mofo = 1;
@@ -503,7 +512,7 @@ function add_unit_to_battle(unit,meeting){
         }
     }
     if (col = 0) then col = obj_controller.bat_hire_column;
-    if (unit.role() = "Death Company") { // Ahahahahah
+    if (_unit_role = "Death Company") { // Ahahahahah
         var really;
         really = false;
         if (string_count("Dreadnought", targ.marine_armour[targ.men]) > 0) then really = true;
@@ -518,30 +527,26 @@ function add_unit_to_battle(unit,meeting){
         scr_add_unit_to_roster(unit);
     }
 
-    // info for ai targetting armour and what they think is best. TODO find out what marine_ranged and attack does
-
     // marine_attack[i]=1;
     // marine_ranged[i]=1;
     // marine_defense[i]=1;
 
     if (obj_ini.mobi[cooh][va] = "Bike") {
-        man_Size = 3;
+        man_size = 3;
     }
     if (obj_ini.mobi[cooh][va] = "Jump Pack") {
-        man_Size = 2;
+        man_size = 2;
     }
 
     //evaluates if there is a limit on the size of men that can be in a battle and only adds the allowable number to roster
     if (new_combat.man_size_limit == 0) {
         new_combat.fighting[cooh][va] = 1;
-        sofar++;
     } else {
-        if (man_size_count + man_size <= new_combat.man_size_limit) {
+        if (new_combat.man_size_count + man_size <= new_combat.man_size_limit) {
             new_combat.fighting[cooh][va] = 1;
-            sofar++;
-            man_size_count += man_size;
+            new_combat.man_size_count += man_size;
             if (man_size_count == new_combat.man_size_limit) {
-                man_limit_reached = true;
+                new_combat.man_limit_reached = true;
             }
         }
     }

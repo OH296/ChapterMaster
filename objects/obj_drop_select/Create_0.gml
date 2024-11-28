@@ -49,7 +49,6 @@ if (action_if_number(obj_saveload, 0, 0)){
     max_ships=0;
     ships_selected=0;
 
-    purge=0;
     purge_method=0;
     purge_score=0;
     purge_a=0;
@@ -170,7 +169,7 @@ btn_back.button_color = CM_GREEN_COLOR;
 btn_back.width = 90;
 
 if (purge ==0){
-sisters=p_target.p_sisters[planet_number];
+    sisters=p_target.p_sisters[planet_number];
     eldar=p_target.p_eldar[planet_number];
     ork=p_target.p_orks[planet_number];
     tau=p_target.p_tau[planet_number];
@@ -182,7 +181,7 @@ sisters=p_target.p_sisters[planet_number];
 
     if (p_target.p_player[planet_number]>0) then max_ships+=1;
 
-    var bes,bes_score;bes=0;bes_score=0;
+    var bes=0,bes_score=0;
     if (sisters>0) and (obj_controller.faction_status[eFACTION.Ecclesiarchy]="War"){bes=5;bes_score=sisters;}
     if (eldar>bes_score){bes=6;bes_score=eldar;}
     if (ork>bes_score){bes=7;bes_score=ork;}

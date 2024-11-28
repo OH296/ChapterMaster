@@ -1,6 +1,15 @@
+enum DropType {
+    RaidAttack=0,
+    PurgeSelect,
+    PurgeBombard,
+    PurgeFire,
+    PurgeSelective,
+    PurgeAssassinate
+}
+
 function drop_select_draw(){
 	with (obj_drop_select){
-	if (!purge || purge >= 3) {
+	if (purge != DropType.PurgeSelect) {
         w = 660;
         h = 520;
         // Center of the screen
@@ -13,74 +22,78 @@ function drop_select_draw(){
         var x3 = (x1 + x2) / 2;
         var y3 = (y1 + y2) / 2;
 
-        draw_set_font(fnt_40k_30b);
-
-        // var xx,yy;
-        // xx=view_xview[0]+545;yy=view_yview[0]+212;
-        draw_set_halign(fa_left);
-        draw_set_color(c_gray);
-        var attack_type = attack ? "Attacking" : "Raiding"
-        draw_text_transformed(x1 + 40, y1 + 38, $"{attack_type} ({planet_numeral_name(planet_number, p_target)} )", 0.6, 0.6, 0);
-        var _offset = x1 + 40;
-        draw_set_font(fnt_40k_14);
-        for (var i=0;i<array_length(roster.company_buttons);i++){
-            var _button = roster.company_buttons[i];
-            _button.x1 = _offset
-            _button.y1 = y1 + 60;
-            _button.update();
-            _button.draw();
-            if (_button.company_present) {
-                if (_button.clicked()) {               
-                    roster.update_roster();
+        if (purge ==DropType.RaidAttack){
+            draw_set_font(fnt_40k_30b);
+    
+            // var xx,yy;
+            // xx=view_xview[0]+545;yy=view_yview[0]+212;
+            draw_set_halign(fa_left);
+            draw_set_color(c_gray);
+            var attack_type = attack ? "Attacking" : "Raiding"
+            draw_text_transformed(x1 + 40, y1 + 38, $"{attack_type} ({planet_numeral_name(planet_number, p_target)} )", 0.6, 0.6, 0);
+            var _offset = x1 + 40;
+            draw_set_font(fnt_40k_14);
+            for (var i=0;i<array_length(roster.company_buttons);i++){
+                var _button = roster.company_buttons[i];
+                _button.x1 = _offset
+                _button.y1 = y1 + 60;
+                _button.update();
+                _button.draw();
+                if (_button.company_present) {
+                    if (_button.clicked()) {               
+                        roster.update_roster();
+                    }
+                }
+                _offset+=_button.width;
+            }
+    
+            // Planet icon here
+            // draw_rectangle(xx+1084,yy+215,xx+1142,yy+273,0);
+    
+            // Formation
+            formation.x1 = x1 + 420;
+            formation.y1 = y1 + 80;
+            formation.str1 = $"Formation: {obj_controller.bat_formation[formation_possible[formation_current]]}";
+            formation.update();
+            formation.draw();
+            if (formation.clicked()) {
+                formation_current++;
+                if (formation_current>=array_length(formation_possible)){
+                    formation_current = 0;
                 }
             }
-            _offset+=_button.width;
+    
+            // Ships Are Up, Fuck Me
+            draw_set_color(c_gray);
+            draw_text(x1 + 40, 273, "Available Forces:");
         }
-
-        // Planet icon here
-        // draw_rectangle(xx+1084,yy+215,xx+1142,yy+273,0);
-
-        // Formation
-        formation.x1 = x1 + 420;
-        formation.y1 = y1 + 80;
-        formation.str1 = $"Formation: {obj_controller.bat_formation[formation_possible[formation_current]]}";
-        formation.update();
-        formation.draw();
-        if (formation.clicked()) {
-            formation_current++;
-            if (formation_current>=array_length(formation_possible)){
-                formation_current = 0;
-            }
-        }
-
-        // Ships Are Up, Fuck Me
-        draw_set_color(c_gray);
-        draw_text(x1 + 40, 273, "Available Forces:");
-
-        var column, row, e, x8, y8, sigh, sip;
-        e = 0;
-        sigh = 0;
-        sip = 1;
-        column = 1;
-        row = 1;
-        x8 = 552;
-        y8 = 299;
-        e = 500;
+        var e = 0;
+        var sigh = 0;
+        var sip = 1;
+        var column = 1;
+        var row = 1;
+        var x8 = 552;
+        var y8 = 299;
+        var e = 500;
 
         var add_ground = 0;
 
         // Local force button;
 
         // Ship buttons;
-        var _local_button = roster.local_button;
-        _local_button.x1 = x8
-        _local_button.y1 = y8
-        _local_button.update();
-        _local_button.draw();
-        if (_local_button.clicked()) {
-            roster.update_roster();
-        }        
+        if (purge !=DropType.PurgeBombard){
+            var _local_button = roster.local_button;
+            _local_button.x1 = x8
+            _local_button.y1 = y8
+            _local_button.update();
+            _local_button.draw();
+            if (_local_button.clicked()) {
+                roster.update_roster();
+            }     
+        }   
         y8 += 21;
+
+        var _all_active = true;
 
         for (var e=0;e<array_length(roster.ships);e++) {
             var _ship_button = roster.ships[e];
@@ -94,6 +107,9 @@ function drop_select_draw(){
             if (_ship_button.hover()){
                 roster.update_local_string(_ship_button.ship_id);
             }
+            if (!_ship_button._all_active){
+                _all_active=false;
+            }
             y8 += 21;
             if (e%9 == 0 && e!=0){
                 y8 = 320;
@@ -101,6 +117,20 @@ function drop_select_draw(){
             }
         }
 
+        var _select_all_button = roster.select_all_ships
+
+        _select_all_button.x1 = 700;
+        _select_all_button.y1=299;
+        _select_all_button.active = !_all_active;
+        _select_all_button.update();
+        _select_all_button.draw();
+        if (_ship_button.clicked() && _select_all_button.active) {
+            for (var e=0;e<array_length(roster.ships);e++) {
+                var _ship_button = roster.ships[e];
+                _ship_button.active = true;
+            }        
+            roster.update_roster();
+        }        
         draw_set_font(fnt_40k_14);
         draw_set_color(c_gray);
         draw_set_alpha(1);
@@ -339,7 +369,6 @@ function drop_select_draw(){
     // God, save us;
     if (menu == 0) {
         if (purge == 1) {
-            draw_sprite(spr_purge_panel, 0, 535, 200);
             draw_set_halign(fa_center);
             draw_set_font(fnt_40k_30b);
 
@@ -394,21 +423,21 @@ function drop_select_draw(){
                             ships_selected = 0;
                             all_sel = 0;
                         }
-                        if (iy = 2) and((purge_b > 0) or(purge_d != 0)) {
+                        else if (iy = 2) and((purge_b > 0) or(purge_d != 0)) {
                             purge = 3;
                             alarm[2] = 1;
                             purge_score = 0;
                             ships_selected = 0;
                             all_sel = 0;
                         }
-                        if (iy = 3) and((purge_c > 0) or(purge_d != 0)) {
+                        else if (iy = 3) and((purge_c > 0) or(purge_d != 0)) {
                             purge = 4;
                             alarm[2] = 1;
                             purge_score = 0;
                             ships_selected = 0;
                             all_sel = 0;
                         }
-                        if (iy = 4) and(purge_d + purge_b != 0) and(p_target.dispo[planet_number] >= 0) and(nup = false) {
+                        else if (iy = 4) and(purge_d + purge_b != 0) and(p_target.dispo[planet_number] >= 0) and(nup = false) {
                             purge = 5;
                             alarm[2] = 1;
                             purge_score = 0;
@@ -423,7 +452,6 @@ function drop_select_draw(){
                 scr_image("purge", (iy - 1) + r, x5, y5 + ((iy - 1) * 73), 351, 63);
             }
         } else if (purge >= 2) {
-            draw_sprite(spr_purge_panel, 0, 535, 200);
             draw_set_halign(fa_center);
             draw_set_font(fnt_40k_30b);
 
@@ -435,10 +463,10 @@ function drop_select_draw(){
 
             draw_set_halign(fa_left);
             draw_set_color(c_gray);
-            if (purge = 2) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Bombard Purging " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
-            if (purge = 3) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Fire Cleansing " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
-            if (purge = 4) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Selective Purging " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
-            if (purge = 5) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Assassinate Governor (" + string(p_target.name) + " " + scr_roman(planet_number) + ")"), 0.6, 0.6, 0);
+            if (purge = DropType.PurgeBombard) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Bombard Purging " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
+            if (purge = DropType.PurgeFire) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Fire Cleansing " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
+            if (purge = DropType.PurgeSelective) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Selective Purging " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
+            if (purge = DropType.PurgeAssassinate) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Assassinate Governor (" + string(p_target.name) + " " + scr_roman(planet_number) + ")"), 0.6, 0.6, 0);
 
             // Disposition here
             var succession = 0,
@@ -458,13 +486,13 @@ function drop_select_draw(){
 
             draw_set_font(fnt_40k_14b);
             draw_set_halign(fa_center);
-            if (succession = 0) {
+            if (!succession) {
                 if (p_target.dispo[pp] >= 0) and(p_target.p_first[pp] <= 5) and(p_target.p_owner[pp] <= 5) and(p_target.p_population[pp] > 0) then draw_text(x2 + 231, y2 + 54, string_hash_to_newline("Disposition: " + string(min(100, p_target.dispo[pp])) + "/100"));
                 if (p_target.dispo[pp] > -30) and(p_target.dispo[pp] < 0) and(p_target.p_owner[pp] <= 5) and(p_target.p_population[pp] > 0) then draw_text(x2 + 231, y2 + 54, string_hash_to_newline("Disposition: ???/100"));
                 if ((p_target.dispo[pp] >= 0) and(p_target.p_first[pp] <= 5) and(p_target.p_owner[pp] > 5)) or(p_target.p_population[pp] <= 0) then draw_text(x2 + 231, y2 + 54, string_hash_to_newline("-------------"));
                 if (p_target.dispo[pp] <= -3000) then draw_text(x2 + 231, y2 + 54, "Chapter Rule");
             }
-            if (succession = 1) then draw_text(x2 + 231, y2 + 54, string_hash_to_newline("War of Succession"));
+            if (succession = 1) then draw_text(x2 + 231, y2 + 54, "War of Succession");
 
             draw_set_color(c_gray);
             draw_set_font(fnt_40k_14);
@@ -474,7 +502,7 @@ function drop_select_draw(){
             draw_rectangle(x2 + 459, y2 + 14, x2 + 516, y2 + 71, 0);
 
             // Ships Are Up, Fuck Me
-            draw_text(x2 + 13, y2 + 80, string_hash_to_newline("Available Forces:"));
+            draw_text(x2 + 13, y2 + 80, "Available Forces:");
 
             var column, row, e, x8, y8, sigh, sip;
             e = 0;
@@ -506,27 +534,6 @@ function drop_select_draw(){
             }
             e = 1;
 
-            if (purge = 2) { // Bombard
-                for (var e=0;e<array_length(roster.ships);e++) {
-                    var _ship_button = roster.ships[e];
-                    _ship_button.x1 = x8
-                    _ship_button.y1 = y8
-                    _ship_button.update();
-                    _ship_button.draw();           
-                    if (_ship_button.clicked()) {
-                        //roster.update_roster();
-                    }
-                    if (_ship_button.hover()){
-                        //roster.update_local_string(_ship_button.ship_id);
-                    }
-                    y8 += 21;
-                    if (e%9 == 0 && e!=0){
-                        y8 = 320;
-                        x8 = 700;
-                    }
-                }
-            }
-
             draw_set_font(fnt_40k_14);
             draw_set_color(c_gray);
             draw_set_alpha(1);
@@ -539,101 +546,11 @@ function drop_select_draw(){
             draw_text(x2 + 14, y2 + 312, "Heresy: " + string(max(hers, influ[eFACTION.Tau])) + "%");
             draw_text(x2 + 14, y2 + 332, "Population: " + string(poppy));
 
-            if (purge = 2) { // Bombardment select all
-                draw_set_alpha(1);
-                yar = 2;
-                if (all_sel = 1) then yar = 3;
-                draw_sprite(spr_creation_check, yar, x2 + 233, y2 + 75);
-                yar = 0;
-                if (point_and_click([x2 + 233, y2 + 75, x2 + 233 + 32, y2 + 75 + 32])) {
-                    var onceh;
-                    onceh = 0;
-                    var onceh;
-                    once = 0;
-                    i = 0;
-                    if (all_sel = 0) and(onceh = 0) {
-                        repeat(60) {
-                            i += 1;
-                            if (ship[i] != "") and(ship_all[i] = 0) {
-                                ship_all[i] = 1;
-                                ships_selected += 1;
-                            }
-                        }
-                        onceh = 1;
-                        all_sel = 1;
-                    }
-                    if (all_sel = 1) and(onceh = 0) {
-                        repeat(60) {
-                            i += 1;
-                            if (ship[i] != "") and(ship_all[i] = 1) {
-                                ship_all[i] = 0;
-                                ships_selected -= 1;
-                            }
-                        }
-                        onceh = 1;
-                        all_sel = 0;
-                    }
-                }
-                draw_text_transformed(x2 + 233 + 30, y2 + 75 + 4, string_hash_to_newline("Select All"), 1, 1, 0);
-            }
-
-            if (purge >= 3) { // Anything not bombardment, select all
-                draw_set_alpha(1);
-                yar = 2;
-                if (all_sel = 1) then yar = 3;
-                draw_sprite(spr_creation_check, yar, x2 + 233, y2 + 75);
-                yar = 0;
-                if (point_and_click([x2 + 233, y2 + 75, x2 + 233 + 32, y2 + 75 + 32])) {
-                    var onceh;
-                    onceh = 0;
-                    var onceh;
-                    once = 0;
-                    i = 0;
-                    if (all_sel = 0) and(onceh = 0) {
-                        repeat(60) {
-                            i += 1;
-                            if (ship[i] != "") and(ship_all[i] = 0) {
-                                ship_all[i] = 1;
-                                scr_drop_fiddle(ship_ide[i], true, i, attack);
-                            }
-                            if (ship_all[500] = 0) then add_ground = 1;
-                            if (ship_all[500] = 1) then add_ground = -1;
-                        }
-                        onceh = 1;
-                        all_sel = 1;
-                    }
-                    if (all_sel = 1) and(onceh = 0) {
-                        repeat(60) {
-                            i += 1;
-                            if (ship[i] != "") and(ship_all[i] = 1) {
-                                ship_all[i] = 0;
-                                scr_drop_fiddle(ship_ide[i], false, i, attack);
-                            }
-                            if (ship_all[500] = 0) then add_ground = 1;
-                            if (ship_all[500] = 1) then add_ground = -1;
-                        }
-                        onceh = 1;
-                        all_sel = 0;
-                    }
-                }
-                draw_text_transformed(x2 + 233 + 30, y2 + 75 + 4, string_hash_to_newline("Select All"), 1, 1, 0);
-            }
-
             var smin, smax;
             var w;
             w = -1;
             smin = 0;
             smax = 0;
-
-            if (purge == 2) {
-                repeat(61) {
-                    w += 1;
-                    if (ship[w] != "") and(ship_size[w] > 1) {
-                        smax += 1;
-                        if (ship_all[w] > 0) then smin += 1;
-                    }
-                }
-            }
 
 
             draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));

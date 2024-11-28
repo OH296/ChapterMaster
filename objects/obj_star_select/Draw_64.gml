@@ -668,6 +668,7 @@ if (obj_controller.selecting_planet!=0){
                 p_target:target,
                 planet_number : obj_controller.selecting_planet,
                 sh_target:instance_nearest(x,y,obj_p_fleet),
+                purge:0,
             });
 
         }else if (current_button=="Attack"){
@@ -685,6 +686,7 @@ if (obj_controller.selecting_planet!=0){
                     sh_target:instance_nearest(x,y,obj_p_fleet),
                     attack :true,
                     sh_target : _targ,
+                    purge:0,
                 }); 
             }           
 
