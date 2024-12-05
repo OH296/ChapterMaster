@@ -530,7 +530,8 @@ function scr_image(path, image_id, x1, y1, width, height) {
 	        draw_sprite_stretched(drawing_sprite,image_id,x1,y1,width,height);
 	    }
 	    if (drawing_exists=false){
-	        draw_set_alpha(1);draw_set_color(0);
+	        draw_set_alpha(1);
+	        draw_set_color(0);
 	        draw_rectangle(x1,y1,x1+width,y1+height,0);
 	        draw_set_color(c_red);
 	        draw_rectangle(x1,y1,x1+width,y1+height,1);

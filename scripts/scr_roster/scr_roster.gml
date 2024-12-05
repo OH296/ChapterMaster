@@ -321,26 +321,29 @@ function Roster() constructor{
             }
         }
     }
-    bombard_purge = false;
-    fire_purge = false;
-    selective_purge = false;
-    assasinate_governor = false;
-
-    static purge_viabilities = function(){
-        bombard_purge = purge_bombard_score();
-        fire_purge = array_length(full_roster_units);
-        selective_purge = array_length(full_roster_units);
-        assasinate_governor = array_length(full_roster_units);     
+    static marines_total = function(){
+        var _marines = 0;
+        for (var i=0;i<array_length(full_roster_units);i++){
+            _marines += is_struct(full_roster_units[i]);
+        }
+        for (var i=0;i<array_length(selected_units);i++){
+            _marines += is_struct(selected_units[i]);
+        }
+        return _marines;
     }
-
     static purge_bombard_score = function(){
         var _purge_score = 0;
         for (var i=0;i<array_length(ships);i++){
             if (ships[i].active){
                 var _id = ships[i].ship_id;
-                if (obj_ini.ship_class[_id] == "Gloriana") then _purge_score += 4;
-                if (obj_ini.ship_class[_id] == "Battle Barge") then _purge_score += 3;
-                if (obj_ini.ship_class[_id] == "Strike Cruiser") then _purge_score += 1;                            
+                var _class = player_ships_class(ship_id);
+                if (obj_ini.ship_class[_id] == "Gloriana"){
+                    _purge_score += 4;
+                } else if (_class=="capital"){
+                    _purge_score += 3;
+                } else if( _class=="frigate"){
+                    _purge_score += 1;
+                }                      
             }
         }  
         return _purge_score;       
@@ -348,24 +351,37 @@ function Roster() constructor{
 
 }
 
-function PurgeButton(purge_image,xx,yy) constructor{
+function PurgeButton(purge_image,xx,yy, purge_type) constructor{
     x1=xx;
-    x2=yy;
-    y1=0;
+    y1=yy;
+    x1=0;
     y2=0;
     width = 351;
     height = 63;
     active = 0;
+    bright_shader = 0.8;
+    self.purge_type = purge_type;
     self.purge_image = purge_image;
 
     static draw = function(){
-        draw_set_alpha(active?1:0.35);      
-        scr_image("purge", purge_image + 4, x1, x2 , 351, 63);
+        if (active){
+            if (scr_hit(x1, y1, x1+width, y1+height)){
+                bright_shader = min (1.2, bright_shader+0.02);     
+            } else {
+                bright_shader = max (0.8, bright_shader-0.02);     
+            }
+        } else {
+            bright_shader=0.35;
+        }
+        shader_set(light_dark_shader);
+        shader_set_uniform_f(shader_get_uniform(light_dark_shader, "highlight"), bright_shader);   
+        scr_image("purge", purge_image, x1, y1 , width, height);
+        shader_reset();
     }
 
     static clicked = function(){
         if (active){
-            return point_and_click([x1, x2, x1+width, y1+height]);
+            return point_and_click([x1, y1, x1+width, y1+height]);
         }
         return false;
     }

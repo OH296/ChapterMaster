@@ -228,10 +228,19 @@ if (purge ==0){
         force_present[forces]=13;
     }   
 } else {
-    bombard_purge = new PurgeButton(5, 631,231);
-    fire_purge = new PurgeButton(6,631,304);
-    selective_purge = new PurgeButton(7,631,377);
-    assasinate_purge = new PurgeButton(8,631,450);
+    var _viable_ground_forces = roster.marines_total();
+    bombard_purge = new PurgeButton(4, 631,231,DropType.PurgeBombard);
+    bombard_purge.active = roster.purge_bombard_score();
+
+    fire_purge = new PurgeButton(5,631,304,DropType.PurgeFire);
+    fire_purge.active = _viable_ground_forces;
+
+    selective_purge = new PurgeButton(6,631,377,DropType.PurgeSelective);
+    selective_purge.active = _viable_ground_forces;
+
+    assasinate_purge = new PurgeButton(7,631,450,DropType.PurgeAssassinate);
+    selective_purge.active = _viable_ground_forces;
+
     purge_options = [bombard_purge, fire_purge, selective_purge, assasinate_purge];
 }
 

@@ -74,7 +74,6 @@ function drop_select_draw(){
         var row = 1;
         var x8 = 552;
         var y8 = 299;
-        var e = 500;
 
         var add_ground = 0;
 
@@ -107,7 +106,7 @@ function drop_select_draw(){
             if (_ship_button.hover()){
                 roster.update_local_string(_ship_button.ship_id);
             }
-            if (!_ship_button._all_active){
+            if (!_ship_button.active){
                 _all_active=false;
             }
             y8 += 21;
@@ -117,14 +116,14 @@ function drop_select_draw(){
             }
         }
 
-        var _select_all_button = roster.select_all_ships
+        var _select_all_button = roster.select_all_ships;
 
         _select_all_button.x1 = 700;
-        _select_all_button.y1=299;
+        _select_all_button.y1 = 299;
         _select_all_button.active = !_all_active;
         _select_all_button.update();
         _select_all_button.draw();
-        if (_ship_button.clicked() && _select_all_button.active) {
+        if (_select_all_button.clicked() && _select_all_button.active) {
             for (var e=0;e<array_length(roster.ships);e++) {
                 var _ship_button = roster.ships[e];
                 _ship_button.active = true;
@@ -369,49 +368,7 @@ function drop_select_draw(){
     // God, save us;
     if (menu == 0) {
         if (purge == 1) {
-            draw_set_halign(fa_center);
-            draw_set_font(fnt_40k_30b);
-
-            draw_set_color(c_gray);
-            draw_rectangle(740, 558, 860, 585, 0);
-            draw_set_color(0);
-            draw_text_transformed(800, 559, "Cancel", 0.75, 0.75, 0);
-            if (scr_hit(740, 558, 860, 585)) {
-                draw_set_alpha(0.2);
-                draw_set_color(0);
-                draw_rectangle(740, 558, 860, 585, 0);
-                draw_set_alpha(1);
-                if (scr_click_left()) {
-                    instance_destroy();
-                }
-            }
-
-            var hih, x5, y5, iy, r, nup;
-            hih = 0;
-            r = 0;
-            iy = 0;
-            nup = false;
-
-            x5 = 535;
-            y5 = 200;
-            x5 += 89;
-            y5 += 31;
-
-            if (instance_exists(p_target)) {
-                if (p_target.p_type[planet_number] = "Shrine") then nup = true;
-            }
-
-            // 89,31
-
-            var _local_forces = array_length(roster.full_roster_units);
-            for (var i=0;i<array_length(purge_options);i++){
-                var _purge_button = purge_options[i];
-                _purge_button.draw();
-                if (_purge_button.clicked()){
-                    purge_score = 0;
-                    purge=_purge_button.selection;
-                }
-            }
+            
             
         } else if (purge >= 2) {
             draw_set_halign(fa_center);
@@ -426,7 +383,7 @@ function drop_select_draw(){
             draw_set_color(c_gray);
             var _purge_strings = ["Bombard Purging {0}", "Fire Cleansing {0}","Selective Purging {0}", "Assassinate Governor ({0})"];
             var _planet_string = planet_numeral_name(planet_number, p_target);
-            draw_text_transformed(x2 + 14, y2 + 12, string(_purge_strings[purge],_planet_string), 0.6, 0.6, 0);
+            draw_text_transformed(x2 + 14, y2 + 12, string(_purge_strings[purge-2],_planet_string), 0.6, 0.6, 0);
 
             // Disposition here
             var succession = 0,
