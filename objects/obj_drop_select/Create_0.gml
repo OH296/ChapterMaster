@@ -193,7 +193,7 @@ if (purge ==0){
     if (demons>0){bes=12;bes_score=demons;}
     if (bes_score>0) then attacking=bes;
 
-    var spesh;spesh=false;
+    var spesh=false;
     if (planet_feature_bool(p_target.p_feature[planet_number],P_features.Warlord10)==1) and (obj_controller.faction_defeated[10]=0) and (obj_controller.faction_gender[10]=1) and (obj_controller.known[eFACTION.Chaos]>0) and (obj_controller.turn>=obj_controller.chaos_turn) then spesh=true;
         
 
@@ -207,10 +207,31 @@ if (purge ==0){
     if (eldar>0){forces+=1;force_present[forces]=6;}
     if (ork>0){forces+=1;force_present[forces]=7;}
     if (tau>0){forces+=1;force_present[forces]=8;}
-    if (tyranids>0){forces+=1;force_present[forces]=9;}
-    if (traitors>0) or ((traitors=0) and (spesh=true)){forces+=1;force_present[forces]=10;}
-    if (csm>0){forces+=1;force_present[forces]=11;}
-    if (demons>0){forces+=1;force_present[forces]=12;}
-    if (necrons>0){forces+=1;force_present[forces]=13;}   
+    if (tyranids>0){
+        forces+=1;
+        force_present[forces]=9;
+    }
+    if (traitors>0) or ((traitors=0) and (spesh=true)){
+        forces+=1;
+        force_present[forces]=10;
+    }
+    if (csm>0){
+        forces+=1;
+        force_present[forces]=11;
+    }
+    if (demons>0){
+        forces+=1;
+        force_present[forces]=12;
+    }
+    if (necrons>0){
+        forces+=1;
+        force_present[forces]=13;
+    }   
+} else {
+    bombard_purge = new PurgeButton(5, 631,231);
+    fire_purge = new PurgeButton(6,631,304);
+    selective_purge = new PurgeButton(7,631,377);
+    assasinate_purge = new PurgeButton(8,631,450);
+    purge_options = [bombard_purge, fire_purge, selective_purge, assasinate_purge];
 }
 

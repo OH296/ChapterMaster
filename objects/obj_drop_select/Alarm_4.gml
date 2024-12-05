@@ -35,7 +35,8 @@ if (sh_target!=-50){
             ship_size[i]=3;
             
             purge_a+=3;
-            purge_b+=ship_max[i];purge_c+=ship_max[i];
+            purge_b+=ship_max[i];
+            purge_c+=ship_max[i];
         }
     }
     q=0;

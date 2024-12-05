@@ -321,12 +321,55 @@ function Roster() constructor{
             }
         }
     }
+    bombard_purge = false;
+    fire_purge = false;
+    selective_purge = false;
+    assasinate_governor = false;
 
+    static purge_viabilities = function(){
+        bombard_purge = purge_bombard_score();
+        fire_purge = array_length(full_roster_units);
+        selective_purge = array_length(full_roster_units);
+        assasinate_governor = array_length(full_roster_units);     
+    }
 
+    static purge_bombard_score = function(){
+        var _purge_score = 0;
+        for (var i=0;i<array_length(ships);i++){
+            if (ships[i].active){
+                var _id = ships[i].ship_id;
+                if (obj_ini.ship_class[_id] == "Gloriana") then _purge_score += 4;
+                if (obj_ini.ship_class[_id] == "Battle Barge") then _purge_score += 3;
+                if (obj_ini.ship_class[_id] == "Strike Cruiser") then _purge_score += 1;                            
+            }
+        }  
+        return _purge_score;       
+    }
 
 }
 
+function PurgeButton(purge_image,xx,yy) constructor{
+    x1=xx;
+    x2=yy;
+    y1=0;
+    y2=0;
+    width = 351;
+    height = 63;
+    active = 0;
+    self.purge_image = purge_image;
 
+    static draw = function(){
+        draw_set_alpha(active?1:0.35);      
+        scr_image("purge", purge_image + 4, x1, x2 , 351, 63);
+    }
+
+    static clicked = function(){
+        if (active){
+            return point_and_click([x1, x2, x1+width, y1+height]);
+        }
+        return false;
+    }
+}
 
 function setup_battle_formations(){
           // Formation here

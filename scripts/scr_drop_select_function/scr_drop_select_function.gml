@@ -403,80 +403,39 @@ function drop_select_draw(){
 
             // 89,31
 
-            repeat(4) {
-                iy += 1;
-                r = 0;
-                draw_set_alpha(1);
-                if (iy = 1) and(purge_a <= 0) then draw_set_alpha(0.35);
-                if (iy = 2) and(purge_b <= 0) and(purge_d = 0) then draw_set_alpha(0.35);
-                if (iy = 3) and(purge_c <= 0) and(purge_d = 0) then draw_set_alpha(0.35);
-                if (iy = 4) and((purge_d + purge_b = 0) or(p_target.dispo[planet_number] < 0)) then draw_set_alpha(0.35);
-                if (iy = 4) and(nup = true) then draw_set_alpha(0.35);
-
-                if (scr_hit(x5, y5 + ((iy - 1) * 73), x5 + 351, y5 + ((iy - 1) * 73) + 63) = true) {
-                    r = 4;
-                    if (scr_click_left()) {
-                        if (iy = 1) and(purge_a > 0) {
-                            purge = 2;
-                            alarm[4] = 1;
-                            purge_score = 0;
-                            ships_selected = 0;
-                            all_sel = 0;
-                        }
-                        else if (iy = 2) and((purge_b > 0) or(purge_d != 0)) {
-                            purge = 3;
-                            alarm[2] = 1;
-                            purge_score = 0;
-                            ships_selected = 0;
-                            all_sel = 0;
-                        }
-                        else if (iy = 3) and((purge_c > 0) or(purge_d != 0)) {
-                            purge = 4;
-                            alarm[2] = 1;
-                            purge_score = 0;
-                            ships_selected = 0;
-                            all_sel = 0;
-                        }
-                        else if (iy = 4) and(purge_d + purge_b != 0) and(p_target.dispo[planet_number] >= 0) and(nup = false) {
-                            purge = 5;
-                            alarm[2] = 1;
-                            purge_score = 0;
-                            ships_selected = 0;
-                            all_sel = 0;
-                        }
-
-                    }
+            var _local_forces = array_length(roster.full_roster_units);
+            for (var i=0;i<array_length(purge_options);i++){
+                var _purge_button = purge_options[i];
+                _purge_button.draw();
+                if (_purge_button.clicked()){
+                    purge_score = 0;
+                    purge=_purge_button.selection;
                 }
-
-                // draw_sprite(spr_purge_buttons,(iy-1)+r,x5,y5+((iy-1)*73));
-                scr_image("purge", (iy - 1) + r, x5, y5 + ((iy - 1) * 73), 351, 63);
             }
+            
         } else if (purge >= 2) {
             draw_set_halign(fa_center);
             draw_set_font(fnt_40k_30b);
 
             // 2 is bombardment
 
-            var x2, y2;
-            x2 = 535;
-            y2 = 200;
+            var x2 = 535;
+            var y2 = 200;
 
             draw_set_halign(fa_left);
             draw_set_color(c_gray);
-            if (purge = DropType.PurgeBombard) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Bombard Purging " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
-            if (purge = DropType.PurgeFire) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Fire Cleansing " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
-            if (purge = DropType.PurgeSelective) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Selective Purging " + string(p_target.name) + " " + scr_roman(planet_number)), 0.6, 0.6, 0);
-            if (purge = DropType.PurgeAssassinate) then draw_text_transformed(x2 + 14, y2 + 12, string_hash_to_newline("Assassinate Governor (" + string(p_target.name) + " " + scr_roman(planet_number) + ")"), 0.6, 0.6, 0);
+            var _purge_strings = ["Bombard Purging {0}", "Fire Cleansing {0}","Selective Purging {0}", "Assassinate Governor ({0})"];
+            var _planet_string = planet_numeral_name(planet_number, p_target);
+            draw_text_transformed(x2 + 14, y2 + 12, string(_purge_strings[purge],_planet_string), 0.6, 0.6, 0);
 
             // Disposition here
             var succession = 0,
-                pp = planet_number
+            pp = planet_number
 
             var succession = has_problem_planet(pp, "succession", p_target);
 
-            if ((p_target.dispo[pp] >= 0) and(p_target.p_owner[pp] <= 5) and(p_target.p_population[pp] > 0)) and(succession = 0) {
-                var wack;
-                wack = 0;
+            if ((p_target.dispo[pp] >= 0) and(p_target.p_owner[pp] <= 5) and(p_target.p_population[pp] > 0)) and (!succession) {
+                var wack = 0;
                 draw_set_color(c_blue);
                 draw_rectangle(x2 + 12, y2 + 53, x2 + 12 + max(0, (min(100, p_target.dispo[pp]) * 4.37)), y2 + 71, 0);
             }
@@ -576,26 +535,16 @@ function drop_select_draw(){
             draw_rectangle(954, 556, 1043, 579, 0);
             draw_set_color(0);
             draw_text_transformed(x2 + 423, y2 + 358, "PURGE!", 1.25, 1.25, 0);
-            if (scr_hit(954, 556, 1043, 579) = true) {
+            if (scr_hit(954, 556, 1043, 579)) {
                 draw_set_alpha(0.2);
                 draw_rectangle(954, 556, 1043, 579, 0);
                 draw_set_alpha(1);
                 if (scr_click_left()) {
                     if (purge == 2) {
-                        for (var i=0;i<array_length(roster.ships);i++){
-                            if (roster.ships[i].active){
-                                var _id = ships[i].ship_id;
-                                if (obj_ini.ship_class[_id] = "Gloriana") then purge_score += 4;
-                                if (obj_ini.ship_class[_id] = "Battle Barge") then purge_score += 3;
-                                if (obj_ini.ship_class[_id] = "Strike Cruiser") then purge_score += 1;                            
-                            }
-                        }  
+                        _purge_score = roster.purge_bombard_score();
                     }                  
 
                     if (purge >= 3) {
-                        var i;
-                        i = -1;
-                        purge_score = 0;
                         purge_score = array_length(roster.selected_units);
                     }
 
@@ -676,7 +625,9 @@ function collect_local_units(){
 	            ship_size[i]=2;
 	            
 	            purge_a+=1;
-	            purge_b+=ship_max[i];purge_c+=ship_max[i];purge_d+=ship_max[i];
+	            purge_b+=ship_max[i];
+                purge_c+=ship_max[i];
+                purge_d+=ship_max[i];
 	        }
 	    }
 	    q=-1;
@@ -693,7 +644,9 @@ function collect_local_units(){
 	            
 	            ship_size[i]=1;
 	            
-	            purge_b+=ship_max[i];purge_c+=ship_max[i];purge_d+=ship_max[i];
+	            purge_b+=ship_max[i];
+                purge_c+=ship_max[i];
+                purge_d+=ship_max[i];
 	        }
 	    }
 
