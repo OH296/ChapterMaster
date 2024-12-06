@@ -428,8 +428,9 @@ function filter_and_sort_company(type, specific){
 }
 
 function switch_view_company(new_view){
+
 	with (obj_controller){
-		if (new_view<1) then exit;
+		if (new_view<1) then exit;	
 		filter_mode = false;
 		text_bar=0;
 		if (managing<=10 && managing>=0){
@@ -448,6 +449,9 @@ function switch_view_company(new_view){
 			company_data={};
 			scr_special_view(new_view);
 		} else {
+			with (obj_ini){
+				scr_company_order(new_view);
+			}
 			scr_company_view(new_view);		
 			company_data = new CompanyStruct(managing);
 		}

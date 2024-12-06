@@ -1,4 +1,7 @@
 /// @mixin obj_creation
+/// @description  Called when an empty custom chapter icon is picked, or the custom icon in bottom right is picked from the new game menu.
+/// if "Create Custom" is picked, argument0 = 0, if "Create Random" is picked, argument0 = 1
+/// @param {Real} argument0 0 if Blank Custom, 1 if Random
 function scr_chapter_random(argument0) {
 
 	// argument0 = 0 = create custom 

@@ -1,4 +1,6 @@
 
+if (!instance_exists(obj_star)) then exit;
+
 if (instance_exists(orbiting)) and (obj_controller.is_test_map=true){
     draw_set_color(c_red);
     draw_line_width(x,y,orbiting.x,orbiting.y,1);
@@ -9,6 +11,7 @@ if (x<0) or (x>room_width) or (y<0) or (y>room_height) then exit;
 if (image_alpha=0) then exit;
 
 var coords = [0,0];
+
 var near_star = instance_nearest(x,y, obj_star);
 if (x==near_star.x && y==near_star.y){
     var coords = [24,-24];

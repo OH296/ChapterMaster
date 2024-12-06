@@ -2,7 +2,6 @@
  * * obj_creation is used as part of the main menu new game and chapter creation logic
  * It contains data and logic for setting up custom chapters as well as populating the new game menu with data for pre-existing chapters.
  */
-// show_debug_overlay(true);
 keyboard_string="";
 
 #region Global Settings: volume, fullscreen etc
@@ -15,6 +14,62 @@ settings_heresy=ini_read_real("Settings","settings_heresy",0);
 settings_fullscreen=ini_read_real("Settings","fullscreen",1);
 settings_window_data=ini_read_string("Settings","window_data","fullscreen");
 ini_close();
+#endregion
+
+#region Icon Grid settings for chapter selection
+icon_width = 48;
+icon_height = 48;
+/// distance between 2 rows of icons in the grid
+icon_row_gap = 60;
+/// distance between section heading and icon grid row
+icon_gap_y = 34;
+/// distance between columns in icon grid
+icon_gap_x = 53;
+/// x coord of left edge of the icon grid
+icon_grid_left_edge = 441;
+/// Max number of columns of icons until a new row is made
+max_cols = 10;
+/// x coord of the right edge of the icon grid
+icon_grid_right_edge = function() {return icon_grid_left_edge + (icon_gap_x * max_cols -1)}; // icon_gap_x * max number of desired columns - 1
+/// y coord of Founding section heading
+founding_y = 133;
+/// y coord of Successor section heading
+successor_y = 250;
+/// y coord of Custom section heading
+custom_y = 463;
+/// y coord of Other section heading
+other_y = 593;
+
+var show_debug = false;
+if(show_debug){
+    show_debug_overlay(true);
+    dbg_view("obj_creation_dbg", true);
+    dbg_section("Icon Grid");
+    ref_to_max_cols = ref_create(self, "max_cols");
+    ref_to_icon_width = ref_create(self, "icon_width");
+    ref_to_icon_height = ref_create(self, "icon_height");
+    ref_to_icon_grid_left_edge = ref_create(self, "icon_grid_left_edge");
+    ref_to_icon_gap_y = ref_create(self, "icon_gap_y");
+    ref_to_icon_gap_x = ref_create(self, "icon_gap_x");
+    ref_to_icon_row_gap = ref_create(self, "icon_row_gap");
+    dbg_slider_int(ref_to_max_cols,1,15);
+    dbg_slider_int(ref_to_icon_width,1,100);
+    dbg_slider_int(ref_to_icon_height,1,100);
+    dbg_slider_int(ref_to_icon_grid_left_edge,1,1000);
+    dbg_slider_int(ref_to_icon_gap_y,1,300);
+    dbg_slider_int(ref_to_icon_gap_x,1,300);
+    dbg_slider_int(ref_to_icon_row_gap,1,300);
+
+    dbg_section("Heading Positions")
+    ref_to_founding_y = ref_create(self, "founding_y");
+    ref_to_successor_y = ref_create(self, "successor_y");
+    ref_to_custom_y = ref_create(self, "custom_y");
+    ref_to_other_y = ref_create(self, "other_y");
+    dbg_slider_int(ref_to_founding_y,1,1000);
+    dbg_slider_int(ref_to_successor_y,1,1000);
+    dbg_slider_int(ref_to_custom_y,1,1000);
+    dbg_slider_int(ref_to_other_y,1,1000);
+}
 #endregion
 
 window_data=string(window_get_x())+"|"+string(window_get_y())+"|"+string(window_get_width())+"|"+string(window_get_height())+"|";
@@ -80,6 +135,7 @@ goto_slide=1;
 highlight=0;
 highlighting=0;
 old_highlight=0;
+/// 1 = select chap, 2 = name, strength, adv/disadv, 3 = homeworld, discipline, 4 = livery, 5 = mutations, disposition, 6 = chapter master
 slide=1;
 slide_show=1;
 cooldown=0;

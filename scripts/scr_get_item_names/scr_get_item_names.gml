@@ -56,7 +56,7 @@ function push_marine_ranged_weapons_item_names(_item_names) {
 /// @param {array} _item_names - The list to append to.
 /// @returns {void}
 function push_marine_melee_weapons_item_names(_item_names) {
-    var item_count = 15;
+    var item_count = 16;
     var initial_size = array_length(_item_names);
     array_resize(_item_names, initial_size + item_count);
 
@@ -72,10 +72,11 @@ function push_marine_melee_weapons_item_names(_item_names) {
     _item_names[@ index++] = "Lightning Claw";
     _item_names[@ index++] = "Force Staff";
     _item_names[@ index++] = "Thunder Hammer";
+    _item_names[@ index++] = "Crozius Arcanum";
     _item_names[@ index++] = "Boarding Shield";
     _item_names[@ index++] = "Storm Shield";
     _item_names[@ index++] = "Bolt Pistol";
-    _item_names[@ index++] = "Bolter"; // 15
+    _item_names[@ index++] = "Bolter"; // 16
 }
 
 

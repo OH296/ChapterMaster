@@ -31,7 +31,8 @@ allow_colour_click = (cooldown<=0)   and (mouse_left>=1) and (custom>1) and (!in
 
 draw_set_alpha(slate4/30);
 if (slate4>0){
-    if (slide=1){
+    /* Chapter Selection grid */
+    if (slide==1){
         draw_set_color(38144);
         draw_set_font(fnt_40k_30b);
         draw_set_halign(fa_center);
@@ -39,39 +40,80 @@ if (slate4>0){
         
         draw_set_font(fnt_40k_30b);
         draw_set_halign(fa_left);
-        icon_gap_y = 34;
-        icon_gap_x = 53;
-        founding_y = 133;
-        successor_y = 250;
-        custom_y = 463;
-        other_y = 593
 
         draw_text_transformed(440,founding_y,"Founding Chapters",0.75,0.75,0);
         draw_text_transformed(440,successor_y,"Existing Chapters",0.75,0.75,0);
 		draw_text_transformed(440,custom_y,string_hash_to_newline("Custom Chapters"),0.75,0.75,0);
         draw_text_transformed(440,other_y,string_hash_to_newline("Other"),0.75,0.75,0);
 
+        /// @localvar grid object to keep track of where to draw icon boxes
+        var grid = {
+            count: 0,
+            x1: icon_grid_left_edge,
+            y1: founding_y + icon_gap_y,
+            w: icon_width,
+            h: icon_height,
+            x2:0,
+            y2:0,
+            left_edge: icon_grid_left_edge,
+            right_edge: icon_grid_right_edge(),
+            row_gap: icon_row_gap,
+            section_gap: icon_gap_y,
+            col_gap: icon_gap_x,
+            /// Updates coords to draw a new icon, creating new rows where needed
+            new_cell: function() {
+                if(count > 0){
+                    x1 = x1 + col_gap;
+                } else {
+                    x2 = x1 + w;
+                    y2 = y1 + h;
+                }
+                if(x1 > right_edge){
+                    x1 = left_edge;
+                    y1 = y1 + row_gap;
+                }
+                x2 = x1 + w;
+                y2 = y1 + h;
+                count += 1;
+            },
+            /// given a new y coord for a section heading resets cell drawing to start a new grid
+            new_section: function(new_y){
+                count = 0;
+                x1 = left_edge;
+                y1 = new_y + section_gap;
+                x2 = x1 + w;
+                y2 = y1 + h;
+            },
+            hover : function(){
+                 return scr_hit(x1,y1,x2,y2);
+            },
+            clicked : function(){
+                 return point_and_click([x1,y1,x2,y2]);
+            }
+        };
 
-        
+
 
         /** * Founding Chapters */
-        var x2,y2,i,new_hover,tool;
-        x2=441;y2=founding_y + icon_gap_y;i=1;new_hover=highlight;tool=0;
+        var i,new_hover,tool;
+        i=1;new_hover=highlight;tool=0;
         for(var c = 0; c < array_length(founding_chapters); c++){
             var chap = founding_chapters[c]
             i = chap.id;
+
+            grid.new_cell();
             
-            draw_sprite(spr_creation_icon,0,x2,167);
-            scr_image("creation/chapters/icons", chap.icon,x2,y2,48,48);
-            // draw_sprite_stretched(spr_icon,i,x2,167,48,48);
-            if(scr_hit(x2,y2, x2+48, y2+48) && slate4>=30){
-            // if (mouse_x>=x2) and (mouse_y>=y2) and (mouse_x<x2+48) and (mouse_y<y2+48) and (slate4>=30){
+            draw_sprite(spr_creation_icon,0,grid.x1,grid.y1);
+            scr_image("creation/chapters/icons", chap.icon, grid.x1,grid.y1,grid.w,grid.h);
+
+            // Hover
+            if(grid.hover() && slate4>=30){
                 if (old_highlight!=highlight) and (highlight!=i) and (goto_slide!=2){old_highlight=highlight;highlighting=1;}
                 if (goto_slide!=2){highlight=i;tool=1;}
-                draw_set_alpha(0.1);draw_set_color(c_white);
-                draw_rectangle(x2,y2,x2+48,y2+48,0);
-                draw_set_alpha(slate4/30);
-                if (point_and_click([x2,y2,x2+48,y2+48])){
+                // Highlight white on hover
+                draw_rectangle_color_simple(grid.x1, grid.y1, grid.x2, grid.y2,0,c_white,0.1);
+                // Click
+                if (grid.clicked()){
                     cooldown=8000;
                     chapter_name=chap.name;
                     if (!chap.disabled){
@@ -89,28 +131,30 @@ if (slate4>0){
                     }
                 }
             }
-            x2+=icon_gap_x;
+            // grid.x1 += icon_gap_x;
         }
         
         /** * Successor Chapters */
-        x2=441;y2=successor_y + icon_gap_y;new_hover=highlight;
+        grid.new_section(successor_y);
+
+        new_hover=highlight;
         for(var c = 0; c < array_length(successor_chapters); c++){
             var chap = successor_chapters[c]
             i = chap.id;
-                    
-            draw_sprite(spr_creation_icon,0,x2,y2);
-            // draw_sprite_stretched(spr_icon,i,x2,397,48,48);
-            scr_image("creation/chapters/icons",chap.icon,x2,y2,48,48);
 
-            
-            if (scr_hit(x2, y2, x2+48, y2+48) && slate4>=30){
+            grid.new_cell();
+
+            draw_sprite(spr_creation_icon,0,grid.x1,grid.y1);
+            scr_image("creation/chapters/icons",chap.icon,grid.x1,grid.y1,grid.w, grid.h);
+
+            // Hover
+            if (grid.hover() && slate4>=30){
                 if (old_highlight!=highlight) and (highlight!=i) and (goto_slide!=2){old_highlight=highlight;highlighting=1;}
                 if (goto_slide!=2){highlight=i;tool=1;}
-                draw_set_alpha(0.1);draw_set_color(c_white);
-                draw_rectangle(x2,y2,x2+48,y2+48,0);
-                draw_set_alpha(slate4/30);
+                // Highlight on hover
+                draw_rectangle_color_simple(grid.x1, grid.y1, grid.x2, grid.y2,0,c_white,0.1);
                 //Click
-                if (point_and_click([x2, y2, x2+48, y2+48])){
+                if (grid.clicked()){
                     cooldown=8000;
                     chapter_name=chap.name;
                     if (!chap.disabled){
@@ -127,36 +171,38 @@ if (slate4>0){
                     }
                 }
             }
-            x2+=icon_gap_x;
         }
         
         /** * Saved Custom Chapters */
-		x2=441;y2=custom_y + icon_gap_y;new_hover=highlight;
+        grid.new_section(custom_y);
+		new_hover=highlight;
         for(var c = 0; c < array_length(custom_chapters); c++){
             var chap = custom_chapters[c];
             i = chap.id;
             
+            grid.new_cell();
             
-            draw_sprite(spr_creation_icon,0,x2,y2);
+            draw_sprite(spr_creation_icon,0,grid.x1,grid.y1);
             if(chap.loaded == false){
                 // should be the icon that says 'custom'
-                draw_sprite_stretched(spr_icon_chapters, 31, x2,y2,48,48); 
+                draw_sprite_stretched(spr_icon_chapters, 31, grid.x1,grid.y1, grid.w, grid.h); 
             } else {
                 if(chap.icon > global.normal_icons_count){
-                    draw_sprite_stretched(spr_icon_chapters, chap.icon - global.normal_icons_count, x2,y2,48,48);
+                    draw_sprite_stretched(spr_icon_chapters, chap.icon - global.normal_icons_count, grid.x1,grid.y1, grid.w, grid.h);
                 } else {
-                    scr_image("creation/chapters/icons", chap.icon, x2,y2,48,48);
+                    scr_image("creation/chapters/icons", chap.icon, grid.x1,grid.y1, grid.w, grid.h);
                 }
             }
             
-            
-            if (scr_hit(x2, y2, x2+48, y2+48) && slate4>=30){
+            // Hover
+            if (grid.hover() && slate4>=30){
                 if (old_highlight!=highlight) and (highlight!=i) and (goto_slide!=2){old_highlight=highlight;highlighting=1;}
                 if (goto_slide!=2){highlight=chap.id;tool=1;}
-                draw_set_alpha(0.1);draw_set_color(c_white);
-                draw_rectangle(x2,y2,x2+48,y2+48,0);
-                draw_set_alpha(slate4/30);
-                if (point_and_click([x2, y2, x2+48, y2+48])){
+                // Highlight white on hover
+                draw_rectangle_color_simple(grid.x1, grid.y1, grid.x2, grid.y2,0,c_white,0.1);
+
+                //Click
+                if (grid.clicked()){
 					if(chap.loaded == true && chap.disabled == false){
                         if(chap.icon > global.normal_icons_count){
                             global.chapter_icon_sprite = spr_icon_chapters;
@@ -183,28 +229,29 @@ if (slate4>0){
                     }
                 }
             }
-            x2+=icon_gap_x;
         }
 
         /** * Other Chapters */
-        x2=441;y2=other_y + icon_gap_y;new_hover=highlight;
+        grid.new_section(other_y);
+
+        new_hover=highlight;
         for(var c = 0; c < array_length(other_chapters); c++){
             var chap = other_chapters[c];
             i = chap.id;
-        
-            draw_sprite(spr_creation_icon,0,x2,y2);
-            // draw_sprite_stretched(spr_icon,i,x2,y2,48,48);
-            scr_image("creation/chapters/icons",chap.icon,x2,y2,48,48);
 
-            
-            if (scr_hit(x2, y2, x2+48, y2+48) && slate4>=30){
+            grid.new_cell();        
+            draw_sprite(spr_creation_icon,0,grid.x1, grid.y1);
+            // draw_sprite_stretched(spr_icon,i,x2,y2,48,48);
+            scr_image("creation/chapters/icons",chap.icon,grid.x1, grid.y1, grid.w, grid.h);
+
+            // Hover
+            if (grid.hover() && slate4>=30){
                 if (old_highlight!=highlight) and (highlight!=i) and (goto_slide!=2){old_highlight=highlight;highlighting=1;}
                 if (goto_slide!=2){highlight=i;tool=1;}
-                draw_set_alpha(0.1);draw_set_color(c_white);
-                draw_rectangle(x2,y2,x2+48,y2+48,0);
-                draw_set_alpha(slate4/30);
+                // Highlight white on hover
+                draw_rectangle_color_simple(grid.x1, grid.y1, grid.x2, grid.y2,0,c_white,0.1);
                 //Click
-                if (point_and_click([x2, y2, x2+48, y2+48])){
+                if (grid.clicked()){
                     cooldown=8000;
                     chapter_name=chap.name;
                     if (!chap.disabled){
@@ -222,23 +269,24 @@ if (slate4>0){
                     }
                 }
             }
-            x2+=icon_gap_x;
         }
         
-        /* Custom + Random*/
-        x2+=53;
+        /* Blank Custom + Random*/
+        grid.new_cell();
+
         i=1001;
         repeat(2){
-            draw_sprite(spr_creation_icon,0,x2,y2);
-            draw_sprite_stretched(spr_icon_chapters,i-1001,x2,y2,48,48);
+            grid.new_cell();            
+
+            draw_sprite(spr_creation_icon,0,grid.x1, grid.y1);
+            draw_sprite_stretched(spr_icon_chapters,i-1001,grid.x1, grid.y1, grid.w, grid.h);
+
             
-            if (scr_hit(x2, y2, x2+48, y2+48) && (slate4>=30)){
+            if (grid.hover() && slate4>=30){
                 if (old_highlight!=highlight) and (highlight!=i) and (goto_slide!=2){old_highlight=highlight;highlighting=1;}
                 if (goto_slide!=2){highlight=i;tool=1;}
-                draw_set_alpha(0.1);draw_set_color(c_white);
-                draw_rectangle(x2,y2,x2+48,y2+48,0);
-                draw_set_alpha(slate4/30);
-                if (point_and_click([x2, y2, x2+48, y2+48])){
+                draw_rectangle_color_simple(grid.x1, grid.y1, grid.x2, grid.y2,0,c_white,0.1);
+                if (grid.clicked()){
                     cooldown=8000;
                     icon=1;
                     icon_name="da";
@@ -248,7 +296,7 @@ if (slate4>0){
                     if (i=1002){custom=1;scr_chapter_random(1);}
                 }
             }
-            i+=1;x2+=53;
+            i+=1;
         }
         
         if (tool=1) and (highlighting<30) then highlighting+=1;

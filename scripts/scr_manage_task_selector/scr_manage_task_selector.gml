@@ -37,6 +37,7 @@ function scr_manage_task_selector(){
 								case "captain_promote":
 		                			unit = display_unit[i];
 		                			unit.update_role(obj_ini.role[100][eROLE.Captain]);
+		                			unit.squad="none";
 		                			var start_company = unit.company;
 		                			var end_company =  selection_data.system;
 		                			var endslot = 0;
@@ -58,6 +59,7 @@ function scr_manage_task_selector(){
 								case "champion_promote":
 		                			unit = display_unit[i];
 		                			unit.update_role(obj_ini.role[100][eROLE.Champion]);
+		                			unit.squad="none";
 
 									with (obj_ini){
 		                				scr_company_order(unit.company);
@@ -70,6 +72,7 @@ function scr_manage_task_selector(){
 								case "ancient_promote":
 		                			unit = display_unit[i];
 		                			unit.update_role(obj_ini.role[100][eROLE.Ancient]);
+		                			unit.squad="none";
 
 
 									with (obj_ini){

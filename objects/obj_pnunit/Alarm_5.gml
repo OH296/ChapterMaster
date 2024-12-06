@@ -82,7 +82,8 @@ for (var i=0;i<array_length(unit_struct);i++){
         if (marine_dead[i]=0) and (_unit.gene_seed_mutations.mucranoid==1) and (ally[i]=false){
             var muck=floor(random(200))+1;
             if (muck=50){    //slime is armour destroyed due to mucranoid
-                if (array_contains(global.power_armour,_unit.armour())){
+                var _power_armour = ARR_power_armour;
+                if (array_contains(_power_armour,_unit.armour())){
                     _unit.update_armour("", false, false);
                     obj_ncombat.mucra[marine_co[i]]=1;
                     obj_ncombat.slime+=1;

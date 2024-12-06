@@ -87,19 +87,21 @@ function ork_fleet_move(){
 function ork_fleet_arrive_target(){
 
     instance_activate_object(obj_en_fleet);
-    var boat=instance_nearest(x,y,obj_en_fleet);
+    var _ork_fleet=scr_orbiting_fleet(eFACTION.Ork);
+    if (_ork_fleet=="none") then return;
     var aler=0;
 
-    if (present_fleet[eFACTION.Player]+present_fleet[eFACTION.Imperium]=0) and (present_fleet[7]>0) and (boat.owner = eFACTION.Ork) and (boat.action=="") and (planets>0){
+    var _imperial_ship = scr_orbiting_fleet([eFACTION.Player, eFACTION.Imperium]);
+    if (_imperial_ship == "none" && _ork_fleet!="none" && planets>0){
         var _allow_landing=true,t1=0,l=0;
     
         repeat(planets){
             l+=1;
             if (t1=0) and (p_tyranids[l]>0) then t1=l;
         }
-        if (t1>0) then p_tyranids[t1]-=boat.capital_number+(boat.frigate_number/2);
+        if (t1>0) then p_tyranids[t1]-=_ork_fleet.capital_number+(_ork_fleet.frigate_number/2);
         if (p_tyranids[t1]<=0){
-            if (planet_feature_bool(p_feature[t1], P_features.Gene_Stealer_Cult)==1){
+            if (planet_feature_bool(p_feature[t1], P_features.Gene_Stealer_Cult)){
                 delete_features(p_feature[t1], P_features.Gene_Stealer_Cult);
                 adjust_influence(eFACTION.Tyranids, -25, t1);
                 var nearest_imperial = nearest_star_with_ownership(x,y,eFACTION.Imperium, self.id);
@@ -114,24 +116,24 @@ function ork_fleet_arrive_target(){
         if (_allow_landing){
             for (var i=1;i<=planets;i++){
                 if ((p_guardsmen[i]+p_pdf[i]+p_player[i]+p_traitors[i]+p_tau[i]>0) or ((p_owner[i]!=7) and (p_orks[i]<=0))){
-                    if (p_type[i]!="Dead") and (p_orks[i]<4) and (i<=planets) and (instance_exists(boat)){
-                        p_orks[i]+=max(2,floor(boat.image_index*0.8));
+                    if (p_type[i]!="Dead") and (p_orks[i]<4) and (i<=planets) and (instance_exists(_ork_fleet)){
+                        p_orks[i]+=max(2,floor(_ork_fleet.image_index*0.8));
                     
 
-                        if (fleet_has_cargo("ork_warboss",boat)){
-                            array_push(p_feature[i], boat.carg_data.ork_warboss);
+                        if (fleet_has_cargo("ork_warboss",_ork_fleet)){
+                            array_push(p_feature[i], _ork_fleet.carg_data.ork_warboss);
                             p_orks[i]=6;
                         }
 
                     
                         if (p_orks[i]>6) then p_orks[i]=6;
-                        with(boat){instance_destroy();}
+                        with(_ork_fleet){instance_destroy();}
                         aler=1;
                     }                    
                 } else {
                     var new_wagh_star = distance_removed_star(x,y, choose(2,3,4,5));
                     if (instance_exists(new_wagh_star)){
-                        with (boat){
+                        with (_ork_fleet){
                             action_x=new_wagh_star.x;
                             action_y=new_wagh_star.y;
                             action = "";
@@ -155,6 +157,10 @@ function merge_ork_fleets(){
     var _stars_with_ork_fleets = {};
     with (obj_en_fleet){
         if (!owner != eFACTION.Ork) then continue;
+        if (capital_number+frigate_number+escort_number <= 0){
+            instance_destroy();
+            continue;
+        }
         if (is_orbiting()){
             if (struct_exists(_stars_with_ork_fleets, orbiting.name)){
                 array_push(_stars_with_ork_fleets[$orbiting.name],id);

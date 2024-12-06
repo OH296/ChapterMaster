@@ -219,6 +219,8 @@ function ColourItem(xx,yy) constructor{
         draw_sprite(spr_mk7_left_arm, 0, xx, yy);
         draw_sprite(spr_mk7_left_trim, 2, xx, yy);          
 		draw_sprite(spr_mk7_complex, 0, xx, yy);
+        draw_sprite(spr_mk7_left_trim, 0 , xx, yy);
+        draw_sprite(spr_mk7_right_trim, 0 , xx, yy);
         draw_sprite(spr_mk7_leg_variants, 1, xx, yy);
         draw_sprite(spr_mk7_chest_variants, 1, xx, yy);           	
         draw_sprite(spr_mk7_mouth_variants, 1, xx, yy);

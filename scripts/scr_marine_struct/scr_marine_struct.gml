@@ -17,17 +17,31 @@
 		the first int is a base or mean value the second int is a sd number to be passed to the gauss() function
 		the string (usually max) is guidance so in the instance of max it will pick the larger value of the mean and the gauss function return
 */
-global.stat_list = ["constitution", "strength", "luck", "dexterity", "wisdom", "piety", "charisma", "technology","intelligence", "weapon_skill", "ballistic_skill"];
+#macro ARR_stat_list ["constitution", "strength", "luck", "dexterity", "wisdom", "piety", "charisma", "technology","intelligence", "weapon_skill", "ballistic_skill"]
+
+global.stat_shorts = {
+	"constitution":"CON", 
+	"strength":"STR", 
+	"luck":"LCK", 
+	"dexterity":"DEX", 
+	"wisdom":"WIS", 
+	"piety":"PTY", 
+	"charisma":"CHA", 
+	"technology":"TEC",
+	"intelligence":"INT", 
+	"weapon_skill":"WS", 
+	"ballistic_skill":"BS",
+}
 
 // will swap these out for enums or some better method as i develop where this is going
-global.body_parts = ["left_leg", "right_leg", "torso", "right_arm", "left_arm", "left_eye", "right_eye", "throat", "jaw","head"];
-global.body_parts_display = ["Left Leg", "Right Leg", "Torso", "Right Arm", "Left Arm", "Left Eye", "Right Eye", "Throat", "Jaw","Head"];
+#macro ARR_body_parts ["left_leg", "right_leg", "torso", "right_arm", "left_arm", "left_eye", "right_eye", "throat", "jaw","head"]
+#macro ARR_body_parts_display ["Left Leg", "Right Leg", "Torso", "Right Arm", "Left Arm", "Left Eye", "Right Eye", "Throat", "Jaw","Head"]
 global.religions={
 	"imperial_cult":{"name":"Imperial Cult"},
 	"cult_mechanicus":{"name":"Cult Mechanicus"}, 
 	"eight_fold_path":{"name":"The Eight Fold Path"}
 };
-global.power_armour=["MK7 Aquila","MK6 Corvus","MK5 Heresy","MK3 Iron Armour","MK4 Maximus","Power Armour"];
+#macro ARR_power_armour ["MK7 Aquila","MK6 Corvus","MK5 Heresy","MK3 Iron Armour","MK4 Maximus","Power Armour"]
 enum location_types {
 	planet,
 	ship,
@@ -36,7 +50,7 @@ enum location_types {
 	warp
 }
 
-global.phy_levels =["Rho","Pi","Omicron","Xi","Nu","Mu","Lambda","Kappa","Iota","Theta","Eta","Zeta","Epsilon","Delta","Gamma","Beta","Alpha","Alpha Plus","Beta","Gamma Plus"]
+#macro ARR_psy_levels ["Rho","Pi","Omicron","Xi","Nu","Mu","Lambda","Kappa","Iota","Theta","Eta","Zeta","Epsilon","Delta","Gamma","Beta","Alpha","Alpha Plus","Beta","Gamma Plus"]
 
 global.base_stats = { //tempory stats subject to change by anyone that wishes to try their luck
 	"chapter_master":{ // TODO consider allowing the player to change the starting stats of the chapter master, and closest advisors, especially for custom chapters
@@ -571,7 +585,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	allegiance =faction;	//faction alligience defaults to the chapter
 	
 	static stat_boosts = function(stat_boosters){
-		stats = global.stat_list;
+		var stats = ARR_stat_list;
 		var edits = struct_get_names(stat_boosters);
 		var edit_stat,random_stat,stat_mod;		
 		for (var stat_iter =0; stat_iter <array_length(stats);stat_iter++){
@@ -732,12 +746,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		} else {
 			var item_key_map = {};
 			var body_part_area_keys
-			for (var i=0;i<array_length(global.body_parts);i++){//search all body parts
-				body_area = body[$ global.body_parts[i]]
+			var _body_parts = ARR_body_parts;
+			for (var i=0;i<array_length(_body_parts);i++){//search all body parts
+				body_area = body[$ _body_parts[i]]
 				body_part_area_keys=struct_get_names(body_area);
 				for (var b=0;b<array_length(body_part_area_keys);b++){
 					if (body_part_area_keys[b]==body_item_key){
-						item_key_map[$ global.body_parts[i]] = body_area[$ body_item_key]
+						item_key_map[$ _body_parts[i]] = body_area[$ body_item_key]
 					}
 				}
 				
@@ -932,8 +947,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 				add_or_sub_health(30);
 			}
 			var bionic_possible = [];
-			for (var body_part = 0; body_part < array_length(global.body_parts);body_part++){
-				part = global.body_parts[body_part];
+			var _body_parts = ARR_body_parts;
+			for (var body_part = 0; body_part < array_length(_body_parts);body_part++){
+				part = _body_parts[body_part];
 				if (!get_body_data("bionic",part)){
 					array_push(bionic_possible, part);
 				}
@@ -1555,6 +1571,17 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			return _type;
 		}
 
+
+		static add_to_squad = function(new_squad){
+			if (squad != "none"){
+				if (new_squad==squad) then exit;
+				remove_from_squad();
+			}
+			squad = new_squad;
+			var _squad = fetch_squad(squad);
+			_squad.add_member(company, marine_number);
+		}
+
 		static marine_location = function(){
 			var location_id,location_name;
 			var location_type = planet_location;
@@ -1860,6 +1887,22 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			}
 		}
 		return has_tag;
+	}
+
+	static get_stat_line = function(){
+		return {
+			"constitution":constitution, 
+			"strength":strength, 
+			"luck":luck, 
+			"dexterity":dexterity, 
+			"wisdom":wisdom, 
+			"piety":piety, 
+			"charisma":charisma, 
+			"technology":technology,
+			"intelligence":intelligence, 
+			"weapon_skill":weapon_skill, 
+			"ballistic_skill":ballistic_skill
+		}
 	}
 
 	static movement_after_math = function(end_company=company, end_slot=marine_number){

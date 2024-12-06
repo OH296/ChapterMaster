@@ -286,14 +286,22 @@ try {
         };
     }
     if ((dropping+attacking=0)) and (string_count("_attack",battle_special)=0) and (string_count("mech",battle_special)=0) and (string_count("ruins",battle_special)=0) and (battle_special!="ship_demon") and (string_count("cs_meeting",battle_special)=0){
-    
-        var yeehaw1=obj_turn_end.battle_object[obj_turn_end.current_battle];
-        yeehaw1.p_player[obj_turn_end.battle_world[obj_turn_end.current_battle]]-=world_size;
-        if (defeat=1) then yeehaw1.p_player[obj_turn_end.battle_world[obj_turn_end.current_battle]]=0;
         
-        obj_controller.combat=0;
-        with(obj_turn_end){
-            alarm[4]=1;
+        if (instance_exists(obj_turn_end)){
+            var _battle_index = obj_turn_end.current_battle;
+            if (_battle_index<array_length(obj_turn_end.battle_object)){
+                var _battle_object=obj_turn_end.battle_object[_battle_index];
+
+                var _planet = obj_turn_end.battle_world[_battle_index];
+                
+                _battle_object.p_player[_planet]-=world_size;
+
+                if (defeat=1) then yeehaw1.p_player[_planet]=0;
+            }
+            obj_controller.combat=0;
+            with(obj_turn_end){
+                alarm[4]=1;
+            }
         }
     }
     if (string_count("ruins",battle_special)>0) and (defeat=1){

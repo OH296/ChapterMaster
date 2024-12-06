@@ -351,7 +351,13 @@ function scr_orbiting_fleet(faction){
 	nearest_fleet = instance_nearest(x,y,obj_en_fleet);
 	while (nearest_fleet.x==x && nearest_fleet.y==y){
 		nearest_fleet = instance_nearest(x,y,obj_en_fleet);
-		if (nearest_fleet.owner == faction){
+		var _valid = false;
+		if (is_array(faction)){
+			_valid = array_contains(faction, nearest_fleet.owner);
+		} else {
+			_valid = nearest_fleet.owner;
+		}
+		if (_valid && nearest_fleet.action == ""){
 			instance_activate_object(obj_en_fleet);
 			return nearest_fleet.id;
 		} else {
@@ -410,7 +416,7 @@ function fleet_arrival_logic(){
     // cur_star.present_fleets+=1;if (owner = eFACTION.Tau) then cur_star.tau_fleets+=1;
     
     
-    if (owner = eFACTION.Mechanicus){
+    if (owner == eFACTION.Mechanicus){
         if (string_count("spelunk1",trade_goods)=1){
             trade_goods="mars_spelunk2";
             action_x=home_x;action_y=home_y;action_eta=52;

@@ -762,7 +762,7 @@ if (title="Necron Tunnels : 3"){option1="Continue";option2="Return to the surfac
 if (title="He Built It") and (option1="") and (string_count("submerged",text)=0){
     option1="Execute the heretic";
     option2="Move him to the Penitorium";
-    option3="mission_star see no problem";
+    option3="I see no problem";
 }
 
 

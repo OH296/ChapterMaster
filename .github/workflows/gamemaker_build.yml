@@ -40,7 +40,7 @@ jobs:
           $CommitHash = git rev-parse --short HEAD
 
           try {
-            $Version = "${{ github.ref_name }}"
+            $Version = "${{ github.ref_name }}".Replace("/", "-")
           } catch {
             # If no tags exist, use the commit hash as the version
             Write-Warning "No tags found, using commit hash as version."
@@ -48,10 +48,12 @@ jobs:
           }
 
           if ("${{ inputs.development }}" -eq "true") {
-            echo "suffix=$Version-$BuildDate" >> $GITHUB_OUTPUT
+            $suffix = "$Version-$BuildDate"
           } else {
-            echo "suffix=$Version" >> $GITHUB_OUTPUT
+            $suffix = $Version
           }
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "suffix=$suffix"
+          Write-Output "Suffix: $suffix"
   
           # Create the version.json content
           $VersionJson = @{
@@ -62,11 +64,11 @@ jobs:
       
           # Write the version.json to disk
           Set-Content -Path datafiles/main/version.json -Value $VersionJson
-          
-          # Set outputs for version, build date, and commit hash
-          # echo "version=$Version" >> $GITHUB_OUTPUT
-          # echo "build_date=$BuildDate" >> $GITHUB_OUTPUT
-          # echo "commit_hash=$CommitHash" >> $GITHUB_OUTPUT
+
+      - name: Check suffix
+        shell: pwsh
+        run: |
+          echo "Suffix is: ${{ steps.version_info.outputs.suffix }}"
 
       # This step finds the yyp file in the repository and saves the path to an output
       - id: find_yyp

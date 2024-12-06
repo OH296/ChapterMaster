@@ -48,7 +48,7 @@ function scr_apothecarium(){
         draw_set_color(c_gray);
         draw_set_font(fnt_40k_30b);
         draw_text_transformed(xx + 336 + 16, yy + 66, "Apothecarium", 1, 1, 0);
-        draw_text_transformed(xx + 336 + 16, yy + 100, "Master of the Apothecarion " + string(obj_ini.name[0, 4]), 0.6, 0.6, 0);
+        draw_text_transformed(xx + 336 + 16, yy + 100, "Master of the Apothecarion " + string(obj_ini.name[0, 3]), 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14);
     }
     if (menu_adept = 1) {

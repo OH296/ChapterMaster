@@ -27,9 +27,11 @@ if ((trade_goods="Khorne_warband") or (trade_goods="Khorne_warband_landing_force
 
 if (_is_orbiting) {
 	turns_static++;
-	if (turns_static>15 && owner==eFACTION.Ork){
-		ork_fleet_move();
-		_is_orbiting=false;
+	if (turns_static>5 && owner==eFACTION.Ork){
+		if (!irandom(7)){
+			ork_fleet_move();
+			_is_orbiting=false;
+		}
 	}
     if (instance_exists(obj_crusade)) 
 	and (orbiting.owner <= eFACTION.Ecclesiarchy) 
@@ -1008,10 +1010,6 @@ if (action=="" && _is_orbiting){
             }
             instance_activate_object(obj_star);
         }
-    }
-    
-    if (owner=eFACTION.Ork) and (action==""){// Should fix orks converging on useless planets
-        ork_fleet_move();
     }
 }
 

@@ -334,7 +334,7 @@ function find_favoured_training_traits(training_enum){
 	var favoured_traits = [];
 	var trait_id ="";
 	var stat_diffs = {};
-	var _stat_names = global.stat_list
+	var _stat_names = ARR_stat_list;
 	for (var i=0;i<array_length(_stat_names);i++){
 		stat_diffs[$_stat_names[i]] = 0;
 	}
@@ -462,7 +462,7 @@ function scr_compile_trial_bonus_string(trial_data){
 function StatDistributionUnit(data) constructor{
 	data_upper_end = 0;
 	data_lower_end =0;
-	var _stat_names = global.stat_list;
+	var _stat_names = ARR_stat_list;
 	for (var i=0;i<array_length(_stat_names);i++){
 		var _stat = _stat_names[i];
 		if (data[$_stat]<data_lower_end){
@@ -586,7 +586,7 @@ function scr_draw_recruit_advisor(){
         draw_set_font(fnt_40k_14);
     }
 
-    if (menu_adept = 0) then blurp = "Hail " + string(obj_ini.name[0, 1]) + "!  You asked for a report?\n\n";
+    if (menu_adept = 0) then blurp = "Hail " + string(obj_ini.name[0, 0]) + "!  You asked for a report?\n\n";
 
     if (obj_ini.doomed = 0) {
         if (recruits <= 0) and(marines >= 1000) then blurp += "Our Chapter currently has no Neophytes- we are at maximum strength and do not require more marines.  ";

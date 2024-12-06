@@ -23,7 +23,6 @@ changelog:
     - title: Under The Hood - Important!
       labels:
         - "PR: Major Code Changes"
-        - "PR: Performance"
     - title: Under The Hood
       labels:
         - "PR: Refactor"
