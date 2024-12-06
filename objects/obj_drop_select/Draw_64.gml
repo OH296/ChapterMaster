@@ -44,21 +44,24 @@ if (instance_number(obj_ncombat) == 0) {
                 draw_text_ext(_xx+0.1, _yy+0.1, roster.roster_local_string, -1, local_content_slate.width-30);
             }     
             if (purge > 0){
-                draw_set_halign(fa_center);
-                draw_set_font(fnt_40k_30b);
+                if (purge == 1){
+                    draw_set_halign(fa_center);
+                    draw_set_font(fnt_40k_30b);
 
-                draw_set_color(c_gray);
-                var _exit = draw_unit_buttons([_xx+(_width/2)-40, 559],"Cancel");
-                if (point_and_click(_exit)){
-                    instance_destroy();
+                    draw_set_color(c_gray);
+                    var _exit = draw_unit_buttons([_xx+(_width/2)-40, 559],"Cancel");
+                    if (point_and_click(_exit)){
+                        instance_destroy();
+                    }
                 }
+                var _xx = local_content_slate.XX;
 
                 /*if (instance_exists(p_target)) {
                     if (p_target.p_type[planet_number] = "Shrine") then nup = true;
                 }
                 */
                 // 89,31
-                draw_set_halign(fa_center);
+                draw_set_halign(fa_left);
                 for (var i=0;i<array_length(purge_options);i++){
                     var _purge_button = purge_options[i];
                     _purge_button.x1 = _xx+10;
