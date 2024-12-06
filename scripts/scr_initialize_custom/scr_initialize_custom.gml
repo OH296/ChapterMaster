@@ -3207,16 +3207,11 @@ function scr_initialize_custom() {
 	// if (string_count("Crafter",strin)>0) and (string_count("Enthusi",strin)=0) then equipment_number[2]=20;
 
 	if (scr_has_adv("Crafters")) && (scr_has_adv("Melee Enthusiasts")) {
-		eqi += 1;
-		equipment[eqi] = "MK3 Iron Armour";
-		equipment_number[eqi] = round(random_range(2, 12));
-		equipment_type[eqi] = "armour";
+        scr_add_item("MK3 Iron Armour", irandom_range(2, 12));
 	}
+
 	if (scr_has_adv("Crafters")) && (!scr_has_adv("Melee Enthusiasts")) {
-		eqi += 1;
-		equipment[eqi] = "MK4 Maximus";
-		equipment_number[eqi] = round(random_range(3, 18));
-		equipment_type[eqi] = "armour";
+        scr_add_item("MK4 Maximus", irandom_range(3, 18));
 	}
 
     gene_slaves = [];

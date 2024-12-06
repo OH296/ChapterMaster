@@ -229,137 +229,158 @@ function drop_select_draw(){
         btn_attack.y1 = btn_back.y1;
         if (attack = 0) then btn_attack.str1 = "RAID!";
         if (attack = 1) then btn_attack.str1 = "ATTACK!";
+        if (purge>1){
+            attack_type = "PURGE"
+        }        
         btn_attack.active = (array_length(roster.selected_units) > 0 && race_quantity > 0);
         btn_attack.update();
         btn_attack.draw();
         if (btn_attack.clicked()) {
-            combating = 1; // Start battle here
+            if (purge ==0){
+                combating = 1; // Start battle here
 
-            if (attack = 1) then obj_controller.last_attack_form = formation_possible[formation_current];
-            if (attack = 0) then obj_controller.last_raid_form = formation_possible[formation_current];
+                if (attack = 1) then obj_controller.last_attack_form = formation_possible[formation_current];
+                if (attack = 0) then obj_controller.last_raid_form = formation_possible[formation_current];
 
-            instance_deactivate_all(true);
-            instance_activate_object(obj_controller);
-            instance_activate_object(obj_ini);
-            instance_activate_object(obj_drop_select);
+                instance_deactivate_all(true);
+                instance_activate_object(obj_controller);
+                instance_activate_object(obj_ini);
+                instance_activate_object(obj_drop_select);
 
-            // 135 ; temporary balancing
-            if (sh_target != -50) {
-                sh_target.acted += 1;
-            }
-
-            if (attacking == 10) or (attacking == 11) {
-                remove_planet_problem(planet_number, "meeting", p_target);
-                remove_planet_problem(planet_number, "meeting_trap", p_target);
-            }
-
-            instance_create(0, 0, obj_ncombat);
-            obj_ncombat.battle_object = p_target;
-            obj_ncombat.battle_loc = p_target.name;
-            obj_ncombat.battle_id = planet_number;
-            obj_ncombat.dropping = 1 - attack;
-            obj_ncombat.attacking = attack;
-            obj_ncombat.enemy = attacking;
-            obj_ncombat.formation_set = formation_possible[formation_current];
-            obj_ncombat.defending = false;
-            obj_ncombat.local_forces = roster.local_button.active
-
-            var _planet = obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id]
-            if (obj_ncombat.battle_object.space_hulk = 1) then obj_ncombat.battle_special = "space_hulk";
-            if (planet_feature_bool(_planet, P_features.Warlord6) == 1) and(obj_ncombat.enemy = 6) and(obj_controller.faction_defeated[6] = 0) then obj_ncombat.leader = 1;
-            if (obj_ncombat.enemy = 7) and(obj_controller.faction_defeated[7] <= 0) {
-                if (planet_feature_bool(_planet, P_features.OrkWarboss)) {
-                    obj_ncombat.leader = 1;
-                    obj_ncombat.Warlord = _planet[search_planet_features(_planet, P_features.OrkWarboss)[0]];
+                // 135 ; temporary balancing
+                if (sh_target != -50) {
+                    sh_target.acted += 1;
                 }
-            }
 
-            if (obj_ncombat.enemy = 9) and(obj_ncombat.battle_object.space_hulk = 0) {
-                if (has_problem_planet(planet_number, "tyranid_org", p_target)) then obj_ncombat.battle_special = "tyranid_org";
-            }
-
-            if (obj_ncombat.enemy = 11) {
-                if (planet_feature_bool(obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id], P_features.World_Eaters) == 1) {
-                    obj_ncombat.battle_special = "world_eaters";
-                    obj_ncombat.leader = 1;
+                if (attacking == 10) or (attacking == 11) {
+                    remove_planet_problem(planet_number, "meeting", p_target);
+                    remove_planet_problem(planet_number, "meeting_trap", p_target);
                 }
-            }
 
-            var _threats = [0,0,0,0,0,sisters,eldar,ork,tau, tyranids, traitors,csm, demons, necrons];
-            if (obj_ncombat.enemy >=5 && obj_ncombat.enemy<=13){
-                obj_ncombat.threat = _threats[obj_ncombat.enemy];
-            }
+                instance_create(0, 0, obj_ncombat);
+                obj_ncombat.battle_object = p_target;
+                obj_ncombat.battle_loc = p_target.name;
+                obj_ncombat.battle_id = planet_number;
+                obj_ncombat.dropping = 1 - attack;
+                obj_ncombat.attacking = attack;
+                obj_ncombat.enemy = attacking;
+                obj_ncombat.formation_set = formation_possible[formation_current];
+                obj_ncombat.defending = false;
+                obj_ncombat.local_forces = roster.local_button.active
 
-            if (obj_ncombat.enemy = 8) {
-                var eth;
-                eth = 0;
-                eth = scr_quest(4, "ethereal_capture", 8, 0);
-                if (eth > 0) and(obj_ncombat.battle_object.p_owner[obj_ncombat.battle_id] = 8) {
-                    var rolli;
-                    rolli = irandom_range(1, 100)
-                    if (obj_ncombat.threat = 6) and(rolli <= 80) then obj_ncombat.ethereal = 1;
-                    if (obj_ncombat.threat = 5) and(rolli <= 65) then obj_ncombat.ethereal = 1;
-                    if (obj_ncombat.threat = 4) and(rolli <= 50) then obj_ncombat.ethereal = 1;
-                    if (obj_ncombat.threat = 3) and(rolli <= 35) then obj_ncombat.ethereal = 1;
+                var _planet = obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id]
+                if (obj_ncombat.battle_object.space_hulk = 1) then obj_ncombat.battle_special = "space_hulk";
+                if (planet_feature_bool(_planet, P_features.Warlord6) == 1) and(obj_ncombat.enemy = 6) and(obj_controller.faction_defeated[6] = 0) then obj_ncombat.leader = 1;
+                if (obj_ncombat.enemy = 7) and(obj_controller.faction_defeated[7] <= 0) {
+                    if (planet_feature_bool(_planet, P_features.OrkWarboss)) {
+                        obj_ncombat.leader = 1;
+                        obj_ncombat.Warlord = _planet[search_planet_features(_planet, P_features.OrkWarboss)[0]];
+                    }
                 }
-                // show_message("Ethereal Quest?: "+string(eth)+"#Ethereal?: "+string(obj_ncombat.ethereal));
-            }
 
-            // if (obj_ncombat.threat>1) and (obj_ncombat.enemy!=13) then obj_ncombat.threat-=1;
-            if (obj_ncombat.threat > 1) and(obj_ncombat.battle_special != "world_eaters") and(attack = 0) then obj_ncombat.threat -= 1;
-            if (obj_ncombat.threat < 1) then obj_ncombat.threat = 1;
-            if (obj_ncombat.enemy = 10) and(obj_ncombat.battle_object.p_type[obj_ncombat.battle_id] = "Daemon") then obj_ncombat.threat = 7;
-
-            if ((attacking = 0) or (attacking = 10) or(attacking = 11)) and(obj_ncombat.battle_object.p_traitors[obj_ncombat.battle_id] = 0) and(obj_ncombat.battle_object.p_chaos[obj_ncombat.battle_id] = 0) {
-                if (planet_feature_bool(obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id], P_features.Warlord10) == 1) and(obj_controller.known[eFACTION.Chaos] = 0) and(obj_controller.faction_gender[10] = 1) and(obj_controller.turn >= obj_controller.chaos_turn) {
-                    var pop;
-                    pop = instance_create(0, 0, obj_popup);
-                    pop.image = "chaos_symbol";
-                    pop.title = "Concealed Heresy";
-                    pop.text = "Your astartes set out and begin to cleanse " + string(obj_ncombat.battle_object.name) + " " + scr_roman(obj_ncombat.battle_id) + " of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";
-                    with(obj_pnunit) {
-                        instance_destroy();
-                    }
-                    with(obj_enunit) {
-                        instance_destroy();
-                    }
-                    with(obj_nfort) {
-                        instance_destroy();
-                    }
-                    with(obj_ncombat) {
-                        instance_destroy();
-                    }
-                    combating = 0;
-                    instance_activate_all();
-                    exit;
-                    exit;
+                if (obj_ncombat.enemy = 9) and(obj_ncombat.battle_object.space_hulk = 0) {
+                    if (has_problem_planet(planet_number, "tyranid_org", p_target)) then obj_ncombat.battle_special = "tyranid_org";
                 }
-                if (planet_feature_bool(obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id], P_features.Warlord10) == 1) and(obj_controller.known[eFACTION.Chaos] >= 2) and(obj_controller.faction_gender[10] = 1) and(obj_controller.turn >= obj_controller.chaos_turn) then with(obj_drop_select) {
-                    obj_ncombat.enemy = 11;
-                    obj_ncombat.threat = 0;
-                    alarm[6] = 1;
-                    with(obj_pnunit) {
-                        instance_destroy();
-                    }
-                    with(obj_enunit) {
-                        instance_destroy();
-                    }
-                    with(obj_nfort) {
-                        instance_destroy();
-                    }
-                    with(obj_ncombat) {
-                        instance_destroy();
-                    }
-                    combating = 0;
-                    instance_activate_all();
-                    exit;
-                    exit;
-                }
-            }
 
-            scr_battle_allies();
-            setup_battle_formations();
-            roster.add_to_battle();
+                if (obj_ncombat.enemy = 11) {
+                    if (planet_feature_bool(obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id], P_features.World_Eaters) == 1) {
+                        obj_ncombat.battle_special = "world_eaters";
+                        obj_ncombat.leader = 1;
+                    }
+                }
+
+                var _threats = [0,0,0,0,0,sisters,eldar,ork,tau, tyranids, traitors,csm, demons, necrons];
+                if (obj_ncombat.enemy >=5 && obj_ncombat.enemy<=13){
+                    obj_ncombat.threat = _threats[obj_ncombat.enemy];
+                }
+
+                if (obj_ncombat.enemy = 8) {
+                    var eth;
+                    eth = 0;
+                    eth = scr_quest(4, "ethereal_capture", 8, 0);
+                    if (eth > 0) and(obj_ncombat.battle_object.p_owner[obj_ncombat.battle_id] = 8) {
+                        var rolli;
+                        rolli = irandom_range(1, 100)
+                        if (obj_ncombat.threat = 6) and(rolli <= 80) then obj_ncombat.ethereal = 1;
+                        if (obj_ncombat.threat = 5) and(rolli <= 65) then obj_ncombat.ethereal = 1;
+                        if (obj_ncombat.threat = 4) and(rolli <= 50) then obj_ncombat.ethereal = 1;
+                        if (obj_ncombat.threat = 3) and(rolli <= 35) then obj_ncombat.ethereal = 1;
+                    }
+                    // show_message("Ethereal Quest?: "+string(eth)+"#Ethereal?: "+string(obj_ncombat.ethereal));
+                }
+
+                // if (obj_ncombat.threat>1) and (obj_ncombat.enemy!=13) then obj_ncombat.threat-=1;
+                if (obj_ncombat.threat > 1) and(obj_ncombat.battle_special != "world_eaters") and(attack = 0) then obj_ncombat.threat -= 1;
+                if (obj_ncombat.threat < 1) then obj_ncombat.threat = 1;
+                if (obj_ncombat.enemy = 10) and(obj_ncombat.battle_object.p_type[obj_ncombat.battle_id] = "Daemon") then obj_ncombat.threat = 7;
+
+                if ((attacking = 0) or (attacking = 10) or(attacking = 11)) and(obj_ncombat.battle_object.p_traitors[obj_ncombat.battle_id] = 0) and(obj_ncombat.battle_object.p_chaos[obj_ncombat.battle_id] = 0) {
+                    if (planet_feature_bool(obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id], P_features.Warlord10) == 1) and(obj_controller.known[eFACTION.Chaos] = 0) and(obj_controller.faction_gender[10] = 1) and(obj_controller.turn >= obj_controller.chaos_turn) {
+                        var pop;
+                        pop = instance_create(0, 0, obj_popup);
+                        pop.image = "chaos_symbol";
+                        pop.title = "Concealed Heresy";
+                        pop.text = "Your astartes set out and begin to cleanse " + string(obj_ncombat.battle_object.name) + " " + scr_roman(obj_ncombat.battle_id) + " of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";
+                        with(obj_pnunit) {
+                            instance_destroy();
+                        }
+                        with(obj_enunit) {
+                            instance_destroy();
+                        }
+                        with(obj_nfort) {
+                            instance_destroy();
+                        }
+                        with(obj_ncombat) {
+                            instance_destroy();
+                        }
+                        combating = 0;
+                        instance_activate_all();
+                        exit;
+                        exit;
+                    }
+                    if (planet_feature_bool(obj_ncombat.battle_object.p_feature[obj_ncombat.battle_id], P_features.Warlord10) == 1) and(obj_controller.known[eFACTION.Chaos] >= 2) and(obj_controller.faction_gender[10] = 1) and(obj_controller.turn >= obj_controller.chaos_turn) then with(obj_drop_select) {
+                        obj_ncombat.enemy = 11;
+                        obj_ncombat.threat = 0;
+                        alarm[6] = 1;
+                        with(obj_pnunit) {
+                            instance_destroy();
+                        }
+                        with(obj_enunit) {
+                            instance_destroy();
+                        }
+                        with(obj_nfort) {
+                            instance_destroy();
+                        }
+                        with(obj_ncombat) {
+                            instance_destroy();
+                        }
+                        combating = 0;
+                        instance_activate_all();
+                        exit;
+                        exit;
+                    }
+                }
+
+                scr_battle_allies();
+                setup_battle_formations();
+                roster.add_to_battle();
+            } else if (purge >1){
+                draw_set_alpha(0.2);
+                draw_rectangle(954, 556, 1043, 579, 0);
+                draw_set_alpha(1);
+                if (scr_click_left()) {
+                    var _purge_score=0;
+                    if (purge == 2) {
+                        _purge_score = roster.purge_bombard_score();
+                    }                  
+
+                    if (purge >= 3) {
+                        _purge_score = array_length(roster.selected_units);
+                    }
+
+                    scr_purge_world(p_target, planet_number, purge - 1, _purge_score);
+                }                
+            }
         }
     }
 
@@ -470,57 +491,6 @@ function drop_select_draw(){
 
 
             draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));
-
-            // draw_text_ext(xx+310,yy+234,string(sel),-1,206);
-
-            // Back / Purge buttons
-
-            draw_set_color(c_gray);
-            draw_rectangle(852, 556, 921, 579, 0);
-            draw_set_color(0);
-            draw_text_transformed(x2 + 320, y2 + 358, string_hash_to_newline("BACK"), 1.25, 1.25, 0);
-            if (scr_hit(852, 556, 921, 579) = true) {
-                draw_set_alpha(0.2);
-                draw_rectangle(852, 556, 921, 579, 0);
-                draw_set_alpha(1);
-                if (scr_click_left()) {
-                    purge = 1;
-                }
-            }
-
-            draw_set_color(c_gray);
-            draw_rectangle(954, 556, 1043, 579, 0);
-            draw_set_color(0);
-            draw_text_transformed(x2 + 423, y2 + 358, "PURGE!", 1.25, 1.25, 0);
-            if (scr_hit(954, 556, 1043, 579)) {
-                draw_set_alpha(0.2);
-                draw_rectangle(954, 556, 1043, 579, 0);
-                draw_set_alpha(1);
-                if (scr_click_left()) {
-                    if (purge == 2) {
-                        _purge_score = roster.purge_bombard_score();
-                    }                  
-
-                    if (purge >= 3) {
-                        purge_score = array_length(roster.selected_units);
-                    }
-
-                    scr_purge_world(p_target, planet_number, purge - 1, purge_score);
-                }
-            }
-
-            if (scr_hit(x2 + 14, y2 + 351, x2 + 300, y2 + 373) = true) and(string_length(sel) > 0) and(purge > 2) {
-                // if (scr_hit(xx+546,yy+551,xx+680,yy+570)=true){
-                draw_set_alpha(1);
-                draw_set_font(fnt_40k_14);
-                draw_set_halign(fa_left);
-                draw_set_color(0);
-                draw_rectangle(mouse_x + 18, mouse_y + 20, mouse_x + string_width_ext(string_hash_to_newline(sel), -1, 500) + 24, mouse_y + 24 + string_height_ext(string_hash_to_newline(sel), -1, 500), 0);
-                draw_set_color(c_gray);
-                draw_set_font(fnt_40k_14);
-                draw_text_ext(mouse_x + 22, mouse_y + 22, string_hash_to_newline(string(sel)), -1, 500);
-                draw_rectangle(mouse_x + 18, mouse_y + 20, mouse_x + string_width_ext(string_hash_to_newline(sel), -1, 500) + 24, mouse_y + 24 + string_height_ext(string_hash_to_newline(sel), -1, 500), 1);
-            }
         }
     }
 }
