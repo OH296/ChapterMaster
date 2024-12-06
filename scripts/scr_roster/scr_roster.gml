@@ -19,12 +19,12 @@ function Roster() constructor{
         local_button.active = false;
 
     select_all_ships = new ToggleButton();
-        local_button.str1 = "All Ships";
-        local_button.text_halign = fa_center;
-        local_button.text_color = CM_GREEN_COLOR;
-        local_button.button_color = CM_GREEN_COLOR;
-        local_button.width = string_width(local_button.str1)+10;
-        local_button.active = false;
+        select_all_ships.str1 = "All Ships";
+        select_all_ships.text_halign = fa_center;
+        select_all_ships.text_color = CM_GREEN_COLOR;
+        select_all_ships.button_color = CM_GREEN_COLOR;
+        select_all_ships.width = string_width(local_button.str1)+10;
+        select_all_ships.active = false;
 
     static format_roster_string = function(){
         roster_string = "";

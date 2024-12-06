@@ -1,6 +1,8 @@
 
 mouse_left=1;
-attack=0;
+if !(variable_instance_exists(self, "attack")){
+    attack = 0;
+}
 once_only=0;
 
 raid_tact=1;

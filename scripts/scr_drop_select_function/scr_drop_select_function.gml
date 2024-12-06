@@ -80,7 +80,7 @@ function drop_select_draw(){
         // Local force button;
 
         // Ship buttons;
-        if (purge !=DropType.PurgeBombard){
+        if (purge != DropType.PurgeBombard){
             var _local_button = roster.local_button;
             _local_button.x1 = x8
             _local_button.y1 = y8
@@ -357,7 +357,6 @@ function drop_select_draw(){
                         combating = 0;
                         instance_activate_all();
                         exit;
-                        exit;
                     }
                 }
 
@@ -438,50 +437,10 @@ function drop_select_draw(){
             // Planet icon here
             draw_rectangle(x2 + 459, y2 + 14, x2 + 516, y2 + 71, 0);
 
-            // Ships Are Up, Fuck Me
-            draw_text(x2 + 13, y2 + 80, "Available Forces:");
-
-            var column, row, e, x8, y8, sigh, sip;
-            e = 0;
-            sigh = 0;
-            sip = 1;
-            column = 1;
-            row = 1;
-            x8 = x2 + 17;
-            y8 = y2 + 105;
-            e = 500;
-
-            var add_ground;
-            add_ground = 0;
-
-            if (purge_d > 0) and(purge != 2) {
-                if (ship_all[e] = 0) then draw_set_alpha(0.35);
-                draw_set_color(c_gray);
-                draw_rectangle(x8, y8, x8 + 160, y8 + 16, 0);
-                draw_set_color(c_black);
-                draw_text(x8 + 2, y8, string_hash_to_newline("Local (" + string(ship_use[e]) + "/" + string(ship_max[e]) + ")"))
-                if (point_and_click([x8, y8, x8 + 160, y8 + 16])) {
-                    var onceh;
-                    onceh = 0;
-                    if (ship_all[e] = 0) then add_ground = 1;
-                    if (ship_all[e] = 1) then add_ground = -1;
-                }
-                y8 += 16;
-                sip += 1;
-            }
-            e = 1;
-
             draw_set_font(fnt_40k_14);
             draw_set_color(c_gray);
             draw_set_alpha(1);
 
-            var hers, influ, poppy;
-            hers = p_target.p_heresy[planet_number] + p_target.p_heresy_secret[planet_number];
-            influ = p_target.p_influence[planet_number];
-            if (p_target.p_large[planet_number] = 1) then poppy = string(p_target.p_population[planet_number]) + "B";
-            if (p_target.p_large[planet_number] = 0) then poppy = string(scr_display_number(p_target.p_population[planet_number]));
-            draw_text(x2 + 14, y2 + 312, "Heresy: " + string(max(hers, influ[eFACTION.Tau])) + "%");
-            draw_text(x2 + 14, y2 + 332, "Population: " + string(poppy));
 
             var smin, smax;
             var w;
@@ -490,7 +449,7 @@ function drop_select_draw(){
             smax = 0;
 
 
-            draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));
+            //draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));
         }
     }
 }
