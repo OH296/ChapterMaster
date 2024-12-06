@@ -232,16 +232,20 @@ if (purge ==0){
 } else {
     var _viable_ground_forces = roster.marines_total();
     bombard_purge = new PurgeButton(4, 631,231,DropType.PurgeBombard);
-    bombard_purge.active = roster.purge_bombard_score();
+    bombard_purge.active = roster.purge_bombard_score() ? 1:0;
+    bombard_purge.description = "The final sanction for worlds where there is no other economic means for rooting out heresy corruption or the xenos, Your chapters reputation amoung the planets populace may will be damaged, any residing governor (providing they are fit to rule and survive) will be displeased, collaterals will be huge but it's effects will surely be great";
 
     fire_purge = new PurgeButton(5,631,304,DropType.PurgeFire);
     fire_purge.active = _viable_ground_forces;
+    fire_purge.description = "Large swathes of the worst affected areas will be put to the torch the heretics and xenos will be found, the planets populace will not thanks you but most governors will be content to allow the work they were to weak to do to be done";
 
     selective_purge = new PurgeButton(6,631,377,DropType.PurgeSelective);
     selective_purge.active = _viable_ground_forces;
+    selective_purge.description = "The nodes of corruption will be saught out and killed, often in such cases the rot resides in the higher reaches of society such methids are perfect for these instances, cut the head off the snake and the rest will wither, the populations of the oppressed planets are generaly pleased even if the nobles and governors chaffe at the censorship or if neccassary execution";
 
     assasinate_purge = new PurgeButton(7,631,450,DropType.PurgeAssassinate);
-    selective_purge.active = _viable_ground_forces;
+    assasinate_purge.active = _viable_ground_forces;
+    assasinate_purge.description = "Often the simplest solution is a single bolt shell or the swift knife the heart. Kill the Leader.";
 
     purge_options = [bombard_purge, fire_purge, selective_purge, assasinate_purge];
 }

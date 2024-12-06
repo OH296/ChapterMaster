@@ -227,7 +227,7 @@ function Roster() constructor{
         var _squads = [];
         var _vehicles = [];
         var _company_present = false;
-        for (var co=0;co<obj_ini.companies;co++){
+        for (var co=0;co<=obj_ini.companies;co++){
             _company_present = false;
             for (var i=0;i<array_length(obj_ini.role[co]);i++){
                 var _allow = false;
@@ -363,9 +363,13 @@ function PurgeButton(purge_image,xx,yy, purge_type) constructor{
     self.purge_type = purge_type;
     self.purge_image = purge_image;
 
+    static hover = function(){
+        return scr_hit(x1, y1, x1+width, y1+height);
+    }
+
     static draw = function(){
         if (active){
-            if (scr_hit(x1, y1, x1+width, y1+height)){
+            if (hover()){
                 bright_shader = min (1.2, bright_shader+0.02);     
             } else {
                 bright_shader = max (0.8, bright_shader-0.02);     

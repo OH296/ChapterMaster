@@ -174,44 +174,46 @@ function drop_select_draw(){
         // draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));
 
         // Target
-        var target_race = "",
-            target_threat = "",
-            race_quantity = 0;
-        var races = ["", "Ecclesiarchy", "Eldar", "Orks", "Tau", "Tyranids", "Heretics", "CSMs", "Daemons", "Necrons"];
-        var threat_levels = ["", "Negligible", "Minor", "Moderate", "High", "Very High", "Overwhelming"];
-        var race_quantities = [0, sisters, eldar, ork, tau, tyranids, traitors, csm, demons, necrons];
+        if (purge == DropType.RaidAttack){
+            var target_race = "",
+                target_threat = "",
+                race_quantity = 0;
+            var races = ["", "Ecclesiarchy", "Eldar", "Orks", "Tau", "Tyranids", "Heretics", "CSMs", "Daemons", "Necrons"];
+            var threat_levels = ["", "Negligible", "Minor", "Moderate", "High", "Very High", "Overwhelming"];
+            var race_quantities = [0, sisters, eldar, ork, tau, tyranids, traitors, csm, demons, necrons];
 
-        if (attacking >= 5 && attacking <= 13) {
-            race_quantity = race_quantities[attacking - 4];
-            target_race = races[attacking - 4];
-        }
+            if (attacking >= 5 && attacking <= 13) {
+                race_quantity = race_quantities[attacking - 4];
+                target_race = races[attacking - 4];
+            }
 
-        if (race_quantity >= 1 && race_quantity <= 6) {
-            target_threat = threat_levels[race_quantity];
-        } else if (race_quantity >= 6) {
-            target_threat = threat_levels[6];
-        }
-        target.x1 = formation.x1;
-        target.y1 = formation.y2 + 10;
-        target.str1 = "Target: ";
-        if (race_quantity != 0) {
-            target.str1 += $"{target_race} ({target_threat} Threat)";
-        } else {
-            target.str1 += "None";
-        }
-        target.update();
-        target.draw();
-        draw_sprite(spr_faction_icons, attacking, x2 - 100, y1 + 40);
-        var q = 0;
-        repeat(20) {
-            q += 1;
-            if (target.clicked() && force_present[q] != 0) {
-                if (attacking != force_present[q] && force_present[q] > 0) {
-                    attacking = force_present[q];
+            if (race_quantity >= 1 && race_quantity <= 6) {
+                target_threat = threat_levels[race_quantity];
+            } else if (race_quantity >= 6) {
+                target_threat = threat_levels[6];
+            }
+            target.x1 = formation.x1;
+            target.y1 = formation.y2 + 10;
+            target.str1 = "Target: ";
+            if (race_quantity != 0) {
+                target.str1 += $"{target_race} ({target_threat} Threat)";
+            } else {
+                target.str1 += "None";
+            }
+            target.update();
+            target.draw();
+            draw_sprite(spr_faction_icons, attacking, x2 - 100, y1 + 40);
+            var q = 0;
+            repeat(20) {
+                q += 1;
+                if (target.clicked() && force_present[q] != 0) {
+                    if (attacking != force_present[q] && force_present[q] > 0) {
+                        attacking = force_present[q];
+                    }
                 }
             }
+            target.locked = (force_present[q] == 0);
         }
-        target.locked = (force_present[q] == 0);
 
         // Back / Purge buttons
         btn_back.x1 = x3 - 100;
@@ -227,16 +229,19 @@ function drop_select_draw(){
         // Attack / Raid buttons
         btn_attack.x1 = btn_back.x1 + btn_attack.width + 10;
         btn_attack.y1 = btn_back.y1;
-        if (attack = 0) then btn_attack.str1 = "RAID!";
-        if (attack = 1) then btn_attack.str1 = "ATTACK!";
-        if (purge>1){
-            attack_type = "PURGE"
+        if (purge == DropType.RaidAttack){
+            if (attack = 0) then btn_attack.str1 = "RAID!";
+            if (attack = 1) then btn_attack.str1 = "ATTACK!";
+            btn_attack.active = (array_length(roster.selected_units) > 0 && race_quantity > 0);
+        }
+        else if (purge>1){
+            btn_attack.str1 = "PURGE"
+            btn_attack.active = (array_length(roster.selected_units) > 0)
         }        
-        btn_attack.active = (array_length(roster.selected_units) > 0 && race_quantity > 0);
         btn_attack.update();
         btn_attack.draw();
         if (btn_attack.clicked()) {
-            if (purge ==0){
+            if (purge == 0){
                 combating = 1; // Start battle here
 
                 if (attack = 1) then obj_controller.last_attack_form = formation_possible[formation_current];
@@ -367,18 +372,16 @@ function drop_select_draw(){
                 draw_set_alpha(0.2);
                 draw_rectangle(954, 556, 1043, 579, 0);
                 draw_set_alpha(1);
-                if (scr_click_left()) {
-                    var _purge_score=0;
-                    if (purge == 2) {
-                        _purge_score = roster.purge_bombard_score();
-                    }                  
+                var _purge_score=0;
+                if (purge == 2) {
+                    _purge_score = roster.purge_bombard_score();
+                }                  
 
-                    if (purge >= 3) {
-                        _purge_score = array_length(roster.selected_units);
-                    }
+                if (purge >= 3) {
+                    _purge_score = array_length(roster.selected_units);
+                }
 
-                    scr_purge_world(p_target, planet_number, purge - 1, _purge_score);
-                }                
+                scr_purge_world(p_target, planet_number, purge , _purge_score);              
             }
         }
     }
