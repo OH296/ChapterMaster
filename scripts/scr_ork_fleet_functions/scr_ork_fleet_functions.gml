@@ -15,11 +15,12 @@ function build_new_ork_ships_to_fleet(star, planet){
     // Increase ship number for this object?
     var rando=irandom(101);
     if (obj_controller.known[eFACTION.Ork]>0) then rando-=10;
-    if (star.p_type[planet]=="Forge"){
+    var _planet_type = star.p_type[planet];
+    if (_planet_type=="Forge"){
         rando-=20;
-    } else if (star.p_type[planet]=="Hive"){
+    } else if (_planet_type=="Hive"){
         rando-=10;
-    }else if (star.p_type[planet]=="Shrine" || star.p_type[planet]=="Temperate"){
+    }else if (_planet_type=="Shrine" || _planet_type=="Temperate"){
         rando-=5;
     }
     if (rando<=15){// was 25
@@ -93,21 +94,23 @@ function ork_fleet_arrive_target(){
 
     var _imperial_ship = scr_orbiting_fleet([eFACTION.Player, eFACTION.Imperium]);
     if (_imperial_ship == "none" && _ork_fleet!="none" && planets>0){
-        var _allow_landing=true,t1=0,l=0;
+        var _allow_landing=true,ork_attack_planet=0,l=0;
     
         repeat(planets){
             l+=1;
-            if (t1=0) and (p_tyranids[l]>0) then t1=l;
+            if (ork_attack_planet=0) and (p_tyranids[l]>0) then ork_attack_planet=l;
         }
-        if (t1>0) then p_tyranids[t1]-=_ork_fleet.capital_number+(_ork_fleet.frigate_number/2);
-        if (p_tyranids[t1]<=0){
-            if (planet_feature_bool(p_feature[t1], P_features.Gene_Stealer_Cult)){
-                delete_features(p_feature[t1], P_features.Gene_Stealer_Cult);
-                adjust_influence(eFACTION.Tyranids, -25, t1);
+        if (ork_attack_planet>0) then p_tyranids[ork_attack_planet]-=_ork_fleet.capital_number+(_ork_fleet.frigate_number/2);
+
+        if (p_tyranids[ork_attack_planet]<=0){
+            if (planet_feature_bool(p_feature[ork_attack_planet], P_features.Gene_Stealer_Cult)){
+                delete_features(p_feature[ork_attack_planet], P_features.Gene_Stealer_Cult);
+                adjust_influence(eFACTION.Tyranids, -25, ork_attack_planet);
                 var nearest_imperial = nearest_star_with_ownership(x,y,eFACTION.Imperium, self.id);
                 if (nearest_imperial != "none"){
                     var targ_planet = scr_get_planet_with_owner(nearest_imperial,eFACTION.Imperium);
-                    new_colony_fleet(self.id, t1, nearest_imperial.id, targ_planet, "refugee");
+                    if (targ_planet==-1) then targ_planet = irandom_range(1, nearest_imperial.planets);
+                    new_colony_fleet(self.id, ork_attack_planet, nearest_imperial.id, targ_planet, "refugee");
                 }
             }
         }
