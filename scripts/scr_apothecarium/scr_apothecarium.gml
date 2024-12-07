@@ -21,6 +21,31 @@ function destroy_all_gene_slaves(recover_gene=true){
         }   
 }
 
+function add_new_gene_slave(){
+    if (gene_seed>0) and (obj_ini.zygote==0) {
+        var _added = false;
+        if (array_length(obj_ini.gene_slaves)){
+            var _last_set = obj_ini.gene_slaves[_slave_length-1];
+            if (_last_set.turn == obj_controller.turn){
+                _last_set.num++;
+                obj_controller.gene_seed--;
+                _added=true;
+            }
+        }
+        if (!_added){
+            array_push(obj_ini.gene_slaves, {
+                num : 1,
+                eta : 120,
+                harvested_once : false,
+                turn : obj_controller.turn,
+                assigned_apothecaries : [],
+            });
+            obj_controller.gene_seed--;
+        }
+        scr_add_item("Gene Pod Incubator", -1);
+    }
+}
+
 function scr_apothecarium(){
 	draw_sprite(spr_rock_bg, 0, xx, yy);
 
@@ -137,26 +162,7 @@ function scr_apothecarium(){
     draw_set_color(c_black);
     if (scr_item_count("Gene Pod Incubator")){
         if (point_and_click(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave",[0.75,0.75],c_green))){
-            if (gene_seed>0) and (obj_ini.zygote==0) {
-                var _added = false;
-                if (array_length(_slave_length)){
-                    var _last_set = obj_ini.gene_slaves[_slave_length-1];
-                    if (_last_set.turn == obj_controller.turn){
-                        _last_set.num++;
-                        _added=true;
-                    }
-                }
-                if (!_added){
-                    array_push(obj_ini.gene_slaves, {
-                        num : 1,
-                        eta : 120,
-                        harvested_once : false,
-                        turn : obj_controller.turn,
-                        assigned_apothecaries : [],
-                    });
-                }
-                scr_add_item("Gene Pod Incubator", -1);
-            }
+            add_new_gene_slave();
         }
     } else {
         if (scr_hit(draw_unit_buttons([xx + 411, yy + 793],"Add Test-Slave",[0.75,0.75],c_grey))){

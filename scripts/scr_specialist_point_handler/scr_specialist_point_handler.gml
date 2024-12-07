@@ -60,11 +60,11 @@ function SpecialistPointHandler() constructor{
         healing_and_point_use();
 
         var _noticed_heresy=false, at_forge=0;
-        var _tech_locations=[]
+        tech_locations=[]
         var _cur_tech;
         total_techs = array_length(techs);
         for (var i=0; i<array_length(techs); i++){
-            _tech_locations[i] = techs[i].marine_location();
+           tech_locations[i] = techs[i].marine_location();
         }
         if (forge_master>-1){
             obj_controller.master_of_forge = techs[forge_master];
@@ -193,7 +193,7 @@ function SpecialistPointHandler() constructor{
             var _heretic_location, _same_location, _current_heretic, _current_tech;
             //iterate through tech heretics;
             for (var heretic=0; heretic<array_length(heretics); heretic++){
-                _heretic_location = _tech_locations[heretics[heretic]];
+                _heretic_location =tech_locations[heretics[heretic]];
                 _current_heretic = techs[heretics[heretic]];
                 if (_current_heretic.in_jail()) then continue;
                 heretics_pursuade_chances = (floor(_current_heretic.charisma/5) - 3)
@@ -210,7 +210,7 @@ function SpecialistPointHandler() constructor{
                     _current_tech = techs[new_pursuasion];
 
                     // find out if heretic is in same location as techmarine
-                    if (same_locations(_heretic_location,_tech_locations[new_pursuasion])){
+                    if (same_locations(_heretic_locationtech_locations[new_pursuasion])){
                         met_non_heretic=true;
                         //if so do a an opposed technology test of techmarine vs tech  heretic techmarine
                         tech_test = _tester.oppposed_test(_current_heretic,_current_tech, "technology");

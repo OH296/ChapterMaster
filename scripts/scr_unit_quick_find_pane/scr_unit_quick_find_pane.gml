@@ -216,10 +216,11 @@ function UnitQuickFindPanel() constructor{
 						var _system_point_data = _special_points[$ _sys_name];
 						var _xx = xx+main_panel.width-10;
 						var _yy = _sys_item_y-20;
-						draw_text(_xx+220, _yy+10,"forge point\n total");
-						draw_text( _xx+340, _yy+10,"forge point\n use");
-						draw_text( _xx+460, _yy+10,"apothecary points\ntotal");
-						draw_text(_xx+580, _yy+10,"apothecary points\nuse");
+						draw_set_font(fnt_40k_12i);
+						draw_text(_xx+220, _yy+10,"forge point\ntotal");
+						draw_text( _xx+300, _yy+10,"forge point\nuse");
+						draw_text( _xx+380, _yy+10,"apothecary points\ntotal");
+						draw_text(_xx+460, _yy+10,"apothecary points\nuse");
 						draw_text(_xx+60, _yy+50,"Orbiting");
 						draw_text( _xx+60, _yy+100,"I");
 						draw_text(_xx+60, _yy+150,"II");
@@ -229,9 +230,9 @@ function UnitQuickFindPanel() constructor{
 						for (var o=0;o<5;o++){
 							var _area_item = _system_point_data[o];
 							draw_text(_xx+220, _y_line,_area_item.forge_points);
-							draw_text(_xx+340, _y_line,_area_item.forge_points_use);
-							draw_text(_xx+460, _y_line , _area_item.heal_points);
-							draw_text(_xx+580, _y_line, _area_item.heal_points_use);
+							draw_text(_xx+300, _y_line,_area_item.forge_points_use);
+							draw_text(_xx+380, _y_line , _area_item.heal_points);
+							draw_text(_xx+460, _y_line, _area_item.heal_points_use);
 							_y_line+=50;						
 						}
 
