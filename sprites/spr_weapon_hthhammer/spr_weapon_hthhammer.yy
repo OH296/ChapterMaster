@@ -28,8 +28,8 @@
   "nineSlice": null,
   "origin": 9,
   "parent": {
-    "name": "melee",
-    "path": "folders/Sprites/Marine Viewer/weapons/melee.yy",
+    "name": "weapons",
+    "path": "folders/Sprites/Marine Viewer/weapons.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

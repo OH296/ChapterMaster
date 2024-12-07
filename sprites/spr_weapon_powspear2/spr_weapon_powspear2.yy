@@ -30,8 +30,8 @@
   "nineSlice": null,
   "origin": 9,
   "parent": {
-    "name": "unused",
-    "path": "folders/Sprites/Marine Viewer/unused.yy",
+    "name": "weapons",
+    "path": "folders/Sprites/Marine Viewer/weapons.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

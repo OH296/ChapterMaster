@@ -2,10 +2,10 @@
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
   "name": "spr_weapon_sbolter",
-  "bbox_bottom": 168,
-  "bbox_left": 3,
-  "bbox_right": 64,
-  "bbox_top": 88,
+  "bbox_bottom": 189,
+  "bbox_left": 5,
+  "bbox_right": 164,
+  "bbox_top": 109,
   "bboxMode": 0,
   "collisionKind": 1,
   "collisionTolerance": 0,
@@ -14,6 +14,7 @@
   "For3D": false,
   "frames": [
     {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"f0dc16e8-bbd2-4823-87a1-ba3601853ffe",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"9e8743e4-54e1-4c35-b7e7-bb668123eb5f",},
   ],
   "gridX": 0,
   "gridY": 0,
@@ -25,8 +26,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "ranged",
-    "path": "folders/Sprites/Marine Viewer/weapons/ranged.yy",
+    "name": "weapons",
+    "path": "folders/Sprites/Marine Viewer/weapons.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {
@@ -43,7 +44,7 @@
     "events": {"resourceType":"KeyframeStore<MessageEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "eventStubScript": null,
     "eventToFunction": {},
-    "length": 1.0,
+    "length": 2.0,
     "lockOrigin": false,
     "moments": {"resourceType":"KeyframeStore<MomentsEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "playback": 1,
@@ -55,9 +56,10 @@
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
             {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"f0dc16e8-bbd2-4823-87a1-ba3601853ffe","path":"sprites/spr_weapon_sbolter/spr_weapon_sbolter.yy",},},},"Disabled":false,"id":"6f46c285-35b1-4a8e-b996-6405ca743092","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"9e8743e4-54e1-4c35-b7e7-bb668123eb5f","path":"sprites/spr_weapon_sbolter/spr_weapon_sbolter.yy",},},},"Disabled":false,"id":"a67c52fb-67e4-4c22-b808-d2298d2b778b","IsCreationKey":false,"Key":1.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
-    "visibleRange": null,
+    "visibleRange": {"x":0.0,"y":0.0,},
     "volume": 1.0,
     "xorigin": 0,
     "yorigin": 0,
@@ -70,5 +72,5 @@
   },
   "type": 0,
   "VTile": false,
-  "width": 167,
+  "width": 180,
 }

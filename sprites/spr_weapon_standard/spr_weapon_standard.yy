@@ -28,8 +28,8 @@
   "nineSlice": null,
   "origin": 9,
   "parent": {
-    "name": "deprecated",
-    "path": "folders/Sprites/Marine Viewer/deprecated.yy",
+    "name": "weapons",
+    "path": "folders/Sprites/Marine Viewer/weapons.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

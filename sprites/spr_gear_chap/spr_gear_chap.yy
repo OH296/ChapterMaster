@@ -28,8 +28,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "deprecated",
-    "path": "folders/Sprites/Marine Viewer/deprecated.yy",
+    "name": "decorations",
+    "path": "folders/Sprites/Marine Viewer/decorations.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

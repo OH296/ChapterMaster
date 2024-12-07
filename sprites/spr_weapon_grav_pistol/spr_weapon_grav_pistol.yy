@@ -2,10 +2,10 @@
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
   "name": "spr_weapon_grav_pistol",
-  "bbox_bottom": 166,
+  "bbox_bottom": 178,
   "bbox_left": 22,
-  "bbox_right": 57,
-  "bbox_top": 93,
+  "bbox_right": 144,
+  "bbox_top": 105,
   "bboxMode": 0,
   "collisionKind": 1,
   "collisionTolerance": 0,
@@ -14,6 +14,7 @@
   "For3D": false,
   "frames": [
     {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"1d11b11a-02d6-47f8-87c7-87206d0c9588",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"dbd97fe8-875d-44bc-a7a7-888a212884db",},
   ],
   "gridX": 0,
   "gridY": 0,
@@ -48,8 +49,8 @@
   },
   "origin": 0,
   "parent": {
-    "name": "ranged",
-    "path": "folders/Sprites/Marine Viewer/weapons/ranged.yy",
+    "name": "weapons",
+    "path": "folders/Sprites/Marine Viewer/weapons.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {
@@ -66,7 +67,7 @@
     "events": {"resourceType":"KeyframeStore<MessageEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "eventStubScript": null,
     "eventToFunction": {},
-    "length": 1.0,
+    "length": 2.0,
     "lockOrigin": false,
     "moments": {"resourceType":"KeyframeStore<MomentsEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "playback": 1,
@@ -78,6 +79,7 @@
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
             {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"1d11b11a-02d6-47f8-87c7-87206d0c9588","path":"sprites/spr_weapon_grav_pistol/spr_weapon_grav_pistol.yy",},},},"Disabled":false,"id":"020a30d9-3988-4c55-91ae-54f299601401","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"dbd97fe8-875d-44bc-a7a7-888a212884db","path":"sprites/spr_weapon_grav_pistol/spr_weapon_grav_pistol.yy",},},},"Disabled":false,"id":"2549fd8e-be82-41a8-aada-d34ccaf9d8b0","IsCreationKey":false,"Key":1.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,
