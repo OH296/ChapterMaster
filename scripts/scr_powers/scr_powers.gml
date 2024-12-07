@@ -559,7 +559,7 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	if (obj_ncombat.sorcery_seen=1) then obj_ncombat.sorcery_seen=2;
 
 	if (p_type="buff") or (power_name="gather_energy"){
-
+		var marine_index;
 		var _random_marine_list = [];
         for (var i=0;i<array_length(unit_struct);i++){
         	array_push(_random_marine_list, i);
@@ -599,23 +599,41 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	    if (power_name="Iron Arm") then marine_iron[unit_id]+=1;
 	    if (power_name="Endurance"){
 	    	
-	        var buf,h;buf=5;h=0;
-	        repeat(100){
-	            if (buf>0){h=floor(random(men))+1;if (marine_type[h]!="") and (marine_hp[h]<=80) and (marine_dead[h]=0){buf-=1;marine_hp[h]+=20;if (marine_hp[h]>100) then marine_hp[h]=100;}}
-	        }
+	        var buf=5;h=0;
+	        for (var i=0;i<array_length(_random_marine_list);i++){
+	        	if (buf<=0) then break;
+	        	marine_index = _random_marine_list[i];
+	        	if (!marine_dead[marine_index]){
+	        		var _buff_unit = unit_struct[marine_index];
+	        		if (_buff_unit.hp()<_buff_unit.max_health()){
+	        			buf-=1;
+	        			_buff_unit.add_or_sub_health(20);
+	        		}
+	        	}
+	        }	        
 	    }
 	    if (power_name="Hysterical Frenzy"){
-	        var buf,h;buf=5;h=0;
-	        repeat(100){
-	            if (buf>0){h=floor(random(men))+1;if (marine_type[h]!="") and (marine_attack[h]<2.5) and (marine_dead[h]=0){buf-=1;marine_attack[h]+=1.5;marine_defense[h]-=0.15;}}
+	        var buf=5;h=0;
+	        for (var i=0;i<array_length(_random_marine_list);i++){
+	        	if (buf<=0) then break;
+	        	marine_index = _random_marine_list[i];
+	        	if (!marine_dead[marine_index]) and (marine_attack[marine_index]<2.5){
+            		buf-=1;
+            		marine_attack[marine_index]+=1.5;
+            		marine_defense[marine_index]-=0.15;
+	        	}
 	        }
 	    }
 	    if (power_name="Regenerate"){
 	    	unit.add_or_sub_health(choose(2,3,4)*5);
 	    	if (unit.hp()>unit.max_health()) then unit.update_health(unit.max_health())}
 
-	    if (power_name="Telekinetic Dome"){if (marine_dome[unit_id]<3) then marine_dome[unit_id]=3;}
-	    if (power_name="Spatial Distortion"){if (marine_spatial[unit_id]<3) then marine_spatial[unit_id]=3;}
+	    if (power_name="Telekinetic Dome"){
+	    	if (marine_dome[unit_id]<3) then marine_dome[unit_id]=3;
+	    }
+	    if (power_name="Spatial Distortion"){
+	    	if (marine_spatial[unit_id]<3) then marine_spatial[unit_id]=3;
+	    }
     
 	    /*obj_ncombat.newline=string(flavour_text1)+string(flavour_text2)+string(flavour_text3);
 	    obj_ncombat.newline_color="blue";
