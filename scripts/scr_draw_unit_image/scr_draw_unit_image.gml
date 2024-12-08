@@ -1020,7 +1020,10 @@ function scr_draw_unit_image(_background=false){
                         }                          
                     }                    
                 } else if (unit_armour=="Artificer Armour"){
-                    specific_armour_sprite = spr_artificer_colors;
+                    complex_set = get_complex_set(eARMOUR_SET.MK7);
+                    complex_set.add_to_area("chest_variants", spr_artificer_chest);
+                    complex_livery = true;
+                    specific_helm = spr_generic_sgt_mk7;
                     if (array_contains(["Champion",obj_ini.role[100][2],obj_ini.role[100][5]], unit_role)){
                         if (unit_chapter=="Ultramarines"){
                             armour_draw=[spr_ultra_honor_guard2, body.torso.armour_choice];
@@ -1090,7 +1093,15 @@ function scr_draw_unit_image(_background=false){
                 if (unit_specialization == UnitSpecialization.Techmarine){
                     if array_contains(["MK5 Heresy", "MK6 Corvus","MK7 Aquila", "MK8 Errant", "Artificer Armour"], unit_armour){
                         if (has_trait("tinkerer") && complex_livery){
-                            complex_set.add_to_area("armour",spr_techmarine_complex);
+                            complex_set.add_group({
+                                "armour":spr_techmarine_complex,
+                                "right_trim":spr_techmarine_right_trim,
+                                "left_trim":spr_techmarine_left_trim,
+                                "leg_variants":spr_techmarine_left_leg,
+                                "leg_variants":spr_techmarine_right_leg,
+                                "head":spr_techmarine_head,
+                                "chest_variants":spr_techmarine_chest,                               
+                            })
                         }
                     }
 
@@ -1408,37 +1419,42 @@ function scr_draw_unit_image(_background=false){
             }
             //purity seals/decorations
             //TODO imprvoe this logic to be more extendable
+
             if (armour_type==ArmourType.Normal){
-                if (struct_exists(body[$ "torso"],"purity_seal")){
-                    if (body[$ "torso"][$"purity_seal"][2]==1){
+                var _torso_data = body[$ "torso"];
+                if (struct_exists(_torso_data,"purity_seal")){
+                    var _torso_purity_seals = _torso_data[$"purity_seal"];
+                    if (_torso_purity_seals[2]==1){
                         draw_sprite(spr_purity_seal,2,x_surface_offset-24,y_surface_offset+14);
                     }
-                    if (body[$ "torso"][$"purity_seal"][0]==1){
+                    if (_torso_purity_seals[0]==1){
                         draw_sprite(spr_purity_seal,0,x_surface_offset-44,y_surface_offset+18);
                     }
-                    if (body[$ "torso"][$"purity_seal"][1]==1){
+                    if (_torso_purity_seals[1]==1){
                         draw_sprite(spr_purity_seal,0,x_surface_offset-6,y_surface_offset+16);
                     }                                       
                 }
                 if (struct_exists(body[$ "left_arm"],"purity_seal")){
-                    if (body[$ "left_arm"][$"purity_seal"][0]==1){
+                    var _arm_seals = body[$ "left_arm"][$"purity_seal"];
+                    if (_arm_seals[0]==1){
                         draw_sprite(spr_purity_seal,1,x_surface_offset+70,y_surface_offset);
                     }
-                    if (body[$ "left_arm"][$"purity_seal"][1]==1){
+                    if (_arm_seals[1]==1){
                         draw_sprite(spr_purity_seal,0,x_surface_offset+26,y_surface_offset+7);
                     }
-                    if (body[$ "left_arm"][$"purity_seal"][2]==1){
+                    if (_arm_seals[2]==1){
                         draw_sprite(spr_purity_seal,0,x_surface_offset+15,y_surface_offset+10);
                     }                                       
                 }
                 if (struct_exists(body[$ "right_arm"],"purity_seal")){
-                    if (body[$ "right_arm"][$"purity_seal"][0]==1){
+                    var _arm_seals = body[$ "right_arm"][$"purity_seal"];
+                    if (_arm_seals[0]==1){
                         draw_sprite(spr_purity_seal,2,x_surface_offset-54,y_surface_offset-3);
                     }
-                    if (body[$ "right_arm"][$"purity_seal"][0]==1){
+                    if (_arm_seals[0]==1){
                         draw_sprite(spr_purity_seal,0,x_surface_offset-72,y_surface_offset+8);
                     }
-                    if (body[$ "right_arm"][$"purity_seal"][0]==1){
+                    if (_arm_seals[0]==1){
                         draw_sprite(spr_purity_seal,0,x_surface_offset-57,y_surface_offset+12);
                     }                    
                 }            

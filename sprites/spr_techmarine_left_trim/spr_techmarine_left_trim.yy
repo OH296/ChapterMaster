@@ -2,10 +2,10 @@
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
   "name": "spr_techmarine_left_trim",
-  "bbox_bottom": 259,
-  "bbox_left": 18,
-  "bbox_right": 161,
-  "bbox_top": 52,
+  "bbox_bottom": 80,
+  "bbox_left": 54,
+  "bbox_right": 152,
+  "bbox_top": 28,
   "bboxMode": 0,
   "collisionKind": 1,
   "collisionTolerance": 0,
@@ -17,7 +17,7 @@
   ],
   "gridX": 0,
   "gridY": 0,
-  "height": 262,
+  "height": 232,
   "HTile": false,
   "layers": [
     {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"2cad82de-f3e9-4204-9bf5-9dcb5f655158","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"7dcc7f70-2bb6-483b-8ab5-6f567496472f","path":"sprites/spr_techmarine_left_trim/spr_techmarine_left_trim.yy",},},},"Disabled":false,"id":"38b42a12-0577-49fd-862f-87f307212a9e","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"7dcc7f70-2bb6-483b-8ab5-6f567496472f","path":"sprites/spr_techmarine_left_trim/spr_techmarine_left_trim.yy",},},},"Disabled":false,"id":"f8610019-e23e-458a-aa65-2af7f50f6808","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,
@@ -70,5 +70,5 @@
   },
   "type": 0,
   "VTile": false,
-  "width": 181,
+  "width": 164,
 }

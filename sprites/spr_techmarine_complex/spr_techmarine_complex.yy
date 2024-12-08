@@ -13,7 +13,7 @@
   "edgeFiltering": false,
   "For3D": false,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"e25dde27-8897-43a0-9d6d-cb10af4a50b9",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"6f5f8280-1432-4189-ba71-5cb47411b603",},
   ],
   "gridX": 0,
   "gridY": 0,
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"e25dde27-8897-43a0-9d6d-cb10af4a50b9","path":"sprites/spr_techmarine_complex/spr_techmarine_complex.yy",},},},"Disabled":false,"id":"45864176-2d0f-4de9-af9e-bc7a472e50e6","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"6f5f8280-1432-4189-ba71-5cb47411b603","path":"sprites/spr_techmarine_complex/spr_techmarine_complex.yy",},},},"Disabled":false,"id":"4ae9f309-78c6-4606-92b1-e0f1c674862b","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,

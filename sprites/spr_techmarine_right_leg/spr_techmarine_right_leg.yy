@@ -1,11 +1,11 @@
 {
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
-  "name": "spr_techmarine_right_trim",
-  "bbox_bottom": 81,
+  "name": "spr_techmarine_right_leg",
+  "bbox_bottom": 220,
   "bbox_left": 11,
-  "bbox_right": 111,
-  "bbox_top": 29,
+  "bbox_right": 62,
+  "bbox_top": 132,
   "bboxMode": 0,
   "collisionKind": 1,
   "collisionTolerance": 0,
@@ -13,14 +13,14 @@
   "edgeFiltering": false,
   "For3D": false,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"7dcc7f70-2bb6-483b-8ab5-6f567496472f",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"22c1fc63-eee0-48f2-842f-3bb5727ed6bc",},
   ],
   "gridX": 0,
   "gridY": 0,
   "height": 232,
   "HTile": false,
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"2cad82de-f3e9-4204-9bf5-9dcb5f655158","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"dbe27ba7-9000-4566-81f3-7688029dd83a","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
   "origin": 0,
@@ -32,7 +32,7 @@
   "sequence": {
     "resourceType": "GMSequence",
     "resourceVersion": "1.4",
-    "name": "spr_techmarine_right_trim",
+    "name": "spr_techmarine_right_leg",
     "autoRecord": true,
     "backdropHeight": 768,
     "backdropImageOpacity": 0.5,
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"7dcc7f70-2bb6-483b-8ab5-6f567496472f","path":"sprites/spr_techmarine_right_trim/spr_techmarine_right_trim.yy",},},},"Disabled":false,"id":"38b42a12-0577-49fd-862f-87f307212a9e","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"22c1fc63-eee0-48f2-842f-3bb5727ed6bc","path":"sprites/spr_techmarine_right_leg/spr_techmarine_right_leg.yy",},},},"Disabled":false,"id":"0fa489e4-21d5-4860-b8a0-45f9bc4cfbe3","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,
