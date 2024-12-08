@@ -37,76 +37,110 @@ enum eARMOUR_SET {
     Indomitus,
     Tartaros,
 }
+function ComplexSet() constructor{
+    static add_to_area = function(area, add_sprite){
+        if (!struct_exists(self, area)){
+            self[$ area] = sprite_duplicate(add_sprite);
+        } else {
+            sprite_merge(self[$ area], add_sprite);
+        }
+    }
 
+    static add_group = function(group){
+        var _areas = struct_get_names(group);
+        for (var i=0;i<array_length(_areas)i++){
+            var _area = _areas[i];
+            add_to_area(_area, group[$_area]);
+        }
+    }
+}
 function get_complex_set(set = eARMOUR_SET.MK7){
-    var set_pieces = {};
+    var set_pieces = new ComplexSet();
 
     if (!array_contains([eARMOUR_SET.Indomitus, eARMOUR_SET.Tartaros], set)) {
-        set_pieces.right_pauldron = spr_gothic_numbers_right_pauldron;
-        set_pieces.left_knee = spr_numeral_left_knee;
+        set_pieces.add_group({
+            right_pauldron : spr_gothic_numbers_right_pauldron,
+            left_knee : spr_numeral_left_knee
+        })
     }
 
     if (set == eARMOUR_SET.MK7){
-        set_pieces.armour = spr_mk7_complex;
-        set_pieces.left_arm = spr_mk7_left_arm;
-        set_pieces.right_arm = spr_mk7_right_arm;
-        set_pieces.left_trim = spr_mk7_left_trim;
-        set_pieces.right_trim = spr_mk7_right_trim;
-        set_pieces.mouth_variants = spr_mk7_mouth_variants;
-        set_pieces.thorax_variants = spr_mk7_thorax_variants;
-        set_pieces.chest_variants = spr_mk7_chest_variants;
-        set_pieces.leg_variants = spr_mk7_leg_variants;
-        set_pieces.backpack = spr_mk7_complex_backpack;
+        set_pieces.add_group({
+            armour : spr_mk7_complex,
+            left_arm : spr_mk7_left_arm,
+            right_arm : spr_mk7_right_arm,
+            left_trim : spr_mk7_left_trim,
+            right_trim : spr_mk7_right_trim,
+            mouth_variants : spr_mk7_mouth_variants,
+            thorax_variants : spr_mk7_thorax_variants,
+            chest_variants : spr_mk7_chest_variants,
+            leg_variants : spr_mk7_leg_variants,
+            backpack : spr_mk7_complex_backpack,
+        });       
     }else if (set == eARMOUR_SET.MK6){
-        set_pieces.armour = spr_mk6_complex;
-        set_pieces.backpack = spr_mk6_complex_backpack;
-        set_pieces.left_arm = spr_mk6_left_arm;
-        set_pieces.right_arm = spr_mk6_right_arm;
-        set_pieces.left_trim = spr_mk7_left_trim;
-        set_pieces.right_trim = spr_mk7_right_trim;
+        set_pieces.add_group({
+            armour: spr_mk6_complex,
+            backpack: spr_mk6_complex_backpack,
+            left_arm: spr_mk6_left_arm,
+            right_arm: spr_mk6_right_arm,
+            left_trim :spr_mk7_left_trim,
+            right_trim: spr_mk7_right_trim,
+        });
     }else if (set == eARMOUR_SET.MK5){
-        set_pieces.armour = spr_mk5_complex;
-        set_pieces.backpack = spr_mk5_complex_backpack;
-        set_pieces.left_arm = spr_mk5_left_arm;
-        set_pieces.right_arm = spr_mk5_right_arm;
-        set_pieces.left_trim = spr_mk7_left_trim;
-        set_pieces.right_trim = spr_mk7_right_trim;
-		set_pieces.head = spr_mk5_head_variants;
+        set_pieces.add_group({
+            armour: spr_mk5_complex,
+            backpack: spr_mk5_complex_backpack,
+            left_arm: spr_mk5_left_arm,
+            right_arm: spr_mk5_right_arm,
+            left_trim :spr_mk7_left_trim,
+            right_trim: spr_mk7_right_trim,
+            head : spr_mk5_head_variants,
+        });        
     }else if (set == eARMOUR_SET.MK4){
-        set_pieces.chest_variants = spr_mk4_chest_variants;
-        set_pieces.armour = spr_mk4_complex;
-        set_pieces.backpack = spr_mk4_complex_backpack;
-        set_pieces.left_arm = spr_mk4_left_arm;
-        set_pieces.leg_variants = spr_mk4_leg_variants;
-        set_pieces.right_arm = spr_mk4_right_arm;
-        set_pieces.left_trim = spr_mk4_left_trim;
-        set_pieces.right_trim = spr_mk4_right_trim;
-        set_pieces.mouth_variants = spr_mk4_mouth_variants;        
+        set_pieces.add_group({
+            chest_variants: spr_mk4_chest_variants,
+            armour: spr_mk4_complex,
+            backpack: spr_mk4_complex_backpack,
+            left_arm :spr_mk4_left_arm,
+            leg_variants: spr_mk4_leg_variants,
+            right_arm: spr_mk4_right_arm,
+            left_trim: spr_mk4_left_trim,
+            right_trim: spr_mk4_right_trim,
+            mouth_variants: spr_mk4_mouth_variants,
+        });                 
     }else if (set == eARMOUR_SET.MK3){
-        set_pieces.armour = spr_mk3_complex;
-        set_pieces.backpack = spr_mk3_complex_backpack;
-        set_pieces.left_arm = spr_mk3_left_arm;
-        set_pieces.right_arm = spr_mk3_right_arm;     
-        set_pieces.head = spr_mk3_head_variants;     
+        set_pieces.add_group({
+            armour : spr_mk3_complex,
+            backpack : spr_mk3_complex_backpack,
+            left_arm : spr_mk3_left_arm,
+            right_arm : spr_mk3_right_arm ,   
+            head : spr_mk3_head_variants,            
+        });    
     }else if (set == eARMOUR_SET.MK8){
-        set_pieces.armour = spr_mk8_complex;
-        set_pieces.backpack = spr_mk8_complex_backpack;
-        set_pieces.left_arm = spr_mk8_left_arm;
-        set_pieces.right_arm = spr_mk8_right_arm; 
-        set_pieces.leg_variants = spr_mk7_leg_variants; 
-        set_pieces.left_trim = spr_mk7_left_trim;
-        set_pieces.right_trim = spr_mk7_right_trim;                    
+        set_pieces.add_group({
+            armour : spr_mk8_complex,
+            backpack : spr_mk8_complex_backpack,
+            left_arm : spr_mk8_left_arm,
+            right_arm : spr_mk8_right_arm,
+            leg_variants : spr_mk7_leg_variants,
+            left_trim : spr_mk7_left_trim,
+            right_trim : spr_mk7_right_trim,          
+        });                            
     }else if (set == eARMOUR_SET.Indomitus){
-        set_pieces.armour = spr_indomitus_complex;
-        set_pieces.left_arm = spr_indomitus_left_arm;
-        set_pieces.right_arm = spr_indomitus_right_arm;
-        set_pieces.backpack = spr_indomitus_backpack_variants;
-        set_pieces.chest_variants = spr_indomitus_chest_variants;
-        set_pieces.leg_variants = spr_indomitus_leg_variants;                 
+         set_pieces.add_group({
+            armour : spr_indomitus_complex,
+            left_arm : spr_indomitus_left_arm,
+            right_arm : spr_indomitus_right_arm,
+            backpack : spr_indomitus_backpack_variants,
+            chest_variants : spr_indomitus_chest_variants,
+            leg_variants : spr_indomitus_leg_variants,           
+        });                         
     }else if (set == eARMOUR_SET.Tartaros){
-        set_pieces.armour = spr_tartaros_complex;
-        set_pieces.left_arm = spr_tartaros_left_arm;
-        set_pieces.right_arm = spr_tartaros_right_arm;                  
+            add_group({
+            armour : spr_tartaros_complex,
+            left_arm : spr_tartaros_left_arm,
+            right_arm : spr_tartaros_right_arm, 
+        })                 
     }
 
     return set_pieces;
@@ -1054,10 +1088,9 @@ function scr_draw_unit_image(_background=false){
                 }
 
                 if (unit_specialization == UnitSpecialization.Techmarine){
-                    if (armour_type==ArmourType.Normal && armour_bypass==false){
-                        if (array_contains(traits, "tinkerer")){
-                            armour_draw=[spr_techmarine_core,0];
-                            armour_bypass = true;
+                    if array_contains(["MK5 Heresy", "MK6 Corvus","MK7 Aquila", "MK8 Errant", "Artificer Armour"], unit_armour){
+                        if (has_trait("tinkerer") && complex_livery){
+                            complex_set.add_to_area("armour",spr_techmarine_complex);
                         }
                     }
 
@@ -1103,22 +1136,15 @@ function scr_draw_unit_image(_background=false){
                         if (unit_progenitor=="Dark Angels"){
                             if array_contains(["MK5 Heresy", "MK6 Corvus","MK7 Aquila", "MK8 Errant", "Artificer Armour"], unit_armour){
                                 _backpack_sprite = spr_da_backpack;
-                                _backpack_index = 0;
-                                if (struct_exists(complex_set, "backpack")){
-                                    struct_remove(complex_set, "backpack");
-                                }                                
+                                complex_set.add_to_area("backpack",spr_da_backpack);                                                        
                             }
                         }
                         if (reverent_guardians) and (!modest_livery){
-                            _backpack_sprite = spr_pack_brazier3;
-                            _backpack_index = 0;
-                            if (struct_exists(complex_set, "backpack")){
-                                struct_remove(complex_set, "backpack");
-                            }                            
+                            complex_set.add_to_area("backpack",spr_pack_brazier3);                         
                         }
                     }
 
-                    if (unit_progenitor == "Dark Angels") {
+                    /*if (unit_progenitor == "Dark Angels") {
                         if (unit_role == "Chapter Master") {
                             _backpack_sprite = spr_da_backpack;
                             _backpack_index = 1;
@@ -1126,7 +1152,7 @@ function scr_draw_unit_image(_background=false){
                             _backpack_sprite = spr_da_chaplain;
                             _backpack_index = 1;
                         }
-                    }
+                    }*/
                     if (complex_livery) && (struct_exists(complex_set, "backpack")){
                         var choice = get_body_data("backpack_variation","torso")%sprite_get_number(complex_set.backpack);
                         setup_complex_livery_shader(role());
@@ -1153,7 +1179,7 @@ function scr_draw_unit_image(_background=false){
                     if (complex_livery){
                         setup_complex_livery_shader(role());
                         if (struct_exists(complex_set, "armour")){
-                            draw_sprite(complex_set.armour,0,x_surface_offset,y_surface_offset);
+                            draw_sprite(complex_set.armour,body.torso.armour_choice,x_surface_offset,y_surface_offset);
                             if (struct_exists(complex_set, "chest_variants")){
                                 var choice = get_body_data("chest_variation","torso")%sprite_get_number(complex_set.chest_variants);
                                 draw_sprite(complex_set.chest_variants,choice,x_surface_offset,y_surface_offset);
@@ -1684,6 +1710,14 @@ function scr_draw_unit_image(_background=false){
     //draw_surface(unit_surface, xx+_x1-x_surface_offset,yy+_y1-y_surface_offset);
     //surface_free(unit_surface);
     shader_reset();
+    var _complex_sprite_names = struct_get_names(complex_set);
+    for (var i=0;i<array_length(_complex_sprite_names);i++){
+        var _area = _complex_sprite_names[i];
+        if (!is_method(_area)){
+            sprite_delete(complex_set[$_area]);
+        }
+    }
+    delete complex_set;
     return new UnitImage(unit_surface);   
 }
 
