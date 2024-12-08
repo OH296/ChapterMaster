@@ -1021,7 +1021,13 @@ function scr_draw_unit_image(_background=false){
                     }                    
                 } else if (unit_armour=="Artificer Armour"){
                     complex_set = get_complex_set(eARMOUR_SET.MK7);
-                    complex_set.add_to_area("chest_variants", spr_artificer_chest);
+                    complex_set.add_group({
+                        right_leg : spr_artificer_right_leg,
+                        left_leg : spr_artificer_left_leg,
+                        chest_variants : spr_artificer_chest,
+                        thorax_variants : spr_artificer_thorax,
+                        mouth_variants : spr_artificer_mouth
+                    });
                     complex_livery = true;
                     specific_helm = spr_generic_sgt_mk7;
                     if (array_contains(["Champion",obj_ini.role[100][2],obj_ini.role[100][5]], unit_role)){
@@ -1030,9 +1036,6 @@ function scr_draw_unit_image(_background=false){
                             armour_bypass=true;
                             // Draw cape;
                             draw_sprite(spr_ultra_honor_guard2,2,x_surface_offset,y_surface_offset);
-                        } else {
-                            armour_draw=[spr_generic_honor_guard,body.torso.armour_choice];
-                            armour_bypass=true;
                         }
                     } 
                     if (unit_chapter=="Blood Angels" || global.chapter_id == eCHAPTERS.BLOOD_ANGELS){
@@ -1106,7 +1109,15 @@ function scr_draw_unit_image(_background=false){
                     }
 
                 }
-
+                if (armour_type==ArmourType.Normal && complex_livery && unit_role==obj_ini.role[100][2]){
+                    complex_set.add_group({
+                        right_leg : spr_artificer_right_leg,
+                        left_leg : spr_artificer_left_leg,
+                        chest_variants : spr_artificer_chest,
+                        thorax_variants : spr_artificer_thorax,
+                        mouth_variants : spr_artificer_mouth
+                    });
+                }
                 // Draw the Iron Halo
                 if (halo==1 && !halo_bypass){
                     var halo_offset_y = 0;
@@ -1207,6 +1218,14 @@ function scr_draw_unit_image(_background=false){
                                 var choice = get_body_data("leg_variants","left_leg")%sprite_get_number(complex_set.leg_variants);
                                 draw_sprite(complex_set.leg_variants,choice,x_surface_offset,y_surface_offset);
                             }
+                            if (struct_exists(complex_set, "left_leg")){
+                                var choice = get_body_data("leg_variants","left_leg")%sprite_get_number(complex_set.left_leg);
+                                draw_sprite(complex_set.left_leg,choice,x_surface_offset,y_surface_offset);
+                            }
+                            if (struct_exists(complex_set, "right_leg")){
+                                var choice = get_body_data("leg_variants","right_leg")%sprite_get_number(complex_set.right_leg);
+                                draw_sprite(complex_set.right_leg,choice,x_surface_offset,y_surface_offset);
+                            }                                                        
                             if (struct_exists(complex_set, "left_trim")){
                                 var choice = get_body_data("trim_variation","left_arm")%sprite_get_number(complex_set.left_trim);
                                 draw_sprite(complex_set.left_trim,choice,x_surface_offset,y_surface_offset);

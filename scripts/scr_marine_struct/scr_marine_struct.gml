@@ -696,7 +696,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		"left_leg":{
 			leg_variants: irandom(100),
 		}, 
-		"right_leg":{}, 
+		"right_leg":{
+			leg_variants: irandom(100),
+		}, 
 		"torso":{
 			cloth:{
 				variation:irandom(15),
