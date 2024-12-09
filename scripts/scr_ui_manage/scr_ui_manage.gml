@@ -1210,7 +1210,7 @@ function scr_ui_manage() {
         var main_rect;
         var repetitions = min(ship_max, ship_see);
 
-        for (var sel = top; sel < repetitions; sel++) {
+        for (var sel = top; sel < repetitions && sel<array_length(sh_name); sel++) {
 
             if (sh_name[sel] != "") {
                 temp1 = string(sh_name[sel]) + " (" + string(sh_class[sel]) + ")";
