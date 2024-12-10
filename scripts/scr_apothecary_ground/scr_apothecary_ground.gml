@@ -36,7 +36,7 @@ function calculate_full_chapter_spread(){
 		    if (is_healer){
 		    	add_apoth_points_to_stack(_unit);
 		    }
-		  	if (_mar_loc[2]!="warp"){
+		  	if (_mar_loc[2]!="Warp"){
   	    		if (_mar_loc[0]=location_types.planet){
   	    			array_slot = _mar_loc[1];
   	    		} else if (_mar_loc[0] == location_types.ship){
@@ -76,7 +76,7 @@ function calculate_full_chapter_spread(){
             	if (obj_ini.veh_race[company][v]!=0){
             		if(obj_ini.veh_lid[company][v]>-1){
 	            		veh_location = obj_ini.veh_lid[company][v];
-	            		if (obj_ini.ship_location[veh_location] == "warp"){
+	            		if (obj_ini.ship_location[veh_location] == "Warp"){
 			  	    		if instance_exists(obj_p_fleet){
 			  	    			with (obj_p_fleet){
 			  	    				if (array_contains(capital_num, veh_location) ||
@@ -168,7 +168,7 @@ function apothecary_simple(){
 	var cur_units, cur_techs, _loc_heal_points, veh_health, points_spent, cur_system, features;
 	var total_bionics = scr_item_count("Bionics");
 	for (i=0;i<array_length(_locations);i++){
-		_cur_loc = _locations[i];
+		var _cur_loc = _locations[i];
 		cur_system="";
 		if (array_length(_unit_spread[$_cur_loc]) == 6){
 			cur_system = _unit_spread[$_cur_loc][5];

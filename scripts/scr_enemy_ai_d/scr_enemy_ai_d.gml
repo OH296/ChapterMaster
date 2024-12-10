@@ -484,14 +484,14 @@ function scr_enemy_ai_d() {
 		storm-=1;
 	    if (storm=0){
 	        var tr="Warp Storms over "+string(name)+" dissipate.";
-	        scr_alert("green","warp",tr,x,y);scr_event_log("green",tr);
+	        scr_alert("green","Warp",tr,x,y);scr_event_log("green",tr);
 	    }
 	}
 	if (trader>0){
 		trader-=1;
 	    if (trader=0){
 	        var tr="Rogue Trader fleet departs from "+string(name)+".";
-	        scr_alert("green","warp",tr,x,y);scr_event_log("green",tr);
+	        scr_alert("green","Warp",tr,x,y);scr_event_log("green",tr);
 	    }
 	}
 

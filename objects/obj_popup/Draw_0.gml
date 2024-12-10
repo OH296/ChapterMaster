@@ -257,7 +257,7 @@ if ((zoom=0) and (type<=4)) or (type=98){
     if (image="angry") then img=7;
     if (image="gene_bad") then img=8;
     if (image="lost_warp") then img=10;
-    if (image="warp") then img=11;
+    if (image="Warp") then img=11;
     if (image="crusade") then img=12;
     if (image="fuklaw") then img=13;
     if (image="artifact") or (image="artifact2") then img=14;

@@ -1165,10 +1165,10 @@ function scr_random_event(execute_now) {
 			star_id.storm += time;
 			evented = true;
 			if (own==1){
-				scr_alert("red","warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
+				scr_alert("red","Warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
 			}
 			else{
-				scr_alert("green","warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
+				scr_alert("green","Warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
 			}	
 		}
 	}
@@ -1461,10 +1461,10 @@ function scr_random_event(execute_now) {
 		}
 		
 	    if ((!psyker_intolerant) && (has_chief_psyker)) {
-			scr_popup("The Maw of the Warp Yawns Wide","Chief "+string(obj_ini.role[100,17])+" "+string(obj_ini.name[0,5])+" reports that the barrier between the realm of man and the Immaterium feels thin and tested.","warp","");
+			scr_popup("The Maw of the Warp Yawns Wide","Chief "+string(obj_ini.role[100,17])+" "+string(obj_ini.name[0,5])+" reports that the barrier between the realm of man and the Immaterium feels thin and tested.","Warp","");
 		}
 	    else if ((psyker_intolerant || !has_chief_psyker) && (cm_is_psyker)) {
-			scr_popup("The Maw of the Warp Yawns Wide","The barrier between the realm of man and the Immaterium feels thin and tested to you.  Dark forces are afoot.","warp","");
+			scr_popup("The Maw of the Warp Yawns Wide","The barrier between the realm of man and the Immaterium feels thin and tested to you.  Dark forces are afoot.","Warp","");
 		}
 
 	}
