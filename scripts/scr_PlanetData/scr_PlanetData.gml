@@ -55,6 +55,7 @@ function PlanetData(planet, system) constructor{
     	} 
     	return xh_force;
     }
+
     deamons = system.p_demons[planet];
     chaos_forces = system.p_chaos[planet];
 
@@ -163,5 +164,68 @@ function PlanetData(planet, system) constructor{
 			handle_exception(_exception);
 		}
 	} 
+
+	static guard_score_calc = function(){
+		guard_score = 0;
+        if (guardsmen < 500) {
+		    guard_score = 0.1;
+		} else if (guardsmen >= 100000000) {
+		    guard_score = 7;
+		} else if (guardsmen >= 50000000) {
+		    guard_score = 6;
+		} else if (guardsmen >= 15000000) {
+		    guard_score = 5;
+		} else if (guardsmen >= 6000000) {
+		    guard_score = 4;
+		} else if (guardsmen >= 1000000) {
+		    guard_score = 3;
+		} else if (guardsmen >= 100000) {
+		    guard_score = 2;
+		} else if (guardsmen >= 2000) {
+		    guard_score = 1;
+		} else {
+		    guard_score = 0.5;
+		}
+
+		return guard_score;
+	}
+
+	static continue_to_planet_battle = function(stop){
+
+	    var _nids_real = planet_forces[eFaction.Tyranids];
+	    var _nids_score = _nids_real < 4 ? 0 : _nids_real;
+	    var _nid_diff = _nids_score-_nids_real;
+	    if (p_chaos[_run]=6.1) and (p_tyranids[_run]>0) then tyranids_score=_nids_real;
+
+	    if (current_owner == eFaction.Tau){
+ 			stop = (xenos_and_heretics() + _nid_diff + player_forces + planet_forces[eFaction.Ecclesiarchy]) <= 0;
+	    }
+	   	
+	   	if (stop){
+	   		if (planet_forces[eFaction.Ork]>0) and (planet_forces[eFaction.Ecclesiarchy]>0) then stop=0;
+	   	}
+
+	    var imperium_forces = ((guardsmen>0) or (pdf>0) or (planet_forces[eFaction.Ecclesiarchy]>0));
+
+	    if (stop){
+	    	if (planet_forces[eFaction.Necrons]>=5 || planet_forces[eFaction.Tyranids]>=5 && imperium_forces) then stop=0;
+	    }
+
+
+	    //tau fight imperial
+	    if (stop){
+	    	if ((guardsmen>0) or (planet_forces[eFaction.Ecclesiarchy]>0)) and ((pdf>0) or (planet_forces[eFaction.Tau]>0)) and (p_owner[_run]=8) then stop=0;
+	    }
+    
+	    // Attack heretics whenever possible, even player controlled ones
+	    if (stop){
+	    	if (player_forces+pdf>0) and (guardsmen>0) and (obj_controller.faction_status[2]="War") then stop=0;
+	    }
+	    if (stop){
+	    	if (player_forces+pdf>0) and (planet_forces[eFaction.Ecclesiarchy]>0) and (obj_controller.faction_status[5]="War") then stop=0;
+	    }
+
+	    return stop;
+	}
 
 }

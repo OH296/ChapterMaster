@@ -64,7 +64,15 @@ function guard_target_matrix(planet){
     if (p_pdf[planet]>0) and (obj_controller.faction_status[2]="War") and (p_owner[planet]=1) then guard_attack="pdf";
     if (p_traitors[planet]<=1) and (p_orks[planet]>=4) then guard_attack="ork";
     // if (p_tyranids[planet]>0) and (guard_attack="") then guard_attack="tyranids";
-    if (p_tyranids[planet]>=4) then guard_attack="tyranids";	
+    if (p_tyranids[planet]>=4) then guard_attack="tyranids";
+    if (p_tyranids[planet]<4){
+		 if (planet_feature_bool(p_feature[planet],P_features.Gene_Stealer_Cult)){
+ 			var _hidden_cult = return_planet_features(p_feature[planet],P_features.Gene_Stealer_Cult)[0].hiding;
+ 			if (!_hidden_cult){
+ 				guard_attack="tyranids";
+ 			}
+ 		}
+    }	
 
     return guard_attack;
 }
