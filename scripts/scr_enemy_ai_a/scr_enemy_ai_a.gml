@@ -115,6 +115,8 @@ function scr_enemy_ai_a() {
 		garrison_force=false;
 		var garrison = new GarrisonForce(p_operatives[_run], true);
 		var sabatours = new GarrisonForce(p_operatives[_run], true, "sabotage");
+		_planet_data.garrison = garrison;
+		_planet_data.sabatours = sabatours;
 
 		garrison_force = garrison.garrison_force;
 		array_push(system_garrison, garrison);
@@ -124,10 +126,6 @@ function scr_enemy_ai_a() {
 	    ensure_no_planet_negatives(_run);
 
 	    planet_forces = _planet_data.planet_forces;
-
-    	if (planet_forces[eFACTION.Tyranids] < 4){
-    		planet_forces[eFACTION.Tyranids] = 0;
-    	}
 
     	var present_forces = [];
     	for (var i=0;i<array_length(planet_forces);i++){
@@ -139,6 +137,7 @@ function scr_enemy_ai_a() {
     	if (array_length(present_forces) == 1 && !p_pdf[_run]){// if there is only one faction with present forces the planet belongs ot that faction
     		p_owner[_run] = present_forces[0];
     		stop=1;
+    		continue;
     	} else if (planet_forces[eFACTION.Player]<=0) and (planet_forces[eFACTION.Ork]>0){//orks prevail  over other factions
     		if (p_owner[_run]==2 or p_owner[_run]==6){
     			p_owner[_run]=eFACTION.Ork;
@@ -146,6 +145,9 @@ function scr_enemy_ai_a() {
     	}
     	if (!stop){
     		stop = _planet_data.continue_to_planet_battle(stop);
+    		if (stop){
+    			continue;
+    		}
     	}
 	    var large=0;
 	    var guard_score=0;
@@ -174,51 +176,40 @@ function scr_enemy_ai_a() {
 	        if (p_tyranids[_run]>=5) then tyranids_score=7;
 	    }
     
-     	var pdf_with_player=false;
-    	var pdf_loss_reduction=_planet_data.fortification_level*0.001;//redues man loss from battle loss if higher defences
-    	if (p_owner[_run]!=8) && (p_owner[_run]=1 ||obj_controller.faction_status[2]!="War") && (garrison_force){
-    		pdf_with_player = true;
-        	pdf_loss_reduction+=garrison.viable_garrison*0.0005;
-    	}   
-    
+     	var pdf_with_player=_planet_data.pdf_will_support_player();
+    	var pdf_loss_reduction=_planet_data.pdf_loss_reduction_calc();//redues man loss from battle loss if higher defences
+    	
+    	if (!stop){
+    		guard_score = _planet_data.guard_score_calc();
+    	}
 	    if (p_guardsmen[_run]>0) and (stop!=1){
 	    	guard_score = _planet_data.guard_score_calc();
-        	
-        	guard_attack = guard_target_matrix(_run);
+        	guard_attack = _planet_data.guard_attack_matrix();
+
 	        if (guard_attack="tyranids") then tyranids_score=p_tyranids[_run];
 	        // Tend to prioritize traitors > Orks > Tau
 	        // Eldar don't get into pitched battles so nyuck nyuck nyuck
 	    }
-	    if (((p_guardsmen[_run]=0) or ((guard_score<=0.5))) or (p_owner[_run]==8)) or ((p_guardsmen[_run]>0) and (obj_controller.faction_status[2]=="War")) and (p_pdf[_run]>0) and (stop!=1){
+	    if (_planet_data.pdf>0 && !stop){
 	    	var pdf_mod;
 	    	var defence_mult = _planet_data.fortification_level*0.1;
 
 	    	try {
-		    	if (pdf_with_player){//if player supports give garrison bonus
-			    	pdf_score=determine_pdf_defence(p_pdf[_run],garrison,_planet_data.fortification_level)[0];
+		    	if (pdf_with_player && garrison_force){//if player supports give garrison bonus
+			    	pdf_score=determine_pdf_defence(_planet_data.pdf,garrison,_planet_data.fortification_level)[0];
 		    	} else{
-		    		pdf_score=determine_pdf_defence(p_pdf[_run],,_planet_data.fortification_level)[0];
+		    		pdf_score=determine_pdf_defence(_planet_data.pdf,,_planet_data.fortification_level)[0];
 		    	}
 	    	}catch(_exception) {
 			    handle_exception(_exception,,,,_run);
 			}
 	        // 
 	        // if (p_eldar[_run]>0) and (p_owner[_run]!=6) then pdf_attack="eldar";
-	        if (p_tyranids[_run]>=4) then pdf_attack="tyranids";
-	        if (p_tau[_run]>0) and (p_owner[_run]!=8) then pdf_attack="tau";
-	        if (p_orks[_run]>0) then pdf_attack="ork";
-	        if (p_traitors[_run]>0) then pdf_attack="traitors";
-	        if (p_chaos[_run]>0) then pdf_attack="csm";
-	        if (p_guardsmen[_run]>0) and (p_owner[_run]=8) then pdf_attack="guard";
-	        if (p_guardsmen[_run]>0) and (p_owner[_run]=1) and (obj_controller.faction_status[2]="War") then pdf_attack="guard";
-	        // Always goes after traitors first, unless
-	        if (p_traitors[_run]<=1) and (p_tau[_run]>=4) and (p_owner[_run]!=8) then pdf_attack="tau";
-	        if (p_traitors[_run]<=1) and (p_orks[_run]>=4) then pdf_attack="ork";
-	        if (p_tyranids[_run]>=4) then pdf_attack="tyranids";
+	        pdf_attack = _planet_data.pdf_attack_matrix();
 	    }
     
 	    if (p_sisters[_run]>0) and (stop!=1){// THEY MARCH FOR THE ECCLESIARCHY
-	    	if (p_player[_run]>0) and (obj_controller.faction_status[5]="War"){
+	    	if (p_player[_run]>0) and (obj_controller.faction_status[5]=="War"){
 	    		sisters_attack="player";
 	    	} else {
 		        if (p_tau[_run]>0) then sisters_attack="tau";
@@ -323,7 +314,7 @@ function scr_enemy_ai_a() {
     
     
     
-	    if (stop=0){// Start stop
+	    if (!stop){// Start stop
 
 	    default_imperium_attack = guard_score>0 && !((guard_score<=0.5) && (pdf_score>1)) ?"guard":"pdf";
     
@@ -546,20 +537,7 @@ function scr_enemy_ai_a() {
 	            rand2=(pdf_random*pdf_score);
 	            var active_garrison = pdf_with_player && garrison.viable_garrison>0;
 	            if (rand1>rand2){
-	                if (planet_forces[eFACTION.Ork]>=4) and (p_pdf[_run]>=30000){
-	                	p_pdf[_run]=floor(p_pdf[_run]*(min(0.95, 0.55+pdf_loss_reduction)));
-	            	}
-	                else if (planet_forces[eFACTION.Ork]>=4 && p_pdf[_run]<30000 && p_pdf[_run]>=10000){
-	                	p_pdf[_run]=active_garrison?p_pdf[_run]*0.4:0;
-	                }
-	                else if (planet_forces[eFACTION.Ork]>=3) and (p_pdf[_run]<10000){
-	                	p_pdf[_run]=active_garrison?p_pdf[_run]*0.4:0;
-	                }
-	                else if (planet_forces[eFACTION.Ork]<3 && p_pdf[_run]>30000){
-	                	p_pdf[_run]=floor(p_pdf[_run]*(min(0.95, 0.7+pdf_loss_reduction)));
-	                }
-	                if (planet_forces[eFACTION.Ork]>=2) and (p_pdf[_run]<2000){ p_pdf[_run]=0;}
-	                if (planet_forces[eFACTION.Ork]>=1) and (p_pdf[_run]<200){ p_pdf[_run]=0;}
+	            	_planet_data.pdf_defence_loss_to_orks();
 
 	                if (active_garrison){
 	                	var tixt = $"Chapter Forces led by {garrison.garrison_leader.name_role()} on {name} {scr_roman_numerals()[_run-1]} were unable to secure PDF victory chapter support requested";
@@ -582,7 +560,7 @@ function scr_enemy_ai_a() {
 	            if (p_pdf[_run]=0) and (p_player[_run]<=0){
 	                var badd=1;
                 
-	                if (p_pdf[1]+p_pdf[2]+p_pdf[3]+p_pdf[4]=0) and (p_guardsmen[1]+p_guardsmen[2]+p_guardsmen[3]+p_guardsmen[4]=0){
+	                if (array_sum(p_pdf)==0) and (p_guardsmen[1]+p_guardsmen[2]+p_guardsmen[3]+p_guardsmen[4]=0){
 	                    badd=2;
 	                }
                 
@@ -793,14 +771,14 @@ function scr_enemy_ai_a() {
             
             
 	            if (p_pdf[_run]=0) and (p_player[_run]<=0) and (p_necrons[_run]>0){
-	                var badd;badd=1;
+	                var _system_overrun=false;
                 
-	                if (p_pdf[1]+p_pdf[2]+p_pdf[3]+p_pdf[4]=0) and (p_guardsmen[1]+p_guardsmen[2]+p_guardsmen[3]+p_guardsmen[4]=0){
-	                    badd=2;
+	                if (!array_sum(p_pdf,0, 1, planets) && !array_sum(p_guardsmen,0, 1, planets)){
+	                    _system_overrun=true;
 	                }
                 
-					if (badd = 1) and(p_tyranids[_run] < 5) and(p_orks[_run] = 0) and(p_traitors[_run] = 0) {
-					    scr_alert("red", "owner", string(name) + " " + string(_run) + " has been overwhelmed by Necrons!", x, y);
+					if (!_system_overrun) and(p_tyranids[_run] < 5) and(p_orks[_run] = 0) and(p_traitors[_run] = 0) {
+					    scr_alert("red", "owner", $"{_planet_data.name()} has been overwhelmed by Necrons!", x, y);
 					    if (visited == 1) {
 					        if (p_type[_run] == "Forge") { //visited variable check whether the star has been visisted or not 1 for true 0 for false
 					            dispo[_run] -= 10; // 10 Disposition decrease for the planet govrnor if it's overrun by necrons
@@ -812,9 +790,9 @@ function scr_enemy_ai_a() {
 					    }
 					}
 					
-	                if (badd=2) and (p_tyranids[_run]<5) and (p_orks[_run]=0) and (p_traitors[_run]=0){
-	                    scr_popup("System Lost","The "+string(name)+" system has been ovewhelmed by Necrons!","necron_army","");
-	                    scr_event_log("red","System "+string(name)+" has been overwhelmed by Necrons.", name);
+	                if (_system_overrun && p_tyranids[_run]<5 && p_orks[_run]=0 && p_traitors[_run]=0){
+	                    scr_popup("System Lost",$"The {name} system has been ovewhelmed by Necrons!","necron_army","");
+	                    scr_event_log("red",$"System {name} has been overwhelmed by Necrons.", name);
 	                }
 	            }
             
@@ -910,7 +888,7 @@ function scr_enemy_ai_a() {
 	    // Restock PDF and military
 	    var i;
 	    i = 0;
-	    repeat(4) {
+	    repeat(planets) {
 	        i += 1;
 	        if (p_type[i] == "Daemon") {
 	            p_heresy[i] = 200;
