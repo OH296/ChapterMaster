@@ -50,7 +50,7 @@ function calculate_full_chapter_spread(){
   	    					array_contains(frigate_num, _mar_loc[1])||
   	    					array_contains(escort_num, _mar_loc[1])
   	    				){
-  	    					key_val=string(id);
+  	    					key_val=$"{id}";
   	    					array_slot=eSystemLoc.orbit;
   	    					break;
   	    				}
@@ -271,11 +271,15 @@ function apothecary_simple(){
 			if (cur_system!=""){
 				point_breakdown.systems[$ cur_system.name][p] = DeepCloneStruct(_point_breakdown);
 			} else if (p==0){
-				if (instance_exists(real(_cur_loc))){
-					_cur_loc.point_breakdown = DeepCloneStruct(_point_breakdown);
+				try {
+					if (instance_exists(real(string_replace(_cur_loc, "ref instance ", "")))){
+						var _instance = real(string_replace(_cur_loc, "ref instance ", ""));
+						_instance.point_breakdown = DeepCloneStruct(_point_breakdown);
+					}
+				}catch(_exception) {
+					handle_exception(_exception);
 				}
 			}	
-			
 			if (cur_system!="" && p>0 && turn_end){
 				with (cur_system){
 		 			if (array_length(p_feature[p])!=0){
