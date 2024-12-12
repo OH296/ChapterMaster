@@ -286,6 +286,14 @@ function CompanyStruct(comp) constructor{
 				current_squad.sort_squad_loadout();
 				reset_squad_surface();
 			}
+			var _button_text = current_squad.allow_bulk_swap ? "Exclude from mass" : "Allow mass";
+			button = draw_unit_buttons([xx+bound_width[0]+5, yy+bound_height[0]+200],_button_text,[1,1],c_green,,,,true);
+			if (point_and_click(button)){
+				current_squad.allow_bulk_swap = !current_squad.allow_bulk_swap;
+			}
+			if (scr_hit(button)){
+				tooltip_draw("Enable to stop this squad from being included in mass equipment changes in chapter settings");
+			}		
 			
 			if (unit_rollover){
 				if (point_in_rectangle(mouse_x, mouse_y, xx+25, yy+144, xx+925, yy+981)){
