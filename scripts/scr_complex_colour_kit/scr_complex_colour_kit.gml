@@ -89,7 +89,9 @@ function ColourItem(xx,yy) constructor{
             right_hand : [18,109,33,134], 
 
             right_backpack : [32,17,60,38],
-            left_backpack : [97,17,130,38],                            
+            left_backpack : [97,17,130,38],
+
+            company_marks :[30, 40, string_width("Company Marks"), string_height("Company Marks")],
     }
 
     static lower_left = ["left_leg_lower","left_leg_upper","left_leg_knee"];
@@ -214,6 +216,12 @@ function ColourItem(xx,yy) constructor{
             image_location_maps.left_trim[2]-=xx;
             image_location_maps.left_trim[3]-=yy;
 
+            image_location_maps.company_marks = draw_unit_buttons([xx-30, yy-40], "Company Marks");
+            image_location_maps.company_marks[0]-=xx;
+            image_location_maps.company_marks[1]-=yy;        
+            image_location_maps.company_marks[2]-=xx;
+            image_location_maps.company_marks[3]-=yy;
+            
     		shader_set(full_livery_shader);
     		var spot_names = struct_get_names(map_colour);
     		for (var i=0;i<array_length(spot_names);i++){
@@ -225,16 +233,16 @@ function ColourItem(xx,yy) constructor{
     		//draw_sprite(sprite_index, 0, x, y);
     		draw_sprite(spr_mk7_complex_backpack, 0, xx, yy);
             draw_sprite(spr_mk7_right_arm, 0, xx, yy);
-            draw_sprite(spr_mk7_right_trim, 2, xx, yy);
-            draw_sprite(spr_mk7_left_arm, 0, xx, yy);
-            draw_sprite(spr_mk7_left_trim, 2, xx, yy);          
+            draw_sprite(spr_mk7_left_arm, 0, xx, yy);         
     		draw_sprite(spr_mk7_complex, 0, xx, yy);
             draw_sprite(spr_mk7_left_trim, 0 , xx, yy);
             draw_sprite(spr_mk7_right_trim, 0 , xx, yy);
             draw_sprite(spr_mk7_leg_variants, 1, xx, yy);
             draw_sprite(spr_mk7_chest_variants, 1, xx, yy);           	
             draw_sprite(spr_mk7_mouth_variants, 1, xx, yy);
-            draw_sprite(spr_mk7_thorax_variants, 1, xx, yy);                  
+            draw_sprite(spr_mk7_thorax_variants, 1, xx, yy);
+            draw_sprite(spr_gothic_numbers_right_pauldron,4,xx, yy);
+            draw_sprite(spr_numeral_left_knee,4,xx, yy);                                
         	//draw_sprite(xx,yy,2,spr_mk7_full_colour);
         	//draw_sprite(xx,yy,3,spr_mk7_full_colour);
         	shader_reset();
@@ -254,7 +262,7 @@ function ColourItem(xx,yy) constructor{
         		}
         	}
         }
-        data_slate.draw(0,0,0.5, 1);
+        data_slate.draw(0,5,0.45, 1);
     }
 }
 

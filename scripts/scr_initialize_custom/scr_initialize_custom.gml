@@ -38,6 +38,26 @@ enum ePROGENITOR {
     RAVEN_GUARD,
     RANDOM,
 }
+function progenitor_map(){
+    var founding_chapters = [
+        "",
+        "Dark Angels",
+        "White Scars",
+        "Space Wolves",
+        "Imperial Fists",
+        "Blood Angels",
+        "Iron Hands",
+        "Ultramarines",
+        "Salamanders",
+        "Raven Guard",
+    ]
+    for (i=1;i<10;i++){
+        if (global.chapter_name==founding_chapters[i] || obj_ini.progenitor==i){
+            return i;
+        }
+    }
+    return 0;
+}
 
 function complex_livery_default() {
 	return {
