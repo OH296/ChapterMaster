@@ -187,6 +187,7 @@ function scr_company_order(company) {
 					if (struct_exists(squad.space,_wanted_role)){
 						while (_squadless_with_role_count> 0) and (_wanted_role_number > 0){
 							var _marine_id = array_pop(_squadless_with_role);
+							_squadless_with_role_count--;
 							unit = fetch_unit([co, _marine_id]);
 							unit.add_to_squad(i)
 							_wanted_role_number--;					

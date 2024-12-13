@@ -39,6 +39,8 @@ function scr_marine_spawn_age(){
 			break;
 	}
 
+	var _venerable_dred = string_concat("Venerable ", obj_ini.role[100][eROLE.Dreadnought]);
+
 	switch(role()){
 		// HQ only
 		case "Chapter Master":
@@ -105,7 +107,7 @@ function scr_marine_spawn_age(){
 			_maximum_age = 600;
 			_apply_gauss = true;
 			break;
-		case "Venerable Dreadnought":
+		case _venerable_dred:
 			_minimum_age = 650;
 			_maximum_age = 0;
 			_apply_gauss = true;

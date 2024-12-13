@@ -159,15 +159,43 @@ function UnitQuickFindPanel() constructor{
 			    draw_text(xx+80, yy+90+(20*i), cur_fleet.capital_number);
 			    draw_text(xx+160, yy+90+(20*i), cur_fleet.frigate_number);
 			    draw_text(xx+240, yy+90+(20*i), cur_fleet.escort_number);
-			    if (cur_fleet.action=="move"){
+			    var _fleet_point_data = cur_fleet.point_breakdown;
+			    if (cur_fleet.action == "Lost"){
+			    	draw_text(xx+310, yy+90+(20*i), "Lost");
+			    }
+			    else if (cur_fleet.action=="move"){
 			    	draw_text(xx+310, yy+90+(20*i), "Warp Travel");
 			    } else {
-			    	draw_text(xx+310, yy+90+(20*i), instance_nearest(cur_fleet.x, cur_fleet.y, obj_star).name);
+			    	var _near_star = instance_nearest(cur_fleet.x, cur_fleet.y, obj_star);
+			    	draw_text(xx+310, yy+90+(20*i), _near_star.name);
+			    	var _special_points = obj_controller.specialist_point_handler.point_breakdown.systems;
+			    	if (struct_exists(_special_points,_near_star)){
+						var _fleet_point_data = _special_points[$ _near_star.name][0];
+					}
 			    }
+			    var _fleet_coords = [xx+10, yy+90+(20*i)-2,xx+main_panel.width,yy+90+(20*i)+18];
+			    
 			    if (point_and_click([xx+10, yy+90+(20*i)-2,xx+main_panel.width,yy+90+(20*i)+18])){
 			    	travel_target = [cur_fleet.x, cur_fleet.y];
 			    	travel_increments = [(travel_target[0]-obj_controller.x)/15,(travel_target[1]-obj_controller.y)/15];
 			    	travel_time = 0;
+			    }
+
+			    if (scr_hit(_fleet_coords)){
+					detail_slate.draw(xx+main_panel.width-10,_fleet_coords[1]-20, 1.5, 1.5);
+					var _xx = xx+main_panel.width-10;
+					var _yy = _fleet_coords[1]-20;
+					draw_set_font(fnt_40k_12i);
+					draw_text(_xx+160, _yy+10,"forge point\ntotal");
+					draw_text( _xx+240, _yy+10,"forge point\nuse");
+					draw_text( _xx+320, _yy+10,"apothecary\npoint total");
+					draw_text(_xx+400, _yy+10,"apothecary\npoint use");
+					draw_text(_xx+60, _yy+50,"Orbiting");
+					var _y_line = _yy+50;
+					draw_text(_xx+160, _y_line,_fleet_point_data.forge_points);
+					draw_text(_xx+240, _y_line,_fleet_point_data.forge_points_use);
+					draw_text(_xx+320, _y_line , _fleet_point_data.heal_points);
+					draw_text(_xx+400, _y_line, _fleet_point_data.heal_points_use);							    	
 			    }
 			    i++;
 			}			
@@ -217,10 +245,10 @@ function UnitQuickFindPanel() constructor{
 						var _xx = xx+main_panel.width-10;
 						var _yy = _sys_item_y-20;
 						draw_set_font(fnt_40k_12i);
-						draw_text(_xx+220, _yy+10,"forge point\ntotal");
-						draw_text( _xx+300, _yy+10,"forge point\nuse");
-						draw_text( _xx+380, _yy+10,"apothecary points\ntotal");
-						draw_text(_xx+460, _yy+10,"apothecary points\nuse");
+						draw_text(_xx+160, _yy+10,"forge point\ntotal");
+						draw_text( _xx+240, _yy+10,"forge point\nuse");
+						draw_text( _xx+320, _yy+10,"apothecary\npoint total");
+						draw_text(_xx+400, _yy+10,"apothecary\npoint use");
 						draw_text(_xx+60, _yy+50,"Orbiting");
 						draw_text( _xx+60, _yy+100,"I");
 						draw_text(_xx+60, _yy+150,"II");
@@ -661,7 +689,7 @@ function load_selection(){
 function unload_selection(){
 	//show_debug_message("{0},{1},{2}",obj_controller.selecting_ship,man_size,selecting_location);
     if (man_size>0) and (obj_controller.selecting_ship>=1) and (!instance_exists(obj_star_select)) 
-    and (selecting_location!="Terra") and (selecting_location!="Mechanicus Vessel") and (selecting_location!="Warp"){
+    and (selecting_location!="Terra" && selecting_location!="Mechanicus Vessel" && selecting_location!="Warp" && selecting_location!="Lost") {
         cooldown=8000;
         var boba=0;
         var unload_star = star_by_name(selecting_location);

@@ -177,7 +177,7 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
 	    var squad_modulo = squad[selected]%10;
 	    draw_set_color(squad_colours[squad_modulo])
 	
-	    if (selected>0 && selected<array_length(display_unit)){
+	    if (selected>0 && selected<array_length(display_unit)-1){
 	        if (squad[selected]==squad[selected+1]) and (squad[selected]!=squad[selected-1]){sqi="top"}
 	        else if (squad[selected]==squad[selected+1]) and (squad[selected]==squad[selected-1]){sqi="mid"}
 	        else if (squad[selected]!=squad[selected+1]) and (squad[selected]==squad[selected-1]) then sqi="bot";

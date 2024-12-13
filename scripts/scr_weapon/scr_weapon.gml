@@ -352,6 +352,22 @@ global.weapons = {
 		"second_profiles": ["Integrated Bolter"],
 		"tags": ["power", "fist"],
 	},
+	"Assault Chainfist": {
+		"abbreviation": "AssltChFst",
+		"attack": {
+			"standard": 550,
+			"master_crafted": 600,
+			"artifact": 700
+		},
+		"description": "Created by mounting a chainsword to a power fist, this weapon is easily able to carve through armoured bulkheads. Contains an integrated Assault Cannon",
+		"melee_hands": 1.25,
+		"ranged_hands": 1,
+		"range": 1,
+		"spli": 2,
+		"arp": 1,
+		"second_profiles": ["Assault Cannon"],
+		"tags": ["power","boarding", "chain", "fist", "dual", "siege"],
+	},
 	"Lightning Claw": {
 		"abbreviation": "LghtClw",
 		"attack": {

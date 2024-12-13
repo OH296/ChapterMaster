@@ -158,6 +158,7 @@ function scr_ui_display_weapons(left_or_right, current_armor, equiped_weapon, cu
                 "Lightning Claw":spr_weapon_lightning1,
                 "Boltstorm Gauntlet":spr_weapon_boltstorm_gauntlet_small,
                 "Chainfist":spr_weapon_chainfist_small,
+                "Assault Chainfist": spr_weapon_chainfist_small,
             }
             var fist_melee_names=struct_get_names(fist_melee);
             for (var i=0;i<array_length(fist_melee_names);i++){

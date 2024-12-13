@@ -299,6 +299,7 @@ function scr_chapter_new(argument0) {
 		obj_creation.homeworld_exists = chapter_object.homeworld_exists;
 		obj_creation.homeworld = chapter_object.homeworld;
 		obj_creation.homeworld_rule = chapter_object.homeworld_rule;
+		obj_creation.homeworld_name = chapter_object.homeworld_name;
 
 		obj_creation.recruiting_exists = chapter_object.recruiting_exists;
 		obj_creation.recruiting = chapter_object.recruiting;

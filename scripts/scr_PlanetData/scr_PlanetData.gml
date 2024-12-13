@@ -17,14 +17,7 @@ function PlanetData(planet, system) constructor{
     pdf = system.p_pdf[planet];
     fortification_level  = system.p_fortified[planet];
     star_station = system.p_station[planet];
-
-    static name = function(){
-    	var _name="";
-    	with (system){
-    		_name =  planet_numeral_name(planet);
-    	}
-    	return _name;
-    }
+    pdf_loss_reduction = 0;
 
     // Whether or not player forces are on the planet
     player_forces = system.p_player[planet];
@@ -38,23 +31,18 @@ function PlanetData(planet, system) constructor{
     	player_forces,
     	guardsmen,
     	0,
+    	0,
     	system.p_sisters[planet],
     	system.p_eldar[planet],
     	system.p_orks[planet],
     	system.p_tau[planet],
     	system.p_tyranids[planet],
+		system.p_traitors[planet],    	
     	system.p_chaos[planet]+ system.p_demons[planet],
-    	system.p_traitors[planet],
     	0,
     	system.p_necrons[planet]
     ]
-    static xenos_and_heretics = function(){
-    	var xh_force = 0;
-    	for (var i=5;i<array_length(planet_forces); i++){
-    		xh_force += planet_forces[i];
-    	} 
-    	return xh_force;
-    }
+
     deamons = system.p_demons[planet];
     chaos_forces = system.p_chaos[planet];
 
@@ -79,6 +67,22 @@ function PlanetData(planet, system) constructor{
     problem_data = system.p_problem_other_data[planet];
     problem_timers = system.p_timer[planet];
 
+    static name = function(){
+    	var _name="";
+    	with (system){
+    		_name =  planet_numeral_name(planet);
+    	}
+    	return _name;
+    }
+
+    static xenos_and_heretics = function(){
+    	var xh_force = 0;
+    	for (var i=5;i<array_length(planet_forces); i++){
+    		xh_force += planet_forces[i];
+    	} 
+    	return xh_force;
+    }
+    
     static marine_training = planet_training_sequence;
 
     static has_feature = function(feature){
@@ -163,5 +167,187 @@ function PlanetData(planet, system) constructor{
 			handle_exception(_exception);
 		}
 	} 
+
+	static guard_score_calc = function(){
+		guard_score = 0;
+        if (guardsmen < 500 && guardsmen>0) {
+		    guard_score = 0.1;
+		} else if (guardsmen >= 100000000) {
+		    guard_score = 7;
+		} else if (guardsmen >= 50000000) {
+		    guard_score = 6;
+		} else if (guardsmen >= 15000000) {
+		    guard_score = 5;
+		} else if (guardsmen >= 6000000) {
+		    guard_score = 4;
+		} else if (guardsmen >= 1000000) {
+		    guard_score = 3;
+		} else if (guardsmen >= 100000) {
+		    guard_score = 2;
+		} else if (guardsmen >= 2000) {
+		    guard_score = 1;
+		} else {
+		    guard_score = 0.5;
+		}
+
+		return guard_score;
+	}
+
+	static continue_to_planet_battle = function(stop){
+
+	    var _nids_real = planet_forces[eFACTION.Tyranids];
+	    var _nids_score = _nids_real < 4 ? 0 : _nids_real;
+	    var _nid_diff = _nids_score-_nids_real;
+
+	    if (chaos_forces==6.1) and (_nids_real>0) then tyranids_score=_nids_real;
+
+	    if (current_owner == eFACTION.Tau){
+ 			stop = (xenos_and_heretics() + _nid_diff + player_forces + planet_forces[eFACTION.Ecclesiarchy]) <= 0;
+	    }
+	   	
+	   	if (stop){
+	   		if (planet_forces[eFACTION.Ork]>0) and (planet_forces[eFACTION.Ecclesiarchy]>0) then stop=0;
+	   	}
+
+	    var imperium_forces = ((guardsmen>0) or (pdf>0) or (planet_forces[eFACTION.Ecclesiarchy]>0));
+
+	    if (stop){
+	    	if (planet_forces[eFACTION.Necrons]>=5 || planet_forces[eFACTION.Tyranids]>=5 && imperium_forces) then stop=0;
+	    }
+
+
+	    //tau fight imperial
+	    if (stop){
+	    	if (current_owner = eFACTION.Tau){
+				if ((guardsmen>0) or (planet_forces[eFACTION.Ecclesiarchy]>0)) and ((pdf>0) or (planet_forces[eFACTION.Tau]>0)) then stop=0;
+	    	}
+	    	
+	    }
+    
+	    // Attack heretics whenever possible, even player controlled ones
+	    if (stop){
+	    	if (player_forces+pdf>0) and (guardsmen>0) and (obj_controller.faction_status[2]="War") then stop=0;
+	    }
+	    if (stop){
+	    	if (player_forces+pdf>0) and (planet_forces[eFACTION.Ecclesiarchy]>0) and (obj_controller.faction_status[5]="War") then stop=0;
+	    }
+
+	    return stop;
+	}
+
+	static pdf_will_support_player = function(){
+		if (current_owner== eFACTION.Tau){
+			return false;
+		}
+		if (has_feature(P_features.Gene_Stealer_Cult) && current_owner==eFACTION.Tyranids){
+			return false;
+		}
+
+		if ((current_owner=1 || obj_controller.faction_status[2]!="War") && pdf){
+			return true;
+		}
+		return false;
+	}
+
+	static guard_attack_matrix = function(){
+		var guard_attack = "";
+	    // if (p_eldar[planet]>0) and (p_owner[planet]!=6) then guard_attack="eldar";
+	    //if (planet_forces[eFACTION.Tau] + planet_forces[eFACTION.Ork] + planet_forces[eFACTION.Heretics]+ planet_forces[eFACTION.Chaos])
+	    if (planet_forces[eFACTION.Tau]>0) then guard_attack="tau";
+	    if (planet_forces[eFACTION.Ork]>0) then guard_attack="ork";
+	    if (planet_forces[eFACTION.Heretics]>0){
+	    		    // Always goes after traitors first, unless
+	    	guard_attack="traitors";
+			if (planet_forces[eFACTION.Heretics]<=1 && planet_forces[eFACTION.Tau]>=4) and (current_owner!=8) then guard_attack="tau";	    	
+	    }
+	    if (planet_forces[eFACTION.Chaos]>0) then guard_attack="csm";
+	    if (pdf>0) and (current_owner=eFACTION.Tau) then guard_attack="pdf";
+
+	    if (current_owner = eFACTION.Player){
+	    	if (pdf>0 && obj_controller.faction_status[2]=="War") then guard_attack="pdf";
+	    }
+	    if (planet_forces[eFACTION.Tyranids]<=1) and (planet_forces[eFACTION.Ork]>=4) then guard_attack="ork";
+	    // if (p_tyranids[planet]>0) and (guard_attack="") then guard_attack="tyranids";
+	    if (planet_forces[eFACTION.Tyranids]>=4){
+	    	guard_attack="tyranids";
+	    }else if (planet_forces[eFACTION.Tyranids]<4 && planet_forces[eFACTION.Tyranids]>0){
+			 if (has_feature(P_features.Gene_Stealer_Cult)){
+	 			var _hidden_cult = get_features(P_features.Gene_Stealer_Cult)[0].hiding;
+	 			if (!_hidden_cult){
+	 				guard_attack="tyranids";
+	 			}
+	 		}
+	    }	
+
+	    return guard_attack;		
+	}
+
+
+	static pdf_attack_matrix = function(){
+		var _no_notable_traitors = planet_forces[eFACTION.Heretics]<=1;
+		var _pdf_attack = "";
+		if (planet_forces[eFACTION.Tyranids]>=4 && !has_feature(P_features.Gene_Stealer_Cult)){
+			_pdf_attack = "tyranids";
+		}
+
+		if (_no_notable_traitors &&  _pdf_attack=="") {
+			if ((planet_forces[eFACTION.Ork]>=4)){
+				_pdf_attack="ork";
+			} else if (planet_forces[eFACTION.Tau]>=4 && current_owner!=8){
+				_pdf_attack="tau";
+			}
+		} 
+		if (guardsmen && _pdf_attack==""){
+			if (obj_controller.faction_status[2]=="War"){
+				if (pdf_will_support_player()){
+					_pdf_attack="guard";
+				}
+			} else if (current_owner == eFACTION.Tau){
+				_pdf_attack="guard";
+			}
+		}
+
+		if (_pdf_attack==""){
+			if (planet_forces[eFACTION.Chaos]>0){
+				_pdf_attack="csm";
+			} else if (planet_forces[eFACTION.Heretics]>0){
+				_pdf_attack="traitors";
+			} else if ((planet_forces[eFACTION.Ork]>0)){
+				_pdf_attack="ork";
+			} else  if (planet_forces[eFACTION.Tau]>0) and (current_owner!=eFACTION.Tau){
+				_pdf_attack="tau";
+			}
+		}
+        // Always goes after traitors first, unless
+        return _pdf_attack;				
+	}
+
+	static pdf_loss_reduction_calc = function(){
+		pdf_loss_reduction = fortification_level*0.001;
+		if (pdf_will_support_player()){
+			pdf_loss_reduction+=garrison.viable_garrison*0.0005;
+		}
+		return pdf_loss_reduction;
+	}
+
+	static pdf_defence_loss_to_orks = function(){
+		var active_garrison = pdf_will_support_player() && garrison.viable_garrison>0;
+        if (planet_forces[eFACTION.Ork]>=4) and (pdf>=30000){
+        	pdf=floor(pdf*(min(0.95, 0.55+pdf_loss_reduction)));
+    	}
+        else if (planet_forces[eFACTION.Ork]>=4 && pdf<30000 && pdf>=10000){
+        	pdf=active_garrison?pdf*0.4:0;
+        }
+        else if (planet_forces[eFACTION.Ork]>=3) and (pdf<10000){
+        	pdf=active_garrison?pdf*0.4:0;
+        }
+        else if (planet_forces[eFACTION.Ork]<3 && pdf>30000){
+        	pdf=floor(pdf*(min(0.95, 0.7+pdf_loss_reduction)));
+        }
+        if (planet_forces[eFACTION.Ork]>=2) and (pdf<2000){ pdf=0;}
+        if (planet_forces[eFACTION.Ork]>=1) and (pdf<200){ pdf=0;}
+
+        system.p_pdf[planet] = pdf;
+	}
 
 }

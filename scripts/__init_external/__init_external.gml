@@ -13,9 +13,6 @@ function __init_external() {
     if (file_exists("message_log.log")) {
         file_delete("message_log.log");
     }
-    if (directory_exists("logs")) {
-        directory_destroy("logs");
-    }
     // ========================
 
     if (!directory_exists("Logs")) {
@@ -41,9 +38,15 @@ function __init_external() {
         global.build_date = _build_date;
         if (string_char_at(_version, 1) != "v") {
             if (string_count("compile-", _version) > 0 || string_count("release-", _version) > 0) {
-                _version = string_delete(_version, 1, 8);
+                var _format_version = string_delete(_version, 1, 8);
+                var _parts = string_split(_format_version, ".");
+                _format_version = _parts[0] + "." + _parts[1];
+                _version = _format_version;
             }
-            _version += $"/{_commit_hash}";
+            if (_commit_hash != "") {
+                _version += $"/{_commit_hash}";
+            }
+            _version = $"dev-{_version}";
         } else {
             _version = string_delete(_version, 1, 1);
         }
