@@ -308,7 +308,7 @@ global.trait_list = {
 		flavour_text:"Started life on a deathworld Prison environment or other desolate start point. While this has greatly improved their strength and survival abilities, their skills in technology and other advanced fields are reduced",
 		intelligence:-3,
 		technology:[-3,2],
-		piety:[300,100],
+		piety:[3,1],
 	},
 	"technophobe":{
 		display_name:"Technophobe",
@@ -825,8 +825,8 @@ function scr_marine_trait_spawning(distribution_set){
 				add_trait(distribution_set[i][0])
 			}
 		} else if (array_length(distribution_set[i])==3){  //trait has conditions
-			var dist_modifiers =distribution_set[i][2];
-			var dist_rate = distribution_set[i][1];
+			var dist_modifiers = DeepCloneStruct(distribution_set[i][2]);
+			var dist_rate = array_copy(distribution_set[i][1]);
 			if (struct_exists(dist_modifiers, "disadvantage")){
 				if (array_contains(obj_ini.dis, dist_modifiers[$"disadvantage"][0])){
 					dist_rate = dist_modifiers[$"disadvantage"][1];  //apply new modifier rate
