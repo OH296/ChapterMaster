@@ -34,8 +34,6 @@ function scr_livery_setup(){
         test_sprite--;
         if (test_sprite<0) then test_sprite=(array_length(draw_sprites)-1);
     }
-    var liv_string = $"Full Livery {livery_picker.role_set == 0? "Defualt" :role[100][livery_picker.role_set]}";
-    draw_text(150, 200, liv_string);
     livery_picker.draw_base();
     draw_rectangle_color_simple(preview_box.x1,preview_box.y1,preview_box.x2,preview_box.y2,1,38144);
     if( shader_is_compiled(sReplaceColor)){
@@ -133,6 +131,8 @@ function scr_livery_setup(){
     }else{
         draw_text(444,252,string_hash_to_newline("Color swap shader#did not compile"));
     }
+    var liv_string = $"Full Livery {livery_picker.role_set == 0? "Defualt" :role[100][livery_picker.role_set]}";
+    draw_text(150, 200, liv_string);    
     
     draw_set_color(38144);
     draw_set_halign(fa_left);

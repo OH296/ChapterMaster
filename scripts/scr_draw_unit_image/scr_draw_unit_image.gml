@@ -1027,7 +1027,9 @@ function scr_draw_unit_image(_background=false){
                         left_leg : spr_artificer_left_leg,
                         chest_variants : spr_artificer_chest,
                         thorax_variants : spr_artificer_thorax,
-                        mouth_variants : spr_artificer_mouth
+                        mouth_variants : spr_artificer_mouth,
+                        left_trim : spr_artificer_left_trim,
+                        left_pauldron : spr_artificer_left_pad,
                     });
                     complex_livery = true;
                     specific_helm = spr_generic_sgt_mk7;
@@ -1242,6 +1244,9 @@ function scr_draw_unit_image(_background=false){
                             if (struct_exists(complex_set, "right_pauldron")){
                                 draw_sprite(complex_set.right_pauldron,company,x_surface_offset,y_surface_offset);
                             }
+                            if (struct_exists(complex_set, "left_pauldron")){
+                                draw_sprite(complex_set.left_pauldron,company,x_surface_offset,y_surface_offset);
+                            }                            
                             if (struct_exists(complex_set, "left_knee")){
                                 draw_sprite(complex_set.left_knee,company,x_surface_offset,y_surface_offset);
                             }                                                                                                                                         
