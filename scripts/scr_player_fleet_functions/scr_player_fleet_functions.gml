@@ -160,6 +160,23 @@ function find_and_move_ship_between_fleets(out_fleet, in_fleet, index){
 		move_ship_between_player_fleets(out_fleet, in_fleet, _class, relative_index);
 	}
 }
+
+function merge_player_fleets(main_fleet, merge_fleet){
+	var _merge_ships = fleet_full_ship_array(merge_fleet);
+	for (var i=0;i<array_length(_merge_ships);i++){
+		find_and_move_ship_between_fleets(merge_fleet, main_fleet, _merge_ships[i]);
+	}
+	main_fleet.alarm[7]=1;
+    if (instance_exists(obj_fleet_select)){
+        if (obj_fleet_select.x=merge_fleet.x) and (obj_fleet_select.y=merge_fleet.y){
+            with(obj_fleet_select){instance_destroy();}
+            main_fleet.alarm[3]=1;
+        }
+    }
+    with (merge_fleet){
+    	instance_destroy();
+    }
+}
 function move_ship_between_player_fleets(out_fleet, in_fleet, class, index){
 	if (class=="capital"){
 		array_insert(in_fleet.capital, 0,out_fleet.capital[index]);
