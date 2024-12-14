@@ -161,7 +161,7 @@ function SpecialistPointHandler() constructor{
             if (struct_exists(_unit_forge_gen_data,"crafter")) then crafters++;
             if (struct_exists(_unit_forge_gen_data,"at_forge")){
                 at_forge++;
-                master_craft_chance += (unit.experience()/50);
+                master_craft_chance += (unit.experience/50);
             }
             forge_points += _forge_point_gen[0];
             var _tech_array_id = array_push(heretics, array_length(techs)-1);
