@@ -1007,94 +1007,9 @@ bat_predator_column=7;
 bat_landraider_column=7;
 bat_scout_column=1;
 // ** Sets up disposition per faction **
-enum eFACTION {
-	Player = 1,
-	Imperium,
-	Mechanicus,
-	Inquisition,
-	Ecclesiarchy,
-	Eldar,
-	Ork,
-	Tau,
-	Tyranids,
-	Chaos,
-	Heretics,
-    Genestealer,
-	Necrons = 13
-}
+set_up_dispositions();
 
-imperial_factions = [
-    eFACTION.Imperium,
-    eFACTION.Mechanicus,
-    eFACTION.Inquisition,
-    eFACTION.Ecclesiarchy,
-]
-faction[0]="";
-disposition[0]=0;
-faction[eFACTION.Player]="Player";
-disposition[1]=0;
-faction[eFACTION.Imperium]="Imperium";
-disposition[3]=0;
-faction[3]="Mechanicus";
-disposition[4]=0;
-faction[4]="Inquisition";
-disposition[4]=0;
-faction[5]="Ecclesiarchy";
-disposition[5]=0;
-// ** Initial disposition for Imperial factions **
-if (instance_exists(obj_ini)){
-    faction[2]="Imperium";
-    disposition[2]=obj_ini.imperium_disposition;
-    faction[3]="Mechanicus";
-    disposition[3]=obj_ini.mechanicus_disposition;
-    faction[4]="Inquisition";
-    disposition[4]=obj_ini.inquisition_disposition;
-    faction[5]="Ecclesiarchy";
-    disposition[5]=obj_ini.ecclesiarchy_disposition;
-}
-// ** Initial disposition for non Imperials **
-faction[6]="Eldar";
-disposition[6]=-10;
-faction[7]="Ork";
-disposition[7]=-40;
-faction[8]="Tau";
-disposition[8]=0;
-faction[9]="Tyranids";
-disposition[9] = irandom_range(40,100) = 1;// use this to countdown genestealer cults, create one at the end
-faction[10]="Chaos";
-disposition[10]=-70;
-faction[11]="Heretics";
-disposition[10]=-70;
-faction[12]="";
-disposition[12]=0;
-faction[13]="Necrons";
-disposition[13]=-20;
-// ** Max disposition for imperials **
-disposition_max[0]=0;
-disposition_max[1]=0;
-disposition_max[2]=40;
-disposition_max[3]=40;
-disposition_max[4]=40;
-disposition_max[5]=40;
-if (instance_exists(obj_ini)){
-    disposition_max[2]=40+obj_ini.imperium_disposition;
-    if (disposition_max[2]>100) then disposition_max[2]=100;
-    disposition_max[3]=40+obj_ini.mechanicus_disposition;
-    if (disposition_max[3]>100) then disposition_max[3]=100;
-    disposition_max[4]=40+obj_ini.inquisition_disposition;
-    if (disposition_max[4]>100) then disposition_max[4]=100;
-    disposition_max[5]=40+obj_ini.ecclesiarchy_disposition;
-    if (disposition_max[5]>100) then disposition_max[5]=100;
-}
-// ** Max disposition for non imperials **
-disposition_max[6]=0;
-disposition_max[7]=0;
-disposition_max[8]=0;
-disposition_max[9]=0;
-disposition_max[10]=0;
-disposition_max[11]=0;
-disposition_max[12]=0;
-disposition_max[13]=0;
+
 // ** Sets up faction leader names as well as player faction stuff **
 faction_leader[0]="";
 faction_title[0]="";

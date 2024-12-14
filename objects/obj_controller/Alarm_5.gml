@@ -770,18 +770,19 @@ if (blood_debt==1) and (penitent==1){
         alarm[8]=1;
     }
     if (penitent_end<30000) then penitent_end+=41000;
-    if (penitent_current>=penitent_max) or (((obj_controller.millenium*1000)+obj_controller.year)>=penitent_end){
+    if (penitent_current>=penitent_max||((obj_controller.millenium*1000)+obj_controller.year)>=penitent_end){
+        var alert_string = "Blood Debt payed off.  You may once more recruit Astartes.";
         penitent=0;
         if (known[eFACTION.Inquisition]==2) or (known[eFACTION.Inquisition]>=4) then scr_audience(4,"penitent_end",0,"",0,0);
         if (known[eFACTION.Ecclesiarchy]>=2) then scr_audience(5,"penitent_end",0,"",0,0);
-        disposition[eFACTION.Imperium]+=20;
-        disposition[eFACTION.Mechanicus]+=15;
-        disposition[eFACTION.Inquisition]+=20;
-        disposition[eFACTION.Ecclesiarchy]+=20;
-        var o=0;
-        if (scr_has_adv("Reverent Guardians")) then o=500;
-        if (o>100) then obj_controller.disposition[eFACTION.Ecclesiarchy]+=10;
-        scr_event_log("","Blood Debt payed off.  You may once more recruit Astartes.");
+        alert_string += "\n("
+        alert_string += alter_disposition(eFACTION.Imperium, 20, , true);
+        alert_string += alter_disposition(eFACTION.Mechanicus, 15, true);
+        alert_string += alter_disposition(eFACTION.Inquisition, 20, true);
+        alert_string += alter_disposition(eFACTION.Ecclesiarchy, scr_has_adv("Reverent Guardians")?30:20, true);
+        alert_string += ")";"
+
+        scr_event_log("",alert_string);
     }
 }
 // * Penitent Crusade end *
@@ -796,16 +797,17 @@ if (penitent==1) and (blood_debt==0){
     }
     if (penitent_current>=penitent_max){
         penitent=0;
+        var alert_string = "Penitent Crusade ends.  You may once more recruit Astartes.";
         if (known[eFACTION.Inquisition]==2) or (known[eFACTION.Inquisition]>=4) then scr_audience(4,"penitent_end",0,"",0,0);
         if (known[eFACTION.Ecclesiarchy]>=2) then scr_audience(5,"penitent_end",0,"",0,0);
-        disposition[eFACTION.Imperium]+=20;
-        disposition[eFACTION.Mechanicus]+=15;
-        disposition[eFACTION.Imperium]+=20;
-        disposition[eFACTION.Ecclesiarchy]+=20;
-        var o=0;
-        if (scr_has_adv("Reverent Guardians")) then o=500;
-        if (o>100) then obj_controller.disposition[eFACTION.Ecclesiarchy]+=10;
-        scr_event_log("","Penitent Crusade ends.  You may once more recruit Astartes.");
+        alert_string += "\n("
+        alert_string += alter_disposition(eFACTION.Imperium, 20, , true);
+        alert_string += alter_disposition(eFACTION.Mechanicus, 15, true);
+        alert_string += alter_disposition(eFACTION.Inquisition, 20, true);
+        alert_string += alter_disposition(eFACTION.Ecclesiarchy, scr_has_adv("Reverent Guardians")?30:20, true);
+        alert_string += ")";"
+
+        scr_event_log("",alert_string);
     }
 }
 // ** Ork WAAAAGH **
@@ -980,26 +982,26 @@ for(var i=1; i<=99; i++){
                     scr_alert("","",twix,0,0);
                     scr_event_log("",twix, star_name);
                 }
-            }
+            }     
             // Changes relation to good
             if (event[i]=="enemy_imperium"){
                 scr_alert("green","enemy","You have made amends with your enemy in the Imperium.",0,0);
-                disposition[eFACTION.Imperium]+=20;
+                alter_disposition(eFACTION.Imperium, 20, , true);   
                 scr_event_log("","Amends made with Imperium.");
             }
             if (event[i]=="enemy_mechanicus"){
                 scr_alert("green","enemy","You have made amends with your Mechanicus enemy.",0,0);
-                disposition[eFACTION.Mechanicus]+=20;
+                alter_disposition(eFACTION.Mechanicus, 20, , true);   
                 scr_event_log("","Amends made with Mechanicus enemy.");
             }
             if (event[i]=="enemy_inquisition"){
                 scr_alert("green","enemy","You have made amends with your enemy in the Inquisition.",0,0);
-                disposition[eFACTION.Inquisition]+=20;
+                alter_disposition(eFACTION.Inquisition, 20, , true);   
                 scr_event_log("","Amends made with Inquisition enemy.");
             }
             if (event[i]=="enemy_ecclesiarchy"){
                 scr_alert("green","enemy","You have made amends with your enemy in the Ecclesiarchy.",0,0);
-                disposition[eFACTION.Ecclesiarchy]+=20;
+                alter_disposition(eFACTION.Ecclesiarchy, 20, , true);   
                 scr_event_log("","Amends made with Ecclesiarchy enemy.");
             }
             // Sector commander losses its mind
@@ -1014,7 +1016,7 @@ for(var i=1; i<=99; i++){
 				var xx=0,yy=0,flee=0,dirr=0;
                 var star_id = scr_random_find(1,true,"","");
 				if(star_id != undefined){
-                    scr_event_log("purple","Chaos Fleets exit the warp near the "+string(star_id.name)+" system.", star_id.name);
+                    scr_event_log("purple",$"Chaos Fleets exit the warp near the {star_id.name} system.", star_id.name);
                     for(var j=0; j<4; j++){
                         dirr+=irandom_range(50,100);
                         xx=star_id.x+lengthdir_x(72,dirr);

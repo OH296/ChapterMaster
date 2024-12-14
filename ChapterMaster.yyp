@@ -1219,6 +1219,7 @@
     {"id":{"name":"obj_p_capital","path":"objects/obj_p_capital/obj_p_capital.yy",},},
     {"id":{"name":"obj_p_cruiser","path":"objects/obj_p_cruiser/obj_p_cruiser.yy",},},
     {"id":{"name":"obj_p_escort","path":"objects/obj_p_escort/obj_p_escort.yy",},},
+    {"id":{"name":"scr_disposition_handler","path":"scripts/scr_disposition_handler/scr_disposition_handler.yy",},},
     {"id":{"name":"obj_p_small","path":"objects/obj_p_small/obj_p_small.yy",},},
     {"id":{"name":"obj_p_th","path":"objects/obj_p_th/obj_p_th.yy",},},
     {"id":{"name":"obj_p_assra","path":"objects/obj_p_assra/obj_p_assra.yy",},},
