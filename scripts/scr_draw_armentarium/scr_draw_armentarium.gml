@@ -75,15 +75,8 @@ function identify_stc(area){
     }
 }
 function scr_draw_armentarium(){
-	    var recruitment_pace = [
-        " is currently halted.",
-        " is advancing sluggishly.",
-        " is advancing slowly.",
-        " is advancing moderately fast.",
-        " is advancing fast.",
-        " is advancing frenetically.",
-        " is advancing as fast as possible."
-    ];
+    var _recruit_pace = ARR_recruitment_pace;
+    var _train_tiers  = ARR_techmarine_training_tiers;
     var xx = __view_get(e__VW.XView, 0) + 0;
 	var yy = __view_get(e__VW.YView, 0) + 0;
 	draw_sprite(spr_rock_bg, 0, xx, yy);
@@ -240,32 +233,11 @@ function scr_draw_armentarium(){
             blurp = "Your Chapter contains " + string(temp[36]) + " " + string(obj_ini.role[100, 16]) + ".##";
             blurp += "The training of a new " + string(obj_ini.role[100, 16]);
         }
-        if (training_techmarine = 0) {
-            blurp += recruitment_pace[training_techmarine];
+        if (training_techmarine>=0){
+            blurp += _recruit_pace[training_techmarine];
         }
-        if (training_techmarine = 1) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 1) + 1;
-        }
-        if (training_techmarine = 2) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 2) + 1;
-        }
-        if (training_techmarine = 3) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 4) + 1;
-        }
-        if (training_techmarine = 4) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 6) + 1;
-        }
-        if (training_techmarine = 5) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 10) + 1;
-        }
-        if (training_techmarine = 6) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 14) + 1;
+        if (training_techmarine >0 && training_techmarine<=6) {
+            eta = floor((359 - tech_points) / _train_tiers[training_techmarine])+ 1;
         }
 
         if (tech_aspirant > 0) and(training_techmarine > 0) and(menu_adept = 1) {

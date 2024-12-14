@@ -188,7 +188,7 @@ try_and_report_loop("imperial ship build", function(){
 // ** Training **
 // * Apothecary *
 recruit_count=0;
-var training_points_values = [ 0, 0.8, 0.9, 1, 1.5, 2, 4 ];
+var training_points_values = ARR_apothecary_training_tiers;
 apothecary_recruit_points += training_points_values[training_apothecary]
 
 novice_type = string("{0} Aspirant",obj_ini.role[100][15])
@@ -267,6 +267,7 @@ if (training_apothecary>0){
 // * Chaplain training *
 // TODO add functionality for Space Wolves and Iron Hands
 recruit_count=0;
+var training_points_values = ARR_chaplain_training_tiers;
 if (global.chapter_name!="Space Wolves") and (global.chapter_name!="Iron Hands"){
 	chaplain_points += training_points_values[training_chaplain];
     novice_type = string("{0} Aspirant",obj_ini.role[100][14]);

@@ -17,15 +17,6 @@ function set_chapter_arti_data(){
 }
 function scr_librarium(){
 	var blurp="";
-	var recruitment_pace = [
-        " is currently halted.",
-        " is advancing sluggishly.",
-        " is advancing slowly.",
-        " is advancing moderately fast.",
-        " is advancing fast.",
-        " is advancing frenetically.",
-        " is advancing as fast as possible."
-    ];
     var xx = __view_get(e__VW.XView, 0) + 0;
 	var yy = __view_get(e__VW.YView, 0) + 0;	
  	draw_sprite(spr_rock_bg, 0, xx, yy);
@@ -70,7 +61,10 @@ function scr_librarium(){
         var tip2 = "";
 
         // Set pace of recruitment based on training psyker value
-        if (training_psyker >= 0 && training_psyker <= 6) then blurp += recruitment_pace[training_psyker];
+        if (training_psyker >= 0 && training_psyker <= 6){
+            var _recruit_pace = ARR_recruitment_pace;
+            blurp += _recruit_pace[training_psyker];
+        }
 
         var artif = "",
             artif_descr = "",
