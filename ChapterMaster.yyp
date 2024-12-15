@@ -754,6 +754,7 @@
     {"id":{"name":"scr_tooltip_draw","path":"scripts/scr_tooltip_draw/scr_tooltip_draw.yy",},},
     {"id":{"name":"spr_ship_castellan","path":"sprites/spr_ship_castellan/spr_ship_castellan.yy",},},
     {"id":{"name":"spr_manta","path":"sprites/spr_manta/spr_manta.yy",},},
+    {"id":{"name":"scr_trade_window","path":"scripts/scr_trade_window/scr_trade_window.yy",},},
     {"id":{"name":"spr_ship_leviathan","path":"sprites/spr_ship_leviathan/spr_ship_leviathan.yy",},},
     {"id":{"name":"spr_mk8_complex","path":"sprites/spr_mk8_complex/spr_mk8_complex.yy",},},
     {"id":{"name":"spr_ship_razorfiend","path":"sprites/spr_ship_razorfiend/spr_ship_razorfiend.yy",},},

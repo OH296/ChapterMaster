@@ -1217,12 +1217,7 @@ other1_disposition=0;
 other1="";
 // ** Sets up bonuses once chapter is created **
 if (instance_exists(obj_ini)){
-    // Tolerant trait
-    if (global.load==0) and (string_count("Tolerant",obj_ini.strin2)>0){
-        obj_controller.disposition[6]+=5;
-        obj_controller.disposition[7]+=5;
-        obj_controller.disposition[8]+=10;
-    }
+
     // General setup
     if (global.load==0){
         // Founding Chapter STC Bonuses here

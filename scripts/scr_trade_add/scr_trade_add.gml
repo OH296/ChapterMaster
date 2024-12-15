@@ -31,7 +31,7 @@ function scr_trade_add(argument0) {
 	    if (argument0="Archeotech Laspistol"){trade_tnum[thinz]=1;tomp1=1;}
 	    if (argument0="Ranger"){get_diag_integer("Eldar Rangers wanted?",5,"t"+string(thinz),"Ranger");}
 	    if (argument0="Useful Information"){
-	        var woj;woj=trade_take[1]+trade_take[2]+trade_take[3]+trade_take[4];
+	        var woj=trade_take[1]+trade_take[2]+trade_take[3]+trade_take[4];
 	        if (string_count("Useful Info",woj)=1){trade_tnum[thinz]=1;tomp1=1;}
 	        if (string_count("Useful Info",woj)>1){trade_tnum[thinz]=0;tomp1=0;trade_take[thinz]="";}
 	    }

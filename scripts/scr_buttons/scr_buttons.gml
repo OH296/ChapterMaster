@@ -278,7 +278,7 @@ function ToggleButton() constructor {
     };
 }
 
-function InteractiveButton() constructor {
+function InteractiveButton(data={}) constructor {
     x1 = 0;
     y1 = 0;
 	x2 = 0;
@@ -295,6 +295,10 @@ function InteractiveButton() constructor {
     text_color = c_gray;
     button_color = c_gray;
 
+    var _data_names = struct_get_names(data);
+    for (var i=0;i<array_length(_data_names);i++){
+    	self[$_data_names[i]] = data[$_data_names[i]];
+    }
     update = function () {
         if (width == 0) {
             width = string_width(str1) + 4;

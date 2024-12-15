@@ -62,8 +62,15 @@ function set_up_dispositions(){
 	    disposition_max[4]=min(40+obj_ini.inquisition_disposition,100);
 
 	    disposition_max[5]=min(40+obj_ini.ecclesiarchy_disposition,100);
+	    if (!global.load) and (scr_has_disadv("Tolerant")){
+	        obj_controller.disposition[6]+=5;
+	        obj_controller.disposition[7]+=5;
+	        obj_controller.disposition[8]+=10;
+	    }		    
 
 	}
+    // Tolerant trait	
+	faction_favour = array_create(14, 0);
 }
 
 function alter_disposition(faction_id, change, return_string=false){
@@ -76,6 +83,22 @@ function alter_disposition(faction_id, change, return_string=false){
 			return "{faction[faction_id]} {_change?"+":""}{_change}";
 		} else {
 			return _change;
+		}
+	}
+}
+
+function alter_multi_disposition(disposition_array, return_string){
+	if (return_string){
+		var _dis_string  = "";
+		for (var i=0;i<array_length(disposition_array)i++){
+			var _data  =  disposition_array[i];
+			_dis_string += " "+alter_disposition(_data[0], _data[1], true);
+		}
+		return _dis_string;
+	} else {
+		for (var i=0;i<array_length(disposition_array)i++){		
+			var _data  =  disposition_array[i];
+			alter_disposition(_data[0], _data[1]);
 		}
 	}
 }
