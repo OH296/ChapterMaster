@@ -669,60 +669,6 @@ function scr_ui_diplomacy() {
 	    }
 		
     
-	    // xx=view_xview[0];yy=view_yview[0];
-    
-    
-    
-	    if (trading=1){
-
-	        if (trading_artifact=0){
-	         
-	        }
-        
-        
-	        if (trade_tnum[1]+trade_tnum[2]+trade_tnum[3]+trade_tnum[4]>0){
-	            draw_set_font(fnt_40k_14b);
-	            draw_text(xx+507,yy+381,string_hash_to_newline(string(obj_controller.faction[diplomacy])+":"));
-	            draw_set_font(fnt_40k_14);
-	            if (trading_artifact=0){
-	                if (trade_tnum[1]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+399);
-	                if (trade_tnum[2]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+419);
-	                if (trade_tnum[3]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+439);
-	                if (trade_tnum[4]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+459);
-	            }
-	            if (trade_tnum[1]=1) and (trade_take[1]!="Artifact") then draw_text(xx+530,yy+399,string_hash_to_newline(string(trade_take[1])));
-	            if (trade_tnum[1]=1) and (trade_take[1]="Artifact") then draw_text(xx+530,yy+399,string_hash_to_newline(string(trade_take[1])));
-	            // 
-	            if (trade_tnum[1]>1) then draw_text(xx+530,yy+399,string_hash_to_newline(string(trade_take[1])+" ("+string(trade_tnum[1])+")"));
-	            if (trade_tnum[2]=1) then draw_text(xx+530,yy+419,string_hash_to_newline(string(trade_take[2])));
-	            if (trade_tnum[2]>1) then draw_text(xx+530,yy+419,string_hash_to_newline(string(trade_take[2])+" ("+string(trade_tnum[2])+")"));
-	            if (trade_tnum[3]=1) then draw_text(xx+530,yy+439,string_hash_to_newline(string(trade_take[3])));
-	            if (trade_tnum[3]>1) then draw_text(xx+530,yy+439,string_hash_to_newline(string(trade_take[3])+" ("+string(trade_tnum[3])+")"));
-	            if (trade_tnum[4]=1) then draw_text(xx+530,yy+459,string_hash_to_newline(string(trade_take[4])));
-	            if (trade_tnum[4]>1) then draw_text(xx+530,yy+459,string_hash_to_newline(string(trade_take[4])+" ("+string(trade_tnum[4])+")"));
-	        }
-	        if (trade_mnum[1]+trade_mnum[2]+trade_mnum[3]+trade_mnum[4]>0){
-	            draw_set_font(fnt_40k_14b);
-	            draw_text(xx+507,yy+529,string_hash_to_newline(string(global.chapter_name)+":"));
-	            draw_set_font(fnt_40k_14);
-	            if (trade_mnum[1]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+547);
-	            if (trade_mnum[2]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+567);
-	            if (trade_mnum[3]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+587);
-	            if (trade_mnum[4]>0) then draw_sprite(spr_cancel_small,0,xx+507,yy+607);
-            
-	            if (trade_mnum[1]=1) then draw_text(xx+530,yy+547,string_hash_to_newline(string(trade_give[1])));
-	            if (trade_mnum[1]>1) then draw_text(xx+530,yy+547,string_hash_to_newline(string(trade_give[1])+" ("+string(trade_mnum[1])+")"));
-	            if (trade_mnum[2]=1) then draw_text(xx+530,yy+567,string_hash_to_newline(string(trade_give[2])));
-	            if (trade_mnum[2]>1) then draw_text(xx+530,yy+567,string_hash_to_newline(string(trade_give[2])+" ("+string(trade_mnum[2])+")"));
-	            if (trade_mnum[3]=1) then draw_text(xx+530,yy+587,string_hash_to_newline(string(trade_give[3])));
-	            if (trade_mnum[3]>1) then draw_text(xx+530,yy+587,string_hash_to_newline(string(trade_give[3])+" ("+string(trade_mnum[3])+")"));
-	            if (trade_mnum[4]=1) then draw_text(xx+530,yy+607,string_hash_to_newline(string(trade_give[4])));
-	            if (trade_mnum[4]>1) then draw_text(xx+530,yy+607,string_hash_to_newline(string(trade_give[4])+" ("+string(trade_mnum[4])+")"));
-	        }
-        
-	    }
-    
-    
 	}
 	//scr_dialogue(diplomacy_pathway);
 	basic_diplomacy_screen();

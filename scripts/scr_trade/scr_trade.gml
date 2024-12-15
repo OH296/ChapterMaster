@@ -29,10 +29,15 @@ function scr_trade(argument0) {
 	    if (diplomacy=3) and (trade_give[i]="Info Chip") and (trade_mnum[i]>0) then my_worth+=trade_mnum[i]*10;// 20% bonus
     
 	    if (trade_give[i]="STC Fragment") and (trade_mnum[i]>0){
-	        if (diplomacy=2) then my_worth+=trade_mnum[i]*900;if (diplomacy=3) then my_worth+=trade_mnum[i]*1000;if (diplomacy=4) then my_worth+=trade_mnum[i]*1000;
-	        if (diplomacy=5) then my_worth+=trade_mnum[i]*900;if (diplomacy=10) then my_worth+=trade_mnum[i]*900;
+	        if (diplomacy=2) then my_worth+=trade_mnum[i]*900;
+	        if (diplomacy=3) then my_worth+=trade_mnum[i]*1000;
+	        if (diplomacy=4) then my_worth+=trade_mnum[i]*1000;
+	        if (diplomacy=5) then my_worth+=trade_mnum[i]*900;
+	        if (diplomacy=10) then my_worth+=trade_mnum[i]*900;
         
-	        if (diplomacy=6) then my_worth+=trade_mnum[i]*500;if (diplomacy=7) then my_worth+=trade_mnum[i]*500;if (diplomacy=8) then my_worth+=trade_mnum[i]*1000;
+	        if (diplomacy=6) then my_worth+=trade_mnum[i]*500;
+	        if (diplomacy=7) then my_worth+=trade_mnum[i]*500;
+	        if (diplomacy=8) then my_worth+=trade_mnum[i]*1000;
 	    }
     
     

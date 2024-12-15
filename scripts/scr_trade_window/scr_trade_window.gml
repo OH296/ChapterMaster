@@ -11,15 +11,19 @@ function trade_tiers(faction){
 				min_disp : 0,
 				require_input : true,
 				max_size : 100000,
+				value : 1
 			},
 			"Recruiting Planet":{
 				min_disp : 0,
+				value : 2000
 			},
 			"License: Repair":{
 				min_disp : 0,
+				value : 750
 			},
 			"License: Crusade":{
 				min_disp : 0,
+				value : 1500
 			},
 		},
 		//start mechanicus
@@ -27,7 +31,8 @@ function trade_tiers(faction){
 			"Terminator Armour":{
 				min_disp : 30,
 				require_input : true,
-				max_size : 5,				
+				max_size : 5,
+				value : 400,				
 			},
 			"Land Raider":{
 				min_disp : 20,
@@ -138,6 +143,8 @@ function trade_tiers(faction){
 	var _data = _trade_data[faction];
 	return _data;
 }
+
+
 function TradeHandler(faction){
 	left_panel = new DataSlate();
 	center_panel = new DataSlate();
@@ -149,19 +156,25 @@ function TradeHandler(faction){
 	player_items = {
 			"Requisition":{
 				min_disp : -100,
-				t_num : 0
+				t_num : 0,
+				require_input : true,
+				worth : 1,				
 			},
 			"Gene-Seed":{
 				min_disp : -100,
-				t_num : 0
+				t_num : 0,
+				require_input : true,
+				worth : 30,				
 			},
 			"STC Fragment":{
 				min_disp : -100,
-				t_num : 0
+				t_num : 0,
+				require_input : false,				
 			},
 			"Info Chip":{
 				min_disp : -100,
-				t_num : 0
+				t_num : 0,
+				require_input : false,			
 			},						
 		}
 	var _trade_items = struct_get_names(trade_options);
@@ -169,12 +182,16 @@ function TradeHandler(faction){
 		var _opt = trade_options[$_trade_items[i]];
 		if (player_disp>=opt.min_disp){
 			_opt.t_num = 0;
+			if (!struct_exists(_opt, "require_input")){
+				opt.require_input = false;
+			}
 			array_push(trade_viables,_trade_items[i]);
 		}
 	}
 	
 	self.faction = faction;
 
+	faction_name = obj_controller.faction[faction];
 	offer_button = new InteractiveButton({
 		x1:682,
 		y1:649,
@@ -220,10 +237,11 @@ function TradeHandler(faction){
 			var _button_coords = draw_unit_buttons(_trade_option_draw,_trade_name);
 			_trade_option_draw = [347, _button_coords[3]];
 			if (point_and_click(_button_coords)){
-				if (struct_exists(_data, "require_input")){
-					if (_data.require_input){
-						get_diag_integer($"{_trade_name}s Wanted?"_data.max_size, $"t{_trade_name}")
-					}
+				if (_data.require_input){
+					get_diag_integer($"{_trade_name}s Wanted?"_data.max_size, $"t{_trade_name}")
+				
+				} else {
+					_data.t_num++;
 				}
 			}	
 		}
@@ -234,10 +252,11 @@ function TradeHandler(faction){
 			var _button_coords = draw_unit_buttons(_trade_option_draw,player_item_names[i]);
 			_trade_option_draw = [_trade_option_draw[0], _button_coords[3]];
 			if (point_and_click(_button_coords)){
-				if (struct_exists(_data, "require_input")){
-					if (_data.require_input){
-						get_diag_integer($"{_trade_name}s Wanted?"_data.max_size, $"m{_trade_name}")
-					}
+				if (_data.require_input){
+					get_diag_integer($"{_trade_name}s Wanted?"_data.max_size, $"m{_trade_name}")
+				}
+				else {
+					_data.t_num++;
 				}
 			}					
 		}
@@ -285,8 +304,30 @@ function TradeHandler(faction){
             cooldown=8;
             click2=1;
             if (diplo_last!="offer") then scr_trade(true);			
-		}			
-	}
+		}	
+		draw_text(507,381,$"{faction_name}:");
+		var _draw_locs = [507,399];
+		for (var i=0;i<array_length(trade_viables);i++){
+			var _trade_name = trade_viables[i]
+			var _data = trade_options[$_trade_name];
+			if (_data.t_num){
+				draw_sprite(spr_cancel_small,0,_draw_locs[0],_draw_locs[1]);
+				draw_text(_draw_locs[0]+23,_draw_locs[1], "{_trade_name}({_data.t_num})");
+				_draw_locs[1]+=20;
+			}
+		}
+		var _draw_locs = [507,399];
+		draw_text(507,547,$"{global.chapter_name}:"));
+		var player_item_names =struct_get_names(player_items);
+		for (var i=0;i<array_length(player_item_names);i++){
+			var _data = player_items[$player_item_names[i]];
+			if (_data.t_num){
+				draw_sprite(spr_cancel_small,0,_draw_locs[0],_draw_locs[1]);
+				draw_text(_draw_locs[0]+23,_draw_locs[1], "{_trade_name}({_data.t_num})");
+				_draw_locs[1]+=20;
+			}								
+		}				
+	}		
 }
 obj_controller.trade_handler = new TradeHandler();
 function scr_trade_window(){
