@@ -296,7 +296,9 @@ try {
                 
                 _battle_object.p_player[_planet]-=world_size;
 
-                if (defeat=1) then yeehaw1.p_player[_planet]=0;
+                if (defeat=1){
+                    _battle_object.p_player[_planet]=0;
+                };
             }
             obj_controller.combat=0;
             with(obj_turn_end){
