@@ -136,11 +136,11 @@ function get_complex_set(set = eARMOUR_SET.MK7){
             leg_variants : spr_indomitus_leg_variants,           
         });                         
     }else if (set == eARMOUR_SET.Tartaros){
-            add_group({
+            set_pieces.add_group({
             armour : spr_tartaros_complex,
             left_arm : spr_tartaros_left_arm,
             right_arm : spr_tartaros_right_arm, 
-        })                 
+        });                
     }
 
     return set_pieces;
