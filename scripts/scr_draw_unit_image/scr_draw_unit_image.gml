@@ -426,7 +426,7 @@ function scr_draw_unit_image(_background=false){
 		var specialist_colours=obj_ini.col_special; 
         var specific_armour_sprite = "none";
         var unit_chapter = global.chapter_name;
-        var unit_progenitor = progenitor_visuals ? progenitor_map() : "";
+        var unit_progenitor = progenitor_visuals ? progenitor_map() : 0;
         var unit_is_sniper = false;
         var unit_role = role();
         var unit_wep1=weapon_one();
@@ -1041,7 +1041,7 @@ function scr_draw_unit_image(_background=false){
                             draw_sprite(spr_ultra_honor_guard2,2,x_surface_offset,y_surface_offset);
                         }
                     } 
-                    if (unit_chapter=="Blood Angels" || global.chapter_id == eCHAPTERS.BLOOD_ANGELS){
+                    if (unit_chapter=="Blood Angels" || unit_progenitor == eCHAPTERS.BLOOD_ANGELS){
                         if (unit_role=="Chapter Master"){
 
                             armour_bypass=true;
@@ -1158,7 +1158,7 @@ function scr_draw_unit_image(_background=false){
                     }
 
                     if (body.torso.backpack_variation % 3 == 0) {
-                        if (unit_progenitor=="Dark Angels"){
+                        if (unit_progenitor == ePROGENITOR.DARK_ANGELS){
                             if array_contains(["MK5 Heresy", "MK6 Corvus","MK7 Aquila", "MK8 Errant", "Artificer Armour"], unit_armour){
                                 _backpack_sprite = spr_da_backpack;
                                 complex_set.add_to_area("backpack",spr_da_backpack);                                                        
