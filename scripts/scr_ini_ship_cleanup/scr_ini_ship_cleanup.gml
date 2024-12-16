@@ -130,10 +130,12 @@ function scr_ini_ship_cleanup() {
 
 
 	// If the ship is dead then make it fucking dead man
-	for (var i=array_length(ship)-1;i>=0;i--){
-	    if (ship[i]!="") and (ship_hp[i]<=0){
-	        scr_kill_ship(i);
-	    }
+	if (array_length(ship)){
+		for (var i=array_length(ship)-1;i>=0;i--){
+		    if (ship[i]!="") and (ship_hp[i]<=0){
+		        scr_kill_ship(i);
+		    }
+		}
 	}
 
 }
