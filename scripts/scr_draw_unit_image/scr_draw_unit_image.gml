@@ -401,6 +401,7 @@ function scr_draw_unit_image(_background=false){
     var modest_livery = obj_controller.modest_livery;
     var progenitor_visuals = obj_controller.progenitor_visuals;
     var draw_sequence = [];
+    try {
     if (name_role()!="") and (base_group=="astartes"){
         for (var i = 1; i <= 2; i++) {
             ui_weapon[i]=spr_weapon_blank;
@@ -1728,6 +1729,9 @@ function scr_draw_unit_image(_background=false){
             draw_text(0,0,string_hash_to_newline("Color swap shader#did not compile"));
         }
         // if (race()!="1"){draw_set_color(38144);draw_rectangle(0,x_surface_offset,y_surface_offset+166,0+231,0);}        
+    }
+    }catch(_exception) {
+        handle_exception(_exception);
     }
 
     draw_set_alpha(1);
