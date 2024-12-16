@@ -100,35 +100,6 @@ function scr_kill_ship(index){
 }
 
 function scr_ini_ship_cleanup() {
-
-	var i=0,j=0,meh=0;
-
-	var co,ide;
-	co=0;ide=0;
-
-
-	/*
-	    This is one of the scripts that has given me a lot of trouble
-	    over the ages.  Formerly, when ships were destroyed, their
-	    array would be crushed.  This meant that marine LID (ship ID)
-	    variables had to be changed to take this into account and
-	    assign them to the recently changed ship IP.
-    
-	    As of recent I have simply removed the 'clean and smash' ship
-	    script, so that their ID's never change.  Instead of condensing
-	    empty slots they are simply left empty.  Ideally this should, 
-	    and so far has, prevent marines from teleporting from ship to
-	    ship.
-    
-	    This scripts new purpose is to simply remove all variables
-	    formerly assigned to a dead ship within the array.  This (should)
-	    prevent the engine from mistaking a dead ship for still being
-	    active and alive.
-	*/
-
-
-
-
 	// If the ship is dead then make it fucking dead man
 	if (array_length(ship)){
 		for (var i=array_length(ship)-1;i>=0;i--){
