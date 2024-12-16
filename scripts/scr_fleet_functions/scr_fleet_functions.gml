@@ -112,12 +112,16 @@ function get_largest_player_fleet(){
 
 function is_orbiting(){
 	if (action != "") then return false;
-	var nearest = instance_nearest(x,y,obj_star);
-	if (point_distance(x,y,nearest.x, nearest.y)<10 && nearest.name != ""){
-		orbiting = nearest.id;
-		return true
+	try {
+		var nearest = instance_nearest(x,y,obj_star);
+		if (point_distance(x,y,nearest.x, nearest.y)<10 && nearest.name != ""){
+			orbiting = nearest.id;
+			return true
+		}
+		orbiting=false;
+	} catch(_exception){
+		return false;
 	}
-	orbiting=false;
 	return false;
 }
 
