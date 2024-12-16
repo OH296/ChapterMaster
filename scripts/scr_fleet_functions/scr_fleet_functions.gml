@@ -330,7 +330,7 @@ function scr_efleet_arrive_at_trade_loc(){
         trade_goods="return";
         if (target!=noone) then target=noone;
         
-        if (owner=eFACTION.Eldar){
+        if (owner==eFACTION.Eldar){
         	cur_star = nearest_star_with_ownership(xx,yy, eFACTION.Eldar);
         	if (cur_star!="none"){
 				cur_star=targ.x;
@@ -345,6 +345,9 @@ function scr_efleet_arrive_at_trade_loc(){
 		action="";
 
         set_fleet_movement();
+        if (action_eta==0){
+        	instance_destroy();
+        }
     }
 }
 function scr_orbiting_fleet(faction){
@@ -439,7 +442,7 @@ function fleet_arrival_logic(){
     
     
     
-    if (trade_goods="return") and (action="move"){
+    if (trade_goods="return"){
         // with(instance_nearest(x,y,obj_star)){present_fleets-=1;}
         instance_destroy();
     }
