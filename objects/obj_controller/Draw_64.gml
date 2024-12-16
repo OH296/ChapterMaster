@@ -43,28 +43,29 @@ if (!zoomed && !zui){
     
     
     if (y_slide>0) then draw_set_alpha((100-(y_slide*2))/100);
-    
+
     draw_set_alpha(1);
     draw_sprite(spr_new_banner,0,1439+new_banner_x,62);
     draw_sprite(spr_new_ui_cover,0,0,(900-17));
     // Handles custom chapters
-    if (string_count("custom",obj_ini.icon_name)>0){
-        var cusl=string_replace(obj_ini.icon_name,"custom","");
-        cusl=real(cusl);
-        if (obj_cuicons.spr_custom[cusl]>0) and (obj_cuicons.spr_custom_icon[cusl]!=-1){
-            draw_sprite_stretched(obj_cuicons.spr_custom_icon[cusl],0,1451+new_banner_x,73,141,141);
-        }
+    if (is_string(obj_ini.icon_name)){
+        if (string_count("custom",obj_ini.icon_name)>0){
+            var cusl=string_replace(obj_ini.icon_name,"custom","");
+            cusl=real(cusl);
+            if (obj_cuicons.spr_custom[cusl]>0) and (obj_cuicons.spr_custom_icon[cusl]!=-1){
+                draw_sprite_stretched(obj_cuicons.spr_custom_icon[cusl],0,1451+new_banner_x,73,141,141);
+            }
+        }else {
+            var icon_sprite=spr_icon,icc=obj_ini.icon;
+            if (icc<=20) then scr_image("creation",icc,1451+new_banner_x,73,141,141);
+            if (icc>20){
+                icon_sprite=spr_icon_chapters;
+                icc-=19;
+                draw_sprite(icon_sprite,icc,1451+new_banner_x,73);
+            }
+        }        
     }
-    // Handles icon for normal chapters
-    if (string_count("custom",obj_ini.icon_name)==0){
-        var icon_sprite=spr_icon,icc=obj_ini.icon;
-        if (icc<=20) then scr_image("creation",icc,1451+new_banner_x,73,141,141);
-        if (icc>20){
-            icon_sprite=spr_icon_chapters;
-            icc-=19;
-            draw_sprite(icon_sprite,icc,1451+new_banner_x,73);
-        }
-    }
+
     
     draw_set_color(38144);
     draw_set_font(fnt_menu);
