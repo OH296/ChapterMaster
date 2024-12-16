@@ -442,7 +442,7 @@ if (unload>0){
             ma_wid[q]=unload;
         }
         else if (man[q]=="vehicle") and (ma_loc[q]==selecting_location)  and (ma_wid[q]<1) and(man_sel[q]!=0){
-            if (b==0) then b=ma_lid[q];
+            if (b==-1) then b=ma_lid[q];
             var unit_id = display_unit[q][1];
             var company = display_unit[q][0]
             obj_ini.veh_loc[company][unit_id]=obj_ini.ship_location[b];

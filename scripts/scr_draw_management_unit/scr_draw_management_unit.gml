@@ -41,7 +41,7 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
 			assignment=unit.assignment();
 			if (assignment!="none"){
 				unit_location_string += $"({assignment})";
-			}else if (fest_planet==0) and (fest_sid>0) and (fest_repeats>0) and (ma_lid[selected]==fest_sid){
+			}else if (fest_planet==0) and (fest_sid>-1) and (fest_repeats>0) and (ma_lid[selected]==fest_sid){
 				unit_location_string="=Event=";
 				eventing=true;
 			}else if (fest_planet==1) and (fest_wid>0) and (fest_repeats>0) and (ma_wid[selected]==fest_wid) and (ma_loc[selected]==fest_star){
@@ -88,7 +88,7 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
         if (ma_wid[selected]!=0){
         	//numeral for vehicle planet
         	unit_location_string += scr_roman(ma_wid[selected]);
-        } else if (ma_lid[selected]>0){
+        } else if (ma_lid[selected]>-1){
         	unit_location_string = obj_ini.ship[ma_lid[selected]]
         }
         health_string=string(round(ma_health[selected]))+"% HP";
@@ -267,8 +267,8 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
 	                	draw_sprite(spr_loc_icon,0,xx+427+8,yy+66);
 	                }
 	        }else{
-	            if (ma_lid[selected]==0) and (ma_wid[selected]>0) then draw_sprite(spr_loc_icon,0,xx+427+8,yy+66);
-	            if (ma_lid[selected]>0) and (ma_wid[selected]==0) then draw_sprite(spr_loc_icon,1,xx+427+8,yy+66);
+	            if (ma_lid[selected]==-1) and (ma_wid[selected]>0) then draw_sprite(spr_loc_icon,0,xx+427+8,yy+66);
+	            if (ma_lid[selected]>-1) and (ma_wid[selected]==0) then draw_sprite(spr_loc_icon,1,xx+427+8,yy+66);
 	        }
 	    }
 	     //TODO handle recursively

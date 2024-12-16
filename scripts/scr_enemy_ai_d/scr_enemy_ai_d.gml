@@ -246,7 +246,7 @@ function scr_enemy_ai_d() {
                             p_player[i]-=scr_unit_size(obj_ini.armour[com][ide],obj_ini.role[com][ide],true);
                             obj_ini.loc[com][ide]="Mechanicus Vessel";
                             unit.planet_location=0;
-                            unit.ship_location=0;
+                            unit.ship_location=-1;
                             techs_taken+=1;
                         }
                         if (unit.ship_location>-1){

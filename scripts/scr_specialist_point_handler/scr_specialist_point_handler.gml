@@ -429,7 +429,7 @@ function SpecialistPointHandler() constructor{
                     var build_loc = array_random_element(obj_controller.player_forge_data.vehicle_hanger);
                     obj_ini.veh_loc[vehicle[0]][vehicle[1]] = build_loc[0];
                     obj_ini.veh_wid[vehicle[0]][vehicle[1]] = build_loc[1];
-                    obj_ini.veh_lid[vehicle[0]][vehicle[1]] = 0;
+                    obj_ini.veh_lid[vehicle[0]][vehicle[1]] = -1;
                 }
                 scr_popup("Forge Completed",$"{item.name} X{item.count} construction finished Vehicles Waiting at hanger on {build_loc[0]} {build_loc[1]}","","");
             }                      

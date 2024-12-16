@@ -735,10 +735,10 @@ function set_member_loc (loc_data){
 			system.p_player[member_location[1]]-=size;
 			system.p_player[wid]+=size;
 			planet_location = wid;
-			ship_location = 0;
+			ship_location = -1;
 		}
 	} else {
-		if (wid == 0 && lid>0){
+		if (wid == 0 && lid>-1){
 			load_marine(lid);
 		}
 	}

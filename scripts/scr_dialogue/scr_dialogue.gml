@@ -337,7 +337,9 @@ function scr_dialogue(diplo_keyphrase) {
 	    if (instance_number(obj_ground_mission)==0){
 	        with(obj_star){
 	            if (string_count(name,scr_master_loc())>0){
-	                repeat(obj_ini.TTRPG[0,1].planet_location){instance_create(x,y,obj_ground_mission);}
+	                repeat(obj_ini.TTRPG[0,0].planet_location){
+	                	instance_create(x,y,obj_ground_mission);
+	                }
 	            }
 	        }
 	    }

@@ -1127,7 +1127,7 @@ for(var i=1; i<=99; i++){
                         last_artifact =  scr_add_artifact("random_nodemon","",0,obj_ini.home_name,2);
                     } else {
                         if (obj_ini.fleet_type != ePlayerBase.home_world){
-                            last_artifact = scr_add_artifact("random_nodemon","",0,obj_ini.ship_location[1],501);
+                            last_artifact = scr_add_artifact("random_nodemon","",0,obj_ini.ship_location[0],501);
                         }
                     }
 
