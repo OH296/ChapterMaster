@@ -61,7 +61,7 @@ function Roster() constructor{
     }
     static update_roster = function(){
     	selected_roster = {};
-        var _allow_dreadnoughts = true;
+        var _allow_dreadnoughts = false;
     	for (var i=0;i<array_length(selected_units);i++){
     		array_push(full_roster_units, selected_units[i]);
     	}
