@@ -831,11 +831,11 @@ function scr_ui_manage() {
 				button.tooltip = "Press Shift L";
 				if (load_unload_possible){
 					button.alpha = 1;
-					if (sel_loading==0){
+					if (sel_loading==-1){
 						if (button.draw()){
 							load_selection();						
 						}
-					} else if (sel_loading!=0){
+					} else if (sel_loading!=-1){
 						button.label = "Unload";
 						if (button.draw()){
 							unload_selection();   // Unload - ask for planet confirmation					
@@ -928,7 +928,7 @@ function scr_ui_manage() {
 				button.label = "Set Boarder";
 				button.keystroke = (keyboard_check(vk_shift) && (keyboard_check_pressed(ord("Q"))));
 				button.tooltip = "Press Shift Q";					
-				var boarder_possible = sel_loading!=0  && man_size>0;
+				var boarder_possible = sel_loading!=-1  && man_size>0;
 				button.alpha = boarder_possible ? 1 : 0.5;
 				if (button.draw() && boarder_possible){
 					if (boarder_possible) then toggle_selection_borders();

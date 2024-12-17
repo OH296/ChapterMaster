@@ -21,8 +21,8 @@ local_content_slate.inside_method=function(){
     var _heigth = local_content_slate.height;
      if (purge==0){
         draw_set_halign(fa_left);
-        draw_text_ext(_xx, _yy, roster.roster_local_string, -1, local_content_slate.width-30);
-        draw_text_ext(_xx+0.1, _yy+0.1, roster.roster_local_string, -1, local_content_slate.width-30);
+        draw_text_ext(_xx+15, _yy, roster.roster_local_string, -1, local_content_slate.width-30);
+        draw_text_ext(_xx+15.1, _yy+0.1, roster.roster_local_string, -1, local_content_slate.width-30);
     }     
     if (purge != DropType.RaidAttack){
         if (purge == DropType.PurgeSelect){

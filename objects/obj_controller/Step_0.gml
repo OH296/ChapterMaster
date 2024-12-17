@@ -462,7 +462,7 @@ if (unload>0){
     obj_ini.ship_carrying[b]-=man_size;
     sh_cargo[b]-=man_size;
     cooldown=10;
-    sel_loading=0;
+    sel_loading=-1;
     man_size=0;
     unload=0;
     with(obj_star_select){instance_destroy();}

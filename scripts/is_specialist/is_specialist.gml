@@ -344,7 +344,7 @@ function group_selection(group, selection_data){
 				reset_manage_arrays();
 				alll=0;              
 				cooldown=10;
-				sel_loading=0;
+				sel_loading=-1;
 				unload=0;
 				alarm[6]=7;
 				company_data={};

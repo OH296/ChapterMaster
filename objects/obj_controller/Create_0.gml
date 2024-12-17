@@ -483,7 +483,7 @@ sel_all="";
 sel_promoting=0;
 drag_square=[];
 rectangle_action = -1;
-sel_loading=0;
+sel_loading=-1;
 sel_uid=0;
 
 // ** Sets Chapter events and celebrations **

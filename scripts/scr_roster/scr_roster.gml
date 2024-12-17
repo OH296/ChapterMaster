@@ -61,6 +61,7 @@ function Roster() constructor{
     }
     static update_roster = function(){
     	selected_roster = {};
+        var _allow_dreadnoughts = true;
     	for (var i=0;i<array_length(selected_units);i++){
     		array_push(full_roster_units, selected_units[i]);
     	}
@@ -75,6 +76,9 @@ function Roster() constructor{
     	for (var i=0;i<array_length(squad_buttons);i++){
     		if (squad_buttons[i].active){
     			array_push(_valid_squad_types, squad_buttons[i].squad);
+                if (squad_buttons[i].squad == "dreadnought"){
+                    _allow_dreadnoughts = true;
+                }
     		}
     	}
         var _valid_vehicles = [];
@@ -99,7 +103,14 @@ function Roster() constructor{
                 if (!array_contains(_valid_companies, _unit.company)) then continue;
 	    		if (_unit.squad_type()!= "none"){
 	    			var _valid_type = array_contains(_valid_squad_types,_unit.squad_type());
-	    		}
+	    		} else {
+                    var _armour_data = _unit.get_armour_data();
+                    if (is_struct(_armour_data)){
+                        if (_armour_data.has_tag("dreadnought")){
+                            _valid_type = _allow_dreadnoughts;
+                        }
+                    }
+                }
 
 	    		if (_unit.ship_location>-1){
 		    	 	if (array_contains(_valid_ship ,_unit.ship_location) && _valid_type){
@@ -259,6 +270,16 @@ function Roster() constructor{
                                 new_squad_button(obj_ini.squads[_unit.squad].display_name, _squad_type);
                             }
                          }
+                    } else {
+                        if (!array_contains(_squads, "dreadnought")){
+                            var _armour_data = _unit.get_armour_data();
+                            if (is_struct(_armour_data)){
+                                if (_armour_data.has_tag("dreadnought")){
+                                    array_push(_squads, "dreadnought");
+                                    new_squad_button("Dreadnought", "dreadnought");
+                                }
+                            }
+                        }                      
                     }
                 }
             }

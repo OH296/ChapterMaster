@@ -458,7 +458,7 @@ function update_general_manage_view(){
 				company_data={};
 	        }            
 	        cooldown=10;
-	        sel_loading=0;
+	        sel_loading=-1;
 	        unload=0;
 	        alarm[6]=30;
 	    } else if (managing==-1){
@@ -563,7 +563,7 @@ function jail_selection(){
     } else if (managing==-1){
     	update_garrison_manage()
     }
-    sel_loading=0;
+    sel_loading=-1;
     unload=0;
     alarm[6]=7;		
 }
