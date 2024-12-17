@@ -340,10 +340,12 @@ function scr_purge_world(star, planet, action_type, action_score) {
 
 
 	if instance_exists(obj_drop_select){
-		if (sh_target!=0){
+		if (instance_exists(sh_target)){
 			sh_target.acted=5;
 		}
-		with(obj_drop_select){instance_destroy();}
+		with(obj_drop_select){
+			instance_destroy();
+		}
 		instance_destroy();
 	}
 

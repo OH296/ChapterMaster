@@ -683,7 +683,6 @@ if (obj_controller.selecting_planet!=0){
                 instance_create_layer(x, y, layer_get_all()[0], obj_drop_select,{
                     p_target:target,
                     planet_number : obj_controller.selecting_planet,
-                    sh_target:instance_nearest(x,y,obj_p_fleet),
                     attack :true,
                     sh_target : _targ,
                     purge:0,
@@ -703,6 +702,7 @@ if (obj_controller.selecting_planet!=0){
                     p_target:target,
                     purge:1,
                     planet_number : obj_controller.selecting_planet,
+                    sh_target : _targ,
                 });
             }
 
