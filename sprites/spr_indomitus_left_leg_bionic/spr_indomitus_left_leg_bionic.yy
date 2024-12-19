@@ -1,11 +1,11 @@
 {
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
-  "name": "spr_indomitus_right_eye",
+  "name": "spr_indomitus_left_leg_bionic",
   "bbox_bottom": 260,
-  "bbox_left": 1,
-  "bbox_right": 174,
-  "bbox_top": 32,
+  "bbox_left": 99,
+  "bbox_right": 166,
+  "bbox_top": 35,
   "bboxMode": 0,
   "collisionKind": 1,
   "collisionTolerance": 0,
@@ -13,8 +13,7 @@
   "edgeFiltering": false,
   "For3D": false,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"66f63e31-1ba0-4731-93d0-9d3dd27ecd03",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"4bc0c5a9-ad91-4ba4-bcc8-3c39fcaa1d70",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"9050d74b-ae5d-43ad-9ef5-42a5ae426e64",},
   ],
   "gridX": 0,
   "gridY": 0,
@@ -33,7 +32,7 @@
   "sequence": {
     "resourceType": "GMSequence",
     "resourceVersion": "1.4",
-    "name": "spr_indomitus_right_eye",
+    "name": "spr_indomitus_left_leg_bionic",
     "autoRecord": true,
     "backdropHeight": 768,
     "backdropImageOpacity": 0.5,
@@ -44,7 +43,7 @@
     "events": {"resourceType":"KeyframeStore<MessageEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "eventStubScript": null,
     "eventToFunction": {},
-    "length": 2.0,
+    "length": 1.0,
     "lockOrigin": false,
     "moments": {"resourceType":"KeyframeStore<MomentsEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "playback": 1,
@@ -55,8 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"66f63e31-1ba0-4731-93d0-9d3dd27ecd03","path":"sprites/spr_indomitus_right_eye/spr_indomitus_right_eye.yy",},},},"Disabled":false,"id":"caa69c33-d3ed-417d-9597-726d8bb07f96","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"4bc0c5a9-ad91-4ba4-bcc8-3c39fcaa1d70","path":"sprites/spr_indomitus_right_eye/spr_indomitus_right_eye.yy",},},},"Disabled":false,"id":"7b971e5d-63dc-464f-a2a5-601dd3c60196","IsCreationKey":false,"Key":1.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"9050d74b-ae5d-43ad-9ef5-42a5ae426e64","path":"sprites/spr_indomitus_left_leg_bionic/spr_indomitus_left_leg_bionic.yy",},},},"Disabled":false,"id":"7eac121b-3931-417e-870e-272025ef2a2e","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,

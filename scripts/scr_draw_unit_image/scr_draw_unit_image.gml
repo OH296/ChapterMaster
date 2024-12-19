@@ -331,6 +331,13 @@ function scr_draw_unit_image(_background=false){
                     } else {
                         draw_sprite(spr_bionics_hand, bionic_spr_index, offset_x, offset_y);
                     }
+                } else if (armour_type == ArmourType.Terminator && struct_exists(body[$ (right_left == 1 ? "right_arm" : "left_arm")], "bionic")){
+                    var bionic_hand = body[$ (right_left == 1 ? "right_arm" : "left_arm")][$ "bionic"];
+                    if (right_left == 1){
+                        draw_sprite(spr_indomitus_right_hand_bionic, 0, offset_x, offset_y);
+                    } else {
+                        draw_sprite(spr_indomitus_left_hand_bionic, 0, offset_x, offset_y);
+                    }
                 }
             }
         }
@@ -1196,7 +1203,34 @@ function scr_draw_unit_image(_background=false){
                     }
                 }
 
-                // Draw arms
+                if (armour_type == ArmourType.Terminator && complex_livery){
+                    var _body_parts = ARR_body_parts;
+                    for (var part = 0; part < array_length(_body_parts); part++) {
+                        if (struct_exists(body[$ _body_parts[part]], "bionic")) {
+
+                            var body_part = _body_parts[part];
+                            var bionic = body[$ body_part][$ "bionic"];
+                            switch (body_part) {
+                                case "left_eye":
+                                    complex_set.add_to_area("left_eye", spr_indomitus_left_eye_bionic);
+                                    break;
+
+                                case "right_eye":
+                                    complex_set.add_to_area("right_eye", spr_indomitus_right_eye_bionic);
+                                    break;
+
+                                case "left_leg":
+                                    complex_set.add_to_area("left_leg", spr_indomitus_left_leg_bionic);
+                                    break;
+
+                                case "right_leg":
+                                    complex_set.add_to_area("right_leg", spr_indomitus_right_leg_bionic);
+                                    break;
+                            }
+
+                        } 
+                    }                   
+                }
                 draw_unit_arms(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set);
 
                 // Draw torso
@@ -1240,7 +1274,15 @@ function scr_draw_unit_image(_background=false){
                             if (struct_exists(complex_set, "head")){
                                 var choice = get_body_data("variation","head")%sprite_get_number(complex_set.head);
                                 draw_sprite(complex_set.head,choice,x_surface_offset,y_surface_offset);
-                            }                            
+                            }
+                            if (struct_exists(complex_set, "left_eye")){
+                                var choice = get_body_data("variant","left_eye")%sprite_get_number(complex_set.left_eye);
+                                draw_sprite(complex_set.left_eye,choice,x_surface_offset,y_surface_offset);
+                            }
+                            if (struct_exists(complex_set, "right_eye")){
+                                var choice = get_body_data("variant","right_eye")%sprite_get_number(complex_set.right_eye);
+                                draw_sprite(complex_set.right_eye,choice,x_surface_offset,y_surface_offset);
+                            }                                                                                        
                             if (struct_exists(complex_set, "right_pauldron")){
                                 draw_sprite(complex_set.right_pauldron,company,x_surface_offset,y_surface_offset);
                             }
@@ -1486,7 +1528,7 @@ function scr_draw_unit_image(_background=false){
             }		
 
 			// Bionics
-            if (!hide_bionics) {
+            if (!hide_bionics || armour_type != ArmourType.Terminator) {
                 var eye_move_x = 0;
                 var eye_move_y = 0;
                 var eye_spacer = 0;

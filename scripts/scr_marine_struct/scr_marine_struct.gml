@@ -715,8 +715,12 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		"right_arm":{
 			trim_variation : irandom(100),
 		}, 
-		"left_eye":{}, 
-		"right_eye":{},
+		"left_eye":{
+			variant : irandom(100),
+		}, 
+		"right_eye":{
+			variant : irandom(100),
+		},
 		"throat":{}, 
 		"jaw":{
 			mouth_variants: irandom(100),
@@ -972,14 +976,14 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 					constitution += 2;
 					strength++;
 					dexterity -= 2;
-					body[$ new_bionic_pos][$"bionic"].variant=irandom(2);
+					body[$ new_bionic_pos][$"bionic"].variant=irandom(100);
 				}else if (array_contains(["left_eye", "right_eye"], new_bionic_pos)){
-					body[$ new_bionic_pos][$"bionic"].variant=irandom(2);
+					body[$ new_bionic_pos][$"bionic"].variant=irandom(100);
 					constitution += 1;
 					wisdom += 1;
 					dexterity++;
 				} else if (array_contains(["left_arm", "right_arm"], new_bionic_pos)){
-					body[$ new_bionic_pos][$"bionic"].variant=irandom(1);
+					body[$ new_bionic_pos][$"bionic"].variant=irandom(100);
 					constitution += 2;
 					strength += 2;
 					weapon_skill--;
