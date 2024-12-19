@@ -74,7 +74,7 @@ function NameGenerator() constructor {
 
     // init
 
-    static SimpleNameGeneration = function(names, used_names, entity_name, reset_on_using_up_all_names = true) {
+    static SimpleNameGeneration = function(names=[];, used_names=[];, entity_name, reset_on_using_up_all_names = true) {
         if (array_length(names) == 0) {
             var used_names_length = array_length(used_names);
             if (reset_on_using_up_all_names) {
