@@ -1776,7 +1776,6 @@ if (welcome_pages>=5){
     }
 }
 remov=string_length(string(temp[65])+string(temp[66])+string(temp[67])+string(temp[68])+string(temp[69]))+1;
-
 action_set_alarm(2, 0);
 
 instance_create(0,0,obj_tooltip );
