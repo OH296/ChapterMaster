@@ -250,11 +250,15 @@ function scr_save(save_part,save_id) {
 	        }
 	    }
 
-		// Save chapter icon
-		ini_write_real("Ini", "global_chapter_icon_sprite", global.chapter_icon_sprite);
-		ini_write_real("Ini", "global_chapter_icon_frame", global.chapter_icon_frame);
-		ini_write_string("Ini", "global_chapter_icon_path", global.chapter_icon_path);
-		ini_write_real("Ini", "global_chapter_icon_filename", global.chapter_icon_filename);
+	    try{
+			// Save chapter icon
+			ini_write_real("Ini", "global_chapter_icon_sprite", global.chapter_icon_sprite);
+			ini_write_real("Ini", "global_chapter_icon_frame", global.chapter_icon_frame);
+			ini_write_string("Ini", "global_chapter_icon_path", global.chapter_icon_path);
+			//ini_write_real("Ini", "global_chapter_icon_filename", global.chapter_icon_filename);
+		} catch(_exception){
+            handle_exception(_exception);
+        }
 
 
 
