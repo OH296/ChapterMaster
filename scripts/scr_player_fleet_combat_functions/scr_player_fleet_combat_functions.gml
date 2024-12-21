@@ -158,7 +158,7 @@ function setup_player_combat_ship(){
 	weapons=obj_ini.ship_weapons[ship_id];
 	turrets=0;
 	ship_colour=obj_controller.body_colour_replace;
-
+	max_speed = obj_ini.ship_speed[ship_id];
     weapon = obj_ini.ship_wep[ship_id];
     
     weapon_facing[1]="";
@@ -276,8 +276,7 @@ function setup_player_combat_ship(){
 		weapons=2;
 		shield_size=1;sprite_index=spr_ship_hunt;
 	    weapon_facing[1]="front";
-	    weapon_dam[1]=8
-	    ;
+	    weapon_dam[1]=8;
 	    weapon_range[1]=450;
 	    weapon_cooldown[1]=60;
 	    weapon_facing[2]="most";
