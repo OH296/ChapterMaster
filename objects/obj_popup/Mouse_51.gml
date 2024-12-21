@@ -90,13 +90,21 @@ if (instance_exists(obj_controller)){
         }
         
         obj_p_fleet.selected=0;
-        obj_p_fleet.alarm[6]=1;
+        with (obj_p_fleet){
+            with(obj_ini){
+                scr_ini_ship_cleanup();
+            }
+
+            if (player_fleet_ship_count() == 0) then instance_destroy();            
+        }
         with(obj_fleet_select){instance_destroy();}
         obj_controller.popup=0;
         if (obj_controller.zoomed=1){with(obj_controller){scr_zoom();}}
         
-        type=98;title="Fleet Retreating";
-        cooldown=15;obj_controller.menu=0;
+        type=98;
+        title="Fleet Retreating";
+        cooldown=15;
+        obj_controller.menu=0;
         
         // 139;
         with(obj_temp_inq){instance_destroy();}
