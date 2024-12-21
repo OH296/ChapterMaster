@@ -5,7 +5,7 @@ function scr_kill_ship(index){
 			var _units_on_ship = [];
 			var _unit;
 			for (var co=0;co<=companies;co++){
-				for (var i=0;i<array_length(obj_ini.name[co]);i++){
+				for (var i=0;i<array_length(name[co]);i++){
 					_unit = fetch_unit([co,i]);
 					if (_unit.ship_location == index){
 						if (!irandom(luck)-3){
@@ -15,29 +15,29 @@ function scr_kill_ship(index){
 						}
 					}
 				}
-				for (var i=0;i<array_length(obj_ini.veh_role);i++){
-					if (obj_ini.veh_lid[co][i]==index){
-		                obj_ini.veh_race[company,i]=0;
-		                obj_ini.veh_loc[company,i]="";
-		                obj_ini.veh_name[company,i]="";
-		                obj_ini.veh_role[company,i]="";
-		                obj_ini.veh_wep1[company,i]="";
-		                obj_ini.veh_wep2[company,i]="";
-		                obj_ini.veh_wep3[company,i]="";
-		                obj_ini.veh_upgrade[company,i]="";
-		                obj_ini.veh_acc[company,i]="";
-		                obj_ini.veh_hp[company,i]=100;
-		                obj_ini.veh_chaos[company,i]=0;
-		                obj_ini.veh_pilots[company,i]=0;
-		                obj_ini.veh_lid[company,i]=-1;
+				for (var i=0;i<array_length(veh_role);i++){
+					if (veh_lid[co][i]==index){
+		                veh_race[company,i]=0;
+		                veh_loc[company,i]="";
+		                veh_name[company,i]="";
+		                veh_role[company,i]="";
+		                veh_wep1[company,i]="";
+		                veh_wep2[company,i]="";
+		                veh_wep3[company,i]="";
+		                veh_upgrade[company,i]="";
+		                veh_acc[company,i]="";
+		                veh_hp[company,i]=100;
+		                veh_chaos[company,i]=0;
+		                veh_pilots[company,i]=0;
+		                veh_lid[company,i]=-1;
 					}
 				}
 			}
-			var in_warp = obj_ini.ship_location[index] == "Warp";
+			var in_warp = ship_location[index] == "Warp";
 			var _available_ships = [];
 			var _ship_fleet = find_ships_fleet(index);
 			if (!in_warp){
-				var _nearest_star = star_by_name(obj_ini.ship_location[index]);
+				var _nearest_star = star_by_name(ship_location[index]);
 			}
 			if (_ship_fleet!="none"){
 				delete_ship_from_fleet(index,_ship_fleet);
@@ -105,11 +105,13 @@ function scr_kill_ship(index){
 
 function scr_ini_ship_cleanup() {
 	// If the ship is dead then make it fucking dead man
-	if (array_length(ship)){
-		for (var i=array_length(ship)-1;i>=0;i--){
-		    if (ship[i]!="") and (ship_hp[i]<=0){
-		        scr_kill_ship(i);
-		    }
+	with(obj_ini){
+		if (array_length(ship)){
+			for (var i=array_length(ship)-1;i>=0;i--){
+			    if (ship[i]!="") and (ship_hp[i]<=0){
+			        scr_kill_ship(i);
+			    }
+			}
 		}
 	}
 

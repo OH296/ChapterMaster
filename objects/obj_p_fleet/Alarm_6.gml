@@ -6,7 +6,7 @@
     scr_dead_marines(2);
 }
 
-with(obj_ini){scr_ini_ship_cleanup();}*/
+scr_ini_ship_cleanup();
 
 
 /* */

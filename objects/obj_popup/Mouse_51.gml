@@ -84,16 +84,12 @@ if (instance_exists(obj_controller)){
                 }
             
             }
-            with (obj_ini){
-                scr_ini_ship_cleanup();
-            }
+            scr_ini_ship_cleanup();
         }
         
         obj_p_fleet.selected=0;
         with (obj_p_fleet){
-            with(obj_ini){
-                scr_ini_ship_cleanup();
-            }
+            scr_ini_ship_cleanup();
 
             if (player_fleet_ship_count() == 0) then instance_destroy();            
         }
