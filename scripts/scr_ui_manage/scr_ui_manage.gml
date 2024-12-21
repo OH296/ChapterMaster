@@ -1240,7 +1240,7 @@ function scr_ui_manage() {
                                 if (is_struct(display_unit[q])) {
                                     unit = display_unit[q];
                                     unit.load_marine(sh_ide[sel], load_from_star);
-                                    ma_loc[q] = sh_name[sel];
+                                    ma_loc[q] = sh_loc[sel];
                                     ma_lid[q] = sh_ide[sel];
                                     ma_wid[q] = 0;
                                 }
@@ -1251,7 +1251,7 @@ function scr_ui_manage() {
                                     if ((sh_cargo[sel] + vehic_size) <= sh_cargo_max[sel] && man_sel[q] != 0) {
                                         var start_ship = obj_ini.veh_lid[vehicle[0]][vehicle[1]];
                                         var start_planet = obj_ini.veh_wid[vehicle[0]][vehicle[1]];
-                                        ma_loc[q] = sh_name[sel];
+                                        ma_loc[q] = sh_loc[sel];
                                         ma_lid[q] = sh_ide[sel];
                                         ma_wid[q] = 0;
                                         obj_ini.veh_loc[vehicle[0]][vehicle[1]] = sh_name[sel];
@@ -1268,10 +1268,12 @@ function scr_ui_manage() {
                                 }
                             }
                         }
+                        selecting_location = "";
                         man_size = 0;
                         man_current = 0;
                         menu = 1;
                         cooldown = 8;
+                        selecting_ship = -1;
                         for (var k = 0; k < array_length(display_unit); k++) {
                             man_sel[k] = 0;
                         }
