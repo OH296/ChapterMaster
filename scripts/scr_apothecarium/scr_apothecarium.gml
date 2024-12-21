@@ -1,6 +1,33 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
+#macro ARR_gene_Seed_mutations ["preomnor", "lyman", "omophagea", "ossmodula", "zygote", "betchers", "catalepsean", "occulobe","mucranoid", "membrane", "voice"];
+
+
+function create_gene_seed = function(){
+   gene_seed_mutations = {
+            "preomnor":obj_ini.preomnor,
+            "lyman":obj_ini.lyman,
+            "omophagea":obj_ini.omophagea,
+            "ossmodula":obj_ini.ossmodula,
+            "zygote":obj_ini.zygote,
+            "betchers":obj_ini.betchers,
+            "catalepsean":obj_ini.catalepsean,
+            "occulobe":obj_ini.occulobe,
+            "mucranoid":obj_ini.mucranoid,
+            "membrane":obj_ini.membrane,
+            "voice":obj_ini.voice,
+    };                                                      
+    var mutation_names = ARR_gene_Seed_mutations;
+    for (var mute = 0; mute <array_length(mutation_names); mute++){
+        if (gene_seed_mutations[$ mutation_names[mute]] == 0){
+            if(irandom(999)-10<obj_ini.stability){
+                gene_seed_mutations[$ mutation_names[mute]] = 1;
+            }
+        }
+    }
+    return gene_seed_mutations;
+}
 function scr_destroy_gene_slave_batch(batch_id, recover_gene=true){
     var _cur_slave = obj_ini.gene_slaves[batch_id];
     if (revover_gene){
@@ -21,6 +48,18 @@ function destroy_all_gene_slaves(recover_gene=true){
         }   
 }
 
+function GeneStock() constructor(chapter_mutations){
+    self.chapter_mutations = chapter_mutations;
+    gene_seed = [];
+    static new_gene_seed(data = "none"){
+        var _seed_data = data
+        if (_seed_data == "none"){
+            _seed_data = create_gene_seed();
+        }
+        array_push(gene_seed, seed_data);
+    }
+}
+
 function add_new_gene_slave(){
     if (gene_seed>0) and (obj_ini.zygote==0) {
         var _added = false;
@@ -34,7 +73,7 @@ function add_new_gene_slave(){
         }
         if (!_added){
             array_push(obj_ini.gene_slaves, {
-                num : 1,
+                num : [],
                 eta : 120,
                 harvested_once : false,
                 turn : obj_controller.turn,

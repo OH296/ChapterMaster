@@ -795,6 +795,7 @@
     {"id":{"name":"spr_explosion2","path":"sprites/spr_explosion2/spr_explosion2.yy",},},
     {"id":{"name":"spr_explosion3","path":"sprites/spr_explosion3/spr_explosion3.yy",},},
     {"id":{"name":"spr_battle_block","path":"sprites/spr_battle_block/spr_battle_block.yy",},},
+    {"id":{"name":"scr_gene_obj_creation","path":"scripts/scr_gene_obj_creation/scr_gene_obj_creation.yy",},},
     {"id":{"name":"spr_battle_block2","path":"sprites/spr_battle_block2/spr_battle_block2.yy",},},
     {"id":{"name":"spr_weapon_storm2","path":"sprites/spr_weapon_storm2/spr_weapon_storm2.yy",},},
     {"id":{"name":"spr_rg_mk7_helm","path":"sprites/spr_rg_mk7_helm/spr_rg_mk7_helm.yy",},},

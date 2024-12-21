@@ -1434,6 +1434,7 @@ if (global.custom=1){
 loyalty=100;
 loyalty_hidden=100;// Updated when inquisitors do an inspection
 // ** Sets up gene seed **
+gene_stock = new GeneStock();
 gene_seed=20;
 if (scr_has_disadv("Sieged")) then gene_seed = floor(random_range(250, 400));
 if scr_has_disadv("Obliterated") then gene_seed=floor(random_range(50,200));
