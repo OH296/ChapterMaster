@@ -331,48 +331,48 @@ function scr_draw_unit_image(_background=false){
                     } else {
                         draw_sprite(spr_bionics_hand, bionic_spr_index, offset_x, offset_y);
                     }
-                } else if (armour_type == ArmourType.Terminator && struct_exists(body[$ (right_left == 1 ? "right_arm" : "left_arm")], "bionic")){
-                    var bionic_hand = body[$ (right_left == 1 ? "right_arm" : "left_arm")][$ "bionic"];
-                    if (right_left == 1){
-                        draw_sprite(spr_indomitus_right_hand_bionic, 0, offset_x, offset_y);
-                    } else {
-                        draw_sprite(spr_indomitus_left_hand_bionic, 0, offset_x, offset_y);
-                    }
                 }
             }
         }
     }
-    
-    var draw_unit_arms = function(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics,complex_set){
+
+    var draw_unit_arms = function(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set){
         if (array_contains([ArmourType.Normal,ArmourType.Terminator, ArmourType.Scout], armour_type)){
             var offset_x = x_surface_offset;
             var offset_y = y_surface_offset;
+            var _bionic_spr;
+            var _arm_spr
             switch(armour_type){
                 case ArmourType.Terminator:
-                    var _arm_spr = spr_terminator_arms;
+                    _arm_spr = spr_terminator_arms;
+                    _bionic_spr = spr_indomitus_right_arm_bionic;
                     break;
                 case ArmourType.Scout:
-                    var _arm_spr = spr_scout_arms;
+                    _arm_spr = spr_scout_arms;
                     break;
                 case ArmourType.Normal:
                 default:
-                    var _arm_spr = spr_pa_arms;
+                    _bionic_spr = spr_bionics_arm;
+                    if (armour() == "Artificer Armour"){ //todo: refactor this
+                        _arm_spr = spr_pa_arms_ornate;
+                    } else {
+                        _arm_spr = spr_pa_arms;
+                    }
                     break;
-            }
-            if (armour() == "Artificer Armour"){ //todo: refactor this
-                _arm_spr = spr_pa_arms_ornate;
             }
             for (var right_left = 1; right_left <= 2; right_left++) {
                 // Draw bionic arms
-                var bionic_on_body = get_body_data("bionic",right_left == 1 ? "right_arm" : "left_arm");
-                if (arm_variant[right_left] == 1 && armour_type == ArmourType.Normal && !hide_bionics && bionic_on_body){
-                    var bionic_arm = bionic_on_body;
-                    var bionic_spr_index = bionic_arm.variant * 2;
+                var _bionic_arm = get_body_data("bionic", right_left == 1 ? "right_arm" : "left_arm");
+                if (arm_variant[right_left] == 1 && _bionic_spr != undefined && !hide_bionics && _bionic_arm){
+                    var _bionic_variant = _bionic_arm.variant * 2;
+                    var bionic_spr_index = 0;
                     if (right_left == 2) {
-                        bionic_spr_index += (specialist_colours >= 2) ? 1 : 0;
-                        draw_sprite_flipped(spr_bionics_arm, bionic_spr_index, offset_x, offset_y);
+                        _bionic_variant += (specialist_colours >= 2) ? 1 : 0;
+                        bionic_spr_index = _bionic_variant mod sprite_get_number(_bionic_spr) - 1;
+                        draw_sprite_flipped(_bionic_spr, bionic_spr_index, offset_x, offset_y);
                     } else {
-                        draw_sprite(spr_bionics_arm, bionic_spr_index, offset_x, offset_y);
+                        bionic_spr_index = _bionic_variant mod sprite_get_number(_bionic_spr) - 1;
+                        draw_sprite(_bionic_spr, bionic_spr_index, offset_x, offset_y);
                     }
                 } else if (arm_variant[right_left] > 0) {
                     if (right_left==1) && (struct_exists(complex_set, "right_arm")) && (arm_variant[right_left] == 1){
