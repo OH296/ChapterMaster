@@ -336,23 +336,21 @@ function scr_draw_unit_image(_background=false){
         }
     };
 
-    var draw_unit_arms = function(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set) {
-        if (array_contains([ArmourType.Normal, ArmourType.Terminator, ArmourType.Scout], armour_type)) {
-            var offset_x = x_surface_offset;
-            var offset_y = y_surface_offset;
-            var _bionic_spr;
+    var draw_unit_arms = function(_x_surface_offset, _y_surface_offset, _armour_type, _specialist_colours, _hide_bionics, _complex_set) {
+        if (array_contains([ArmourType.Normal, ArmourType.Terminator, ArmourType.Scout], _armour_type)) {
+            var _bionic_options;
             var _arm_spr;
-            switch (armour_type) {
+            switch (_armour_type) {
                 case ArmourType.Terminator:
                     _arm_spr = spr_terminator_arms;
-                    _bionic_spr = spr_indomitus_right_arm_bionic;
+                    _bionic_options = [spr_indomitus_right_arm_bionic];
                     break;
                 case ArmourType.Scout:
                     _arm_spr = spr_scout_arms;
                     break;
                 case ArmourType.Normal:
                 default:
-                    _bionic_spr = spr_bionics_arm;
+                    _bionic_options = [spr_bionics_arm, spr_bionics_arm_2];
                     if (armour() == "Artificer Armour") {
                         //todo: refactor this
                         _arm_spr = spr_pa_arms_ornate;
@@ -361,36 +359,37 @@ function scr_draw_unit_image(_background=false){
                     }
                     break;
             }
-            for (var right_left = 1; right_left <= 2; right_left++) {
+            for (var _right_left = 1; _right_left <= 2; _right_left++) {
                 // Draw bionic arms
-                var _bionic_arm = get_body_data("bionic", right_left == 1 ? "right_arm" : "left_arm");
-                if (arm_variant[right_left] == 1 && _bionic_spr != undefined && !hide_bionics && _bionic_arm) {
-                    var _bionic_variant = _bionic_arm.variant * 2;
-                    var bionic_spr_index = 0;
-                    if (right_left == 2) {
-                        _bionic_variant += (specialist_colours >= 2) ? 1 : 0;
-                        bionic_spr_index = _bionic_variant % sprite_get_number(_bionic_spr) - 1;
-                        draw_sprite_flipped(_bionic_spr, bionic_spr_index, offset_x, offset_y);
+                var _bionic_arm = get_body_data("bionic", _right_left == 1 ? "right_arm" : "left_arm");
+                if (arm_variant[_right_left] == 1 && _bionic_options != undefined && !_hide_bionics && _bionic_arm) {
+                    var _bionic_variant = _bionic_arm.variant % array_length(_bionic_options);
+                    var _bionic_spr_index = 0;
+                    var _bionic_spr = _bionic_options[_bionic_variant];
+                    if (_right_left == 2) {
+                        if (_specialist_colours >= 2) {
+                            _bionic_spr_index = sprite_get_number(_bionic_spr) - 1;
+                        }
+                        draw_sprite_flipped(_bionic_spr, _bionic_spr_index, _x_surface_offset, _y_surface_offset);
                     } else {
-                        bionic_spr_index = _bionic_variant % sprite_get_number(_bionic_spr) - 1;
-                        draw_sprite(_bionic_spr, bionic_spr_index, offset_x, offset_y);
+                        draw_sprite(_bionic_spr, _bionic_spr_index, _x_surface_offset, _y_surface_offset);
                     }
-                } else if (arm_variant[right_left] > 0) {
-                    if ((right_left == 1) && struct_exists(complex_set, "right_arm") && (arm_variant[right_left] == 1)) {
+                } else if (arm_variant[_right_left] > 0) {
+                    if ((_right_left == 1) && struct_exists(_complex_set, "right_arm") && (arm_variant[_right_left] == 1)) {
                         setup_complex_livery_shader(role());
-                        draw_sprite(complex_set.right_arm, 0, x_surface_offset, y_surface_offset);
+                        draw_sprite(_complex_set.right_arm, 0, _x_surface_offset, _y_surface_offset);
                         shader_set(sReplaceColor);
-                    } else if ((right_left == 2) && struct_exists(complex_set, "left_arm") && (arm_variant[right_left] == 1)) {
+                    } else if ((_right_left == 2) && struct_exists(_complex_set, "left_arm") && (arm_variant[_right_left] == 1)) {
                         setup_complex_livery_shader(role());
-                        draw_sprite(complex_set.left_arm, 0, x_surface_offset, y_surface_offset);
+                        draw_sprite(_complex_set.left_arm, 0, _x_surface_offset, _y_surface_offset);
                         shader_set(sReplaceColor);
                     } else {
-                        var _spr_index = (arm_variant[right_left] - 1) * 2;
-                        if (right_left == 2) {
-                            _spr_index += (specialist_colours >= 2) ? 1 : 0;
-                            draw_sprite_flipped(_arm_spr, _spr_index, offset_x, offset_y);
+                        var _spr_index = (arm_variant[_right_left] - 1) * 2;
+                        if (_right_left == 2) {
+                            _spr_index += (_specialist_colours >= 2) ? 1 : 0;
+                            draw_sprite_flipped(_arm_spr, _spr_index, _x_surface_offset, _y_surface_offset);
                         } else {
-                            draw_sprite(_arm_spr, _spr_index, offset_x, offset_y);
+                            draw_sprite(_arm_spr, _spr_index, _x_surface_offset, _y_surface_offset);
                         }
                     }
                 }
