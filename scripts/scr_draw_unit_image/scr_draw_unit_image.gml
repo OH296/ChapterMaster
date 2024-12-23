@@ -338,7 +338,7 @@ function scr_draw_unit_image(_background=false){
 
     var draw_unit_arms = function(_x_surface_offset, _y_surface_offset, _armour_type, _specialist_colours, _hide_bionics, _complex_set) {
         if (array_contains([ArmourType.Normal, ArmourType.Terminator, ArmourType.Scout], _armour_type)) {
-            var _bionic_options;
+            var _bionic_options = [];
             var _arm_spr;
             switch (_armour_type) {
                 case ArmourType.Terminator:
@@ -362,7 +362,7 @@ function scr_draw_unit_image(_background=false){
             for (var _right_left = 1; _right_left <= 2; _right_left++) {
                 // Draw bionic arms
                 var _bionic_arm = get_body_data("bionic", _right_left == 1 ? "right_arm" : "left_arm");
-                if (arm_variant[_right_left] == 1 && _bionic_options != undefined && !_hide_bionics && _bionic_arm) {
+                if (arm_variant[_right_left] == 1 && _bionic_options != [] && !_hide_bionics && _bionic_arm) {
                     var _bionic_variant = _bionic_arm.variant % array_length(_bionic_options);
                     var _bionic_spr_index = 0;
                     var _bionic_spr = _bionic_options[_bionic_variant];
