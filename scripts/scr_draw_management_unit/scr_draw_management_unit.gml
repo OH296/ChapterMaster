@@ -179,7 +179,7 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
 	    	draw_set_color(squad_colours[_squad_modulo])
 	    }
 	
-	    if (selected>0 && selected<array_length(display_unit)-1 && array_length(squad)-1<selected){
+	    if (selected>0 && selected<array_length(display_unit)-1 && array_length(squad)-1>selected){
 	    	var _cur_squad = squad[selected];
 	    	var _next_squad = squad[selected+1];
 	    	var _prev_squad = squad[selected-1];
