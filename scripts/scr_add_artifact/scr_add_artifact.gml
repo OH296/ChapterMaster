@@ -233,6 +233,10 @@ function ArtifactStruct(Index) constructor{
 	static ship_id =  function (){
 		return obj_ini.artifact_sid[index]-500;
 	}
+
+	static set_ship_id = function(ship_id){
+		obj_ini.artifact_sid[index] = ship_id+500;
+	}
 	static location_string = function(){
 		if (sid()>=500){
 			return obj_ini.ship[ship_id()];
