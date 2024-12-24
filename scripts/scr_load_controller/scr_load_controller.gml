@@ -230,7 +230,7 @@ function scr_load_controller(save_id){
 	    if (Production_research!=0){
 	    	obj_controller.production_research = json_parse(base64_decode(Production_research));
 	    }
-	    var forge_queue=ini_read_string("Controller","specialist_point_handler.forge_queue",0);
+	    var forge_queue=ini_read_string("Controller","forge_queue",0);
 	    if (forge_queue!=0){
 	    	obj_controller.specialist_point_handler.forge_queue = json_parse(base64_decode(forge_queue));
 	    }
