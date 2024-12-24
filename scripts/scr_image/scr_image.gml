@@ -582,7 +582,7 @@ function scr_image_cache(path, image_id){
 			if (image_id<array_length(obj_img.image_cache[$path])){
 				array_set(obj_img.image_cache[$path], image_id, drawing_sprite);
 			} else {
-				while (image_id<array_length(obj_img.image_cache[$path])){
+				while (image_id>=array_length(obj_img.image_cache[$path])){
 					array_push(obj_img.image_cache[$path], drawing_sprite);
 				}
 			}
