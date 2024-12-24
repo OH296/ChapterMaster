@@ -8,7 +8,7 @@ function distribute_strength_to_fleet(strength, fleet){
 			fleet.escort_number++;
 		} else if (ship_type==2){
 			fleet.frigate_number++;
-		}else if (ship_type==2){
+		}else if (ship_type==3){
 			fleet.capital_number++;
 		}
 	}
