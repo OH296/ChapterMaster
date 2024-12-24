@@ -9,7 +9,7 @@ function scr_kill_ship(index){
 					_unit = fetch_unit([co,i]);
 					if (_unit.ship_location == index){
 						if (!irandom(luck)-3){
-							scr_kill_unit(unit.company, unit.marine_number);
+							scr_kill_unit(_unit.company, _unit.marine_number);
 						} else {
 							array_push(_units_on_ship, _unit);
 						}
@@ -17,19 +17,7 @@ function scr_kill_ship(index){
 				}
 				for (var i=0;i<array_length(veh_role);i++){
 					if (veh_lid[co][i]==index){
-		                veh_race[company,i]=0;
-		                veh_loc[company,i]="";
-		                veh_name[company,i]="";
-		                veh_role[company,i]="";
-		                veh_wep1[company,i]="";
-		                veh_wep2[company,i]="";
-		                veh_wep3[company,i]="";
-		                veh_upgrade[company,i]="";
-		                veh_acc[company,i]="";
-		                veh_hp[company,i]=100;
-		                veh_chaos[company,i]=0;
-		                veh_pilots[company,i]=0;
-		                veh_lid[company,i]=-1;
+						reset_vehicle_variable_arrays(co, i);
 					}
 				}
 			}
