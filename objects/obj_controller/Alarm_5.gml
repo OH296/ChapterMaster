@@ -718,9 +718,12 @@ for(var c=0; c<11; c++){
 }
 // STC Bonuses
 if (obj_controller.stc_ships>=6){
-    for(var v=1; v<=40; v++){
-        if (obj_ini.ship_hp[v]<obj_ini.ship_maxhp[v]) then obj_ini.ship_hp[v]+=round(obj_ini.ship_maxhp[v]*0.06);
-        if (obj_ini.ship_hp[v]>obj_ini.ship_maxhp[v]) then obj_ini.ship_hp[v]=obj_ini.ship_maxhp[v];
+    //self healing ships logic
+    for(var v=0; v<array_length(obj_ini.ship_hp); v++){
+        if (obj_ini.ship_hp[v]<obj_ini.ship_maxhp[v]){
+            var _max = obj_ini.ship_maxhp[v];
+            obj_ini.ship_hp[v] = min(_max,obj_ini.ship_hp[v]+round(_max*0.06));
+        }
     }
 }
 
