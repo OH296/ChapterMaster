@@ -1,5 +1,19 @@
 
 
+function distribute_strength_to_fleet(strength, fleet){
+	while(strength>0){
+		var ship_type = choose(1,1,1,1,2,2,3);
+		strength-=ship_type;
+		if (ship_type==1){
+			fleet.escort_number++;
+		} else if (ship_type==2){
+			fleet.frigate_number++;
+		}else if (ship_type==3){
+			fleet.capital_number++;
+		}
+	}
+}
+
 //to be run within with scope
 function set_fleet_target(targ_x, targ_y, final_target){
 	action_x = targ_x;

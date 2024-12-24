@@ -574,12 +574,16 @@ function scr_image_cache(path, image_id){
 	
 	if(sprite_exists(existing_sprite)){
 		drawing_sprite = existing_sprite;
-	} else {
+	} else if (image_id>-1){
 		var folders = string_replace_all(path, "/", "\\");
 		var dir = $"{working_directory}\\images\\{folders}\\{string(image_id)}.png";
 		if(file_exists(dir)){
 			drawing_sprite = sprite_add(dir,1, false,false,0,0);
+			if (image_id >= array_length(obj_img.image_cache[$path])) {
+				array_resize(obj_img.image_cache[$path], image_id + 1);
+			}
 			array_set(obj_img.image_cache[$path], image_id, drawing_sprite);
+			
 		} else {
 			drawing_sprite = -1;
 			// debugl($"No directory/file found matching {dir}"); // too much noise

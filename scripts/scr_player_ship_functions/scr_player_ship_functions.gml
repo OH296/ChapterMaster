@@ -9,7 +9,7 @@ function return_lost_ships_chance(){
 function return_lost_ship(){
 	var _return_id = get_valid_player_ship("Lost");
 	if (_return_id!=-1){
-		_lost_fleet = "none";
+		var _lost_fleet = "none";
 		with (obj_p_fleet){
 			if (action == "Lost"){
 				_lost_fleet = id;
@@ -21,20 +21,25 @@ function return_lost_ship(){
 		_new_fleet.owner  = eFACTION.Player;
 		if (_lost_fleet!="none"){
 			find_and_move_ship_between_fleets(_lost_fleet, _new_fleet,_return_id);
+			if (player_fleet_ship_count(_lost_fleet)==0){
+				with (_lost_fleet){
+					instance_destroy();
+				}
+			}
 		} else {
 			add_ship_to_fleet(_return_id, _new_fleet);
 		}
 
 		var _return_defect = d100_roll();
-		var _text = "The ship {obj_ini.ship[_return_id]} has returned to real space and is now orbiting the {_star.name} system\n";
+		var _text = $"The ship {obj_ini.ship[_return_id]} has returned to real space and is now orbiting the {_star.name} system\n";
 		if (_return_defect<90){
 			if (_return_defect>80){
 				obj_ini.ship_hp[_return_id] *= random_range(0.2,0.8);
-				_text += "Reports indicate it has suffered damage as a result of it's time in the warp";
+				_text += $"Reports indicate it has suffered damage as a result of it's time in the warp";
 			} else if (_return_defect>70){
 				var techs = collect_role_group("forge", [_star.name, 0, _return_id]);
 				if (array_length(techs)){
-					_text += "One of the ships main reactors sufered a malfunction and the ships tech staff died to a man attempting to contain the damage";
+					_text += $"One of the ships main reactors sufered a malfunction and the ships tech staff died to a man attempting to contain the damage";
 					for (var i=0; i<array_length(techs);i++){
 						var _tech = techs[i];
 						kill_and_recover(_tech.company, _tech.marine_number);
@@ -43,7 +48,7 @@ function return_lost_ship(){
 			} else if (_return_defect>60){
 				var _units = collect_role_group("all", [_star.name, 0, _return_id]);
 				if (array_length(_units)){
-					_text += "While in the warp the geller fields temporarily went down leaving the ships crew to face the horror of the warp";
+					_text += $"While in the warp the geller fields temporarily went down leaving the ships crew to face the horror of the warp";
 					for (var i=0;i<array_length(_units);i++){
 						_units.edit_corruption(max(0,irandom_range(20, 120)-_unit.piety));
 					}
@@ -51,21 +56,47 @@ function return_lost_ship(){
 			} else if (_return_defect>50){
 				var _units = collect_role_group("all", [_star.name, 0, _return_id]);
 				if (array_length(_units)>1){
-					_text += "The ship was stuck in the warp for many years so many that even the resolve of the marines began to breakdown, there was a mutiney as many marines thought they would be best to try their luck as renegades in the warp the geneseed. Those who remained loyal to you prevailed but their geneseed was burnt for fear of corruption";
+					_text += $"The ship was stuck in the warp for many years so many that even the resolve of the marines began to breakdown, there was a mutiney as many marines thought they would be best to try their luck as renegades in the warp. Those who remained loyal to you prevailed but their geneseed was burnt for fear of corruption";
 					_units = array_shuffle(_units);
 					for (var i=0;i<floor(array_length(_units)/2);i++){
 						var _unit=_units[i];
 						kill_and_recover(_unit.company, _unit.marine_number, true, false);
 					}
 				}
-			} else if (_return_defect>50){
+			} else if (_return_defect>40){
 				var _units = collect_role_group("all", [_star.name, 0, _return_id]);
 				if (array_length(_units)>0){
-					_text += "The ship is empty, what happened to the origional crew is a mystery";
+					_text += $"The ship is empty, what happened to the origional crew is a mystery";
 					for (var i=0;i<array_length(_units);i++){
 						var _unit=_units[i];
 						kill_and_recover(_unit.company, _unit.marine_number, false, false);
 					}					
+				}
+			}else if (_return_defect>20){
+				//This would be an awsome oppertunity and ideal kick off place to allow a redemtion arc either liberating the ship or some of your captured marines  gene seed other bits
+				_text += $"The fate of your ship {obj_ini.ship[_return_id]} has now become clear\n A Chaos fleet has warped into the {_star.name} system with your once prized ship now a part of it";
+				var _units = collect_role_group("all", [_star.name, 0, _return_id]);
+				if (array_length(_units)>0){
+					_text += $"You must assume the worst for your crew";
+					for (var i=0;i<array_length(_units);i++){
+						var _unit=_units[i];
+						kill_and_recover(_unit.company, _unit.marine_number, false, false);
+					}				
+				}
+				scr_kill_ship(_return_id);
+				var _chaos_fleet = spawn_chaos_fleet_at_system(_star);
+				var fleet_strength = ((100 - d100_roll())/10)+3;
+				distribute_strength_to_fleet(fleet_strength, _chaos_fleet);
+				with (_new_fleet){
+					instance_destroy();
+				}
+
+			} else{
+				var _units = collect_role_group("all", [_star.name, 0, _return_id]);
+				_text += $"The fate of your ship {obj_ini.ship[_return_id]} has now become clear. While it did not survive it's travels through the warp and tore itself apart somewhere in the  {_star.name} system. ";
+				scr_kill_ship(_return_id);
+				if (array_length(_units)>0){
+					_text += "Some of your astartes may have been able to jetison and survive the ships destruction";
 				}
 			}
 			//More scenarios needed but this is a good start

@@ -173,14 +173,26 @@ function scr_draw_management_unit(selected, yy=0, xx=0, draw=true){
 	    // Squads
 	    var sqi="";
 	    draw_set_color(c_black);
-	    var squad_colours=[c_teal,c_red,c_green,c_orange,c_aqua,c_fuchsia,c_green,c_blue,c_fuchsia,c_maroon]
-	    var squad_modulo = squad[selected]%10;
-	    draw_set_color(squad_colours[squad_modulo])
+	    var squad_colours=[c_teal,c_red,c_green,c_orange,c_aqua,c_fuchsia,c_green,c_blue,c_fuchsia,c_maroon];
+	    if (squad[selected]!=-1){
+	    	var _squad_modulo = squad[selected]%10;
+	    	draw_set_color(squad_colours[_squad_modulo])
+	    }
 	
-	    if (selected>0 && selected<array_length(display_unit)-1){
-	        if (squad[selected]==squad[selected+1]) and (squad[selected]!=squad[selected-1]){sqi="top"}
-	        else if (squad[selected]==squad[selected+1]) and (squad[selected]==squad[selected-1]){sqi="mid"}
-	        else if (squad[selected]!=squad[selected+1]) and (squad[selected]==squad[selected-1]) then sqi="bot";
+	    if (selected>0 && selected<array_length(display_unit)-1 && array_length(squad)-1>selected){
+	    	var _cur_squad = squad[selected];
+	    	var _next_squad = squad[selected+1];
+	    	var _prev_squad = squad[selected-1];
+	        if (_cur_squad==_next_squad){
+	        	if (squad[selected]!=_prev_squad){
+	        		sqi="top";
+	        	} else {
+	        		sqi="mid"
+	        	}
+	        }
+	        else if (squad[selected]==_prev_squad){
+	        	sqi="bot";
+	        }
 	    }
 	    //TODO handle recursively with an array
 	      draw_rectangle(xx+25,yy+64,xx+25+8,yy+85,0);

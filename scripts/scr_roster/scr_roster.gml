@@ -460,7 +460,6 @@ function add_unit_to_battle(unit,meeting, is_local){
     }
     var _armour_data = unit.get_armour_data();
     var _wearing_armour = is_struct(_armour_data);
-    obj_drop_select.fighting[company][v] = true;
 
     var col = 0,targ = 0,moov = 0;
     _unit_role = unit.role();
