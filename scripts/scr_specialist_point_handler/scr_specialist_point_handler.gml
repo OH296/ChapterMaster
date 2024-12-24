@@ -106,7 +106,7 @@ function SpecialistPointHandler() constructor{
 
         }
         forge_points = floor(forge_points);
-        //in this instance tech heretics are techmarines with the "tech_heretic" trait
+        //in this instance tech  are techmarines with the "tech_heretic" trait
         if (turn_end){
             if (array_length(techs)==0) then scr_loyalty("Upset Machine Spirits","+");
 
@@ -144,7 +144,7 @@ function SpecialistPointHandler() constructor{
         var _tester = global.character_tester;
         var _possibility_of_heresy = 8;
         if (array_contains(obj_ini.dis,"Tech-Heresy")) then _possibility_of_heresy = 6;
-        if (irandom(power(_possibility_of_heresy,(array_length(heretics)+2.2))) == 0 && array_length(techs)>0){
+        if (irandom(power(_possibility_of_heresy,(array_length()+2.2))) == 0 && array_length(techs)>0){
             var _current_tech = array_random_element(techs);
            if  (!_tester.standard_test(_current_tech, "piety")[0]){
                _current_tech.add_trait("tech_heretic");
@@ -168,7 +168,7 @@ function SpecialistPointHandler() constructor{
                 master_craft_chance += (unit.experience/50);
             }
             forge_points += _forge_point_gen[0];
-            var _tech_array_id = array_push(heretics, array_length(techs)-1);
+            var _tech_array_id = array_push(, array_length(techs)-1);
             if (unit.has_trait("tech_heretic")){
                 array_push(heretics, _tech_array_id);
             }
@@ -192,7 +192,7 @@ function SpecialistPointHandler() constructor{
     //handles tech heretic idealology rot
     static tech_ideology_spread = function(){
         try{
-        var tech_test, charisma_test, piety_test, _met_non_heretic, heretics_pursuade_chances;
+        var tech_test, charisma_test, piety_test, _met_non_heretic, heretics_persuade_chances;
         var _tester = global.character_tester;
         if (array_length(heretics)>0 && obj_controller.turn>75){
             var _heretic_location, _same_location, _current_heretic, _current_tech;
@@ -201,18 +201,18 @@ function SpecialistPointHandler() constructor{
                 _heretic_location = tech_locations[heretics[heretic]];
                 _current_heretic = techs[heretics[heretic]];
                 if (_current_heretic.in_jail()) then continue;
-                heretics_pursuade_chances = (floor(_current_heretic.charisma/5) - 3)
+                heretics_persuade_chances = (floor(_current_heretic.charisma/5) - 3)
                 //iterate through rest of techs
                 var _pursuasions =[];
                 _met_non_heretic = false;
                 var _new_pursuasion;
-                for (var i=0; i<array_length(techs) && heretics_pursuade_chances>0; i++){
+                for (var i=0; i<array_length(techs) && heretics_persuade_chances>0; i++){
                     _same_location=false;
                     var _new_pursuasion = array_random_index(techs);
                     //if tech is also heretic skip
                     if (array_contains(heretics,_new_pursuasion)) then continue;
                     if (array_contains(_pursuasions,_new_pursuasion)) then continue;
-                    heretics_pursuade_chances--;
+                    heretics_persuade_chances--;
                     _current_tech = techs[_new_pursuasion];
 
                     // find out if heretic is in same location as techmarine
