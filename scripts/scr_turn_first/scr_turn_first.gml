@@ -35,7 +35,6 @@ function scr_turn_first() {
 	    }
 	    _identifiable=false;
 	}
-	identifiable=0;
 	unload=0;
 
 
