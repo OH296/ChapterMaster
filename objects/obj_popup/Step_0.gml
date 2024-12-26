@@ -23,12 +23,17 @@ if (type=9.1) and (obj_controller.stc_wargear_un+obj_controller.stc_vehicles_un+
 }
 
 if (image="fuklaw") and (save>0){
-    if (press=1){
-        var del;del=obj_saveload.save[self.save];
-        if (file_exists("save"+string(del)+".ini")){
-            file_delete("save"+string(del)+".ini");
-            if (file_exists("save"+string(del)+"log.ini")){file_delete("save"+string(del)+"log.ini");}
-            if (file_exists("screen"+string(del)+".png")){file_delete("screen"+string(del)+".png");}
+    if (press==1){
+        var del=obj_saveload.save[save];
+        var _save_file = $"save{del}.ini";
+        if (file_exists(_save_file)){
+            file_delete(_save_file);
+            if (file_exists($"save{del}log.ini")){
+                file_delete($"save{del}log.ini");
+            }
+            if (file_exists($"screen{del}.png")){
+                file_delete($"screen{del}.png");
+            }
             with(obj_saveload){instance_destroy();}
             var news=instance_create(0,0,obj_saveload);
             news.menu=woopwoopwoop;
