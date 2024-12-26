@@ -380,18 +380,21 @@ function SpecialistPointHandler() constructor{
         var _stack_lost_incubators = [];
         for (var i=0; i<_slave_length; i++){
             _cur_slave = _slaves[i];
-            if (_cur_slave.num>0){
+            var _slave_num = array_length(_cur_slave.num);
+            if (_slave_num>0){
                 _cur_slave.eta--;
-                if (irandom(100000)<obj_ini.stability*_cur_slave.num){
-                    _cur_slave.num--;
+                if (irandom(100000)<obj_ini.stability*_slave_num){
+                    array_delete(_cur_slave.num, array_random_index(_cur_slave.num) , 1);
                     _lost_gene_slaves++;
                     scr_add_item("Gene Pod Incubator");
                 }
                 if (_cur_slave.eta==0 && _cur_slave.num>0){
                     _cur_slave.eta=60;
-                    gene_seed_count()+=_cur_slave.num;
+                    for (var i=0;i<_slave_num;i++){
+                        obj_controller.gene_stock.new_gene_seed(_cur_slave.num[i]);
+                    }
                     // color / type / text /x/y
-                    scr_alert("green","test-slaves",$"Test-Slave Incubators Batch {i} harvested for {_cur_slave.num} Gene-Seed.",0,0);
+                    scr_alert("green","test-slaves",$"Test-Slave Incubators Batch {i} harvested for {_slave_num} Gene-Seed.",0,0);
                 } else if (_cur_slave.num==0){
                     array_push(_stack_lost_incubators, i);
                 }

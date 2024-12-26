@@ -98,7 +98,7 @@ function planet_training_sequence(local_apothecary_points){
 	        if (struct_exists(recruit_type, "seed_waste")){
 	            if (obj_controller.recruiting > 0) {
 	                if (random(1)<recruit_type.seed_waste){
-	                    gene_seed_count()--;
+	                    obj_controller.gene_stock.remove_gene_seed(1);
 	                    //TODO make more informative
 	                    scr_alert("red", "owner", "Blood Duels are efficient in time, but costly in risk with gene material. Gene-seed has been lost.", 0, 0);
 	                }
@@ -163,7 +163,7 @@ function planet_training_sequence(local_apothecary_points){
 	                    array_insert(obj_controller.recruit_data, i, {"recruit_data":{
 	                        recruit_world :planet_type ,
 	                        aspirant_trial :obj_controller.recruit_trial ,
-	                        gene_seed : obj_controller.gene_stock.remove_gene_seed();
+	                        gene_seed : obj_controller.gene_stock.remove_gene_seed(1)[0];
 	                    }});                                                                                                   
 	                    break;
 	                }

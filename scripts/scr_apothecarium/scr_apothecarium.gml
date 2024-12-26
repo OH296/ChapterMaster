@@ -58,11 +58,15 @@ function GeneStock() constructor(chapter_mutations){
         }
         array_push(gene_seed, seed_data);
     }
-    static remove_gene_seed = function(){
-        var _remove = array_random_index(gene_seed);
-        var _seed = gene_seed[_remove];
-        array_delete(gene_seed, _remove, 1);
-        return _seed;
+    static remove_gene_seed = function(count=1){
+        _seeds = [];
+        repeat(count){
+            var _remove = array_random_index(gene_seed);
+            var _seed = gene_seed[_remove];
+            array_delete(gene_seed, _remove, 1);
+            array_push(_seeds, _seed);
+        }
+        return _seeds;
     }
     static mechanicus_tithes = function(){
         var expected,txt="";
@@ -81,20 +85,18 @@ function GeneStock() constructor(chapter_mutations){
 
         if (!mech_mad){
             if (gene_seed_count()) and (und_gene_vaults==0) and (onceh==0){
-                gene_seed_count()-=expected;
+                gene_stock.remove_gene_seed(expected);
                 onceh=1;
-                if (gene_seed_count()>=gene_iou) and (gene_iou>0){
-                    expected+=gene_iou;
-                    gene_seed_count()-=gene_iou;
-                    gene_iou=0;
-                    onceh=3;
-                }
+
                 for(var i=0; i<50; i++){
                     if (gene_seed_count()<gene_iou) and (gene_seed_count()>0) and (gene_iou>0){
                         expected+=1;
-                        gene_seed_count()-=1;
+                        gene_stock.remove_gene_seed(gene_iou);
+
                         gene_iou-=1;
                         if (gene_iou==0) then onceh=3;
+                    } else {
+                        break;
                     }
                 }
 
@@ -107,12 +109,12 @@ function GeneStock() constructor(chapter_mutations){
 
             if (gene_seed_count()>0) and (und_gene_vaults>0) and (onceh==0){
                 expected=1;
-                gene_seed_count()-=expected;
+                gene_stock.remove_gene_seed(expected);
                 onceh=1;
 
                 if (gene_seed_count()<gene_iou) and (gene_seed_count()>0) and (gene_iou>0){
                     expected+=1;
-                    gene_seed_count()-=1;
+                    gene_stock.remove_gene_seed(1);
                     gene_iou-=1;
                     if (gene_iou==0) then onceh=3;
                 }
@@ -143,20 +145,18 @@ function add_new_gene_slave(){
         if (array_length(obj_ini.gene_slaves)){
             var _last_set = obj_ini.gene_slaves[array_length(obj_ini.gene_slaves)-1];
             if (_last_set.turn == obj_controller.turn){
-                _last_set.num++;
-                gene_seed_count()--;
+                _last_set.num = array_concat(_last_set.num,obj_controller.gene_stock.remove_gene_seed(1));
                 _added=true;
             }
         }
         if (!_added){
             array_push(obj_ini.gene_slaves, {
-                num : [],
+                num : obj_controller.gene_stock.remove_gene_seed(1),
                 eta : 120,
                 harvested_once : false,
                 turn : obj_controller.turn,
                 assigned_apothecaries : [],
             });
-            gene_seed_count()--;
         }
         scr_add_item("Gene Pod Incubator", -1);
     }
