@@ -389,7 +389,7 @@ function SpecialistPointHandler() constructor{
                 }
                 if (_cur_slave.eta==0 && _cur_slave.num>0){
                     _cur_slave.eta=60;
-                    obj_controller.gene_seed+=_cur_slave.num;
+                    gene_seed_count()+=_cur_slave.num;
                     // color / type / text /x/y
                     scr_alert("green","test-slaves",$"Test-Slave Incubators Batch {i} harvested for {_cur_slave.num} Gene-Seed.",0,0);
                 } else if (_cur_slave.num==0){

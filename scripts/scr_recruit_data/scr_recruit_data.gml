@@ -66,7 +66,7 @@ function planet_training_sequence(local_apothecary_points){
     var thirdpop = max_population / 3;
     var halfpop = max_population / 2;	
 
-	if (planet_feature_bool(features, P_features.Recruiting_World)) and(obj_controller.gene_seed > 0) and(current_owner <= 5) and(obj_controller.faction_status[current_owner] != "War") {
+	if (planet_feature_bool(features, P_features.Recruiting_World)) and(gene_seed_count() > 0) and(current_owner <= 5) and(obj_controller.faction_status[current_owner] != "War") {
         var _planet_population = population;
         if (large_population) {
             _planet_population *= 1000000000;
@@ -98,7 +98,7 @@ function planet_training_sequence(local_apothecary_points){
 	        if (struct_exists(recruit_type, "seed_waste")){
 	            if (obj_controller.recruiting > 0) {
 	                if (random(1)<recruit_type.seed_waste){
-	                    obj_controller.gene_seed--;
+	                    gene_seed_count()--;
 	                    //TODO make more informative
 	                    scr_alert("red", "owner", "Blood Duels are efficient in time, but costly in risk with gene material. Gene-seed has been lost.", 0, 0);
 	                }
@@ -155,7 +155,6 @@ function planet_training_sequence(local_apothecary_points){
 
 	            for (var i=0;i<array_length(obj_controller.recruit_training);i++) {
 	                if (obj_controller.recruit_training[i]<1 || months_to_neo<obj_controller.recruit_training[i]){
-	                    obj_controller.gene_seed -= 1;
 	                    array_insert(obj_controller.recruit_corruption, i, new_recruit_corruption);
 	                    array_insert(obj_controller.recruit_distance , i, 0);
 	                    array_insert(obj_controller.recruit_training, i, months_to_neo);
@@ -164,6 +163,7 @@ function planet_training_sequence(local_apothecary_points){
 	                    array_insert(obj_controller.recruit_data, i, {"recruit_data":{
 	                        recruit_world :planet_type ,
 	                        aspirant_trial :obj_controller.recruit_trial ,
+	                        gene_seed : obj_controller.gene_stock.remove_gene_seed();
 	                    }});                                                                                                   
 	                    break;
 	                }

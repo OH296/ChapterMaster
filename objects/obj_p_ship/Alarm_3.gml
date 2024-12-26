@@ -8,11 +8,11 @@ if (hp<maxhp) and (ship_id!=0){
     if (ship_id=1) and (obj_ini.fleet_type = ePlayerBase.home_world) and (obj_ini.ship_class[1]="Battle Barge"){
     
         if (obj_controller.und_gene_vaults=0){
-            obj_controller.gene_seed=0;
+            gene_seed_count()=0;
             destroy_all_gene_slaves(false);
         }
         if (obj_controller.und_gene_vaults>0){
-            obj_controller.gene_seed-=floor(obj_controller.gene_seed/10);
+            gene_seed_count()-=floor(gene_seed_count()/10);
         }
     }
     

@@ -31,7 +31,7 @@ function create_gene_seed = function(){
 function scr_destroy_gene_slave_batch(batch_id, recover_gene=true){
     var _cur_slave = obj_ini.gene_slaves[batch_id];
     if (revover_gene){
-        obj_controller.gene_seed+=_cur_slave.num;
+        gene_seed_count()+=_cur_slave.num;
         scr_add_item("Gene Pod Incubator", _cur_slave.num);
     }
     delete _cur_slave;
@@ -40,12 +40,12 @@ function scr_destroy_gene_slave_batch(batch_id, recover_gene=true){
 
 function destroy_all_gene_slaves(recover_gene=true){
     var _slave_length = array_length(obj_ini.gene_slaves);
-         if (_slave_length>0){
-            for (var i=_slave_length-1; i>=0; i--){
-                scr_destroy_gene_slave_batch(i,recover_gene);
-            }
-            obj_ini.gene_slaves = [];
-        }   
+     if (_slave_length>0){
+        for (var i=_slave_length-1; i>=0; i--){
+            scr_destroy_gene_slave_batch(i,recover_gene);
+        }
+        obj_ini.gene_slaves = [];
+    }   
 }
 
 function GeneStock() constructor(chapter_mutations){
@@ -58,6 +58,83 @@ function GeneStock() constructor(chapter_mutations){
         }
         array_push(gene_seed, seed_data);
     }
+    static remove_gene_seed = function(){
+        var _remove = array_random_index(gene_seed);
+        var _seed = gene_seed[_remove];
+        array_delete(gene_seed, _remove, 1);
+        return _seed;
+    }
+    static mechanicus_tithes = function(){
+        var expected,txt="";
+        var onceh=0;
+        expected=max(1,round(gene_seed_count()/20));
+
+        var mech_mad = obj_controller.faction_status[eFACTION.Mechanicus]=="War";
+
+        if (!gene_seed_count()) or (mech_mad){
+            onceh=2;
+            gene_iou+=1;
+            loyalty-=2;
+            loyalty_hidden-=2;
+            txt="No Gene-Seed for Adeptus Mechanicus tithe.  High Lords of Terra IOU increased to "+string(gene_iou)+".";
+        }
+
+        if (!mech_mad){
+            if (gene_seed_count()) and (und_gene_vaults==0) and (onceh==0){
+                gene_seed_count()-=expected;
+                onceh=1;
+                if (gene_seed_count()>=gene_iou) and (gene_iou>0){
+                    expected+=gene_iou;
+                    gene_seed_count()-=gene_iou;
+                    gene_iou=0;
+                    onceh=3;
+                }
+                for(var i=0; i<50; i++){
+                    if (gene_seed_count()<gene_iou) and (gene_seed_count()>0) and (gene_iou>0){
+                        expected+=1;
+                        gene_seed_count()-=1;
+                        gene_iou-=1;
+                        if (gene_iou==0) then onceh=3;
+                    }
+                }
+
+                if (gene_iou<0) then gene_iou=0;
+
+                txt=string(expected)+" Gene-Seed sent to Adeptus Mechanicus for tithe.";
+                if (gene_iou>0) then txt+="  IOU remains at "+string(gene_iou)+".";
+                if (onceh==3) then txt+="  IOU has been payed off.";
+            }
+
+            if (gene_seed_count()>0) and (und_gene_vaults>0) and (onceh==0){
+                expected=1;
+                gene_seed_count()-=expected;
+                onceh=1;
+
+                if (gene_seed_count()<gene_iou) and (gene_seed_count()>0) and (gene_iou>0){
+                    expected+=1;
+                    gene_seed_count()-=1;
+                    gene_iou-=1;
+                    if (gene_iou==0) then onceh=3;
+                }
+
+                if (gene_iou<0) then gene_iou=0;
+
+                txt=string(expected)+" Gene-Seed sent to Adeptus Mechanicus for tithe.";
+                if (gene_iou>0) then txt+="  IOU remains at "+string(gene_iou)+".";
+                if (onceh==3) then txt+="  IOU has been payed off.";
+            }
+
+            var _colour = onceh!=2 ? "green": "red";
+
+            scr_alert(_colour,"tithes",txt,0,0);
+            scr_event_log(_colour,txt);
+
+        }
+    }
+}
+
+function gene_seed_count(){
+    return array_length(obj_controller.gene_stock.gene_seed);
 }
 
 function add_new_gene_slave(){
@@ -67,7 +144,7 @@ function add_new_gene_slave(){
             var _last_set = obj_ini.gene_slaves[array_length(obj_ini.gene_slaves)-1];
             if (_last_set.turn == obj_controller.turn){
                 _last_set.num++;
-                obj_controller.gene_seed--;
+                gene_seed_count()--;
                 _added=true;
             }
         }
@@ -79,7 +156,7 @@ function add_new_gene_slave(){
                 turn : obj_controller.turn,
                 assigned_apothecaries : [],
             });
-            obj_controller.gene_seed--;
+            gene_seed_count()--;
         }
         scr_add_item("Gene Pod Incubator", -1);
     }
@@ -164,10 +241,10 @@ function scr_apothecarium(){
     var blurp2 = "";
     var _slave_length = array_length(obj_ini.gene_slaves);
     if (!obj_ini.zygote) {
-        if (obj_controller.marines + obj_controller.gene_seed <= 300) and(_slave_length = 0) {
+        if (obj_controller.marines + gene_seed_count() <= 300) and(_slave_length = 0) {
             blurp2 = "Our Chapter is disasterously low in number- it is strongly advised that we make use of test-slaves to breed new gene-seed.  Give me the word andwe can begin installing gestation pods.";
         }
-        else if (obj_controller.marines + obj_controller.gene_seed > 300) and(_slave_length = 0) {
+        else if (obj_controller.marines + gene_seed_count() > 300) and(_slave_length = 0) {
             blurp2 = "Our Chapter is capable of using test-slaves to breed new gene-seed.  Should our number of astartes ever plummet this may prove a valuable method of rapidly bringing our chapter back up to size.";
         }
         else if (_slave_length > 0) {
@@ -199,7 +276,7 @@ function scr_apothecarium(){
         }
     }
     draw_set_alpha(1);
-    if (obj_controller.gene_seed <= 0) or(obj_ini.zygote = 1) then draw_set_alpha(0.5);
+    if (gene_seed_count() <= 0) or(obj_ini.zygote = 1) then draw_set_alpha(0.5);
     draw_set_color(c_gray);
     draw_set_color(c_black);
     if (scr_item_count("Gene Pod Incubator")){

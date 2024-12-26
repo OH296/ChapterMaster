@@ -21,7 +21,7 @@ function scr_gene_obj_creation(){
     draw_rectangle(445, 200, 1125, 202, true);
     
     draw_set_font(fnt_40k_30b);
-    draw_text_transformed(503,210,string_hash_to_newline("Gene-Seed Mutations"),0.6,0.6,0);
+    draw_text_transformed(503,210,"Gene-Seed Mutations",0.6,0.6,0);
     if (mutations>mutations_selected) then draw_text_transformed(585,230,$"Select {mutations-mutations_selected} More",0.5,0.5,0);
     
     var x1,y1,spac=34;

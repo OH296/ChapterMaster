@@ -52,7 +52,7 @@ if (ground_mission){
 
 seed_saved=(min(seed_max,apothecaries_alive*40))-gene_penalty;
 if (obj_ini.doomed) then seed_saved=0;
-if (seed_saved>0) then obj_controller.gene_seed+=seed_saved;
+if (seed_saved>0) then gene_seed_count()+=seed_saved;
 
 if (obj_ini.doomed && !apothecaries_alive){
     part3=$"Chapter Mutation prevents retrieving Gene-Seed.  {seed_max} Gene-Seed lost.";
@@ -83,7 +83,8 @@ if (red_thirst>2){
     
     newline=voodoo;newline_color="red";
     scr_newtext();
-    newline=" ";scr_newtext();
+    newline=" ";
+    scr_newtext();
 }
 
 
@@ -723,8 +724,8 @@ if (obj_ini.fleet_type != ePlayerBase.home_world) and (defeat==1) and (dropping=
 			battle_object.p_feature[obj_ncombat.battle_id][monastery_list[mon]].status="destroyed";
 		}
 
-	    if (obj_controller.und_gene_vaults=0) then newline="Your Fortress Monastery has been raided.  "+string(obj_controller.gene_seed)+" Gene-Seed has been destroyed or stolen.";
-	    if (obj_controller.und_gene_vaults>0) then newline="Your Fortress Monastery has been raided.  "+string(floor(obj_controller.gene_seed/10))+" Gene-Seed has been destroyed or stolen.";
+	    if (obj_controller.und_gene_vaults=0) then newline="Your Fortress Monastery has been raided.  "+string(gene_seed_count())+" Gene-Seed has been destroyed or stolen.";
+	    if (obj_controller.und_gene_vaults>0) then newline="Your Fortress Monastery has been raided.  "+string(floor(gene_seed_count()/10))+" Gene-Seed has been destroyed or stolen.";
 
 	    scr_event_log("red",newline, battle_object.name);
 	    instance_activate_object(obj_event_log);
@@ -778,7 +779,7 @@ if (obj_ini.fleet_type != ePlayerBase.home_world) and (defeat==1) and (dropping=
             //all Gene Pod Incubators and gene seed are lost
 	        destroy_all_gene_slaves(false);
 	    }
-	    if (obj_controller.und_gene_vaults>0) then obj_controller.gene_seed-=floor(obj_controller.gene_seed/10);
+	    if (obj_controller.und_gene_vaults>0) then gene_seed_count()-=floor(gene_seed_count()/10);
 	}
 }
 instance_deactivate_object(obj_star);

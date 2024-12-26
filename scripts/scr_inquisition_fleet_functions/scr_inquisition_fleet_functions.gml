@@ -219,10 +219,10 @@ function inquisitor_approval_gene_banks(){
     for (var e=0;e<array_length(obj_ini.gene_slaves);e++){
         gene_slave_count += obj_ini.gene_slaves[e].num;
     }
-    if (obj_controller.marines<=200) and (gene_slave_count>=100) and (obj_controller.gene_seed>=1100) then hur=1;
-    if (obj_controller.marines<=500) and (obj_controller.marines>200) and (gene_slave_count>=75) and (obj_controller.gene_seed>=900) then hur=1;
-    if (obj_controller.marines<=700) and (obj_controller.marines>500) and (gene_slave_count>=50) and (obj_controller.gene_seed>=750) then hur=1;
-    if (obj_controller.marines>700) and (gene_slave_count>=50) and (obj_controller.gene_seed>=500) then hur=1;
+    if (obj_controller.marines<=200) and (gene_slave_count>=100) and (gene_seed_count()>=1100) then hur=1;
+    if (obj_controller.marines<=500) and (obj_controller.marines>200) and (gene_slave_count>=75) and (gene_seed_count()>=900) then hur=1;
+    if (obj_controller.marines<=700) and (obj_controller.marines>500) and (gene_slave_count>=50) and (gene_seed_count()>=750) then hur=1;
+    if (obj_controller.marines>700) and (gene_slave_count>=50) and (gene_seed_count()>=500) then hur=1;
     if (obj_controller.marines>990) and (gene_slave_count>=50) then hur=2;
     return hur;
 }
