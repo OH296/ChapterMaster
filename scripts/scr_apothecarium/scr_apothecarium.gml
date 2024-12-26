@@ -58,6 +58,28 @@ function GeneStock() constructor(chapter_mutations){
         }
         array_push(gene_seed, seed_data);
     }
+
+    static harvest_from_slave_pod = function (slave_pod){
+        var _slave_num = array_length(slave_pod.num);
+        var _lost_gene_slaves=0;
+        if (_slave_num>0){
+            slave_pod.eta--;
+            if (irandom(100000)<obj_ini.stability*_slave_num){
+                array_delete(slave_pod.num, array_random_index(_cur_slave.num) , 1);
+                _lost_gene_slaves++;
+                _slave_num--;
+                scr_add_item("Gene Pod Incubator");
+            }
+            if (slave_pod.eta==0 && slave_pod.num>0){
+                slave_pod.eta=60;
+                for (var i=0;i<_slave_num;i++){
+                    new_gene_seed(slave_pod.num[i]);
+                }
+                // color / type / text /x/y
+                scr_alert("green","test-slaves",$"Test-Slave Incubators Batch {i} harvested for {_slave_num} Gene-Seed.",0,0);
+            }
+        }
+    }
     static remove_gene_seed = function(count=1){
         _seeds = [];
         repeat(count){

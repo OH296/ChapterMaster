@@ -811,13 +811,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			if (faction ="chapter"){
 				allegiance = global.chapter_name;
 			}
-			if (struct_exists(other_spawn_data , "gene_seed_data")){
-				gene_seed_mutations = other_spawn_data.gene_seed_data
+			if (struct_exists(other_spawn_data , "gene_seed")){
+				gene_seed_mutations = other_spawn_data.gene_seed
 			} else {
 			   gene_seed_mutations = create_gene_seed();
 			}
 
-			if (gene_seed_mutations[$ "voice"] == 1){
+			if (gene_seed_mutations.voice == 1){
 				charisma-=2;
 			}
 			if (instance_exists(obj_controller)){

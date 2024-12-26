@@ -37,7 +37,18 @@ function scr_wipe_unit(company, unit_slot){
 
 function kill_and_recover(company, unit_slot, equipment=true, gene_seed_collect=true){
 	var unit = obj_ini.TTRPG[company][unit_slot];
+	var _returns = {
+		equipments : false,
+		gene_seed : [],
+	}
 	if (equipment){
+		returns.equipment = {
+			"wep1":unit.weapon_one(),
+			"wep2":unit.weapon_two(),
+			"mobi":unit.mobility_item(),
+			"armour":unit.armour(),
+			"gear":unit.gear(),
+		}
 		var strip = {
 			"wep1":"",
 			"wep2":"",
@@ -45,12 +56,15 @@ function kill_and_recover(company, unit_slot, equipment=true, gene_seed_collect=
 			"armour":"",
 			"gear":"",
 		};
+
 		unit.alter_equipment(strip,false, true);
 	} 
 	if (gene_seed_collect && unit.base_group=="astartes"){
 		//TODO get rid of string methods
         if (unit.age() > 30 && !obj_ini.zygote && !obj_ini.doomed) then obj_controller.gene_seed+=1;
         if (unit.age() > 50) and (string_count("Doom",obj_ini.strin2)==0){
+        	array_push(gene_seed, )
+        	_returns.gene_seed = unit.gene_seed_mutations;
         	gene_seed_count()+=1;	
         }
 	}
