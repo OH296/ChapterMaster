@@ -22,7 +22,7 @@ if (type=9.1) and (obj_controller.stc_wargear_un+obj_controller.stc_vehicles_un+
     obj_controller.cooldown=10;instance_destroy();exit;
 }
 
-if (image="fuklaw") and (save>0){
+if (image=="fuklaw") and (save>0){
     if (press==1){
         var del=obj_saveload.save[save];
         var _save_file = $"save{del}.ini";
