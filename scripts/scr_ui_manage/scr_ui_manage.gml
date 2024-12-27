@@ -1111,7 +1111,7 @@ function scr_ui_manage() {
 					stats_displayed = false;
 				}
 		        with (obj_controller){
-    		        if (view_squad && !instance_exists(obj_temp3) && !instance_exists(obj_popup)){
+    		        if (view_squad && !instance_exists(obj_popup)){
     		        	if (managing>10){
     		        		view_squad=false;
     		        		unit_profile=false;

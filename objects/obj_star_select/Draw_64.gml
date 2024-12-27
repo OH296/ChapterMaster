@@ -711,7 +711,6 @@ if (obj_controller.selecting_planet!=0){
             if (instance_exists(obj_bomb_select)){
                 obj_bomb_select.p_target=target;
                 obj_bomb_select.sh_target=instance_nearest(x,y,obj_p_fleet);
-                if (instance_nearest(x,y,obj_p_fleet).acted=0) then instance_create(target.x,target.y,obj_temp3);
                 if (instance_nearest(x,y,obj_p_fleet).acted>0) then with(obj_bomb_select){instance_destroy();}
             }
         }else if (current_button=="+Recruiting"){

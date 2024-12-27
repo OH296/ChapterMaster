@@ -689,7 +689,6 @@ if (obj_ini.omophagea){
                 instance_deactivate_object(obj_turn_end);
 
                 with(inquisitor_ship){instance_destroy();}
-                with(obj_temp3){instance_destroy();}
                 with(obj_ground_mission){instance_destroy();}
             }
             instance_deactivate_object(obj_star);
