@@ -290,6 +290,7 @@ function set_shader_array(shader_array){
 /// @mixin
 function scr_draw_unit_image(_background=false){
     var _role = obj_ini.role[100];
+    var complex_set={};    
     var draw_unit_hands = function(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, right_left){
         if (arm_variant[right_left] == 1) {
             return;
@@ -448,7 +449,6 @@ function scr_draw_unit_image(_background=false){
         var armour_type = ArmourType.Normal;
         var armour_sprite = spr_weapon_blank;
         var complex_livery = false;
-        var complex_set={};
         var back_equipment = BackType.None;
         var psy_hood = 0;
         var skull_mask = 0;
