@@ -200,9 +200,13 @@ function scr_fleet_advisor(){
 
                         cn.temp[109] = string(obj_ini.ship_turrets[i]);
 
-                        for (var s=1;s<array_length(obj_ini.ship_wep_facing[i]) && s<5;s++){
-                            cn.temp[110+((s-1)*2)] = obj_ini.ship_wep[i][s]
-                            cn.temp[110+((s-1)*2)+1] =obj_ini.ship_wep_facing[i][s];
+                        var facing_length = array_length(obj_ini.ship_wep_facing[i]);
+                        var wep_length = array_length(obj_ini.ship_wep[i]);
+                        var max_weapons = min(facing_length, wep_length, 5);
+
+                        for (var s = 1; s < max_weapons; s++) {
+                            cn.temp[110+((s-1)*2)] = obj_ini.ship_wep[i][s];
+                            cn.temp[110+((s-1)*2)+1] = obj_ini.ship_wep_facing[i][s];
                         }
 
                         cn.temp[118] = $"{obj_ini.ship_carrying[i]}/{obj_ini.ship_capacity[i]}";
