@@ -642,7 +642,7 @@ global.weapons = {
 		"range": 8,
 		"spli": 6,
 		"arp": 1,
-		"tags": ["grav", "heavy_weapon"]
+		"tags": ["grav", "heavy_weapon"],
 		"maintenance" : 0.2,
 	},
 	"Underslung Bolter": {
