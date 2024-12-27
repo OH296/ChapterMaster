@@ -597,9 +597,9 @@ global.weapons = {
 	"Grav-Pistol": {
 		"abbreviation": "GrvPstl",
 		"attack": {
-			"standard": 100,
-			"master_crafted": 110,
-			"artifact": 120
+			"standard": 150,
+			"master_crafted": 200,
+			"artifact": 250
 		},
 		"description": "A smaller version of the Grav-Gun which utilises the gravitic reaction principle most commonly seen powering grav-vehicles such as the Land Speeder.",
 		"melee_hands": 0,
@@ -608,7 +608,8 @@ global.weapons = {
 		"range": 2.1,
 		"spli": 1,
 		"arp": 1,
-		"tags": ["grav", "pistol"]
+		"tags": ["grav", "pistol"],
+		"maintenance" : 0.8,
 	},
 	"Grav-Gun": {
 		"abbreviation": "GrvGn",
@@ -624,7 +625,8 @@ global.weapons = {
 		"range": 4,
 		"spli": 3,
 		"arp": 1,
-		"tags": ["grav"]
+		"tags": ["grav"],
+		"maintenance" : 0.1,
 	},
 	"Grav-Cannon": {
 		"abbreviation": "GrvCan",
@@ -641,6 +643,7 @@ global.weapons = {
 		"spli": 6,
 		"arp": 1,
 		"tags": ["grav", "heavy_weapon"]
+		"maintenance" : 0.2,
 	},
 	"Underslung Bolter": {
 		"abbreviation": "UndBltr",
