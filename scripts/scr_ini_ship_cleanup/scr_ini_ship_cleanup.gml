@@ -30,7 +30,21 @@ function scr_kill_ship(index){
 			if (_ship_fleet!="none"){
 				delete_ship_from_fleet(index,_ship_fleet);
 				_available_ships = fleet_full_ship_array(_ship_fleet);
-			}		
+			}
+			_units_on_ship = array_shuffle(_units_on_ship);
+			for (var i=0;i<array_length(_available_ships);i++){
+				if (_available_ships[i]==index) then continue;
+				var _cur_ship = _available_ships[i];
+				var f=0;
+				var _total_units = array_length(_units_on_ship);
+				while (ship_carrying[_cur_ship]<ship_capacity[_cur_ship] && f<_total_units && array_length(_units_on_ship)>0){
+					f++;
+					if (_units_on_ship[0].get_unit_size()+ship_carrying[_cur_ship]<=ship_capacity[_cur_ship]){
+						_units_on_ship[0].load_marine(_cur_ship);
+						array_delete(_units_on_ship, 0, 1);
+					}
+				}
+			}				
 			array_delete(ship,index,1);
 			array_delete(ship_uid,index,1);
 			array_delete(ship_owner,index,1);
@@ -59,19 +73,6 @@ function scr_kill_ship(index){
 			array_delete(ship_contents,index,1);
 			array_delete(ship_turrets,index,1);
 
-			_units_on_ship = array_shuffle(_units_on_ship);
-			for (var i=0;i<array_length(_available_ships);i++){
-				var _cur_ship = _available_ships[i];
-				var f=0;
-				var _total_units = array_length(_units_on_ship);
-				while (ship_carrying[_cur_ship]<ship_capacity[_cur_ship] && f<_total_units && array_length(_units_on_ship)>0){
-					f++;
-					if (_units_on_ship[0].get_unit_size()+ship_carrying[_cur_ship]<=ship_capacity[_cur_ship]){
-						_units_on_ship[0].load_marine(_cur_ship);
-						array_delete(_units_on_ship, 0, 1);
-					}
-				}
-			}
 			if (!in_warp){
 				if (_nearest_star!="none"){
 					while(array_length(_units_on_ship)>0){

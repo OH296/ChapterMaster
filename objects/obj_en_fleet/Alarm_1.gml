@@ -107,7 +107,7 @@ if (navy && action=="") {
                 
 	                var bombard=0,deaths=0,hurss=0,onceh=0,wob=0,kill=0;
                 
-	                for (var o=1;o<=planets;o++){
+	                for (var o=1;o<=orbiting.planets;o++){
 	                	if (orbiting.p_owner[o]==eFACTION.Player){
 	                		if (orbiting.p_population[o]+orbiting.p_pdf[o]>0) ||  (orbiting.p_player[o]>0){
 	                			bombard=o;
