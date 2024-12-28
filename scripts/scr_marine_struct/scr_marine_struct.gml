@@ -721,7 +721,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		"right_eye":{
 			variant : irandom(100),
 		},
-		"throat":{}, 
+		"throat":{
+			variant : irandom(100),
+		}, 
 		"jaw":{
 			mouth_variants: irandom(100),
 		},
