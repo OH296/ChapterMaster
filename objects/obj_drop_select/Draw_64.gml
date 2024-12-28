@@ -4,8 +4,8 @@ w = 660;
 h = 520;
 // Center of the screen
 //setup
-var _x_center = (camera_width / 2) - (w/2);
-var _y_center = (camera_height / 2) - (h/2);
+var _x_center = (display_get_gui_width() / 2) - (w/2);
+var _y_center = (display_get_gui_height() / 2) - (h/2);
 //draw main_slate
 if (purge != DropType.PurgeSelect && (local_content_slate.XX<=_x_center-local_content_slate.width)){
     main_slate.inside_method = drop_select_draw;
