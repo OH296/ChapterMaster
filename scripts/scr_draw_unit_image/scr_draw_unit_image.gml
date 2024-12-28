@@ -140,6 +140,9 @@ function get_complex_set(set = eARMOUR_SET.MK7){
             armour : spr_tartaros_complex,
             left_arm : spr_tartaros_left_arm,
             right_arm : spr_tartaros_right_arm, 
+            right_leg : spr_tartaros_right_leg,
+            left_leg : spr_tartaros_left_leg,
+            chest_variants : spr_tartaros_chest,
         });                
     }
 
