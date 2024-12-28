@@ -386,15 +386,15 @@ function ArtifactStruct(Index) constructor{
 				var _find_function = "";
 				if (_b_type=="gear"){
 					var _update_function = "update_gear";
-					var _find_function = "gear";
+					_find_function = "gear";
 				} else if (_b_type=="armour"){
 					var _update_function = "update_armour";
-					var _find_function = "armour";
+					_find_function = "armour";
 				} else if (_b_type=="mobility"){
 					var _update_function = "update_mobility_item";
-					var _find_function = "mobility_item";
+					_find_function = "mobility_item";
 				}
-				if (var _find_function!=""){
+				if (_find_function!=""){
 					for (var co=0;co<obj_ini.companies;co++){
 						for (var i=0;i<array_length(obj_ini.role[co]);i++){
 							var _unit = fetch_unit([co,i]);
