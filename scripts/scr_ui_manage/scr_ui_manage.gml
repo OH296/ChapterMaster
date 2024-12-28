@@ -99,7 +99,9 @@ function scr_ui_manage() {
 		// Draw the company followed by chapters name
 	    	draw_text(xx+800,yy+74,string_hash_to_newline(string(fx)+", "+string(global.chapter_name)));			
 		} else if (managing<0){
-			draw_text(xx+800,yy+74,selection_data.purpose);			
+			if (struct_exists(selection_data, "purpose")){
+				draw_text(xx+800,yy+74,$"{selection_data.purpose}");			
+			}
 		}
 		
 	    if (managing<=10 && managing>0){
