@@ -127,9 +127,10 @@ function get_complex_set(set = eARMOUR_SET.MK7){
             mouth_variants : spr_mk7_mouth_variants,
             thorax_variants : spr_mk7_thorax_variants,
             chest_variants : spr_mk7_chest_variants,
-            leg_variants : spr_mk7_leg_variants,         
+            leg_variants : spr_mk7_leg_variants,
+            gorget : spr_mk8_gorget,        
         });
-        add_to_area : spr_mk8_chest                      
+        set_pieces.add_to_area("chest_variants", spr_mk8_chest);                      
     }else if (set == eARMOUR_SET.Indomitus){
          set_pieces.add_group({
             armour : spr_indomitus_complex,
