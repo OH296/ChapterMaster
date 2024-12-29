@@ -122,10 +122,14 @@ function get_complex_set(set = eARMOUR_SET.MK7){
             backpack : spr_mk8_complex_backpack,
             left_arm : spr_mk8_left_arm,
             right_arm : spr_mk8_right_arm,
-            leg_variants : spr_mk7_leg_variants,
             left_trim : spr_mk7_left_trim,
-            right_trim : spr_mk7_right_trim,          
-        });                            
+            right_trim : spr_mk7_right_trim,
+            mouth_variants : spr_mk7_mouth_variants,
+            thorax_variants : spr_mk7_thorax_variants,
+            chest_variants : spr_mk7_chest_variants,
+            leg_variants : spr_mk7_leg_variants,         
+        });
+        add_to_area : spr_mk8_chest                      
     }else if (set == eARMOUR_SET.Indomitus){
          set_pieces.add_group({
             armour : spr_indomitus_complex,
