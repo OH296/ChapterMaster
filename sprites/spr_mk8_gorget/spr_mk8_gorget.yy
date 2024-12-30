@@ -2,7 +2,7 @@
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
   "name": "spr_mk8_gorget",
-  "bbox_bottom": 58,
+  "bbox_bottom": 53,
   "bbox_left": 57,
   "bbox_right": 106,
   "bbox_top": 24,
@@ -25,7 +25,7 @@
   "height": 232,
   "HTile": false,
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"524b16bf-038e-4b49-b1ba-d666ad239326","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"e79fd6c3-148d-41a0-b649-496590b98fdc","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
   "origin": 9,
