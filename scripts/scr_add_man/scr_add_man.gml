@@ -229,7 +229,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
 			unit = new TTRPG_stats("chapter", target_company, good, "scout", other_data);
 			unit.corruption = corruption
 			unit.roll_age(); // Age here
-			unit.alter_unit_equipment(_gear);
+			unit.alter_equipment(_gear);
 			marines += 1;
 
 			if (!other_gear) {

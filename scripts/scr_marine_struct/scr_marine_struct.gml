@@ -1603,7 +1603,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			} else {
 				location_type =  location_types.ship; //marine is on ship
 				location_id = ship_location; //ship array position
-				location_name = obj_ini.ship_location[location_id]; //location of ship
+				if (location_id<array_length(obj_ini.ship_location)){
+					location_name = obj_ini.ship_location[location_id]; //location of ship
+				} else {
+					location_name = location_name = obj_ini.loc[company][marine_number];
+				}
 			}
 			return [location_type,location_id ,location_name];
 		};
