@@ -247,7 +247,7 @@ function collect_role_group(group="standard", location="", opposite=false, searc
 	        	if (location==""){
 	        		_add=true;
 	       		} else if (!is_array(location)){
-		       		_add=unit.is_at_location(location, 0, 0);
+		       		_add=unit.is_at_location(location);
 		       	} else {
 		       		_add=unit.is_at_location(location[0], location[1], location[2]);
 		       	}
@@ -299,7 +299,7 @@ function collect_by_religeon(religion, sub_cult="", location=""){
 	        	}
 	        	if (location==""){
 	        		_add=true;
-	       		} else if (unit.is_at_location(location, 0, 0)){
+	       		} else if (unit.is_at_location(location)){
 	       			_add=true;
 	       		}
 	        }

@@ -1235,7 +1235,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			}			
 			if (weapon_slot==0){
 				//decide if any weapons are ranged
-				if (_wep1.range<=1.1 && _wep2.range<=1.1){
+				if (_wep1.range<1.1 && _wep2.range<1.1){
 					if (array_length(_wep1.second_profiles) + array_length(_wep2.second_profiles) ==0){
 						ranged_damage_data = [final_range_attack,explanation_string,carry_data,primary_weapon, secondary_weapon];
 					} else {

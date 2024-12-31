@@ -491,7 +491,7 @@ if (obj_controller.selecting_planet!=0){
                         if (cur_feature.forge>0){
                             var forge = cur_feature.forge_data;
                             var size_string= $"{size[forge.size]} Chapter Forge"
-                            array_push(planet_displays, [size_string, target.p_feature[current_planet][i].forge_data]);
+                            array_push(planet_displays, [size_string, forge]);
                         }
                     }                
                 }
@@ -499,11 +499,12 @@ if (obj_controller.selecting_planet!=0){
         }
         if (upgrade_count>0){
             for (i =0; i <  upgrade_count ;i++){
-                if (target.p_upgrades[current_planet][i].f_type == P_features.Secret_Base){
-                    if (target.p_upgrades[current_planet][i].forge>0){
-                        var forge = target.p_upgrades[current_planet][i].forge_data;
+                var _upgrade = target.p_upgrades[current_planet][i];
+                if (_upgrade.f_type == P_features.Secret_Base){
+                    if (_upgrade.forge>0){
+                        var forge = _upgrade.forge_data;
                         var size_string= $"{size[forge.size]} Chapter Forge"
-                        array_push(planet_displays, [size_string, target.p_upgrades[current_planet][i].forge_data]);
+                        array_push(planet_displays, [size_string, forge]);
                     }
                 }
             }
