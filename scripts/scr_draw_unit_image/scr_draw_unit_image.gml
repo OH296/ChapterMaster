@@ -118,10 +118,10 @@ function get_complex_set(set = eARMOUR_SET.MK7){
         });    
     }else if (set == eARMOUR_SET.MK8){
         set_pieces.add_group({
-            armour : spr_mk8_complex,
-            backpack : spr_mk8_complex_backpack,
-            left_arm : spr_mk8_left_arm,
-            right_arm : spr_mk8_right_arm,
+            armour : spr_mk7_complex,
+            backpack : spr_mk7_complex_backpack,
+            left_arm : spr_mk7_left_arm,
+            right_arm : spr_mk7_right_arm,
             left_trim : spr_mk7_left_trim,
             right_trim : spr_mk7_right_trim,
             mouth_variants : spr_mk7_mouth_variants,
@@ -130,7 +130,6 @@ function get_complex_set(set = eARMOUR_SET.MK7){
             leg_variants : spr_mk7_leg_variants,
             gorget : spr_mk8_gorget,        
         });
-        set_pieces.add_to_area("chest_variants", spr_mk8_chest);                      
     }else if (set == eARMOUR_SET.Indomitus){
          set_pieces.add_group({
             armour : spr_indomitus_complex,
