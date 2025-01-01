@@ -113,7 +113,7 @@ complex_selection = "sgt";
 complex_depth_selection = 0;
 //TODO probably make this array based at some point ot match other unit data
 complex_livery_data = complex_livery_default();
-
+left_data_slate = new DataSlate();
 standard_livery_components = 0;
 enum LiveryComponents{
 	Body,
@@ -144,7 +144,27 @@ heheh=0;
 icons_top=1;
 icons_max=0;
 turn_selection_change=false;
-
+buttons = {
+    home_world_recruit_share : new ToggleButton(),
+    complex_homeworld : new ToggleButton({
+        x1 : 550,
+        y1 :  422,
+        active : false,
+        str1 : "Spawn System Options",
+        tooltip : "Click for Complex Spawn System Options",
+        button_color : #009500,
+    }),
+    home_spawn_loc_options : new radio_set([
+        {
+            str1 : "fringe",
+            font : fnt_40k_30b,
+        },
+        {
+            str1 : "central",
+            font : fnt_40k_30b
+        },        
+    ], "Home Spwan\nLocation"),
+}
 scrollbar_engaged=0;
 
 text_selected="none";

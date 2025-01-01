@@ -598,6 +598,122 @@ try {
         draw_sprite_stretched(spr_creation_arrow,0,550,160,32,32);
         draw_sprite_stretched(spr_creation_arrow,1,597,160,32,32);
     }*/
+    
+    draw_set_color(38144);
+    draw_line(445,200,1125,200);
+    draw_line(445,201,1125,201);
+    draw_line(445,202,1125,202);
+    
+    if (popup=""){
+        if (custom<2) then draw_set_alpha(0.5);
+        draw_text_transformed(800,211,string_hash_to_newline("Chapter Type"),0.6,0.6,0);
+        draw_set_halign(fa_left);
+        
+        if (scr_hit(516,242,674,266)){
+            tooltip="Homeworld";
+            tooltip2="Your chapter has a homeworld that they base on.  Contained upon it is a massive Fortress Monastery, which provides high levels of defense and automated weapons.";
+        }
+        if (scr_hit(768,242,866,266)){
+            tooltip="Fleet Based";
+            tooltip2="Rather than a homeworld your chapter begins near their recruiting world.  The fleet includes a Battle Barge, which serves as a mobile base, and powerful ship.";
+        }
+        if (scr_hit(952,242,1084,266)){
+            tooltip="Penitent";
+            tooltip2="As with Fleet Based, but you must crusade and fight until your penitence meter runs out.  Note that recruiting is disabled until then.";
+        }// Avoiding fights will result in excomunicatus traitorus.
+        
+        if (custom<2) then draw_set_alpha(0.5);
+        yar=0;if (fleet_type=1) then yar=1;draw_sprite(spr_creation_check,yar,519,239);yar=0;
+        if (scr_hit(519,239,519+32,239+32)) and (cooldown<=0) and (mouse_left>=1) and (custom=2){cooldown=8000;
+            if (points+20<=maxpoints) and (fleet_type=3){points+=20;fleet_type=1;}
+            if (fleet_type=2){fleet_type=1;}
+        }
+        draw_text_transformed(551,239,string_hash_to_newline("Homeworld"),0.6,0.6,0);
+        
+        yar=0;if (fleet_type=2) then yar=1;draw_sprite(spr_creation_check,yar,771,239);yar=0;
+        if (scr_hit(771,239,771+32,239+32)) and (cooldown<=0) and (mouse_left>=1) and (custom=2){cooldown=8000;
+            if (points+20<=maxpoints) and (fleet_type=3){points+=20;fleet_type=2;}
+            if (fleet_type=1){fleet_type=2;}
+        }
+        draw_text_transformed(804,239,string_hash_to_newline("Fleet Based"),0.6,0.6,0);
+        
+        yar=0;if (fleet_type=3) then yar=1;draw_sprite(spr_creation_check,yar,958,239);yar=0;
+        if (scr_hit(958,239,958+32,239+32)) and (cooldown<=0) and (mouse_left>=1) and (custom=2){if (fleet_type!=3) then points-=20;fleet_type=3;cooldown=8000;}
+        draw_text_transformed(990,239,string_hash_to_newline("Penitent"),0.6,0.6,0);
+        draw_set_alpha(1);
+        
+        draw_line(445,289,1125,289);
+        draw_line(445,290,1125,290);
+        draw_line(445,291,1125,291);
+        
+        draw_set_halign(fa_center);
+        draw_text_transformed(800,301,string_hash_to_newline("Chapter Stats"),0.6,0.6,0);
+        draw_set_halign(fa_right);
+        
+        draw_text_transformed(617,332,$"Strength ({strength})",0.5,0.5,0);
+        draw_text_transformed(617,387,$"Cooperation ({cooperation})",0.5,0.5,0);
+        draw_text_transformed(617,442,$"GeneSeed Purity ({purity})",0.5,0.5,0);
+        draw_text_transformed(617,497,$"GeneSeed Stability ({stability})",0.5,0.5,0);
+        var arrow_buttons_controls = [strength, cooperation, purity, stability]
+        for (var i=0;i<4;i++){
+            if (custom=2) then draw_sprite_stretched(spr_arrow,0,625,325+(i*55),32,32);
+            if (scr_hit(625,325+(i*55),657,357+(i*55))){
+                obj_cursor.image_index=1;
+                if (cooldown<=0) and (custom=2) and (arrow_buttons_controls[i]>1) and (mouse_left>=1){
+                    arrow_buttons_controls[i]-=1;
+                    points-=10;
+                    cooldown=8000;
+                }
+            }
+            if (custom=2) then draw_sprite_stretched(spr_arrow,1,1135,325+(i*55),32,32);
+            if (scr_hit(1135,325+(i*55),1167,357+(i*55))){
+                obj_cursor.image_index=1;
+                if (cooldown<=0) and (custom=2) and (arrow_buttons_controls[i]<10) and (points+10<=maxpoints) and (mouse_left>=1){
+                    arrow_buttons_controls[i]+=1;
+                    points+=10;
+                    cooldown=8000;
+                }
+            }
+            draw_rectangle(668,330+(i*55),1125,351+(i*55),1);   
+            draw_rectangle(668,330+(i*55),668+(arrow_buttons_controls[i]*45.7),351+(i*55),0);     
+        }
+        strength = arrow_buttons_controls[0];
+        cooperation = arrow_buttons_controls[1];
+        purity = arrow_buttons_controls[2];
+        stability = arrow_buttons_controls[3];
+        
+        if (scr_hit(532,325,1166,357)){tooltip="Strength";tooltip2="How many companies your chapter begins with.  For every score below five a company will be removed; conversely, each score higher grants 50 additional astartes.";}
+        if (scr_hit(486,380,1166,412)){tooltip="Cooperation";tooltip2="How diplomatic your chapter is.  A low score will lower starting dispositions of Imperial factions and make disposition increases less likely to occur.";}
+        if (scr_hit(442,435,1166,467)){tooltip="Purity";tooltip2="A measure of how pure and mutation-free your chapter's gene-seed is.  A perfect score means no mutations must be chosen.  The lower the score, the more mutations.";}
+        if (scr_hit(423,490,1166,522)){tooltip="Stability";tooltip2="A measure of how easily new mutations and corruption can occur with your chapter-gene seed.  A perfect score makes the gene-seed almost perfectly stable.";}
+    }
+    
+    if (popup!="icons"){
+        draw_rectangle(445, 551, 1125, 553, 0);
+    }
+    
+    if (popup!="") or (custom<2) then draw_set_alpha(0.5);
+    
+    
+    if (popup!="icons"){
+        var advantage_click = (mouse_left>=1  && cooldown<=0  &&  custom>1);
+        draw_set_halign(fa_left);
+        draw_set_font(fnt_40k_30b);
+        draw_text_transformed(436,564,"Chapter Advantages",0.5,0.5,0);
+        draw_set_font(fnt_40k_14);
+        var adv_txt = {
+            x1: 436,
+            y1: 570,
+            w: 204,
+            h: 20,
+        }
+        adv_txt.x2 = adv_txt.x1 + adv_txt.w;
+        adv_txt.y2 = adv_txt.y1 + adv_txt.h;
+        var max_advantage_count = 8;
+        for (i=1;i<=max_advantage_count;i++){
+            var draw_string = adv_num[i]==0?"[+]":"[-] "+adv[i];
+            draw_text(adv_txt.x1,adv_txt.y1+(i*adv_txt.h), draw_string);
+            if (scr_hit(adv_txt.x1,adv_txt.y1+(i*adv_txt.h),adv_txt.x2,adv_txt.y2+(i*adv_txt.h))){
 
 		draw_set_color(38144);
 		draw_line(445, 200, 1125, 200);
@@ -851,30 +967,117 @@ try {
 			draw_line(445, 728, 1125, 728);
 			draw_line(445, 729, 1125, 729);
 
-			draw_set_font(fnt_40k_30b);
-			draw_set_halign(fa_center);
-			draw_text_transformed(800, 211, "Select an Icon", 0.6, 0.6, 0);
-			draw_text_transformed(800, 687, "Cancel", 0.6, 0.6, 0);
+if (slide=3){
+    draw_set_color(38144);
+    draw_set_font(fnt_40k_30b);
+    draw_set_halign(fa_center);
+    
+    tooltip="";
+    tooltip2="";
+    obj_cursor.image_index=0;
+    
+    draw_text(800,80,chapter_name);
+    
+    draw_set_color(38144);
+    draw_rectangle(445, 200, 1125, 202, 0);
 
-			var cw, ch;
-			cw = string_width("Cancel") * 0.6;
-			ch = string_height("Cancel") * 0.6;
+    scr_creation_home_planet_create();
+    left_data_slate.inside_method = function(){
 
-			if (scr_hit(800, 687, 800 + cw, 687 + ch)) {
-				draw_set_color(c_white);
-				draw_set_alpha(0.25);
-				draw_text_transformed(800, 687, string_hash_to_newline("Cancel"), 0.6, 0.6, 0);
-				draw_set_color(38144);
-				draw_set_alpha(1);
+        if (!buttons.complex_homeworld.active){
+        
+            var trial_data = scr_trial_data();
+            draw_text_transformed(80,90,"Aspirant Trial",0.6,0.6,0);
 
-				if ((mouse_left == 1) && (cooldown <= 0)) {
-					cooldown = 8000;
-					popup = "";
-				}
-			}
+            if (custom>1){
+                draw_sprite_stretched(spr_creation_arrow,0,40,90,32,32);
+                if (point_and_click([40,90,40+32,90+32])){
+                    aspirant_trial++;
+                    if (aspirant_trial>=array_length(trial_data)){
+                        aspirant_trial=0
+                    }
+                }
+                var _right_x = 72 + string_length("Aspirant Trial") + 10;
+                draw_sprite_stretched(spr_creation_arrow,1,_right_x,90,32,32);
+                if (point_and_click([_right_x,90,_right_x+32,90+32])){
+                    aspirant_trial--;
+                    if (aspirant_trial<0){
+                        aspirant_trial = array_length(trial_data)-1;
+                    }
+                }
+            }
 
-			draw_set_font(fnt_40k_14b);
-			draw_set_halign(fa_left);
+            var current_trial = trial_data[aspirant_trial];
+
+            
+
+            draw_text_transformed(80,110,current_trial.name,0.5,0.5,0);
+            
+            var asp_info;
+            asp_info = scr_compile_trial_bonus_string(current_trial);
+
+            draw_text_ext_transformed(left_data_slate.XX+20,150,asp_info,-1,left_data_slate.width-20,0.4,0.4,0);
+             
+            if (scr_hit(50,480,950,510)){
+                tooltip="Aspirant Trial";
+                tooltip2="A special challenge is needed for Aspirants to be judged worthy of becoming Astartes.  After completing the Trial they then become a Neophyte, beginning implantation and training (This can be changed once in game but the chosen trial here will effect the spawn characteristics of your starting marines).";
+            }
+        } else {
+            draw_set_font(fnt_40k_30b);
+            var spawn_radio = buttons.home_spawn_loc_options;
+            spawn_radio.x1 = 70;
+            spawn_radio.y1 =  60;
+            spawn_radio.draw();
+        }
+    }
+    left_data_slate.draw(0,5,0.45, 1);
+    
+    draw_line(445,640,1125,640);
+    draw_line(445,641,1125,641);
+    draw_line(445,642,1125,642);
+    
+    if (race[100,17]!=0){
+        draw_text_transformed(460,665,"Psychic Discipline",0.6,0.6,0);
+        if (scr_hit(445,665,620,690)){
+            tooltip="Psychic Discipline";
+            tooltip2="The Psychic Discipline that your psykers will use by default.";
+        }
+        
+        var fug,fug2;fug=string_delete(discipline,2,string_length(discipline));
+        fug2=string_delete(discipline,1,1);draw_text_transformed(513,697,string_hash_to_newline(string_upper(fug)+string(fug2)),0.5,0.5,0);
+        
+        var psy_info;psy_info="";
+        if (discipline="default") then psy_info="-Psychic Blasts and Barriers";
+        if (discipline="biomancy") then psy_info="-Manipulates Biology to Buff or Heal";
+        if (discipline="pyromancy") then psy_info="-Unleashes Blasts and Walls of Flame";
+        if (discipline="telekinesis") then psy_info="-Manipulates Gravity to Throw or Shield";
+        if (discipline="rune Magick") then psy_info="-Summons Deadly Elements and Feral Spirits";
+        draw_text_transformed(533,729,string_hash_to_newline(string(psy_info)),0.5,0.5,0);
+        
+        if (custom<2) then draw_set_alpha(0.5);
+        if (custom=2) then draw_sprite_stretched(spr_creation_arrow,0,437,688,32,32);
+        if (custom=2) then draw_sprite_stretched(spr_creation_arrow,1,475,688,32,32);
+        draw_set_alpha(1);
+        
+        if (scr_hit(437,688,437+32,688+32)) and (mouse_left>=1) and (cooldown<=0) and (custom>1){
+            var onceh;onceh=0;cooldown=8000;
+            if (discipline="default") and (onceh=0){discipline="rune Magick";onceh=1;}
+            if (discipline="rune Magick") and (onceh=0){discipline="telekinesis";onceh=1;}
+            if (discipline="telekinesis") and (onceh=0){discipline="pyromancy";onceh=1;}
+            if (discipline="pyromancy") and (onceh=0){discipline="biomancy";onceh=1;}
+            if (discipline="biomancy") and (onceh=0){discipline="default";onceh=1;}
+        }
+        if (scr_hit(475,688,475+32,688+32)) and (mouse_left>=1) and (cooldown<=0) and (custom>1){
+            var onceh;onceh=0;cooldown=8000;
+            if (discipline="default") and (onceh=0){discipline="biomancy";onceh=1;}
+            if (discipline="biomancy") and (onceh=0){discipline="pyromancy";onceh=1;}
+            if (discipline="pyromancy") and (onceh=0){discipline="telekinesis";onceh=1;}
+            if (discipline="telekinesis") and (onceh=0){discipline="rune Magick";onceh=1;}
+            if (discipline="rune Magick") and (onceh=0){discipline="default";onceh=1;}
+        }
+         
+    }
+}
 
 			// repeat here
 

@@ -769,6 +769,7 @@
     {"id":{"name":"spr_ship_inter","path":"sprites/spr_ship_inter/spr_ship_inter.yy",},},
     {"id":{"name":"DiploCommonComponents","path":"scripts/DiploCommonComponents/DiploCommonComponents.yy",},},
     {"id":{"name":"spr_ship_craftworld","path":"sprites/spr_ship_craftworld/spr_ship_craftworld.yy",},},
+    {"id":{"name":"scr_creation_home_planet_create","path":"scripts/scr_creation_home_planet_create/scr_creation_home_planet_create.yy",},},
     {"id":{"name":"spr_binders_robes","path":"sprites/spr_binders_robes/spr_binders_robes.yy",},},
     {"id":{"name":"spr_helm_decorations","path":"sprites/spr_helm_decorations/spr_helm_decorations.yy",},},
     {"id":{"name":"spr_ws_mk7_scar_of_the_ancients","path":"sprites/spr_ws_mk7_scar_of_the_ancients/spr_ws_mk7_scar_of_the_ancients.yy",},},
