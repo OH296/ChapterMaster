@@ -18,152 +18,15 @@ good_log=1;
 
 var xx,yy,ok=0,did=0,_current_system=0,px=0,py=0,rando=0;
 // Set player set
-for(var i=0; i<100; i++){
-    if (ok==0){
-        xx=floor(random((room_width-128)))+64;
-        yy=floor(random((room_width-92)))+64;
-
-        _current_system=instance_nearest(xx,yy,obj_star);
-
-        if (instance_exists(_current_system)){
-            if (_current_system.star=="orange1" || _current_system.star=="orange2"){
-                if (_current_system.p_type[1]=="Temperate"){
-                    did=1;
-                    ok=1;
-                    if (obj_ini.fleet_type==ePlayerBase.home_world){
-                        _current_system.p_owner[1]=eFACTION.Player;
-                        _current_system.p_first[1]=eFACTION.Player;
-                        _current_system.owner  = eFACTION.Player;
-                    }
-                    px=_current_system.x;
-                    py=_current_system.y;
-                }
-                else if (_current_system.p_type[2]=="Temperate") and (did=0){
-                    did=1;
-                    ok=1;
-                    if (obj_ini.fleet_type==ePlayerBase.home_world){
-                        _current_system.p_owner[2]=1;
-                        _current_system.p_first[2]=1;
-                        _current_system.owner  = eFACTION.Player;
-                    }
-                    px=_current_system.x;
-                    py=_current_system.y;
-                }
-                else if (_current_system.p_type[3]=="Temperate") and (did=0){
-                    did=1;
-                    ok=1;
-                    if (obj_ini.fleet_type==ePlayerBase.home_world){
-                        _current_system.p_owner[3]=1;
-                        _current_system.p_first[3]=1;
-                        _current_system.owner  = eFACTION.Player;
-                    }
-                    px=_current_system.x;
-                    py=_current_system.y;
-                }
-                else if (_current_system.p_type[4]=="Temperate") and (did=0){
-                    did=1;
-                    ok=1;
-                    if (obj_ini.fleet_type==ePlayerBase.home_world){
-                        _current_system.p_owner[4]=1;
-                        _current_system.p_first[4]=1;
-                        _current_system.owner  = eFACTION.Player;
-                    }
-                    px=_current_system.x;
-                    py=_current_system.y;
-                }
-            }
-            if (ok==0) and (did==0) then instance_deactivate_object(_current_system);
-        }
-    }
-}
+_current_system.find_player_spawn_star();
 
 instance_activate_object(obj_star);
 
 // Set player homeworld
 if (did==1){
-
-    _current_system.planets=2;
-    _current_system.vision=1;
-    if (obj_ini.fleet_type=ePlayerBase.home_world) then _current_system.owner  = eFACTION.Player;
-    _current_system.p_type[3]="";
-    _current_system.planet[3]=0;
-    _current_system.p_type[4]="";
-    _current_system.planet[4]=0;
     
     if (obj_ini.fleet_type==ePlayerBase.home_world){
-        if (obj_ini.recruiting_type!=obj_ini.home_type) and (obj_ini.home_name!=obj_ini.recruiting_name){
-            _current_system.p_type[1]=obj_ini.recruiting_type;
-
-            if (obj_ini.recruiting_name!="random"){
-                array_push(global.name_generator.star_used_names, obj_ini.recruiting_name);
-                if (star_by_name(obj_ini.recruiting_name) != "none" ){
-                    star_by_name(obj_ini.recruiting_name).name = global.name_generator.generate_star_name();
-                }
-                _current_system.name=obj_ini.recruiting_name;
-            }
-
-            _current_system.p_type[2]=obj_ini.home_type;
-            _current_system.planet[2]=1;
-
-            if (obj_ini.home_name!="random"){
-                array_push(global.name_generator.star_used_names, obj_ini.home_name);
-                if (star_by_name(obj_ini.home_name) != "none" ){
-                    star_by_name(obj_ini.home_name).name = global.name_generator.generate_star_name();
-                }
-                _current_system.name=obj_ini.home_name;
-            }            
-
-            array_push(_current_system.p_feature[1], new NewPlanetFeature(P_features.Recruiting_World));//recruiting world
-            array_push(_current_system.p_feature[2], new NewPlanetFeature(P_features.Monastery));
-            _current_system.p_owner[2]=eFACTION.Player;
-
-            _current_system.p_first[2]=1; //monestary
-            if (homeworld_rule!=1) then _current_system.dispo[2]=-5000;
-            
-            if (obj_ini.home_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;
-            if (obj_ini.recruiting_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;
-            
-            _current_system.p_lasers[2]=8;
-            _current_system.p_silo[2]=100;
-            _current_system.p_defenses[2]=75;
-            if (obj_ini.custom==0){
-                _current_system.p_lasers[2]=32;
-                _current_system.p_silo[2]=300;
-                _current_system.p_defenses[2]=225;
-            }
-            
-            if (_current_system.p_type[1]=="random") then _current_system.p_type[1]=choose("Death","Temperate","Desert","Ice");
-            if (_current_system.p_type[2]=="random") then _current_system.p_type[2]=choose("Death","Temperate","Desert","Ice");
-            if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(_current_system.name)+" I|";
-            
-            _current_system.p_player[2]=obj_ini.man_size;
-        }
-        if (obj_ini.recruiting_type==obj_ini.home_type) or (obj_ini.home_name==obj_ini.recruiting_name){
-            _current_system.p_type[1]="Dead";
-            _current_system.p_type[2]=obj_ini.home_type;
-            _current_system.planet[2]=1;
-            if (obj_ini.home_name!="random") then _current_system.name=obj_ini.home_name;
-            array_push(_current_system.p_feature[2], new NewPlanetFeature(P_features.Monastery), new NewPlanetFeature(P_features.Recruiting_World))
-			_current_system.p_owner[2]=eFACTION.Player;
-            _current_system.p_first[2]=eFACTION.Player;
-            if (homeworld_rule!=1) then _current_system.dispo[2]=-5000;
-            if (obj_ini.home_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;
-            if (obj_ini.recruiting_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;
-            
-            _current_system.p_lasers[2]=8;
-            _current_system.p_silo[2]=100;
-            _current_system.p_defenses[2]=75;
-            if (obj_ini.custom==0){
-                _current_system.p_lasers[2]=32;
-                _current_system.p_silo[2]=300;
-                _current_system.p_defenses[2]=225;
-            }
-            if (_current_system.p_type[1]=="random") then _current_system.p_type[1]=choose("Death","Temperate","Desert","Ice");
-            if (_current_system.p_type[2]=="random") then _current_system.p_type[2]=choose("Death","Temperate","Desert","Ice");
-            if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(_current_system.name)+" II|";
-            
-            _current_system.p_player[2]=obj_ini.man_size;
-        }
+        set_player_homeworld_star(_current_system);
     }
     // Crusade and fleet based
     if (obj_ini.fleet_type!=1){

@@ -1,26 +1,32 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
+
+
 function scr_creation_home_planet_create(){
 
-	var fleet_type_text = fleet_type==eFLEET_TYPES.HOMEWORLD ? "Homeworld" : "Flagship";
+	var fleet_type_text = fleet_type==ePlayerBase.home_world ? "Homeworld" : "Flagship";
     draw_text_transformed(644,218,fleet_type_text,0.6,0.6,0);
 
-    var _cur_planet_index,_cur_planet_index2;_cur_planet_index=0;_cur_planet_index2=0;name_bad=0;
+    var _cur_planet_index=0,_cur_planet_index2=0,name_bad=0;
     
 
     var _cur_planet_index  = scr_planet_image_numbers(homeworld);
     if (fleet_type!=1) then _cur_planet_index=16;
 
-    if (fleet_type == eFLEET_TYPES.HOMEWORLD){
+    if (fleet_type == ePlayerBase.home_world){
         scr_image("ui/planet",_cur_planet_index,580,244,128,128);
         // draw_sprite(spr_planet_splash,_cur_planet_index,580,244);
         
         draw_text_transformed(644,378,homeworld,0.5,0.5,0);
         // draw_text_transformed(644,398,string(homeworld_name),0.5,0.5,0);
         if (text_selected!="home_name") or (custom<2) then draw_text_transformed(644,398,homeworld_name,0.5,0.5,0);
+
         if (custom>1){
-            if (text_selected="home_name") and (text_bar>30) then draw_text_transformed(644,398,homeworld_name,0.5,0.5,0);
-            if (text_selected="home_name") and (text_bar<=30) then draw_text_transformed(644,398,homeworld_name+"|",0.5,0.5,0);
+
+            if (text_selected="home_name") {
+            	draw_text_transformed(644,398,homeworld_name+(text_bar>30?"":"|"),0.5,0.5,0);
+            } 
+
             if (scr_text_hit(644,398,true,homeworld_name)){
                 obj_cursor.image_index=2;
                 if (cooldown<=0) and (mouse_left>=1){
@@ -73,7 +79,7 @@ function scr_creation_home_planet_create(){
         _system_complex.clicked();
         draw_set_font(fnt_40k_30b);
     }
-    if (fleet_type != eFLEET_TYPES.HOMEWORLD){
+    if (fleet_type != ePlayerBase.home_world){
         // draw_sprite(spr_planet_splash,_cur_planet_index,580,244);
         scr_image("ui/planet",_cur_planet_index,580,244,128,128);
         
@@ -96,7 +102,8 @@ function scr_creation_home_planet_create(){
             	flagship_name=keyboard_string;
             }
             draw_set_alpha(0.75);
-            draw_rectangle(525,398,760,418,1);draw_set_alpha(1);
+            draw_rectangle(525,398,760,418,1);
+            draw_set_alpha(1);
             var _refresh_fs_name_btn =[770, 398, 790, 418];
             draw_unit_buttons(_refresh_fs_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
             if(point_and_click(_refresh_fs_name_btn)){
@@ -111,9 +118,12 @@ function scr_creation_home_planet_create(){
     
     
     
-    if (fleet_type!=eFLEET_TYPES.PENITENCE){
+    if (fleet_type!=ePlayerBase.penitent){
         if (fleet_type!=1) or (custom<2) then draw_set_alpha(0.5);
-        yar=0;if (recruiting_exists=1) then yar=1;draw_sprite(spr_creation_check,yar,858,221);yar=0;
+        yar=0;
+        if (recruiting_exists=1) then yar=1;
+        draw_sprite(spr_creation_check,yar,858,221);
+        yar=0;
         if (scr_hit(858,221,858+32,221+32)) and (cooldown<=0) and (mouse_left>=1) and (custom>1) and (fleet_type=1){
         	cooldown=8000;
         	var onc_cur_planet_index;
@@ -210,11 +220,11 @@ function scr_creation_home_planet_create(){
     
     
     if (scr_hit(575,216,710,242)){
-        if (fleet_type!=eFLEET_TYPES.HOMEWORLD){
+        if (fleet_type!=ePlayerBase.home_world){
         	tooltip="Battle Barge";
         	tooltip2="The name of your Flagship Battle Barge.";
         }
-        else if (fleet_type==eFLEET_TYPES.HOMEWORLD){
+        else if (fleet_type==ePlayerBase.home_world){
         	tooltip="Homeworld";
         	tooltip2="The world that your Chapter's Fortress Monastery is located upon.  More civilized worlds are more easily defensible but the citizens may pose a risk or be a nuisance.";
         }
@@ -234,7 +244,7 @@ function scr_creation_home_planet_create(){
     draw_set_halign(fa_left);
     
     //TODO move to OOP checkboxes
-    if (fleet_type == eFLEET_TYPES.HOMEWORLD){
+    if (fleet_type == ePlayerBase.home_world){
         if (custom<2) then draw_set_alpha(0.5);
         var _homeworld_types = [
         	{

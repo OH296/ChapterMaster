@@ -1028,6 +1028,12 @@ if (slide=3){
             spawn_radio.x1 = 70;
             spawn_radio.y1 =  60;
             spawn_radio.draw();
+
+            var _recruit_home = buttons.recruit_home_relationship;
+
+            _recruit_home.x1 = 70;
+            _recruit_home.y1 =  500;
+            _recruit_home.draw();
         }
     }
     left_data_slate.draw(0,5,0.45, 1);

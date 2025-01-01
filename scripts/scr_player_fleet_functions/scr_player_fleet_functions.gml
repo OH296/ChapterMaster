@@ -2,6 +2,7 @@
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more informationype
 
 enum ePlayerBase {
+	none = 0,
 	home_world = 1,
 	fleet_based = 2,
 	penitent = 3,

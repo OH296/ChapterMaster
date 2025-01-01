@@ -156,14 +156,43 @@ buttons = {
     }),
     home_spawn_loc_options : new radio_set([
         {
-            str1 : "fringe",
+            str1 : "Fringe",
             font : fnt_40k_30b,
         },
         {
-            str1 : "central",
+            str1 : "Central",
             font : fnt_40k_30b
         },        
     ], "Home Spwan\nLocation"),
+
+    recruit_home_relationship : new radio_set([
+        {
+            str1 : "Share Planet",
+            font : fnt_40k_14b,
+        },
+        {
+            str1 : "Share System",
+            font : fnt_40k_14b
+        },
+        {
+            str1 : "Seperate",
+            font : fnt_40k_14b
+        },            
+    ], "Recruit world\Home World Relationship"),
+    home_warp : new radio_set([
+        {
+            str1 : "Secluded",
+            font : fnt_40k_14b,
+        },
+        {
+            str1 : "Connected",
+            font : fnt_40k_14b
+        },
+        {
+            str1 : "Warp Hub",
+            font : fnt_40k_14b
+        },            
+    ], "Home warp access"),    
 }
 scrollbar_engaged=0;
 

@@ -12,7 +12,7 @@ function ChapterData() constructor {
 	icon = 0;
 	icon_name = "aa";
 	aspirant_trial = eTrials.BLOODDUEL;
-	fleet_type = eFLEET_TYPES.NONE;
+	fleet_type = ePlayerBase.none;
 	strength = 0;
 	purity = 0;
 	stability = 0;
@@ -479,14 +479,6 @@ function scr_chapter_new(argument0) {
 	return true;
 }
 
-
-enum eFLEET_TYPES {
-	NONE = 0,
-	HOMEWORLD = 1,
-	FLEET_BASED,
-	PENITENCE,
-}
-
 enum eHOMEWORLD_RULE {
 	NONE = 0,
 	GOVERNOR = 1,
@@ -499,4 +491,9 @@ enum eCM_SPECIALTY {
 	LEADER = 1,
 	CHAMPION,
 	PSYKER,
+}
+enum eRecruitHomeRelationship{
+	SAMEPLANET,
+	SAMESYSTEM,
+	DIFFERENTSYSTEM,
 }

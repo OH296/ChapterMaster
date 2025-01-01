@@ -654,6 +654,7 @@
     {"id":{"name":"spr_ui_hov_4","path":"sprites/spr_ui_hov_4/spr_ui_hov_4.yy",},},
     {"id":{"name":"spr_settings_button","path":"sprites/spr_settings_button/spr_settings_button.yy",},},
     {"id":{"name":"spr_help_panel","path":"sprites/spr_help_panel/spr_help_panel.yy",},},
+    {"id":{"name":"scr_system_spawn_functions","path":"scripts/scr_system_spawn_functions/scr_system_spawn_functions.yy",},},
     {"id":{"name":"UIRenderComponents","path":"scripts/UIRenderComponents/UIRenderComponents.yy",},},
     {"id":{"name":"spr_dread_lascannon","path":"sprites/spr_dread_lascannon/spr_dread_lascannon.yy",},},
     {"id":{"name":"spr_help_exit","path":"sprites/spr_help_exit/spr_help_exit.yy",},},
