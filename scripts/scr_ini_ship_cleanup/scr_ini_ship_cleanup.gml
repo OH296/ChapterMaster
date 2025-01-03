@@ -8,7 +8,7 @@ function scr_kill_ship(index){
 				for (var i=0;i<array_length(name[co]);i++){
 					_unit = fetch_unit([co,i]);
 					if (_unit.ship_location == index){
-						if (!irandom(luck)-3){
+						if (!irandom(_unit.luck)-3){
 							scr_kill_unit(_unit.company, _unit.marine_number);
 						} else {
 							array_push(_units_on_ship, _unit);
