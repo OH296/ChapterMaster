@@ -6,11 +6,13 @@ function add_fleet_ships_to_combat(fleet, combat){
 	var _ships = fleet_full_ship_array(fleet);
 	var _ship_array_length = array_length(_ships);
 	for (var i=0;i<_ship_array_length;i++){
+		if (i>=array_length(_ships)) then break;
 		_ship_id = _ships[i];
 		if (obj_ini.ship_hp[_ship_id]<=0 || obj_ini.ship[_ship_id]==""){
 			array_delete(_ships,i,1);
 			i--;
 			_ship_array_length--;
+			continue;
 		}
         if (obj_ini.ship_size[_ship_id]>=3) then combat.capital++;
         if (obj_ini.ship_size[_ship_id]==2) then combat.frigate++;
