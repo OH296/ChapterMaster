@@ -34,7 +34,7 @@ if (ai_a>=0){
     ai_a--;
     if (ai_a==0){
         try{
-            scr_enemy_ai_a
+            scr_enemy_ai_a();
         } catch(_exception){
             handle_exception(_exception);
         }
@@ -44,7 +44,7 @@ if (ai_b>=0){
     ai_b--;
     if (ai_b==0){
         try{
-            scr_enemy_ai_b
+            scr_enemy_ai_b();
         } catch(_exception){
             handle_exception(_exception);
         }
@@ -54,7 +54,7 @@ if (ai_c>=0){
     ai_c--;
     if (ai_c==0){
         try{
-            scr_enemy_ai_c
+            scr_enemy_ai_c();
         } catch(_exception){
             handle_exception(_exception);
         }
@@ -64,7 +64,7 @@ if (ai_d>=0){
     ai_d--;
     if (ai_d==0){
         try{
-            scr_enemy_ai_d
+            scr_enemy_ai_d();
         } catch(_exception){
             handle_exception(_exception);
         }
@@ -74,7 +74,7 @@ if (ai_e>=0){
     ai_e--;
     if (ai_e==0){
         try{
-            scr_enemy_ai_e
+            scr_enemy_ai_e();
         } catch(_exception){
             handle_exception(_exception);
         }
