@@ -380,13 +380,13 @@ function new_player_ship(type, start_loc="home", new_name=""){
         obj_ini.ship_shields[index]=24;
         obj_ini.ship_wep[index,1]="Lance Battery";
         ship_wep_facing[index,1]="most";
-        obj_ini.ship_wep_condition[last_ship,1]="";
+        obj_ini.ship_wep_condition[index,1]="";
         obj_ini.ship_wep[index,2]="Lance Battery";
 		ship_wep_facing[index,2]="most";
-        obj_ini.ship_wep_condition[last_ship,2]="";
+        obj_ini.ship_wep_condition[index,2]="";
         obj_ini.ship_wep[index,3]="Lance Battery";
         ship_wep_facing[index,3]="most";
-        obj_ini.ship_wep_condition[last_ship,3]="";
+        obj_ini.ship_wep_condition[index,3]="";
         obj_ini.ship_wep[index,4]="Plasma Cannon";
         ship_wep_facing[index,4]="front";
         obj_ini.ship_wep_condition[index,4]="";
