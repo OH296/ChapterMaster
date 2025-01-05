@@ -18,7 +18,7 @@ good_log=1;
 
 var xx,yy,ok=0,did=0,_current_system=0,px=0,py=0,rando=0;
 // Set player set
-_current_system.find_player_spawn_star();
+_current_system = find_player_spawn_star();
 
 instance_activate_object(obj_star);
 
@@ -29,7 +29,7 @@ if (did==1){
         set_player_homeworld_star(_current_system);
     }
     // Crusade and fleet based
-    if (obj_ini.fleet_type!=1){
+    if (obj_ini.fleet_type!=ePlayerBase.home_world){
         if (obj_ini.recruiting_type!=obj_ini.home_type) and (obj_ini.home_name!=obj_ini.recruiting_name){
             _current_system.p_type[1]=obj_ini.recruiting_type;
             if (obj_ini.recruiting_name!="random") then _current_system.name=obj_ini.recruiting_name;

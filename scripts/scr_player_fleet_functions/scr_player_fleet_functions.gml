@@ -1,12 +1,6 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more informationype
 
-enum ePlayerBase {
-	none = 0,
-	home_world = 1,
-	fleet_based = 2,
-	penitent = 3,
-}
 function init_player_fleet_arrays(){
 	ship=[];
 	ship_uid=[];
