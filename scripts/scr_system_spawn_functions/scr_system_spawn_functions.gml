@@ -1,6 +1,8 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
+
+#macro ARR_planet_types ["Dead","Ice", "Temperate","Feudal","Shrine","Agri","Death","Hive","Forge","Desert","Lava"]
 enum ePlayerBase {
 	none = 0,
 	home_world = 1,
@@ -74,11 +76,11 @@ function player_home_star(home_planet){
             p_defenses[home_planet]=225;
         }
         
-
-        if (p_type[home_planet]=="random") then p_type[home_planet]=choose("Death","Temperate","Desert","Ice");
+        var _planet_types = ARR_planet_types;
+        if (p_type[home_planet]=="random") then p_type[home_planet]=choose(_planet_types);
         if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(name)+" I|";
         
-        p_player[2]=obj_ini.man_size;
+        p_player[home_planet]=obj_ini.man_size;
 }
 
 
@@ -94,6 +96,7 @@ function set_player_recruit_planet(recruit_planet){
     } 	
 	array_push(p_feature[recruit_planet], new NewPlanetFeature(P_features.Recruiting_World));//recruiting world
 	if (p_type[recruit_planet]=="random") then p_type[recruit_planet]=choose("Death","Temperate","Desert","Ice","Hive", "Fuedal");
+	if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(name)+" II|";
 }
 
 function set_player_homeworld_star(chosen_star){
@@ -114,32 +117,12 @@ function set_player_homeworld_star(chosen_star){
 				set_player_recruit_planet(_recruit_star);
 
 	       }
+	    } else if (obj_ini.recruit_relative_loc==0){
+	    	array_push(p_feature[_home_star], new NewPlanetFeature(P_features.Recruiting_World));//recruiting world
+	    	if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(name)+" II|";
+	    } else if (obj_ini.recruit_relative_loc==2){
+	    	
 	    }
-	    if (obj_ini.recruiting_type==obj_ini.home_type) or (obj_ini.home_name==obj_ini.recruiting_name){
-	        p_type[1]="Dead";
-	        p_type[2]=obj_ini.home_type;
-	        planet[2]=1;
-	        if (obj_ini.home_name!="random") then name=obj_ini.home_name;
-	        array_push(p_feature[2], new NewPlanetFeature(P_features.Monastery), new NewPlanetFeature(P_features.Recruiting_World))
-			p_owner[2]=eFACTION.Player;
-	        p_first[2]=eFACTION.Player;
-	        if (homeworld_rule!=1) then dispo[2]=-5000;
-	        if (obj_ini.home_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;
-	        if (obj_ini.recruiting_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;
-	        
-	        p_lasers[2]=8;
-	        p_silo[2]=100;
-	        p_defenses[2]=75;
-	        if (obj_ini.custom==0){
-	            p_lasers[2]=32;
-	            p_silo[2]=300;
-	            p_defenses[2]=225;
-	        }
-	        if (p_type[1]=="random") then p_type[1]=choose("Death","Temperate","Desert","Ice");
-	        if (p_type[2]=="random") then p_type[2]=choose("Death","Temperate","Desert","Ice");
-	        if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(name)+" II|";
-	        
-	        p_player[2]=obj_ini.man_size;
-	    }
+	    
     }	
 }

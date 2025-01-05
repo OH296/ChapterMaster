@@ -146,7 +146,7 @@ function scr_creation_home_planet_create(){
             if (custom>1){
             	draw_sprite_stretched(spr_creation_arrow,0,865,285,32,32);
             	draw_sprite_stretched(spr_creation_arrow,1,1055,285,32,32);
-		        var planet_types = ["Dead","Ice", "Temperate","Feudal","Shrine","Agri","Death","Hive","Forge","Desert","Lava"];
+		        var planet_types = ARR_planet_types;
 		        var planet_change_allow = (mouse_left>=1) and (cooldown<=0) and (custom>1);
 		        for (var i=0;i<array_length(planet_types);i++){
 
