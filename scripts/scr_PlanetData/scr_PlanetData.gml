@@ -26,22 +26,25 @@ function PlanetData(planet, system) constructor{
     ground_defences = system.p_defenses[planet];
     upgrades = system.p_upgrades[planet];
     // v how much of a problem they are from 1-5
-    planet_forces = [
-    	0,
-    	player_forces,
-    	guardsmen,
-    	0,
-    	0,
-    	system.p_sisters[planet],
-    	system.p_eldar[planet],
-    	system.p_orks[planet],
-    	system.p_tau[planet],
-    	system.p_tyranids[planet],
-		system.p_traitors[planet],    	
-    	system.p_chaos[planet]+ system.p_demons[planet],
-    	0,
-    	system.p_necrons[planet]
-    ]
+    planet_forces = array_create(14, 0);
+
+    try{
+    	planet_forces[1] = player_force;
+
+	    planet_forces[2] =	guardsmen;
+
+	    planet_forces[5] =	system.p_sisters[planet];
+	    planet_forces[6] =	system.p_eldar[planet];
+	    planet_forces[7] =	system.p_orks[planet];
+	    planet_forces[8] =	system.p_tau[planet];
+	    planet_forces[9] =	system.p_tyranids[planet];
+		planet_forces[10] =	system.p_traitors[planet],;   	
+	    planet_forces[11] =	system.p_chaos[planet]+ system.p_demons[planet];
+
+	    planet_forces[13] =	system.p_necrons[planet];
+	catch(_exception){
+		handle_exception(_exception);
+	}
 
     deamons = system.p_demons[planet];
     chaos_forces = system.p_chaos[planet];
