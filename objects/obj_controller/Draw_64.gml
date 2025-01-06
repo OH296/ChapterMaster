@@ -62,11 +62,7 @@ if (!zoomed && !zui){
     draw_set_font(fnt_menu);
     draw_set_halign(fa_center);
     // Draws the sector name
-    try{
-        var _sector_string = $"Sector {obj_ini.sector_name}";
-    } catch(_exception){
-        var _sector_string = "Terra Nova";
-    }
+    var _sector_string = $"Sector {obj_ini.sector_name ?? "Terra Nova"}";
     draw_text(775,17,_sector_string);
     draw_text(775.5,17.5,_sector_string);
     
