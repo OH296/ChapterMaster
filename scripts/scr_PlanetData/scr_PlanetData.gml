@@ -42,7 +42,7 @@ function PlanetData(planet, system) constructor{
 	    planet_forces[11] =	system.p_chaos[planet]+ system.p_demons[planet];
 
 	    planet_forces[13] =	system.p_necrons[planet];
-	catch(_exception){
+	}catch(_exception){
 		handle_exception(_exception);
 	}
 
