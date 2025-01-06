@@ -29,7 +29,7 @@ function PlanetData(planet, system) constructor{
     planet_forces = array_create(14, 0);
 
     try{
-    	planet_forces[1] = player_force;
+    	planet_forces[1] = player_forces;
 
 	    planet_forces[2] =	guardsmen;
 
