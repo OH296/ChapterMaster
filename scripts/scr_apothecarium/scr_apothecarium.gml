@@ -162,7 +162,7 @@ function gene_seed_count(){
 }
 
 function add_new_gene_slave(){
-    if (gene_seed>0) and (obj_ini.zygote==0) {
+    if (gene_seed_count()>0) and (obj_ini.zygote==0) {
         var _added = false;
         if (array_length(obj_ini.gene_slaves)){
             var _last_set = obj_ini.gene_slaves[array_length(obj_ini.gene_slaves)-1];
@@ -244,10 +244,11 @@ function scr_apothecarium(){
 
     // 
 
-    if (gene_seed <= 0) then blurp += "##My lord, our stocks of gene-seed are empty.  It would be best to have some come mechanicus tithe.##Further training of Neophytes is halted until our stocks replenish.";
-    if (gene_seed > 0) and(gene_seed <= 10) then blurp += "##My Brother " + string(obj_ini.role[100, 15]) + "s assigned to the gene-vault have informed me that our stocks are nearly gone.  They only number " + string(gene_seed) + "; this includes those recently recovered from our fallen comerades-in-arms.";
-    if (gene_seed > 10) then blurp += "##My Brother " + string(obj_ini.role[100, 15]) + "s assigned to the gene-vault have informed me that our stocks of gene-seed currently number " + string(gene_seed) + ".  This includes those recently recovered from our fallen comerades-in-arms.";
-    if (gene_seed > 0) then blurp += "##The stocks are stable and show no sign of mutation.";
+    var _gene_count = gene_seed_count();
+    if (_gene_count <= 0) then blurp += $"##My lord, our stocks of gene-seed are empty.  It would be best to have some come mechanicus tithe.##Further training of Neophytes is halted until our stocks replenish.";
+    if (_gene_count > 0) and(_gene_count <= 10) then blurp += $"##My Brother {obj_ini.role[100, 15]}s assigned to the gene-vault have informed me that our stocks are nearly gone.  They only number {_gene_count}; this includes those recently recovered from our fallen comerades-in-arms.";
+    if (_gene_count > 10) then blurp += $"##My Brother {obj_ini.role[100, 15]}s assigned to the gene-vault have informed me that our stocks of gene-seed currently number {_gene_count}.  This includes those recently recovered from our fallen comerades-in-arms.";
+    if (_gene_count > 0) then blurp += $"##The stocks are stable and show no sign of mutation.";
 
     if (menu_adept = 1) {
         var _recruit_pace = ARR_recruitment_pace;
@@ -255,7 +256,7 @@ function scr_apothecarium(){
         blurp += "Training of further " + string(obj_ini.role[100, 15]) + "s";
         if (training_apothecary >= 0 && training_apothecary <= 6) then blurp += _recruit_pace[training_apothecary];
         if (training_apothecary > 0) then blurp += "  The next " + string(obj_ini.role[100, 15]) + " is expected in " + string(eta) + " months.";
-        blurp += "##You have " + string(gene_seed) + " gene-seed stocked.";
+        blurp += $"##You have {_gene_count} gene-seed stocked.";
     }
 
     draw_text_ext(xx + 336 + 16, yy + 130, string_hash_to_newline(string(blurp)), -1, 536);

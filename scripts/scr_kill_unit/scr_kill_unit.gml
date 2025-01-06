@@ -61,12 +61,7 @@ function kill_and_recover(company, unit_slot, equipment=true, gene_seed_collect=
 	} 
 	if (gene_seed_collect && unit.base_group=="astartes"){
 		//TODO get rid of string methods
-        if (unit.age() > 30 && !obj_ini.zygote && !obj_ini.doomed) then obj_controller.gene_seed+=1;
-        if (unit.age() > 50) and (string_count("Doom",obj_ini.strin2)==0){
-        	array_push(gene_seed, )
-        	_returns.gene_seed = unit.gene_seed_mutations;
-        	gene_seed_count()+=1;	
-        }
+		unit.harvest_gene_seed();
 	}
     if (obj_ini.race[company][unit_slot]==1){
         if(is_specialist(obj_ini.role[company][unit_slot])){

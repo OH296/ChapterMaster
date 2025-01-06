@@ -890,6 +890,17 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 					body[$"head"].hood = 1;
 				}
 			}
+
+			static harvest_gene_seed = function(){
+				var _gene_data = gene_seed_mutations;
+				var _gene_stock = obj_Controller.gene_stock;
+		        if (age() > 30 && !_gene_data.zygote && !_gene_data.doomed){
+		        	_gene_stock.new_gene_seed(_gene_data);
+		        }
+		        if (age() > 50) and (!obj_ini.doomed){
+		        	_gene_stock.new_gene_seed(_gene_data);	
+		        }				
+			}
 			break;
 		case "tech_priest":
 			loyalty = obj_controller.disposition[eFACTION.Mechanicus]-10;

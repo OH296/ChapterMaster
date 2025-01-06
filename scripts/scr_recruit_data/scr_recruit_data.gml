@@ -587,7 +587,7 @@ function scr_draw_recruit_advisor(){
 			blurp += $"Our Chapter currently has {recruits} recruits being trained. {recruit_name[0]} is the next scheduled Neophyte to become a battle brother in {recruit_training[0] + recruit_distance[0]} months' time.";
 		}
 
-		if (gene_seed > 0) {
+		if (gene_seed_count() > 0) {
 			var _recruit_rates = ARR_recruitment_rates;
 			var _cur_recruit_rate = $"The recruitment is {_recruit_rates[recruiting]}";
 			if ((recruiting == 0) && (marines >= 1000)) {
@@ -608,7 +608,7 @@ function scr_draw_recruit_advisor(){
 		blurp += "\nMutation of our gene-seed currently makes us unable to recruit new Neophytes. We are doomed to a slow demise unless the Apothecaries can fix it.";
 	}
 	
-	if (gene_seed == 0) {
+	if (gene_seed_count() == 0) {
 		blurp += "\nThere is no more gene-seed in our vaults and we cannot create more neophytes as a result. Something must be done, Chapter Master.";
 	}
 	
