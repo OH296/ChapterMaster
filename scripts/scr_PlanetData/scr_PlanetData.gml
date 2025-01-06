@@ -38,7 +38,7 @@ function PlanetData(planet, system) constructor{
 	    planet_forces[7] =	system.p_orks[planet];
 	    planet_forces[8] =	system.p_tau[planet];
 	    planet_forces[9] =	system.p_tyranids[planet];
-		planet_forces[10] =	system.p_traitors[planet],;   	
+		planet_forces[10] =	system.p_traitors[planet];   	
 	    planet_forces[11] =	system.p_chaos[planet]+ system.p_demons[planet];
 
 	    planet_forces[13] =	system.p_necrons[planet];
