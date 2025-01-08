@@ -11,9 +11,9 @@ function scr_add_vehicle(vehicle_type, target_company, weapon1, weapon2, weapon3
 		arm = "";
 		missing = 0;
 
-		for (var i = 0; i < array_length(obj_ini.veh_role[target_company]); i++) {
+		for (var i = 1; i < array_length(obj_ini.veh_role[target_company]); i++) {
 			if (good == 0) {
-				if (obj_ini.veh_role[target_company, i] == "") {
+				if (obj_ini.veh_role[target_company][i] == "") {
 					good = i;
 					break;
 				}
