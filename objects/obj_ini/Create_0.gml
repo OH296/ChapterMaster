@@ -18,9 +18,9 @@ companies=10;
 progenitor=ePROGENITOR.NONE;
 aspirant_trial = 0;
 
-//defualt sector name to prevent potential crash
+//default sector name to prevent potential crash
 sector_name = "Terra Nova";
-
+//default
 load_to_ships=[2,0,0];
 if (instance_exists(obj_creation)){load_to_ships=obj_creation.load_to_ships;}
 

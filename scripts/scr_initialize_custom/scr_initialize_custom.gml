@@ -1726,8 +1726,8 @@ function scr_initialize_custom() {
 				"min": 4,
 				"loadout": {
 					"required": {
-						"wep1": [wep1[100, 10], 7],
-						"wep2": [wep2[100, 10], 7],
+						"wep1": [wep1[100, 10], 5],
+						"wep2": [wep2[100, 10], 5],
 					},
 					"option": {
 						"wep1": [
@@ -3035,12 +3035,12 @@ function scr_initialize_custom() {
 					repeat(temp1) {
 						k += 1;
 						man_size += 1;
-						add_unit_to_company("marine", company, k, roles.tactical, eROLE.Tactical, "","", "", "", "");
+						add_unit_to_company("marine", company, k, roles.tactical, eROLE.Tactical, "default","default", "default", "default", "default");
 					}
 					repeat(assault) {
 						k += 1;
 						man_size += 1;
-						add_unit_to_company("marine", company, k, roles.assault, eROLE.Assault, "", "", "", "default", "");
+						add_unit_to_company("marine", company, k, roles.assault, eROLE.Assault, "default", "default", "default", "default", "default");
 					}
 					repeat(devastator) {
 						k += 1;
@@ -3049,14 +3049,14 @@ function scr_initialize_custom() {
 						if (wep1[defaults_slot, eROLE.Devastator] == "Heavy Ranged") {
 							_wep1 = choose("Multi-Melta", "Lascannon", "Missile Launcher", "Heavy Bolter");
 						} 
-						add_unit_to_company("marine", company, k, roles.devastator, eROLE.Devastator, _wep1, "","", "default", "");
+						add_unit_to_company("marine", company, k, roles.devastator, eROLE.Devastator, _wep1, "default","default", "default", "default");
 					}
 				}
 				if (company = 10) {
 					repeat(temp1) {
 						k += 1;
 						man_size += 1;
-						add_unit_to_company("scout", company, k, roles.scout, eROLE.Scout, "", "", "", "", "Scout Armour");
+						add_unit_to_company("scout", company, k, roles.scout, eROLE.Scout, "defaultdefault", "defaultdefault", "defaultdefault", "defaultdefault", "Scout Armour");
 					}
 				}
 			}
@@ -3065,7 +3065,7 @@ function scr_initialize_custom() {
 				if (company < 8) then repeat(temp1) {
 					k += 1;
 					man_size += 1;
-					add_unit_to_company("marine", company, k, roles.tactical, eROLE.Tactical, "", "", "", "", "");
+					add_unit_to_company("marine", company, k, roles.tactical, eROLE.Tactical, "default", "default", "default", "default", "default");
 				} 
 				
 				// reserve company only of assault
@@ -3083,30 +3083,27 @@ function scr_initialize_custom() {
 					if (wep1[defaults_slot, eROLE.Devastator] == "Heavy Ranged") {
 						_wep1 = choose("Multi-Melta", "Lascannon", "Missile Launcher", "Heavy Bolter");
 					} 
-					add_unit_to_company("marine", company, k, roles.devastator,eROLE.Devastator, _wep1, "","","default", "");
+					add_unit_to_company("marine", company, k, roles.devastator,eROLE.Devastator, _wep1,);
 				}
 	
 				if (company = 10) then
 				for (var i = 0; i < temp1; i++) {
 					k += 1;
 					man_size += 1;
-					add_unit_to_company("scout", company, k, roles.scout,eROLE.Scout, "", "", "", "", "Scout Armour");
+					add_unit_to_company("scout", company, k, roles.scout,eROLE.Scout, , , , , "Scout Armour");
 				}
 
 				if (company_unit2 = "assault") then repeat(assault) {
 					k += 1;
 					man_size += 1;
-					add_unit_to_company("marine", company, k, roles.assault,eROLE.Assault, "", "", "", "default", "");
+					add_unit_to_company("marine", company, k, roles.assault,eROLE.Assault);
 				}
 
 				if (company_unit3 = "devastator") then repeat(devastator) {
 					k += 1;
 					man_size += 1;
-					var _wep1 = wep1[defaults_slot, eROLE.Devastator];
-					if (wep1[defaults_slot, eROLE.Devastator] == "Heavy Ranged") {
-						_wep1 = choose("Multi-Melta", "Lascannon", "Missile Launcher", "Heavy Bolter");
-					} 
-					add_unit_to_company("marine", company, k, roles.devastator, eROLE.Devastator, _wep1, "","", "default", "");
+
+					add_unit_to_company("marine", company, k, roles.devastator, eROLE.Devastator);
 				}
 			}
 
@@ -3384,7 +3381,7 @@ function add_veh_to_company(name, company, slot, wep1, wep2, wep3, upgrade, acce
 /// each item slot can be "" or "default" or a named item. "" will assign items from the available item pool. 
 /// Use "" if you want to set weapons and gear via squad layouts.
 /// "default" will set it to the value in the default slot for the given role, see `load_default_gear`
-function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1, wep2, gear, mobi, armour){
+function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1="default", wep2="default", gear="default", mobi="default", armour="default"){
 	obj_ini.TTRPG[company][slot] = new TTRPG_stats("chapter", company, slot, ttrpg_name);
 	obj_ini.race[company][slot] = 1;
 	obj_ini.loc[company][slot] = obj_ini.home_name;

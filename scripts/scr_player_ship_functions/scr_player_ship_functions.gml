@@ -129,7 +129,7 @@ function get_player_ships(location="", name=""){
 	return _ships;
 }
 
-function new_player_ship_defualts(){
+function new_player_ship_defaults(){
 	with (obj_ini){
 		array_push(ship, "");
 		array_push(ship_uid,0);
@@ -246,7 +246,7 @@ function loose_ship_to_warp_event(){
 
 function new_player_ship(type, start_loc="home", new_name=""){
     var ship_names="",index=0;
-    var index = new_player_ship_defualts();
+    var index = new_player_ship_defaults();
     
     for(var k=0; k<=200; k++){
         if (new_name==""){

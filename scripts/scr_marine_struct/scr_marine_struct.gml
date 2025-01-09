@@ -86,7 +86,7 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			skills: {
 				weapons:{
 					"bolter":3, "chainsword":3, "ccw":3, "bolt_pistol":3}},
-			start_gear:{"armour":"Power Armour", "wep1":"Bolter", "wep2":"Chainsword"},
+			start_gear:{"armour":"Power Armour", "wep1":"Chainsword", "wep2":"Chainsword"},
 			base_group : "astartes",
 	},
 	"scout":{
