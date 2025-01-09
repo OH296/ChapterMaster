@@ -1,4 +1,47 @@
 
+
+#macro ARR_power_discipline_list ["default", "biomancy", "pyromancy","telekinesis","rune Magick"]
+function player_select_powers(){
+    if (race[100,17]!=0){
+    	var _powers = ARR_power_discipline_list;
+    	var _disp_index = array_get_index(_powers, discipline);
+    	if (_disp_index=-1){
+    		discipline = _powers[0];
+    		_disp_index = 0;
+    	}
+
+        draw_text_transformed(460,665,"Psychic Discipline",0.6,0.6,0);
+        if (scr_hit(445,665,620,690)){
+            tooltip="Psychic Discipline";
+            tooltip2="The Psychic Discipline that your psykers will use by default.";
+        }
+        
+        var fug=string_delete(discipline,2,string_length(discipline));
+        var fug2=string_delete(discipline,1,1);
+        draw_text_transformed(513,697,string_hash_to_newline(string_upper(fug)+string(fug2)),0.5,0.5,0);
+        
+        var psy_info="";
+        if (discipline="default") then psy_info="-Psychic Blasts and Barriers";
+        if (discipline="biomancy") then psy_info="-Manipulates Biology to Buff or Heal";
+        if (discipline="pyromancy") then psy_info="-Unleashes Blasts and Walls of Flame";
+        if (discipline="telekinesis") then psy_info="-Manipulates Gravity to Throw or Shield";
+        if (discipline="rune Magick") then psy_info="-Summons Deadly Elements and Feral Spirits";
+        draw_text_transformed(533,729,string_hash_to_newline(string(psy_info)),0.5,0.5,0);
+        
+        if (custom<2) then draw_set_alpha(0.5);
+        if (custom=2) then draw_sprite_stretched(spr_creation_arrow,0,437,688,32,32);
+        if (custom=2) then draw_sprite_stretched(spr_creation_arrow,1,475,688,32,32);
+        draw_set_alpha(1);
+        if ((mouse_left>=1) and (cooldown<=0) and (custom>1)){
+        	if (scr_hit(437,688,437+32,688+32)){
+        		_disp_index = _disp_index==0 ?  array_length(_powers)-1 : _disp_index-1;
+        	} else if (scr_hit(475,688,475+32,688+32)){
+        		_disp_index = _disp_index>=array_length(_powers)-1 ? 0 : _disp_index+1;
+        	}
+        }
+        discipline = _powers[_disp_index];
+    }	
+}
 function scr_powers(power_set, power_count, enemy_target, unit_id) {
 
 	// power_set: letter
