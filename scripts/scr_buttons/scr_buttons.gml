@@ -212,6 +212,7 @@ function radio_set(options_array, title)constructor{
 	self.title = title;
 	active_col = #009500;
 	innactive_col = c_gray;
+	allow_changes = true;
 	gap=10;
 	x1 = 0;
 	y1 = 0;
@@ -233,7 +234,7 @@ function radio_set(options_array, title)constructor{
 			_cur_opt.button_color = _cur_opt.active ? active_col: innactive_col;
 			_cur_opt.draw();
 			
-			if (_cur_opt.clicked()){
+			if (_cur_opt.clicked() && allow_changes){
 				current_selection = i;
 			}
 			_prev_x = _cur_opt.x2+gap;
@@ -246,6 +247,7 @@ function ToggleButton(data={}) constructor {
     y1 = 0;
 	x2 = 0;
 	y2 = 0;
+	tooltip = "";
     str1 = "";
     width = 0;
 	height = 0;
@@ -308,6 +310,11 @@ function ToggleButton(data={}) constructor {
             } else {
                 if (hover_alpha < 1) hover_alpha += 0.03; // Increase state_alpha when not hovered
             }
+        }
+        if (tooltip!=""){
+        	if (hover()){
+	        	tooltip_draw(tooltip);
+	        }
         }
 
         total_alpha = state_alpha * hover_alpha;

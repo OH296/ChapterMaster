@@ -1,6 +1,95 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
+function player_recruit_planet_selection(){
+    with (obj_creation){
+    if (fleet_type!=1) or (custom<2) then draw_set_alpha(0.5);
+    yar=0;
+    var _recruit_home = buttons.recruit_home_relationship;
 
+    _recruit_home.x1 = 1265;
+    _recruit_home.y1 =  110;
+    if (custom==0){
+        _recruit_home.allow_changes = false;
+    }
+    _recruit_home.draw();
+    var _recruit_world_type = _recruit_home.current_selection;
+    draw_set_color(38144);
+    draw_set_font(fnt_40k_30b);
+    draw_set_halign(fa_center);        
+    if (_recruit_world_type==0){
+        recruiting = homeworld;
+    }
+    var _cur_planet_index2  = scr_planet_image_numbers(recruiting);
+    
+    if (custom>1 && _recruit_world_type>0){
+        draw_sprite_stretched(spr_creation_arrow,0,1265,285,32,32);
+        draw_sprite_stretched(spr_creation_arrow,1,1455,285,32,32);
+        var planet_types = ARR_planet_types;
+        var planet_change_allow = (mouse_left>=1) and (cooldown<=0) and (custom>1);
+        for (var i=0;i<array_length(planet_types);i++){
+
+            if (recruiting==planet_types[i] && planet_change_allow){
+                if (point_and_click([1265,285,1265+32,285+32])){
+                    if (i==array_length(planet_types)-1){
+                        recruiting=planet_types[0];
+                    } else {
+                        recruiting=planet_types[i+1];
+                    }
+                }
+
+                if (point_and_click([1455,285,1455+32,285+32])){
+                    if (i==0){
+                        recruiting=planet_types[array_length(planet_types)-1];
+                    } else {
+                        recruiting=planet_types[i-1];
+                    }
+                }
+            }
+        }               
+    } 
+   
+
+    // draw_sprite(spr_planet_splash,_cur_planet_index2,580+333,244);
+    scr_image("ui/planet",_cur_planet_index2,980+333,244,128,128);
+    
+    draw_text_transformed(1044+333,378,recruiting,0.5,0.5,0);
+    // draw_text_transformed(644+333,398,string(recruiting_name),0.5,0.5,0);
+    
+    if (_recruit_world_type<2){
+        recruiting_name = homeworld_name;
+    }
+    if (fleet_type=1 && _recruit_world_type<2) and (homeworld_name=recruiting_name) then name_bad=1;
+    //TODO make a centralised logic for player renaming things in the creation screen
+    if (name_bad=1) then draw_set_color(c_red);
+    if (text_selected!="recruiting_name") or (custom<2) then draw_text_transformed(1044+333,398,recruiting_name,0.5,0.5,0);
+    if (custom>1 && _recruit_world_type==2){
+        if (text_selected="recruiting_name") and (text_bar>30) then draw_text_transformed(1044+333,398,recruiting_name,0.5,0.5,0);
+        if (text_selected="recruiting_name") and (text_bar<=30) then draw_text_transformed(1044+333,398,$"{recruiting_name}|",0.5,0.5,0);
+        if (scr_text_hit(1044+333,398,true,recruiting_name)){
+            obj_cursor.image_index=2;
+            if (cooldown<=0) and (mouse_left>=1){
+                text_selected="recruiting_name";
+                cooldown=8000;
+                keyboard_string=recruiting_name;
+            }
+        }
+        if (text_selected="recruiting_name") then recruiting_name=keyboard_string;
+        draw_set_alpha(0.75);
+        draw_rectangle(925+333,398,1160+333,418,1);
+        draw_set_alpha(1);
+
+        if (_recruit_world_type==2){
+            var _refresh_rec_name_btn =[1503, 398, 1503+20, 398+20];
+            draw_unit_buttons(_refresh_rec_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
+            if(point_and_click(_refresh_rec_name_btn)){
+                var _new_rec_name = global.name_generator.generate_star_name();
+                show_debug_message($"regen name of recruiting_name from {recruiting_name} to {_new_rec_name}");
+                recruiting_name = _new_rec_name;
+            }
+        }
+    }
+    }
+}    
 
 function scr_creation_home_planet_create(){
 
@@ -119,94 +208,12 @@ function scr_creation_home_planet_create(){
     
     
     if (fleet_type!=ePlayerBase.penitent){
-        if (fleet_type!=1) or (custom<2) then draw_set_alpha(0.5);
-        yar=0;
-        if (recruiting_exists=1) then yar=1;
-        draw_sprite(spr_creation_check,yar,858,221);
-        yar=0;
-        if (scr_hit(858,221,858+32,221+32)) and (cooldown<=0) and (mouse_left>=1) and (custom>1) and (fleet_type=1){
-        	cooldown=8000;
-        	var onc_cur_planet_index;
-        	onc_cur_planet_index=0;
-            if (recruiting_exists=1) and (onc_cur_planet_index=0){
-            	recruiting_exists=0;
-            	onc_cur_planet_index=1;
-            }
-            if (recruiting_exists=0) and (onc_cur_planet_index=0){
-            	recruiting_exists=1;
-            	onc_cur_planet_index=1;
-            }
-        }
-        draw_set_alpha(1);
-        draw_text_transformed(644+333,218,"Recruiting World",0.6,0.6,0);
-        
-        if (recruiting_exists=1){
-        	var _cur_planet_index2  = scr_planet_image_numbers(recruiting);
-            
-            if (custom>1){
-            	draw_sprite_stretched(spr_creation_arrow,0,865,285,32,32);
-            	draw_sprite_stretched(spr_creation_arrow,1,1055,285,32,32);
-		        var planet_types = ARR_planet_types;
-		        var planet_change_allow = (mouse_left>=1) and (cooldown<=0) and (custom>1);
-		        for (var i=0;i<array_length(planet_types);i++){
-
-		            if (recruiting==planet_types[i] && planet_change_allow){
-		                if (point_and_click([865,285,865+32,285+32])){
-		                    if (i==array_length(planet_types)-1){
-		                        recruiting=planet_types[0];
-		                    } else {
-		                        recruiting=planet_types[i+1];
-		                    }
-		                }
-
-		                if (point_and_click([1055,285,1055+32,285+32])){
-		                    if (i==0){
-		                        recruiting=planet_types[array_length(planet_types)-1];
-		                    } else {
-		                        recruiting=planet_types[i-1];
-		                    }
-		                }
-		            }
-		        }             	
-            } 
-           
-
-            // draw_sprite(spr_planet_splash,_cur_planet_index2,580+333,244);
-            scr_image("ui/planet",_cur_planet_index2,580+333,244,128,128);
-            
-            draw_text_transformed(644+333,378,recruiting,0.5,0.5,0);
-            // draw_text_transformed(644+333,398,string(recruiting_name),0.5,0.5,0);
-            
-            if (fleet_type=1) and (homeworld_name=recruiting_name) then name_bad=1;
-            //TODO make a centralised logic for player renaming things in the creation screen
-            if (name_bad=1) then draw_set_color(c_red);
-            if (text_selected!="recruiting_name") or (custom<2) then draw_text_transformed(644+333,398,recruiting_name,0.5,0.5,0);
-            if (custom>1){
-                if (text_selected="recruiting_name") and (text_bar>30) then draw_text_transformed(644+333,398,recruiting_name,0.5,0.5,0);
-                if (text_selected="recruiting_name") and (text_bar<=30) then draw_text_transformed(644+333,398,$"{recruiting_name}|",0.5,0.5,0);
-                if (scr_text_hit(644+333,398,true,recruiting_name)){
-                    obj_cursor.image_index=2;
-                    if (cooldown<=0) and (mouse_left>=1){
-                    	text_selected="recruiting_name";
-                    	cooldown=8000;
-                    	keyboard_string=recruiting_name;
-                    }
-                }
-                if (text_selected="recruiting_name") then recruiting_name=keyboard_string;
-                draw_set_alpha(0.75);
-                draw_rectangle(525+333,398,760+333,418,1);
-                draw_set_alpha(1);
-
-                var _refresh_rec_name_btn =[1103, 398, 1103+20, 398+20];
-                draw_unit_buttons(_refresh_rec_name_btn,"?", [1,1], 38144,,fnt_40k_14b);
-                if(point_and_click(_refresh_rec_name_btn)){
-                    var _new_rec_name = global.name_generator.generate_star_name();
-                    show_debug_message($"regen name of recruiting_name from {recruiting_name} to {_new_rec_name}");
-                    recruiting_name = _new_rec_name;
-                }
-            }
-        }
+        right_data_slate.inside_method = player_recruit_planet_selection;
+    } else{
+        right_data_slate.inside_method = "";
     }
+
+    right_data_slate.draw(1210, 5,0.45, 1);
     
     if (recruiting_exists==0 && homeworld_exists==1){
         // draw_sprite(spr_planet_splash,_cur_planet_index,580+333,244);

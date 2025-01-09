@@ -114,6 +114,7 @@ complex_depth_selection = 0;
 //TODO probably make this array based at some point ot match other unit data
 complex_livery_data = complex_livery_default();
 left_data_slate = new DataSlate();
+right_data_slate = new DataSlate();
 standard_livery_components = 0;
 enum LiveryComponents{
 	Body,
@@ -169,16 +170,19 @@ buttons = {
         {
             str1 : "Share Planet",
             font : fnt_40k_14b,
+            tooltip : "Your recruit world will be the same planet as your home world",
         },
         {
             str1 : "Share System",
-            font : fnt_40k_14b
+            font : fnt_40k_14b,
+            tooltip : "Your recruit world will be in the the same system as your home world",
         },
         {
             str1 : "Seperate",
-            font : fnt_40k_14b
+            font : fnt_40k_14b,
+            tooltip : "Your recruit world will be in a different system to your homeworld",
         },            
-    ], "Recruit world\Home World Relationship"),
+    ], "Recruit world"),
     home_warp : new radio_set([
         {
             str1 : "Secluded",
