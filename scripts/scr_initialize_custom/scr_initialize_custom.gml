@@ -3056,7 +3056,7 @@ function scr_initialize_custom() {
 					repeat(temp1) {
 						k += 1;
 						man_size += 1;
-						add_unit_to_company("scout", company, k, roles.scout, eROLE.Scout, "defaultdefault", "defaultdefault", "defaultdefault", "defaultdefault", "Scout Armour");
+						add_unit_to_company("scout", company, k, roles.scout, eROLE.Scout, "default", "default", "default", "default", "Scout Armour");
 					}
 				}
 			}
