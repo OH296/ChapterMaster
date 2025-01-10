@@ -610,7 +610,7 @@ try {
         var shiyp=instance_nearest(battle_object.x,battle_object.y,obj_p_fleet);
         if (shiyp.x == battle_object.x && shiyp.y ==battle_object.y){
             shi = fleet_full_ship_array(shiyp)[0];
-            loc = obj_ini.ship(shi);
+            loc = obj_ini.ship[shi];
         }
         
         if (hulk_treasure=1){// Requisition
