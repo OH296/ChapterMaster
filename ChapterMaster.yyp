@@ -448,6 +448,7 @@
     {"id":{"name":"spr_marine_base","path":"sprites/spr_marine_base/spr_marine_base.yy",},},
     {"id":{"name":"spr_clothing_colors","path":"sprites/spr_clothing_colors/spr_clothing_colors.yy",},},
     {"id":{"name":"spr_facial_colors","path":"sprites/spr_facial_colors/spr_facial_colors.yy",},},
+    {"id":{"name":"spr_skitarii","path":"sprites/spr_skitarii/spr_skitarii.yy",},},
     {"id":{"name":"spr_techmarine_left_leg","path":"sprites/spr_techmarine_left_leg/spr_techmarine_left_leg.yy",},},
     {"id":{"name":"scr_librarium","path":"scripts/scr_librarium/scr_librarium.yy",},},
     {"id":{"name":"spr_chaplain_skull_helm","path":"sprites/spr_chaplain_skull_helm/spr_chaplain_skull_helm.yy",},},

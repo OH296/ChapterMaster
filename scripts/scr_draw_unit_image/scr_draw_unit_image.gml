@@ -1805,6 +1805,7 @@ function scr_draw_unit_image(_background=false){
             if (string_count("Ranger",name_role())>0) then draw_sprite(spr_eldar_hire,0,x_surface_offset,y_surface_offset);
             if (string_count("Howling Banshee",name_role())>0) then draw_sprite(spr_eldar_hire,1,x_surface_offset,y_surface_offset);
         }
+        if (string_count("Skitarii",name_role())>0) then draw_sprite(spr_skitarii,0,x_surface_offset,y_surface_offset);
     }
     surface_reset_target();
     /*shader_set_uniform_i(shader_get_uniform(sReplaceColor, "u_blend_modes"), 2);                
