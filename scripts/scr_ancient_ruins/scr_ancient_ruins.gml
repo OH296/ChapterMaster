@@ -20,7 +20,9 @@ function scr_ruins_suprise_attack_player(){
 		instance_deactivate_all(true);
 		instance_activate_object(obj_controller);
 		instance_activate_object(obj_ini);
+		instance_activate_object(obj_star_select);
 		instance_activate_object(obj_star);
+		instance_activate_object(obj_ground_mission);
 		var _star = star_by_name(obj_ground_mission.loc);
 		var _planet = obj_ground_mission.num;
 		
@@ -30,7 +32,7 @@ function scr_ruins_suprise_attack_player(){
 		
 		//that_one=instance_nearest(0,0,obj_star);
 	// instance_activate_object(obj_star);
-		scr_battle_roster(_star.name ,_planet,true);
+		scr_battle_roster(obj_ground_mission.loc ,_planet,true);
 		obj_controller.cooldown=10;
 		obj_ncombat.battle_object=_star;
 		obj_ncombat.battle_loc=_star.name;
@@ -48,6 +50,10 @@ function scr_ruins_suprise_attack_player(){
 	} catch (_exception) {
 		handle_exception(_exception);
 		instance_activate_all();
+		instance_destroy(obj_popup);
+		instance_destroy(obj_star_select);
+		instance_destroy(obj_ground_mission);	
+		instance_destroy(obj_ncombat);		
 	}
 }
 //spawn point for starship
