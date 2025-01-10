@@ -53,6 +53,13 @@ function ComplexSet() constructor{
             add_to_area(_area, group[$_area]);
         }
     }
+
+    static add_or_replace = function(area, add_sprite){
+        if (struct_exists(self, area)){
+            sprite_delete(self[$area]);
+        }
+        self[$ area] = sprite_duplicate(add_sprite);
+    }
 }
 function get_complex_set(set = eARMOUR_SET.MK7){
     var set_pieces = new ComplexSet();
@@ -1235,7 +1242,16 @@ function scr_draw_unit_image(_background=false){
                     }                   
                 }
                 draw_unit_arms(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set);
-
+                if (armour_type==ArmourType.Normal && complex_livery){
+                    if (struct_exists(body[$ "right_leg"], "bionic")) {
+                        complex_set.add_or_replace("right_leg",spr_bionic_leg_right);
+                    }
+                }
+                if (armour_type==ArmourType.Normal && complex_livery){
+                    if (struct_exists(body[$ "left_leg"], "bionic")) {
+                        complex_set.add_or_replace("left_leg",spr_bionic_leg_left);
+                    }
+                }                
                 // Draw torso
                 if (!armour_bypass){
                     if (complex_livery){
@@ -1263,6 +1279,7 @@ function scr_draw_unit_image(_background=false){
                                 draw_sprite(complex_set.left_leg,choice,x_surface_offset,y_surface_offset);
                             }
                             if (struct_exists(complex_set, "right_leg")){
+
                                 var choice = get_body_data("leg_variants","right_leg")%sprite_get_number(complex_set.right_leg);
                                 draw_sprite(complex_set.right_leg,choice,x_surface_offset,y_surface_offset);
                             }                                                        
@@ -1574,25 +1591,29 @@ function scr_draw_unit_image(_background=false){
                                     break;
 
                                 case "left_leg":
-                                    if (armour_type == ArmourType.Normal) {
-                                        var sprite_num = 2;
-                                        if (specialist_colours >= 2) {
-                                            sprite_num = 3;
-                                        }
-                                        if (bionic.variant == 0) {
-                                            draw_sprite(spr_bionics_leg_2, sprite_num, x_surface_offset, y_surface_offset)
-                                        } else {
-                                            draw_sprite(spr_bionics_leg_3, sprite_num, x_surface_offset, y_surface_offset)
+                                    if (!complex_livery){
+                                        if (armour_type == ArmourType.Normal) {
+                                            var sprite_num = 2;
+                                            if (specialist_colours >= 2) {
+                                                sprite_num = 3;
+                                            }
+                                            if (bionic.variant == 0) {
+                                                draw_sprite(spr_bionics_leg_2, sprite_num, x_surface_offset, y_surface_offset)
+                                            } else {
+                                                draw_sprite(spr_bionics_leg_3, sprite_num, x_surface_offset, y_surface_offset)
+                                            }
                                         }
                                     }
                                     break;
 
                                 case "right_leg":
-                                    if (armour_type == ArmourType.Normal) {
-                                        if (bionic.variant == 0) {
-                                            draw_sprite(spr_bionics_leg_2, 0, x_surface_offset, y_surface_offset)
-                                        } else {
-                                            draw_sprite(spr_bionics_leg_3, 0, x_surface_offset, y_surface_offset)
+                                    if (!complex_livery){
+                                        if (armour_type == ArmourType.Normal) {
+                                            if (bionic.variant == 0) {
+                                                draw_sprite(spr_bionics_leg_2, 0, x_surface_offset, y_surface_offset)
+                                            } else {
+                                                draw_sprite(spr_bionics_leg_3, 0, x_surface_offset, y_surface_offset)
+                                            }
                                         }
                                     }
                                     break;
