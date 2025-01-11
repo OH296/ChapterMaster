@@ -2119,7 +2119,7 @@ try {
 			draw_set_font(fnt_40k_14b);
 			if (scr_hit(1000, 135, 1180, 170)) {
 				tooltip = "Do you want to edit your chapter?";
-				tooltip2 = "Click to save edit chapter";
+				tooltip2 = "Click to edit chapter";
 				if (mouse_left >= 1) {
 					slide=2
 					change_slide=1;
