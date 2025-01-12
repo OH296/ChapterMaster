@@ -3391,12 +3391,7 @@ function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1
 		obj_ini.name[company][slot] = global.name_generator.generate_space_marine_name();
 	}
 	var spawn_unit = fetch_unit([company,slot]);
-	if(ttrpg_name == "marine" || ttrpg_name == "scout"){
-		spawn_unit.marine_assembling();
-	} else {
-		spawn_unit.roll_age();
-		spawn_unit.roll_experience();
-	}
+
 	if(wep1 != ""){
 		if(wep1 == "default"){
 			spawn_unit.update_weapon_one(obj_ini.wep1[obj_ini.defaults_slot][role_id], false, false);
@@ -3434,6 +3429,12 @@ function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1
 			spawn_unit.update_mobility_item(mobi, false, false);
 		}
 	}
+    if(ttrpg_name == "marine" || ttrpg_name == "scout"){
+        spawn_unit.marine_assembling();
+    } else {
+        spawn_unit.roll_age();
+        spawn_unit.roll_experience();
+    }    
 	if(role_id == eROLE.HonourGuard){
 		spawn_unit.add_trait(choose("guardian", "champion", "observant", "perfectionist","natural_leader"));
 	}
