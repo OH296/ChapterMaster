@@ -629,6 +629,7 @@
     {"id":{"name":"spr_loc_icon","path":"sprites/spr_loc_icon/spr_loc_icon.yy",},},
     {"id":{"name":"spr_diplo_symbols","path":"sprites/spr_diplo_symbols/spr_diplo_symbols.yy",},},
     {"id":{"name":"spr_defeat","path":"sprites/spr_defeat/spr_defeat.yy",},},
+    {"id":{"name":"spr_mk3_right_leg_variants","path":"sprites/spr_mk3_right_leg_variants/spr_mk3_right_leg_variants.yy",},},
     {"id":{"name":"spr_rectangle","path":"sprites/spr_rectangle/spr_rectangle.yy",},},
     {"id":{"name":"sprite245","path":"sprites/sprite245/sprite245.yy",},},
     {"id":{"name":"spr_cursor","path":"sprites/spr_cursor/spr_cursor.yy",},},

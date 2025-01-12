@@ -125,7 +125,8 @@ function get_complex_set(set = eARMOUR_SET.MK7){
             left_arm : spr_mk3_left_arm,
             right_arm : spr_mk3_right_arm ,   
             head : spr_mk3_head_variants, 
-            left_leg : spr_mk3_left_leg_variants           
+            left_leg : spr_mk3_left_leg_variants,
+            right_leg : spr_mk3_left_leg_variants           
         });    
     }else if (set == eARMOUR_SET.MK8){
         set_pieces.add_group({
