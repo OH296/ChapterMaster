@@ -581,265 +581,269 @@ function scr_restart_variables(saved_game) {
 		}
 
 		if (saved_game == 4) {
-			for (var i = 0; i < 21; i++) {
-				world[i] = "";
-				world_type[i] = "";
-				world_feature[i] = "";
-			}
 
-			for (var i = 0; i < 6; i++) {
-				adv[i] = "";
-				adv_num[i] = 0;
-				dis[i] = "";
-				dis_num[i] = 0;
-			}
-
-			points = 100;
-			maxpoints = 100;
-			custom = 0;
-
-			hapothecary = global.name_generator.generate_space_marine_name();
-			hchaplain = global.name_generator.generate_space_marine_name();
-			clibrarian = global.name_generator.generate_space_marine_name();
-			fmaster = global.name_generator.generate_space_marine_name();
-			recruiter = global.name_generator.generate_space_marine_name();
-			admiral = global.name_generator.generate_space_marine_name();
-
-			// First is for the correct slot, second is for default info
-			for (var i = 100; i < 103; i++) {
-				race[i, 2] = 1;
-				role[i, 2] = "Honour Guard";
-				wep1[i, 2] = "Power Sword";
-				wep2[i, 2] = "Bolter";
-				armour[i, 2] = "Artificer Armour";
-
-				race[i, 3] = 1;
-				role[i, 3] = "Veteran";
-				wep1[i, 3] = "Chainsword";
-				wep2[i, 3] = "Bolter";
-				armour[i, 3] = "Power Armour";
-
-				race[i, 4] = 1;
-				role[i, 4] = "Terminator";
-				wep1[i, 4] = "Power Fist";
-				wep2[i, 4] = "Storm Bolter";
-				armour[i, 4] = "Terminator Armour";
-
-				race[i, 5] = 1;
-				role[i, 5] = "Captain";
-				wep1[i, 5] = "Power Sword";
-				wep2[i, 5] = "Bolt Pistol";
-				armour[i, 5] = "Power Armour";
-				gear[i, 5] = "Iron Halo";
-
-				race[i, 6] = 1;
-				role[i, 6] = "Dreadnought";
-				wep1[i, 6] = "Close Combat Weapon";
-				wep2[i, 6] = "Twin Linked Lascannon";
-				armour[i, 6] = "Dreadnought";
-
-				race[i, 8] = 1;
-				role[i, 8] = "Tactical Marine";
-				wep1[i, 8] = "Bolter";
-				wep2[i, 8] = "Combat Knife";
-				armour[i, 8] = "Power Armour";
-
-				race[i, 9] = 1;
-				role[i, 9] = "Devastator Marine";
-				wep1[i, 9] = "";
-				wep2[i, 9] = "Combat Knife";
-				armour[i, 9] = "Power Armour";
-
-				race[i, 10] = 1;
-				role[i, 10] = "Assault Marine";
-				wep1[i, 10] = "Chainsword";
-				wep2[i, 10] = "Bolt Pistol";
-				armour[i, 10] = "Power Armour";
-				mobi[i, 10] = "Jump Pack";
-
-				race[i, 11] = 1;
-				role[i, 11] = "Ancient";
-				wep1[i, 11] = "Company Standard";
-				wep2[i, 11] = "Power Sword";
-				armour[i, 11] = "Power Armour";
-
-				race[i, 12] = 1;
-				role[i, 12] = "Scout";
-				wep1[i, 12] = "Sniper Rifle";
-				wep2[i, 12] = "Combat Knife";
-				armour[i, 12] = "Scout Armour";
-
-				race[i, 14] = 1;
-				role[i, 14] = "Chaplain";
-				wep1[i, 14] = "Power Sword";
-				wep2[i, 14] = "Bolt Pistol";
-				armour[i, 14] = "Power Armour";
-				gear[i, 14] = "Rosarius";
-
-				race[i, 15] = 1;
-				role[i, 15] = "Apothecary";
-				wep1[i, 15] = "Chainsword";
-				wep2[i, 15] = "Bolt Pistol";
-				armour[i, 15] = "Power Armour";
-				gear[i, 15] = "Narthecium";
-
-				race[i, 16] = 1;
-				role[i, 16] = "Techmarine";
-				wep1[i, 16] = "Power Axe";
-				wep2[i, 16] = "Storm Bolter";
-				armour[i, 16] = "Artificer Armour";
-				gear[i, 16] = "";
-				mobi[i, 16] = "Servo-arm";
-
-				race[i, 17] = 1;
-				role[i, 17] = "Librarian";
-				wep1[i, 17] = "Force Staff";
-				wep2[i, 17] = "Bolt Pistol";
-				armour[i, 17] = "Power Armour";
-				gear[i, 17] = "Psychic Hood";
-
-				race[i, 18] = 1;
-				role[i, 18] = "Sergeant";
-				wep1[i, 18] = "Chainsword";
-				wep2[i, 18] = "Storm Bolter";
-				armour[i, 18] = "Power Armour";
-				gear[i, 18] = "";
-
-				race[i, 19] = 1;
-				role[i, 19] = "Veteran Sergeant";
-				wep1[i, 19] = "Chainsword";
-				wep2[i, 19] = "Storm Bolter";
-				armour[i, 19] = "Power Armour";
-				gear[i, 19] = "";
-			}
-
-			points = 100;
-			selected_chapter = 999;
-			chapter = obj_restart_vars.restart_name;
-			founding = obj_restart_vars.restart_founding;
-			founding_secret = obj_restart_vars.restart_secret;
-
-			company_title[0] = "";
-
-			for (var i = 1; i <= 11; i++) {
-				company_title[i] = obj_restart_vars.restart_title[i];
-			}
-
-			icon = obj_restart_vars.restart_icon;
-			icon_name = obj_restart_vars.restart_icon_name;
-			discipline = obj_restart_vars.restart_powers;
-
-			for (var ad = 0; ad < 5; ad++) {
-				if (ad == 0) {
-					adv[ad] = "";
-					dis[ad] = "";
-				}
-				if (ad > 0) {
-					adv[ad] = obj_restart_vars.restart_adv[ad];
-					dis[ad] = obj_restart_vars.restart_dis[ad];
-				}
-			}
-			// show_message("D: "+string(dis[1]));
-
-			// Need disposition here
-
-			recruiting = obj_restart_vars.restart_recruiting_type;
-			aspirant_trial = obj_restart_vars.restart_trial;
-			recruiting_name = obj_restart_vars.restart_recruiting_name;
-			homeworld = obj_restart_vars.restart_home_type;
-			homeworld_name = obj_restart_vars.restart_home_name;
-			fleet_type = obj_restart_vars.restart_fleet_type;
-			flagship_name = obj_restart_vars.restart_flagship_name;
-
-			recruiting_exists = obj_restart_vars.restart_recruiting_exists;
-			homeworld_exists = obj_restart_vars.restart_homeworld_exists;
-			homeworld_rule = obj_restart_vars.restart_homeworld_rule;
-
-			battle_cry = obj_restart_vars.restart_battle_cry;
-
-			main_color = obj_restart_vars.restart_main_color;
-			secondary_color = obj_restart_vars.restart_secondary_color;
-			main_trim = obj_restart_vars.restart_trim_color;
-			left_pauldron = obj_restart_vars.restart_pauldron2_color;
-			right_pauldron = obj_restart_vars.restart_pauldron_color;
-			lens_color = obj_restart_vars.restart_lens_color;
-			weapon_color = obj_restart_vars.restart_weapon_color;
-			col_special = obj_restart_vars.restart_col_special;
-			trim = obj_restart_vars.restart_trim;
-			skin_color = obj_restart_vars.restart_skin_color;
-
-			hapothecary = obj_restart_vars.restart_hapothecary;
-			hchaplain = obj_restart_vars.restart_hchaplain;
-			clibrarian = obj_restart_vars.restart_clibrarian;
-			fmaster = obj_restart_vars.restart_fmaster;
-			recruiter = obj_restart_vars.restart_recruiter;
-			admiral = obj_restart_vars.restart_admiral;
-
-			equal_specialists = obj_restart_vars.restart_equal_specialists;
-			load_to_ships = obj_restart_vars.restart_load_to_ships;
-			successors = obj_restart_vars.restart_successors;
-
-			mutations = obj_restart_vars.restart_mutations;
-			preomnor = obj_restart_vars.restart_preomnor;
-			voice = obj_restart_vars.restart_voice;
-			doomed = obj_restart_vars.restart_doomed;
-			lyman = obj_restart_vars.restart_lyman;
-			omophagea = obj_restart_vars.restart_omophagea;
-			ossmodula = obj_restart_vars.restart_ossmodula;
-			membrane = obj_restart_vars.restart_membrane;
-			zygote = obj_restart_vars.restart_zygote;
-			betchers = obj_restart_vars.restart_betchers;
-			catalepsean = obj_restart_vars.restart_catalepsean;
-			secretions = obj_restart_vars.restart_secretions;
-			occulobe = obj_restart_vars.restart_occulobe;
-			mucranoid = obj_restart_vars.restart_mucranoid;
-
-			chapter_master_name = obj_restart_vars.restart_master_name;
-			chapter_master_melee = obj_restart_vars.restart_master_melee;
-			chapter_master_ranged = obj_restart_vars.restart_master_ranged;
-			chapter_master_specialty = obj_restart_vars.restart_master_specialty;
-
-			strength = obj_restart_vars.restart_strength;
-			cooperation = obj_restart_vars.restart_cooperation;
-			purity = obj_restart_vars.restart_purity;
-			stability = obj_restart_vars.restart_stability;
-
-			for (var i = 0; i < 21; i++) {
-				race[100, i] = obj_restart_vars.r_race[100, i];
-
-				role[100, i] = obj_restart_vars.r_role[100, i];
-				wep1[100, i] = obj_restart_vars.r_wep1[100, i];
-				wep2[100, i] = obj_restart_vars.r_wep2[100, i];
-				armour[100, i] = obj_restart_vars.r_armour[100, i];
-				gear[100, i] = obj_restart_vars.r_gear[100, i];
-				mobi[100, i] = obj_restart_vars.r_mobi[100, i];
-			}
-
-			custom = 1;
-			restarted = 1;
-			mutations_selected = mutations;
-
-			for (var i = 1; i <= 4; i++) {
-				if ((adv[i] != "") && (adv_num[i] == 0)) {
-					for (var n = 1; n <= 40; n++) {
-						if (obj_creation.all_advantages[n].name == adv[i]) {
-							adv_num[i] = n;
-						}
-					}
-				}
-			}
-
-			for (var i = 1; i <= 4; i++) {
-				if ((dis[i] != "") && (dis_num[i] == 0)) {
-					for (var n = 1; n <= 40; n++) {
-						if (obj_creation.all_disadvantages[n].name[n] == dis[i]) {
-							dis_num[i] = n;
-						}
-					}
-				}
-			}
 		}
 	} catch (_exception) {
 		handle_exception(_exception);
 	}
+}
+
+function reset_creation_variables(){
+	for (var i = 0; i < 21; i++) {
+		world[i] = "";
+		world_type[i] = "";
+		world_feature[i] = "";
+	}
+
+	for (var i = 0; i < 6; i++) {
+		adv[i] = "";
+		adv_num[i] = 0;
+		dis[i] = "";
+		dis_num[i] = 0;
+	}
+
+	points = 100;
+	maxpoints = 100;
+	custom = 0;
+
+	hapothecary = global.name_generator.generate_space_marine_name();
+	hchaplain = global.name_generator.generate_space_marine_name();
+	clibrarian = global.name_generator.generate_space_marine_name();
+	fmaster = global.name_generator.generate_space_marine_name();
+	recruiter = global.name_generator.generate_space_marine_name();
+	admiral = global.name_generator.generate_space_marine_name();
+
+	// First is for the correct slot, second is for default info
+	for (var i = 100; i < 103; i++) {
+		race[i, 2] = 1;
+		role[i, 2] = "Honour Guard";
+		wep1[i, 2] = "Power Sword";
+		wep2[i, 2] = "Bolter";
+		armour[i, 2] = "Artificer Armour";
+
+		race[i, 3] = 1;
+		role[i, 3] = "Veteran";
+		wep1[i, 3] = "Chainsword";
+		wep2[i, 3] = "Bolter";
+		armour[i, 3] = "Power Armour";
+
+		race[i, 4] = 1;
+		role[i, 4] = "Terminator";
+		wep1[i, 4] = "Power Fist";
+		wep2[i, 4] = "Storm Bolter";
+		armour[i, 4] = "Terminator Armour";
+
+		race[i, 5] = 1;
+		role[i, 5] = "Captain";
+		wep1[i, 5] = "Power Sword";
+		wep2[i, 5] = "Bolt Pistol";
+		armour[i, 5] = "Power Armour";
+		gear[i, 5] = "Iron Halo";
+
+		race[i, 6] = 1;
+		role[i, 6] = "Dreadnought";
+		wep1[i, 6] = "Close Combat Weapon";
+		wep2[i, 6] = "Twin Linked Lascannon";
+		armour[i, 6] = "Dreadnought";
+
+		race[i, 8] = 1;
+		role[i, 8] = "Tactical Marine";
+		wep1[i, 8] = "Bolter";
+		wep2[i, 8] = "Combat Knife";
+		armour[i, 8] = "Power Armour";
+
+		race[i, 9] = 1;
+		role[i, 9] = "Devastator Marine";
+		wep1[i, 9] = "";
+		wep2[i, 9] = "Combat Knife";
+		armour[i, 9] = "Power Armour";
+
+		race[i, 10] = 1;
+		role[i, 10] = "Assault Marine";
+		wep1[i, 10] = "Chainsword";
+		wep2[i, 10] = "Bolt Pistol";
+		armour[i, 10] = "Power Armour";
+		mobi[i, 10] = "Jump Pack";
+
+		race[i, 11] = 1;
+		role[i, 11] = "Ancient";
+		wep1[i, 11] = "Company Standard";
+		wep2[i, 11] = "Power Sword";
+		armour[i, 11] = "Power Armour";
+
+		race[i, 12] = 1;
+		role[i, 12] = "Scout";
+		wep1[i, 12] = "Sniper Rifle";
+		wep2[i, 12] = "Combat Knife";
+		armour[i, 12] = "Scout Armour";
+
+		race[i, 14] = 1;
+		role[i, 14] = "Chaplain";
+		wep1[i, 14] = "Power Sword";
+		wep2[i, 14] = "Bolt Pistol";
+		armour[i, 14] = "Power Armour";
+		gear[i, 14] = "Rosarius";
+
+		race[i, 15] = 1;
+		role[i, 15] = "Apothecary";
+		wep1[i, 15] = "Chainsword";
+		wep2[i, 15] = "Bolt Pistol";
+		armour[i, 15] = "Power Armour";
+		gear[i, 15] = "Narthecium";
+
+		race[i, 16] = 1;
+		role[i, 16] = "Techmarine";
+		wep1[i, 16] = "Power Axe";
+		wep2[i, 16] = "Storm Bolter";
+		armour[i, 16] = "Artificer Armour";
+		gear[i, 16] = "";
+		mobi[i, 16] = "Servo-arm";
+
+		race[i, 17] = 1;
+		role[i, 17] = "Librarian";
+		wep1[i, 17] = "Force Staff";
+		wep2[i, 17] = "Bolt Pistol";
+		armour[i, 17] = "Power Armour";
+		gear[i, 17] = "Psychic Hood";
+
+		race[i, 18] = 1;
+		role[i, 18] = "Sergeant";
+		wep1[i, 18] = "Chainsword";
+		wep2[i, 18] = "Storm Bolter";
+		armour[i, 18] = "Power Armour";
+		gear[i, 18] = "";
+
+		race[i, 19] = 1;
+		role[i, 19] = "Veteran Sergeant";
+		wep1[i, 19] = "Chainsword";
+		wep2[i, 19] = "Storm Bolter";
+		armour[i, 19] = "Power Armour";
+		gear[i, 19] = "";
+	}
+
+	points = 100;
+	selected_chapter = 999;
+	chapter = obj_restart_vars.restart_name;
+	founding = obj_restart_vars.restart_founding;
+	founding_secret = obj_restart_vars.restart_secret;
+
+	company_title[0] = "";
+
+	for (var i = 1; i <= 11; i++) {
+		company_title[i] = obj_restart_vars.restart_title[i];
+	}
+
+	icon = obj_restart_vars.restart_icon;
+	icon_name = obj_restart_vars.restart_icon_name;
+	discipline = obj_restart_vars.restart_powers;
+
+	for (var ad = 0; ad < 5; ad++) {
+		if (ad == 0) {
+			adv[ad] = "";
+			dis[ad] = "";
+		}
+		if (ad > 0) {
+			adv[ad] = obj_restart_vars.restart_adv[ad];
+			dis[ad] = obj_restart_vars.restart_dis[ad];
+		}
+	}
+	// show_message("D: "+string(dis[1]));
+
+	// Need disposition here
+
+	recruiting = obj_restart_vars.restart_recruiting_type;
+	aspirant_trial = obj_restart_vars.restart_trial;
+	recruiting_name = obj_restart_vars.restart_recruiting_name;
+	homeworld = obj_restart_vars.restart_home_type;
+	homeworld_name = obj_restart_vars.restart_home_name;
+	fleet_type = obj_restart_vars.restart_fleet_type;
+	flagship_name = obj_restart_vars.restart_flagship_name;
+
+	recruiting_exists = obj_restart_vars.restart_recruiting_exists;
+	homeworld_exists = obj_restart_vars.restart_homeworld_exists;
+	homeworld_rule = obj_restart_vars.restart_homeworld_rule;
+
+	battle_cry = obj_restart_vars.restart_battle_cry;
+
+	main_color = obj_restart_vars.restart_main_color;
+	secondary_color = obj_restart_vars.restart_secondary_color;
+	main_trim = obj_restart_vars.restart_trim_color;
+	left_pauldron = obj_restart_vars.restart_pauldron2_color;
+	right_pauldron = obj_restart_vars.restart_pauldron_color;
+	lens_color = obj_restart_vars.restart_lens_color;
+	weapon_color = obj_restart_vars.restart_weapon_color;
+	col_special = obj_restart_vars.restart_col_special;
+	trim = obj_restart_vars.restart_trim;
+	skin_color = obj_restart_vars.restart_skin_color;
+
+	hapothecary = obj_restart_vars.restart_hapothecary;
+	hchaplain = obj_restart_vars.restart_hchaplain;
+	clibrarian = obj_restart_vars.restart_clibrarian;
+	fmaster = obj_restart_vars.restart_fmaster;
+	recruiter = obj_restart_vars.restart_recruiter;
+	admiral = obj_restart_vars.restart_admiral;
+
+	equal_specialists = obj_restart_vars.restart_equal_specialists;
+	load_to_ships = obj_restart_vars.restart_load_to_ships;
+	successors = obj_restart_vars.restart_successors;
+
+	mutations = obj_restart_vars.restart_mutations;
+	preomnor = obj_restart_vars.restart_preomnor;
+	voice = obj_restart_vars.restart_voice;
+	doomed = obj_restart_vars.restart_doomed;
+	lyman = obj_restart_vars.restart_lyman;
+	omophagea = obj_restart_vars.restart_omophagea;
+	ossmodula = obj_restart_vars.restart_ossmodula;
+	membrane = obj_restart_vars.restart_membrane;
+	zygote = obj_restart_vars.restart_zygote;
+	betchers = obj_restart_vars.restart_betchers;
+	catalepsean = obj_restart_vars.restart_catalepsean;
+	secretions = obj_restart_vars.restart_secretions;
+	occulobe = obj_restart_vars.restart_occulobe;
+	mucranoid = obj_restart_vars.restart_mucranoid;
+
+	chapter_master_name = obj_restart_vars.restart_master_name;
+	chapter_master_melee = obj_restart_vars.restart_master_melee;
+	chapter_master_ranged = obj_restart_vars.restart_master_ranged;
+	chapter_master_specialty = obj_restart_vars.restart_master_specialty;
+
+	strength = obj_restart_vars.restart_strength;
+	cooperation = obj_restart_vars.restart_cooperation;
+	purity = obj_restart_vars.restart_purity;
+	stability = obj_restart_vars.restart_stability;
+
+	for (var i = 0; i < 21; i++) {
+		race[100, i] = obj_restart_vars.r_race[100, i];
+
+		role[100, i] = obj_restart_vars.r_role[100, i];
+		wep1[100, i] = obj_restart_vars.r_wep1[100, i];
+		wep2[100, i] = obj_restart_vars.r_wep2[100, i];
+		armour[100, i] = obj_restart_vars.r_armour[100, i];
+		gear[100, i] = obj_restart_vars.r_gear[100, i];
+		mobi[100, i] = obj_restart_vars.r_mobi[100, i];
+	}
+
+	custom = 1;
+	restarted = 1;
+	mutations_selected = mutations;
+
+	for (var i = 1; i <= 4; i++) {
+		if ((adv[i] != "") && (adv_num[i] == 0)) {
+			for (var n = 1; n <= 40; n++) {
+				if (obj_creation.all_advantages[n].name == adv[i]) {
+					adv_num[i] = n;
+				}
+			}
+		}
+	}
+
+	for (var i = 1; i <= 4; i++) {
+		if ((dis[i] != "") && (dis_num[i] == 0)) {
+			for (var n = 1; n <= 40; n++) {
+				if (obj_creation.all_disadvantages[n].name[n] == dis[i]) {
+					dis_num[i] = n;
+				}
+			}
+		}
+	}	
 }

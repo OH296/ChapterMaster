@@ -875,8 +875,8 @@ if (global.restart>0){
     slide=2;
     slide_show=2;
     
-    scr_restart_variables(4);
-    with(obj_restart_vars){instance_destroy();}
+    reset_creation_variables();
+    //with(obj_restart_vars){instance_destroy();}
     global.restart=0;
 }
 

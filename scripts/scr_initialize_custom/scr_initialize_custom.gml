@@ -3141,10 +3141,6 @@ function scr_initialize_custom() {
 	// obj_controller.marines-=commands;
 
 
-	instance_create(0, 0, obj_restart_vars);
-	scr_restart_variables(1);
-
-
 	scr_add_item("Bolter", 20);
 	scr_add_item("Chainsword", 20);
 	scr_add_item("Bolt Pistol", 5);
