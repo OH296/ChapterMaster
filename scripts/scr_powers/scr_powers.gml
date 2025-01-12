@@ -9,6 +9,9 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	// This is a stand-alone script that determines powers based on the POWERS variable,
 	// executes them, and applies the effect and flavor.  All in one.  Because I eventually
 	// got better at this sort of thing.
+    
+    // This is called in context of a obj_pnunit
+    
 	var unit = unit_struct[unit_id];
 	if (!is_struct(unit))then exit;
 	if (unit.name()=="")then exit;
@@ -55,24 +58,24 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	        if (book_powers=""){// Check materials here for non-chaos powers
 	            if (string_count("GOLD",tome_tags)>0) then book_powers="default";// gold
 	            if (string_count("CRU",tome_tags)>0) then book_powers="telekenesis";// crumbling
-	            if (string_count("GLO",tome_tags)>0) then book_powers="default";// blue glow
-	            if (string_count("ADA",tome_tags)>0) then book_powers="default";// adamantium
+	            if (string_count("GLOW",tome_tags)>0) then book_powers="default";// blue glow
+	            if (string_count("ADAMANTINE",tome_tags)>0) then book_powers="default";// adamantium
 	            if (string_count("PRE",tome_tags)>0) then book_powers="biomancy";// preserved flesh
 	            if (string_count("THI",tome_tags)>0) then book_powers="biomancy";// thin
 	            if (string_count("FAL",tome_tags)>0) then book_powers="nu";// fallen angle
 	            if (string_count("SAL",tome_tags)>0) then book_powers="pyromancy";// salamander
-	            if (string_count("TEN",tome_tags)>0) then book_powers="what_the_fuck_man";// tentacles
+	            if (string_count("TENTACLES",tome_tags)>0) then book_powers="what_the_fuck_man";// tentacles
 	            if (string_count("MIN",tome_tags)>0) then book_powers="tz_daemon";// mindfuck
 	            if (book_powers="default") and (string_count("BUR",tome_tags)>0) then book_powers="pyromancy";// burning book
             
             
-	            // skulls, falling angel, thin, tentacle, mindfuckif (t2!="Statue") then t5=choose("SKU","FAL","THI","TEN","MIN");
+	            // skulls, falling angel, thin, tentacle, mindfuckif (t2!="Statue") then t5=choose("SKU","FAL","THI","TENTACLES","MIN");
             
 	        }
         
 	    }
 	}
-	if (array_contains(obj_ini.adv,"Daemon Binders")) then binders=true;
+	if (scr_has_adv("Daemon Binders")) then binders=true;
 	var p_type="";p_rang=0;p_tar=0;p_spli=0;p_att=0;p_arp=0;p_duration=0;
 
 	if (string_count("Z",using)>0){
@@ -415,24 +418,26 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	// }
 	var has_force_weapon=false;
 	if (is_struct(weapon_one)){
-		if weapon_one.has_tag("psy"){
+		if weapon_one.has_tag("force"){
 			has_force_weapon=true;
 		}
 	}
 
 	if (is_struct(weapon_two)){
-		if weapon_two.has_tag("psy"){
+		if weapon_two.has_tag("force"){
 			has_force_weapon=true;
 		}
 	}
 
 	if (has_force_weapon){
-		if (p_att>0) then p_att=round(p_att)*1.25;
-		if (p_rang>0) then p_rang=round(p_rang)*1.25;
 		if (unit.weapon_one()=="Force Staff" || unit.weapon_two()=="Force Staff"){
 			if (p_att>0) then p_att=round(p_att)*2;
 			if (p_rang>0) then p_rang=round(p_rang)*1.5;
-		}		
+		}
+		else{
+			if (p_att>0) then p_att=round(p_att)*1.25;
+			if (p_rang>0) then p_rang=round(p_rang)*1.25;
+		}
 	}
 
 	if (binders==true) and (p_type=="attack"){
@@ -479,9 +484,9 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	// peril1+=30;
 	if (string_count("Hood",marine_gear[unit_id])>0) then peril1-=5;
 	if (peril1<1) then peril1=1;
-	if (string_count("Warp Touched",obj_ini.strin2)>0) then peril1+=2;
+	if (scr_has_disadv("Warp Touched")) then peril1+=2;
 	if (marine_type[unit_id]="Chapter Master") and (peril1>1) then peril1=round(peril1/2);
-	if (string_count("Shitty",obj_ini.strin2)>0) then peril1+=3;
+	if (scr_has_disadv("Shitty Luck")) then peril1+=3;
 
 	if (book_powers!="") then peril1+=tome_bad;
 	if (string_count("daemon",book_powers)>0) then peril1+=3;
@@ -501,8 +506,8 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 
 	    p_type="perils";
 	    flavour_text3="";
-	    if (array_contains(obj_ini.dis,"Warp Touched")) then peril3+=20;
-	    if (array_contains(obj_ini.dis,"Shitty Luck")) then peril3+=25;
+	    if (scr_has_disadv("Warp Touched")) then peril3+=20;
+	    if (scr_has_disadv("Shitty Luck")) then peril3+=25;
 
 	    if (string_count("daemon",book_powers)>0) then peril1+=25;
 
@@ -510,40 +515,38 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	    flavour_text1=$"{unit.name_role()} suffers Perils of the Warp!  ";
 	    flavour_text2=scr_perils_table(peril3, unit, psy_discipline, power_name,unit_id, book_powers);
     
-	    if (unit.hp()<0){
-	        if (marine_dead[unit_id]=0) then marine_dead[unit_id]=1;
-	        obj_ncombat.player_forces-=1;
-       
-	        var units_lost=0,going_up=0;
-	        var important=[],u=-1,hh=0,stahp=0;
-	        repeat(50)
-	        	{
-	        		u+=1;
-	        		if (u<=20) then important[u]="";
-	        		lost[u]="";
-	        		lost_num[u]=0;
-	        	}
-	        var h=0,good=0,open=0;
-	        repeat(30){// Need to find the open slot
-	            h+=1;
-	            if (obj_ncombat.player_forces>6){
-	                if (marine_type[unit_id]=lost[hh]) and (good=0){
-	                	lost_num[hh]+=1;
-	                	good=1;
-	                }// If one unit is all the same, and get smashed, this should speed up the repeats
-	                if (marine_type[unit_id]=lost[h]) and (good=0){
-	                	lost_num[h]+=1;
-	                	good=1;
-	                	hh=h;}
-	            }
-	            if (lost[h]="") and (open=0) then open=h;// Find the first open
-	        }
-	        if (good=0) and (open!=0){lost_num[open]=1;lost[open]=marine_type[unit_id];}
-	        units_lost+=1;
-	        men-=1;
-        
-	        if (unit.IsSpecialist("dreadnoughts")) then dreads-=1;
-	        if (obj_ncombat.red_thirst=1) and (marine_type[unit_id]!="Death Company") then obj_ncombat.red_thirst=2;
+        if (unit.hp() < 0){//TODO create is_dead function to remove repeats of this log
+            if (marine_dead[unit_id] == 0) {
+                marine_dead[unit_id] = 1;
+                obj_ncombat.player_forces -= 1;
+            }
+            
+            // Track the lost unit
+            var existing_index = array_get_index(lost, marine_type[unit_id]);
+            if (existing_index != -1) {
+                lost_num[existing_index] += 1;
+            } else {
+                array_push(lost, marine_type[unit_id]);
+                array_push(lost_num, 1);
+            }
+
+            // Update unit counts
+            var armour_data = unit.get_armour_data();
+            var is_dread = false;
+            if (is_struct(armour_data)){
+                 is_dread = armour_data.has_tag("dreadnought");
+            }
+            if (is_dread) {
+                dreads -= 1;
+            } else {
+                men -= 1;
+            }
+
+            // Trigger red thirst
+            if (obj_ncombat.red_thirst == 1 && marine_type[unit_id] != "Death Company") {
+                obj_ncombat.red_thirst = 2;
+            }
+
 	    }
     
 	    obj_ncombat.messages+=1;
@@ -556,57 +559,81 @@ function scr_powers(power_set, power_count, enemy_target, unit_id) {
 	if (obj_ncombat.sorcery_seen=1) then obj_ncombat.sorcery_seen=2;
 
 	if (p_type="buff") or (power_name="gather_energy"){
+		var marine_index;
+		var _random_marine_list = [];
+        for (var i=0;i<array_length(unit_struct);i++){
+        	array_push(_random_marine_list, i);
+        }
+        _random_marine_list = array_shuffle(_random_marine_list);
+
 	    if (power_name="Force Dome") or (power_name="Stormbringer"){
-	        var buf,h;buf=9;h=0;
-	        repeat(100){
-	            if (buf>0){h=floor(random(men))+1;if (marine_type[h]!="") and (marine_dead[h]=0) and (marine_mshield[h]=0){buf-=1;marine_mshield[h]=2;}}
-	            if (buf=0){
-	            	if (marine_mshield[unit_id]<2){
-	            		buf-=1;marine_mshield[unit_id]=2;
-	            	}}
+	        var buf=9;
+	        for (var i=0;i<array_length(_random_marine_list);i++){
+	        	if (buf<=0) then break;
+	        	marine_index = _random_marine_list[i];
+	        	if (!marine_dead[marine_index]) and (!marine_mshield[marine_index]){
+            		buf-=1;
+            		marine_mshield[marine_index]=2;
+	        	}
 	        }
 	    }
-	    if (power_name="Quickening"){if (marine_quick[unit_id]<3) then marine_quick[unit_id]=3;}
+
+	    if (power_name="Quickening"){
+	    	if (marine_quick[unit_id]<3) then marine_quick[unit_id]=3;
+	    }
 	    if (power_name="Might of the Ancients"){if (marine_might[unit_id]<3) then marine_might[unit_id]=3;}
     
 	    if (power_name="Fiery Form"){if (marine_fiery[unit_id]<3) then marine_fiery[unit_id]=3;}
 	    if (power_name="Fire Shield"){
-	        var buf,h;buf=9;h=0;
-	        repeat(100){
-	            if (buf>0){
-	            	h=irandom(men-1)+1;
-	            	if (marine_type[h]!="") and (marine_dead[h]=0) and (marine_fshield[h]=0){
-	            		buf-=1;
-	            		marine_fshield[h]=2;
-	            	}
-	            }
-	            if (buf=0){
-	            	if (marine_fshield[unit_id]<2){
-	            		buf-=1;marine_fshield[unit_id]=2;
-	            	}
-	            }
-	        }
+	        var buf=9;
+	        for (var i=0;i<array_length(_random_marine_list);i++){
+	        	if (buf<=0) then break;
+	        	marine_index = _random_marine_list[i];
+	        	if (!marine_dead[marine_index]) and (!marine_fshield[marine_index]){
+            		buf-=1;
+            		marine_fshield[marine_index]=2;
+	        	}
+	        }	    	
 	    }
     
 	    if (power_name="Iron Arm") then marine_iron[unit_id]+=1;
 	    if (power_name="Endurance"){
-	        var buf,h;buf=5;h=0;
-	        repeat(100){
-	            if (buf>0){h=floor(random(men))+1;if (marine_type[h]!="") and (marine_hp[h]<=80) and (marine_dead[h]=0){buf-=1;marine_hp[h]+=20;if (marine_hp[h]>100) then marine_hp[h]=100;}}
-	        }
+	    	
+	        var buf=5;h=0;
+	        for (var i=0;i<array_length(_random_marine_list);i++){
+	        	if (buf<=0) then break;
+	        	marine_index = _random_marine_list[i];
+	        	if (!marine_dead[marine_index]){
+	        		var _buff_unit = unit_struct[marine_index];
+	        		if (_buff_unit.hp()<_buff_unit.max_health()){
+	        			buf-=1;
+	        			_buff_unit.add_or_sub_health(20);
+	        		}
+	        	}
+	        }	        
 	    }
 	    if (power_name="Hysterical Frenzy"){
-	        var buf,h;buf=5;h=0;
-	        repeat(100){
-	            if (buf>0){h=floor(random(men))+1;if (marine_type[h]!="") and (marine_attack[h]<2.5) and (marine_dead[h]=0){buf-=1;marine_attack[h]+=1.5;marine_defense[h]-=0.15;}}
+	        var buf=5;h=0;
+	        for (var i=0;i<array_length(_random_marine_list);i++){
+	        	if (buf<=0) then break;
+	        	marine_index = _random_marine_list[i];
+	        	if (!marine_dead[marine_index]) and (marine_attack[marine_index]<2.5){
+            		buf-=1;
+            		marine_attack[marine_index]+=1.5;
+            		marine_defense[marine_index]-=0.15;
+	        	}
 	        }
 	    }
 	    if (power_name="Regenerate"){
 	    	unit.add_or_sub_health(choose(2,3,4)*5);
 	    	if (unit.hp()>unit.max_health()) then unit.update_health(unit.max_health())}
 
-	    if (power_name="Telekinetic Dome"){if (marine_dome[unit_id]<3) then marine_dome[unit_id]=3;}
-	    if (power_name="Spatial Distortion"){if (marine_spatial[unit_id]<3) then marine_spatial[unit_id]=3;}
+	    if (power_name="Telekinetic Dome"){
+	    	if (marine_dome[unit_id]<3) then marine_dome[unit_id]=3;
+	    }
+	    if (power_name="Spatial Distortion"){
+	    	if (marine_spatial[unit_id]<3) then marine_spatial[unit_id]=3;
+	    }
     
 	    /*obj_ncombat.newline=string(flavour_text1)+string(flavour_text2)+string(flavour_text3);
 	    obj_ncombat.newline_color="blue";

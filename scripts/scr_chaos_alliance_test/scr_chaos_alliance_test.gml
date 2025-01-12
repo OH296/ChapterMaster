@@ -6,16 +6,15 @@ function scr_chaos_alliance_test() {
 
 	accept_chance+=(obj_controller.marines*0.00375);
 	accept_chance+=(obj_controller.command*0.00375);
-	repeat(4){o+=1;
-	    if (obj_ini.adv[o]="Daemon Binders") then accept_chance+=2;
-	    if (obj_ini.dis[o]="Suspicious") then accept_chance+=1;
-	    if (obj_ini.adv[o]="Psyker Abundance") then accept_chance+=1;
-    
-	    if (obj_ini.adv[o]="Reverent Guardians") then accept_chance-=2;
-	    if (obj_ini.dis[o]="Never Forgive") then accept_chance-=2;
-	    if (obj_ini.adv[o]="Enemy: Fallen"){accept_chance-=999;result="fail_fallen";}
-	    if (obj_ini.dis[o]="Shitty Luck") then shittah=true;
-	}
+	
+	if (scr_has_adv("Daemon Binders")) then accept_chance+=2;
+	if (scr_has_disadv("Suspicious")) then accept_chance+=1;
+	if (scr_has_adv("Psyker Abundance")) then accept_chance+=1;
+
+	if (scr_has_adv("Reverent Guardians")) then accept_chance-=2;
+	if (scr_has_disadv("Never Forgive")) then accept_chance-=2;
+	if (scr_has_adv("Enemy: Fallen")){accept_chance-=999;result="fail_fallen";}
+	if (scr_has_disadv("Shitty Luck")) then shittah=true;
 	if (string_count("|CPF|",obj_controller.useful_info)>0) then result="fail_angry";
 	if (string_count("CHTRP2|",obj_controller.useful_info)>0) then result="fail";
 
@@ -54,23 +53,19 @@ function scr_chaos_alliance_test() {
     
 	    if (!instance_exists(that_star)) then diplo_text="[Error: No WL10 planet feature found.]";
 	    if (instance_exists(that_star)){
-	        var ii,fprob;ii=0;fprob=0;
-	        repeat(4){
-	            if (fprob=0){ii+=1;
-	                if (that_star.p_problem[that_planet,ii]=""){
-	                    that_star.p_problem[that_planet,ii]="meeting";
-	                    if (result="success_trap") then that_star.p_problem[that_planet,ii]="meeting_trap";
-	                    that_star.p_timer[that_planet,ii]=36;
-	                    fprob=ii;
-	                }
-	            }
+	        var meeeting_arranged=false;
+	        if (result="success_trap"){
+	        	meeeting_arranged=add_new_problem(that_planet, "meeting_trap", 36,that_star)
+	        } else {
+	        	meeeting_arranged=add_new_problem(that_planet, "meeting", 36,that_star)
 	        }
-        
-	        var rando,new_event;rando=choose(1,2);
-	        if (rando=1) then diplo_text+="A proposal that needs further consideration and some negotiation.  Meet me at "+string(that_title)+" and we shall resolve this.";
-	        if (rando=2) then diplo_text+="Interesting. I shall be at "+string(that_title)+" and, if you are sincere, you will come to me and we can take this proposal to its logical conclusion.";
-	        scr_event_log("","Chaos Lord "+string(obj_controller.faction_leader[eFACTION.Chaos])+" agrees to meet with you on "+string(that_title)+" to discuss an alliance.");
-	        new_event=instance_create(that_star.x+16,that_star.y-24,obj_star_event);
+        	if (meeeting_arranged){
+		        var rando,new_event;rando=choose(1,2);
+		        if (rando=1) then diplo_text+="A proposal that needs further consideration and some negotiation.  Meet me at "+string(that_title)+" and we shall resolve this.";
+		        if (rando=2) then diplo_text+="Interesting. I shall be at "+string(that_title)+" and, if you are sincere, you will come to me and we can take this proposal to its logical conclusion.";
+		        scr_event_log("","Chaos Lord "+string(obj_controller.faction_leader[eFACTION.Chaos])+" agrees to meet with you on "+string(that_title)+" to discuss an alliance.");
+		        new_star_event_marker("purple");
+		    }
 	    }
     
 	}

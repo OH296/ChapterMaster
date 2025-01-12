@@ -8,10 +8,6 @@ if (audio_is_playing(snd_blood)=true) then scr_music("royal",2000);
 scr_dialogue("lol");
 */
 
-/*var g;g=0;
-repeat(100){g+=1;
-    show_message(string(obj_ini.role[0,g])+": "+string(obj_ini.experience[0,g]));
-}*/
 
 
 // alarm[7]=1;
@@ -29,17 +25,13 @@ repeat(100){g+=1;
 // loyalty=0;loyalty_hidden=0;
 
 
-// show_message(string(obj_ini.ship[1])+" location: "+string(obj_ini.ship_location[1]));
+// show_message(string(obj_ini.ship[0])+" location: "+string(obj_ini.ship_location[0]));
 
 // alarm[8]=1;
 
 // menu=20;
 // diplomacy=-5.3;
 
-/*var i;i=0;
-repeat(100){i+=1;
-    if (recent_type[i]!="") then show_message(string(i)+"] "+string(recent_type[i])+"/"+string(recent_keyword[i])+"/"+string(recent_number[i]));
-}*/
 
 
 // show_message(cooldown);

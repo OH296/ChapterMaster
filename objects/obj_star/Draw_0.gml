@@ -10,93 +10,69 @@ if (p_type[1]="Craftworld") and (obj_controller.known[eFACTION.Eldar]=0){
 var show=name;
 
 if (global.cheat_debug=true) then show=string(name)+"#"+string(p_problem[1,1])+":"+string(p_timer[1,1])+"#"+string(p_problem[1,2])+":"+string(p_timer[1,2])+"#"+string(p_problem[1,3])+":"+string(p_timer[1,3]);
-
+scale = min(camera_get_view_width(view_camera[0])/global.default_view_width, 2.4);
 draw_set_color(c_white);
 draw_set_alpha(0.25);
-if (x2!=0) then draw_line(x,y,x2,y2);
-if (craftworld==0) and (vision==1) then draw_self();
-if (craftworld==1) then draw_sprite_ext(spr_craftworld,0,x,y,1,1,point_direction(x,y,room_width/2,room_height/2)+90,c_white,1);
-if (space_hulk==1) then draw_sprite_ext(spr_star_hulk,0,x,y,1,1,0,c_white,1);
 
-if (storm>0) then draw_sprite_ext(spr_warp_storm,storm_image,x,y,0.75,0.75,0,c_white,1);
+if (!craftworld) and (vision==1) then draw_sprite_ext(sprite_index,image_index,x,y,1*scale,1*scale,0,c_white,1)
+if (craftworld) then draw_sprite_ext(spr_craftworld,0,x,y,1*scale,1*scale,point_direction(x,y,room_width/2,room_height/2)+90,c_white,1);
+if (space_hulk) then draw_sprite_ext(spr_star_hulk,0,x,y,1*scale,1*scale,0,c_white,1);
 
-// if (vision=1) then draw_set_alpha(0.5);
-// if (vision=0) then draw_set_alpha(0.3);
-
-/*
-draw_set_halign(fa_center);
-draw_set_font(fnt_menu);
-draw_set_color(38144);
-
-// Checks the owner of the planet
-switch (owner) {
-    case 1:
-        draw_set_color(c_white);
-        break;
-    case 2:
-        draw_set_color(c_gray);
-        break;
-    case 3:
-        draw_set_color(c_red); // toaster fuckers
-        break;
-    case 5:
-        draw_set_color(c_white);
-        break;
-    case 6:
-        draw_set_color(33023);
-        break;
-    case 7:
-        draw_set_color(38144); // waagh
-        break;
-    case 8:
-        draw_set_color(117758); // the greater good
-        break;
-    case 9:
-        draw_set_color(7492269); // bug boys
-        break;
-    case 10:
-        draw_set_color(c_purple); // chaos
-        break;
-    case 13:
-        draw_set_color(65408); // Sleepy robots
-        break;
-}
-// if (explored=0){draw_set_color(38144);show="???";}
-
-if (owner!=1){
-    draw_set_alpha(0.5);
-    if (obj_controller.zoomed==0) then draw_text_transformed(x,y+16,string_hash_to_newline(string(show)),1.3,1.3,0);
-    if (obj_controller.zoomed==1) then draw_text_transformed(x,y+16,string_hash_to_newline(string(show)),2,2,0);// was 1.65
-}
-if (owner==1){
-    var siz;
-    draw_set_alpha(1);
-    if (obj_controller.zoomed==0) then siz=1.3;
-    if (obj_controller.zoomed==1) then siz=2;
-    
-    draw_set_color(c_blue);
-    draw_text_transformed(x-1,y+15,string_hash_to_newline(show),siz,siz,0);
-    draw_text_transformed(x+1,y+17,string_hash_to_newline(show),siz,siz,0);
-    draw_set_color(c_white);
-    draw_text_transformed(x,y+16,string_hash_to_newline(show),siz,siz,0);
-}
-*/
+if (storm>0) then draw_sprite_ext(spr_warp_storm,storm_image,x,y,0.75*scale,0.75*scale,0,c_white,1);
 
 //ad hoc way of determining whether stuff is in view or not...needs work
-var cam = view_get_camera(view_current)
-var x1 = camera_get_view_x(cam)
-var y1 = camera_get_view_y(cam)
-var w = x1 + camera_get_view_width(view_current)
-var h = y1 + camera_get_view_height(view_current)
 
+draw_set_halign(fa_center);
+draw_set_font(fnt_cul_14);
 draw_set_alpha(1);
 
-if obj_controller.zoomed || rectangle_in_rectangle(ui_node.gui_x, ui_node.gui_y, ui_node.gui_x + ui_node.width , ui_node.gui_y + ui_node.height, x1, y1, w, h) > 0 {
-	ui_node.activate();
-} else {
-	ui_node.deactivate();
-}
-if (ui_node!=noone &&  global.load==0){
-    ui_node.render(x,y);
+
+if (!global.load && (obj_controller.zoomed || in_camera_view(star_box_shape()))) {
+    
+    if (garrison){
+        draw_sprite(spr_new_resource,3,x-30,y+15);
+        if (scr_hit(x-40,y+10,x-10,y+35)){
+            tooltip_draw("Marine Garrison in system");
+        }
+    }
+    if (point_in_rectangle(mouse_x, mouse_y,x-128,y, x+128, y+80) && obj_controller.zoomed){
+        scale *= 1.5;
+    }    
+    if (stored_owner != owner || !surface_exists(star_tag_surface)){
+        star_tag_surface = surface_create(256, 128);
+        var xx=64;
+        var yy=0;
+        surface_set_target(star_tag_surface);
+        var panel_width = string_width(name) + 60;
+        if (owner != eFACTION.Player ){
+            var _faction_index = owner;
+            var faction_colour = global.star_name_colors[_faction_index];
+            draw_sprite_general(spr_p_name_bg, 0, 0, 0, string_width(name) + 60, 32, xx-(panel_width/2), yy+30, 1, 1, 0, faction_colour, faction_colour, faction_colour, faction_colour, 1);
+            draw_sprite_ext(spr_faction_icons,_faction_index,xx+(panel_width/2)-30,yy+25, 0.60, 0.60, 0, c_white, 1);
+        } else {
+            scr_shader_initialize();
+            var main_color = make_colour_from_array(obj_controller.body_colour_replace);
+            var right_pauldron = make_colour_from_array(obj_controller.pauldron_colour_replace);
+            draw_sprite_general(spr_p_name_bg, 0, 0, 0, string_width(name) + 60, 32, xx-(panel_width/2), yy+30, 1, 1, 0, main_color, main_color, right_pauldron, right_pauldron, 1);
+            var faction_sprite = global.chapter_icon_sprite;
+            var _faction_index = global.chapter_icon_frame;
+            draw_sprite_ext(faction_sprite,_faction_index,xx+(panel_width/2)-30,yy+30, 0.2, 0.2, 0, c_white, 1);
+            //context.set_vertical_gradient(main_color, right_pauldron);
+            //draw_text_ext_transformed_color(gx + xoffset,gy + yoffset,text,sep,owner.width,xscale,yscale,angle ,col1, col2, col3, col4, alpha);
+        }
+        draw_set_color(c_white);
+        draw_text(xx, yy+33, name)
+        surface_reset_target();
+        stored_owner = owner;
+        draw_surface_ext(star_tag_surface, x-(64*scale), y, scale, scale, 1, c_white, 1);
+    } else {
+        draw_surface_ext(star_tag_surface, x-(64*scale), y, scale, scale, 1, c_white, 1);
+    }
 }
 draw_set_valign(fa_top)
+
+
+
+
+
+

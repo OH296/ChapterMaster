@@ -1,0 +1,36 @@
+changelog:
+  exclude:
+    labels:
+      - "PR: Chore"
+      
+  categories:
+    - title: Possibly Breaking Changes
+      labels:
+        - "PR: Breaking!"
+        
+    - title: New/Changed
+      labels:
+        - "PR: Feature"
+        - "PR: Enhancement"
+        - "PR: Balance"
+        - "PR: Misc Change"
+        
+    - title: Fixes
+      labels:
+        - "PR: Fix"
+        
+    - title: Under The Hood - Important!
+      labels:
+        - "PR: Major Code Changes"
+        
+    - title: Under The Hood
+      labels:
+        - "PR: Refactor"
+        - "PR: Performance"
+        - "PR: Code Style"
+        - "PR: Docs"
+        - "PR: CI"
+        
+    - title: Other Changes
+      labels:
+        - "*"

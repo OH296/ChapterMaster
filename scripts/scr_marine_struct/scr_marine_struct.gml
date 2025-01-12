@@ -4,7 +4,7 @@
 	role[100][14]:{"armour":[["MK3 Iron Armour",25]],
 	role[100][15]:{"armour":[["MK3 Iron Armour", 10]]}, //apothecary
 	role[100][16]:{"armour":},
-	"Standard Bearer":{"armour":[["MK3 Iron Armour", 3]]},
+	obj_ini.role[100][11]:{"armour":[["MK3 Iron Armour", 3]]},
 	role[100][7]:{"armour":[]},  //company champion
 	role[100][8]:{"armour":[["MK8 Errant", 3],["MK3 Iron Armour", 3],["MK4 Maximus", 3],["MK5 Heresy", 3]]},     //tacticals
 	role[100][10]:{"armour":},		
@@ -17,17 +17,31 @@
 		the first int is a base or mean value the second int is a sd number to be passed to the gauss() function
 		the string (usually max) is guidance so in the instance of max it will pick the larger value of the mean and the gauss function return
 */
-global.stat_list = ["constitution", "strength", "luck", "dexterity", "wisdom", "piety", "charisma", "technology","intelligence", "weapon_skill", "ballistic_skill"];
+#macro ARR_stat_list ["constitution", "strength", "luck", "dexterity", "wisdom", "piety", "charisma", "technology","intelligence", "weapon_skill", "ballistic_skill"]
+
+global.stat_shorts = {
+	"constitution":"CON", 
+	"strength":"STR", 
+	"luck":"LCK", 
+	"dexterity":"DEX", 
+	"wisdom":"WIS", 
+	"piety":"PTY", 
+	"charisma":"CHA", 
+	"technology":"TEC",
+	"intelligence":"INT", 
+	"weapon_skill":"WS", 
+	"ballistic_skill":"BS",
+}
 
 // will swap these out for enums or some better method as i develop where this is going
-global.body_parts = ["left_leg", "right_leg", "torso", "right_arm", "left_arm", "left_eye", "right_eye", "throat", "jaw","head"];
-global.body_parts_display = ["Left Leg", "Right Leg", "Torso", "Right Arm", "Left Arm", "Left Eye", "Right eye", "Throat", "Jaw","Head"];
+#macro ARR_body_parts ["left_leg", "right_leg", "torso", "right_arm", "left_arm", "left_eye", "right_eye", "throat", "jaw","head"]
+#macro ARR_body_parts_display ["Left Leg", "Right Leg", "Torso", "Right Arm", "Left Arm", "Left Eye", "Right Eye", "Throat", "Jaw","Head"]
 global.religions={
 	"imperial_cult":{"name":"Imperial Cult"},
 	"cult_mechanicus":{"name":"Cult Mechanicus"}, 
 	"eight_fold_path":{"name":"The Eight Fold Path"}
 };
-global.power_armour=["MK7 Aquila","MK6 Corvus","MK5 Heresy","MK3 Iron Armour","MK4 Maximus","Power Armour"];
+#macro ARR_power_armour ["MK7 Aquila","MK6 Corvus","MK5 Heresy","MK3 Iron Armour","MK4 Maximus","Power Armour"]
 enum location_types {
 	planet,
 	ship,
@@ -36,359 +50,10 @@ enum location_types {
 	warp
 }
 
-global.phy_levels =["Rho","Pi","Omicron","Xi","Nu","Mu","Lambda","Kappa","Iota","Theta","Eta","Zeta","Epsilon","Delta","Gamma","Beta","Alpha","Alpha Plus","Beta","Gamma Plus"]
-global.trait_list = {
-	"champion":{
-		weapon_skill : [10,5,"max"],      
-		ballistic_skill:[10,5, "max"],
-		display_name : "Champion",
-		flavour_text : "Because of either natural talent, or obsessive training they are a master of arms",
-		effect:"increase Melee Burden Cap"
-	},
-	"lightning_warriors":{
-		constitution: -6,
-		dexterity :6,
-		weapon_skill : 5,
-		flavour_text : "A master of speed covering distances quickly to enter the fray",
-		display_name : "Lightning Warrior",
-	},
-	"slow_and_purposeful":{
-		constitution:6,
-		dexterity : -6,
-		strength : 2,
-		flavour_text : "Implacable, advancing in combat with methodical reason",
-		display_name : "Slow and Purposeful",
+#macro ARR_psy_levels ["Rho","Pi","Omicron","Xi","Nu","Mu","Lambda","Kappa","Iota","Theta","Eta","Zeta","Epsilon","Delta","Gamma","Beta","Alpha","Alpha Plus","Beta","Gamma Plus"]
 
-	},
-	"melee_enthusiast":{
-		weapon_skill : 5,
-		strength : 3,		
-		flavour_text : "Nothing can keep them from the fury of melee combat",	
-		display_name : "Melee Enthusiast",
-
-	},
-	"shitty_luck":{
-		luck:-4,
-		flavour_text : "For all their talent they are dogged by poor luck",
-		display_name : "Shitty Luck",
-	},
-	"very_hard_to_kill":{
-		constitution:15,
-		luck:2,
-		flavour_text : "Posses toughness and luck unsurpassed by most",
-		display_name : "Very Hard To Kill",
-		
-	},
-	"paragon":{
-		constitution:12,
-		luck:2,
-		strength:10,
-		dexterity:10,
-		intelligence:6,
-		charisma:6,
-		weapon_skill:10,
-		ballistic_skill:10,
-		flavour_text : "Walks in the footsteps of the Primarchs of old",
-		display_name : "Paragon",
-
-	},
-	"warp_touched":{
-		intelligence:4,
-		flavour_text : "Interacted with the warp in a way that has forever marked them",
-		display_name : "Warp Touched",		
-	},
-	"lucky":{
-		luck : 4,
-		flavour_text : "Inexplicably lucky",
-		display_name : "Lucky"
-	},
-	"old_guard":{
-		luck : 1,
-		constitution : 1,
-		strength :1,
-		weapon_skill : [2, 2, "max"],
-		ballistic_skill :[2, 2, "max"],
-		flavour_text : "Seen many young warriors rise and die before them but they themselves still remain",
-		display_name : "Old Guard"
-	},
-	"seasoned":{
-		luck : 1,
-		constitution : 1,
-		strength :1,
-		weapon_skill : 1,
-		ballistic_skill :1,
-		flavour_text : "A seasoned warrior, having fought for many years",
-		display_name : "Seasoned",		
-	},
-	"ancient":{
-		luck : 1,
-		constitution : -1,
-		strength :-1,
-		weapon_skill : 3,
-		ballistic_skill :4,
-		wisdom : 5,
-		flavour_text : "Truly Ancient. While their body may ache - skills and wisdom are to be respected",
-		display_name : "Ancient",		
-	},
-	"tinkerer":{
-		technology:[5,2,"max"],
-		display_name:"Tinkerer",
-		flavour_text:"They have a knack for tinkering around with various technological devices and apparatuses, often augmenting and improving their own equipment",
-	},
-	"lead_example":{
-		weapon_skill:[2,1,"max"],
-		ballistic_skill :[2,1,"max"],
-		constitution :[2,1, "max"],
-		dexterity:2,
-		strength:1,
-		luck:1,
-		intelligence:1,
-		wisdom:1,
-		charisma:3,
-		display_name:"Lead by Example",
-		flavour_text :"In their many years of service, they have risen through the ranks and have always led by example from the front. They have earned the respect of all their brothers",
-	},
-	"still_standing":{
-		weapon_skill:[6,2,"max"],
-		ballistic_skill :[6,2,"max"],
-		constitution :[3,1, "max"],
-		dexterity:5,
-		luck:3,
-		wisdom:[3,3,1],
-		charisma:1,
-		display_name:"Still Standing",
-		flavour_text :"Survived the unthinkable. Whether it was slaying a Warboss, vanquishing a Norn-Queen, or accomplishing another incredible feat, they stood last while their comrades fell",
-	},
-	"lone_survivor":{
-		weapon_skill:[8,2,"max"],
-		ballistic_skill :[8,2,"max"],
-		constitution :[8,1, "max"],
-		dexterity:[4,2, "max"],
-		strength:[4,2, "max"],
-		luck:5,
-		wisdom:[2,1,"max"],
-		intelligence:[3,3,"max"],
-		charisma:[-3, 1, "min"],
-		display_name:"Lone Survivor",
-		flavour_text :"Survived a battle where all their comrades died. They became more reclusive, but gained immeasurable combat capabilities and are harder to kill.",
-	},
-	"beast_slayer":{
-		weapon_skill:[3,2,"max"],
-		ballistic_skill :[4,2,"max"],
-		constitution :[2,1, "max"],
-		dexterity:1,
-		strength:4,
-		wisdom:3,
-		charisma:1,
-		display_name:"Lone Survivor",
-		flavour_text :"Defeated a huge beast in single combat, this proves their toughness and their great ability to overcome powerful enemies of the imperium",
-
-	},	
-	"mars_trained":{
-		technology:[10,5,"max"],
-		intelligence:[5,5,"max"],
-		display_name:"Trained On Mars",
-		flavour_text:"Had the best instruction in the imperium on technology from the Tech Priests of Mars"
-	},
-	"flesh_is_weak":{
-		technology:[2,1,"max"],
-		constitution:[1,1,"max"],
-		piety:[3,1,"max"],
-		display_name:"Weakness of Flesh",
-		flavour_text:"Perceive living flesh as a weakness and try to cast it aside whatever possible",
-		effect:"faith boosts from bionic replacements"
-	},
-	"zealous_faith":{
-		strength:[1,1,"max"],
-		texhnology:-2,
-		wisdom:3,
-		intelligence:-2,
-		piety:[5,2,"max"],
-		display_name:"Zealous Faith",
-		flavour_text:"Put great emphasis on their faith, able to draw strength from it in crisis"
-	},
-	"feet_floor":{
-		wisdom:1,
-		dexterity:-2,
-		display_name:"Feet On the Ground",
-		flavour_text:"Prefer to keep both feet on the ground",
-		effect:"reduction in combat effectiveness when using Bikes or Jump Packs"
-	},
-	"tyrannic_vet":{
-		wisdom :[2,3,"max"],
-		dexterity:1,
-		weapon_skill:1,
-		ballistic_skill:1,
-		constitution:1,
-		display_name:"Tyrannic War Veteran",
-		flavour_text:"A veteran of the many wars against the the Tyranid swarms",
-		effect:"Increased lethality against tyranids"
-	},
-	"blood_for_blood":{
-		strength:[3,2,"max"],
-		weapon_skill:1,
-		piety:2,
-		display_name:"Blood For the Blood God",
-		flavour_text:"Spilled blood in the name of the blood god",
-		effect:"Has the attention of Khorne"
-	},
-	"blunt":{
-		strength:[2,2,"max"],
-		wisdom:2,
-		charisma:-2,
-		intelligence:-4,
-		weapon_skill:1,
-		display_name:"Blunt",
-		flavour_text:"Tend towards simplistic approaches to achieve goals",
-	},
-	"skeptic":{
-		piety:[-6,4,"min"],
-		wisdom:1,
-		display_name:"Skeptic",
-		flavour_text:"Have a skeptical outlook and put little thought in trivial matters like religion and faith",
-	},
-	"scholar":{
-		intelligence:[4,2,"max"],
-		wisdom:1,
-		technology:2,
-		stength:-1,
-		display_name:"Scholar",
-		flavour_text:"Have a keen mind and enjoy reading and training it whenever possible",
-	},
-	"brute":{
-		strength:[4,2,"max"],
-		weapon_skill:[2,2,"max"],
-		ballistic_skill:[-2,1,"min"],
-		wisdom:-5,
-		intelligence:-5,
-		charisma:-2,
-		display_name:"Brute",
-		flavour_text:"A brutal character, often solving problems with intimidation or violence",
-	},
-	"charismatic":{
-		charisma:[10,4,"max"],
-		display_name:"Charismatic",
-		flavour_text:"Liked by most without even trying",
-	},
-	"recluse":{
-		charisma:[-3,2,"min"],
-		dexterity:1,
-		wisdom:1,
-		display_name:"Reclusive",
-		flavour_text:"Generally withdrawn and reclusive, avoiding social engagements where possible",
-	}	,
-	"nimble":{
-		display_name:"Nimble",
-		flavour_text:"Naturally nimble and light on their feet",
-		dexterity:[4,3,"max"],
-		weapon_skill:1,
-		constitution:-3,
-	},
-	"jaded":{
-		display_name:"Jaded",
-		flavour_text:"Their past has led them to form a deep distrust and cynical outlook on most parts of their life",
-		charisma:-2,
-		wisdom:-1,
-	},
-	"observant":{
-		display_name:"Observant",
-		flavour_text:"Tend to notice things that most don't",
-		wisdom:[5,2,"max"],
-		dexterity:2
-	},
-	"perfectionist":{
-		display_name:"Perfectionist",
-		flavour_text:"Obsessed with doing things correctly",
-		wisdom:[2,2,"max"],
-		weapon_skill:[2,2,"max"],
-		ballistic_skill:[2,2,"max"],
-		intelligence:[2,1],
-		piety:[2,1],
-	},
-	"guardian":{
-		display_name:"Guardian",
-		weapon_skill:[2,2,"max"],
-		ballistic_skill:[2,2,"max"],
-		charisma:2,
-		flavour_text:"Born with a guardian's heart, they vow to shield their charges, defending them unto death",
-		effect:"Are a better guardian or bodyguard",
-	},
-	"cunning":{
-		display_name:"Cunning",
-		weapon_skill:[1,1,"max"],
-		ballistic_skill:[2,2,"max"],
-		dexterity:[2,2,"max"],
-		charisma:2,
-		wisdom:1,
-		flavour_text:"Possessed of a fine cunning",
-	},
-	"strong":{
-		display_name:"Strong",
-		strength:[6,2,"max"],
-		flavour_text:"Endowed with strength from birth",
-	},	
-	"slow":{
-		display_name:"slow",
-		dexterity:[-3,3,"min"],
-		flavour_text:"Have many talents but being fast ain't one of them",
-	},			
-	"deathworld":{
-		display_name:"Deathworld Born",
-		strength:[2,2,"max"],
-		constitution:[2,2,"max"],
-		dexterity:[2,2,"max"],
-		weapon_skill:[2,2,"max"],
-		ballistic_skill:[2,-2,"min"],
-		wisdom:[2,2,"max"],
-		flavour_text:"Started life on a deathworld. While this has greatly improved their strength and survival abilities, their skills in technology and other advanced fields are reduced",
-		intelligence:-3,
-		technology:[-3,2,"min"],
-		piety:[3,1],
-	},
-	"technophobe":{
-		display_name:"Technophobe",
-		technology:[-7,2,"min"],
-		flavour_text:"Have a deep mistrust and loathing of technology",
-	},
-	"fast_learner":{
-		display_name:"Quick Learner",
-		wisdom:[2,2,"max"],
-		intelligence:[2,2,"max"],
-		technology:[2,2,"max"],
-		flavour_text:"Fast learner, picking up new skills with ease",
-		effect:"learns new skills more easily",
-	},
-	"brawler":{
-		display_name:"Brawler",
-		strength:[2,2,"max"],
-		constitution:[2,2,"max"],
-		flavour_text:"Compelled towards the thrill of combat, they revel in the raw, primal dance of battle, often relying on nothing more than the crushing power of their fists",
-		effect:"bonus to fist type weaponry",
-	},
-	"tech_heretic":{
-		display_name:"Tech Heretic",
-		technology:[3,1,"max"],
-		intelligence:1,
-		flavour_text:"Engage in study and beliefs considered heretical in the eyes of Mars and the Imperium",
-		//effect:"bonus to fist type weaponry",
-	},
-	"crafter":{
-		display_name:"Crafter",
-		technology:[6,1,"max"],
-		intelligence:1,
-		flavour_text:"Particularly skilled at building and making things, often improving their quality along the way",
-		effect:"provides more total forge points especially when assigned to a forge",
-	},	
-	"natural_leader":{
-		display_name:"Natural Leader",
-		flavour_text:"Excels in all areas of command be that rallying his men, planning logistics or drawing up plans for engagements",
-		wisdom : [4, 2, "max"],
-		charisma : [4, 2, "max"],
-		effect:"Bonus when commanding",		
-	}
-}
 global.base_stats = { //tempory stats subject to change by anyone that wishes to try their luck
-	"chapter_master":{
+	"chapter_master":{ // TODO consider allowing the player to change the starting stats of the chapter master, and closest advisors, especially for custom chapters
 			title : "Adeptus Astartes",
 			strength:[42,5],
 			constitution:[44,3],
@@ -418,8 +83,10 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			piety : [30,3],
 			luck :10,
 			technology :[30,3],
-			skills: {weapons:{"bolter":3, "chainsword":3, "ccw":3, "bolt_pistol":3}},
-			start_gear:{"armour":"power_armour", "wep1":"bolter", "wep2":"chainsword"},
+			skills: {
+				weapons:{
+					"bolter":3, "chainsword":3, "ccw":3, "bolt_pistol":3}},
+			start_gear:{"armour":"Power Armour", "wep1":"Chainsword", "wep2":"Chainsword"},
 			base_group : "astartes",
 	},
 	"scout":{
@@ -437,7 +104,7 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			luck :10,
 			technology :[28,3],
 			skills: {weapons:{"bolter":3, "chainsword":3, "ccw":3, "bolt_pistol":3}},
-			start_gear:{"armour":"power_armour", "wep1":"bolter", "wep2":"chainsword"},
+			start_gear:{"armour":"Power Armour", "wep1":"Bolter", "wep2":"Chainsword"}, // Scouts should probably have access only to scout armour, and perhaps some stuff from hirelings
 			base_group : "astartes",
 	},
 	"dreadnought":{
@@ -455,159 +122,211 @@ global.base_stats = { //tempory stats subject to change by anyone that wishes to
 			luck :10,
 			technology :[30,3],
 			skills: {weapons:{"bolter":3, "chainsword":3, "ccw":3, "bolt_pistol":3}},
-			start_gear:{"armour":"power_armour", "wep1":"bolter", "wep2":"chainsword"},
+			start_gear:{"armour":"Power Armour", "wep1":"Bolter", "wep2":"Chainsword"},
 			base_group : "astartes",
 			traits:["ancient","slow_and_purposeful","lead_example","zealous_faith",choose("still_standing","beast_slayer","lone_survivor")]
 	},			
+	/* TODO - check and tweak if necessary
+	"chapter_servitor":{
+			title : "Chapter Servitor",
+			strength:[36,4],
+			constitution:[36,3],
+			weapon_skill : [30,2,"max"],
+			ballistic_skill : [30,2,"max"],
+			dexterity:[36,3],
+			intelligence:0,
+			wisdom:0,
+			charisma :[10,1],
+			religion : "imperial_cult",
+			piety : [28,3],
+			luck : 10,
+			technology :[30,3],
+			skills: {weapons:{"Bolter":1, "Chainsword":1, "Combat Knife":1, "Bolt Pistol":1}},
+			start_gear:{"armour":"power_armour", "wep1":"Combat Knife", "gear":"Servo-arm"}, TODO - tweak and check if correct
+			base_group : "astartes",
+			traits:["lobotomized"],
+	},
+	*/
+	// TODO - add more hirelings on the imperial side...
 	"skitarii":{
 			title : "Skitarii",
-			strength:20,
-			constitution:28,
-			weapon_skill : [20,5],
-			ballistic_skill : [20,5],			
-			dexterity:25,
-			intelligence:25,
-			wisdom:10,
-			charisma :5,
+			strength : [12,1], // I don't think skitarii are particularly strong
+			constitution : [15,1],
+			weapon_skill : [12,1],
+			ballistic_skill : [20,1],			
+			dexterity : [25,1],
+			intelligence : [25,1],
+			wisdom : [10,1], // Hm, no, very unwise...
+			charisma : [5,1], // Talking in binary does not help to make many friends
 			religion : "cult_mechanicus",
-			piety : 20,
-			technology :30,
-			luck :5,
-			skills: {weapons:{"hellgun":1,}},	
-			start_gear:{"armour":"skitarii_armour", "wep1":"hellgun"},
+			piety : [20,1],
+			luck : 10, // I don't see the point to make them less lucky than space marines
+			technology : [30,1],
+			skills: {weapons:{"Hellgun":1,}},
+			start_gear:{
+					wep2 : "",
+					wep1 : "Hellgun",
+					armour : "Skitarii Armour",
+					gear : "",
+					mobi : "",
+				},
 			base_group : "skitarii",
 	},
 	"tech_priest":{
-			strength:[12,1],
-			constitution:[30,1],
-			dexterity:[20,1],
-			weapon_skill : [15,5],
-			ballistic_skill : [15,5],				
-			intelligence:[30,3],
-			wisdom:[20,3],
-			charisma :[8,1],
-			religion : "cult_mechanicus",
 			title : "Tech Priest",
+			strength : [15,1],
+			constitution : [30,1],
+			weapon_skill : [15,1],
+			ballistic_skill : [25,3],				
+			dexterity : [25,3],
+			intelligence : [30,3],
+			wisdom : [20,2],
+			charisma : [30,2], // Considering their voicelines in DoW:DC and SS, I'd say they can have charisma
+			religion : "cult_mechanicus",
 			piety : [45,3],
-			luck :6,
-			technology :[55,3],
-			skills: {weapons:{"power_weapon":2,}},	
-			start_gear:{"armour":"dragon_scales", "wep1":"power_weapon"},
+			luck : 10,
+			technology : [55,3],
+			skills: {
+				weapons:{
+					"Power Axe":2, "Laspistol":2, "Hellgun":1,
+				} // TODO - add skills for Servo-arm(m)
+			},
+			start_gear:{"armour":"Dragon Scales", "wep1":"Power Axe", "wep2":"Laspistol", "mobi":"Servo-arm"}, 
 			base_group : "tech_priest",
 	},
-	"skitarii_ranger":{
-			title : "Skitarii Ranger",
-			strength:20,
-			constitution:26,
-			weapon_skill : [20,5],
-			ballistic_skill : [20,5],				
-			dexterity:34,
-			intelligence:7,
-			wisdom:2,
-			charisma :2,
-			religion : "cult_mechanicus",
-			piety : 10,
-			technology :8,
-			luck :5,
-			weapon_skill : 35,
-			ballistic_skill : 40,			
-			skills: {weapons:{"ranger_long_rifle":1,}},	
-			start_gear:{"armour":"skitarii_armour", "wep1":"hellgun", "wep2":"shuriken_pistol"},
-			base_group : "skitarii",
+	"eldar_ranger":{ // TODO rename this
+			title : "Eldar Ranger", // TODO - that should be Eldar
+			strength : [25,1],
+			constitution : [30,2],
+			weapon_skill : [45,4],
+			ballistic_skill : [45,4],				
+			dexterity : [50,5], // Dexterity should be eldar 'specialization'
+			intelligence : [35,3],
+			wisdom : [50,3],
+			charisma : [20,2], // Arrogance from cultural stuff, supposedly
+			religion : "cult_mechanicus", // TODO - add eldar faith
+			piety : [30,5], // I think eldar rangers can be either - faithful to the path or more cynical
+			luck : 10,
+			technology : [20,1], // Elves in most fiction tend to be kind of bad at technology, right?
+			skills: {
+				weapons:{
+					"Ranger Long Rifle":3, "Shuriken Pistol":3, "Eldar Power Sword":3}}, // TODO - check if these actually work
+			start_gear:{"armour":"Ranger Armour", "wep1":"Ranger Long Rifle", "wep2":"Eldar Power Sword"}, // TODO - add Eldar Armour
+			base_group : "skitarii", // Might want to rename this
 	},
 	"inquisition_crusader":{
-			title : "Inquisition Crusador",
-			strength:4,
-			constitution:26,
-			dexterity:4,
-			intelligence:3,
-			wisdom:2,
-			charisma :2,
+			title : "Inquisition Crusader",
+			strength : [10,1], // 10 is considered standard for a chad-like Imperial Guardsman
+			constitution : [10,1],
+			weapon_skill : [10,1],
+			ballistic_skill : [10,1],
+			dexterity : [10,1],
+			intelligence : [10,1],
+			wisdom : [12,1], // They may know a bit more than average imperial
+			charisma : [10,1],
 			religion : "imperial_cult",
-			piety : 10,
-			technology :3,
-			luck :4,
-			weapon_skill : 20,
-			ballistic_skill : 14,			
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [30,5], // Supposedly, they can be radical or puritan...
+			luck : 10,
+			technology : [8,1],
+			skills : {}, // TODO consider what skills are needed for this bloke
+			start_gear:{"armour":"Light Power Armour", "wep1":"Power Sword", "wep2":"Combat Shield"}, // TODO - add Light variant of Power Armour
 			base_group : "human",
 	},
+	/* TODO - add psychic capabilities
+	"sanctioned_psyker":{
+			title: "Sanctioned Psyker",
+	}
+	*/
 	"sister_of_battle":{
 			title : "Sister of Battle",
-			strength:5,
-			constitution:28,
-			dexterity:6,
-			intelligence:5,
-			wisdom:5,
-			charisma :2,
+			strength : [10,1],
+			constitution : [10,1], // TODO - consider making it that hireling armour boosts constitution, and possibly other stats
+			weapon_skill : [12,1],
+			ballistic_skill : [12,1],
+			dexterity : [10,1],
+			intelligence : [10,1],
+			wisdom : [10,1],
+			charisma : [10,1],
 			religion : "imperial_cult",
-			piety : 20,
-			technology :3,
-			luck :4,
-			weapon_skill : 25,
-			ballistic_skill : 20,			
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [50,2], // Fanatics, for most part
+			luck : 10,
+			technology : [8,1],
+			skills: {
+				weapons:{
+					"Light Bolter":1, "Bolt Pistol":1, "Chainsword":1, "Sarissa":1}},
+			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":""},
 			base_group : "human",
+			// traits:["zealous_faith"],
 	},
 	"sister_hospitaler":{
-			title : "Sister of Battle",
-			strength:5,
-			constitution:28,
-			dexterity:6,
-			intelligence:5,
-			wisdom:5,
-			charisma :5,
+			title : "Sister Hospitaler",
+			strength : [11,1],
+			constitution : [12,1], // TODO - consider making it that hireling armour boosts constitution
+			weapon_skill : [13,1],
+			ballistic_skill : [13,1],
+			dexterity : [11,1],
+			intelligence : [12,1],
+			wisdom : [11,1],
+			charisma : [10,1],
 			religion : "imperial_cult",
-			piety : 20,
-			technology :3,
-			luck :4,
-			weapon_skill : 25,
-			ballistic_skill : 20,
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [50,2], // Fanatics, for most part
+			luck : 10,
+			technology : [12,1], // They probably know a bit more, due to medical studies
+			skills: {
+				weapons:{
+					"Light Bolter":2, "Bolt Pistol":2, "Chainsword":2, "Sarissa":2}},
+			start_gear:{"armour":"Light Power Armour", "wep1":"Light Bolter", "wep2":"", "gear":"Sororitas Medkit"},
 			base_group : "human",
+			// traits:["zealous_faith"],
 	},
-	"ork_sniper":{
+	"ork_sniper":{ // I'm gonna make the stats basically the same as the shoota boy in the stat calculator
 			title : "Ork Sniper",
-			strength:24,
-			constitution:29,
-			dexterity:30,
-			intelligence:10,
-			wisdom:20,
-			charisma :25,
+			strength : [20,2],
+			constitution : [20,2],
+			weapon_skill : [9,1],
+			ballistic_skill : [20,2],
+			dexterity : [6,1],
+			intelligence : [10,1],
+			wisdom : [10,1],
+			charisma : [10,1],
 			religion : "gorkamorka",
-			piety : 20,
-			technology :8,
-			luck :6,
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [20,2], // I'm not sure how would one even properly value this... how attached the ork is to the WAAAGH energy field?
+			luck : 10,
+			technology : [20,2],
+			skills: {
+				weapons:{
+					"Sniper Rifle":1, "Choppa":1}},
+			start_gear:{"armour":"Ork Armour", "wep1":"Sniper Rifle", "wep2":"Choppa"},
 			base_group : "ork",
 	},
-	"flash_git":{
+	"flash_git":{ // For this one, Big shoota ork will be used
 			title : "Flash Git",
-			strength:30,
-			constitution:23,
-			dexterity:15,
-			intelligence:5,
-			wisdom:3,
-			charisma :4,
+			strength : [40,3],
+			constitution : [40,3],
+			weapon_skill : [25,2],
+			ballistic_skill : [40,3],
+			dexterity : [8,1],
+			intelligence : [20,2],
+			wisdom : [20,2],
+			charisma : [14,1],
 			religion : "gorkamorka",
-			piety : 20,
-			technology :2,
-			luck :4,
-			skills: {},	
-			start_gear:{"armour":"Power Armour", "wep1":"Power Sword", "wep2":"Storm Shield"},
+			piety : [20,2],
+			luck : 10,
+			technology : [30,3],
+			skills: {
+				weapons:{
+					"Sniper Rifle":1, "Snazzgun":2, "Choppa":2}},
+			start_gear:{"armour":"Ork Armour", "wep1":"Snazzgun", "wep2":"Choppa"}, // Consider giving a "Power Klaw" instead of Choppa, and better armour
 			base_group : "ork",
 	}
+	// TODO - add more hireling types
 }
-function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
+function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) constructor{
 	constitution=0; strength=0;luck=0;dexterity=0;wisdom=0;piety=0;charisma=0;technology=0;intelligence=0;weapon_skill=0;ballistic_skill=0;size = 0;planet_location=0;
 	if (!instance_exists(obj_controller) && class!="blank"){//game start unit planet location
 		planet_location=2;
 	}
-	ship_location=0;
+	ship_location=-1;
 	religion="none";
 	master_loyalty = 0;
 	job="none";
@@ -624,21 +343,48 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 	squad = "none";
 	stat_point_exp_marker = 0;
 	bionics=0;
-	static experience =  function(){
-		return obj_ini.experience[company][marine_number];
-	}//get exp
+	favorite=false;
+	spawn_data = other_spawn_data;
+	unit_health=0;
+	if (faction=="chapter" && !struct_exists(spawn_data, "recruit_data")){
+		spawn_data.recruit_data = {
+			recruit_world : obj_ini.recruiting_type,
+			aspirant_trial : obj_ini.recruit_trial			
+		};
+	}
+	experience = 0;
 	turn_stat_gains = {};
-	static update_exp = function(new_val){obj_ini.experience[company][marine_number] = new_val}//change exp
+
+	static update_exp = function(new_val){
+		experience = new_val
+	}//change exp
+
+	static set_exp = function(new_val){
+		experience = new_val
+		var _powers_learned = 0;
+
+		if (IsSpecialist("libs")) { 
+			_powers_learned = update_powers();
+		}
+
+		// 0 is returned to have the same return format as in add_exp, to avoid confusion;
+		return [0, _powers_learned];
+	}//change exp
+
 	static add_exp = function(add_val){
 		var instace_stat_point_gains = {};
+		var _powers_learned = 0;
 		stat_point_exp_marker += add_val;
-		obj_ini.experience[company][marine_number] += add_val;
+		experience += add_val;
 		if (base_group == "astartes"){
 			while (stat_point_exp_marker>=15){
 				var stat_gains = choose("weapon_skill", "ballistic_skill", "wisdom");
 				var special_stat = irandom(3);
 				if (IsSpecialist("forge") && special_stat==0) then stat_gains = "technology";
-				if (IsSpecialist("libs") && special_stat==0) then stat_gains = "intelligence";
+				if (IsSpecialist("libs")) {
+					if (special_stat==0) then stat_gains = "intelligence";
+					_powers_learned = update_powers();
+				}
 				if (IsSpecialist("chap") && special_stat==0) then stat_gains = "charisma";
 				if (IsSpecialist("apoth") && special_stat==0) then stat_gains = "intelligence";
 				if (role()=="Champion" && stat_gains!="weapon_skill" && special_stat==0) then stat_gains = "weapon_skill";
@@ -660,8 +406,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 					turn_stat_gains[$ stat_gains]=1;
 				}
 			}
+			assign_reactionary_traits();
 		}
-		return instace_stat_point_gains;
+		return [instace_stat_point_gains, _powers_learned];
 	}
 	static armour = function(raw=false){
 		var wep = obj_ini.armour[company][marine_number];
@@ -683,7 +430,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			if (role() == obj_ini.role[100][12] && new_role!=obj_ini.role[100][12]){
 		  		if (!get_body_data("black_carapace","torso")){
 		  			alter_body("torso", "black_carapace", true);
-		  			stat_boosts({strength:4, constitution:4,dexterity:4})//will decide on if these are needed
+		  			stat_boosts(
+		  				{strength:4, 
+		  				constitution:4,
+		  				dexterity:4
+		  			})//will decide on if these are needed
 		  		}	
 			}
 			if (!is_specialist(role())){//logs changes too and from specialist status
@@ -703,7 +454,14 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			array_push(role_history ,[role(), obj_controller.turn])
 		}
 		if (new_role==obj_ini.role[100][5]){
+			if (company==2) then obj_ini.watch_master_name=name();
+			if (company==3) then obj_ini.arsenal_master_name=name();
 	        if (company==4) then obj_ini.lord_admiral_name=name();
+			if (company==5) then obj_ini.march_master_name=name();
+			if (company==6) then obj_ini.rites_master_name=name();
+			if (company==7) then obj_ini.chief_victualler_name=name();
+			if (company==8) then obj_ini.lord_executioner_name=name();
+			if (company==9) then obj_ini.relic_master_name=name();
 	        if (company==10) then obj_ini.recruiter_name=name();
 	        scr_recent("captain_promote",name(),company);			
 		} else  if (new_role==obj_ini.role[100][4]){
@@ -712,7 +470,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			scr_recent("honor_promote",name(),company);
 		} else if (new_role==obj_ini.role[100][6]){
 
-            var dread_weapons =["Close Combat Weapon","Force Staff","Lascannon","Assault Cannon","Missile Launcher","Heavy Bolter"];
+            var dread_weapons = ["Close Combat Weapon","Force Staff","Twin Linked Lascannon","Assault Cannon","Missile Launcher","Plasma Cannon", "Multi-Melta", "Twin Linked Heavy Bolter"];
 
             if (!array_contains(dread_weapons,weapon_one())){
                 update_weapon_one("");
@@ -729,10 +487,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		return obj_ini.artifact[wep];
 	};	
 	static hp = function(){ 
-		return obj_ini.hp[company][marine_number]; //return current health
+		return unit_health; //return current unit_health
 	};
 	static add_or_sub_health = function(health_augment){
-		obj_ini.hp[company][marine_number]+=health_augment;
+		unit_health+=health_augment;
+		unit_health = min(unit_health, max_health());
 	}
 	static healing = function(apoth){
 		if (hp()<=0) then exit;
@@ -741,7 +500,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		var new_health;
 		if (apoth){
 			if (base_group == "astartes"){
-				if (gene_seed_mutations[$ "ossmodula"]==1){
+				if (gene_seed_mutations[$ "ossmodula"]){
 					health_portion=6;
 				}else{
 					health_portion=4;
@@ -752,7 +511,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		} else {
 			if (base_group == "astartes"){
 				health_portion = 8;
-				if (gene_seed_mutations[$ "ossmodula"]==1){
+				if (gene_seed_mutations[$ "ossmodula"]){
 					health_portion = 10;
 				}
 			}
@@ -761,9 +520,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		if (new_health>m_health) then new_health=m_health;
 		update_health(new_health);	
 	}
-	 static update_health = function(new_health){
-	    obj_ini.hp[company][marine_number] = new_health;
-	 };
+	static update_health = function(new_health){
+		unit_health = min(new_health, max_health());
+	};
 
 	 static hp_portion = function(){
 	 	return (hp()/max_health());
@@ -784,160 +543,49 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		return size
 	};
 	mobility_item_quality = "standard";
-   static update_mobility_item = function(new_mobility_item, from_armoury = true, to_armoury=true, quality="any"){
-   		var arti = !is_string(new_mobility_item);
-   		var change_mob=mobility_item()
-   		if (change_mob == new_mobility_item){
-   			return "no change";
-   		}
-	  	if (from_armoury && new_mobility_item!="" && !arti){
-	  		if (scr_item_count(new_mobility_item, quality)>0){
-				var exp_require = gear_weapon_data("weapon", new_mobility_item, "exp", false, quality);
-	  			if (exp_require>experience()){
-	  				return "exp_low";
-	  			} 	  				  			
-		   		quality=scr_add_item(new_mobility_item,-1, quality);
-		   		quality = quality!=undefined? quality:"standard";
-		    } else {
-		    	return "no_items";
-		    }
-		} else {
-			quality= quality=="any"?"standard":quality;
-		}
-		var portion = hp_portion();
-		if (change_mob != "") and (to_armoury){
-			if (!is_string(mobility_item(true))){
-				obj_ini.artifact_equipped[mobility_item(true)]=false;
-			} else {
-				scr_add_item(change_mob,1,mobility_item_quality );
-			}
-		}
-		obj_ini.mobi[company][marine_number] = new_mobility_item;
-	 	if (arti){
-	    	obj_ini.artifact_equipped[new_mobility_item] = true;
-	    	mobility_item_quality = obj_ini.artifact_quality[new_mobility_item];
-	    	var arti = obj_ini.artifact_struct[new_mobility_item];
-			arti.bearer=[company,marine_number]; 	
-	    } else {
-	    	mobility_item_quality=quality;
-	    }		
-		update_health(portion*max_health());
-		get_unit_size(); //every time mobility_item is changed see if the marines size has changed
-		return "complete";
-	};		
-
-   armour_quality="standard";
+	armour_quality="standard";
    
-  static update_armour = function(new_armour, from_armoury=true, to_armoury=true, quality="any"){
-  		var arti = !is_string(new_armour);
-	  	var change_armour=armour();
-	  	var require_carpace=false;
-	  	var armour_list=[];
-	  	var _new_power_armour = array_contains(global.power_armour, new_armour);
-	  	var _old_power_armour = array_contains(global.power_armour, change_armour);
-	   	if ((change_armour == new_armour || ((_old_power_armour && _new_power_armour) && new_armour=="Power Armour"))){
-	   		return "no change";
-	   	}
-	  	if (_new_power_armour){
-	  		require_carpace=true;
-	  		if (new_armour=="Power Armour"){
-	  			armour_list = global.power_armour;
-	  		}
-	  	} else if (new_armour="Terminator Armour"){
-	  		require_carpace=true;
-	  		armour_list = ["Terminator Armour","Tartarus"];
-	  	}
-	  	if (require_carpace){
-	  		if (!get_body_data("black_carapace","torso")){
-	  			return "needs_carapace";
-	  		}
-	  	}//using this method this should be adaptable for a whole range of classes and archeotypes
-	  	if (array_length(armour_list)>0){
-	  		var armour_found=false;
-            for (var pa=0;pa<array_length(armour_list);pa++){
-            	if (scr_item_count(armour_list[pa])>0||!from_armoury){
-            		new_armour = armour_list[pa];
-            		armour_found=true;
-            		break;
-            	}
-            }
-            if (!armour_found){
-            	return "no_items";
-            } 
-        }		
-	   		
-	  	if (from_armoury && new_armour!="" && !arti){
-	  		if (scr_item_count(new_armour,quality)>0){
-				var exp_require = gear_weapon_data("weapon", new_armour, "exp", false, quality);
-	  			if (exp_require>experience()){
-	  				return "exp_low";
-	  			} 	  			
-		   		quality=scr_add_item(new_armour,-1,quality);
-		   		if (quality == "no_item") then return "no_items";
-		   		quality = quality!=undefined? quality:"standard";
-		    } else {
-				return "no_items";
-		    }
-		} else {
-			quality = quality=="any" ? "standard" : quality;
-		}
-		if (change_armour != "") and (to_armoury){
-			if (!is_string(armour(true))){
-				obj_ini.artifact_equipped[armour(true)]=false;
-			} else {	
-				scr_add_item(change_armour,1,armour_quality);
-			}
-		}
-		var portion = hp_portion();
-	    obj_ini.armour[company][marine_number] = new_armour;
-	    if (arti){
-	    	obj_ini.artifact_equipped[new_armour] = true;
-	    	armour_quality = obj_ini.artifact_quality[new_armour];
-			var arti = obj_ini.artifact_struct[new_armour];
-			arti.bearer=[company,marine_number]; 		    	
-	    } else {
-	    	armour_quality=quality;
-	    }
-	    var new_arm_data = get_armour_data();
-	    if (is_struct(new_arm_data)){
-	    	if (new_arm_data.has_tag("terminator")){
-	    		update_mobility_item("");
-	    	}
-	    }
-	    if (armour()=="Dreadnought"){
-	    	is_boarder = false;
-	    	update_gear("");
-	    	update_mobility_item("");
-	    }
-	    update_health(portion*max_health());
-		get_unit_size(); //every time armour is changed see if the marines size has changed
-		return "complete";
-	};	
-	static max_health =function(){
+   //Unit update equip slot functions held in sscr_unit_equip_functions
+	static update_armour = scr_update_unit_armour;
+	static update_weapon_one = scr_update_unit_weapon_one;
+	static update_weapon_two = scr_update_unit_weapon_two;   
+	static update_gear = scr_update_unit_gear;
+	static update_mobility_item = scr_update_unit_mobility_item;
+
+	static max_health =function(base=false){
 		var max_h = 100 * (1+((constitution - 40)*0.025));
-		max_h += gear_weapon_data("armour", armour(), "hp_mod");
-		max_h += gear_weapon_data("gear", gear(), "hp_mod");
-		max_h += gear_weapon_data("mobility", mobility_item(), "hp_mod");
-		max_h += gear_weapon_data("weapon", weapon_one(), "hp_mod");
-		max_h += gear_weapon_data("weapon", weapon_two(), "hp_mod");
+		if (!base){
+			max_h += gear_weapon_data("armour", armour(), "hp_mod");
+			max_h += gear_weapon_data("gear", gear(), "hp_mod");
+			max_h += gear_weapon_data("mobility", mobility_item(), "hp_mod");
+			max_h += gear_weapon_data("weapon", weapon_one(), "hp_mod");
+			max_h += gear_weapon_data("weapon", weapon_two(), "hp_mod");
+		}
 		return max_h;
 	};	
+
 	static increase_max_health = function(increase){
-		return max_health() + (increase*(1+((constitution - 40)*0.025))); //calculate the effect of health buffs
+		return max_health() + (increase*(1+((constitution - 40)*0.025))); //calculate the effect of unit_health buffs
 	};		
+
 	// used both to load unit data from save and to add preset base_stats
 	static load_json_data = function(data){							//this also allows us to create a pre set of anysort for a marine
-		 var names = variable_struct_get_names(data);
-		 for (var i = 0; i < array_length(names); i++) {
-            variable_struct_set(self, names[i], variable_struct_get(data, names[i]))
-        }
+		try {
+				var names = variable_struct_get_names(data);
+				for (var i = 0; i < array_length(names); i++) {
+					variable_struct_set(self, names[i], variable_struct_get(data, names[i]))
+				}
+		} catch (_exception) {
+			handle_exception(_exception);
+		}
 	};
+
 	traits = [];			//marine trait list	
 	feats = [];
 	allegiance =faction;	//faction alligience defaults to the chapter
 	
 	static stat_boosts = function(stat_boosters){
-		stats = global.stat_list;
+		var stats = ARR_stat_list;
 		var edits = struct_get_names(stat_boosters);
 		var edit_stat,random_stat,stat_mod;		
 		for (var stat_iter =0; stat_iter <array_length(stats);stat_iter++){
@@ -996,59 +644,28 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		array_push(feats, feat_data);
 	};
 
-	static distribute_traits = function (distribution_set){
-			function is_state_required(mod_area){
-				is_required = false;
-				if (array_length(mod_area)>2){
-					if (mod_area[2] == "require"){
-						is_required =true;
-					}
-				}
-				return is_required;
-			}		
-		for (var i=0;i<array_length(distribution_set);i++){//standard distribution for trait
-			if (array_length(distribution_set[i])==2){
-				if (irandom(distribution_set[i][1][0])>distribution_set[i][1][1]){
-					add_trait(distribution_set[i][0])
-				}
-			} else if (array_length(distribution_set[i])==3){  //trait has conditions
-				var dist_modifiers =distribution_set[i][2];
-				var dist_rate = distribution_set[i][1];
-				if (struct_exists(dist_modifiers, "disadvantage")){
-					if (array_contains(obj_ini.dis, dist_modifiers[$"disadvantage"][0])){
-						dist_rate = dist_modifiers[$"disadvantage"][1];  //apply new modifier rate
-					} else if (is_state_required(dist_modifiers[$"disadvantage"])){
-						dist_rate=[0,0];
-					}
-				}
-				if (struct_exists(dist_modifiers, "advantage")){
-					if (array_contains(obj_ini.adv, dist_modifiers[$"advantage"][0])){
-						dist_rate = dist_modifiers[$"advantage"][1];  //apply new modifier rate
-					} else if (is_state_required(dist_modifiers[$"advantage"])){
-						dist_rate=[0,0];
-					}
-				}
-				if (struct_exists(dist_modifiers, "progenitor")){
-					if (obj_ini.progenitor == dist_modifiers[$ "progenitor"][0]){
-						dist_rate = dist_modifiers[$"progenitor"][1]; 
-					}else if (is_state_required(dist_modifiers[$ "progenitor"])){
-						dist_rate=[0,0];
-					}
-				}
-				if (struct_exists(dist_modifiers, "chapter_name")){
-					if (global.chapter_name == dist_modifiers[$ "chapter_name"][0]){
-						dist_rate = dist_modifiers[$"chapter_name"][1]; 
-					}else if (is_state_required(dist_modifiers[$ "chapter_name"])){
-						dist_rate=[0,0];
-					}
-				}								
-				if (irandom(dist_rate[0])>dist_rate[1]){
-					add_trait(distribution_set[i][0]);
-				}
-			}
-		}
-	}
-	
+	static distribute_traits = scr_marine_trait_spawning;
+
+	static alter_equipment = alter_unit_equipment;
+	static stat_display = scr_draw_unit_stat_data;
+	static draw_unit_image = scr_draw_unit_image;
+	static display_wepaons = scr_ui_display_weapons;
+	static unit_profile_text = scr_unit_detail_text;
+	static unit_equipment_data= function(){
+		var armour_data=get_armour_data()
+		var gear_data=get_gear_data()
+		var mobility_data=get_mobility_data()
+		var weapon_one_data=get_weapon_one_data()
+		var weapon_two_data=get_weapon_two_data()
+		var equip_data = {
+				armour_data:armour_data,
+				gear_data:gear_data,
+				mobility_data:mobility_data,
+				weapon_one_data:weapon_one_data,
+				weapon_two_data:weapon_two_data
+			};
+		return equip_data;
+	}	
 	//takes dict and plumbs dict values into unit struct
 	if (array_contains(variable_struct_get_names(global.base_stats), class)){
 		load_json_data(global.base_stats[$ class]);
@@ -1076,23 +693,41 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		}
 	};
 	body = {
-		"left_leg":{}, 
-		"right_leg":{}, 
+		"left_leg":{
+			leg_variants: irandom(100),
+		}, 
+		"right_leg":{
+			leg_variants: irandom(100),
+		}, 
 		"torso":{
 			cloth:{
 				variation:irandom(15),
 			},
-			armour_choice:irandom(1),
+			armour_choice:irandom(100),
 			variation:irandom(10),
-			backpack_variation:irandom(10),
+			backpack_variation:irandom(100),
+			thorax_variation : irandom(100),
+			chest_variation : irandom(100),
 		}, 
-		"left_arm":{},
-		"right_arm":{}, 
-		"left_eye":{}, 
-		"right_eye":{},
-		"throat":{}, 
-		"jaw":{},
-		"head":{variation:irandom(10)}
+		"left_arm":{
+			trim_variation : irandom(100),
+		},
+		"right_arm":{
+			trim_variation : irandom(100),
+		}, 
+		"left_eye":{
+			variant : irandom(100),
+		}, 
+		"right_eye":{
+			variant : irandom(100),
+		},
+		"throat":{
+			variant : irandom(100),
+		}, 
+		"jaw":{
+			mouth_variants: irandom(100),
+		},
+		"head":{variation:irandom(100)}
 	}; //body parts list can be extended as much as people want
 
 	static alter_body = function(body_slot, body_item_key, new_body_data, overwrite=true){//overwrite means it will replace any existing data
@@ -1101,7 +736,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 				body[$ body_slot][$ body_item_key] = new_body_data;
 			}
 		} else {
-			return "invalid body area"
+			return "invalid body area";
 		}
 	}
 
@@ -1119,12 +754,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		} else {
 			var item_key_map = {};
 			var body_part_area_keys
-			for (var i=0;i<array_length(global.body_parts);i++){//search all body parts
-				body_area = body[$ global.body_parts[i]]
+			var _body_parts = ARR_body_parts;
+			for (var i=0;i<array_length(_body_parts);i++){//search all body parts
+				body_area = body[$ _body_parts[i]]
 				body_part_area_keys=struct_get_names(body_area);
 				for (var b=0;b<array_length(body_part_area_keys);b++){
 					if (body_part_area_keys[b]==body_item_key){
-						item_key_map[$ global.body_parts[i]] = body_area[$ body_item_key]
+						item_key_map[$ _body_parts[i]] = body_area[$ body_item_key]
 					}
 				}
 				
@@ -1133,6 +769,26 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		}
 		return false;
 	}
+
+	if (struct_exists(self,"start_gear")){
+		if (base_group!="marine"){
+			alter_equipment(start_gear,false,false);
+		} else {
+			alter_equipment(start_gear,true,true);
+		}
+	}
+	static equipment_maintenance_burden = function(){
+		var burden = 0.0;
+		burden+=get_armour_data("maintenance");
+		burden+=get_gear_data("maintenance");
+		burden+=get_mobility_data("maintenance");
+		burden+=get_weapon_one_data("maintenance");
+		burden+=get_weapon_two_data("maintenance");
+		if (has_trait("tinkerer")){
+			burden *= 0.33;
+		}
+		return burden;
+	}			
 	/*ey so i got this concept where basically take away luck, ballistic_skill and weapon_skill 
 	there are 8 other stats each of which will have more attached aspects and game play elements 
 	they effect as time goes on, so that means between the 8 other stats if you had a choice of two 
@@ -1144,40 +800,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 	switch base_group{
 		case "astartes":				//basic marine class //adds specific mechanics not releveant to most units
 			loyalty = 100;
-			var astartes_trait_dist = [
-				["very_hard_to_kill", [149,148]],
-				["scholar", [99,98]],
-				["brawler", [99,98],{"chapter_name":["Space Wolves",[10,9]]}],
-				["brute", [99,98]],
-				["charismatic", [99,98]],
-				["skeptic", [99,98]],
-				["blunt", [99,98]],
-				["nimble", [99,98]],
-				["recluse", [99,98]],
-				["perfectionist", [99,98]],
-				["observant", [99,98]],
-				["cunning", [99,98]],
-				["guardian", [99,98]],
-				["observant", [99,98]],
-				["technophobe", [99,98],{"progenitor":[6,[1000,999]]}],
-				["jaded", [99,98]],
-				["strong", [99,98]],
-				["fast_learner", [149,148]],
-				["feet_floor", [199,198],{"chapter_name":["Space Wolves",[10,7]]}],
-				["paragon", [999,998]],
-				["warp_touched",[299,298]],
-				["shitty_luck",[99,98],{"disadvantage":["Shitty Luck",[3,2]]}],
-				["lucky",[99,98]],
-				["natural_leader",[199,198]],
-				["slow_and_purposeful",[99,98],{"advantage":["Slow and Purposeful",[3,1]]}],
-				["melee_enthusiast",[99,98],{"advantage":["Melee Enthusiasts",[3,1]]}],
-				["lightning_warriors",[99,98],{"advantage":["Lightning Warriors",[3,1]]}],
-				["zealous_faith",[99,98],{"chapter_name":["Black Templars",[3,2]]}],
-				["flesh_is_weak",[1000,999],{"chapter_name":["Iron Hands",[10,9],"required"],"progenitor":[6,[10,9],"required"]}],
-				["tinkerer",[199,198],{"chapter_name":["Iron Hands",[49,47]]}],
-				["crafter",[299,298],{"advantage":["crafter",[199,198]]}],
-			];
-			distribute_traits(astartes_trait_dist);
+			var _astartes_trait_dist = global.astartes_trait_dist;
+
+			distribute_traits(_astartes_trait_dist);
+
 			alter_body("torso","black_carapace",true);
 			if (class=="scout" &&  global.chapter_name!="Space Wolves"){
 				alter_body("torso","black_carapace",false);
@@ -1211,7 +837,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			}
 			if (instance_exists(obj_controller)){
 				role_history = [[obj_ini.role[company][marine_number], obj_controller.turn]]; //marines_promotion and demotion history
-				marine_ascension = obj_controller.turn; // on what day did turn did this marine begin to exist
+				marine_ascension = ((obj_controller.millenium*1000)+obj_controller.year); // on what day did this marine begin to exist
 			} else {
 				role_history = [[obj_ini.role[company][marine_number], "pre_game"]];
 				marine_ascension = "pre_game"; // on what day did turn did this marine begin to exist
@@ -1222,61 +848,55 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			// array index 1 == probability e.g 99,98 == if (irandom(99)>98){add_trait}
 			// array index 3 == probability modifiers
 			psionic = 0
-			var warp_level = irandom(299)+1{
-				if (warp_level<=190){
-					psionic=choose(0,1);
-				} else if(warp_level<=294){
-					psionic=choose(2,3,4,5,6,7);
-				}else if(warp_level<=297){
-					psionic=choose(8,9,10);
-				} else if(warp_level<=298){
-					psionic=choose(11,12);
-				} else if(warp_level<=299){
-					psionic=choose(11,12,13,14);
-				} else if warp_level<=300{
-					if(irandom(4)==4){
-						psionic=choose(15,16);
-					} else{
-						psionic=choose(13,14);
-					}
-				}
-			}
-			if (array_contains(obj_ini.adv, "Psyker Abundance")){
-				if (psionic<16) then psionic++;
-				if (psionic<10) then psionic++;
-			}
-			if (array_contains(obj_ini.dis, "Psyker Intolerant")){
-				if (irandom(4)==0){
-					psionic = max(psionic-5, 0);
+			var warp_level = irandom(299)+1;
+			if (warp_level<=190){
+				psionic=choose(0,1);
+			} else if(warp_level<=294){
+				psionic=choose(2,3,4,5,6,7);
+			}else if(warp_level<=297){
+				psionic=choose(8,9,10);
+			} else if(warp_level<=298){
+				psionic=choose(11,12);
+			} else if(warp_level<=299){
+				psionic=choose(11,12,13,14);
+			} else if warp_level<=300{
+				if(irandom(4)==4){
+					psionic=choose(15,16);
+				} else{
+					psionic=choose(13,14);
 				}
 			}
 
-			if (global.chapter_name=="Black Templars"){
-				if (irandom(14)==0){
-					body[$"torso"].robes =choose(1,2);
-				}				
+			if (scr_has_adv("Psyker Abundance")){
+				if (psionic<16) then psionic++;
+				if (psionic<10) then psionic++;
+			} else if (scr_has_disadv("Psyker Intolerant")){
+				if (warp_level<=190){
+					psionic=choose(0,1);
+				} else {
+					psionic=choose(2,3,4,5,6,7);
+				}
 			}
-			if (global.chapter_name=="Space Wolves") or (obj_ini.progenitor=3) {
+
+
+			if (global.chapter_name=="Space Wolves") or (obj_ini.progenitor == ePROGENITOR.SPACE_WOLVES) {
 				religion_sub_cult = "The Allfather";
-			} else if(global.chapter_name=="Salamanders") or (obj_ini.progenitor==8){
+			} else if(global.chapter_name=="Salamanders") or (obj_ini.progenitor == ePROGENITOR.SALAMANDERS) {
 				religion_sub_cult = "The Promethean Cult";
-			} else if (global.chapter_name=="Iron Hands") or (obj_ini.progenitor=6){
+			} else if (global.chapter_name=="Iron Hands" || obj_ini.progenitor == ePROGENITOR.IRON_HANDS) {
 				religion_sub_cult = "The Cult of Iron";
 			} 
 
-			if (array_contains(["Dark Angels","Black Templars"],global.chapter_name) || obj_ini.progenitor==1){
-				if (irandom(14)==0){
-					body[$"torso"].robes =choose(0,0,0,1,1,2);
-					if (irandom(2)<2){
-						body[$"head"].hood =1;
-					}
-				}
-			}else  if(irandom(30)==0){
-				body.torso.robes =choose(0,1,2,2,2,2,2);
-				if (body.torso<2){
-					if (irandom(2)==0){
-						body[$"head"].hood =1;
-					}
+			var _robe_chance = 5;
+			if (global.chapter_name == "Black Templars"){
+				_robe_chance += 70;
+			}else if(global.chapter_name == "Dark Angels" || obj_ini.progenitor == ePROGENITOR.DARK_ANGELS){
+				_robe_chance += 50;
+			}
+			if (irandom(100) <= _robe_chance) {
+				body.torso.robes = irandom(2);
+				if (body[$"torso"].robes == 0 && irandom(1) == 0){
+					body[$"head"].hood = 1;
 				}
 			}
 			break;
@@ -1293,6 +913,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		return obj_ini.race[company][marine_number];
 	};	//get race
 
+	static update_loyalty = function(change_value){
+		loyalty = clamp(loyalty+change_value, 0, 100);
+	}
 	static calculate_death = function(death_threshold = 25, death_random=50,apothecary=true, death_type="normal"){
 		dies = false;
 		death_random += luck;
@@ -1326,8 +949,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 				add_or_sub_health(30);
 			}
 			var bionic_possible = [];
-			for (var body_part = 0; body_part < array_length(global.body_parts);body_part++){
-				part = global.body_parts[body_part];
+			var _body_parts = ARR_body_parts;
+			for (var body_part = 0; body_part < array_length(_body_parts);body_part++){
+				part = _body_parts[body_part];
 				if (!get_body_data("bionic",part)){
 					array_push(bionic_possible, part);
 				}
@@ -1348,14 +972,14 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 					constitution += 2;
 					strength++;
 					dexterity -= 2;
-					body[$ new_bionic_pos][$"bionic"].variant=irandom(2);
+					body[$ new_bionic_pos][$"bionic"].variant=irandom(100);
 				}else if (array_contains(["left_eye", "right_eye"], new_bionic_pos)){
-					body[$ new_bionic_pos][$"bionic"].variant=irandom(2);
+					body[$ new_bionic_pos][$"bionic"].variant=irandom(100);
 					constitution += 1;
 					wisdom += 1;
 					dexterity++;
 				} else if (array_contains(["left_arm", "right_arm"], new_bionic_pos)){
-					body[$ new_bionic_pos][$"bionic"].variant=irandom(1);
+					body[$ new_bionic_pos][$"bionic"].variant=irandom(100);
 					constitution += 2;
 					strength += 2;
 					weapon_skill--;
@@ -1376,7 +1000,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		}
 	};
 	static age = function(){
-		var real_age = ((obj_controller.millenium*1000)+obj_controller.year)-obj_ini.age[company][marine_number];
+		var real_age = obj_ini.age[company][marine_number];
 		return real_age;
 	};// age
 
@@ -1397,51 +1021,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 	is_boarder =false;
 
 	gear_quality="standard";
-	static update_gear = function(new_gear,from_armoury=true, to_armoury=true, quality="any"){
-		var arti = !is_string(new_gear);
-		var change_gear = gear();
-		if (change_gear == new_gear){
-	 		return "no change";
-	 	}
-	  	if (from_armoury) and (new_gear!="") and (!arti){
-	  		if (scr_item_count(new_gear,quality)>0){
-				var exp_require = gear_weapon_data("gear", new_gear, "exp", false, quality);
-	  			if (exp_require>experience()){
-	  				return "exp_low";
-	  			}
-		   		quality=scr_add_item(new_gear,-1, quality);
-		   		if (quality == "no_item") then return "no_items";
-		   		quality = quality!=undefined? quality:"standard";
-		    } else {
-		    	return "no_items";
-		    }
-		} else {
-			quality = quality=="any"?"standard":quality;
-		}
-
-		var portion = hp_portion();
-		if (change_gear != "" && to_armoury){
-			if (!is_string(gear(true))){
-				obj_ini.artifact_equipped[gear(true)]=false;
-			} else {			
-				scr_add_item(change_gear,1,gear_quality);
-			}
-		}  			
-		obj_ini.gear[company][marine_number] = new_gear;
-	 	if (arti){
-	    	obj_ini.artifact_equipped[new_gear] = true;
-	    	gear_quality = obj_ini.artifact_quality[new_gear];
-			var arti = obj_ini.artifact_struct[new_gear];
-			arti.bearer=[company,marine_number]; 	    	
-	    } else {
-	    	gear_quality=quality;
-	    }	
-		update_health(portion*max_health());
-		 return "complete";
-	}
+	static update_gear = scr_update_unit_gear;
 
 	if (base_group!="none"){
-		update_health(max_health()); //set marine health to max
+		update_health(max_health()); //set marine unit_health to max
 	}
 	   
 	static weapon_one = function(raw=false){
@@ -1478,10 +1061,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 
 		var is_artifact = !is_string(item);
 		if (!is_artifact && art_only == false){
-			return $"{quality_string_conversion(quality)}{item}";
+			return $"{item}";
 		} else if (is_artifact) {
 			if (obj_ini.artifact_struct[item].name==""){
-				return  $"{quality_string_conversion(quality)}{obj_ini.artifact[item]}";
+				return  $"{obj_ini.artifact[item]}";
 			} else {
 				return obj_ini.artifact_struct[item].name;
 			}
@@ -1491,91 +1074,32 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 	}
 
 	weapon_one_data={quality:"standard"};
-  weapon_one_quality = "standard";
+  	weapon_one_quality = "standard";
 
 	static weapon_viable = function(new_weapon,quality){
 		viable = true;
 		qual_string = quality;
 		if (scr_item_count(new_weapon, quality)>0){
-			var exp_require = gear_weapon_data("weapon", new_weapon, "exp", false, quality);
-				if (exp_require>experience()){
+			var exp_require = gear_weapon_data("weapon", new_weapon, "req_exp", false, quality);
+				if (exp_require>experience){
 					viable = false;
 					qual_string = "exp_low";
 				}  			
 	   		quality=scr_add_item(new_weapon,-1,quality);
-	   		if (quality == "no_item") then return "no_items";
+	   		if (quality == "no_item") then return [false, "no_items"]
 	   		qual_string = quality!=undefined? quality:"standard";
 	    } else {
 	    	viable = false;
 	    	qual_string = "no_items";
 	    }
 	    if (new_weapon=="Company Standard"){
-	    	if (unit.role()!="Standard Bearer"){
+	    	if (role()!=obj_ini.role[100][11]){
 	    		viable = false;
 	    		qual_string = "wrong_role";
 	    	}
 	    }
 	    return [viable, qual_string];	
-	}
-
-  static update_weapon_one = function(new_weapon,from_armoury=true, to_armoury=true,quality="any"){
-  	var arti = !is_string(new_weapon);
-  	var change_wep = weapon_one();
-  	var weapon_list = [];
-    if (new_weapon == "Heavy Ranged"){
-    	weapon_list=["Heavy Bolter","Lascannon","Missile Launcher"];
-    	if array_contains(weapon_list, change_wep){
-    		return "no change";
-    	}
-    }else if (change_wep == new_weapon){
-   		return "no change";
-   	}
-
-  	if (array_length(weapon_list)>0){
-  		var weapon_found=false;
-  		var _wep_choice;
-  		while (array_length(weapon_list)>0){//randomises heavy weapon choice
-  			_wep_choice=irandom(array_length(weapon_list)-1);
-  			if (scr_item_count(weapon_list[_wep_choice])>0){
-  				weapon_found=true;
-  				new_weapon=weapon_list[_wep_choice];
-  				break;
-  			}
-  			array_delete(weapon_list,_wep_choice, 1)
-  		}
-        if (!weapon_found){
-        	return "no_items";
-        } 
-    } 	
-  	if (from_armoury && new_weapon!="" && !arti){
-  		var viability = weapon_viable(new_weapon,quality);
-  		if (viability[0]){
-  			quality = viability[1];
-  		} else {
-  			return viability[1];
-  		}
-	}else {
-		quality= quality=="any"?"standard":quality;
-	}
-
-	if (change_wep != "") and (to_armoury){
-		if (!is_string(weapon_one(true))){
-			obj_ini.artifact_equipped[weapon_one(true)]=false;
-		} else {			
-			scr_add_item(change_wep,1, weapon_one_quality);
-		}
-	}       	
-    obj_ini.wep1[company][marine_number] = new_weapon;
- 	if (arti){
-    	obj_ini.artifact_equipped[new_weapon] = true;
-		var arti = obj_ini.artifact_struct[new_weapon];
-		arti.bearer=[company,marine_number];    	
-    	weapon_one_quality = obj_ini.artifact_quality[new_weapon];
-    } else {
-    	weapon_one_quality=quality;
-    }
-     return "complete";
-	};
+	} 
 
 	static weapon_two = function(raw=false){
 		var wep = obj_ini.wep2[company][marine_number];
@@ -1584,40 +1108,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 	};
 
 	weapon_two_quality="standard";
-  	static update_weapon_two = function(new_weapon,from_armoury=true, to_armoury=true, quality="any"){
-  		var arti = !is_string(new_weapon);
-	   	var change_wep = weapon_two();
-	  	if (change_wep == new_weapon){
-	   		return "no change";
-	   	}     	
-	  	if (from_armoury) and (new_weapon!="") && (!arti){
-	  		var viability = weapon_viable(new_weapon,quality);
-	  		if (viability[0]){
-	  			quality = viability[1];
-	  		} else {
-	  			return viability[1];
-	  		}
-		} else {
-			quality= quality=="any"?"standard":quality;
-		}
-		if (change_wep != "") and (to_armoury){
-			if (!is_string(weapon_two(true))){
-				obj_ini.artifact_equipped[weapon_two(true)]=false;
-			}else {
-				scr_add_item(change_wep,1, weapon_two_quality);
-			}		
-		}      	
-    	obj_ini.wep2[company][marine_number] = new_weapon;
-	 	if (arti){
-	    	obj_ini.artifact_equipped[new_weapon] = true;
-	    	weapon_two_quality = obj_ini.artifact_quality[new_weapon];
-			var arti = obj_ini.artifact_struct[new_weapon];
-			arti.bearer=[company,marine_number]; 	    	
-	    } else {
-	    	weapon_two_quality=quality;
-	    }
-    	return "complete";
-	};
 
 		static specials = function(){ 
 			return obj_ini.spe[company][marine_number];
@@ -1627,7 +1117,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			return obj_ini.race[company][marine_number];
 		};
 
-		//get equipment data methods by deafult they garb all equipment data and return an equipment struct e.g new equipment_struct(item_data, core_type,quality="none")
+		//get equipment data methods by deafult they garb all equipment data and return an equipment struct e.g new EquipmentStruct(item_data, core_type,quality="none")
 		static get_armour_data= function(type="all"){
 			return gear_weapon_data("armour", armour(), type, false, armour_quality);
 		}
@@ -1650,7 +1140,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			damage_res+=get_mobility_data("damage_resistance_mod");
 			damage_res+=get_weapon_one_data("damage_resistance_mod");
 			damage_res+=get_weapon_two_data("damage_resistance_mod");			
-			damage_res = min(75, damage_res+floor(((constitution*0.005) + (experience()/1000))*100));
+			damage_res = min(75, damage_res+floor(((constitution*0.005) + (experience/1000))*100));
 			return damage_res;
 		};
 
@@ -1677,7 +1167,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			if (base_group == "astartes"){
 				ranged_hands_limit = 2
 			} else if base_group == "tech_priest" {
-				ranged_hands_limit = 1+(technology/100);;
+				ranged_hands_limit = 1+(technology/100);
 			}else if base_group == "human" {
 				ranged_hands_limit = 1;
 			}	
@@ -1711,9 +1201,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		static ranged_attack = function(weapon_slot=0){
 			encumbered_ranged=false;			
 			//base modifyer based on unit skill set
-			ranged_att = 100*(((ballistic_skill/50) + (dexterity/400)+ (experience()/500)));
+			ranged_att = 100*(((ballistic_skill/50) + (dexterity/400)+ (experience/500)));
 			var final_range_attack=0;
-			var explanation_string = $"Stat Mod: x{ranged_att/100}#  BS: x{ballistic_skill/50}#  DEX: x{dexterity/400}#  EXP: x{experience()/500}#";
+			var explanation_string = $"Stat Mod: x{ranged_att/100}#  BS: x{ballistic_skill/50}#  DEX: x{dexterity/400}#  EXP: x{experience/500}#";
 			//determine capavbility to weild bulky weapons
 			var carry_data =ranged_hands_limit();
 
@@ -1723,15 +1213,15 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			//grab generic structs for weapons
 			var _wep1 = get_weapon_one_data();
 			var _wep2 = get_weapon_two_data();
-			//default to fists
-			if (!is_struct(_wep1)) then _wep1 = new equipment_struct({},"");
-			if (!is_struct(_wep2)) then _wep2 = new equipment_struct({},"");
+
+			if (!is_struct(_wep1)) then _wep1 = new EquipmentStruct({},"");
+			if (!is_struct(_wep2)) then _wep2 = new EquipmentStruct({},"");
 			if (allegiance==global.chapter_name){
 				_wep1.owner_data("chapter");
 				_wep2.owner_data("chapter");
 			}
-			var primary_weapon= new equipment_struct({},"");
-			var secondary_weapon= new equipment_struct({},"");
+			var primary_weapon= new EquipmentStruct({},"");
+			var secondary_weapon= new EquipmentStruct({},"");
 			if (carry_data[0]>carry_data[1]){
 				encumbered_ranged=true;					
 				ranged_att*=0.6;
@@ -1739,7 +1229,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			}			
 			if (weapon_slot==0){
 				//decide if any weapons are ranged
-				if (_wep1.range<=1.1 && _wep2.range<=1.1){
+				if (_wep1.range<1.1 && _wep2.range<1.1){
 					if (array_length(_wep1.second_profiles) + array_length(_wep2.second_profiles) ==0){
 						ranged_damage_data = [final_range_attack,explanation_string,carry_data,primary_weapon, secondary_weapon];
 					} else {
@@ -1784,9 +1274,21 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			//calculate chapter specific bonus
 			if (allegiance==global.chapter_name){//calculate player specific bonuses
 				if (primary_weapon.has_tag("bolt")){
-					if (array_contains(obj_ini.adv, "Bolter Drilling") && base_group=="astartes"){
+					if (scr_has_adv("Bolter Drilling") && base_group=="astartes"){
 						range_multiplyer+=0.15;
 						explanation_string+=$"Bolter Drilling:X1.15#"
+					}
+				}
+				if (primary_weapon.has_tag("energy")){
+					if (scr_has_adv("Ryzan Patronage") && base_group=="astartes"){
+						range_multiplyer+=0.15;
+						explanation_string+=$"Ryzan Craftsmanship:X1.15#"
+					}
+				}
+				if (primary_weapon.has_tag("heavy_ranged")){
+					if (scr_has_adv("Devastator Doctrine") && base_group=="astartes"){
+						range_multiplyer+=0.15;
+						explanation_string+=$"Devastator Doctrine:X1.15#"
 					}
 				}
 			}
@@ -1880,17 +1382,17 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		}		
 		static melee_attack = function(weapon_slot=0){
 			encumbered_melee=false;
-			melee_att = 100*(((weapon_skill/100) * (strength/20)) + (experience()/1000)+0.1);
+			melee_att = 100*(((weapon_skill/100) * (strength/20)) + (experience/1000)+0.1);
 			var explanation_string = string_concat("#Stats: ", format_number_with_sign(round(((melee_att/100)-1)*100)), "%#");
 			explanation_string += "  Base: +10%#";
 			explanation_string += string_concat("  WSxSTR: ", format_number_with_sign(round((((weapon_skill/100)*(strength/20))-1)*100)), "%#");
-			explanation_string += string_concat("  EXP: ", format_number_with_sign(round((experience()/1000)*100)), "%#");
+			explanation_string += string_concat("  EXP: ", format_number_with_sign(round((experience/1000)*100)), "%#");
 
 			melee_carrying = melee_hands_limit();
 			var _wep1 = get_weapon_one_data();
 			var _wep2 = get_weapon_two_data();
-			if (!is_struct(_wep1)) then _wep1 = new equipment_struct({},"");
-			if (!is_struct(_wep2)) then _wep2 = new equipment_struct({},"");
+			if (!is_struct(_wep1)) then _wep1 = new EquipmentStruct({},"");
+			if (!is_struct(_wep2)) then _wep2 = new EquipmentStruct({},"");
 			if (allegiance==global.chapter_name){
 				_wep1.owner_data("chapter");
 				_wep2.owner_data("chapter");
@@ -1898,15 +1400,19 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			var primary_weapon;
 			var secondary_weapon="none";
 			if (weapon_slot==0){
-				//if player has not ranged weapons
-				if (((_wep1.range>1.1 ||_wep1.range==0) && (_wep2.range>1.1||_wep2.range==0)) && (!_wep1.has_tags(["pistol","flame"]) && !_wep2.has_tags(["pistol","flame"]))){
-					primary_weapon=new equipment_struct({},"");//create blank weapon struct
+				//if player has not melee weapons
+				var valid1 = ((_wep1.range<=1.1 && _wep1.range!=0) || (_wep1.has_tags(["pistol","flame"])));
+				var valid2 = ((_wep2.range<=1.1 && _wep2.range!=0) || (_wep2.has_tags(["pistol","flame"])));
+				if (!valid1 && !valid2){
+					primary_weapon=new EquipmentStruct({},"");//create blank weapon struct
 					primary_weapon.attack=strength/3;//calculate damage from player fists
 					primary_weapon.name="fists";
+					primary_weapon.range = 1;
+					primary_weapon.ammo = -1;					
 				} else {
-					if (_wep1.range>1.1 && !_wep1.has_tags(["pistol","flame"])){
+					if (!valid1 && valid2){
 						primary_weapon=_wep2;
-					} else if (_wep2.range>1.1 && !_wep2.has_tags(["pistol","flame"])){
+					} else if (valid1 && !valid2){
 						primary_weapon=_wep1;
 					} else {
 						var highest = _wep1.attack>_wep2.attack ? _wep1 :_wep2;
@@ -1921,9 +1427,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 							primary_weapon=highest;
 							melee_att*=0.5;
 							if (primary_weapon.has_tag("flame")){
-								explanation_string+=$"Primary is Flame: +50%#"
+								explanation_string+=$"Primary is Flame: -50%#"
 							} else if primary_weapon.has_tag("pistol"){
-								explanation_string+=$"Primary is Pistol: +50%#"
+								explanation_string+=$"Primary is Pistol: -50%#"
 							}
 							secondary_weapon=lowest;
 						}
@@ -1937,11 +1443,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 				}
 			};
 			var basic_wep_string = $"{primary_weapon.name}: {primary_weapon.attack}#";
-			if IsSpecialist("libs"){
-				if (primary_weapon.has_tag("psy") ||_wep2.has_tag("psy")){
-					var force_modifier = (((weapon_skill/100) * (psionic/10) * (intelligence/10)) + (experience()/1000)+0.1);
+			if IsSpecialist("libs") or has_trait("warp_touched"){
+				if (primary_weapon.has_tag("force") ||_wep2.has_tag("force")){
+					var force_modifier = (((weapon_skill/100) * (psionic/10) * (intelligence/10)) + (experience/1000)+0.1);
 					primary_weapon.attack *= force_modifier;
-					basic_wep_string += $"Active Force Weapon: x{force_modifier}#  Base: 0.10#  WSxPSIxINT: x{(weapon_skill/100)*(psionic/10)*(intelligence/10)}#  EXP: x{experience()/1000}#";
+					basic_wep_string += $"Active Force Weapon: x{force_modifier}#  Base: 0.10#  WSxPSIxINT: x{(weapon_skill/100)*(psionic/10)*(intelligence/10)}#  EXP: x{experience/1000}#";
 				}		
 			};
 			explanation_string = basic_wep_string + explanation_string
@@ -1969,6 +1475,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 					melee_att*=1.1;
 					explanation_string+=$"{global.trait_list.brawler.display_name}: x1.1#";
 				}
+				if (primary_weapon.has_tag("power") && has_trait("duelist")){
+					melee_att*=1.3;
+					explanation_string+=$"{global.trait_list.duelist.display_name}: x1.3#";
+				}				
 			}
 			var final_attack =  floor((melee_att/100)*primary_weapon.attack);
 			if (secondary_weapon!="none" && !encumbered_melee){
@@ -2000,7 +1510,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 
 		//TODO just did this so that we're not loosing featuring but this porbably needs a rethink
 		static hammer_of_wrath =  function(){
-			var wrath =  new equipment_struct({},"");
+			var wrath =  new EquipmentStruct({},"");
 			wrath.attack=(strength*2) +(0.5*weapon_skill);
 			wrath.name = "hammer_of_wrath";
 			wrath.range = 1;
@@ -2032,7 +1542,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 					return obj_ini.squads[squad].assignment.type;
 				}
 			}
-			if (job!= "none"){
+			if (job != "none"){
 				return job.type;
 			} else {
 				return "none"
@@ -2052,6 +1562,28 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 				squad = "none"
 			}
 		}
+
+		static squad_type = function(){
+			var _type = "none";
+			if (squad != "none"){
+				if (squad < array_length(obj_ini.squads)){
+					return obj_ini.squads[squad].type;
+				}
+			}
+			return _type;
+		}
+
+
+		static add_to_squad = function(new_squad){
+			if (squad != "none"){
+				if (new_squad==squad) then exit;
+				remove_from_squad();
+			}
+			squad = new_squad;
+			var _squad = fetch_squad(squad);
+			_squad.add_member(company, marine_number);
+		}
+
 		static marine_location = function(){
 			var location_id,location_name;
 			var location_type = planet_location;
@@ -2059,13 +1591,17 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 				location_id = location_type; //planet_number marine is on
 				location_type = location_types.planet; //state marine is on planet
 				if (obj_ini.loc[company][marine_number] == "home"){
-					obj_ini.loc[company][marine_number] = obj_ini.home_name
+					obj_ini.loc[company][marine_number] = obj_ini.home_name;
 				}
 				location_name = obj_ini.loc[company][marine_number]; //system marine is in
 			} else {
 				location_type =  location_types.ship; //marine is on ship
 				location_id = ship_location; //ship array position
-				location_name = obj_ini.ship_location[location_id]; //location of ship
+				if (location_id<array_length(obj_ini.ship_location)){
+					location_name = obj_ini.ship_location[location_id]; //location of ship
+				} else {
+					location_name = location_name = obj_ini.loc[company][marine_number];
+				}
 			}
 			return [location_type,location_id ,location_name];
 		};
@@ -2124,16 +1660,16 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 	static unload = function(planet_number, system){
 		var current_location = marine_location();
 		if (current_location[0]==location_types.ship){
-			if (!array_contains(["Warp", "Terra", "Mechanicus Vessel"],obj_ini.ship_location[current_location[1]]) && obj_ini.ship_location[current_location[1]]==system.name){
+			if (!array_contains(["Warp", "Terra", "Mechanicus Vessel", "Lost"],current_location[2]) && current_location[2]==system.name){
 				obj_ini.loc[company][marine_number]=obj_ini.ship_location[current_location[1]];
 				planet_location=planet_number;
-				ship_location=0;
+				ship_location=-1;
 				get_unit_size();
 				system.p_player[planet_number]+= size;
 				obj_ini.ship_carrying[current_location[1]] -= size;
 			}
 		} else {
-			ship_location=0;
+			ship_location=-1;
 			obj_ini.loc[company][marine_number]=system.name;
 			planet_location=planet_number;
 			system.p_player[planet_number]+= size;
@@ -2143,7 +1679,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 	static allocate_unit_to_fresh_spawn = function(type="default"){
 		var homestar = "none";
 		var spawn_location_chosen = false;
-	 	if ((type="home") or (type="default")) and (obj_ini.fleet_type==1){
+	 	if ((type="home") or (type="default")) and (obj_ini.fleet_type==ePlayerBase.home_world){
 	        var homestar =  star_by_name(obj_ini.home_name);
 	    } else if (type !="ship"){
 	    	var homestar =  star_by_name(type);	    	
@@ -2152,7 +1688,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 
 	    }*/
     	if (homestar!="none"){
-	        for (i=1;i<=homestar.planets;i++){
+	        for (var i=1;i<=homestar.planets;i++){
 	        	if (homestar.p_owner[i]==eFACTION.Player||
 	        		(obj_controller.faction_status[eFACTION.Imperium]!="War" && 
 	        		array_contains(obj_controller.imperial_factions, homestar.p_owner[i]))){
@@ -2169,22 +1705,28 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 				load_unit_to_fleet(player_fleet,self);
 				spawn_location_chosen=true;
 			}
-		}			
+			//TODO add more work arounds in case of no valid spawn point
+			if (!spawn_location_chosen){
+				if (player_fleet != "none"){
+
+				}
+			}
+		}		
 	}
 
 
-	static is_at_location = function(location, planet, ship){
+	static is_at_location = function(location="", planet=0, ship=-1){
 		var is_at_loc = false;
 		if (planet>0){
 			if (obj_ini.loc[company][marine_number]==location && planet_location=planet){
 				is_at_loc=true;
 			}
-		} else if (ship>0){
+		} else if (ship>-1){
 			if (ship_location==ship){
 				is_at_loc=true;
 			}
-		} else if (ship==0 && planet==0){
-			if (ship_location>0){
+		} else if (ship==-1 && planet==0){
+			if (ship_location>-1){
 				if (obj_ini.ship_location[ship_location]==location){
 					is_at_loc=true;
 				}
@@ -2194,19 +1736,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		}
 		return is_at_loc;
 	}
-	static spawn_exp =function(){
-		var spawn_ex = 0;
-		if (obj_ini.company_spawn_buffs[company] != 0){
-			spawn_ex += floor(gauss(obj_ini.company_spawn_buffs[company][0], obj_ini.company_spawn_buffs[company][1]));	//finds the on game spwan buff a marine should get from being spawned at game start
-		}
-		if (struct_exists(obj_ini.role_spawn_buffs, role())){ //adds exp buffs based on marine's role
-			if (obj_ini.role_spawn_buffs[$ role()] != 0){
-				spawn_ex += floor(gauss(obj_ini.role_spawn_buffs[$ role()][0], obj_ini.role_spawn_buffs[$ role()][1]));
-			}
-		}
-		if (spawn_ex != 0){add_exp(spawn_ex)}  //update the marines exp with updated guass value
-
-	};
 
 	static edit_corruption = function (edit){
 		corruption = edit > 0 ?min(100, corruption+edit) : max(0, corruption+edit);
@@ -2216,314 +1745,99 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 		return (obj_ini.god[company,marine_number]>=10);
 	}
 
-	static forge_point_generation = function(turn_end=false){
-		var trained_person = IsSpecialist("forge");
-		var crafter = has_trait("crafter");
-		if (!(trained_person || crafter)) then return 0;
-		var reasons = {}
-		var points = 0;
-		if (trained_person){
-			var points = technology/10;
-			reasons.trained = points;
-		}
-		if (job!="none"){
-			if (job.type == "forge"){
-				
-				if (crafter){
-					points*=3;
-					reasons.at_forge = "x3 (Crafter)";
-				} else {
-					points*=2;
-					reasons.at_forge = "x2";
-				}
-				points+=3;
-				if (turn_end){
-					add_exp(0.25);
-				}
-			}
-		}
-		if (crafter){
-			points+=3;
-			reasons.crafter = 3;
-		}
-		if (role()=="Forge Master"){
-			points+=5;
-			reasons.master = 5;
-		}
-		return [points,reasons];
+	static forge_point_generation = unit_forge_point_generation;
+
+	static apothecary_point_generation = unit_apothecary_points_gen;
+
+	static marine_assembling = scr_marine_game_spawn_constructions;
+
+	static random_update_armour = scr_marine_spawn_armour;
+
+	static roll_age = scr_marine_spawn_age;
+
+	static roll_experience = function() {
+		var _exp = 0;
+		// var _company_bonus = 0;
+		var _age_bonus = age();
+		var _gauss_sd_mod = 14;
+
+		// switch(company){
+		// 	case 1:
+		// 		_company_bonus = 55;
+		// 		break;
+		// 	case 2:
+		// 	case 3:
+		// 	case 4:
+		// 	case 5:
+		// 	case 6:
+		// 		_company_bonus = 40;
+		// 		break;
+		// 	case 7:
+		// 		_company_bonus = 25;
+		// 		break;
+		// 	case 8:
+		// 		_company_bonus = 10;
+		// 		break;
+		// 	case 9:
+		// 		_company_bonus = 2;
+		// 		break;
+		// 	case 10:
+		// 		_company_bonus = 0;
+		// 		break;
+		// 	default:
+		// 		break;
+		// }
+
+		// switch(role()){
+			// HQ
+			// case "Chapter Master":
+			// case "Chief Librarian":
+			// case "Forge Master":
+			// case "Master of Sanctity":
+			// case "Master of the Apothecarion":
+			// case obj_ini.role[100][eROLE.HonourGuard]:
+			// case "Codiciery":
+			// case "Lexicanum":
+			// 1st company only
+			// case obj_ini.role[100][eROLE.Veteran]:
+			// case obj_ini.role[100][eROLE.Terminator]:
+			// case obj_ini.role[100][eROLE.VeteranSergeant]:
+			// Command Squads
+			// case obj_ini.role[100][eROLE.Captain]:
+			// case obj_ini.role[100][eROLE.Champion]:
+			// case obj_ini.role[100][eROLE.Ancient]:
+			// Command Squads and HQ
+			// case obj_ini.role[100][eROLE.Chaplain]:
+			// case obj_ini.role[100][eROLE.Apothecary]:
+			// case obj_ini.role[100][eROLE.Techmarine]:
+			// case obj_ini.role[100][eROLE.Librarian]:
+			// Company marines
+			// case obj_ini.role[100][eROLE.Dreadnought]:
+			// case obj_ini.role[100][eROLE.Tactical]:
+			// case obj_ini.role[100][eROLE.Devastator]:
+			// case obj_ini.role[100][eROLE.Assault]:
+			// case obj_ini.role[100][eROLE.Sergeant]:
+			// case obj_ini.role[100][eROLE.Scout]:
+			// 	break;
+		// }
+
+		_exp = _age_bonus;
+		_exp = max(0, floor(gauss(_exp, _exp / _gauss_sd_mod)));
+		add_exp(_exp);
 	}
 
-	static spawn_old_guard =function(){
-		var old_guard=irandom(100);
-		var age = (obj_ini.millenium*1000)+obj_ini.year-4 - (company * 3);
-		repeat(10-company){
-			age -= (irandom(30));
+	static assign_reactionary_traits = function() {
+		var _age = age();
+		var _exp = experience;
+		var _total_score = _age + _exp;
+	
+		if (_total_score > 280){
+			add_trait("ancient");
+		} else if (_total_score > 180){
+			add_trait("old_guard");
+		} else if (_total_score > 100){
+			add_trait("seasoned");
 		}
-		var bionic_count = choose(0,0,0,0,1,2,3);
-		if (global.chapter_name=="Iron Hands"){
-			bionic_count = choose(2,3,4,5);
-		}
-		switch(role()){
-			case obj_ini.role[100][5]:  //captain
-				if(old_guard>=75){
-					update_armour("MK3 Iron Armour",false,false);
-					age -= gauss(400, 200);
-					add_trait("old_guard");
-					add_exp(50);
-					bionic_count = choose(0,0,1,2,3)
-				} // 25% of iron within
-				else{
-					update_armour(choose("MK5 Heresy","MK6 Corvus","MK7 Aquila", "MK4 Maximus","MK8 Errant"),false,false);
-					age -= gauss(400, 25);
-					add_trait("seasoned");
-					add_exp(25);
-				}
-				break;
-			case  obj_ini.role[100][15]:  //apothecary
-				update_armour("MK7 Aquila",false,false);
-				if (company<=2){update_armour(choose("MK8 Errant","MK6 Corvus"),false,false)
-				}else{
-					update_armour(choose("MK5 Heresy","MK6 Corvus","MK7 Aquila", "MK4 Maximus","MK8 Errant"),false,false);
-				}
-				age -= gauss(400, 250);
-				if (intelligence<40){
-					intelligence=40;
-				}
-				break;
-			case "Standard Bearer":
-				 update_armour("MK5 Heresy",false,false);
-				 age -= gauss(400, 250);
-				break;
-			case  obj_ini.role[100][8]:		//tacticals
-				if (old_guard=99){
-						update_armour("MK3 Iron Armour",false,false)
-						age -= gauss(600, 150);
-						add_trait("ancient");
-						add_exp(choose(100,75,50));	
-					} // 1%
-					else if (old_guard>=97 and old_guard<=99){
-						update_armour("MK4 Maximus",false,false)
-						age -= gauss(500, 100);
-						add_trait("old_guard");	
-						add_exp(choose(75,50));
-					} //3%
-					else if (old_guard>=91 and old_guard<=96){
-						update_armour("MK5 Heresy",false,false);
-						age -= gauss(300, 100);
-						add_trait("seasoned");
-						add_exp(choose(25,50));
-					} // 6%
-					else if (old_guard>=79 and old_guard<=90){
-						update_armour("MK6 Corvus",false,false);
-						age -= gauss(250, 25);
-						add_exp(choose(10,25));
-					} // 12%
-					else if (company<=2){
-						update_armour("MK6 Corvus",false,false)
-						} // company 1 and 2 taccies get beakies by default
-					else{update_armour("MK7 Aquila",false,false)};
-				break;
-			case  obj_ini.role[100][10]:		//assualts
-				// due to assault marines not wanting corvus due to worse ac, given them better chances with melee oriented armours. 
-				// melee is risky af anyway so let's reward players who go assault marine heavy at game start
-				if (old_guard>=99 and old_guard<=97){
-					update_armour("MK8 Errant",false,false);
-					age -= gauss(150, 30);
-					add_exp(25);
-				} // 3% 
-				else if (old_guard>=91 and old_guard<=96){
-					update_armour("MK3 Iron Armour",false,false);
-					age -= gauss(600, 100);
-					add_trait(choose("ancient","old_guard"),false,false);
-					add_exp(choose(10, 30, 50));
-				} // 6% 
-				else if (old_guard>=80 and old_guard<=90){
-					update_armour("MK4 Maximus",false,false);
-					age -= gauss(300, 75);
-					add_trait("old_guard")
-					add_exp(25);
-				} // 12%
-				else if (old_guard>=57 and old_guard<=79){
-					update_armour("MK5 Heresy",false,false);
-					age -= gauss(240, 40);
-					add_trait("seasoned")
-					add_exp(choose(10,25));
-				} // 24%
-				else{
-					update_armour("MK7 Aquila",false,false);
-					age -= gauss(150, 30);
-				};
-				break;	
-			case  obj_ini.role[100][9]: 		//devastators	
-				if ((old_guard>=99) and (old_guard<=97)){
-					update_armour("MK4 Maximus",false,false);
-					age -= gauss(300, 100);
-					add_trait(choose("ancient","old_guard"));
-					add_exp(choose(25, 50));
-				} // 3% for maximus
-				else if (old_guard>=78 and old_guard<=96){
-					update_armour("MK6 Corvus",false,false);
-					age -= gauss(200, 50);
-					add_trait("seasoned");
-					add_exp(25);
-				} // 20% chance for devos to have ranged armor, wouldn't want much else
-				else if (company<=2) {
-					update_armour("MK6 Corvus",false,false);
-				} // company 1 and 2 taccies get beakies by default
-				else{update_armour("MK7 Aquila",false,false)};
-				break;
-			case  obj_ini.role[100][3]: //veterans
-				if ((old_guard>=80)and (old_guard>=95)){
-					update_armour(choose("MK4 Maximus","MK8 Errant"),false,false);
-					age -= gauss(150, 30);
-					add_trait(choose("old_guard"));
-					add_exp(choose(50, 75));					
-				} else if (old_guard>95){
-					update_armour(choose("MK4 Maximus","MK3 Iron Armour"),false,false);
-					age -= gauss(300, 100);
-					add_trait(choose("old_guard"));
-					add_exp(choose(125, 100));
-				} else if (old_guard<35){
-					update_armour(choose("MK4 Maximus","MK3 Iron Armour"),false,false);
-					age -= gauss(150, 30);
-					add_trait(choose("old_guard"));
-					add_exp(choose(25, 50));					
-				}
-				if (global.chapter_name=="Ultramarines"){
-					if (choose(true,false)){
-						add_trait("tyrannic_vet");
-						bionic_count+=irandom(1);
-					}
-				}
-				break;
-			case obj_ini.role[100][16]: //techmarines
-				update_armour(choose("MK8 Errant","MK6 Corvus","MK4 Maximus","MK3 Iron Armour"),false,false)
-				if ((global.chapter_name=="Iron Hands" || obj_ini.progenitor=6 || array_contains(obj_ini.dis, "Tech-Heresy"))){
-					add_bionics("right_arm","standard",false);
-					bionic_count = choose(6,6,7,7,7,8,9);
-					add_trait("flesh_is_weak");
-					var tech_heresy = irandom(19);
-				}else {
-			    	bionic_count = irandom(5)+1;
-				  if (irandom(2) ==0){
-				    add_trait("flesh_is_weak");
-				  }
-				  var tech_heresy = irandom(49);
-			  	}
-			  	if (array_contains(obj_ini.dis, "Tech-Heresy")){
-			  		var tech_heresy = irandom(10);
-			  		technology+=4;
-			  	}
-			  	if (tech_heresy==0){
-			  		add_trait("tech_heretic");
-			  		edit_corruption(30);
-			  	}
-				if (technology<35){
-					technology=35;
-				}
-			  add_trait("mars_trained");
-			  if (irandom(1) ==0){
-			    add_trait("tinkerer");
-			  }
-			  if (religion !="cult_mechanicus"){
-			  	religion_sub_cult = "none";
-			  }
-			  if (array_contains(obj_ini.adv, "Crafters")){
-			  	if (irandom(2)==0){
-			  		add_trait("crafter");
-			  	}
-			  } else if (obj_ini.progenitor==8 || obj_ini.progenitor==6){
-			  	technology+=2;
-			  	if (irandom(4)==0){
-			  		add_trait("crafter");
-			  	}			  	
-			  }
-			  religion = "cult_mechanicus"	
-			  add_exp(irandom(50));
-				break;
-			case  obj_ini.role[100][12]: //scouts
-				bionic_count = choose(0,0,0,0,0,0,0,0,0,0,0,1);
-				break;
-			case  obj_ini.role[100][14]:  //chaplain
-				update_armour(choose("MK5 Heresy","MK6 Corvus","MK7 Aquila", "MK4 Maximus","MK8 Errant"),false,false);
-				age -= gauss(400, 250);
-				if (piety<35){
-					piety=35;
-				}
-				if(irandom(1) ==0){
-					add_trait("zealous_faith")
-				}
-				add_exp(irandom(50));
-				break;
-			case "Codiciery":
-				update_armour(choose("MK5 Heresy","MK6 Corvus","MK7 Aquila", "MK4 Maximus","MK8 Errant"),false,false);
-				age -= gauss(150, 20);
-				break;
-			case "Lexicanum":
-				update_armour(choose("MK5 Heresy","MK6 Corvus","MK7 Aquila", "MK4 Maximus","MK8 Errant"),false,false);
-				age -= gauss(200, 30);
-				add_trait("seasoned");
-				break;
-			case obj_ini.role[100,17]:
-				update_armour(choose("MK5 Heresy","MK6 Corvus","MK7 Aquila", "MK4 Maximus","MK8 Errant"),false,false);
-				age -= gauss(400, 250);
-				add_trait("seasoned");
-				break;	
-			case obj_ini.role[100][Role.CAPTAIN]:
-				charisma += (irandom(10));
-				wisdom += (irandom(10));
-				piety += (irandom(10));
-				if (irandom(1)==0){
-					add_trait("natural_leader");
-				}
-				if (array_contains(obj_ini.adv, "Melee Enthusiasts")){
-					weapon_skill += irandom(5);
-					if (irandom(1)==0){
-						add_trait("melee_enthusiast");
-					}
-				}
-				if (array_contains(obj_ini.adv, "Slow and Purposeful")){
-					constitution += irandom(5);
-					if (irandom(1)==0){
-						add_trait("slow_and_purposeful");
-					}
-				}
-				break;
-
-		}
-		if (irandom(75)>74){
-			add_trait("tyrannic_vet");
-			bionic_count+=irandom(2);
-		};		
-		if (irandom(399-experience()) == 0){
-			add_trait("still_standing");
-		};
-		if (irandom(399-experience()) == 0){
-			add_trait("beast_slayer");
-		};		
-		if (irandom(499-experience())==0){
-			add_trait("lone_survivor");
-		}
-		for(var i=0;i<bionic_count;i++){
-				add_bionics("none","standard",false);
-		}
-		if (irandom(3)==0){
-			body[$ "torso"][$ "purity_seal"] = [irandom(1),irandom(1),irandom(1),];
-		}
-		if (irandom(3)==0){
-			body[$ "left_arm"][$ "purity_seal"] = [irandom(1),irandom(1),irandom(1),];
-		}
-		if (irandom(3)==0){
-			body[$ "right_arm"][$ "purity_seal"] = [irandom(1),irandom(1),irandom(1),];
-		}	
-		if (irandom(3)==0){
-			body[$ "left_leg"][$ "purity_seal"] = [irandom(1),irandom(1),irandom(1),];
-		}
-		if (irandom(3)==0){
-			body[$ "right_leg"][$ "purity_seal"] = [irandom(1),irandom(1),irandom(1),];
-		}	
-
-		update_age(floor(age));	
 	}
 
 	static set_default_equipment= function(from_armoury=true, to_armoury=true, quality="any"){
@@ -2547,47 +1861,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			quality);
 		}
 	}
-	static alter_equipment = function(update_equipment, from_armoury=true, to_armoury=true, quality="any"){
-		var equip_areas = struct_get_names(update_equipment);
-		for (var i=0;i<array_length(equip_areas);i++){
-			switch(equip_areas[i]){
-				case "wep1":
-					update_weapon_one(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "wep2":
-					update_weapon_two(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "mobi":
-					update_mobility_item(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "armour":
-					update_armour(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;
-				case "gear":
-					update_gear(update_equipment[$ equip_areas[i]],from_armoury,to_armoury,quality);
-					break;								
-			}
-		}
-	}
-	static stat_display = scr_draw_unit_stat_data;
-	static draw_unit_image = scr_draw_unit_image;
-	static display_wepaons = scr_ui_display_weapons;
-	static unit_profile_text = scr_unit_detail_text;
-	static unit_equipment_data= function(){
-		var armour_data=get_armour_data()
-		var gear_data=get_gear_data()
-		var mobility_data=get_mobility_data()
-		var weapon_one_data=get_weapon_one_data()
-		var weapon_two_data=get_weapon_two_data()
-		var equip_data = {
-				armour_data:armour_data,
-				gear_data:gear_data,
-				mobility_data:mobility_data,
-				weapon_one_data:weapon_one_data,
-				weapon_two_data:weapon_two_data
-			};
-		return equip_data;
-	}
+
 	static equipped_artifacts=function(){
 		artis = [
 			weapon_one(true),
@@ -2605,6 +1879,36 @@ function TTRPG_stats(faction, comp, mar, class = "marine") constructor{
 			}
 		}
 		return artis;
+	}
+
+	static equipped_artifact_tag = function(tag){
+		var cur_artis = equipped_artifacts();
+		var arti;
+		var has_tag = false;
+		for(var i=0;i<array_length(cur_artis);i++){
+			arti = obj_ini.artifact_struct[cur_artis[i]];
+			has_tag = arti.has_tag(tag);
+			if (has_tag){
+				break;
+			}
+		}
+		return has_tag;
+	}
+
+	static get_stat_line = function(){
+		return {
+			"constitution":constitution, 
+			"strength":strength, 
+			"luck":luck, 
+			"dexterity":dexterity, 
+			"wisdom":wisdom, 
+			"piety":piety, 
+			"charisma":charisma, 
+			"technology":technology,
+			"intelligence":intelligence, 
+			"weapon_skill":weapon_skill, 
+			"ballistic_skill":ballistic_skill
+		}
 	}
 
 	static movement_after_math = function(end_company=company, end_slot=marine_number){
@@ -2641,72 +1945,18 @@ function jsonify_marine_struct(company, marine){
 	var names = variable_struct_get_names(copy_marine_struct); // get all keys within structure
 	for (var name = 0; name < array_length(names); name++) { //loop through keys to find which ones are methods as they can't be saved as a json string
 		if (!is_method(copy_marine_struct[$ names[name]])){
-			copy_part = DeepCloneStruct(copy_marine_struct[$ names[name]])
+			copy_part = DeepCloneStruct(copy_marine_struct[$ names[name]]);
 			variable_struct_set(new_marine, names[name],copy_part); //if key value is not a method add to copy structure
+			delete copy_part;
 		}
 	}
 	return json_stringify(new_marine);
 }
 
+/// @param {Array<Real>} unit where unit[0] is company and unit[1] is the position
+/// @returns {Struct.TTRPG_stats} unit
 function fetch_unit(unit){
 	return obj_ini.TTRPG[unit[0]][unit[1]];
 }
-
-
-function pen_and_paper_sim() constructor{
-	static oppposed_test = function(unit1, unit2, stat,unit1_mod=0,unit2_mod=0,  modifiers={}){
-		var stat1 = irandom(99)+1;
-		var unit1_val = unit1[$ stat]+unit1_mod;
-		var unit2_val = unit2[$ stat]+unit2_mod;
-		var stat2 = irandom(99)+1;
-		var stat1_pass_margin, stat2_pass_margin, winner, pass_margin;
-		//unit 1 passes test 
-		if (stat1 < unit1_val){
-			stat1_pass_margin = unit1_val- stat1;
-
-			//unit 1 and unit 2 pass tests
-			if (stat2<unit2_val){
-				stat2_pass_margin =  unit2_val - stat2;
-
-				//unit 2 passes by bigger margin and thus wins
-				if (stat2_pass_margin > stat1_pass_margin){
-					winner = 2;
-					pass_margin = stat2_pass_margin-stat1_pass_margin;
-				} else {
-					winner = 1;
-					pass_margin = stat1_pass_margin-stat2_pass_margin;
-				}
-			} else {//only unit 1 passes test thus is winner
-				winner = 1;
-				pass_margin = unit1_val- stat1;
-			}
-		} else if (stat2<unit2_val){//only unit 2 passes test
-			winner = 2;
-			pass_margin = unit2_val-stat2;
-		} else {
-			winner = 0;
-			pass_margin = unit1_val- stat1;
-		}
-
-		return [winner, pass_margin];
-	}
-
-	static standard_test = function(unit, stat, difficulty_mod=0){
-		var passed =false;
-		var margin=0
-		var random_roll = irandom(99)+1;
-		if (random_roll<unit[$ stat]+difficulty_mod){
-			passed = true;
-			margin = unit[$ stat]+difficulty_mod - random_roll;
-		} else {
-			passed = false;
-			margin = unit[$ stat]+difficulty_mod - random_roll;
-		}
-
-		return [passed, margin];
-	}
-}
-
-global.character_tester = new pen_and_paper_sim();
 
 

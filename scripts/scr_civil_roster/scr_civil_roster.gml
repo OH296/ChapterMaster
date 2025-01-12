@@ -155,9 +155,9 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
 	                    if (co=10) then col=22-obj_controller.bat_scout_column;
 	                }
                 
-	                if (unit.role()=deploying_unit.role[100][5]) or (unit.role()="Standard Bearer") or (unit.role()=deploying_unit.role[100][7]){
+	                if (unit.role()=deploying_unit.role[100][5]) or (unit.role()=deploying_unit.role[100][11]) or (unit.role()=deploying_unit.role[100][7]){
 	                    if (unit.role()=deploying_unit.role[100][5]){new_combat.en_captains+=1;if (new_combat.en_big_mofo>5) then new_combat.en_big_mofo=5;}
-	                    if (unit.role()="Standard Bearer") then new_combat.en_standard_bearers+=1;
+	                    if (unit.role()=deploying_unit.role[100][11]) then new_combat.en_standard_bearers+=1;
 						if (unit.role()=deploying_unit.role[100][7]) then new_combat.champions+=1;
                     
 	                    if (co=1){
@@ -199,8 +199,8 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
 	                targ.dude_id[targ.men]=va;
 	                targ.dudes[targ.men]=unit.role();
 	                targ.dudes_num[targ.men]=1;
-	                targ.dudes_hp[targ.men]=deploying_unit.hp[cooh,va];
-	                targ.dudes_exp[targ.men]=deploying_unit.experience[cooh,va];
+	                targ.dudes_hp[targ.men]=unit.hp();
+	                targ.dudes_exp[targ.men]=unit.experience;
 	                targ.dudes_powers[targ.men]=deploying_unit.spe[cooh,va];
 	                targ.dudes_wep1[targ.men]=deploying_unit.wep1[cooh,va];
 	                targ.dudes_wep2[targ.men]=deploying_unit.wep2[cooh,va];
@@ -318,9 +318,9 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
 	                    if (co=10) then col=obj_controller.bat_scout_column;
 	                }
                 
-	                if (unit.role()=deploying_unit.role[100][5]) or (unit.role()="Standard Bearer") or (unit.role()=deploying_unit.role[100][7]){
+	                if (unit.role()=deploying_unit.role[100][5]) or (unit.role()=deploying_unit.role[100][11]) or (unit.role()=deploying_unit.role[100][7]){
 	                    if (unit.role()=deploying_unit.role[100][5]){new_combat.captains+=1;if (new_combat.big_mofo>5) then new_combat.big_mofo=5;}
-	                    if (unit.role()="Standard Bearer") then new_combat.standard_bearers+=1;
+	                    if (unit.role()=deploying_unit.role[100][11]) then new_combat.standard_bearers+=1;
 						if (unit.role()=deploying_unit.role[100][7]) then new_combat.champions+=1;
                     
 	                    if (co=1){
@@ -359,7 +359,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.marine_gear[targ.men] = deploying_unit.gear[cooh][va];
                     targ.marine_mobi[targ.men] = unit.mobility_item();
                     targ.marine_hp[targ.men] = unit.hp();
-                    targ.marine_exp[targ.men] = deploying_unit.experience[cooh][va];
+                    targ.marine_exp[targ.men] = unit.experience;
                     targ.marine_powers[targ.men] = deploying_unit.spe[cooh][va];
                     targ.marine_ranged[targ.men] = unit.ranged_attack();
                     targ.marine_ac[targ.men]=unit.armour_calc();

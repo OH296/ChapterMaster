@@ -1,8 +1,7 @@
 function scr_special_view(command_group) {
 
 	// Works as COMPANY VIEW but for the subsections of HQ
-
-	var v, i; 
+ 
 	var mans=0, onceh, company=0, bad=0, oth=0, unit;
 	gogogo=0;
 	vehicles=0;
@@ -11,11 +10,11 @@ function scr_special_view(command_group) {
 
 	var squads=0, squad_typ="", squad_loc=0, squad_members=0;
 
-	for (i=0;i<20;i++){
+	for (var i=0;i<20;i++){
 		sel_uni[i]="";
 		sel_veh[i]="";
 	}
-	for (i=0;i<501;i++){
+	for (var i=0;i<501;i++){
 
 	    if (i<=50){
 	    	penit_co[i]=0;
@@ -27,8 +26,6 @@ function scr_special_view(command_group) {
 
 	mans=0;
 	vehicles=0;
-	v=0;
-	i=0;
 	b=0;
 
 	// v: check number
@@ -36,10 +33,10 @@ function scr_special_view(command_group) {
 
 	b=0;
 	if (command_group==11) or (command_group==0){				//HQ units
-		for (v = 0;v<array_length(obj_ini.TTRPG[0]);v++){
+		for (var v = 0;v<array_length(obj_ini.TTRPG[0]);v++){
 			bad=0;
 			if (obj_ini.name[0][v]== ""){continue;}
-			if (obj_ini.TTRPG[0][v].ship_location>0){
+			if (obj_ini.TTRPG[0][v].ship_location>-1){
 			   	var ham=obj_ini.TTRPG[0][v].ship_location;
 			   	if (obj_ini.ship_location[ham]="Lost") then continue;
 			}
@@ -55,69 +52,39 @@ function scr_special_view(command_group) {
 	}
 
 	if (command_group==12) or (command_group==0){// Apothecarion
-		for (v = 0;v<array_length(obj_ini.TTRPG[0]);v++){
-			bad=0;
-		    if (obj_ini.TTRPG[company,v].ship_location>0){
-		        var ham=obj_ini.TTRPG[0][v].ship_location;
-		        if (obj_ini.ship_location[ham]=="Lost") then continue
-		    }
-			unit = obj_ini.TTRPG[company][v]
-		    if (unit.IsSpecialist("apoth", true)){
-		        add_man_to_manage_arrays(unit);
-		        if (obj_ini.role[0][v]=obj_ini.role[100][15]) then ma_promote[b]=1;
-		    }
+		var apothecaries = collect_role_group(["apoth",true]);
+		for (var i=0;i<array_length(apothecaries);i++){
+			unit = apothecaries[i];
+			add_man_to_manage_arrays(apothecaries[i]);
+			//if (unit.role()== obj_ini.role[0][v]=obj_ini.role[100][15]) then ma_promote[b]=1;
 		}
 	}
 
 	v=0;
 	if (command_group==13) or (command_group==0){// Librarium
-		for (v = 0;v<array_length(obj_ini.TTRPG[0]);v++){
-		    if (obj_ini.TTRPG[company,v].ship_location>0){
-		        var ham=obj_ini.TTRPG[0][v].ship_location;
-		        if (obj_ini.ship_location[ham]=="Lost") then continue;
-		    }
-		    //find if mlib specialist or trainee
-		    unit = obj_ini.TTRPG[company][v];
-		    if (unit.IsSpecialist("libs", true)){
-		        add_man_to_manage_arrays(unit);
-	            if (unit.role()=="Lexicanum") and (ma_exp[b]>=80) then ma_promote[b]=1;
-	            if (unit.role()=="Codiciery") and (ma_exp[b]>=125) then ma_promote[b]=1;
-		    }
-		}
+		var libs = collect_role_group(["libs",true]);
+		for (var i=0;i<array_length(libs);i++){
+			unit = libs[i];
+			add_man_to_manage_arrays(libs[i]);
+		}		
 	}
 
 	v=0;
 	if (command_group==14) or (command_group==0){// Reclusium
-		for (v = 0;v<array_length(obj_ini.TTRPG[0]);v++){
-		    bad=0;
-		    if (obj_ini.TTRPG[company,v].ship_location>0){
-		        var ham=obj_ini.TTRPG[0][v].ship_location;
-		        if (obj_ini.ship_location[ham]=="Lost") then bad=1;
-		    }
-		    unit = obj_ini.TTRPG[company,v];
-		    if (bad==0){
-		    	if (unit.IsSpecialist("chap", true) && (global.chapter_name!="Iron Hands" || unit.role()=="Master of Sanctity")){
-		    		add_man_to_manage_arrays(unit);
-		    	}
-			}
-		}
+		var chaps = collect_role_group(["chap",true]);
+		for (var i=0;i<array_length(chaps);i++){
+			unit = chaps[i];
+			add_man_to_manage_arrays(chaps[i]);
+		}	
 	}
 
 	v=0;
 	squads=0;
 	if (command_group==15) or (command_group==0){// Armamentarium
-		for (v = 0;v<array_length(obj_ini.TTRPG[0]);v++){
-		    bad=0;
-		    if (obj_ini.TTRPG[company,v].ship_location>0){
-		        var ham=obj_ini.TTRPG[0][v].ship_location;
-		        if (obj_ini.ship_location[ham]=="Lost") then bad=1;
-		    }
-		    unit = obj_ini.TTRPG[company,v];
-		    if (!bad){
-		    	if (unit.IsSpecialist("forge", true)){
-		    		add_man_to_manage_arrays(unit);
-		    	}
-			}
+		var chaps = collect_role_group(["forge",true]);
+		for (var i=0;i<array_length(chaps);i++){
+			unit = chaps[i];
+			add_man_to_manage_arrays(chaps[i]);
 		}
 	}
 
@@ -128,10 +95,9 @@ function scr_special_view(command_group) {
 
 	// b=last_man;
 	last_man=b;
-	i=0;
 	last_vehicle=0;
 
-	for (i=1;i<101;i++){// 100
+	for (var i=1;i<101;i++){// 100
 	    if (obj_ini.veh_race[company,i]!=0){
 	    	add_vehicle_to_manage_arrays([company,i]);
 	    }
@@ -139,10 +105,9 @@ function scr_special_view(command_group) {
 
 
 
-	i=0;
 	squads=0;
 	//TODO unify this data with other_manage_data() method
-	for (i=1;i<array_length(display_unit);i++){
+	for (var i=1;i<array_length(display_unit);i++){
 		onceh=0;
 	    var ahuh=0;
 	    if (man[i]="man"){if (ma_role[i]!="") then ahuh=1;}

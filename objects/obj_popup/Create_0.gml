@@ -1,4 +1,4 @@
-
+set_zoom_to_default();
 type=0;size=2;y_scale=1;
 if (size=1) then sprite_index=spr_popup_small;
 if (size=2) then sprite_index=spr_popup_medium;
@@ -56,24 +56,26 @@ units=0;
 min_exp=0;
 cooldown=20;
 all_good=0;
+prev_selected = 0;
 
 new_target=0;
 
-if (instance_exists(obj_controller)){obj_controller.cooldown=9999;}
+if (instance_exists(obj_controller)){obj_controller.cooldown=8000;}
 number=0;
 company_promote_data = [
-//index 0 = draw x, 1=drawy, 2 = ep requirement for company
-    [1030,230,150],//1st company
-    [1140,230,120],
-    [1250,230,110],
-    [1360,230,100],
-    [1470,230,80],
-    [1030,250,70],
-    [1140,250,60],
-    [1250,250,50],
-    [1360,250,40],
-    [1470,250,40],//10th company
+//index 0 = draw x, 1 = draw y, 2 = exp requirement for company
+    [1030,230,100],//1st company
+    [1140,230,65],
+    [1250,230,65],
+    [1360,230,65],
+    [1470,230,65],
+    [1030,250,45],
+    [1140,250,45],
+    [1250,250,35],
+    [1360,250,25],
+    [1470,250,15],//10th company
 ]
+
 for (var i=0;i<=10;i++){i+=1;role_name[i]="";role_exp[i]=0;}
 
 reset_options = function(){
@@ -83,24 +85,25 @@ reset_options = function(){
     option4="";   
 }
 
+// TODO: connect this logic with the other_manage_data() to reduce verboseness;
 get_unit_promotion_options = function(){
     var spec=0;
     for (var i=0;i<=11;i++){role_name[i]="";role_exp[i]=0;}  
     i=0;  
        // this area does the required exp for roles per company
-    if (unit_role=obj_ini.role[100][16]){
+    if (unit_role=obj_ini.role[100][16]){ //techmarine
         role_name[1]=obj_ini.role[100][16];
         role_exp[1]=5;
         spec=1;
-    }else if (unit_role=obj_ini.role[100][15]){
+    }else if (unit_role=obj_ini.role[100][15]){ //apothecary
         role_name[1]=obj_ini.role[100][15];
         role_exp[1]=5;
         spec=1;
-    }else if (unit_role=obj_ini.role[100][6]){
+    }else if (unit_role=obj_ini.role[100][6]){ //venerable dreadnought
         role_name[1]="Venerable "+string(obj_ini.role[100][6]);
         role_exp[1]=400;
         spec=0;
-    } else if (unit_role=obj_ini.role[100][14] && global.chapter_name!="Space Wolves" && global.chapter_name!="Iron Hands"){
+    } else if (unit_role=obj_ini.role[100][14] && global.chapter_name!="Space Wolves" && global.chapter_name!="Iron Hands"){ //chaplain
         role_name[1]=obj_ini.role[100][14];
         role_exp[1]=5;
         spec=1;
@@ -111,64 +114,107 @@ get_unit_promotion_options = function(){
         role_name[1]=obj_ini.role[100,17];role_exp[1]=125;spec=1;
     } 
     if (target_comp>0 && target_comp<=10 && spec==0){
-        if (units=1){                                           //exp_limits for captains
-            if (scr_role_count(obj_ini.role[100][5],"1")==0){
+        if (units=1){
+            if (scr_role_count(obj_ini.role[100][5],"1")==0){ //captain
                 i+=1;
                 role_name[i]=obj_ini.role[100][5];
-                role_exp[i]=170;//all captains are equalish
+                role_exp[i]=80;//all captains are equalish
             }
-            if (scr_role_count("Standard Bearer","1")==0){
+            if (scr_role_count(obj_ini.role[100][11],"1")==0){ //company ancient
                 i+=1;
-                role_name[i]="Standard Bearer";
+                role_name[i]=obj_ini.role[100][11];
                 role_exp[i]=company_promote_data[target_comp-1][2]+10;
             }
-            if (scr_role_count(obj_ini.role[100][7],"1")==0){
+            if (scr_role_count(obj_ini.role[100][7],"1")==0){ //company champ
                 i+=1;
-                role_name[i]=obj_ini.role[100][7];//company champ
+                role_name[i]=obj_ini.role[100][7];
                 role_exp[i]=company_promote_data[target_comp-1][2]+10;//may as well have this liniked to weapon skill
             }
             i+=1;
-            role_name[i]=obj_ini.role[100][6];
-            role_exp[i]=200;                
+            role_name[i]=obj_ini.role[100][6]; //dreadnought
+            role_exp[i]=200;
         }
         
-        i+=1;
-        role_name[i]=obj_ini.role[100][8];//tact
-        role_exp[i]=company_promote_data[target_comp-1][2];
         if (obj_controller.command_set[2]==1){
+            if (array_contains([2, 3, 4, 5, 6, 7], target_comp)){
+                i+=1;
+                role_name[i]=obj_ini.role[100][8]; //tacts
+                role_exp[i]=company_promote_data[target_comp-1][2];
+                if (obj_controller.command_set[2]==0){
+                    role_exp[i]=0;
+                }
+            }
+            
+            if (array_contains([2, 3, 4, 5, 8], target_comp)){
+                i+=1;
+                role_name[i]=obj_ini.role[100][10]; //assualts
+                role_exp[i]=company_promote_data[target_comp-1][2];
+                if (obj_controller.command_set[2]==0){
+                    role_exp[i]=0;
+                }
+            }
+    
+            if (array_contains([2, 3, 4, 5, 9], target_comp)){
+                i+=1;
+                role_name[i]=obj_ini.role[100][9]; //devs
+                role_exp[i]=company_promote_data[target_comp-1][2];
+                if (obj_controller.command_set[2]==0){
+                    role_exp[i]=0;
+                }
+            }
+    
+            if (target_comp == 1){
+                i+=1;
+                role_name[i]=obj_ini.role[100][4]; //terminators
+                role_exp[i]=100;
+            }  
+    
+            if (target_comp == 10){
+                i+=1;
+                role_name[i]=obj_ini.role[100][12]; //scouts
+                role_exp[i]=company_promote_data[target_comp-1][2];
+                if (obj_controller.command_set[2]==0){
+                    role_exp[i]=0;
+                }
+            }
+    
+            if (target_comp == 1){
+                i+=1;
+                role_name[i]=obj_ini.role[100][3]; //veterans
+                role_exp[i]=100;
+            }
+        } else {
+            i+=1;
+            role_name[i]=obj_ini.role[100][8]; //tacts
+            role_exp[i]=0;
+        
+            i+=1;
+            role_name[i]=obj_ini.role[100][10]; //assualts
+            role_exp[i]=0;
+
+            i+=1;
+            role_name[i]=obj_ini.role[100][9]; //devs
+            role_exp[i]=0;
+
+            i+=1;
+            role_name[i]=obj_ini.role[100][4]; //terminators
+            role_exp[i]=100;
+
+            i+=1;
+            role_name[i]=obj_ini.role[100][12]; //scouts
+            role_exp[i]=0;
+
+            i+=1;
+            role_name[i]=obj_ini.role[100][3]; //veterans
             role_exp[i]=0;
         }
-        
-        i+=1;
-        role_name[i]=obj_ini.role[100][10];//assualt
-        role_exp[i]=company_promote_data[target_comp-1][2];
-        if (obj_controller.command_set[2]==1){
-            role_exp[i]=0;
-        } 
-              
-        i+=1;
-        role_name[i]=obj_ini.role[100][9];//dev
-        role_exp[i]=company_promote_data[target_comp-1][2];
-        if (obj_controller.command_set[2]==1){
-            role_exp[i]=0;
-        }   
-             
-        i+=1;
-        role_name[i]=obj_ini.role[100][4];//terminators
-        role_exp[i]=180;      
-
-        i+=1;
-        role_name[i]=obj_ini.role[100][12];//scouts
-        role_exp[i]=0; 
-
-        i+=1;
-        role_name[i]=obj_ini.role[100][3];//
-        role_exp[i]=150;            
+    
     }
     if ((target_comp==0 || target_comp>10)) and (spec==0){
         i+=1;
         role_name[i]=obj_ini.role[100][2];//honor guard
-        role_exp[i]=200;
+        role_exp[i]=140;
+        if (obj_controller.command_set[2]==0) then role_exp[i]=0;
     }     
 }
 
@@ -184,9 +230,13 @@ a_wep1="";a_wep2="";a_armour="";a_gear="";a_mobi="";
 n_good1=1;n_good2=1;n_good3=1;n_good4=1;n_good5=1;
 sel1=0;sel2=0;sel3=0;sel4=0;sel5=0;
 vehicle_equipment=0;warning="";
-var i;i=-1;
-repeat(51){
-    i+=1;item_name[i]="";
+item_name = [];
+
+move_to_next_stage = function(){
+    return (scr_hit(0,0, room_width, room_height) ||
+        press_exclusive(vk_enter) ||
+        press_exclusive(vk_space) ||
+        press_exclusive(vk_enter));
 }
 
 
@@ -225,7 +275,7 @@ calculate_equipment_needs =  function (){
             req_wep2_num=0;
             req_mobi="";
             req_mobi_num=0;
-        } else if (rall="Standard Bearer"){
+        } else if (rall=obj_ini.role[100][11]){
             req_armour="Power Armour";
             req_armour_num=units;
             req_wep2="Company Standard";
@@ -281,8 +331,9 @@ calculate_equipment_needs =  function (){
 
         // This checks to see if there is any more in the armoury
         if (req_armour=="Power Armour"){
-            for (i=0;i<array_length(global.power_armour);i++){
-                have_armour_num+=scr_item_count(global.power_armour[i]);
+            var _power_armour = ARR_power_armour;
+            for (i=0;i<array_length(_power_armour);i++){
+                have_armour_num+=scr_item_count(_power_armour[i]);
             }
         }else if (req_armour="Terminator Armour"){
             have_armour_num+=scr_item_count("Terminator Armour");
@@ -299,11 +350,13 @@ calculate_equipment_needs =  function (){
             have_wep1_num+=scr_item_count("Lascannon");
             have_wep1_num+=scr_item_count("Heavy Bolter");
             have_wep1_num+=scr_item_count("Missile Launcher");
+            have_wep1_num+=scr_item_count("Multi-Melta");
         }
         if (req_wep2="Heavy Ranged"){
             have_wep2_num+=scr_item_count("Heavy Bolter");
             have_wep2_num+=scr_item_count("Lascannon");
             have_wep2_num+=scr_item_count("Missile Launcher");
+            have_wep1_num+=scr_item_count("Multi-Melta");
         }
         if (req_gear!="") then have_gear_num+=scr_item_count(string(req_gear));
         if (req_mobi!="") then have_mobi_num+=scr_item_count(string(req_mobi));

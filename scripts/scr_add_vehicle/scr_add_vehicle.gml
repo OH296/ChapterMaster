@@ -1,85 +1,127 @@
-function scr_add_vehicle(argument0, argument1, argument2, argument3, argument4, argument5, argument6) {
+function scr_add_vehicle(vehicle_type, target_company, weapon1, weapon2, weapon3, upgrade, accessory) {
+	try {
+		// That should be sufficient to add stuff in a highly modifiable fashion
 
-	// argument0 = type
-	// argument1 = company
-	// argument2 = weapon1
-	// argument3 = weapon2
-	// argument4 = weapon3
-	// argument5 = upgrade
-	// argument6 = accessory
+		var i = 0;
+		e = 0;
+		good = 0;
+		wep1 = "";
+		wep2 = "";
+		gear = "";
+		arm = "";
+		missing = 0;
 
+		for (var i = 1; i < array_length(obj_ini.veh_role[target_company]); i++) {
+			if (good == 0) {
+				if (obj_ini.veh_role[target_company][i] == "") {
+					good = i;
+					break;
+				}
+			}
+		}
 
+		if (good != 0) {
+			obj_ini.veh_race[target_company][good] = 1;
 
-	// That should be sufficient to add stuff in a highly modifiable fashion
+			if (obj_ini.fleet_type == ePlayerBase.home_world) {
+				obj_ini.veh_loc[target_company][good] = obj_ini.home_name;
+				obj_ini.veh_wid[target_company][good] = 2;
+				obj_ini.veh_lid[target_company][good] = -1;
+			}
 
+			if (obj_ini.fleet_type != ePlayerBase.home_world) {
+				// Need a more elaborate ship_carrying += here for the different types of units
+				var first = 0, backup = 0, i = 0;
+				for (var i = 0; i < array_length(obj_ini.ship_class); i++) {
+					if ((obj_ini.ship_class[i] == "Battle Barge") && (first == 0) && (obj_ini.ship_capacity[i] > obj_ini.ship_carrying[i])) {
+						first = i;
+					}
+					if ((obj_ini.ship_class[i] == "Strike Cruiser") && (backup == 0) && (obj_ini.ship_capacity[i] > obj_ini.ship_carrying[i])) {
+						backup = i;
+					}
+				}
+				if (first != 0) {
+					obj_ini.veh_lid[target_company][good] = first;
+					obj_ini.veh_loc[target_company][good] = obj_ini.ship_location[first];
+					obj_ini.veh_wid[target_company][good] = 0;
+					obj_ini.ship_carrying[first] += 1;
+				} else if ((first == 0) && (backup != 0)) {
+					obj_ini.veh_lid[target_company][good] = backup;
+					obj_ini.veh_loc[target_company][good] = obj_ini.ship_location[backup];
+					obj_ini.veh_wid[target_company][good] = 0;
+					obj_ini.ship_carrying[backup] += 1;
+				} else if ((first == 0) && (backup == 0)) {
+					obj_ini.veh_lid[target_company][good] = -1;
+					obj_ini.veh_loc[target_company][good] = "";
+					obj_ini.veh_wid[target_company][good] = 0;
+					exit;
+				}
+			}
 
-	var i,good, wep1, wep2, gear, arm, e, missing;
-	i=0;e=0;good=0;wep1="";wep2="";gear="";arm="";missing=0;
+			obj_ini.veh_role[target_company][good] = vehicle_type;
 
-	repeat(150){i+=1;if (good=0){if (obj_ini.veh_role[argument1,i]="") then good=i;}}
+			if (weapon1 != "standard") {
+				obj_ini.veh_wep1[target_company][good] = weapon1;
+			}
+			if (weapon2 != "standard") {
+				obj_ini.veh_wep2[target_company][good] = weapon2;
+			}
+			if (weapon3 != "standard") {
+				obj_ini.veh_wep3[target_company][good] = weapon3;
+			}
+			if (upgrade != "standard") {
+				obj_ini.veh_upgrade[target_company][good] = upgrade;
+			}
+			if (accessory != "standard") {
+				obj_ini.veh_acc[target_company][good] = accessory;
+			}
 
+			if ((weapon1 == "standard") && (weapon2 == "standard") && (weapon3 == "standard")) {
+				if (vehicle_type == "Rhino") {
+					obj_ini.veh_wep1[target_company][good] = "Storm Bolter";
+				}
+				if (vehicle_type == "Whirlwind") {
+					obj_ini.veh_wep1[target_company][good] = "Whirlwind Missiles";
+				}
+				if (vehicle_type == "Predator") {
+					var randumb;
+					randumb = choose(1, 2);
+					if (randumb == 1) {
+						obj_ini.veh_wep1[target_company][good] = "Autocannon Turret";
+					}
+					if (randumb == 2) {
+						obj_ini.veh_wep1[target_company][good] = "Twin Linked Lascannon Turret";
+					}
+				}
+				if (vehicle_type == "Land Raider") {
+					var randumb = choose(1, 1, 2, 3);
+					if (randumb == 1) {
+						obj_ini.veh_wep1[target_company][good] = "Twin Linked Heavy Bolter Mount";
+						obj_ini.veh_wep2[target_company][good] = "Twin Linked Lascannon Sponsons";
+					}
+					if (randumb == 2) {
+						obj_ini.veh_wep1[target_company][good] = "Twin Linked Assault Cannon Mount";
+						obj_ini.veh_wep2[target_company][good] = "Hurricane Bolter Sponsons";
+					}
+					if (randumb == 3) {
+						obj_ini.veh_wep1[target_company][good] = "Twin Linked Assault Cannon Mount";
+						obj_ini.veh_wep2[target_company][good] = "Flamestorm Cannon Sponsons";
+					}
+				}
+				if (vehicle_type == "Land Speeder") {
+					obj_ini.veh_wep1[target_company][good] = "Heavy Bolter";
+					obj_ini.veh_wep2[target_company][good] = "";
+					obj_ini.veh_upgrade[target_company][good] = "";
+				}
+			}
 
-	if (good!=0){
-	    obj_ini.veh_race[argument1][good]=1;
+			obj_ini.veh_hp[target_company][good] = 100;
+			obj_ini.veh_chaos[target_company][good] = 0;
+			obj_ini.veh_pilots[target_company][good] = 0;
+		}
 
-	    if (obj_ini.fleet_type=1){obj_ini.veh_loc[argument1][good]=obj_ini.home_name;obj_ini.veh_wid[argument1][good]=2;obj_ini.veh_lid[argument1][good]=0;}
-
-	    if (obj_ini.fleet_type!=1){// Need a more elaborate ship_carrying += here for the different types of units
-	        var first,backup;first=0;backup=0;i=0;
-	        repeat(30){i+=1;
-	            if (obj_ini.ship_class[i]="Battle Barge") and (first=0) and (obj_ini.ship_capacity[i]>obj_ini.ship_carrying[i]) then first=i;
-	            if (obj_ini.ship_class[i]="Strike Cruiser") and (backup=0) and (obj_ini.ship_capacity[i]>obj_ini.ship_carrying[i]) then backup=i;
-	        }
-	        if (first!=0){
-	            obj_ini.veh_lid[argument1][good]=first;obj_ini.veh_loc[argument1][good]=obj_ini.ship_location[first];
-	            obj_ini.veh_wid[argument1][good]=0;obj_ini.ship_carrying[first]+=1;
-	        }
-	        if (first=0) and (backup!=0){
-	            obj_ini.veh_lid[argument1][good]=backup;obj_ini.veh_loc[argument1][good]=obj_ini.ship_location[backup];
-	            obj_ini.veh_wid[argument1][good]=0;obj_ini.ship_carrying[backup]+=1;
-	        }
-	        if (first=0) and (backup=0){
-	            obj_ini.veh_lid[argument1][good]=0;obj_ini.veh_loc[argument1][good]="";obj_ini.veh_wid[argument1][good]=0;exit;
-	        }
-
-	    }
-
-
-
-
-
-
-
-
-	    obj_ini.veh_role[argument1][good]=argument0;
-
-	    if (argument2!="standard") then obj_ini.veh_wep1[argument1][good]=argument2;
-	    if (argument3!="standard") then obj_ini.veh_wep2[argument1][good]=argument3;
-	    if (argument4!="standard") then obj_ini.veh_wep3[argument1][good]=argument4;
-	    if (argument5!="standard") then obj_ini.veh_upgrade[argument1][good]=argument5;
-	    if (argument6!="standard") then obj_ini.veh_acc[argument1][good]=argument6;
-
-	    if (argument2="standard") and (argument3="standard") and (argument4="standard"){
-	        if (argument0="Rhino"){obj_ini.veh_wep1[argument1][good]="Storm Bolter";}
-	        if (argument0="Whirlwind"){obj_ini.veh_wep1[argument1][good]="Whirlwind Missiles";}
-	        if (argument0="Predator"){
-	            var randumb;randumb=choose(1,2)
-	            if (randumb=1){obj_ini.veh_wep1[argument1][good]="Autocannon Turret";}
-	            if (randumb=2){obj_ini.veh_wep1[argument1][good]="Twin Linked Lascannon Turret";}
-	        }
-					if (argument0="Land Raider"){
-	            var randumb;randumb=choose(1,1,2,3)
-	            if (randumb=1){obj_ini.veh_wep1[argument1][good]="Twin Linked Heavy Bolter Mount";obj_ini.veh_wep2[argument1][good]="Twin Linked Lascannon Sponsons";}
-	            if (randumb=2){obj_ini.veh_wep1[argument1][good]="Twin Linked Assault Cannon Mount";obj_ini.veh_wep2[argument1][good]="Hurricane Bolter Sponsons";}
-	            if (randumb=3){obj_ini.veh_wep1[argument1][good]="Twin Linked Assault Cannon Mount";obj_ini.veh_wep2[argument1][good]="Flamestorm Cannon Sponsons";}
-	        }
-	        if (argument0="Land Speeder"){obj_ini.veh_wep1[argument1][good]="Heavy Bolter";obj_ini.veh_wep2[argument1][good]="";obj_ini.veh_upgrade[argument1][good]="";}
-	    }
-
-	    obj_ini.veh_hp[argument1][good]=100;
-	    obj_ini.veh_chaos[argument1][good]=0;
-	    obj_ini.veh_pilots[argument1][good]=0;
+		return [target_company, good];
+	} catch (_exception) {
+		handle_exception(_exception);
 	}
-
-
 }

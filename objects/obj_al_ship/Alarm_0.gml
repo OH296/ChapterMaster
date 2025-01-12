@@ -1,5 +1,5 @@
 // Sets up the ships for each race
-for(var i=1; i<=array_length(cooldown); i++){
+for(var i=1; i<array_length(cooldown); i++){
     cooldown[i]=0;
 }
 
@@ -42,7 +42,7 @@ if (class=="Apocalypse Class Battleship"){
     weapon_dam[4]=14;
     weapon_range[4]=600;
     weapon_cooldown[4]=20;
-}
+}else 
 if (class=="Nemesis Class Fleet Carrier"){
     sprite_index=spr_ship_nem;
     ship_size=3;
@@ -75,7 +75,7 @@ if (class=="Nemesis Class Fleet Carrier"){
     weapon_dam[3]=14;
     weapon_range[3]=300;
     weapon_cooldown[3]=30;
-}
+}else 
 if (class=="Avenger Class Grand Cruiser"){
     sprite_index=spr_ship_aven;
     ship_size=2;
@@ -97,7 +97,7 @@ if (class=="Avenger Class Grand Cruiser"){
     weapon_dam[1]=14;
     weapon_range[1]=300;
     weapon_cooldown[1]=25;
-}
+}else 
 if (class=="Sword Class Frigate"){
     sprite_index=spr_ship_sword;
     ship_size=1;
@@ -153,7 +153,7 @@ if (class=="Void Stalker"){
     weapon_dam[3]=10;
     weapon_range[3]=600;
     weapon_cooldown[3]=10;
-}
+}else 
 if (class=="Shadow Class"){
     sprite_index=spr_ship_shadow;
     ship_size=3;
@@ -180,7 +180,7 @@ if (class=="Shadow Class"){
     weapon_dam[2]=10;
     weapon_range[2]=450;
     weapon_cooldown[2]=30;
-}
+}else 
 if (class=="Hellebore"){
     sprite_index=spr_ship_hellebore;
     ship_size=1;
@@ -213,7 +213,7 @@ if (class=="Hellebore"){
     weapon_range[3]=9999;
     weapon_cooldown[3]=90;
     weapon_ammo[1]=1;
-}
+}else 
 if (class=="Aconite"){
     sprite_index=spr_ship_aconite;
     ship_size=1;
@@ -278,7 +278,7 @@ if (class=="Dethdeala"){
     weapon_dam[5]=0;
     weapon_range[5]=9999;
     weapon_cooldown[5]=90;    
-}
+}else 
 if (class=="Gorbag's Revenge"){
     sprite_index=spr_ship_gorbag;
     ship_size=3;
@@ -323,7 +323,7 @@ if (class=="Gorbag's Revenge"){
     weapon_range[5]=9999;
     weapon_cooldown[5]=90;
     cooldown[5]=30;
-}
+}else 
 if (class=="Kroolboy") or (class=="Slamblasta"){
     ship_size=3;
     sprite_index=spr_ship_krool;
@@ -358,7 +358,7 @@ if (class=="Kroolboy") or (class=="Slamblasta"){
     weapon_dam[3]=12;
     weapon_range[3]=200;
     weapon_cooldown[3]=40;
-}
+}else 
 if (class=="Battlekroozer"){
     sprite_index=spr_ship_kroozer;
     ship_size=3;
@@ -403,7 +403,7 @@ if (class=="Battlekroozer"){
     weapon_range[5]=9999;
     weapon_cooldown[5]=90;
     cooldown[5]=30;
-}
+}else 
 if (class=="Ravager"){
     sprite_index=spr_ship_ravager;
     ship_size=1;
@@ -470,7 +470,7 @@ if (class=="Custodian"){
     weapon_range[4]=9999;
     weapon_cooldown[4]=90;
     weapon_ammo[4]=4;
-}
+}else 
 if (class=="Protector"){
     sprite_index=spr_ship_protector;
     ship_size=2;
@@ -508,7 +508,7 @@ if (class=="Protector"){
     weapon_dam[4]=0;weapon_range[4]=9999;
     weapon_cooldown[4]=90;
     weapon_ammo[4]=2;
-}
+}else 
 if (class=="Emissary"){
     sprite_index=spr_ship_emissary;
     ship_size=2;
@@ -547,7 +547,7 @@ if (class=="Emissary"){
     weapon_range[4]=9999;
     weapon_cooldown[4]=90;
     weapon_ammo[4]=1;
-}
+}else 
 if (class=="Warden"){
     sprite_index=spr_ship_warden;
     ship_size=1;
@@ -573,7 +573,7 @@ if (class=="Warden"){
     weapon_dam[2]=10;
     weapon_range[2]=300;
     weapon_cooldown[2]=60;
-}
+}else 
 if (class=="Castellan"){
     sprite_index=spr_ship_castellan;
     ship_size=1;
@@ -644,7 +644,7 @@ if (class=="Desecrator"){
     weapon_dam[5]=0;
     weapon_range[5]=9999;
     weapon_cooldown[5]=90;    
-}
+}else 
 if (class=="Avenger"){
     sprite_index=spr_ship_veng;
     ship_size=2;
@@ -671,7 +671,7 @@ if (class=="Avenger"){
     weapon_dam[2]=12;
     weapon_range[2]=300;
     weapon_cooldown[2]=30;
-}
+}else 
 if (class=="Carnage") or (class="Daemon"){
     sprite_index=spr_ship_carnage;
     ship_size=2;
@@ -707,7 +707,7 @@ if (class=="Carnage") or (class="Daemon"){
         sprite_index=spr_ship_daemon;
         image_alpha=0.5;
     }
-}
+}else 
 if (class=="Iconoclast"){
     sprite_index=spr_ship_icono;
     ship_size=1;
@@ -767,7 +767,7 @@ if (class=="Leviathan"){
     weapon_range[4]=9999;
     weapon_ammo[4]=6;
     weapon_cooldown[4]=120;
-}
+}else 
 if (class=="Razorfiend"){
     sprite_index=spr_ship_razorfiend;
     ship_size=2;
@@ -799,7 +799,7 @@ if (class=="Razorfiend"){
     weapon_dam[3]=20;
     weapon_range[3]=64;
     weapon_cooldown[3]=60;
-}
+}else 
 if (class=="Stalker"){
     sprite_index=spr_ship_stalker;
     ship_size=1;
@@ -831,7 +831,7 @@ if (class=="Stalker"){
     weapon_dam[3]=6;
     weapon_range[3]=200;
     weapon_cooldown[3]=60;
-}
+}else 
 if (class=="Prowler"){
     sprite_index=spr_ship_prowler;
     ship_size=1;
@@ -875,7 +875,7 @@ if (owner == eFACTION.Tyranids){
 }
 
 if (owner != eFACTION.Eldar){
-    hp=hp/2;
+    hp/=2;
     maxhp=hp;
     shields=shields/2;
     maxshields=shields;

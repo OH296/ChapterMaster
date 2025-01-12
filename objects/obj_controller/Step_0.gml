@@ -1,5 +1,8 @@
 // Handles most logic for main menus, audio and checks if cheats are enabled
 // TODO refactor will wait untill squads PR (#76) is merged
+if (menu == 0 && zoomed == 0 && !instance_exists(obj_ingame_menu)){
+    scr_zoom_keys();
+}
 if (double_click>=0) then double_click-=1;
 if (text_bar>0){
     text_bar+=1;
@@ -29,6 +32,7 @@ if (fest_scheduled==0) and (fest_sid+fest_wid>0) and (menu!=12.1){
     fest_honor_id=0;
     fest_attend="";
 }
+
 if (menu!=24) and (formating>0) then formating=0;
 
 if (instance_exists(obj_formation_bar)) and ((menu!=24) or (formating<=0)){
@@ -158,22 +162,9 @@ if (text_bar>60) then text_bar=1;
 
 if (obj_controller.disposition[4]<=20) or (obj_controller.loyalty<=33) and (demanding==0) then demanding=1;
 if (obj_controller.disposition[4]>20) and (obj_controller.loyalty>33) and (demanding==1) then demanding=0;
-// Main menu movement
-if ((menu==0) and (formating==0)) or (instance_exists(obj_fleet)){
-    var spd=12,keyb=""; // player move speed on campaign map
-    if ((!instance_exists(obj_ingame_menu)) and (!instance_exists(obj_ncombat))) or (instance_exists(obj_fleet)){
-        if keyboard_check(vk_shift){spd*=3;} // shift down, increase speed
-        if ((keyboard_check(vk_left)) or (mouse_x<=__view_get( e__VW.XView, 0 )+2) or (keyboard_check(ord("A")))) and (x>800) then x-=spd;
-        if ((keyboard_check(vk_right)) or (mouse_x>=__view_get( e__VW.XView, 0 )+1598) or (keyboard_check(ord("D")))) and (x<(room_width-800)) then x+=spd;
-        if ((keyboard_check(vk_up)) or (mouse_y<=__view_get( e__VW.YView, 0 )+2) or (keyboard_check(ord("W")))) and (y>450) then y-=spd;
-        if ((keyboard_check(vk_down)) or (mouse_y>=__view_get( e__VW.YView, 0 )+898) or (keyboard_check(ord("S")))) and (y<(room_height-450)) then y+=spd;
-    }
-}
 
-if (x<800) then x=800;
-if (y<450) then y=450;
-if (x>(room_width-800)) then x=room_width-800;
-if (y>(room_height-450)) then y=room_height-450;
+main_map_move_keys();
+
 // For testing purposes
 if (is_test_map=true) then with(obj_en_fleet){
     if (owner = eFACTION.Imperium){
@@ -253,252 +244,7 @@ if (y_slide>0) then new_button_highlight="";
 // Checks which menu was clicked
 var high="";
 var stop = 0;
-if (new_buttons_hide==0) and (y_slide<=0) and (!instance_exists(obj_ingame_menu)){
-    var but=4,bx=1374,by=8,button_width=108,hei=42;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+hei-dif2) then stop=1;
-            }
-            if (stop==0) then high="options";
-        }
-    }
-    but=4;
-    bx=1484;
-    by=8;
-    button_width=108;
-    hei=42;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+hei-dif2) then stop=1;
-            }
-            if (stop==0) then high="menu";
-        }
-    }
-    but=1;
-    bx=34;
-    by=838;
-    button_width=142;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+134){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+134);
-                dif2=dif1*1.25;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="manage";
-        }
-    }
-    but=1;
-    bx=179;
-    by=838;
-    button_width=142;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+134){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+134);
-                dif2=dif1*1.25;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="settings";
-        }
-    }
-    but=1;
-    bx=1130;
-    by=838;
-    button_width=142;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+134){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+134);
-                dif2=dif1*1.25;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="diplomacy";
-        }
-    }
-    but=1;
-    bx=1275;
-    by=838;
-    button_width=142;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+134){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+134);
-                dif2=dif1*1.25;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="log";
-        }
-    }
-    but=2;
-    bx=1420;
-    by=838;
-    button_width=142;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+134){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+134);
-                dif2=dif1*1.25;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="turn";
-        }
-    }
-    but=3;
-    bx=357;
-    by=838;
-    button_width=115;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="apoth";
-        }
-    }
-    but=3;
-    bx=473;
-    by=838;
-    button_width=115;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="reclusium";
-        }
-    }
-    but=3;
-    bx=590;
-    by=838;
-    button_width=115;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="librarium";
-        }
-    }
-    but=3;
-    bx=706;
-    by=838;
-    button_width=115;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="armoury";
-        }
-    }
-    but=3;
-    bx=822;
-    by=838;
-    button_width=115;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="recruitment";
-        }
-    }
-    but=3;
-    bx=938;
-    by=838;
-    button_width=115;
-    hei=43;
-    if (mouse_y>=__view_get( e__VW.YView, 0 )+by) and (mouse_y<=__view_get( e__VW.YView, 0 )+by+hei){
-        if (mouse_x>=__view_get( e__VW.XView, 0 )+bx) and (mouse_x<=__view_get( e__VW.XView, 0 )+bx+button_width){
-            if (mouse_x>=__view_get( e__VW.XView, 0 )+bx+108){
-                var dif1,dif2;
-                dif1=mouse_x-(__view_get( e__VW.XView, 0 )+bx+108);
-                dif2=dif1*2;
-                if (mouse_y<__view_get( e__VW.YView, 0 )+by+dif2) then stop=1;
-            }
-            if (stop==0) then high="fleet";
-        }
-    }    
-    new_button_highlight=high;
-}
 // Which menu is highlighted
-if (high=="options") and (h_options<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_options+=0.02;
-if ((high!="options") or (new_buttons_hide==1)) and (h_options>0) then h_options-=0.04;
-
-if (high=="menu") and (h_menu<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_menu+=0.02;
-if ((high!="menu") or (new_buttons_hide==1)) and (h_menu>0) then h_menu-=0.04;
-
-if (high=="manage") and (h_manage<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_manage+=0.02;
-if ((high!="manage") or (new_buttons_hide==1)) and (h_manage>0) then h_manage-=0.04;
-
-if (high=="settings") and (h_settings<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_settings+=0.02;
-if ((high!="settings") or (new_buttons_hide==1)) and (h_settings>0) then h_settings-=0.04;
-
-if (high=="diplomacy") and (h_diplomacy<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_diplomacy+=0.02;
-if ((high!="diplomacy") or (new_buttons_hide==1)) and (h_diplomacy>0) then h_diplomacy-=0.04;
-
-if (high=="log") and (h_log<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_log+=0.02;
-if ((high!="log") or (new_buttons_hide==1)) and (h_log>0) then h_log-=0.04;
-
-if (high=="turn") and (h_turn<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_turn+=0.02;
-if ((high!="turn") or (new_buttons_hide==1)) and (h_turn>0) then h_turn-=0.04;
-
-if (high=="apoth") and (h_apothecarium<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_apothecarium+=0.02;
-if ((high!="apoth") or (new_buttons_hide==1)) and (h_apothecarium>0) then h_apothecarium-=0.04;
-
-if (high=="reclusium") and (h_reclusium<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_reclusium+=0.02;
-if ((high!="reclusium") or (new_buttons_hide==1)) and (h_reclusium>0) then h_reclusium-=0.04;
-
-if (high=="librarium") and (h_librarium<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_librarium+=0.02;
-if ((high!="librarium") or (new_buttons_hide==1)) and (h_librarium>0) then h_librarium-=0.04;
-
-if (high=="armoury") and (h_armoury<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_armoury+=0.02;
-if ((high!="armoury") or (new_buttons_hide==1)) and (h_armoury>0) then h_armoury-=0.04;
-
-if (high=="recruitment") and (h_recruitment<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_recruitment+=0.02;
-if ((high!="recruitment") or (new_buttons_hide==1)) and (h_recruitment>0) then h_recruitment-=0.04;
-
-if (high=="fleet") and (h_fleet<0.5) and (new_buttons_hide==0) and (y_slide<=0) then h_fleet+=0.02;
-if ((high!="fleet") or (new_buttons_hide==1)) and (h_fleet>0) then h_fleet-=0.04;
 
 if (menu=14) and (!instance_exists(obj_shop)) then instance_create(0,0,obj_shop);
 if (menu!=14) and (instance_exists(obj_shop)) then with(obj_shop){instance_destroy();}
@@ -528,7 +274,7 @@ if (menu==1 && (managing>0 || managing<0)){
         if (!is_array(last_unit)){
             last_unit=[0,0];
         }
-        if (unit.base_group != "none") && (last_unit[1]!=unit.marine_number){
+        if (unit.base_group != "none") && (last_unit[1]!=unit.marine_number || last_unit[0]!=unit.company){
             last_unit=[unit.company,unit.marine_number]
             marine_armour[0]=unit.armour();
             fix_right=0;
@@ -570,7 +316,7 @@ if (menu==1 && (managing>0 || managing<0)){
             }                                      
             //if (string_count("&",temp[106])>0) then temp[106]=clean_tags(temp[106]);
             // Experience
-            temp[113]=string(floor(unit.experience()));
+            temp[113]=string(floor(unit.experience));
             // Bonuses
             temp[119]="";
             if (string_length(unit.specials())>0){
@@ -593,7 +339,13 @@ if (menu==1 && (managing>0 || managing<0)){
             // Ranged Attack
             temp[117]=unit.ranged_attack();
             // Damage Resistance
-            temp[118]=string(damage_res)+"%";
+            temp[118] = string(damage_res)+"%";
+            if (is_struct(temp[121])){
+                try{
+                    temp[121].destroy_image();
+                }
+            }
+            temp[121] = unit.draw_unit_image();
         /*if (man[sel]="vehicle"){
             // TODO
         }*/
@@ -659,8 +411,10 @@ if (menu==0) and (repair_ships>0) and (instance_number(obj_turn_end)==0) and (in
         if (frigate_health<100) and (frigate_number>0) then acted=2;
         if (escort_health<100) and (escort_number>0) then acted=2;
     }
-    for(var i=1; i<=30; i++){
-        if (obj_ini.ship_location[i]!="Warp") and (obj_ini.ship_location[i]!="Lost"){obj_ini.ship_hp[i]=obj_ini.ship_maxhp[i];}
+    for(var i=1; i<array_length(obj_ini.ship); i++){
+        if (obj_ini.ship_location[i]!="Warp") and (obj_ini.ship_location[i]!="Lost"){
+            obj_ini.ship_hp[i]=obj_ini.ship_maxhp[i];
+        }
     }
     // TODO need something here to veryify that the ships are within a friendly star system
 }
@@ -671,33 +425,33 @@ if (unload>0){
     
     var unit,company, unit_id;
     for(var q=0; q<array_length(display_unit); q++){
-        if (man[q]=="man") and (ma_loc[q]==selecting_location) and (ma_wid[q]<1)and (man_sel[q]!=0){
-            if (b==0) then b=ma_lid[q];
+        if (man[q]=="man") and (ma_loc[q]==selecting_location) and (ma_wid[q]<1) and (man_sel[q]!=0){
+            if (b==-1) then b=ma_lid[q];
             unit=display_unit[q];
             if (!is_struct(unit)) then continue;
             if (unit.name()=="") then continue;
             unit_id = unit.marine_number;
             company = unit.company;
             obj_ini.loc[company][unit_id]=obj_ini.ship_location[b];
-            unit.ship_location=0;
+            unit.ship_location=-1;
             unit.planet_location=unload;
             obj_ini.uid[company][unit_id]=0;
             
             ma_loc[q]=obj_ini.ship_location[b];
-            ma_lid[q]=0;
+            ma_lid[q]=-1;
             ma_wid[q]=unload;
         }
         else if (man[q]=="vehicle") and (ma_loc[q]==selecting_location)  and (ma_wid[q]<1) and(man_sel[q]!=0){
-            if (b==0) then b=ma_lid[q];
+            if (b==-1) then b=ma_lid[q];
             var unit_id = display_unit[q][1];
             var company = display_unit[q][0]
             obj_ini.veh_loc[company][unit_id]=obj_ini.ship_location[b];
-            obj_ini.veh_lid[company][unit_id]=0;
+            obj_ini.veh_lid[company][unit_id]=-1;
             obj_ini.veh_wid[company][unit_id]=unload;
             obj_ini.veh_uid[company][unit_id]=0;
             
             ma_loc[q]=obj_ini.ship_location[b];
-            ma_lid[q]=0;
+            ma_lid[q]=-1;
             ma_wid[q]=unload;
         }
     }
@@ -706,19 +460,20 @@ if (unload>0){
         man_sel[i]=0;
     }
     obj_ini.ship_carrying[b]-=man_size;
-    sh_cargo[b]-=man_size;
+    reset_ship_manage_arrays();
     cooldown=10;
-    sel_loading=0;
+    sel_loading=-1;
     man_size=0;
     unload=0;
     with(obj_star_select){instance_destroy();}
 }
 // Resets selections
-if (managing>0) and (man_size==0) and ((selecting_location!="") or (selecting_types!="") or (selecting_planet!=0) or (selecting_ship!=0)){
+if (managing>0) and (man_size==0) and ((selecting_location!="") or (selecting_types!="") or (selecting_planet!=0) or (selecting_ship!=-1)){
     selecting_location="";
     selecting_types="";
     selecting_planet=0;
-    selecting_ship=0;
+    selecting_ship=-1;
 }
 
 if (marines<=0) and (alarm[7]=-1) and (!instance_exists(obj_fleet_controller)) and (!instance_exists(obj_ncombat)) then alarm[7]=15;
+

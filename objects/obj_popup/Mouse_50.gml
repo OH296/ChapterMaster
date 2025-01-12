@@ -10,8 +10,6 @@ if (instance_exists(obj_fleet)) then exit;
 if (obj_controller.scrollbar_engaged!=0) then exit;
 if (cooldown>0) then exit;
 
-if (woopwoopwoop=1){woopwoopwoop=2;exit;}
-
 if (battle_special>0){
     alarm[0]=1;
     cooldown=10;exit;
@@ -107,7 +105,8 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1576) and (mouse_y<y
         company=manag
     }
     if (type=5.1) and (cooldown<=0) and (company!=target_comp) and (target_comp!=-1){
-        cooldown=999;obj_controller.cooldown=8000;
+        cooldown=999;
+        obj_controller.cooldown=8000;
 
         var mahreens=0,w=0,god=0,vehi=0,god2=0;
 
@@ -184,19 +183,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1576) and (mouse_y<y
                         obj_ini.veh_lid[target_comp][vehi]=obj_ini.veh_lid[veh_data[0]][veh_data[1]];
                         obj_ini.veh_wid[target_comp][vehi]=obj_ini.veh_wid[veh_data[0]][veh_data[1]];
 
-                        obj_ini.veh_race[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_loc[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_role[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_wep1[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_wep2[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_wep3[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_upgrade[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_acc[veh_data[0]][veh_data[1]]="";
-                        obj_ini.veh_hp[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_chaos[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_pilots[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_lid[veh_data[0]][veh_data[1]]=0;
-                        obj_ini.veh_wid[veh_data[0]][veh_data[1]]=0;
+                        destroy_vehicle(veh_data[0],veh_data[1]);
 
                         vehi++;
                     }
@@ -222,20 +209,14 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1576) and (mouse_y<y
 
         with(obj_controller){
             // man_current=0;
-            var i=-1;man_size=0;selecting_location="";selecting_types="";selecting_ship=0;
+            var i=-1;
+            man_size=0;
+            selecting_location="";
+            selecting_types="";
+            selecting_ship=-1;
             
             if (obj_controller.managing>0){
                 reset_manage_arrays();
-                repeat(501){w+=1;
-                    
-                    sh_ide[w]=0;
-                    sh_name[w]="";
-                    sh_class[w]="";
-                    sh_loc[w]="";
-                    sh_hp[w]="";
-                    sh_cargo[w]=0;
-                    sh_cargo_max[w]="";
-                }
                 alll=0;
                 update_general_manage_view();
             }
@@ -266,21 +247,20 @@ if (type=6) and (cooldown<=0){// Actually changing equipment right here
         }
         if (mouse_y>=yy+318) and (mouse_y<yy+330) and (mouse_x>=xx+1263) and (mouse_x<xx+1289) and (tab!=2){change_tab=1;tab=2;obj_controller.last_weapons_tab=2;cooldown=8000;}
         if (mouse_y>=yy+318) and (mouse_y<yy+330) and (mouse_x>=xx+1409) and (mouse_x<xx+1435) and (target_comp<3){
-            var onceh=0;cooldown=8000;
-             if (onceh=0){
-                 if (master_crafted=0){
-                    master_crafted=1;
-                    obj_controller.popup_master_crafted=1;
-                    onceh=1;
-                    scr_weapons_equip();
-                }
-                else if (master_crafted=1){
-                    master_crafted=0;
-                    obj_controller.popup_master_crafted=0;
-                    onceh=1;
-                    scr_weapons_equip();
-                }
-             }
+            cooldown=8000;
+
+            master_crafted = !bool(master_crafted);
+            obj_controller.popup_master_crafted = master_crafted;
+            item_name = [];
+            scr_get_item_names(
+                item_name,
+                vehicle_equipment, // eROLE
+                target_comp, // slot
+                tab == 1 ? eENGAGEMENT.Ranged : eENGAGEMENT.Melee,
+                false, // include company standard
+                true, // limit to available equipment
+                master_crafted
+            );
         }
     }
 
@@ -289,24 +269,26 @@ if (type=6) and (cooldown<=0){// Actually changing equipment right here
         var befi;befi=target_comp;
 
         if (change_tab=0){
-            if (mouse_y>=yy+220) and (mouse_y<yy+240){target_comp=1;cooldown=8000;tab=obj_controller.last_weapons_tab;}
-            if (mouse_y>=yy+240) and (mouse_y<yy+260){target_comp=2;cooldown=8000;tab=obj_controller.last_weapons_tab;}
-            if (mouse_y>=yy+260) and (mouse_y<yy+280){target_comp=3;cooldown=8000;}
-            if (mouse_y>=yy+280) and (mouse_y<yy+300){target_comp=4;cooldown=8000;}
-            if (mouse_y>=yy+300) and (mouse_y<yy+320){target_comp=5;cooldown=8000;}
+            if (mouse_y>=yy+215) and (mouse_y<yy+235){target_comp=1;cooldown=8000;tab=obj_controller.last_weapons_tab;}
+            if (mouse_y>=yy+235) and (mouse_y<yy+255){target_comp=2;cooldown=8000;tab=obj_controller.last_weapons_tab;}
+            if (mouse_y>=yy+255) and (mouse_y<yy+275){target_comp=3;cooldown=8000;}
+            if (mouse_y>=yy+275) and (mouse_y<yy+295){target_comp=4;cooldown=8000;}
+            if (mouse_y>=yy+295) and (mouse_y<yy+315){target_comp=5;cooldown=8000;}
         }
 
-        if ((befi!=target_comp) and (vehicle_equipment!=-1)) or (change_tab=1){
-            var i;i=-1;repeat(40){i+=1;item_name[i]="";}
-
-            scr_weapons_equip();
-
+        if ((befi != target_comp && vehicle_equipment != -1) || change_tab == 1) {
+            item_name = [];
+            scr_get_item_names(
+                item_name,
+                vehicle_equipment, // eROLE
+                target_comp, // slot
+                tab == 1 ? eENGAGEMENT.Ranged : eENGAGEMENT.Melee,
+                false, // include company standard
+                true, // limit to available equipment
+                master_crafted
+            );
         }
-
-
-
     }
-
 }
 
 
@@ -342,14 +324,19 @@ if (point_in_rectangle(mouse_x, mouse_y, xx+1465, yy+499,xx+1576,yy+518)){// Pro
         variable_struct_set(role_squad_equivilances,obj_ini.role[100][3],"sternguard_veteran_squad");
         variable_struct_set(role_squad_equivilances,obj_ini.role[100][4],"terminator_squad");
 
-        for(i=0;i<array_length(obj_controller.display_unit);i++){
+        for(i=0;i<array_length(obj_controller.display_unit) && mahreens<500;i++){
             if (obj_controller.man[i]=="man") and (obj_controller.man_sel[i]==1) and (obj_controller.ma_exp[i]>=min_exp){
                 moveable=true;
                 unit = obj_controller.display_unit[i];
                 if (unit.squad != "none"){   // this evaluates if you are trying promote a whole squad
                     move_squad = unit.squad;
                     squad = obj_ini.squads[move_squad];
+                    squad.update_fulfilment();
                     move_members = squad.members;
+                    if (array_length(move_members)==1){
+                        unit.squad = "none";
+                        moveable = false;
+                    }                  
                     for (var mem = 0;mem<array_length(move_members);mem++){//check all members have been selected and are in the same company
                         if (i+mem<array_length(obj_controller.display_unit)){
                             if (!is_struct(obj_controller.display_unit[i+mem])) then continue;
@@ -366,7 +353,7 @@ if (point_in_rectangle(mouse_x, mouse_y, xx+1465, yy+499,xx+1576,yy+518)){// Pro
                     if (moveable){
                         var mem_unit;
                         for (var mem = 0;mem<array_length(move_members);mem++){
-                            var mem_unit = fetch_unit(move_members[mem])
+                            var mem_unit = fetch_unit(move_members[mem]);
                             if (mem_unit.company!=target_comp){
                                 scr_move_unit_info(mem_unit.company,target_comp,mem_unit.marine_number,mahreens, false);
                                 squad.members[mem][0] = target_comp;
@@ -428,7 +415,7 @@ if (point_in_rectangle(mouse_x, mouse_y, xx+1465, yy+499,xx+1576,yy+518)){// Pro
             // man_current=0;
             var man_size=0;selecting_location="";
             selecting_types="";
-            selecting_ship=0;
+            selecting_ship=-1;
             reset_manage_arrays();
             alll=0;
             update_general_manage_view();
@@ -451,11 +438,11 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
         cooldown=999;
         obj_controller.cooldown=8;
 
-        if (n_wep1="(None)") then n_wep1="";
-        if (n_wep2="(None)") then n_wep2="";
-        if (n_armour="(None)") then n_armour="";
-        if (n_gear="(None)") then n_gear="";
-        if (n_mobi="(None)") then n_mobi="";
+        if (n_wep1=ITEM_NAME_NONE) then n_wep1="";
+        if (n_wep2=ITEM_NAME_NONE) then n_wep2="";
+        if (n_armour=ITEM_NAME_NONE) then n_armour="";
+        if (n_gear=ITEM_NAME_NONE) then n_gear="";
+        if (n_mobi=ITEM_NAME_NONE) then n_mobi="";
 
 
         for (var i=0;i<array_length(obj_controller.display_unit);i++){
@@ -483,7 +470,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
                             obj_controller.ma_armour[i]="";
                             obj_ini.veh_wep3[unit[0],unit[1]]="";
 
-                            if (n_armour!="(None") and (n_armour!=""){
+                            if (n_armour!=ITEM_NAME_NONE) and (n_armour!=""){
                                 obj_controller.ma_armour[i]=n_armour;
                                 obj_ini.veh_wep3[unit[0],unit[1]]=n_armour;
                                 if (n_armour!="") then scr_add_item(n_armour,-1);
@@ -532,7 +519,7 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
                             if (obj_controller.ma_gear[i]!="") then scr_add_item(obj_controller.ma_gear[i],1);
                             obj_controller.ma_gear[i]="";
                             obj_ini.veh_upgrade[unit[0],unit[1]]="";
-                            if (n_gear!="(None)") and (n_gear!=""){
+                            if (n_gear!=ITEM_NAME_NONE) and (n_gear!=""){
                                 obj_controller.ma_gear[i]=n_gear;
                                 obj_ini.veh_upgrade[unit[0],unit[1]]=n_gear;
                             }
@@ -566,41 +553,15 @@ if (mouse_x>=xx+1465) and (mouse_y>=yy+499) and (mouse_x<xx+1577) and (mouse_y<y
 
 
 // if ((mouse_x>=xx+240) and (mouse_x<=xx+387) and (type!=88)) or (((type=9) or (type=9.1)) and (mouse_x>=xx+240+420) and (mouse_x<xx+387+420)){
-if ((type=9) or (type=9.1)) and (mouse_x>=xx+240+420) and (mouse_x<xx+387+420){
-    if ((type=9) or (type=9.1)) and (cooldown<=0){
-        giveto=0;
+if (type=9.1) and (mouse_x>=xx+240+420) and (mouse_x<xx+387+420) and (cooldown<=0){
 
-        if (mouse_y>=yy+325) and (mouse_y<yy+342){
-            obj_controller.cooldown=8000;
-            instance_destroy();
-            exit;
-        }
+    if (mouse_y>=yy+325) and (mouse_y<yy+342){
+        obj_controller.cooldown=8000;
+        instance_destroy();
+        exit;
+    }
 
-        inq_hide=0;
-        if (type=9){
-            if (array_contains(obj_ini.artifact_tags[obj_controller.fest_display], "inq")){
-                var i=-1;
-                repeat(10){
-                    i+=1;
-                    if (obj_controller.quest[i]="artifact_loan") then inq_hide=1;
-                    if (obj_controller.quest[i]="artifact_return") then inq_hide=2;
-                }
-            }
-        }
-
-
-        if (mouse_y>=yy+121) and (mouse_y<=yy+149) and (obj_controller.known[eFACTION.Imperium]>1) then giveto=2;
-        if (mouse_y>=yy+151) and (mouse_y<=yy+179) and (obj_controller.known[eFACTION.Mechanicus]>1) then giveto=3;
-        if (mouse_y>=yy+181) and (mouse_y<=yy+209) and ((obj_controller.known[eFACTION.Inquisition]>1) or (inq_hide=2)) and (inq_hide!=1) then giveto=4;
-        if (mouse_y>=yy+211) and (mouse_y<=yy+239) and (obj_controller.known[eFACTION.Ecclesiarchy]>1) then giveto=5;
-        if (mouse_y>=yy+241) and (mouse_y<=yy+269) and (obj_controller.known[eFACTION.Eldar]>1) then giveto=6;
-        if (mouse_y>=yy+271) and (mouse_y<=yy+299) and (obj_controller.known[eFACTION.Tau]>1) then giveto=8;
-
-
-
-
-
-        if (giveto>0) and (type=9.1){
+    if (giveto>0) {
             var r1,r2,cn;r2=0;cn=obj_controller;
             r1=floor(random(cn.stc_wargear_un+cn.stc_vehicles_un+cn.stc_ships_un))+1;
 
@@ -618,23 +579,20 @@ if ((type=9) or (type=9.1)) and (mouse_x>=xx+240+420) and (mouse_x<xx+387+420){
             if (r2=3) then cn.stc_ships_un-=1;
 
             // Modify disposition here
-            if (giveto = eFACTION.Imperium)
-				obj_controller.disposition[giveto]+=3;
-            else if (giveto = eFACTION.Mechanicus)
-				obj_controller.disposition[giveto]+=choose(5,6,7,8);
-            else if (giveto = eFACTION.Inquisition)
-				obj_controller.disposition[giveto]+=3;
+            if (giveto = eFACTION.Imperium){
+                obj_controller.disposition[giveto]+=3;
+            }
+            else if (giveto = eFACTION.Mechanicus){
+                obj_controller.disposition[giveto]+=choose(5,6,7,8);
+            }
+            else if (giveto = eFACTION.Inquisition){
+                obj_controller.disposition[giveto]+=3;
+            }
             else if (giveto = eFACTION.Ecclesiarchy) {
                 obj_controller.disposition[giveto]+=3;
-                var o;
-				o=0;
-				repeat(4) {
-					o+=1;
-					if (obj_ini.adv[o]="Reverent Guardians") {
-						obj_controller.disposition[giveto]+=2;
-						break;
-					}
-				}
+                if (scr_has_adv("Reverent Guardians")){
+                    obj_controller.disposition[giveto]+=2;
+                }
             }
 			
             if (giveto=eFACTION.Eldar)
@@ -658,107 +616,6 @@ if ((type=9) or (type=9.1)) and (mouse_x>=xx+240+420) and (mouse_x<xx+387+420){
 			}
             instance_destroy();
 			exit;
-        }
-
-        if (giveto>0) and (type=9){
-            var arti_index = obj_controller.menu_artifact;
-
-            var e=0;
-            repeat(50){e+=1;
-                if (obj_controller.fest_display=arti_index) then obj_controller.fest_display=0;
-
-                /*if (obj_ini.artifact_tags[obj_controller.menu_artifact]=obj_controller.recent_keyword[e]){
-                    obj_controller.recent_keyword[e]="";obj_controller.recent_type[e]="";
-                    obj_controller.recent_turn[e]=0;obj_controller.recent_number[e]=0;
-                    scr_recent("artifact_gifted",obj_controller.recent_keyword,giveto);
-                    scr_recent("","",0);
-                }*/
-            }
-
-
-
-
-            old_tags=obj_ini.artifact_tags[arti_index];
-            obj_ini.artifact[arti_index]="";
-            obj_ini.artifact_tags[arti_index]="";
-            obj_ini.artifact_identified[arti_index]=0;
-            obj_ini.artifact_condition[arti_index]=100;
-            obj_ini.artifact_loc[arti_index]="";
-            obj_ini.artifact_sid[arti_index]=0;
-            var arti = obj_ini.artifact_struct[arti_index];
-            arti.unequip_from_unit();
-            obj_ini.artifact_struct[arti_index] = new arti_struct(arti_index);
-            obj_ini.artifact_equipped[arti_index] = false;
-
-            obj_controller.artifacts-=1;
-            cooldown=7000;
-
-            obj_controller.cooldown=10;
-            if (obj_controller.menu_artifact>obj_controller.artifacts) then obj_controller.menu_artifact=obj_controller.artifacts;
-
-            obj_controller.menu=20;
-            obj_controller.diplomacy=giveto;
-            obj_controller.force_goodbye=-1;
-            var the="";
-            if (giveto!=7) and (giveto!=10) then the="the ";
-            scr_event_log("","Artifact gifted to "+string(the)+string(obj_controller.faction[giveto])+".");
-            var is_daemon = array_contains(old_tags,"Daemon");
-            var is_chaos = array_contains(old_tags,"Chaos");
-            if (inq_hide!=2) then with(obj_controller){
-                if (!is_daemon) or ((diplomacy!=4) and (diplomacy!=5) and (diplomacy!=2)) then scr_dialogue("artifact_thanks");
-                if (is_daemon) and ((diplomacy=4) or (diplomacy=5) or (diplomacy=2)) then scr_dialogue("artifact_daemon");
-            }
-            if (inq_hide=2) and (obj_controller.diplomacy=4) then with(obj_controller){scr_dialogue("artifact_returned");}
-
-            if (string_count("mnr",old_tags)=0){
-                if (giveto=2) then obj_controller.disposition[2]+=6;
-                if (giveto=3) then obj_controller.disposition[3]+=4;
-                if (giveto=4) and (inq_hide!=2) then obj_controller.disposition[4]+=4;
-                if (giveto=4) and (inq_hide=2) then obj_controller.disposition[4]+=2;
-                if (giveto=5) and (!is_daemon){
-                    obj_controller.disposition[5]+=4;
-                    var o=0
-                    if (array_contains(obj_ini.adv, "Reverent Guardians")) then obj_controller.disposition[5]+=2;
-                }
-                if (giveto=6) then obj_controller.disposition[6]+=3;
-                if (giveto=8) then obj_controller.disposition[8]+=4;
-            }
-
-            // Need to modify ^^^^ based on if it is chaos or daemonic
-
-            if (giveto=2){
-                if (is_daemon){
-                    var v,ev;v=0;ev=0;repeat(99){v+=1;if (ev=0) and (obj_controller.event[v]="") then ev=v;}
-                    obj_controller.event[ev]="imperium_daemon";obj_controller.event_duration[ev]=1;
-                    with(obj_star){
-                        if (p_owner[1]=2) then p_heresy[1]+=choose(30,40,50,60);
-                        if (p_owner[2]=2) then p_heresy[2]+=choose(30,40,50,60);
-                        if (p_owner[3]=2) then p_heresy[3]+=choose(30,40,50,60);
-                        if (p_owner[4]=2) then p_heresy[4]+=choose(30,40,50,60);
-                    }
-                }
-                if (is_chaos){
-                    with(obj_star){
-                        if (p_owner[1]=2) and (p_heresy[1]>0) then p_heresy[1]+=10;
-                        if (p_owner[2]=2) and (p_heresy[2]>0) then p_heresy[2]+=10;
-                        if (p_owner[3]=2) and (p_heresy[3]>0) then p_heresy[3]+=10;
-                        if (p_owner[4]=2) and (p_heresy[4]>0) then p_heresy[4]+=10;
-                    }
-                }
-            }
-            if (giveto=8){
-                if (is_daemon){
-                    with(obj_star){
-                        if (p_owner[1]=8) then p_heresy[1]+=40;
-                        if (p_owner[2]=8) then p_heresy[2]+=40;
-                        if (p_owner[3]=8) then p_heresy[3]+=40;
-                        if (p_owner[4]=8) then p_heresy[4]+=40;
-                    }
-                }
-            }
-            instance_destroy();exit;
-        }
-
     }
 }
 
@@ -769,77 +626,6 @@ if (mouse_x>=xx+121) and (mouse_y>=yy+393) and (mouse_x<xx+231) and (mouse_y<yy+
     if (type=8) and (cooldown<=0){
         obj_controller.cooldown=8000;
         instance_destroy();exit;
-    }
-}
-
-if (type=8) and (cooldown<=0){
-    var xx,yy,before;
-    xx=__view_get( e__VW.XView, 0 )+951;yy=__view_get( e__VW.YView, 0 )+48;
-    before=target_comp;
-
-    if (mouse_y>=yy+71) and (mouse_y<yy+87){
-        if (mouse_x>=xx+75) and (mouse_x<=xx+125){target_comp=0;cooldown=8000;}
-    }
-    if (mouse_y>=yy+87) and (mouse_y<yy+103){
-        if (mouse_x>=xx+77) and (mouse_x<=xx+125){target_comp=1;cooldown=8000;}
-        if (mouse_x>=xx+158) and (mouse_x<=xx+203){target_comp=2;cooldown=8000;}
-        if (mouse_x>=xx+275) and (mouse_x<=xx+320){target_comp=3;cooldown=8000;}
-        if (mouse_x>=xx+386) and (mouse_x<=xx+430){target_comp=4;cooldown=8000;}
-        if (mouse_x>=xx+497) and (mouse_x<=xx+545){target_comp=5;cooldown=8000;}
-    }
-    if (mouse_y>=yy+103) and (mouse_y<yy+129){
-        if (mouse_x>=xx+77) and (mouse_x<=xx+125){target_comp=6;cooldown=8000;}
-        if (mouse_x>=xx+158) and (mouse_x<=xx+203){target_comp=7;cooldown=8000;}
-        if (mouse_x>=xx+275) and (mouse_x<=xx+320){target_comp=8;cooldown=8000;}
-        if (mouse_x>=xx+386) and (mouse_x<=xx+430){target_comp=9;cooldown=8000;}
-        if (mouse_x>=xx+497) and (mouse_x<=xx+545){target_comp=10;cooldown=8000;}
-    }
-
-    if (mouse_y>=yy+124) and (mouse_y<yy+146) and (target_role<3){
-        if (mouse_x>=xx+196) and (mouse_x<xx+291){target_role=1;cooldown=8;}
-        if (mouse_x>=xx+424) and (mouse_x<=xx+525){target_role=2;cooldown=8;}
-    }
-
-    if (before!=target_comp){units=0;
-        with(obj_controller){
-            if (obj_popup.target_comp>0) then scr_company_view(obj_popup.target_comp);
-            if (obj_popup.target_comp=0) then scr_special_view(0);
-        }
-        var i;i=-1;
-        repeat(array_length(obj_controller.display_unit)){i+=1;
-            obj_controller.man_sel[i]=0;
-        }i=-1;
-    }
-
-
-    if (cooldown<=0) and (target_comp!=-1){
-        var xx,yy,bb;bb="";x2=__view_get( e__VW.XView, 0 )+951;y2=__view_get( e__VW.YView, 0 )+398;
-        var top,sel,temp1,temp2,temp3,temp4,temp5;temp1="";temp2="";temp3="";temp4="";temp5="";
-        top=obj_controller.man_current;var stop;stop=0;sel=top;
-
-        repeat(min(array_length(obj_controller.display_unit),23)){
-            if (mouse_x>=xx+29) and (mouse_y>=yy+150) and (mouse_x<xx+569) and (mouse_y<yy+175.4){
-                var onceh;onceh=0;stop=0;
-                if (obj_controller.man_sel[sel]=0) and (onceh=0){cooldown=8000;units=1;
-                    if (stop=0){
-                        onceh=1;
-                        obj_controller.man_sel[sel]=1;
-                        stop=sel;
-                    }
-                }
-                if (obj_controller.man_sel[sel]=1) and (onceh=0){
-                    onceh=1;units=0;obj_controller.man_sel[sel]=0;cooldown=8000;
-                }
-            }
-            yy+=25.4;sel+=1;
-        }
-
-        if (stop!=0){var i;i=-1;
-            repeat(array_length(obj_controller.display_unit)){i+=1;
-                if (i!=stop) then obj_controller.man_sel[i]=0;
-            }
-        }
-
     }
 }
 

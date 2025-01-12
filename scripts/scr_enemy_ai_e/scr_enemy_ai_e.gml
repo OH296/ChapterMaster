@@ -9,51 +9,52 @@ function scr_enemy_ai_e() {
     var imperium_fleets = present_fleet[2]+present_fleet[3];
 
 
-    var have_fleets, battle, battle2, strength, attack;
+    var have_fleets, battle, battle2;
     have_fleets = 0;
     battle = 0;
     battle2 = 0;
-    strength = 0;
-    damage = 0;
-    attack = 0;
-    var i;
-    i = -1;
-    repeat(20) {
-        i += 1;
-        attack[i] = 0;
-        strength[i] = 0;
-        damage[i] = 0;
-    }
 
-    i = 0;
-    repeat(13) {
-        i += 1;
-        if (present_fleet[i] > 0) then have_fleets += 1;
+
+    var attack = array_create(20,0);
+    var strength = array_create(20,0);
+    var damage = array_create(20,0);
+
+
+    for (var i = 1; i <= 13; i += 1) {
+        if (present_fleet[i]) {
+            have_fleets += 1;
+        }
     }
 
     if (present_fleet[1] > 0) { // Battle1 is reserved for player battles
-        if (present_fleet[2] > 0) and(obj_controller.faction_status[2] = "War") then battle = 1;
-        if (present_fleet[3] > 0) and(obj_controller.faction_status[3] = "War") then battle = 1;
-        if (present_fleet[6] > 0) and(obj_controller.faction_status[6] = "War") then battle = 1;
-        if (present_fleet[7] > 0) then battle = 1;
-        if (present_fleet[8] > 0) and(obj_controller.faction_status[8] = "War") then battle = 1;
-        if (present_fleet[9] > 0) then battle = 1;
+        var battle_if_war = [8,eFACTION.Mechanicus,eFACTION.Imperium];
+        
+        var always_battle = [7,9];
+
+        for (var i=0;i<array_length(battle_if_war);i++){
+            var cur_targ = battle_if_war[i];
+            if (present_fleet[cur_targ] > 0) and (obj_controller.faction_status[cur_targ] == "War"){
+                battle = 1;
+                break;
+            }
+        }
+        if (!battle){
+           for (var i=0;i<array_length(always_battle);i++){
+                var cur_targ = always_battle[i];
+                if (present_fleet[cur_targ] > 0) and (obj_controller.faction_status[cur_targ] == "War"){
+                    battle = 1;
+                    break;
+                }            
+           }
+        }
+
         if (present_fleet[10] > 0) and(obj_controller.faction_status[10] = "War") {
             
-            var special_stop, run, s;
-            special_stop = false;
-            run = 0;
-            s = 0;
-            repeat(planets) {
-                run += 1;
-                s = 0;
-                var problems = p_problem[run];
-                if (array_contains(problems, "meeting") || array_contains(problems, "meeting_trap")){
-                    special_stop = true;
-                    break;
+            if (!battle){
+                if (!has_problem_star( "meeting") && !has_problem_star( "meeting_trap")){
+                    battle = 1;
                 }
             }
-            if (special_stop = false) then battle = 1;
         }
         if (present_fleet[13] > 0) then battle = 1;
     }
@@ -69,18 +70,18 @@ function scr_enemy_ai_e() {
             if (standard_xenos_enemies > 0) then battle2 = 6;
         }
         else if (present_fleet[7] > 0){
-            if (standard_xenos_enemies > 0) then battle2 = 7;
+            if (standard_xenos_enemies-present_fleet[7] > 0) then battle2 = 7;
         }
         else if (present_fleet[8] > 0){
-            if (standard_xenos_enemies > 0) then battle2 = 8;
+            if (standard_xenos_enemies-present_fleet[8] > 0) then battle2 = 8;
         }
         else if (present_fleet[9] > 0){
-            if (standard_xenos_enemies > 0) then battle2 = 9;
+            if (standard_xenos_enemies-present_fleet[9] > 0) then battle2 = 9;
         }
         else if (present_fleet[10] > 0){
-            if (standard_xenos_enemies > 0) then battle2 = 10;
+            if (standard_xenos_enemies-present_fleet[10] > 0) then battle2 = 10;
         }
-        else if (present_fleet[13] > 0){
+        else if (present_fleet[13]-present_fleet[13] > 0){
             if (standard_xenos_enemies > 0) then battle2 = 13;
         }
     }
@@ -378,25 +379,12 @@ function scr_enemy_ai_e() {
 
             repeat(9) {
                 i += 1;
-                var special_stop;
-                special_stop = false;
-
+                var special_stop = false;;
                 if (i = 10) or(i = 11) {
-                    var run, s;
-                    run = 0;
-                    s = 0;
-                    repeat(4) {
-                        run += 1;
-                        s = 0;
-                        repeat(4) {
-                            s += 1;
-                            if (p_problem[run, s] = "meeting") or(p_problem[run, s] = "meeting_trap") then special_stop = true;
-                        }
-                    }
+                    special_stop = has_problem_star("meeting")||has_problem_star("meeting_trap");
                 }
 
-
-                if (obj_controller.faction_status[i] = "War") and(onceh = 0) and(special_stop = false) { // Quene battle
+                if (obj_controller.faction_status[i] = "War") and(onceh = 0) and(!special_stop) { // Quene battle
                     obj_turn_end.battles += 1;
                     obj_turn_end.battle[obj_turn_end.battles] = 1;
                     obj_turn_end.battle_world[obj_turn_end.battles] = -50;
@@ -415,7 +403,7 @@ function scr_enemy_ai_e() {
                         }
                         with(obj_en_fleet) {
                             if (action = "") and(orbiting = obj_controller.temp[1049]) and(owner = 10) {
-                                if (string_count("BLOOD", trade_goods) > 0) then instance_create(x, y, obj_temp2);
+                                if (string_count("Khorne_warband", trade_goods) > 0) then instance_create(x, y, obj_temp2);
                                 if (string_lower(trade_goods) = "csm") then instance_create(x, y, obj_temp3);
                             }
                         }
@@ -464,82 +452,64 @@ function scr_enemy_ai_e() {
         }
 
         if (p_player[run] > 0 && force_count > 0) {
-            var spyrer, fallen, s;
+            var spyrer, fallen;
             spyrer = 0;
             fallen = 0;
-            s = 0;
 
-            repeat(4) {
-                s += 1;
-                if (p_player[run] > 0) and(p_problem[run, s] = "meeting") or(p_problem[run, s] = "meeting_trap") {
-                    if (p_problem[run, s] = "meeting") then chaos_meeting = run;
-                    if (p_problem[run, s] = "meeting_trap") then chaos_meeting = run + 0.1;
+            if (p_player[run] > 0){
+                if (has_problem_planet(run,  "meeting")) {
+                    chaos_meeting = run;
+                } else if (has_problem_planet(run,  "meeting_trap")){
+                    chaos_meeting = run + 0.1;
                 }
-                if (p_player[run] > 20) and(p_problem[run, s] = "spyrer") {
+            } 
+            if (has_problem_planet(run,  "spyrer")) {
+                if (p_player[run] > 20){
                     var tixt;
-                    tixt = "The Spyrer on " + string(name);
-                    if (run = 1) then tixt += " I";
-                    if (run = 2) then tixt += " II";
-                    if (run = 3) then tixt += " III";
-                    if (run = 4) then tixt += " IV";
+                    tixt = "The Spyrer on " + planet_numeral_name(run);
                     tixt += " seems to have vanished, presumably gone into hiding.";
                     scr_popup("Spyrer Rampage", tixt, "spyrer", "");
-                }
-                if (p_player[run] <= 20) and(p_problem[run, s] = "spyrer") {
+                } else if ((p_player[run] <= 20)){
                     obj_turn_end.battles += 1;
                     obj_turn_end.battle[obj_turn_end.battles] = 1;
                     obj_turn_end.battle_world[obj_turn_end.battles] = run;
                     obj_turn_end.battle_opponent[obj_turn_end.battles] = 30;
                     obj_turn_end.battle_location[obj_turn_end.battles] = name;
                     obj_turn_end.battle_object[obj_turn_end.battles] = id;
-                    obj_turn_end.battle_special[obj_turn_end.battles] = "spyrer";
+                    obj_turn_end.battle_special[obj_turn_end.battles] = "spyrer";                    
                 }
-                if (p_player[run] > 0) and(p_problem[run, s] = "fallen") {
-                    var chan;
-                    chan = choose(1, 2, 3, 4);
-                    if (chan <= 2) {
-                        obj_turn_end.battles += 1;
-                        obj_turn_end.battle[obj_turn_end.battles] = 1;
-                        obj_turn_end.battle_world[obj_turn_end.battles] = run;
-                        obj_turn_end.battle_opponent[obj_turn_end.battles] = 10;
-                        obj_turn_end.battle_location[obj_turn_end.battles] = name;
-                        obj_turn_end.battle_object[obj_turn_end.battles] = id;
-                        if (chan = 1) then obj_turn_end.battle_special[obj_turn_end.battles] = "fallen1";
-                        if (chan = 2) then obj_turn_end.battle_special[obj_turn_end.battles] = "fallen2";
-                    }
-                    if (chan >= 3) {
-                        if (p_problem[run, 1] = "fallen") then fallen = 1;
-                        if (p_problem[run, 2] = "fallen") then fallen = 2;
-                        if (p_problem[run, 3] = "fallen") then fallen = 3;
-                        if (p_problem[run, 4] = "fallen") then fallen = 4;
-                        p_problem[run, fallen] = "";
-                        p_timer[run, fallen] = 0;
-                        var tixt;
-                        tixt = "Your marines have scoured " + string(name);
-                        if (run = 1) then tixt += " I";
-                        if (run = 2) then tixt += " II";
-                        if (run = 3) then tixt += " III";
-                        if (run = 4) then tixt += " IV";
+            }
+
+            if (p_player[run] > 0) and (has_problem_planet(run,  "fallen")) {
+                var chan;
+                chan = choose(1, 2, 3, 4);
+                if (chan <= 2) {
+                    obj_turn_end.battles += 1;
+                    obj_turn_end.battle[obj_turn_end.battles] = 1;
+                    obj_turn_end.battle_world[obj_turn_end.battles] = run;
+                    obj_turn_end.battle_opponent[obj_turn_end.battles] = 10;
+                    obj_turn_end.battle_location[obj_turn_end.battles] = name;
+                    obj_turn_end.battle_object[obj_turn_end.battles] = id;
+                    if (chan = 1) then obj_turn_end.battle_special[obj_turn_end.battles] = "fallen1";
+                    if (chan = 2) then obj_turn_end.battle_special[obj_turn_end.battles] = "fallen2";
+
+                }else if (chan >= 3) {
+                    if (remove_planet_problem(run, "fallen")){
+                        tixt = "Your marines have scoured " + planet_numeral_name(run);
                         tixt += " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
                         scr_popup("Hunt the Fallen", tixt, "fallen", "");
-                        if (run = 1) then scr_event_log("", "Mission Successful: No Fallen located upon " + string(name) + " I.");
-                        if (run = 2) then scr_event_log("", "Mission Successful: No Fallen located upon " + string(name) + " II.");
-                        if (run = 3) then scr_event_log("", "Mission Successful: No Fallen located upon " + string(name) + " III.");
-                        if (run = 4) then scr_event_log("", "Mission Successful: No Fallen located upon " + string(name) + " IV.");
+                        scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run)}");
                     }
                 }
             }
+
         }
-        if (p_player[run] > 0) and((p_problem[run, 1] = "bomb") or(p_problem[run, 2] = "bomb") or(p_problem[run, 3] = "bomb") or(p_problem[run, 4] = "bomb")) {
+        if (p_player[run] > 0) and(has_problem_planet(run,"bomb")) {
             var have_bomb;
             have_bomb = scr_check_equip("Plasma Bomb", name, run, 0);
             if (have_bomb > 0) {
                 var tixt;
-                tixt = "Your marines on " + string(name);
-                if (run = 1) then tixt += " I";
-                if (run = 2) then tixt += " II";
-                if (run = 3) then tixt += " III";
-                if (run = 4) then tixt += " IV";
+                tixt = "Your marines on " + planet_numeral_name(run);
                 tixt += " are prepared and ready to enter the Necron Tombs.  A Plasma Bomb is in tow.";
                 scr_popup("Necron Tomb Excursion", tixt, "necron_cave", "blarg|" + string(name) + "|" + string(run) + "|999|");
             }
@@ -587,25 +557,13 @@ function scr_enemy_ai_e() {
                         }
                         break;
                     case 10:
-                        var pause = 0,
-                            r = 0;
-                        for (r = 0; r < array_length(p_problem[run]); r++) {
-                            if (p_problem[run][r] == "meeting" || p_problem[run][r] == "meeting_trap") {
-                                pause = 1;
-                            }
-                        }
+                         var pause = has_problem_planet(run,"meeting")||has_problem_planet(run,"meeting_trap");
                         if (p_guardsmen[run] + p_pdf[run] == 0 && p_player[run] > 0 && p_traitors[run] > 0 && pause == 0 && obj_controller.faction_status[10] == "War") {
                             battle_opponent = 10;
                         }
                         break;
                     case 11:
-                        var pause = 0,
-                            r = 0;
-                        for (r = 0; r < array_length(p_problem[run]); r++) {
-                            if (p_problem[run][r] == "meeting" || p_problem[run][r] == "meeting_trap") {
-                                pause = 1;
-                            }
-                        }
+                        var pause = has_problem_planet(run,"meeting")||has_problem_planet(run,"meeting_trap");
                         if (p_guardsmen[run] + p_pdf[run] == 0 && p_player[run] > 0 && p_chaos[run] > 0 && pause == 0 && obj_controller.faction_status[10] == "War") {
                             battle_opponent = 11;
                         }
@@ -639,182 +597,12 @@ function scr_enemy_ai_e() {
         thirdpop = p_max_population[run] / 3;
         halfpop = p_max_population[run] / 2;
 
-        if (array_length(p_feature[run]) != 0) {
-            if (planet_feature_bool(p_feature[run], P_features.Recruiting_World) == 1) and(obj_controller.gene_seed = 0) and(obj_controller.recruiting > 0) {
-                obj_controller.recruiting = 0;
-                obj_controller.income_recruiting = 0;
-                scr_alert("red", "recruiting", "The Chapter has run out of gene-seed!", 0, 0);
-            }
+        if (array_length(p_feature[run])) {
+            var planet_data = new PlanetData(run, self);
 
             // Transforming billions pop number to a real number so the code can handle it
             // Otherwise, 3 and a half billions get translated as 3,50 instead of 3500000000
-            var _planet_population = p_population[run];
-            if (p_large[run] == 1) {
-                _planet_population = _planet_population * 1000000000;
-            }
 
-            if (planet_feature_bool(p_feature[run], P_features.Recruiting_World) == 1) and(obj_controller.gene_seed > 0) and(p_owner[run] <= 5) and(obj_controller.faction_status[p_owner[run]] != "War") {
-                if (_planet_population >= 50) {
-                    // Commenting this for now, looks like debug code
-                    //scr_alert("green","owner", "Recruitment is slowed due to lack of population on our recruitment worlds",0,0);
-                    if (p_large[run] = 0) then p_population[run] -= 1;
-
-                    var recruit_chance = 999;
-                    var aspirant = 0;
-                    var new_recruit_corruption = 10;
-                    var months_to_neo = 72;
-                    var dista = 0;
-                    var onceh = 0;
-                    var recruit_chance_array = [0, 250, 200, 150, 125, 100];
-                    if (obj_controller.recruiting>0){
-                        recruit_chance = irandom(recruit_chance_array[obj_controller.recruiting]) + 1;
-                    }
-
-                    // 135; recruiting
-                    // new_recruit_corruption isn't really relevant as corruption in marines doesn't matter
-                    // by default it takes 72 turns (6 years) to train
-
-                    var planet_type_recruit_chance = {
-                        "hive" : 40,
-                        "Temperate" : 20,
-                        "Feudal" : 20,
-                        "Forge" : 15,
-                        "Shrine" : 15,
-                        "Desert" : 15,
-                        "Ice" : 15,
-                        "Agri" : 10,
-                        "Death" : 10,
-                        "Lava" : 7,
-                    }
-                    var planet_type = p_type[run];
-                    if (struct_exists(planet_type_recruit_chance, planet_type)){
-                        if (recruit_chance <= planet_type_recruit_chance[$ planet_type]){
-                            aspirant = 1;
-                        }
-                    }
-
-                    // if a planet type has less than half it's max pop, you get 20% less spacey marines
-                    if (_planet_population <= halfpop) {
-                        recruit_chance += 1.2;
-                       // scr_alert("red", "owner", "The populations you attain aspirants from are less populant than required, chances of recruiting aspirants is 20% lower", 0, 0);
-                    }
-
-                    // This is the area has trial types that don't care about planet type 
-                    // xp is given in a latter if loop
-
-                    if (obj_controller.recruit_trial = "Blood Duel") { // blood duel is most numerous, but not great with gene seed
-                        months_to_neo -= choose(24, 24, 36, 36, 36, 48);
-                        new_recruit_corruption += choose(10, 15, 20);
-                        recruit_chance -= choose(0.7, 0.7, 0.8, 0.8, 0, 8, 0.9);
-
-                        if (obj_controller.recruiting > 0) {
-                            var wasted_gene_seed = choose(0, 0, 0, 0, 0, 0, 0, 0, 1);
-                            if (wasted_gene_seed = 1) {
-                                wasted_gene_seed += (obj_controller.recruiting);
-                                (obj_controller.gene_seed) -= wasted_gene_seed;
-                                if (wasted_gene_seed >= 1) {
-                                    scr_alert("red", "owner", "Blood Duels are efficient in time, but costly in risk with gene material. Gene-seed has been lost.", 0, 0);
-                                }
-                            }
-                        }
-                    }
-                    else if (obj_controller.recruit_trial = "Challenge") {
-                        new_recruit_corruption += choose(1, 2, 3)
-                        months_to_neo -= choose(-6, 0, 6);
-                    }
-                    else if (obj_controller.recruit_trial = "Exposure") {
-                        new_recruit_corruption += choose(1, 2, 3)
-                    }
-                    else if (obj_controller.recruit_trial = "Knowledge of Self") { // less time heavy than apprenticeship. Good on temperates (ppl are educated there idk)
-                        months_to_neo += choose(18, 24, 24, 24, 36, 36);
-                        new_recruit_corruption -= choose(4, 6, 8)
-                    }
-                    else if (obj_controller.recruit_trial = "Apprenticeship") { // the "I don't need any more astartes but have money to spend" one
-                        months_to_neo += choose(48, 60);
-                        new_recruit_corruption -= 10;
-                    }
-
-                    // xp gain for the recruit is here
-                    // as well as planet type buffs or nerfs
-                    if (aspirant != 0) {
-                        var i, new_recruit;
-                        i = 0;
-                        new_recruit = 0;
-
-                        // gets the next empty recruit space on the array
-                        var new_recruit_exp = irandom(5);
-
-                        // gives planet buffs
-
-                        if (p_type[run] = "Death") {
-                            new_recruit_exp += 6;
-                        }
-                        if (p_type[run] = "Ice") {
-                            new_recruit_exp += 3;
-                        }
-                        if (p_type[run] = "Desert") {
-                            new_recruit_exp += 3;
-                        }
-                        if (p_type[run] = "Lava") {
-                            new_recruit_exp += 9;
-                        }
-
-
-                        if (obj_controller.recruit_trial = "Hunting the Hunter") {
-                            if (p_type[run] = "Desert") or(p_type[run] = "Ice") or(p_type[run] == "Death") {
-                                new_recruit_exp += irandom(13) + 7;
-                            }
-                        }
-
-                        if (obj_controller.recruit_trial = "Exposure") {
-                            if (p_type[run] == "Desert") or(p_type[run] == "Ice") or(p_type[run] == "Death") or(p_type[run] == "Lava") or(p_type[run] == "Forge") {
-                                months_to_neo -= choose(12, 12, 12, 24, 24, 36);
-                            }
-                        }
-
-                        if (obj_controller.recruit_trial = "Survival of the Fittest") {
-                            if (p_type[run] = "Desert") or(p_type[run] = "Ice") or(p_type[run] = "Death") or(p_type[run] = "Lava") {
-                                recruit_chance -= choose(0.7, 0.8, 0.8, 0.8, 0.9);
-                            }
-                            if (p_type[run] = "Feudal") {
-                                recruit_chance -= choose(0.5, 0.6, 0.6, 0.7, 0.7, 0.8)
-                            }
-                        }
-                        if (obj_controller.recruit_trial = "Challenge") {
-                            new_recruit_exp += choose(0, 0, 0, 0, 0, 0, 0, 0, 10, 20);
-                            scr_alert("green", "owner", "A worthy aspirant has risen to the rank of Neophyte, doing quite well against the challenger Astartes.", 0, 0);
-                        }
-
-
-                        if (obj_controller.recruit_trial = "Apprenticeship") {
-                            if (p_type[run] = "Lava") {
-                                recruit_chance -= choose(0.5, 0.6, 0.6, 0.7, 0.7);
-                            } // nocturne gaming
-                            new_recruit_exp += irandom(5) + 34;
-                        }
-
-                        if (obj_controller.recruit_trial = "Knowledge of Self") {
-                            if (p_type[run] = "Temperate") then new_recruit_exp += irandom(5) + 5; // this is the only one that gives bonus for temperates
-                            new_recruit_exp += irandom(10) + 15;
-                        }
-
-                        if (new_recruit_exp >= 40) then new_recruit_exp = 38;// we don't want immediate battle bros
-
-                        for (var i=0;i<array_length(obj_controller.recruit_training);i++) {
-                            if (obj_controller.recruit_training[i]<1 || months_to_neo<obj_controller.recruit_training[i]){
-                                obj_controller.gene_seed -= 1;
-                                array_insert(obj_controller.recruit_corruption, i, new_recruit_corruption);
-                                array_insert(obj_controller.recruit_distance , i, 0);
-                                array_insert(obj_controller.recruit_training, i, new_recruit_exp);
-                                array_insert(obj_controller.recruit_exp, i, months_to_neo); 
-                                array_insert(obj_controller.recruit_name, i, global.name_generator.generate_space_marine_name());                                                                                           
-                                break;
-                            }
-                        }
-                    }
-                    // End aspirant!=0
-                } // End pop>50
-            } // End recruiting possible
             //fortress monestary
             if (p_owner[run] == 1) {
                 var monestary = search_planet_features(p_feature[run], P_features.Monastery);
@@ -826,14 +614,13 @@ function scr_enemy_ai_e() {
                     ml = 32;
                     build_rate = 4;
                     build_rate2 = 6;
-
-                    if (string_count("Siege Masters", obj_ini.strin) > 0) {
+                    if (scr_has_adv("Siege Masters")){
                         md = 300;
                         ms = 400;
                         ml = 48;
                         build_rate2 = 5;
                     }
-                    if (string_count("Crafters", obj_ini.strin) > 0) or(string_count("Crafters", obj_ini.strin) > 0) {
+                    if (scr_has_adv("Crafters")){
                         build_rate = 3;
                         if (choose(0, 1) = 1) {
                             if (p_silo[run] < ms) then p_silo[run] += 1;
@@ -846,7 +633,10 @@ function scr_enemy_ai_e() {
                     if ((obj_controller.turn / build_rate) = round(obj_controller.turn / build_rate)) and(p_lasers[run] > ml) then p_lasers[run] += 1;
                     if ((obj_controller.turn / build_rate2) = round(obj_controller.turn / build_rate2)) and(p_fortified[run] < 5) then p_fortified[run] += 1;
                     if (monestary.forge>0){
-                        obj_controller.player_forges += sqr(monestary.forge_data.size);
+                        obj_controller.player_forge_data.player_forges += sqr(monestary.forge_data.size);
+                        if (monestary.forge_data.vehicle_hanger){
+                            array_push(obj_controller.player_forge_data.vehicle_hanger,[name,run]);
+                        }
                     }
                 }
             }            
@@ -877,7 +667,10 @@ function scr_enemy_ai_e() {
                     }
                     if (upgrade.built<=obj_controller.turn && upgrade_type == P_features.Secret_Base){
                         if (upgrade.forge > 0){
-                            obj_controller.player_forges+=sqr(upgrade.forge_data.size);
+                            obj_controller.player_forge_data.player_forges+=sqr(upgrade.forge_data.size);
+                            if (upgrade.forge_data.vehicle_hanger){
+                                array_push(obj_controller.player_forge_data.vehicle_hanger,[name,run]);
+                            }                            
                         }
                     }
                 }
@@ -920,23 +713,36 @@ function scr_enemy_ai_e() {
         }
 
         // title / text / image / speshul
+        var popup_text = "A cloaked, ragged figure approaches your forces and hails you. ";
         if (master_present = 1) and(otm <= 21) {
             var effect;
             effect = "meeting_1t";
             if (chaos_meeting == floor(chaos_meeting)) then effect = "meeting_1";
-            scr_popup("Chaos Meeting", "A cloaked, ragged figure approaches your forces and hails you.  He is to bring you to meet with their master and you have few enough forces to be permitted.  What is thy will?", "chaos_messenger", effect);
+            scr_popup("Chaos Meeting", $"{popup_text}He is to bring you to meet with their master and you have few enough forces to be permitted.  What is thy will?", "chaos_messenger", effect);
         }
         if (master_present = 1) and(otm > 21) {
-            scr_popup("Chaos Meeting", "A cloaked, ragged figure approaches your forces and hails you.  He is to bring you to their master, but before the meeting proceeds, you must bring fewer forces.  Only yourself and up to two squads will be allowed in the presence of " + string(obj_controller.faction_title[10]) + " " + string(obj_controller.faction_leader[10]) + ".", "chaos_messenger", "meeting_2");
+            scr_popup("Chaos Meeting", $"{popup_text}He is to bring you to their master, but before the meeting proceeds, you must bring fewer forces.  Only yourself and up to two squads will be allowed in the presence of {obj_controller.faction_title[10]} {obj_controller.faction_leader[10]}.", "chaos_messenger", "meeting_2");
             with(obj_temp_meeting) {
                 instance_destroy();
             }
         }
         if (master_present = 0) and(otm > 21) {
-            scr_popup("Chaos Meeting", "A cloaked, ragged figure approaches your forces and hails them.  The meeting was supposed to be with the Chaos Lord, and yourself, but you are not planet-side.  Land on the planet with up to two squads and the meeting will proceed.", "chaos_messenger", "meeting_3");
+            scr_popup("Chaos Meeting",  $"{popup_text}The meeting was supposed to be with the Chaos Lord, and yourself, but you are not planet-side.  Land on the planet with up to two squads and the meeting will proceed.", "chaos_messenger", "meeting_3");
             with(obj_temp_meeting) {
                 instance_destroy();
             }
         }
     }
+
+    for (var i=1;i<=planets;i++){
+        var existing_problem = has_any_problem_planet(i);
+        if (!existing_problem){
+            if (!irandom(50) && p_owner[i]==eFACTION.Imperium){
+                if (p_owner[i] == eFACTION.Imperium){
+                    scr_new_governor_mission(i);
+                }
+            }
+        }
+    }
+    
 }

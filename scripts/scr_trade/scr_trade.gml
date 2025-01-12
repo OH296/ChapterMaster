@@ -16,8 +16,7 @@ function scr_trade(argument0) {
 
 
 
-	var i=0;
-	repeat(4){i+=1;
+    for (var i = 1; i < 5; i++) {
 	    if (trade_give[i]="Requisition") and (trade_mnum[i]>0) then my_worth+=trade_mnum[i];
     
 	    if (trade_give[i]="Gene-Seed") and (trade_mnum[i]>0){
@@ -54,21 +53,21 @@ function scr_trade(argument0) {
 	    if (trade_take[i]="Land Raider") then their_worth+=trade_tnum[i]*600;
 	    if (trade_take[i]="Castellax Battle Automata") then their_worth+=trade_tnum[i]*1200;
 	    if (trade_take[i]="Minor Artifact") then their_worth+=trade_tnum[i]*450;
-	    if (trade_take[i]="Skitarii") then their_worth+=trade_tnum[i]*20;
+	    if (trade_take[i]="Skitarii") then their_worth+=trade_tnum[i]*15;
 	    if (trade_take[i]="Techpriest") then their_worth+=trade_tnum[i]*150;
     
 	    if (trade_take[i]="Condemnor Boltgun") then their_worth+=trade_tnum[i]*15;
 	    if (trade_take[i]="Hellrifle") then their_worth+=trade_tnum[i]*20;
 	    if (trade_take[i]="Incinerator") then their_worth+=trade_tnum[i]*20;
-	    if (trade_take[i]="Crusader") then their_worth+=trade_tnum[i]*40;
+	    if (trade_take[i]="Crusader") then their_worth+=trade_tnum[i]*20;
 	    if (trade_take[i]="Exterminatus") then their_worth+=trade_tnum[i]*1500;
 	    if (trade_take[i]="Cyclonic Torpedo") then their_worth+=trade_tnum[i]*3000;
     
 	    if (trade_take[i]="Eviscerator") then their_worth+=trade_tnum[i]*20;
 	    if (trade_take[i]="Heavy Flamer") then their_worth+=trade_tnum[i]*12;
 	    if (trade_take[i]="Inferno Bolts") then their_worth+=trade_tnum[i]*5;
-	    if (trade_take[i]="Sister of Battle") then their_worth+=trade_tnum[i]*50;
-	    if (trade_take[i]="Sister Hospitaler") then their_worth+=trade_tnum[i]*70;
+	    if (trade_take[i]="Sister of Battle") then their_worth+=trade_tnum[i]*40;
+	    if (trade_take[i]="Sister Hospitaler") then their_worth+=trade_tnum[i]*50;
     
 	    if (trade_take[i]="Eldar Power Sword") then their_worth+=trade_tnum[i]*50;
 	    if (trade_take[i]="Archeotech Laspistol") then their_worth+=trade_tnum[i]*150;
@@ -188,13 +187,13 @@ function scr_trade(argument0) {
     
 	    // show_message("A: "+string(liscensing));
     
-	    i=0;var goods;goods="";
+	    ;var goods;goods="";
 	   
     
     
 	    // Temporary work around
-	    if (lisc>0){var i;i=0;
-	        repeat(4){i+=1;
+	    if (lisc>0){
+            for (var i = 1; i <= 4; i += 1) {
 	            if (trade_give[i]="Requisition") then requisition-=trade_mnum[i];
 	            if (trade_give[i]="Gene-Seed") and (trade_mnum[i]>0){
 	                gene_seed-=trade_mnum[i];
@@ -204,14 +203,21 @@ function scr_trade(argument0) {
 	            }
 	            if (trade_give[i]="Info Chip") and (trade_mnum[i]>0) then info_chips-=trade_mnum[i];
 	            if (trade_give[i]="STC Fragment") and (trade_mnum[i]>0){
-	                var remov,p;remov=0;p=0;
-	                repeat(100){
-	                    if (remov=0){p=choose(1,2,3);
-	                        if (p=1) and (stc_wargear_un>0){stc_wargear_un-=1;remov=1;}
-	                        if (p=2) and (stc_vehicles_un>0){stc_vehicles_un-=1;remov=1;}
-	                        if (p=3) and (stc_ships_un>0){stc_ships_un-=1;remov=1;}
-	                    }
-	                }
+                    for (var j = 0; j < 100; j += 1) {
+                        var p = choose(1, 2, 3);
+                        if (p == 1 && stc_wargear_un > 0) {
+                            stc_wargear_un -= 1;
+                            break;
+                        }
+                        if (p == 2 && stc_vehicles_un > 0) {
+                            stc_vehicles_un -= 1;
+                            break;
+                        }
+                        if (p == 3 && stc_ships_un > 0) {
+                            stc_ships_un -= 1;
+                            break;
+                        }
+                    }
 	            }
 	        }
         
@@ -222,16 +228,16 @@ function scr_trade(argument0) {
     
 	    if (lisc!=step) or (lisc=0){// Do not fly over licenses
     
-	        if (obj_ini.fleet_type=1) then with(obj_star){
+	        if (obj_ini.fleet_type=ePlayerBase.home_world) then with(obj_star){
 	            if ((p_owner[1]=1) or (p_owner[2]=1) or (p_owner[3]=1) or (p_owner[4]=1)){instance_create(x,y,obj_temp2);x-=10000;y-=10000;}
 	        }
         
         
-	        if (obj_ini.fleet_type!=1){
+	        if (obj_ini.fleet_type != ePlayerBase.home_world){
 	            // with(obj_star){if (present_fleet[1]>0){x-=10000;y-=10000;}}
 	            with(obj_p_fleet){// Get the nearest star system that is viable for creating the trading fleet
 	                if (capital_number>0) and (action="") then instance_create(instance_nearest(x,y,obj_star).x,instance_nearest(x,y,obj_star).y,obj_temp2);
-	                if (frigate_number>0) and (action="") then instance_create(instance_nearest(x,y,obj_star).x,instance_nearest(x,y,obj_star).y,obj_temp4);
+	                if (frigate_number>0) and (action="") then instance_create(instance_nearest(x,y,obj_star).x,instance_nearest(x,y,obj_star).y,obj_ground_mission);
 	            }
 	        }
         
@@ -269,16 +275,16 @@ function scr_trade(argument0) {
 	        }
         
         
-	        // show_message("TG2:"+string(instance_number(obj_temp2))+", TG3:"+string(instance_number(obj_temp3))+", TG4:"+string(instance_number(obj_temp4)));
+	        // show_message("TG2:"+string(instance_number(obj_temp2))+", TG3:"+string(instance_number(obj_temp3))+", TG4:"+string(instance_number(obj_ground_mission)));
         
         
-	        var targ, flit, i,chasing;chasing=0;targ=0;// Set target, chase
+	        var targ, flit, chasing;chasing=0;targ=0;// Set target, chase
         
-	        // if (obj_ini.fleet_type!=1){
+	        // if (obj_ini.fleet_type != ePlayerBase.home_world){
 	            if (instance_exists(obj_temp2)) then targ=instance_nearest(obj_temp2.x,obj_temp2.y,obj_temp3);
-	            if (!instance_exists(obj_temp2)) and (instance_exists(obj_temp4)) then targ=instance_nearest(obj_temp4.x,obj_temp4.y,obj_temp3);
+	            if (!instance_exists(obj_temp2)) and (instance_exists(obj_ground_mission)) then targ=instance_nearest(obj_ground_mission.x,obj_ground_mission.y,obj_temp3);
             
-	            if ((!instance_exists(obj_temp2)) and (!instance_exists(obj_temp4))) or (instance_number(obj_p_fleet)=1) and ((obj_p_fleet.x<=0) or (obj_p_fleet.x>room_width) or (obj_p_fleet.y<=0) or (obj_p_fleet.y>room_height)){
+	            if ((!instance_exists(obj_temp2)) and (!instance_exists(obj_ground_mission))) or (instance_number(obj_p_fleet)=1) and ((obj_p_fleet.x<=0) or (obj_p_fleet.x>room_width) or (obj_p_fleet.y<=0) or (obj_p_fleet.y>room_height)){
 	                with(obj_star){
 	                    if (x<-3500) and (y<-3500){x+=10000;y+=10000;}
 	                    if (x<-3500) and (y<-3500){x+=10000;y+=10000;}
@@ -303,55 +309,42 @@ function scr_trade(argument0) {
 	            }
             
 	            // If player fleet is flying about then get their target for new target
-	            if (!instance_exists(obj_temp2)) and (!instance_exists(obj_temp4)) and (instance_exists(obj_p_fleet)) and (obj_ini.fleet_type!=1){
+	            if (!instance_exists(obj_temp2)) and (!instance_exists(obj_ground_mission)) and (instance_exists(obj_p_fleet)) and (obj_ini.fleet_type != ePlayerBase.home_world){
 	                // show_message("no T2 or T4: chasing");
 	                chasing=1;
 	                with(obj_p_fleet){var pop;
 	                    if (capital_number>0) and (action!=""){pop=instance_create(action_x,action_y,obj_temp2);pop.action_eta=action_eta;}
-	                    if (frigate_number>0) and (action!=""){pop=instance_create(action_x,action_y,obj_temp4);pop.action_eta=action_eta;}
+	                    if (frigate_number>0) and (action!=""){pop=instance_create(action_x,action_y,obj_ground_mission);pop.action_eta=action_eta;}
 	                }
 	            }
 	            if (instance_exists(obj_temp2)) then targ=instance_nearest(obj_temp2.x,obj_temp2.y,obj_temp3);
-	            if (!instance_exists(obj_temp2)) and (instance_exists(obj_temp4)) then targ=instance_nearest(obj_temp4.x,obj_temp4.y,obj_temp3);
+	            if (!instance_exists(obj_temp2)) and (instance_exists(obj_ground_mission)) then targ=instance_nearest(obj_ground_mission.x,obj_ground_mission.y,obj_temp3);
 	        // }
-        
-	        // if (obj_ini.fleet_type=1) then targ=instance_nearest(obj_temp2.x,obj_temp2.y,obj_temp3);
-        
-	        /*if (obj_ini.fleet_type!=1){flit=instance_create(targ.x-0,targ.y-32,obj_en_fleet);}
-	        if (obj_ini.fleet_type=1){var wooo;
-	            wooo=instance_nearest(targ.x,targ.y,obj_temp3);
-	            flit=instance_create(wooo.x-0,wooo.y-32,obj_en_fleet);
-	        }*/
-        
+
 	        if (!instance_exists(obj_temp3)){
 	            with(obj_star){
 	                if (x<-3500) and (y<-3500){x+=10000;y+=10000;}
 	                if (x<-3500) and (y<-3500){x+=10000;y+=10000;}
 	            }
 	            trading=0;scr_dialogue("trade_error_2");
-            
-	            if (trade_take[1]="Recruiting Planet") then recruiting_worlds_bought-=1;
-	            if (trade_take[2]="Recruiting Planet") then recruiting_worlds_bought-=1;
-	            if (trade_take[3]="Recruiting Planet") then recruiting_worlds_bought-=1;
-	            if (trade_take[4]="Recruiting Planet") then recruiting_worlds_bought-=1;
-	            if (trade_take[1]="License: Crusade") or (trade_take[2]="License: Crusade") or (trade_take[3]="License: Crusade") or (trade_take[4]="License: Crusade"){
-	                obj_controller.liscensing=0;
-	            }
-	            if (trade_take[1]="Useful Information") or (trade_take[2]="Useful Information") or (trade_take[3]="Useful Information") or (trade_take[4]="Useful Information"){
-	                obj_controller.liscensing=0;
-	            }
-	            if (trade_take[1]="License: Repair") or (trade_take[2]="License: Repair") or (trade_take[3]="License: Repair") or (trade_take[4]="License: Repair"){
-	                repair_ships=0;
+
+	            for (var i=1;i<5;i++){
+	            	if (trade_take[i]=="Recruiting Planet") then recruiting_worlds_bought-=1;
+	            	if (trade_take[i]=="License: Crusade") then obj_controller.liscensing=0;
+	            	if (trade_take[i]=="Useful Information") then obj_controller.liscensing=0;
+	            	if (trade_take[i]=="License: Repair") then repair_ships=0;
 	            }
             
-	            instance_activate_all();exit;
+	            instance_activate_all();
+	            exit;
 	        }
         
         
-	        flit=instance_create(targ.x-0,targ.y-32,obj_en_fleet);
+	        flit=instance_create(targ.x,targ.y,obj_en_fleet);
         
 	        flit.owner=diplomacy;
-	        flit.home_x=targ.x;flit.home_y=targ.y;
+	        flit.home_x=targ.x;
+	        flit.home_y=targ.y;
         
 	        if (diplomacy=5) then flit.owner = eFACTION.Imperium;
         
@@ -396,13 +389,14 @@ function scr_trade(argument0) {
 	        flit.trade_goods=goods;
 	        if (flit.trade_goods="") then flit.trade_goods="none";
         
-	        if (obj_ini.fleet_type!=1){
+	        if (obj_ini.fleet_type != ePlayerBase.home_world){
 	            if (instance_exists(obj_temp2)){flit.action_x=obj_temp2.x;flit.action_y=obj_temp2.y;flit.target=instance_nearest(flit.action_x,flit.action_y,obj_p_fleet);}
-	            if (!instance_exists(obj_temp2)) and (instance_exists(obj_temp4)){flit.action_x=obj_temp4.x;flit.action_y=obj_temp4.y;flit.target=instance_nearest(flit.action_x,flit.action_y,obj_p_fleet);}
+	            if (!instance_exists(obj_temp2)) and (instance_exists(obj_ground_mission)){flit.action_x=obj_ground_mission.x;flit.action_y=obj_ground_mission.y;flit.target=instance_nearest(flit.action_x,flit.action_y,obj_p_fleet);}
 	        }
-	        if (obj_ini.fleet_type=1){
+	        if (obj_ini.fleet_type=ePlayerBase.home_world){
 	            targ=instance_nearest(flit.x,flit.y,obj_temp2);
-	            flit.action_x=targ.x;flit.action_y=targ.y;
+	            flit.action_x=targ.x;
+	            flit.action_y=targ.y;
 	        }
         
 	        if (chasing=1){flit.minimum_eta=flit.target.action_eta;}
@@ -410,7 +404,7 @@ function scr_trade(argument0) {
         
 	        with(obj_temp2){instance_destroy();}
 	        with(obj_temp3){instance_destroy();}
-	        with(obj_temp4){instance_destroy();}
+	        with(obj_ground_mission){instance_destroy();}
         
         
 	    // show_message("D: "+string(liscensing));
@@ -430,8 +424,8 @@ function scr_trade(argument0) {
             
 	            if (got>=500) and (diplomacy=6){
 	                var got2;got2=0;
-	                repeat(10){if (got2<50){got2+=1;if (quest[got2]="300req") and (quest_faction[got2]=6){
-	                    scr_dialogue("mission1_thanks");scr_quest(2,"300req",6,0);got2=50;trading=0;
+	                repeat(10){if (got2<50){got2+=1;if (quest[got2]="fund_elder") and (quest_faction[got2]=6){
+	                    scr_dialogue("mission1_thanks");scr_quest(2,"fund_elder",6,0);got2=50;trading=0;
 	                    trade_take[0]="";trade_take[1]="";trade_take[2]="";trade_take[3]="";trade_take[4]="";trade_take[5]="";trade_tnum[0]=0;trade_tnum[1]=0;trade_tnum[2]=0;trade_tnum[3]=0;trade_tnum[4]=0;trade_tnum[5]=0;
 	                    trade_give[0]="";trade_give[1]="";trade_give[2]="";trade_give[3]="";trade_give[4]="";trade_give[5]="";trade_mnum[0]=0;trade_mnum[1]=0;trade_mnum[2]=0;trade_mnum[3]=0;trade_mnum[4]=0;trade_mnum[5]=0;
 	                    exit;

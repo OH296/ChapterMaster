@@ -49,13 +49,8 @@ show_message(blarg);*/
 "+string(dudes_num[15])+"x "+string(dudes[15])+"
 "+string(dudes_num[16])+"x "+string(dudes[16]));*/
 
-var i;i=0;
+var i=0;
 repeat(50){i+=1;
     if (marine_type[i]!="") then show_message(string(i)+", "+string(marine_type[i])+", HP: "+string(marine_hp[i]));
 }
 
-
-
-
-/* */
-/*  */

@@ -9,17 +9,17 @@ function scr_check_equip(search_item, system, planet_or_ship_id, remove_item) {
 
 
 
-	var man_c=0,man_i=0,c=0,i=0,have=0, unit, marine_present;
+	var man_c=0,man_i=0,have=0, unit, marine_present;
 
-	for (c=0;c<=10;c++){
-	    for (i=1;i<=500;i++){
+	for (var c=0;c<=10;c++){
+	    for (var i=1;i<=500;i++){
     		if (obj_ini.name[c][i]=="") then continue;
     		marine_present=false;
 
 	    	if (!instance_exists(obj_ncombat)){ 
 	    		unit = obj_ini.TTRPG[c][i];
 		        if (system!="") and (planet_or_ship_id>0){
-		            if (unit.is_at_location(system,planet_or_ship_id,0)){
+		            if (unit.is_at_location(system,planet_or_ship_id,-1)){
 		            	marine_present=true;
 		            }
 		        }

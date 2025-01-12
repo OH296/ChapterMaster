@@ -35,7 +35,7 @@ if (show>0) and (current_battle<=battles){
     if (battle_world[i]>0) then draw_text_transformed(xxx+265,yyy+11,string_hash_to_newline("Forces Attacked! ("+string(battle_location[i])+" "+scr_roman(battle_world[i])+")"),0.7,0.7,0);
     if (battle_world[i]=-50) then draw_text_transformed(xxx+265,yyy+11,string_hash_to_newline("Fleet Attacked! ("+string(battle_location[i])+" System)"),0.7,0.7,0);
     
-    scr_image("force",1,xxx+378-32,yyy+86-32,64,64);
+    scr_image("ui/force",1,xxx+378-32,yyy+86-32,64,64);
     // draw_sprite(spr_force_icon,1,xxx+378,yyy+86);
     
     draw_set_font(fnt_40k_14);draw_set_halign(fa_left);
@@ -61,7 +61,7 @@ if (show>0) and (current_battle<=battles){
         
         if (enemy_fleet[1]!=0){
             // draw_sprite(spr_force_icon,enemy_fleet[1],xxx+44,yyy+269);
-            scr_image("force",enemy_fleet[1],xxx+44-32,yyy+269-32,64,64);
+            scr_image("ui/force",enemy_fleet[1],xxx+44-32,yyy+269-32,64,64);
             var shw;shw="";
             if (ecap[1]=1) then shw+=string(ecap[1])+" Battleship#";
             if (ecap[1]!=1) then shw+=string(ecap[1])+" Battleships#";
@@ -75,7 +75,7 @@ if (show>0) and (current_battle<=battles){
         }
         if (enemy_fleet[2]!=0){
             // draw_sprite(spr_force_icon,enemy_fleet[2],xxx+154,yyy+269);
-            scr_image("force",enemy_fleet[2],xxx+154-32,yyy+269-32,64,64);
+            scr_image("ui/force",enemy_fleet[2],xxx+154-32,yyy+269-32,64,64);
             var shw;shw="";
             if (ecap[2]=1) then shw+=string(ecap[2])+" Battleship#";
             if (ecap[2]!=1) then shw+=string(ecap[2])+" Battleships#";
@@ -89,7 +89,7 @@ if (show>0) and (current_battle<=battles){
         }
         if (enemy_fleet[3]!=0){
             // draw_sprite(spr_force_icon,enemy_fleet[3],xxx+264,yyy+269);
-            scr_image("force",enemy_fleet[3],xxx+264-32,yyy+269-32,64,64);
+            scr_image("ui/force",enemy_fleet[3],xxx+264-32,yyy+269-32,64,64);
             var shw;shw="";
             if (ecap[3]=1) then shw+=string(ecap[3])+" Battleship#";
             if (ecap[3]!=1) then shw+=string(ecap[3])+" Battleships#";
@@ -104,7 +104,7 @@ if (show>0) and (current_battle<=battles){
         
         if (allied_fleet[1]!=0){
             // draw_sprite(spr_force_icon,allied_fleet[1],xxx+374,yyy+269);
-            scr_image("force",allied_fleet[1],xxx+374-32,yyy+269-32,64,64);
+            scr_image("ui/force",allied_fleet[1],xxx+374-32,yyy+269-32,64,64);
             var shw;shw="";
             if (acap[1]=1) then shw+=string(acap[1])+" Battleship#";
             if (acap[1]!=1) then shw+=string(acap[1])+" Battleships#";
@@ -118,7 +118,7 @@ if (show>0) and (current_battle<=battles){
         }
         if (allied_fleet[2]!=0){
             // draw_sprite(spr_force_icon,allied_fleet[1],xxx+484,yyy+269);
-            scr_image("force",allied_fleet[1],xxx+484-32,yyy+269-32,64,64);
+            scr_image("ui/force",allied_fleet[1],xxx+484-32,yyy+269-32,64,64);
             var shw;shw="";
             if (acap[2]=1) then shw+=string(acap[2])+" Battleship#";
             if (acap[2]!=1) then shw+=string(acap[2])+" Battleships#";
@@ -167,7 +167,7 @@ if (show>0) and (current_battle<=battles){
         
         draw_set_halign(fa_center);
         // draw_sprite(spr_force_icon,battle_opponent[i],xxx+44,yyy+289);
-        scr_image("force",battle_opponent[i],xxx+44-32,yyy+289-32,64,64);
+        scr_image("ui/force",battle_opponent[i],xxx+44-32,yyy+289-32,64,64);
         draw_text_transformed(xxx+44,yyy+316,string_hash_to_newline(string(strin[4])),0.75,1,0);
         draw_set_halign(fa_center);draw_set_font(fnt_40k_14b);
         
@@ -290,43 +290,6 @@ if (show>0) and (current_battle<=battles){
 
 
 /* */
-
-var i;
-i=0;
-
-
-draw_set_font(fnt_40k_14b);
-draw_set_halign(fa_left);
-draw_set_color(38144);
-
-if (alerts>0) and (popups_end=1){
-	
-    repeat(alerts){
-        i+=1;
-
-        draw_set_color(38144);
-        if (alert_color[i] == "red") then draw_set_color(c_red);
-        if (alert_color[i] == "yellow") then draw_set_color(57586);
-        // if (alert_color[i]="purple") then draw_set_color(c_red);
-        draw_set_alpha(min(1,alert_alpha[i]));
-        
-        if (obj_controller.zoomed=0){
-            draw_text(__view_get( e__VW.XView, 0 )+16,__view_get( e__VW.YView, 0 )+46+(i*20),string_hash_to_newline(string(alert_txt[i])));
-            // draw_text(view_xview[0]+16.5,view_yview[0]+40.5+(i*12),string(alert_txt[i]));
-        }
-        /*if (obj_controller.zoomed=1){
-            draw_text_transformed(80,80+(i*24),string(alert_txt[i]),2,2,0);
-            draw_text_transformed(81,81+(i*24),string(alert_txt[i]),2,2,0);
-        }*/
-        
-        if (obj_controller.zoomed=1){
-            draw_text_transformed(32,92+(i*40),string_hash_to_newline(string(alert_txt[i])),2,2,0);
-            // draw_text_transformed(122,122+(i*36),string(alert_txt[i]),3,3,0);
-        }
-    }
-}
-
-draw_set_alpha(1);
 
 /* */
 /*  */

@@ -1,10 +1,10 @@
 
 var co=0,i=0,o=0, unit;
 
-for (o=1;o<=20;o++){
+for (o=0;o<array_length(origin.board_co);o++){
     co=origin.board_co[o];
     i=origin.board_id[o];
-    unit = obj_ini.TTRPG[co][i];
+    unit = fetch_unit([co, i]);
     if (unit.hp()<=-15) and (obj_ini.race[co][i]=1) and (unit.name()!=""){
         var seed_max=0;
         if (apothecary<=0){
@@ -33,7 +33,7 @@ for (o=1;o<=20;o++){
             
             if (obj_fleet.capital+obj_fleet.frigate+obj_fleet.escort>0) then obj_controller.gene_seed+=seed_max;
         }else if (apothecary>0){
-            unit.update_health(unit.hp()+irandom(10)+2);
+            unit.add_or_sub_health(irandom_range(9,14));
             apothecary-=0.5;
         }
     }

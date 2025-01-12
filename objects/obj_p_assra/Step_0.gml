@@ -71,8 +71,7 @@ if (boarding=true) and (board_cooldown>=0) and (instance_exists(target)) and (in
         o=firstest-1;difficulty=50;challenge=0;roll1=0;roll2=0;attack=0;arp=0;wep="";hits=0;hurt=0;damaged_ship=0;
         co=0;i=0;ac=0;dr=1;
         
-        repeat(boarders){
-            o+=1;
+        for (var o=0;o<array_length(origin.board_co);o++){
             if (!instance_exists(target)) then exit;
             
             // show_message(origin);
@@ -87,15 +86,15 @@ if (boarding=true) and (board_cooldown>=0) and (instance_exists(target)) and (in
             if (unit.hp()>0){
                 
                 // Bonuses
-                difficulty+=unit.experience()/20;
+                difficulty+=unit.experience/20;
                 difficulty+=(1-(target.hp/target.maxhp))*33;
                 //TODO define tag for bording weapons
-                if (array_contains(["Chainfist","Meltagun","Lascutter"], unit.weapon_one())) then difficulty+=3;
-                if (array_contains(["Chainfist","Meltagun","Lascutter"], unit.weapon_two())) then difficulty+=3;
+                if (array_contains(["Chainfist","Meltagun","Lascutter","Boarding Shield"], unit.weapon_one())) then difficulty+=3;
+                if (array_contains(["Chainfist","Meltagun","Lascutter","Boarding Shield"], unit.weapon_two())) then difficulty+=3;
 
-                if (array_contains(obj_ini.adv, "Boarders")) then  difficulty+=7;
-                if (array_contains(obj_ini.adv, "Melee Enthusiasts")) then  difficulty+=3;
-                if (array_contains(obj_ini.adv, "Lightning Warriors")) then  difficulty+=3;
+                if (scr_has_adv("Boarders")) then  difficulty+=7;
+                if (scr_has_adv("Assault Doctrine")) then  difficulty+=3;
+                if (scr_has_adv("Lightning Warriors")) then  difficulty+=3;
 
                 // Penalties
                 if (unit.weapon_one()=="")then difficulty-=10;
@@ -136,6 +135,8 @@ if (boarding=true) and (board_cooldown>=0) and (instance_exists(target)) and (in
                         
                         bridge_damage=3;
                         //TODO tagging system to slove this
+                        we="Heavy Thunder Hammer";
+                        if (we1=we) or (we2=we) then bridge_damage=max(bridge_damage,8);
                         we="Eviscerator";
                         if (we1=we) or (we2=we) then bridge_damage=max(bridge_damage,7);
                         we="Chainfist";
@@ -287,7 +288,7 @@ if (boarding=true) and (board_cooldown>=0) and (instance_exists(target)) and (in
                     if (arp=0) then hurt=max(0,(attack-ac)*dr);
                     
                     repeat(hits){
-                        obj_ini.hp[co][i]-=hurt;
+                        unit.add_or_sub_health(-hurt);
                     }
                     
                     if (unit.hp()<=0){
@@ -315,7 +316,7 @@ if (boarding=true) and (board_cooldown>=0) and (instance_exists(target)) and (in
                 co=origin.board_co[o];
                 i=origin.board_id[o];               
                 unit = obj_ini.TTRPG[co][i];
-                unit_exp=unit.experience()                
+                unit_exp=unit.experience                
                 exp_roll=irandom(150+unit_exp)+1;
                 if (exp_roll>=unit_exp){
                     if (unit_exp<50){new_exp=experience

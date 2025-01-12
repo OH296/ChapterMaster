@@ -16,7 +16,7 @@ function scr_random_event(execute_now) {
 	//        if (obj_controller.known[eFACTION.Eldar]=2){
 	//            obj_turn_end.audien_topic[obj_turn_end.audiences]="mission1";
 	//            obj_controller.known[eFACTION.Eldar]=2.2;
-	//            scr_quest(0,"300req",6,24);
+	//            scr_quest(0,"fund_elder",6,24);
 	//        }
         
 	//        exit;
@@ -233,8 +233,9 @@ function scr_random_event(execute_now) {
 		}
 		var marine=marine_and_company[1];
 		var company=marine_and_company[0];
+		var unit = fetch_unit(marine_and_company);
 		var role=obj_ini.role[company][marine];
-		var text = string(role)+" "+string(obj_ini.name[company][marine]);
+		var text = unit.name_role();
 		var company_text = scr_convert_company_to_string(company);
 		if(company_text != ""){
 			company_text = "("+company_text+")";
@@ -282,21 +283,20 @@ function scr_random_event(execute_now) {
 			if(tries_to_place_space_hulk >= 50)
 			{
 				// its possible for there to be no good spot for the space hulk at a star, if there are too many stars in close proximity
-				debugl("RE: Space Hulk, couldn't find a spot for the spacehulk at the " +star_id.name +" system");
+				debugl($"RE: Space Hulk, couldn't find a spot for the spacehulk at the {star_id.name} system");
 				exit;	
 			}
-			var spaceHulk = instance_create(spaceHulkX,spaceHulkY,obj_star); 
-	        spaceHulk.space_hulk=1;
-	        spaceHulk.p_type[1]="Space Hulk";
-	        spaceHulk.name=global.name_generator.generate_hulk_name();
-	        if (own=1){
-				scr_alert("red","space_hulk","The Space Hulk "+string(spaceHulk.name)+" appears near the "+string(star_id.name)+" system.",spaceHulkX,spaceHulkY);
+			try{
+				var spaceHulk = scr_create_space_hulk(spaceHulkX,spaceHulkY);
+				
+				scr_alert(own?"red":"green","space_hulk",$"The Space Hulk {spaceHulk.name} appears near the {star_id.name} system.",spaceHulkX,spaceHulkY);
+
+				scr_event_log("",$"The Space Hulk {spaceHulk.name} appears near the {star_id.name} system.",star_id.name);
+		        evented = true;
 			}
-			else{ 
-				scr_alert("green","space_hulk","The Space Hulk "+string(spaceHulk.name)+" appears near the "+string(star_id.name)+" system.",spaceHulkX,spaceHulkY);
+			catch(_exception){
+				handle_exception(_exception);
 			}
-			scr_event_log("","The Space Hulk "+string(spaceHulk.name)+" appears near the "+string(star_id.name)+" system.");
-	        evented = true;
 		}
 	}
 	
@@ -325,7 +325,7 @@ function scr_random_event(execute_now) {
 			unit.add_exp(10);
 		}
 		else {
-			unit.add_exp(max(20, unit.experience()));
+			unit.add_exp(max(20, unit.experience));
 		}
 		
 		scr_popup("Promotions!",text,"distinguished","");
@@ -353,13 +353,13 @@ function scr_random_event(execute_now) {
         
 		//this bit should be improved, idk what duke was checking for here
 		//TODO make craft chance reflective of crafters skill, rewards players for having skilled tech area
-        if (string_count("Shit",obj_ini.strin2)>0) {
+        if (scr_has_disadv("Shitty Luck")) {
 			craft_roll+=20;
 		}
-        if (string_count("Tech-Heresy",obj_ini.strin2)>0) {
+        if (scr_has_disadv("Tech-Heresy")) {
 			craft_roll+=20;
 		}
-		if (string_count("Crafter",obj_ini.strin)>0) {
+		if (scr_has_adv("Crafter")) {
             if (craft_roll>80) {
 				craft_roll-=10;
 			}
@@ -384,7 +384,7 @@ function scr_random_event(execute_now) {
 		}
         
 			var event_index = -1;
-			for(var i = 1; i < 100; i++){
+			for(var i = 0; i < array_length(event); i++){
 				if(event[i] == "" || event[i] == undefined){
 					event_index = i;
 					break;
@@ -400,28 +400,21 @@ function scr_random_event(execute_now) {
 	        event[event_index]="strange_building|"+unit.name()+"|"+string(company)+"|"+string(marine)+"|"+string(crafted_object)+"|";
 	        event_duration[event_index]=1;
         
-			var marine_is_planetside = unit.planet_location>0
+			var marine_is_planetside = unit.planet_location>0;
 	        if (marine_is_planetside && heritical_item) {
-	            obj_controller.temp[100]=obj_ini.loc[company][marine]; //Why the fuck are we doing that??
-	            obj_controller.temp[101]=unit.planet_location;
-	            with(obj_star){
-	                if (this.name = obj_ini.loc[company][marine]){
-						for(var i = 1; i <= planets; i++){
-							p_hurssy[1]+=6;
-							p_hurssy_time[1]=2;
-						}
-						break;
-	                }
+	        	var _system = star_by_name(obj_ini.loc[company][marine]);
+	        	var _planet = unit.planet_location;
+	            if (_system!="none"){
+	            	with (_system){
+	            		p_hurssy[_planet]+=6;
+						p_hurssy_time[_planet]=2;
+	            	}	               
 	            }
 	        }
 	        else if (!marine_is_planetside and heritical_item){
-	            obj_controller.temp[101]=unit.ship_location;
-            
-	            with(obj_p_fleet){ // TO DO: fix this
-					var u;
-	                u=0;repeat(6){u+=1;if (capital_num[u]=obj_controller.temp[101]){hurssy+=6;hurssy_time=2;}}
-	                u=0;repeat(10){u+=1;if (frigate_num[u]=obj_controller.temp[101]){hurssy+=6;hurssy_time=2;}}
-	                u=0;repeat(20){u+=1;if (escort_num[u]=obj_controller.temp[101]){hurssy+=6;hurssy_time=2;}}
+	            var _fleet = find_ships_fleet(unit.ship_location);
+	            if (_fleet!="none"){
+	            	//the intended code for here was to add some sort of chaos event on the ship stashed up ready to fire in a few turns
 	            }
 	        }
 	}
@@ -1023,23 +1016,14 @@ function scr_random_event(execute_now) {
 		}
 		
 	    var planet=irandom_range(1,star.planets);
-		for(var i = 1; i<= 4;i++){
-			if(star.p_problem[planet,i] == "") {
-				star.p_problem[planet,i] = "harlequins";
-				star.p_timer[planet,i] = irandom_range(2,5);
-				break;
-			}
-			if(i == 4){
-				debugl("RE: Harlequins, couldn't assing a problem to the planet");
-				exit;
-			}
-		}
-	    var text="Eldar Harlequins have been seen on planet " + string(star.name) + " " + scr_roman(planet) + ". Their purposes are unknown.";
-	    scr_popup("Harlequin Troupe",text,"harlequin","");
-	    var star_alert = instance_create(star.x+16,star.y-24,obj_star_event);
-		star_alert.image_alpha=1;
-		star_alert.image_speed=1;
-		star_alert.col="green";
+	    if ( add_new_problem(planet, "harlequins", irandom_range(2,5),star)){
+		    var text="Eldar Harlequins have been seen on planet " + string(star.name) + " " + scr_roman(planet) + ". Their purposes are unknown.";
+		    scr_popup("Harlequin Troupe",text,"harlequin","");
+		    var star_alert = instance_create(star.x+16,star.y-24,obj_star_event);
+			star_alert.image_alpha=1;
+			star_alert.image_speed=1;
+			star_alert.col="green";
+	    }
 	}
     
 	else if (chosen_event == EVENT.succession_war){
@@ -1069,15 +1053,9 @@ function scr_random_event(execute_now) {
 			}
 		}
 		
-		array_push(star.p_feature[planet], new new_planet_feature(P_features.Succession_War))
-	    for(var i = 1; i <= 4; i++){
-			if(star.p_problem[planet,i] == "" ) {
-				star.p_problem[planet,i] = "succession";
-				star.p_timer[planet,i] = irandom(6) + 4;
-				star.dispo[planet] = -5000; 
-				break;
-			}
-		}
+		array_push(star.p_feature[planet], new NewPlanetFeature(P_features.Succession_War));
+		add_new_problem(planet, "succession",irandom(6) + 4, star);
+		star.dispo[planet] = -5000; 
 		
 		var text = string(star.name) + scr_roman(planet);
 		scr_popup("War of Succession","The planetary governor of "+string(text)+" has died.  Several subordinates and other parties each claim to be the true heir and successor- war has erupted across the planet as a result.  Heresy thrives in chaos.","succession","");
@@ -1155,7 +1133,7 @@ function scr_random_event(execute_now) {
 	    var own,time,him;
 		
 		time=irandom_range(6,24);
-	    if (string_count("Shitty",obj_ini.strin2)==1){
+	    if (scr_has_disadv("Shitty Luck")){
 			own=1;
 		}
 		else {
@@ -1180,10 +1158,10 @@ function scr_random_event(execute_now) {
 			star_id.storm += time;
 			evented = true;
 			if (own==1){
-				scr_alert("red","warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
+				scr_alert("red","Warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
 			}
 			else{
-				scr_alert("green","warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
+				scr_alert("green","Warp","Warp Storms rage across the "+string(star_id.name)+" system.",star_id.x,star_id.y);
 			}	
 		}
 	}
@@ -1191,7 +1169,7 @@ function scr_random_event(execute_now) {
 	else if (chosen_event == EVENT.enemy_forces){
 		debugl("RE: Enemy Forces");
 		var own;
-	    if (string_count("Shitty",obj_ini.strin2)==1) {
+	    if (scr_has_disadv("Shitty Luck")) {
 			own=1;
 		}
 		else{
@@ -1350,124 +1328,7 @@ function scr_random_event(execute_now) {
 	}
 
 	else if (chosen_event == EVENT.ship_lost){
-		debugl("RE: Ship Lost");   
-		
-		var eligible_fleets = [];
-		with(obj_p_fleet) {
-			if (action="move") {
-				array_push(eligible_fleets, id);
-			}
-		}
-		
-		if(array_length(eligible_fleets) == 0) {
-			debugl("RE: Ship Lost, couldn't find a player fleet");   
-			exit;
-		}
-		
-		var fleet = eligible_fleets[irandom(array_length(eligible_fleets) - 1)];		
-		var ship_index = -1;
-		var ship_type="";
-	    var ship_count = fleet.capital_number + fleet.frigate_number + fleet.escort_number;
-	    var ship_roll=irandom_range(1,ship_count);
-	    if (ship_roll <= fleet.capital_number){
-			ship_index=ship_roll;
-			ship_type="capital";
-		}
-	    else if ((ship_roll > fleet.capital_number) && (ship_roll <= fleet.capital_number + fleet.frigate_number)) {
-			ship_index = ship_roll-fleet.capital_number;
-			ship_type = "frigate";
-		}
-	    else if ((ship_roll > fleet.frigate_number + fleet.capital_number) && (fleet.escort_number > 0)) { 
-			ship_index = ship_roll - fleet.capital_number - fleet.frigate_number;
-			ship_type = "escort";
-		}
-		
-		
-		var chosen_ship = -1;
-		var text="The ";
-		var ship_name = "";
-		switch(ship_type) {
-			case "capital":
-				ship_name = fleet.capital[ship_index];
-				text += "Battle Barge '" + string(ship_name) + "'";
-				chosen_ship = fleet.capital_num[ship_index];
-				break;
-			case "frigate":
-				ship_name = fleet.frigate[ship_index];
-				text += "Strike Cruiser '" + string(ship_name) + "'";
-				chosen_ship = fleet.frigate_num[ship_index];
-				break;
-			case "escort":
-				ship_name = fleet.escort[ship_index];
-				text += "Escort Frigate '" + string(ship_name) + "'";
-				chosen_ship = fleet.escort_num[ship_index];
-				break;
-			default:	
-				debugl("RE: Ship Lost, couldn't identify ship type");
-				exit;
-		}
-		
-		text+=" has been lost to the miasma of the warp."
-		var marine_count = scr_count_marines_on_ship(chosen_ship);				
-		if (marine_count>0) {
-			text += "  " + string(marine_count) + " Battle Brothers were onboard.";
-		}
-		scr_event_log("red",string(text));
-
-		var lost_ship_fleet = instance_create(-500,-500,obj_p_fleet);
-		lost_ship_fleet.owner = eFACTION.Player;
-		
-		switch(ship_type) {
-			case "capital":
-			    lost_ship_fleet.capital_number=1;
-				lost_ship_fleet.capital[1] = ship_name;
-				lost_ship_fleet.capital_num[1] = chosen_ship;
-				array_delete(fleet.capital,ship_index,1);
-				array_delete(fleet.capital_num,ship_index,1);
-				fleet.capital_number -= 1;
-				break;
-			case "frigate": 
-			    lost_ship_fleet.frigate_number=1;
-				lost_ship_fleet.frigate[1]=ship_name;
-				lost_ship_fleet.frigate_num[1]=chosen_ship;
-				array_delete(fleet.frigate,ship_index,1);
-			    array_delete(fleet.frigate_num,ship_index,1);
-				fleet.frigate_number-=1;
-				break;
-			case "escort":
-			    lost_ship_fleet.escort_number=1;
-				lost_ship_fleet.escort[1] = ship_name;
-				lost_ship_fleet.escort_num[1] = chosen_ship;
-			    array_delete(fleet.escort,ship_index,1);
-			    array_delete(fleet.escort_num,ship_index,1);
-				fleet.escort_number-=1;
-				break;
-		}
-		var unit;
-		for(var company = 0; company <= 10; company++){
-			for(var marine = 1; marine <= 300; marine++){
-				if (obj_ini.name[company][marine] == "") then continue;
-				unit = fetch_unit([company, marine]);
-				if(unit.ship_location == chosen_ship) {
-					obj_ini.loc[company, marine] = "Lost";
-				}
-			}
-			for(var vehicle = 1; vehicle <= 100; vehicle++){
-				if(obj_ini.veh_lid[company, vehicle] == chosen_ship){
-					obj_ini.veh_loc[company, vehicle] = "Lost";
-				}
-			}
-		}
-	
-		obj_ini.ship_location[chosen_ship]="Lost";
-		lost_ship_fleet.action="lost";
-		lost_ship_fleet.alarm[1]=2;
-		
-		scr_popup("Ship Lost",text,"lost_warp","");
-               
-	    if (fleet.capital_number+fleet.frigate_number+fleet.escort_number=0) then with(fleet){
-				instance_destroy();
-		}
+		loose_ship_to_warp_event();
 	}
     
 	else if (chosen_event == EVENT.chaos_invasion){
@@ -1503,10 +1364,10 @@ function scr_random_event(execute_now) {
 		}
 		
 	    if ((!psyker_intolerant) && (has_chief_psyker)) {
-			scr_popup("The Maw of the Warp Yawns Wide","Chief "+string(obj_ini.role[100,17])+" "+string(obj_ini.name[0,5])+" reports that the barrier between the realm of man and the Immaterium feels thin and tested.","warp","");
+			scr_popup("The Maw of the Warp Yawns Wide","Chief "+string(obj_ini.role[100,17])+" "+string(obj_ini.name[0,5])+" reports that the barrier between the realm of man and the Immaterium feels thin and tested.","Warp","");
 		}
 	    else if ((psyker_intolerant || !has_chief_psyker) && (cm_is_psyker)) {
-			scr_popup("The Maw of the Warp Yawns Wide","The barrier between the realm of man and the Immaterium feels thin and tested to you.  Dark forces are afoot.","warp","");
+			scr_popup("The Maw of the Warp Yawns Wide","The barrier between the realm of man and the Immaterium feels thin and tested to you.  Dark forces are afoot.","Warp","");
 		}
 
 	}
@@ -1535,13 +1396,8 @@ function scr_random_event(execute_now) {
 		var eta = scr_mission_eta(star.x,star.y, 1);
 		
 		var assigned_problem = false;
-		for(var i = 1; i<=4 && !assigned_problem; i++) {
-			if(star.p_problem[planet,i] == "") {
-				star.p_problem[planet,i] = "fallen";
-				star.p_timer[planet,i] = eta;
-				assigned_problem = true;
-			}
-		}
+		
+		add_new_problem(planet, "fallen", eta,star)
 		
 		if(!assigned_problem) {
 			debugl("RE: Hunt the Fallen, coulnd't assign a problem to the planet");

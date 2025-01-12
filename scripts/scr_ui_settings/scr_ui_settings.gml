@@ -178,8 +178,8 @@ function scr_ui_settings() {
 					tooltip2="You and your advisors will be placed within this section.  It is strongly advisable you give them backup in this same column.";
 				}
 	            if (theh.unit_id=2){
-					tooltip="Honor Guard";
-					tooltip2="Any Honor Guard within your Headquarters will be placed here.  The best place for them within the formation depends on loadout.";
+					tooltip="Honour Guard";
+					tooltip2="Any Honour Guard within your Headquarters will be placed here.  The best place for them within the formation depends on loadout.";
 				}
 	            if (theh.unit_id=3){
 					tooltip="Librarians";
@@ -294,11 +294,9 @@ function scr_ui_settings() {
 			draw_set_font(fnt_40k_14b);
 			draw_set_halign(fa_right);
         
-	        var title,geh,tab;
-			title="";
-			geh="";
+            var title = "";
+            var geh = "";
 			spacing=22;
-			tab=0;
 	        x5=xx+830;
 			y5=yy+207-spacing;
         
@@ -317,12 +315,12 @@ function scr_ui_settings() {
 					geh=obj_ini.armour[co,ide];
 				}
 	            if (gg=4){
-					title="Mobility Item: ";
-					geh=obj_ini.mobi[co,ide];
-				}
-	            if (gg=5){
 					title="Special Item: ";
 					geh=obj_ini.gear[co,ide];
+				}
+	            if (gg=5){
+					title="Mobility Item: ";
+					geh=obj_ini.mobi[co,ide];
 				}
             
 	            draw_set_halign(fa_right);
@@ -340,25 +338,31 @@ function scr_ui_settings() {
 	                if ((obj_ini.armour[co,ide]="Terminator Armour") or (obj_ini.armour[co,ide]="Dreadnought")) and (gg=4) then nep=true;
 	                if (ide=6) and ((gg=3) or (gg=5)) then nep=true;
                 
-	                if (obj_controller.mouse_left=1) and (obj_controller.cooldown<=0) and (nep=false){
-	                    obj_controller.cooldown=8000;
-	                    if (obj_mass_equip.tab!=0) then obj_mass_equip.refresh=true;
-	                    if (obj_mass_equip.tab=0){
-	                        if (gg=1) then tab=1;
-	                        if (gg=2) then tab=2;
-	                        if (gg=3) then tab=3;
-	                        if (gg=4) then tab=5;
-	                        if (gg=5) then tab=4;
-                        
-	                        obj_mass_equip.tab=tab;
-	                        with(obj_mass_equip){scr_weapons_equip();}// Gets item list
-	                    }
-	                }
+                    if (obj_controller.mouse_left == 1 && obj_controller.cooldown <= 0 && !nep) {
+                        obj_controller.cooldown=8000;
+                        if (obj_mass_equip.tab != 0) {
+                            obj_mass_equip.refresh = true;
+                        } else if (obj_mass_equip.tab == 0) {
+                            obj_mass_equip.tab = gg;
+                            obj_mass_equip.item_name = [];
+                            var is_hand_slot = (gg == 1 || gg == 2);
+                            scr_get_item_names(
+                                obj_mass_equip.item_name,
+                                obj_controller.settings, // eROLE
+                                gg, // slot
+                                is_hand_slot ? (
+                                    obj_mass_equip.tab == 1 ? eENGAGEMENT.Ranged : eENGAGEMENT.Melee
+                                ) : eENGAGEMENT.None,
+                                true, // include company standard
+                                false, // show all regardless of inventory
+                            );
+                        }
+                    }
 	            }
 	            draw_set_alpha(1);
-				draw_set_color(c_gray);
+	            draw_set_color(c_gray);
 	            draw_set_halign(fa_left);
-				draw_text(x5+5,y5,string(geh));
+	            draw_text(x5+5,y5,string(geh));
 	        }
 	    }
 	}
@@ -372,11 +376,31 @@ function scr_ui_settings() {
 		draw_set_color(c_gray);
 		draw_set_font(fnt_40k_30b);
 	    draw_text_transformed(xx+800,yy+66,string(global.chapter_name)+" Chapter Settings",1,1,0);
-	    draw_text_transformed(xx+800,yy+100,"(Codex Compliant)",0.6,0.6,0);
-	    draw_set_font(fnt_40k_14);draw_set_halign(fa_left);
+	    draw_text_transformed(xx+800,yy+110,"(Codex Compliant)",0.6,0.6,0);
+	    draw_set_font(fnt_40k_14);
+		draw_set_halign(fa_left);
     
 	    yy-=64;
     
+
+		cx = xx + 31;
+		cy = yy + 203;
+		che = progenitor_visuals;
+		draw_sprite(spr_creation_check, che + 2, cx, cy);
+
+		var _option_name = "Progenitor Livery";
+		draw_text(cx + 35, cy, _option_name);
+
+		if (scr_hit(cx, cy, cx + string_width(_option_name) + 35, cy + sprite_get_height(spr_creation_check))) {
+			tool1 = _option_name;
+			tool2 = "Turned off by default. \nWhen turned on, various unit visuals may change depending on your progenitor chapter.";
+			if ((mouse_left=1) and (cooldown<=0)) {
+				progenitor_visuals = !progenitor_visuals;
+				cooldown=8000;
+			}
+		}
+
+		
 	    draw_text(xx+66,yy+238,"Allow Astartes Transfer");
 	    che=command_set[1];
 		cx=xx+31;
@@ -386,7 +410,7 @@ function scr_ui_settings() {
 	    if (scr_hit(cx+31,cy,cx+260,cy+20)=true){
 			tool1="Allow Astartes Transfer";
 			tool2="Turned off by default. Allows you to transfer Astartes in the same way as vehicles.";
-			}
+		}
 	    if (scr_hit(cx,cy,cx+32,cy+32)=true) and (mouse_left=1) and (cooldown<=0){
 			var onceh;
 			onceh=0;cooldown=8000;
@@ -400,49 +424,49 @@ function scr_ui_settings() {
 			}
 		}
     
-	    draw_text(xx+66,yy+273,"Remove Promote EXP Requirements");
+	    draw_text(xx+66,yy+273,"Codex Compliant Organization");
 	    che=command_set[2];
 		cx=xx+31;
 		cy=yy+269;
 		
 	    draw_sprite(spr_creation_check,che+2,cx,cy);
 	    if (scr_hit(cx+31,cy,cx+300,cy+20)=true){
-			tool1="Remove Promote EXP Requirements";
-			tool2="Turned off by default.  Allows you to promote Astartes without regard of their Experience.  Experience requirements for Terminator Armour and Thunder Hammers remain.";
+			tool1="Codex Compliant Organization";
+			tool2="When enabled, marine promotions are limited based on their current company and EXP, overall following the Codex Astartes promotion sequence." + "\n\n" + "When disabled, you can promote marines to any company, from any company, disregarding any EXP requirements." + "\n" + "Terminators, Dreadnoughts and Company Command roles retain EXP requirements however.";
 		}
 	    if (scr_hit(cx,cy,cx+32,cy+32)=true) and (mouse_left=1) and (cooldown<=0){
 			var onceh=0;
 			cooldown=8000;
-			if (onceh=0) and (command_set[2]=0){
-				onceh=1;
-				command_set[2]=1;
-			}
 			if (onceh=0) and (command_set[2]=1){
 				onceh=1;
 				command_set[2]=0;
 			}
+			if (onceh=0) and (command_set[2]=0){
+				onceh=1;
+				command_set[2]=1;
+			}
 		}
     
-	    draw_text(xx+66,yy+308,"Modest Livelry");
-	    che=blandify;
+	    draw_text(xx+66,yy+308,"Modest Livery");
+	    che=modest_livery;
 		cx=xx+31;
 		cy=yy+304;
 		
 	    draw_sprite(spr_creation_check,che+2,cx,cy);
 	    if (scr_hit(cx+31,cy,cx+300,cy+20)=true){
-			tool1="Modest Livelry";
+			tool1="Modest Livery";
 			tool2="Turned off by default.  Prevents Advantages and Disadvantages from changing the appearances of your marines, effectively disabling any special ornamentation or possible battle wear.";
 		}
 	    if (scr_hit(cx,cy,cx+32,cy+32)=true) and (mouse_left=1) and (cooldown<=0){
 			var onceh=0;
 			cooldown=8000;
-			if (onceh=0) and (blandify=0){
+			if (onceh=0) and (modest_livery=0){
 				onceh=1;
-				blandify=1;
+				modest_livery=1;
 			}
-			if (onceh=0) and (blandify=1){
+			if (onceh=0) and (modest_livery=1){
 				onceh=1;
-				blandify=0;
+				modest_livery=0;
 			}
 		}
     
@@ -457,7 +481,7 @@ function scr_ui_settings() {
     
 	    draw_text(xx+66,yy+359,"Captain");
 	    draw_text(xx+66,yy+386,"Standard Bearer");
-	    draw_text(xx+66,yy+413,"Company Champion");
+	    draw_text(xx+66,yy+413,"Champion");
 	    draw_text(xx+66,yy+440,"Chaplain");
 	    draw_text(xx+66,yy+467,"Apothecary");
 	    draw_text(xx+66,yy+494,"Librarian");
@@ -892,13 +916,20 @@ function scr_ui_settings() {
 	                    if (bat_formation[formating]=""){
 	                        bat_formation[formating]="Custom"+string(formating-3);
 	                        bat_formation_type[formating]=1;
-	                        bat_deva_for[formating]=1;bat_assa_for[formating]=4;
-	                        bat_tact_for[formating]=2;bat_vete_for[formating]=2;
-	                        bat_hire_for[formating]=3;bat_libr_for[formating]=3;
-	                        bat_comm_for[formating]=3;bat_tech_for[formating]=3;
-	                        bat_term_for[formating]=3;bat_hono_for[formating]=3;
-	                        bat_drea_for[formating]=5;bat_rhin_for[formating]=6;
-	                        bat_pred_for[formating]=7;bat_land_for[formating]=7;
+	                        bat_deva_for[formating]=1;
+	                        bat_assa_for[formating]=4;
+	                        bat_tact_for[formating]=2;
+	                        bat_vete_for[formating]=2;
+	                        bat_hire_for[formating]=3;
+	                        bat_libr_for[formating]=3;
+	                        bat_comm_for[formating]=3;
+	                        bat_tech_for[formating]=3;
+	                        bat_term_for[formating]=3;
+	                        bat_hono_for[formating]=3;
+	                        bat_drea_for[formating]=5;
+	                        bat_rhin_for[formating]=6;
+	                        bat_pred_for[formating]=7;
+	                        bat_land_for[formating]=7;
 	                        bat_scou_for[formating]=1;
 	                    }
 	                }

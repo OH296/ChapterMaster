@@ -8,6 +8,9 @@ function scr_unit_detail_text(){
 	var unit_role = role();
 	var body_augmentations = {mutations:[], bionics:[[],[]]}
 	var body_bionics = get_body_data("bionic");
+	var _phy_levels = ARR_psy_levels;
+	var _body_parts = ARR_body_parts;
+	var _body_parts_display = ARR_body_parts_display;
 	if(base_group == "astartes"){
 		is_astartes = true;
 	}
@@ -34,7 +37,12 @@ function scr_unit_detail_text(){
 		if (base_group == "astartes"){
 			var ascension_date = marine_ascension;
 			if ascension_date = "pre_game" then ascension_date = "when the chapter was created";
-			unit_data_string += $"{round(age())} years old. Ascended to an Astartes {ascension_date}.";
+			unit_data_string += $"{round(age())} years old. Ascended to an Astartes in the year {ascension_date}.";
+			if (struct_exists(spawn_data, "recruit_data")){
+				var recruit_data = spawn_data.recruit_data;
+				unit_data_string+="\n";
+				unit_data_string += $"they were recruited from a {recruit_data.recruit_world} World, and was chosen as potential candidate for the chapter by way of a {scr_trial_data(recruit_data.aspirant_trial).name} Trial";
+			}
 		}
 
 		// Religion text
@@ -57,7 +65,7 @@ function scr_unit_detail_text(){
 		}
 
 		// Psyker text
-		unit_data_string += $"Has an Assignment rating of {global.phy_levels[psionic]} ({psionic}) ";
+		unit_data_string += $"Has an Assignment rating of {_phy_levels[psionic]} ({psionic}) ";
 		var is_lib = array_contains(["Lexicanum", "Codiciery",obj_ini.role[100,17]], role());
 		if (psionic<2){
 			unit_data_string += "and as such has almost no presence in the warp.";
@@ -111,9 +119,9 @@ function scr_unit_detail_text(){
 			if (bionic_count == 0){
 				unit_data_string+= "Has no bodily augmentations besides his astartes gene-seed and organs.";
 			}else if(bionic_count == 1 && array_length(bionic_positions)>0){
-				for (var i=0;i<array_length(global.body_parts);i++){
-					if (bionic_positions[0]==global.body_parts[i]){
-						unit_data_string+= $"Has a bionic {global.body_parts_display[i]}.";
+				for (var i=0;i<array_length(_body_parts);i++){
+					if (bionic_positions[0]==_body_parts[i]){
+						unit_data_string+= $"Has a bionic {_body_parts_display[i]}.";
 					}
 				}
 			}else if((bionic_count >1) and (bionic_count <=4)){

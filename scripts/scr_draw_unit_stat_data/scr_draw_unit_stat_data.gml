@@ -6,6 +6,7 @@ function scr_draw_unit_stat_data(manage=false){
 	var stat_tool_tips = [];
 	var trait_tool_tips = [];
 	var unit_name = name();
+	var _psy_levels = ARR_psy_levels;
 
 	var data_block = {
 		x1: xx + 1008,
@@ -110,7 +111,7 @@ function scr_draw_unit_stat_data(manage=false){
 	// draw_set_color(c_black);
 	// draw_rectangle(stat_block.x1,stat_block.y1, stat_block.x1 + (4*array_length(stat_display_list)), stat_block.y1+48+4, 1)
 	var viewing_stat,icon_colour;
-	for (i=0; i<array_length(stat_display_list);i++){
+	for (var i=0; i<array_length(stat_display_list);i++){
 		if (point_in_rectangle(mouse_x, mouse_y, attribute_box.x1,attribute_box.y1,attribute_box.x2,attribute_box.y2)){
 			viewing_stat=true;
 		}else{
@@ -224,30 +225,33 @@ function scr_draw_unit_stat_data(manage=false){
 		array_push(data_lines, data_entry);
 		
 		data_entry = {};
-		data_entry.text = $"Assignment: {global.phy_levels[psionic]} ({psionic})\n";
+		data_entry.text = $"Assignment: {_psy_levels[psionic]} ({psionic})\n";
 		data_entry.tooltip = "The Imperium measures and records the psionic activity and power level of psychic individuals through a rating system called The Assignment. Comprised of a twenty-four point scale, The Assignment simplifies the comparison of psykers to aid Imperial authorities in recognizing possible threats.";
 		array_push(data_lines, data_entry);
 		
 		var forge_gen = forge_point_generation();
-		if (forge_gen!=0){
-			data_entry = {};
-			data_entry.tooltip="";
-			var gen_reasons = forge_gen[1];
-			data_entry.text = $"Forge Production: {forge_gen[0]}\n";
-			if (struct_exists(gen_reasons, "trained")){
-				data_entry.tooltip+=$"Trained On Mars (TEC/10): {gen_reasons.trained}\n";
-				if (struct_exists(gen_reasons, "at_forge")){
-					data_entry.tooltip+=$"{gen_reasons.at_forge}(at Forge)\n";
-				}
+
+		data_entry = {};
+		data_entry.tooltip="";
+		var gen_reasons = forge_gen[1];
+		data_entry.text = $"Forge Production: {forge_gen[0]}\n";
+		if (struct_exists(gen_reasons, "trained")){
+			data_entry.tooltip+=$"Trained On Mars (TEC/10): {gen_reasons.trained}\n";
+			if (struct_exists(gen_reasons, "at_forge")){
+				data_entry.tooltip+=$"{gen_reasons.at_forge}(at Forge)\n";
 			}
-			if (struct_exists(gen_reasons, "master")){
-				data_entry.tooltip+=$"Forge Master: +{gen_reasons.master}\n";
-			}
-			if (struct_exists(gen_reasons, "crafter")){
-				data_entry.tooltip+=$"Crafter: +{gen_reasons.crafter}\n";
-			}
-			array_push(data_lines, data_entry);
 		}
+		if (struct_exists(gen_reasons, "master")){
+			data_entry.tooltip+=$"Forge Master: +{gen_reasons.master}\n";
+		}
+		if (struct_exists(gen_reasons, "crafter")){
+			data_entry.tooltip+=$"Crafter: +{gen_reasons.crafter}\n";
+		}
+		if (struct_exists(gen_reasons, "maintenance")){
+			data_entry.tooltip+=$"Maintenance: +{gen_reasons.maintenance}";
+		}			
+		array_push(data_lines, data_entry);
+
 		
 		for (var i = 0; i < array_length(data_lines); i++) {
 			draw_text(data_block.x1+16, attribute_box.y2+16+(i*24), data_lines[i].text); // Adjust the y-coordinate for the new line
@@ -256,7 +260,7 @@ function scr_draw_unit_stat_data(manage=false){
 
 		var x1 = data_block.x2-16;
 		if array_length(traits) != 0 {
-			for (i=0; i<array_length(traits); i++) {
+			for (var i=0; i<array_length(traits); i++) {
 				var trait_name = global.trait_list[$ traits[i]].display_name;
 				var trait_description = string(global.trait_list[$ traits[i]].flavour_text, unit_name);
 				var trait_effect = "";
@@ -269,7 +273,7 @@ function scr_draw_unit_stat_data(manage=false){
 				draw_set_halign(fa_left);
 				var x2 = x1 - string_width(trait_name);
 				var y2 = y1 + string_height(trait_name);
-				array_push(trait_tool_tips, [x1, y1, x2, y2, trait_description + trait_effect]);
+				array_push(trait_tool_tips, [x1, y1, x2, y2, trait_description + "#" + trait_effect]);
 			}
 		} else {
 			draw_set_halign(fa_right);
@@ -277,12 +281,12 @@ function scr_draw_unit_stat_data(manage=false){
 			draw_set_halign(fa_left);
 		}
 
-		for (i=0;i<array_length(stat_tool_tips);i++){
+		for (var i=0;i<array_length(stat_tool_tips);i++){
 			if (point_in_rectangle(mouse_x, mouse_y, stat_tool_tips[i][0], stat_tool_tips[i][1], stat_tool_tips[i][2], stat_tool_tips[i][3])){
 				tooltip_draw(stat_tool_tips[i][4], 300, [stat_tool_tips[i][0], stat_tool_tips[i][3]],,,stat_tool_tips[i][5]);
 			}
 		}
-		for (i=0;i<array_length(trait_tool_tips);i++){
+		for (var i=0;i<array_length(trait_tool_tips);i++){
 			if (point_in_rectangle(mouse_x, mouse_y, trait_tool_tips[i][2], trait_tool_tips[i][1], trait_tool_tips[i][0], trait_tool_tips[i][3])){
 				tooltip_draw(trait_tool_tips[i][4], 300);
 			}

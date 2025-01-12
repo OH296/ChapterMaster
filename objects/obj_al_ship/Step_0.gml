@@ -1,5 +1,5 @@
 // Manages space combat, checks if ships are destroyed and does the targeting and pointing of the ship
-show_debug_message("-")
+
 var __b__;
 var bull, ok, targe=0,rdir=0,dist=9999,xx=x,yy=y;
 var front=0,right=0,left=0,rear=0;
@@ -459,7 +459,7 @@ if (__b__){
         
         if (y<-2000) or (y>room_height+2000) or (x<-2000) or (x>room_width+2000) then hp=-50;
         // Weapon and turret cooldown
-        for (var i = 1; i <= array_length(cooldown); i++) {
+        for (var i = 1; i < array_length(cooldown); i++) {
             if (cooldown[i]>0){
                 cooldown[i]--;
             }

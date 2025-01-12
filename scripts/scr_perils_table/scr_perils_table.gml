@@ -14,7 +14,7 @@ function scr_perils_table(peril_roll, unit, psy_discipline, power_name, unit_id,
 		}],
 		[31, function(peril_roll, unit, psy_discipline, power_name, unit_id, book_powers){
 			//TODO figure out a better way of making a marine unconcious/incapacitated
-			unit.add_or_sub_health(-5000);
+			//unit.add_or_sub_health(-5000);
 		    var flavour_text2="Psychic backlash knocks him out entirely, incapacitating the marine.";
 		    return flavour_text2;
 		}],
@@ -46,7 +46,7 @@ function scr_perils_table(peril_roll, unit, psy_discipline, power_name, unit_id,
 		        var flavour_text2="Capricious voices eminate from the surrounding area, whispering poisonous lies and horrible truths.";
 		        unit.corruption+=choose(10,15,20);
 		        repeat(6){
-		            var t=floor(random(men))+1;
+		            var t=floor(random(men));
 		            if (marine_type[t]!="") then unit.corruption+=choose(6,9,12,15);
 		        }
 		        return flavour_text2;
@@ -102,7 +102,7 @@ function scr_perils_table(peril_roll, unit, psy_discipline, power_name, unit_id,
 		        unit.add_or_sub_health(-65);
 		       unit.add_or_sub_health(-5000);
 		        repeat(7){
-		            var t=floor(random(men))+1;
+		            var t=floor(random(men));
 		            if (marine_type[t]!="") then marine_hp[t]-=choose(10,20,30);
 		        }
 		        return flavour_text2;
@@ -136,8 +136,6 @@ function scr_perils_table(peril_roll, unit, psy_discipline, power_name, unit_id,
 				marine_dead[unit_id]=2;
 		        if (unit.role()="Chapter Master") then global.defeat=3;
 		        flavour_text2="The marine's flesh begins to twist and rip, seemingly turning inside out.  His form looms up, and up, and up.  Within seconds a Greater Daemon of ";
-		        //if (obj_ini.age[marine_co[unit_id],marine_id[unit_id]]<=((obj_controller.millenium*1000)+obj_controller.year)-10) and (obj_ini.zygote=0) and (string_count("Doom",obj_ini.strin2)=0) then obj_ncombat.gene_penalty+=1;
-		        //if (obj_ini.age[marine_co[unit_id],marine_id[unit_id]]<=((obj_controller.millenium*1000)+obj_controller.year)-5) and (string_count("Doom",obj_ini.strin2)=0) then obj_ncombat.gene_penalty+=1;
 	        
 		        var dem=choose("Slaanesh","Nurgle","Tzeentch");
 		        if (book_powers!=""){

@@ -18,331 +18,39 @@ function set_up_armentarium(){
         click=1;
         temp[36]=scr_role_count(obj_ini.role[100][16],"");
         temp[37]=temp[36]+scr_role_count(string(obj_ini.role[100][16])+" Aspirant","");
-        calculate_research_points();
+        specialist_point_handler.calculate_research_points();
         in_forge=false
-        forge_button = new shutter_button();
-        stc_flashes = new glow_dot();
+        forge_button = new ShutterButton();
+        stc_flashes = new GlowDot();
         /*for (var i =0;i<3;i++){
             for (var f =0;f<7;f++){
-                stc_flashes[i][f] = new glow_dot();
+                stc_flashes[i][f] = new GlowDot();
                // stc_flashes[i][f].flash_size
             }
         }*/
         speeding_bits = [
-            new speeding_dot(0, 0,(210/6)*stc_wargear),
-            new speeding_dot(0, 0,(210/6)*stc_vehicles),
-            new speeding_dot(0, 0,(210/6)*stc_ships)
+            new SpeedingDot(0, 0,(210/6)*stc_wargear),
+            new SpeedingDot(0, 0,(210/6)*stc_vehicles),
+            new SpeedingDot(0, 0,(210/6)*stc_ships)
         ]        
-}
-
-function drop_down(selection, draw_x, draw_y, options,open_marker){
-	if (selection!=""){
-		draw_unit_buttons([draw_x, draw_y],selection,[1,1],c_green);
-		draw_set_color(c_red);
-		if (array_length(options)>1){
-			if (point_in_rectangle(
-				mouse_x,
-				mouse_y,
-				draw_x, 
-				draw_y, 
-				draw_x + 5 + string_width(selection), 
-				draw_y + 4 + string_height(selection)
-			)){
-				open_marker = true;
-			}
-			if (open_marker){
-                current_target=true;
-				var roll_down_offset=4+string_height(selection);
-				for (var col = 0;col<array_length(options);col++){
-					if (options[col]==selection) then continue;
-					draw_unit_buttons([draw_x , draw_y+roll_down_offset],options[col],[1,1],c_red);
-					if (mouse_check_button_pressed(mb_left) && 
-						point_in_rectangle(
-								mouse_x,
-								mouse_y,
-								draw_x, 
-								draw_y+roll_down_offset, 
-								draw_x +5 +string_width(options[col]), 
-								draw_y+roll_down_offset+string_height(options[col])+4									
-							)){
-						selection = options[col];
-						open_marker = false;
-					}
-					roll_down_offset += string_height(options[col])+4;
-
-				}
-				if (!point_in_rectangle(
-						mouse_x,
-						mouse_y,
-						draw_x,
-						draw_y,
-						draw_x + 5 +string_width(selection),
-						draw_y+roll_down_offset,
-					)
-				){
-					open_marker = false;
-                    if (current_target) then current_target=false;
-				}
-			} else {
-                current_target=false;
-            }
-		}
-	}
-    return [selection,open_marker];
 }
 
 function same_locations(first_loc,second_loc){
     var same_loc = false;
-    if (first_loc[2] != "warp" && first_loc[2] != "lost"){
-        if (first_loc[2] == second_loc[2]) then same_loc=true;
-    } else {
-        if (first_loc[1] == second_loc[1]) &&
-            (first_loc[0] == second_loc[0]){
-                same_loc=true;
+    if (is_array(first_loc)&& is_array(second_loc)){
+        if (first_loc[2] != "Warp" && first_loc[2] != "Lost"){
+            if (first_loc[2] == second_loc[2]) then same_loc=true;
+        } else {
+            if (first_loc[1] == second_loc[1]) &&
+                (first_loc[0] == second_loc[0]){
+                    same_loc=true;
+            }
         }
     }
     return same_loc;
 }
 
-function calculate_research_points(turn_end=false){
-    with (obj_controller){
-        research_points = 0;
-        forge_points = 0;
-        master_craft_chance = 99;
-        forge_string = $"Forge Production Rate#";
-        var heretics = [], forge_master=-1, notice_heresy=false, forge_point_gen=[], crafters=0, at_forge=0, gen_data={};
-        var tech_locations=[]
-        var techs = collect_role_group("forge");
-        for (var i=0; i<array_length(techs); i++){
-            if (techs[i].in_jail()) then continue;
-            if (techs[i].technology>40 && techs[i].hp() >0){
-                research_points += techs[i].technology-40;
-                forge_point_gen=techs[i].forge_point_generation(true);
-                gen_data = forge_point_gen[1];
-                if (struct_exists(gen_data,"crafter")) then crafters++;
-                if (struct_exists(gen_data,"at_forge")){
-                    at_forge++;
-                    master_craft_chance -= (techs[i].experience()/50)
-                }
-                forge_points += forge_point_gen[0];
-                if (techs[i].has_trait("tech_heretic")){
-                    array_push(heretics, i);
-                }
-            }
-            tech_locations[i] = techs[i].marine_location();
-            if (techs[i].IsSpecialist("heads")){
-                forge_master=i;
-            }
-        }
-        if (forge_master>-1){
-            obj_controller.master_of_forge = techs[forge_master];
-        }
-        forge_string += $"Techmarines: +{floor(forge_points)}#";
-        var forge_veh_maintenance={};
-        for (var comp=0;comp<=10;comp++){
-            for (var veh=0;veh<=100;veh++){
-                if (obj_ini.veh_role[comp][veh]=="Land Raider"){
-                    forge_veh_maintenance.land_raider = struct_exists(forge_veh_maintenance, "land_raider") ?forge_veh_maintenance.land_raider + 1 : 1;
-                } else if (array_contains(["Rhino","Predator", "Whirlwind"],obj_ini.veh_role[comp][veh])){
-                    forge_veh_maintenance.small_vehicles = struct_exists(forge_veh_maintenance, "small_vehicles") ?forge_veh_maintenance.small_vehicles + 0.2 :0.2;
-                }
-            }
-        }
 
-        if (struct_exists(forge_veh_maintenance, "land_raider")){
-            forge_string += $"Land Raider Maintenance: -{forge_veh_maintenance.land_raider}#";
-            forge_points-=forge_veh_maintenance.land_raider;
-        }
-        if (struct_exists(forge_veh_maintenance, "small_vehicles")){
-            if (floor(forge_veh_maintenance.small_vehicles)>0){
-                forge_string += $"Small Vehicle Maintenance: -{floor(forge_veh_maintenance.small_vehicles)}#";
-                forge_points-=floor(forge_veh_maintenance.small_vehicles);
-            }
-        }
-        if (player_forges>0){
-            forge_points += 5*player_forges;
-            forge_string += $"Forges: +{5*player_forges}#";
-        }
-        forge_points = floor(forge_points);
-        var tech_test, charisma_test, piety_test, met_non_heretic;
-        //in this instance tech heretics are techmarines with the "tech_heretic" trait
-        if (turn_end){
-            if (array_length(techs)==0) then scr_loyalty("Upset Machine Spirits","+");
-            if (array_length(heretics)>0 && turn>75){
-                var heretic_location, same_location, current_heretic, current_tech;
-                //iterate through tech heretics;
-                for (var heretic=0; heretic<array_length(heretics); heretic++){
-                    heretic_location = tech_locations[heretics[heretic]];
-                    current_heretic = techs[heretics[heretic]];
-                    if (current_heretic.in_jail()) then continue;
-                    //iterate through rest of techs
-                    met_non_heretic = false;
-                    for (var i=0; i<array_length(techs); i++){
-                        same_location=false;
-                        //if tech is also heretic skip
-                        if (array_contains(heretics,i)) then continue;
-                        current_tech = techs[i];
-
-                        // find out if heretic is in same location as techmarine
-                        if (same_locations(heretic_location,tech_locations[i])){
-                            met_non_heretic=true;
-                            //if so do a an opposed technology test of techmarine vs tech  heretic techmarine
-                            tech_test = global.character_tester.oppposed_test(current_heretic,current_tech, "technology");
-
-
-                            if (tech_test[0]==1){
-                                // if heretic wins do an opposed charisma test
-                                charisma_test =  global.character_tester.oppposed_test(current_heretic,current_tech, "charisma", -15+current_tech.corruption);                           
-                                if (charisma_test[0]==1){
-                                    // if heretic win tech is corrupted
-                                    //tech is corrupted by half the pass margin of the heretic
-                                    //this means high charisma heretics will spread corruption more quickly and more often
-                                    if (current_heretic.corruption>current_tech.corruption){
-                                        current_tech.edit_corruption(min(4,charisma_test[1]));
-                                    }
-
-                                    // tech takes a piety test to see if tehy break faith with cult mechanicus and become tech heretic
-                                    //piety test is augmented by by the techs corruption with the test becoming harder to pass the more
-                                    // corrupted the tech is
-                                    piety_test = global.character_tester.standard_test(current_tech, "piety", +75 - current_tech.corruption);
-
-                                    // if tech fails piety test tech also becomes tech heretic
-                                    if (piety_test[0] == false && choose(true,false)){
-                                        current_tech.add_trait("tech_heretic");
-                                    }
-                                } else if (charisma_test[0]==2){
-                                    if (charisma_test[1] > 40 && notice_heresy=false){
-                                        scr_alert("purple","Tech Heresy",$"{current_tech.name_role()} contacts you concerned of Tech Heresy in the Armentarium");
-                                        notice_heresy=true;
-                                    }
-                                }
-                            }
-                            if (i==forge_master){
-                                // if tech is the forge master then forge master takes a wisdom in this case doubling as a perception test
-                                // if forge master passes tech heresy is noted and chapter master notified
-                                if (global.character_tester.standard_test(current_tech, "wisdom", - 40)[0] && !notice_heresy){
-                                    notice_heresy=true;
-                                    scr_event_log("purple",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
-                                    scr_alert("purple","Tech Heresy",$"{techs[forge_master].name_role()} Has noticed signs of tech heresy amoung the Armentarium ranks");
-                                    //pip=instance_create(0,0,obj_popup);
-                                }
-                            }
-                        }
-                    }
-                    if (!met_non_heretic){
-                        if (irandom(4)==0){
-                            current_heretic.edit_corruption(1);
-                        }
-                    }
-                    //add check to see if tech heretic is anywhere near mechanicus forge if so maybe do stuff??
-                    /*if (heretic_location==location_types.planet){
-                        if 
-                    }*/
-                }
-                if (array_length(techs)>array_length(heretics)){
-                    if (array_length(heretics)/array_length(techs)>=0.35){
-                        if (irandom(9)==0){
-                            /*var text_string = "You Recive an Urgent Transmision from";
-                            if (forge_master>-1){
-    
-                            }*/
-                            scr_popup("Technical Differences!","You Recive an Urgent Transmision A serious breakdown in culture has coccured causing believers in tech heresy to demand that they are given preseidence and assurance to continue their practises","tech_uprising","");
-                        }
-                    }
-                }
-            }
-            possibility_of_heresy = 8;
-            if (array_contains(obj_ini.dis,"Tech-Heresy")) then possibility_of_heresy = 6;
-            if (irandom(power(possibility_of_heresy,(array_length(heretics)+2))) == 0 && array_length(techs)>0){
-                var current_tech = techs[irandom(array_length(techs)-1)];
-               if  (!global.character_tester.standard_test(current_tech, "piety")[0]){
-                   current_tech.add_trait("tech_heretic");
-                   current_tech.edit_corruption(20+irandom(15));
-               }
-            }
-            if (forge_master==-1){ 
-                var tech_count = scr_role_count(obj_ini.role[100][16]);
-                if (tech_count>1){
-                    var last_master = obj_ini.previous_forge_masters[array_length(obj_ini.previous_forge_masters)-1];
-                    scr_popup("New Forge Master",$"The Demise of Forge Master {last_master} means a replacement must be chosen. Several Options have already been put forward to you but it is ultimatly your decision.","new_forge_master","");
-                } else if (tech_count==1){
-                    scr_role_count(obj_ini.role[100][16],"","units")[0].update_role("Forge Master");
-                }
-            }
-            forge_queue_logic();       
-        }
-    }   
-}
-
-function forge_queue_logic(){
-    if (forge_points>0){
-        var master_craft_count, normal_count, quality_string;
-        var reduction_points = forge_points;
-        if (array_length(forge_queue)>0 && forge_points>0){
-            var forging_length = array_length(forge_queue);
-            for (var i=0;i<forging_length;i++){
-                if (forge_queue[i].forge_points<=reduction_points){
-                    reduction_points-=forge_queue[i].forge_points;
-                    if (is_string(forge_queue[i].name)){
-                        master_craft_count=0;
-                        quality_string="";
-                        normal_count=0;
-                        for (var s=0;s<forge_queue[i].count;s++){
-                            if (irandom(master_craft_chance)==0){
-                                master_craft_count++;
-                            } else {
-                                normal_count++;
-                            }
-                        }
-                        scr_add_item(forge_queue[i].name, normal_count);
-                        if (master_craft_count>0){
-                            scr_add_item(forge_queue[i].name, master_craft_count,"master_crafted");
-                            var numerical_string = master_craft_count==1?"was":"were";
-                            quality_string=$"X{master_craft_count} {numerical_string} Completed to a Master Crafted standard";
-                        }else {
-                            quality_string=$"all were completed to a standard STC compliant quality";
-                        }
-                        scr_popup("Forge Completed",$"{forge_queue[i].name} X{forge_queue[i].count} construction finished {quality_string}","","");                        
-                    } else if (is_array(forge_queue[i].name)){
-                        if (forge_queue[i].name[0]=="research"){
-                            var tier_depth = array_length(forge_queue[i].name[2]);
-                            var tier_names=forge_queue[i].name[2];
-                            if (tier_depth==1){
-                                production_research[$ tier_names[0]][0]++;
-                            } else if (tier_depth==2){
-                                production_research[$ tier_names[0]][1][$ tier_names[1]][0]++;
-                            } else if (tier_depth == 3){
-                                production_research[$ tier_names[0]][1][$ tier_names[1]][1][$ tier_names[2]][0]++;
-                            }
-                        }
-                    }
-                    array_delete(forge_queue, i, 1);
-                    i--;
-                    forging_length--;
-                } else {
-                    forge_queue[i].forge_points -= reduction_points;
-                    reduction_points=0;
-                }
-                if (reduction_points<=0) then break;
-            }
-        }
-    } 
-}
-function research_end(){
-    calculate_research_points(true);
-    stc_research[$ stc_research.research_focus] += research_points;
-    var research_area_limit;
-    if (stc_research.research_focus=="vehicles"){
-        research_area_limit = stc_vehicles;
-    } else if (stc_research.research_focus=="wargear"){
-        research_area_limit = stc_wargear;
-    }else if (stc_research.research_focus=="ships"){
-        research_area_limit = stc_ships;
-    }    
-    if (stc_research[$ stc_research.research_focus]>5000*(research_area_limit+1)){
-       identify_stc(stc_research.research_focus);  
-    }
-}
 
 function identify_stc(area){
     switch(area){
@@ -367,15 +75,8 @@ function identify_stc(area){
     }
 }
 function scr_draw_armentarium(){
-	    var recruitment_pace = [
-        " is currently halted.",
-        " is advancing sluggishly.",
-        " is advancing slowly.",
-        " is advancing moderately fast.",
-        " is advancing fast.",
-        " is advancing frenetically.",
-        " is advancing as fast as possible."
-    ];
+    var _recruit_pace = ARR_recruitment_pace;
+    var _train_tiers  = ARR_techmarine_training_tiers;
     var xx = __view_get(e__VW.XView, 0) + 0;
 	var yy = __view_get(e__VW.YView, 0) + 0;
 	draw_sprite(spr_rock_bg, 0, xx, yy);
@@ -398,7 +99,7 @@ function scr_draw_armentarium(){
         draw_text_transformed(xx + 336 + 16, yy + 66, string_hash_to_newline(header), 1, 1, 0);
         if (!in_forge){
             draw_set_font(fnt_40k_30b);
-            draw_text_transformed(xx + 336 + 16, yy + 100, string_hash_to_newline("Forge Master " + string(obj_ini.name[0, 2])), 0.6, 0.6, 0);
+            draw_text_transformed(xx + 336 + 16, yy + 100, string_hash_to_newline("Forge Master " + string(obj_ini.name[0, 1])), 0.6, 0.6, 0);
         }
     }
     if (menu_adept = 1) {
@@ -532,32 +233,11 @@ function scr_draw_armentarium(){
             blurp = "Your Chapter contains " + string(temp[36]) + " " + string(obj_ini.role[100, 16]) + ".##";
             blurp += "The training of a new " + string(obj_ini.role[100, 16]);
         }
-        if (training_techmarine = 0) {
-            blurp += recruitment_pace[training_techmarine];
+        if (training_techmarine>=0){
+            blurp += _recruit_pace[training_techmarine];
         }
-        if (training_techmarine = 1) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 1) + 1;
-        }
-        if (training_techmarine = 2) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 2) + 1;
-        }
-        if (training_techmarine = 3) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 4) + 1;
-        }
-        if (training_techmarine = 4) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 6) + 1;
-        }
-        if (training_techmarine = 5) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 10) + 1;
-        }
-        if (training_techmarine = 6) {
-            blurp += recruitment_pace[training_techmarine];
-            eta = floor((359 - tech_points) / 14) + 1;
+        if (training_techmarine >0 && training_techmarine<=6) {
+            eta = floor((359 - tech_points) / _train_tiers[training_techmarine])+ 1;
         }
 
         if (tech_aspirant > 0) and(training_techmarine > 0) and(menu_adept = 1) {
@@ -588,7 +268,7 @@ function scr_draw_armentarium(){
         }else if (stc_research.research_focus=="ships"){
             research_area_limit = stc_ships;
         }
-        var research_progress = ceil(((5000*(research_area_limit+1))-stc_research[$ stc_research.research_focus])/research_points);
+        var research_progress = ceil(((5000*(research_area_limit+1))-stc_research[$ stc_research.research_focus])/specialist_point_handler.research_points);
 		static research_drop_down = false;
         var research_eta_message = $"Based on current progress it will be {research_progress} months until next significant research step is complete";
         draw_text_ext(xx + 336 + 16, y_offset+25, string_hash_to_newline(research_eta_message), -1, 536);        
@@ -792,102 +472,13 @@ function scr_draw_armentarium(){
         draw_set_color(0);       
         //draw_rectangle(xx + 359, yy + 66, xx + 886, yy + 818, 0);
 
-        var forge_buttons= [xx + 359, yy + 77, 0, 0]
-        draw_unit_buttons([forge_buttons[0] , forge_buttons[1]],"<-- Overview",[1,1],c_red);
-        forge_buttons[2] = forge_buttons[0] + (string_width("<-- Overview")) + 8;
-        forge_buttons[3] = forge_buttons[1] + (string_height("<-- Overview")) + 5;
-        if (point_in_rectangle(
-            mouse_x,
-            mouse_y, 
-            forge_buttons[0], 
-            forge_buttons[1], 
-            forge_buttons[2],
-            forge_buttons[3]
-            ) && mouse_check_button_pressed(mb_left)
-        ){
+        if (point_and_click(draw_unit_buttons([xx + 359, yy + 77],"<-- Overview",[1,1],c_red))){
             in_forge=false;
         }        
-        draw_set_color(c_gray);
-        draw_rectangle(xx + 359, yy + 107, xx + 886, yy + 127, 0);
-        draw_set_alpha(1);
-        draw_set_font(fnt_40k_14);
-        draw_set_color(0);
-        draw_text(xx+359,yy+109,string_hash_to_newline("Name"));
-        draw_text(xx+500,yy+109,string_hash_to_newline("Number"));
-        draw_text(xx+600,yy+109,string_hash_to_newline("Forge Points"));
-        draw_text(xx+700,yy+109,string_hash_to_newline("Construction ETA"));        
-        draw_set_color(c_gray);
-        var item_gap = 130;
-        var total_eta=0;
-        static top_point=0;
-        for (var i=top_point; i<13; i++){
-            if (i+1>array_length(forge_queue)) then break;
-            draw_set_color(c_gray);
-            if point_in_rectangle(mouse_x, mouse_y, xx + 359,yy +item_gap, xx + 886, yy +item_gap+20){
-                draw_set_color(c_white);
-            }
-            if (is_string(forge_queue[i].name)){
-                draw_text(xx+359,yy + item_gap,string_hash_to_newline(forge_queue[i].name));
-                draw_text(xx+525,yy + item_gap,string_hash_to_newline(forge_queue[i].count));
-                if (forge_queue[i].ordered==obj_controller.turn){
-                    if (forge_queue[i].count>1){
-                         draw_unit_buttons([xx+500 , yy + item_gap],"-",[0.75,0.75],c_red);
-                         if (point_in_rectangle(
-                            mouse_x,
-                            mouse_y, 
-                            xx+500, 
-                            yy + item_gap, 
-                            xx+500+3+(0.75*string_width("-")),
-                            yy + item_gap+3+(0.75*string_height("-")), 
-                            ) && mouse_check_button_pressed(mb_left)
-                        ){
-                            var unit_cost = forge_queue[i].forge_points/forge_queue[i].count;
-                            forge_queue[i].count--;
-                            forge_queue[i].forge_points-=unit_cost;
-                         }               
-                    }
-                    if (forge_queue[i].count<100){
-                        draw_unit_buttons([xx+545 , yy + item_gap],"+",[0.75,0.75],c_green);
-                         if (point_in_rectangle(
-                            mouse_x,
-                            mouse_y, 
-                            xx+545, 
-                            yy + item_gap, 
-                            xx+545+3+(0.75*string_width("+")),
-                            yy + item_gap+3+(0.75*string_height("+")) 
-                            ) && mouse_check_button_pressed(mb_left) && current_target==false
-                        ){
-                            var unit_cost = forge_queue[i].forge_points/forge_queue[i].count;
-                            forge_queue[i].count++;
-                            forge_queue[i].forge_points+=unit_cost;
-                         }                  
-                    }
-                }
-            } else if (is_array(forge_queue[i].name)){
-                if (forge_queue[i].name[0]  == "research"){
-                    draw_text(xx+359,yy + item_gap,string_hash_to_newline(forge_queue[i].name[1]));
-                }
-            }
-            draw_text(xx+630,yy + item_gap,string_hash_to_newline(forge_queue[i].forge_points));
-            total_eta += ceil(forge_queue[i].forge_points/forge_points);
-            draw_text(xx+735,yy+ item_gap,string_hash_to_newline(total_eta) + " turns");        
-            forge_buttons= [xx+850, yy + item_gap, 0, 0]
-            draw_unit_buttons([forge_buttons[0] , forge_buttons[1]],"X",[0.75,0.75],c_red);
-            forge_buttons[2] = forge_buttons[0] + (string_width("X")) + 8;
-            forge_buttons[3] = forge_buttons[1] + (string_height("X")) + 5;            
-             if (point_in_rectangle(
-                mouse_x,
-                mouse_y, 
-                forge_buttons[0], 
-                forge_buttons[1], 
-                forge_buttons[2],
-                forge_buttons[3]
-                ) && mouse_check_button_pressed(mb_left)
-            ){
-                array_delete(forge_queue, i, 1);
-             }                     
-            item_gap +=20
-        }
+
+        specialist_point_handler.draw_forge_queue(xx+ 359,yy + 107);
+
+        
         // draw_set_color(c_red);
         //draw_line(xx + 326 + 16, yy + 426, xx + 887 + 16, yy + 426);         
         draw_set_color(#af5a00);
@@ -895,8 +486,8 @@ function scr_draw_armentarium(){
         var forge_text = $"Forge point production per turn: {forge_points}#";
         // draw_sprite_ext(spr_forge_points_icon,0,xx+359+string_width(forge_text), yy+410,0.3,0.3,0,c_white,1);
         forge_text += $"Chapter total {obj_ini.role[100, 16]}s: {temp[36]}#";
-        forge_text += $"Planetary Forges in operation: {obj_controller.player_forges}#";
-        forge_text += $"Master Craft Forge Chance: {1-((master_craft_chance+1)/100)}#    Assign techmarines to forges to increase Master Craft Chance";
+        forge_text += $"Planetary Forges in operation: {obj_controller.player_forge_data.player_forges}#";
+        forge_text += $"Master Craft Forge Chance: {master_craft_chance}%#    Assign techmarines to forges to increase Master Craft Chance";
         // forge_text += $"A total of {obj_ini.role[100, 16]}s assigned to Forges: {var}#";
         draw_text_ext(xx+359, yy+410, string_hash_to_newline(forge_text),-1,670);
     }
