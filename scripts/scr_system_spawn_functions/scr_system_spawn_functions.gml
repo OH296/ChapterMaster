@@ -62,7 +62,7 @@ function player_home_star(home_planet){
         p_owner[home_planet]=eFACTION.Player;
 
         p_first[home_planet]=1; //monestary
-        if (homeworld_rule!=1) then dispo[home_planet]=-5000;
+        if (obj_ini.homeworld_rule!=1) then dispo[home_planet]=-5000;
         
         if (obj_ini.home_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;
         if (obj_ini.recruiting_type=="Shrine") then known[eFACTION.Ecclesiarchy]=1;

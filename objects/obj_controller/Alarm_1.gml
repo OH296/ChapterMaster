@@ -23,7 +23,8 @@ _current_system = find_player_spawn_star();
 instance_activate_object(obj_star);
 
 // Set player homeworld
-if (did==1){
+did = instance_exists(_current_system);
+if (did){
     
     if (obj_ini.fleet_type==ePlayerBase.home_world){
         set_player_homeworld_star(_current_system);
@@ -74,7 +75,6 @@ if (did==1){
     
     var fleet=instance_create(_current_system.x,_current_system.y,obj_p_fleet);
     fleet.owner  = eFACTION.Player;
-    fleet.alarm[5]=5;
     
     for(var f=0; f<array_length(obj_ini.ship); f++){
         add_ship_to_fleet(f, fleet);
@@ -93,8 +93,13 @@ if (did==1){
             instance_create(x,y,obj_fleet_show);
         }
     }
+
     // End player homeworld
-    
+    px = _current_system.x;
+    py = _current_system.y;
+    xx = px;
+    yy = py;
+    instance_activate_object(obj_star);
     instance_deactivate_object(_current_system);
     
     _current_system=instance_nearest(px,py,obj_star);
@@ -270,21 +275,11 @@ if (did==1){
         }// end repeat
 
         // important later on for having other chapters homeworlds or civil war imperiums
-        if (p_type[1]!="Forge") and (p_type[1]!="Ice"){
-            p_owner[1] = eFACTION.Imperium;
-            p_first[1] = p_owner[1];
-        }  
-        if (p_type[2]!="Forge") and (p_type[2]!="Ice"){
-            p_owner[2] = eFACTION.Imperium
-            p_first[2] = p_owner[2];
-        }
-        if (p_type[3]!="Forge") and (p_type[3]!="Ice"){
-            p_owner[3] = eFACTION.Imperium;
-            p_first[3] = p_owner[3]
-        }
-        if (p_type[4]!="Forge") and (p_type[4]!="Ice"){
-            p_owner[4] = eFACTION.Imperium;
-            p_first[4] = p_owner[4]
+        for (var p=1;p<=planets;p++){
+            if (p_type[p]!="Forge") and (p_type[p]!="Ice"){
+                p_owner[p] = eFACTION.Imperium;
+                p_first[p] = p_owner[p];
+            } 
         }
     }// end with _current_system
     
@@ -298,16 +293,22 @@ if (did==1){
     if (tau==1){
         _current_system=instance_furthest(px,py,obj_star);
         
-        with(obj_star){if (planets==0) then instance_deactivate_object(id);}
+        with(obj_star){
+            if (planets==0) then instance_deactivate_object(id);
+        }
         
         var stop=0;
         for(var i=0; i<100; i++){
             if (stop!=5){
                 if (_current_system.planets==1) and (_current_system.p_type[1]=="Dead"){
                     stop=1;
-                    with(_current_system){instance_deactivate_object(instance_id_get( 0 ));}
+                    with(_current_system){
+                        instance_deactivate_object(instance_id_get( 0 ));
+                    }
                 }
-                if (_current_system.planets>=1) or (_current_system.p_type[1]!="Dead") then stop=0;
+                if (_current_system.planets>=1) or (_current_system.p_type[1]!="Dead"){
+                    stop=0;
+                }
                 if (stop==0) then stop=5;
             }
         }
@@ -383,7 +384,7 @@ if (did==1){
             continue;
         }
         if  (owner == eFACTION.Imperium){
-            //this object simply acts as a counter of ork owned planets
+            //this object simply acts as a counter of imperium owned planets
             array_push(_imperial_planets, id);
         }
       
@@ -395,8 +396,8 @@ if (did==1){
    /*if (obj_ini.fleet_type==ePlayerBase.penitent) then orkz+=2;*/
     if (is_test_map==true) then orkz=4;
 
-    for(var j=0; j<orkz; j++){
-        n=array_length(_imperial_planets);
+    n=array_length(_imperial_planets);
+    for(var j=0; j<orkz && j<n; j++){
         i = array_random_index(_imperial_planets);
         _current_system=_imperial_planets[i];
         
@@ -436,14 +437,14 @@ if (did==1){
     if (field=="both"){
         if (obj_ini.fleet_type==ePlayerBase.penitent) then orkz+=3;
         orkz+=3;
-        for(var j=0; j<orkz; j++){
-            n=array_length(_non_xenos_chaos);
-            i=array_random_index(_non_xenos_chaos);
-            _current_system=_non_xenos_chaos[i];
+        n=array_length(_non_xenos_chaos);
+        for (var j=0; j<orkz && j<n; j++){
+            
+            _current_system=array_random_element(_non_xenos_chaos);
 
             _current_system.planet[1]=1;
-            _current_system.p_owner[1]=90;
-            _current_system.owner=90;
+            _current_system.p_owner[1]=7;
+            _current_system.owner=7;
             array_delete(_non_xenos_chaos, i, 1);
         }
     }
@@ -539,7 +540,9 @@ if (!instance_exists(obj_saveload)) and (instance_exists(obj_creation)) and (glo
 }
 
 instance_activate_all();
-with(obj_creation){instance_destroy();}
+with(obj_creation){
+    instance_destroy();
+}
 
 
 create_complex_star_routes();
