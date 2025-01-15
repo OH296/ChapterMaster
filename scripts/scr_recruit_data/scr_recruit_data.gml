@@ -267,7 +267,7 @@ function scr_trial_data(wanted=-1){
 			train_time : {
 				base : [90, 108],
 				planets : {
-					shrine :[70, 108],
+					Shrine :[70, 108],
 				}
 			},
 			exp_bonus : {
@@ -286,7 +286,7 @@ function scr_trial_data(wanted=-1){
 			train_time : {
 				base : [66, 80],
 				planets : {
-					shrine :[70, 108],
+					Shrine :[70, 108],
 				}
 			},
 			exp_bonus : {
@@ -299,7 +299,7 @@ function scr_trial_data(wanted=-1){
 			train_time : {
 				base : [120, 140],
 				planets : {
-					shrine :[70, 108],
+					Shrine :[70, 108],
 				}
 			},
 			exp_bonus : {
