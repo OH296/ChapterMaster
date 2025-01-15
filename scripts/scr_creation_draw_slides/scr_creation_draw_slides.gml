@@ -996,10 +996,22 @@ function draw_chapter_homeworld_select(){
             }
         } else {
             draw_set_font(fnt_40k_30b);
-            var spawn_radio = buttons.home_spawn_loc_options;
-            spawn_radio.x1 = 70;
-            spawn_radio.y1 =  60;
-            spawn_radio.draw();
+            var s_pawn_radio = buttons.home_spawn_loc_options;
+            _spawn_radio.x1 = 70;
+            _spawn_radio.y1 =  60;
+            _spawn_radio.draw();
+
+            var _warp_lanes_radio = buttons.home_warp;
+            warp_lanes_radio.update({
+            	x1 : 70,
+            	y1 : spawn_radio.y2,
+            });
+
+            var _home_planets = buttons.home_planets
+            _home_planets.update({
+            	x1 : 70,
+            	y1 : _warp_lanes_radio.y2,
+            });            
 
         }
     }

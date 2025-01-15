@@ -196,7 +196,25 @@ buttons = {
             str1 : "Warp Hub",
             font : fnt_40k_14b
         },            
-    ], "Home warp access"),    
+    ], "Home warp access"),
+    home_planets : new radio_set([
+        {
+            str1 : "one",
+            font : fnt_40k_14b,
+        },
+        {
+            str1 : "two",
+            font : fnt_40k_14b
+        },
+        {
+            str1 : "three",
+            font : fnt_40k_14b
+        }, 
+        {
+            str1 : "four",
+            font : fnt_40k_14b
+        },                    
+    ], "Home System Planets"),        
 }
 scrollbar_engaged=0;
 

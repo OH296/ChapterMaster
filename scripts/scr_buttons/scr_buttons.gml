@@ -213,18 +213,30 @@ function radio_set(options_array, title)constructor{
 	active_col = #009500;
 	innactive_col = c_gray;
 	allow_changes = true;
-	gap=10;
+	x_gap = 10;
+	y_gap = 5;
 	x1 = 0;
 	y1 = 0;
+	max_width = 0;
+	max_height = 0;
 	for (var i=0;i<array_length(options_array);i++){
 		array_push(toggles, new ToggleButton(options_array[i]));
 	}
+	x2 = 0;
+	y2 = 0;
 
+	static update = function(data){
+	    var _data_presets = struct_get_names(data);
+	    for (var i=0;i<array_length(_data_presets);i++){
+	    	self[$_data_presets[i]] = data[$_data_presets[i]];
+	    }		
+	}
 	static draw = function(){
 		draw_text(x1, y1, title);
 
 		var _prev_x = x1;
 		var prev_y = y1+string_height(title)+10;
+		var items_on_row = 0;
 		for (var i=0;i<array_length(toggles);i++){
 			var _cur_opt = toggles[i];
 			_cur_opt.x1 = _prev_x;
@@ -233,11 +245,22 @@ function radio_set(options_array, title)constructor{
 			_cur_opt.active = i==current_selection;
 			_cur_opt.button_color = _cur_opt.active ? active_col: innactive_col;
 			_cur_opt.draw();
+			items_on_row++
 			
 			if (_cur_opt.clicked() && allow_changes){
 				current_selection = i;
 			}
-			_prev_x = _cur_opt.x2+gap;
+			_prev_x = _cur_opt.x2+x_gap;
+
+			x2 = _prev_x>x2 ? prev_x:x2;
+			y2 = prev_y + _cur_opt.height;
+			if (max_width>0){
+				if (_prev_x - x1 > max_width){
+					_prev_x = x1;
+					prev_y += _cur_opt.height+y_gap;
+					items_on_row = 0;
+				}
+			}
 		}
 	}
 }

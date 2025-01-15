@@ -20,7 +20,7 @@
         "homeworld": "Dead", // one of  "Lava" "Desert" "Forge" "Hive" "Death" "Agri" "Feudal" "Temperate" "Ice" "Dead" "Shrine"
         "homeworld_name": "Lacrima Vex", // Homeworld Planet name, leave blank to autogenerate
         "recruiting": "Death", // one of "Lava" "Desert" "Forge" "Hive" "Death" "Agri" "Feudal" "Temperate" "Ice" "Dead" "Shrine"
-        "recruiting_name": "", // Recruiting Planet name, leave blank to autogenerate
+        "recruiting_name": "Lacrima Vex", // Recruiting Planet name, leave blank to autogenerate
         "discipline": "default", // one of 'default' 'biomancy' 'pyromancy' 'telekinesis' 'rune Magick'
         "aspirant_trial": "CHALLENGE", // one of "BLOODDUEL" "HUNTING" "SURVIVAL" "EXPOSURE" "KNOWLEDGE" "CHALLENGE"  "APPRENTICESHIP" 
         "advantages": [

@@ -31,26 +31,8 @@ if (did){
     }
     // Crusade and fleet based
     if (obj_ini.fleet_type!=ePlayerBase.home_world){
-        if (obj_ini.recruiting_type!=obj_ini.home_type) and (obj_ini.home_name!=obj_ini.recruiting_name){
-            _current_system.p_type[1]=obj_ini.recruiting_type;
-            if (obj_ini.recruiting_name!="random") then _current_system.name=obj_ini.recruiting_name;
-            _current_system.p_type[2]=obj_ini.home_type;
-            _current_system.planet[2]=1;
-            if (obj_ini.home_name!="random") then _current_system.name=obj_ini.home_name;
-            array_push(_current_system.p_feature[1],new NewPlanetFeature(P_features.Recruiting_World))
-            if (_current_system.p_type[1]=="random") then _current_system.p_type[1]=choose("Feral","Temperate","Desert","Ice");
-            if (_current_system.p_type[2]=="random") then _current_system.p_type[2]=choose("Feral","Temperate","Desert","Ice");
-            if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(_current_system.name)+" I|";
-        }
-        if (obj_ini.recruiting_type==obj_ini.home_type) or (obj_ini.home_name==obj_ini.recruiting_name){
-            _current_system.p_type[1]="Dead";
-            _current_system.p_type[2]=obj_ini.home_type;
-            _current_system.planet[2]=1;
-            if (obj_ini.home_name!="random") then _current_system.name=obj_ini.home_name;
-            array_push(_current_system.p_feature[2],new NewPlanetFeature(P_features.Recruiting_World))
-            if (_current_system.p_type[1]=="random") then _current_system.p_type[1]=choose("Feral","Temperate","Desert","Ice");
-            if (_current_system.p_type[2]=="random") then _current_system.p_type[2]=choose("Feral","Temperate","Desert","Ice");
-            if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(_current_system.name)+" II|";
+        with (_current_system){
+            set_player_recruit_planet(irandom_range(1, _current_system.planets));
         }
     }
     with(_current_system){
