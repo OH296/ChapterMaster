@@ -169,7 +169,7 @@ function scr_enemy_ai_d() {
         if (tomb2_planet_slot>-1){
         	var battli=0;
         	var roll1=floor(random(100))+1;
-        	var completion = p_problem_other_data[i][bionics_planet_slot].completion>0;
+        	var completion = p_problem_other_data[i][tomb2_planet_slot].completion>0;
         	if (completion>2){
                 if (roll1>=90) and (roll1<98) then battli=1;// oops
                 if (roll1>=98) then battli=2;// very oops, much necron, wow
