@@ -156,7 +156,7 @@ function apothecary_simple(){
 		}
 		if (!marines_present){
 			if (obj_controller.gene_seed == 0) and (obj_controller.recruiting > 0) {
-				var _training_ground = system_feature_bool(self, P_features.Recruiting_World);
+				var _training_ground = system_feature_bool(self.p_feature, P_features.Recruiting_World);
 				if (_training_ground){
                     obj_controller.recruiting = 0;
                     obj_controller.income_recruiting = 0;
