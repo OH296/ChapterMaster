@@ -38,13 +38,17 @@ function scr_special_view(command_group) {
 			if (obj_ini.name[0][v]== ""){continue;}
 			if (obj_ini.TTRPG[0][v].ship_location>-1){
 			   	var ham=obj_ini.TTRPG[0][v].ship_location;
-			   	if (obj_ini.ship_location[ham]="Lost") then continue;
+			   	if (obj_ini.ship_location[ham]=="Lost") then continue;
 			}
 
 			unit = obj_ini.TTRPG[0][v];	    	
 			var yep=0;
-			if (unit.base_group!="astartes") and (unit.base_group!="none"){yep=1;}
-			if ((unit.role()=="Chapter Master") or (unit.role()==obj_ini.role[100][2])){yep=1;}
+			if (unit.base_group!="astartes") and (unit.base_group!="none"){
+				yep=1;
+			}
+			if ((unit.role()=="Chapter Master") or (unit.role()==obj_ini.role[100][2])){
+				yep=1;
+			}
 			if (yep==1){
 		        add_man_to_manage_arrays(unit);
 			}

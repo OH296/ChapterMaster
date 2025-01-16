@@ -14,6 +14,7 @@ function UnitQuickFindPanel() constructor{
 
 	view_area = "fleets";
 	static update_garrison_log = function(){
+		try{
 		for (var i = 0;i<array_length(obj_ini.ship_carrying); i++){
 			obj_ini.ship_carrying[i]=0
 		};
@@ -21,6 +22,7 @@ function UnitQuickFindPanel() constructor{
 		delete garrison_log;
 	    garrison_log = {};
 	    obj_controller.specialist_point_handler.calculate_research_points(false);
+	    var _ship_count = array_length(obj_ini.ship_carrying);
 	    show_debug_message(obj_controller.specialist_point_handler.point_breakdown);
 	    for (var co=0;co<=obj_ini.companies;co++){
 	    	for (var u=0;u<array_length(obj_ini.TTRPG[co]);u++){
@@ -48,7 +50,9 @@ function UnitQuickFindPanel() constructor{
 						group.techies++;
 	    			}
 	    		} else if (unit_location[0]==location_types.ship){
-	    			obj_ini.ship_carrying[unit.ship_location]+=unit.get_unit_size();
+	    			if (unit.ship_location<_ship_count && unit.ship_location>-1){
+	    				obj_ini.ship_carrying[unit.ship_location]+=unit.get_unit_size();
+	    			}
 	    		}
 	    	}
 	    	try{
@@ -78,7 +82,10 @@ function UnitQuickFindPanel() constructor{
 				handle_exception(_exception);
 			}
 	    }
-	    update_mission_log();	
+	    update_mission_log();
+	    }catch(_exception){
+			handle_exception(_exception);
+		}	
 	}
 
 	update_mission_log = function(){

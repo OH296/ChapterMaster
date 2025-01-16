@@ -110,6 +110,7 @@ function scr_ini_ship_cleanup() {
 			    }
 			}
 		}
+		sort_all_companies();
 	}
 
 }
