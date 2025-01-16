@@ -24,6 +24,11 @@ function ChapterData() constructor {
 	recruiting = "Death"; 
 	recruiting_name = global.name_generator.generate_star_name();
 	homeworld_rule = eHOMEWORLD_RULE.NONE;
+	home_spawn_loc = 0;
+	recruit_home_relationship = 0;
+	home_warp = 0;
+	home_planets = 0;
+
 	flagship_name = global.name_generator.generate_imperial_ship_name();
 	monastary_name = "";
 	advantages = array_create(9);
@@ -307,6 +312,11 @@ function scr_chapter_new(argument0) {
 		obj_creation.recruiting_exists = chapter_object.recruiting_exists;
 		obj_creation.recruiting = chapter_object.recruiting;
 		obj_creation.recruiting_name = chapter_object.recruiting_name;
+
+		obj_creation.buttons.home_spawn_loc_options.current_selection = chapter_object.home_spawn_loc ?? 0;
+		obj_creation.buttons.recruit_home_relationship.current_selection = chapter_object.recruit_home_relationship ?? 0;
+		obj_creation.buttons.home_warp.current_selection = chapter_object.home_warp ?? 0;
+		obj_creation.buttons.home_planets.current_selection=   chapter_object.home_planets ??0;
 
 		obj_creation.aspirant_trial = trial_map(chapter_object.aspirant_trial);
 		obj_creation.adv = chapter_object.advantages;

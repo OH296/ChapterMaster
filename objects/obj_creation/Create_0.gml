@@ -187,14 +187,17 @@ buttons = {
         {
             str1 : "Secluded",
             font : fnt_40k_14b,
+            tooltip : "Your home system is logistically secluded with no major warp routes",
         },
         {
             str1 : "Connected",
-            font : fnt_40k_14b
+            font : fnt_40k_14b,
+            tooltip : "Your home system is connected to the larger imperium and system by warp routes",
         },
         {
             str1 : "Warp Hub",
-            font : fnt_40k_14b
+            font : fnt_40k_14b,
+            tooltip : "Your home system is in a very stable warp area, accessible by several warp lanes",
         },            
     ], "Home warp access"),
     home_planets : new radio_set([

@@ -235,12 +235,12 @@ function radio_set(options_array, title)constructor{
 		draw_text(x1, y1, title);
 
 		var _prev_x = x1;
-		var prev_y = y1+string_height(title)+10;
+		var _prev_y = y1+string_height(title)+10;
 		var items_on_row = 0;
 		for (var i=0;i<array_length(toggles);i++){
 			var _cur_opt = toggles[i];
 			_cur_opt.x1 = _prev_x;
-			_cur_opt.y1 = prev_y;
+			_cur_opt.y1 = _prev_y;
 			_cur_opt.update()
 			_cur_opt.active = i==current_selection;
 			_cur_opt.button_color = _cur_opt.active ? active_col: innactive_col;
@@ -252,12 +252,12 @@ function radio_set(options_array, title)constructor{
 			}
 			_prev_x = _cur_opt.x2+x_gap;
 
-			x2 = _prev_x>x2 ? prev_x:x2;
-			y2 = prev_y + _cur_opt.height;
+			x2 = _prev_x>x2 ? _prev_x:x2;
+			y2 = _prev_y + _cur_opt.height;
 			if (max_width>0){
 				if (_prev_x - x1 > max_width){
 					_prev_x = x1;
-					prev_y += _cur_opt.height+y_gap;
+					_prev_y += _cur_opt.height+y_gap;
 					items_on_row = 0;
 				}
 			}
