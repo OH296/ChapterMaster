@@ -238,7 +238,8 @@ function ColourItem(xx,yy) constructor{
             draw_sprite(spr_mk7_left_trim, 0 , xx, yy);
             draw_sprite(spr_mk7_right_trim, 0 , xx, yy);
             draw_sprite(spr_mk7_leg_variants, 1, xx, yy);
-            draw_sprite(spr_mk7_chest_variants, 1, xx, yy);           	
+            draw_sprite(spr_mk7_chest_variants, 1, xx, yy);
+            draw_sprite(spr_mk7_head_variants, 1, xx, yy);         	
             draw_sprite(spr_mk7_mouth_variants, 1, xx, yy);
             draw_sprite(spr_mk7_thorax_variants, 1, xx, yy);
             draw_sprite(spr_gothic_numbers_right_pauldron,4,xx, yy);
