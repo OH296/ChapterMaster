@@ -46,6 +46,13 @@ function ComplexSet() constructor{
         }
     }
 
+    static replace_area = function(area, add_sprite){
+        if (struct_exists(self, area)){
+            sprite_delete(self[$area]);
+        }
+        self[$ area] = sprite_duplicate(add_sprite);
+    }
+
     static remove_area = function(area){
         if (struct_exists(self, area)){
             sprite_delete(self[$area]);
@@ -60,14 +67,8 @@ function ComplexSet() constructor{
             add_to_area(_area, group[$_area]);
         }
     }
-
-    static add_or_replace = function(area, add_sprite){
-        if (struct_exists(self, area)){
-            sprite_delete(self[$area]);
-        }
-        self[$ area] = sprite_duplicate(add_sprite);
-    }
 }
+
 function get_complex_set(set = eARMOUR_SET.MK7){
     var set_pieces = new ComplexSet();
 
@@ -1157,15 +1158,15 @@ function scr_draw_unit_image(_background=false){
                     complex_set.remove_area("mouth_variants");
                     if (armour_type == ArmourType.Terminator) {
                         if (unit_specialization == UnitSpecialization.WolfPriest) {
-                            complex_set.add_or_replace("head",spr_chaplain_wolfterm_helm);
+                            complex_set.replace_area("head",spr_chaplain_wolfterm_helm);
                         } else {
-                            complex_set.add_or_replace("head",spr_chaplain_term_helm);
+                            complex_set.replace_area("head",spr_chaplain_term_helm);
                         }
                     } else {
                         if (unit_specialization == UnitSpecialization.WolfPriest) {
-                            complex_set.add_or_replace("head",spr_chaplain_wolf_helm);
+                            complex_set.replace_area("head",spr_chaplain_wolf_helm);
                         } else {
-                            complex_set.add_or_replace("head",spr_chaplain_helm); 
+                            complex_set.replace_area("head",spr_chaplain_helm); 
                         }
                     }
                 }
@@ -1274,12 +1275,12 @@ function scr_draw_unit_image(_background=false){
                 draw_unit_arms(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set);
                 if (armour_type==ArmourType.Normal && complex_livery){
                     if (struct_exists(body[$ "right_leg"], "bionic")) {
-                        complex_set.add_or_replace("right_leg",spr_bionic_leg_right);
+                        complex_set.replace_area("right_leg",spr_bionic_leg_right);
                     }
                 }
                 if (armour_type==ArmourType.Normal && complex_livery){
                     if (struct_exists(body[$ "left_leg"], "bionic")) {
-                        complex_set.add_or_replace("left_leg",spr_bionic_leg_left);
+                        complex_set.replace_area("left_leg",spr_bionic_leg_left);
                     }
                 }                
                 // Draw torso
