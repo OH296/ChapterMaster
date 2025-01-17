@@ -225,6 +225,7 @@ function CompanyStruct(comp) constructor{
 				                obj_controller.x = garrrison_star.x;
 				                obj_controller.y = garrrison_star.y;
 				                obj_controller.selection_data =  {
+				                	system : garrrison_star.id,
 				                	planet:cur_assignment.ident,
 				                	feature:"",
 				                }

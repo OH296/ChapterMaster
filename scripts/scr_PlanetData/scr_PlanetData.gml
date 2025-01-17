@@ -1,5 +1,8 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
+
+#macro ARR_strength_descriptions ["none", "Minimal", "Sparse", "Moderate", "Numerous", "Very Numerous", "Overwhelming"];
+
 function PlanetData(planet, system) constructor{
 	self.planet = planet;
 	self.system = system;
@@ -13,9 +16,32 @@ function PlanetData(planet, system) constructor{
     max_population = system.p_max_population[planet];
     large_population = system.p_large[planet];
     secondary_population = system.p_pop[planet];
+    is_craftworld = system.craftworld;
+    is_hulk = system.space_hulk;
+
+    static display_population = function(){
+    	if (large_population){
+    		return $"{population} B";
+    	} else {
+    		return $"{scr_display_number(population)}";
+    	}
+    }
+
+    static at_war = function(){
+    	var _at_war = false
+    	if (current_owner>5) then _at_war=true;
+        if (obj_controller.faction_status[current_owner]="War") then _at_war=true;
+        return _at_war;
+    }
+
     guardsmen = system.p_guardsmen[planet];
     pdf = system.p_pdf[planet];
     fortification_level  = system.p_fortified[planet];
+    static alter_fortification = function(alteration){
+    	system.p_fortified[planet] += alteration;
+    	fortification_level = system.p_fortified[planet];
+    }
+
     star_station = system.p_station[planet];
     pdf_loss_reduction = 0;
 
@@ -70,6 +96,10 @@ function PlanetData(planet, system) constructor{
     problem_data = system.p_problem_other_data[planet];
     problem_timers = system.p_timer[planet];
 
+    static has_problem = function(problem){
+    	has_problem_planet(planet, problem, system);
+    }
+
     static name = function(){
     	var _name="";
     	with (system){
@@ -90,6 +120,10 @@ function PlanetData(planet, system) constructor{
 
     static has_feature = function(feature){
     	return planet_feature_bool(features, feature);
+    }
+    
+    static has_upgrade= function(feature){
+    	return planet_feature_bool(upgrades, feature);
     }
 
     static get_features = function(request_feature){
@@ -350,4 +384,322 @@ function PlanetData(planet, system) constructor{
         system.p_pdf[planet] = pdf;
 	}
 
+
+	static planet_info_screen = function(){
+		var improve=0
+        var xx=15;
+        var yy=25;
+        var current_planet=obj_controller.selecting_planet;
+        var nm=scr_roman(current_planet), temp1=0;
+        draw_set_halign(fa_center);
+        draw_set_font(fnt_40k_14);
+        
+        var _xenos_and_heretics = xenos_and_heretics();
+        if (current_owner<=5) and (!_xenos_and_heretics){
+            if (planet_forces[eFACTION.Player]>0||system.present_fleet[1]>0){
+                if (fortification_level<5) then improve=1;
+            }
+        }
+        
+        // Draw disposition here
+        var yyy=0;
+
+        var _succession = has_problem("succession");
+
+        if ((player_disposition>=0 && current_owner<=5 && population>0)) and (_succession=0){
+            var wack=0;
+            draw_set_color(c_blue);
+            draw_rectangle(xx+349,yy+175,xx+349+(min(100,player_disposition)*3.68),yy+192,0);
+        }
+        draw_set_color(c_gray);
+        draw_rectangle(xx+349,yy+175,xx+717,yy+192,1);
+        draw_set_color(c_white);
+        
+        var player_dispo = player_disposition;
+        if (!_succession){
+            if (player_dispo>=0) and (origional_owner<=5) and (current_owner<=5) and (population>0) then draw_text(xx+534,yy+176,"Disposition: "+string(min(100,player_dispo))+"/100");
+            if (player_dispo>-30) and (player_dispo<0) and (current_owner<=5) and (population>0){
+                draw_text(xx+534,yy+176,"Disposition: ???/100");
+            }
+            if ((player_dispo>=0) and (origional_owner<=5) and (current_owner>5)) or (population<=0){
+                draw_text(xx+534,yy+176,"-------------");
+            }
+
+            if (player_dispo<=-3000) then draw_text(xx+534,yy+176,"Disposition: N/A");
+        } else  if (_succession=1) then draw_text(xx+534,yy+176,"War of _Succession");
+        draw_set_color(c_gray);
+        // End draw disposition
+        draw_set_color(c_gray);
+        draw_rectangle(xx+349,yy+193,xx+717,yy+210,0);
+        var bar_width = 717-349;
+        var bar_start_point = xx+349;
+        var bar_percent_length = (bar_width/100);
+        var current_bar_percent = 0;
+        var hidden_cult = false;
+        if (has_feature(P_features.Gene_Stealer_Cult)){
+            hidden_cult = get_features(P_features.Gene_Stealer_Cult)[0].hiding;
+        }          
+        
+        for (var i=1;i<13;i++){
+            if (population_influences[i]>0){
+                draw_set_color(global.star_name_colors[i]);
+                if (hidden_cult){
+                    draw_set_color(global.star_name_colors[eFACTION.Imperium]);
+                }
+                var current_start = bar_start_point+(current_bar_percent*bar_percent_length)
+                draw_rectangle(current_start,yy+193,current_start+(bar_percent_length*population_influences[i]),yy+210,0);
+                current_bar_percent+=population_influences[i];
+            }
+            draw_set_color(c_gray);
+        }
+
+        draw_set_color(c_white);   
+        draw_text(xx+534,yy+194,"Population Influence");
+        yy+=20;
+        draw_set_font(fnt_40k_14b);
+        draw_set_halign(fa_left);
+        if (!is_craftworld && !is_hulk) then draw_text(xx+480,yy+196,$"{system.name} {nm}  ({planet_type})");
+        if (is_craftworld) then draw_text(xx+480,yy+196,string(system.name)+" (Craftworld)");
+        // if (is_craftworld=0) and (is_hulk=0) then draw_text(xx+534,yy+214,string(planet_type)+" World");
+        // if (is_craftworld=1) then draw_text(xx+594,yy+214,"Craftworld");
+        if (is_hulk) then draw_text(xx+480,yy+196,"Space Hulk");
+        
+        // draw_sprite(spr_planet_splash,temp1,xx+349,yy+194);
+        scr_image("ui/planet",scr_planet_image_numbers(planet_type),xx+349,yy+194,128,128);
+        draw_rectangle(xx+349,yy+194,xx+477,yy+322,1);
+        draw_set_font(fnt_40k_14);
+        
+        var pop_string = $"Population: {display_population()}";
+
+        if (instance_exists(obj_star_select)){
+            var _button_manager = obj_star_select.button_manager;
+            _button_manager.update({
+                label:pop_string,
+                tooltip : "population data toggle with 'P'",
+                keystroke : press_exclusive(ord("P")),
+                x1 : xx+480,
+                y1 : yy+217,
+                w : 200,
+                h : 22
+            });
+            _button_manager.update_loc();
+            if (_button_manager.draw()){
+                obj_star_select.population = !obj_star_select.population;
+                if (obj_star_select.population){
+                    obj_star_select.potential_doners = find_population_doners(system.id);
+                }
+            }
+        }
+        
+        if (is_craftworld=0) and (is_hulk=0){
+            var y7=240,temp3=string(scr_display_number(guardsmen));
+            if (guardsmen>0){
+                draw_text(xx+480,yy+y7,$"Imperial Guard: {temp3}");
+                y7+=20;
+            }
+            var temp4=string(scr_display_number(pdf));
+            if (current_owner!=8){
+                draw_text(xx+480,yy+y7,$"Defense Force: {temp4}");
+            }
+            if (current_owner=8){
+                draw_text(xx+480,yy+y7,$"Gue'Vesa Force:  {temp4}");
+            }
+        }
+        
+        var temp5="";
+        
+        
+        if (!is_hulk){
+            if (improve=1){
+                draw_set_color(c_green);
+                draw_rectangle(xx+481,yy+280,xx+716,yy+298,0);
+                draw_sprite(spr_requisition,0,xx+657,yy+283);
+                
+                
+                var improve_cost=1500,yep=0,o=0;
+
+                if (scr_has_adv("Siege Masters")){
+                	improve_cost=1100;
+                }
+                
+                draw_text_glow(xx+671, yy+281,improve_cost,16291875,0);
+                
+                if (scr_hit(xx+481,yy+282,xx+716,yy+300)){
+                    draw_set_color(0);
+                    draw_set_alpha(0.2);
+                    draw_rectangle(xx+481,yy+280,xx+716,yy+298,0);
+                    if (scr_click_left()) and (obj_controller.requisition>=improve_cost){
+                        obj_controller.requisition-=improve_cost;
+                        alter_fortification(1);
+                        
+                        if (player_disposition>0) and (player_disposition<=100){
+                            player_disposition=min(100,player_disposition+(9-fortification_level));
+                        }
+                    }
+                    
+                }
+                draw_set_alpha(1);
+                draw_set_color(0);
+            }
+            var forti_string = ["None", "Sparse","Light","Moderate","Heavy","Major","Extreme"];
+            var planet_forti = $"Defenses: {forti_string[fortification_level]}";
+
+            draw_text(xx+480,yy+280,planet_forti);
+        }
+        
+        draw_set_color(c_gray);
+        
+        if (is_hulk=1){
+            temp5="Integrity: "+string(floor(fortification_level*20))+"%";
+            draw_text(xx+480,yy+280,temp5);
+        }
+        
+        var temp6="???";
+        var tau_influence = population_influences[eFACTION.Tau];
+        var target_planet_heresy=corruption;
+        if (max(target_planet_heresy,tau_influence)<=10) then temp6="None";
+        if (max(target_planet_heresy,tau_influence)>10) and (max(target_planet_heresy,tau_influence)<=30) then temp6="Little";
+        if (max(target_planet_heresy,tau_influence)>30) and (max(target_planet_heresy,tau_influence)<=50) then temp6="Major";
+        if (max(target_planet_heresy,tau_influence)>50) and (max(target_planet_heresy,tau_influence)<=70) then temp6="Heavy";
+        if (max(target_planet_heresy,tau_influence)>70) and (max(target_planet_heresy,tau_influence)<=96) then temp6="Extreme";
+        if (target_planet_heresy>=96) or (tau_influence>=96) then temp6="Maximum";
+        draw_text(xx+480,yy+300,$"Corruption: {temp6}");
+        
+        
+        draw_set_font(fnt_40k_14b);
+        draw_text(xx+349,yy+326,"Planet Forces");
+        draw_text(xx+535,yy+326,"Planet Features");
+        draw_set_font(fnt_40k_14);
+        
+        
+        var temp8="",t=-1;
+        repeat(8){
+            var ahuh,ahuh2,ahuh3;ahuh="";ahuh2=0;ahuh3=0;t+=1;
+            with (system){
+                if (t=0){ahuh="Adepta Sororitas: ";ahuh2=p_sisters[current_planet];}
+                if (t=1){ahuh="Ork Presence: ";ahuh2=p_orks[current_planet];}
+                if (t=2){ahuh="Tau Presence: ";ahuh2=p_tau[current_planet];}
+                if (t=3){ahuh="Tyranid Presence: ";ahuh2=p_tyranids[current_planet];}
+                if (t=4){ahuh="Traitor Presence: ";ahuh2=p_traitors[current_planet];if (ahuh2>6) then ahuh="Daemon Presence: ";}
+                if (t=5){ahuh="CSM Presence: ";ahuh2=p_chaos[current_planet];}
+                if (t=6){ahuh="Daemon Presence: ";ahuh2=p_demons[current_planet];}
+                if (t=7){ahuh="Necron Presence: ";ahuh2=p_necrons[current_planet];}
+            }
+            
+            if (t!=0){
+                if (ahuh2=1) then ahuh3="Tiny";if (ahuh2=2) then ahuh3="Sparse";
+                if (ahuh2=3) then ahuh3="Moderate";if (ahuh2=4) then ahuh3="Heavy";
+                if (ahuh2=5) then ahuh3="Extreme";if (ahuh2>=6) then ahuh3="Rampant";
+            }
+            if (t=0){
+                if (ahuh2=1) then ahuh3="Very Few";if (ahuh2=2) then ahuh3="Few";
+                if (ahuh2=3) then ahuh3="Moderate";if (ahuh2=4) then ahuh3="Numerous";
+                if (ahuh2=5) then ahuh3="Very Numerous";if (ahuh2>=6) then ahuh3="Overwhelming";
+            }
+            
+            if (ahuh!="") and (ahuh2>0) then temp8+=string(ahuh)+" "+string(ahuh3)+"#";
+        }
+        draw_text(xx+349,yy+346,string_hash_to_newline(string(temp8)));
+        
+        
+        var to_show=0,temp9="";t=-1;
+
+        var fit =  array_create(11, "");
+        var planet_displays = [], i;
+        var feat_count, _cur_feature;
+        var feat_count = array_length(features);
+        var upgrade_count = array_length(upgrades);
+        var size = ["", "Small", "", "Large"];
+        if ( feat_count > 0){
+            for (i =0; i <  feat_count ;i++){
+                cur_feature= features[i]
+                if (cur_feature.planet_display != 0){
+                    if (cur_feature.f_type == P_features.Gene_Stealer_Cult){
+                        if (!cur_feature.hiding){
+                            array_push(planet_displays, [cur_feature.planet_display, cur_feature]);
+                        }
+                    }else if (cur_feature.player_hidden == 1){
+                        array_push(planet_displays, ["????", ""] );
+                    }else{
+                        array_push(planet_displays, [cur_feature.planet_display, cur_feature]);
+                    }
+                    if (cur_feature.f_type == P_features.Monastery){
+                        if (cur_feature.forge>0){
+                            var forge = cur_feature.forge_data;
+                            var size_string= $"{size[forge.size]} Chapter Forge"
+                            array_push(planet_displays, [size_string, forge]);
+                        }
+                    }                
+                }
+            }
+        }
+        if (upgrade_count>0){
+            for (i =0; i <  upgrade_count ;i++){
+                var _upgrade = upgrades[i];
+                if (_upgrade.f_type == P_features.Secret_Base){
+                    if (_upgrade.forge>0){
+                        var forge = _upgrade.forge_data;
+                        var size_string= $"{size[forge.size]} Chapter Forge"
+                        array_push(planet_displays, [size_string, forge]);
+                    }
+                }
+            }
+        }
+        for (i=0;i<array_length(problems);i++){
+            if (problems[i]=="") then continue;
+            problem_data = problems_data[i];
+            if (struct_exists(problem_data, "stage")){
+                if (problem_data.stage == "preliminary"){
+                    var mission_string  = $"{problem_data.applicant} Audience";
+                    problem_data.f_type = P_features.Mission;
+                    problem_data.time = problem_timers[i];
+                    problem_data.problem = problems[i];
+                    problem_data.array_position = i;
+                    array_push(planet_displays, [mission_string, problem_data]);
+                }
+            }
+        }
+
+        t=0;
+        var button_size, y_move=0, button_colour;
+        for (i=0; i< array_length(planet_displays); i++){
+            button_colour = c_green;
+            if (planet_displays[i][0] == "????") then button_colour = c_red;
+            button_size = draw_unit_buttons([xx+535,yy+346+y_move], planet_displays[i][0],[1,1], button_colour,, fnt_40k_14b, 1);
+            y_move += button_size[3]-button_size[1];
+            if (point_and_click(button_size)){
+                if (planet_displays[i][0] != "????"){
+                    obj_star_select.feature = new FeatureSelected(planet_displays[i][1], system, current_planet);
+                } else {
+                    obj_star_select.feature = "";
+                }
+            }
+        }
+        if (obj_controller.selecting_planet>0){
+            var current_planet=obj_controller.selecting_planet;
+            draw_set_color(c_black);
+            draw_set_halign(fa_center);
+            
+            /*if (obj_controller.recruiting_worlds_bought>0) and (system.p_owner[obj_controller.selecting_planet]<=5) and (obj_controller.faction_status[system.p_owner[obj_controller.selecting_planet]]!="War"){
+                if (string_count("Recr",system.p_feature[obj_controller.selecting_planet])=0){
+                    button4="+Recruiting";
+                }
+            }*/
+            
+            /*if (origional_owner=1){
+                if (mouse_x>=xx+363) and (mouse_y>=yy+194) and (mouse_x<xx+502) and (mouse_y<yy+204){
+                    if (string_count("Monastery",features)>0){
+                        var wid,hei,tex;draw_set_halign(fa_left);
+                        tex=string(system.p_lasers[current_planet])+" Defense Laser, "+string(system.p_defenses[current_planet])+" Weapon Emplacements, "+string(system.p_silo[current_planet])+" Missile Silo";
+                        hei=string_height_ext(tex,-1,200)+4;wid=string_width_ext(tex,-1,200)+4;
+                        draw_set_color(c_black);
+                        draw_rectangle(xx+363,yy+210,xx+363+wid,yy+210+hei,0);
+                        draw_set_color(38144);
+                        draw_rectangle(xx+363,yy+210,xx+363+wid,yy+210+hei,1);
+                        draw_text_ext(xx+365,yy+212,tex,-1,200);
+                    }
+                }
+            }*/
+        }		
+	}
 }

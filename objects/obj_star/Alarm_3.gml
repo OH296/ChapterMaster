@@ -34,20 +34,23 @@ obj_star_select.target=self.id;
 
 try{
     if (obj_controller.selection_data != false){
-        var data = obj_controller.selection_data;
-        if (data.system != "none"){
-            if (struct_exists(data, "feature")){
-                if (data.feature != " none"){
-                    if (is_struct(data.feature)){
-                        if (struct_exists(data.feature, "f_type")){
-                            if (data.feature.f_type != "none"){
-                                obj_star_select.feature = new FeatureSelected(data.feature,data.system, data.planet);
+        var _data = obj_controller.selection_data;
+        if (!struct_exists(_data, "system")){
+            _data.system = id;
+        }
+        if (_data.system != "none"){
+            if (struct_exists(_data, "feature")){
+                if (_data.feature != " none"){
+                    if (is_struct(_data.feature)){
+                        if (struct_exists(_data.feature, "f_type")){
+                            if (_data.feature.f_type != "none"){
+                                obj_star_select.feature = new FeatureSelected(_data.feature,_data.system, _data.planet);
                             }
                         }
                     }
                 }
             }
-            obj_controller.selecting_planet = data.planet;
+            obj_controller.selecting_planet = _data.planet;
             obj_controller.selection_data=false;
             if (obj_controller.selecting_planet >0 && obj_controller.selecting_planet<5){
                 obj_star_select.garrison = new GarrisonForce(p_operatives[obj_controller.selecting_planet]);       

@@ -41,19 +41,16 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
 
 
     // Target info
-    var hers, influ, poppy;
+    var _total_hers, _influ;
     draw_set_font(fnt_info);
-    draw_text_bold(bomb_window.x1+20, bomb_window.y1+70, ($"Target planet: {p_target.name} {obj_controller.selecting_planet}"));    
+    draw_text_bold(bomb_window.x1+20, bomb_window.y1+70, ($"Target planet: {p_data.name()}"));    
 
-    hers=p_target.p_heresy[obj_controller.selecting_planet]+p_target.p_heresy_secret[obj_controller.selecting_planet];
-    influ=p_target.p_influence[obj_controller.selecting_planet];
-    if (p_target.p_large[obj_controller.selecting_planet]==1) then poppy=string(p_target.p_population[obj_controller.selecting_planet])+"B";
-    if (p_target.p_large[obj_controller.selecting_planet]==0) then poppy=string(scr_display_number(p_target.p_population[obj_controller.selecting_planet]));
+    _total_hers=p_data.corruption+p_data.secret_corruption;
 
-    var population_string = $"Population: ";
+    _influ=p_target.p__influence[obj_controller.selecting_planet];
+
+    var population_string = $"Population: {p_data.display_population()} people";
     draw_text_bold(bomb_window.x1+20, bomb_window.y1+90, population_string);
-    draw_text(bomb_window.x1+20+string_width(population_string), bomb_window.y1+90, ($"{poppy} people"));
-
 
     if (p_target.sprite_index!=spr_star_hulk){
         // TODO a centralised point to be able to fetch display names from factions identifying number
@@ -100,64 +97,13 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
 
         var str=0,str_string="";
         // TODO a centralised point to be able to fetch display names from factions identifying number
-        switch (target) {
-            case 2:
-                str = imp;
-                break;
-            case 2.5:
-                str = pdf;
-                break;
-            case 3:
-                str = mechanicus;
-                break;
-            case 5:
-                str = sisters;
-                break;
-            case 6:
-                str = eldar;
-                break;
-            case 7:
-                str = ork;
-                break;
-            case 8:
-                str = tau;
-                break;
-            case 9:
-                str = tyranids;
-                break;
-            case 10:
-                str = max(traitors, chaos);
-                break;
-            case 13:
-                str = necrons;
-                break;
-            default:
-                str = 0;
-                break;
+        str = floor(p_data.planet_forces[target]);
+        if (target == 2.5){
+            str = determine_pdf_defence(p_data.pdf,,p_data.fortification_level[0])[0];
         }
-
-        switch (str) {
-            case 1:
-                str_string = "Minimal";
-                break;
-            case 2:
-                str_string = "Sparse";
-                break;
-            case 3:
-                str_string = "Moderate";
-                break;
-            case 4:
-                str_string = "Numerous";
-                break;
-            case 5:
-                str_string = "Very Numerous";
-                break;
-            case 6:
-                str_string = "Overwhelming";
-                break;
-            default:
-                str_string = "";
-                break;
+        var _s_strings = ARR_strength_descriptions
+        if (str<array_Length(_s_strings)){
+            str_string = _s_strings[str];
         }
 
         var target_string = "Target force:  ";
@@ -165,16 +111,14 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
         if (point_and_click(draw_unit_buttons([bomb_window.x1+12+string_width(target_string), bomb_window.y1+99], string(t_name), [1, 1], #34bc75, fa_center, fnt_info))) {
             if (targets > 1) {
                 var possibleTargets = [];
-                if (imp > 0) array_push(possibleTargets, 2);
-                if (pdf > 0) array_push(possibleTargets, 2.5);
-                if (mechanicus > 0) array_push(possibleTargets, 3);
-                if (sisters > 0) array_push(possibleTargets, 5);
-                if (eldar > 0) array_push(possibleTargets, 6);
-                if (ork > 0) array_push(possibleTargets, 7);
-                if (tau > 0) array_push(possibleTargets, 8);
-                if (tyranids > 0) array_push(possibleTargets, 9);
-                if (max(traitors, chaos) > 0) array_push(possibleTargets, 10);
-                if (necrons > 0) array_push(possibleTargets, 13);
+                for (var i=2;i<array_length(p_data.planet_forces);i++){
+                    if (p_data.planet_forces[i]>0){
+                        array_push(possibleTargets, i);
+                    }
+                    if (p_data.pdf > 0){
+                        array_push(possibleTargets, 2.5);
+                    }
+                }
                 
                 // Switch target to the next in the array
                 if (array_length(possibleTargets) > 0) {
@@ -183,10 +127,9 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
                     target = possibleTargets[currentIndex];
                 }
             }
-        }        
-        var strength_string = $"Strength: ";
+        }
+        var strength_string = $"Strength: {str}";
         draw_text_bold(bomb_window.x1+20, bomb_window.y1+130,strength_string);
-        draw_text(bomb_window.x1+20+string_width(strength_string), bomb_window.y1+130, $"{string(str_string)} ({string(str)})")
     }
 
 
@@ -266,6 +209,18 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
     var button_alpha = 1;
     if (!ships_selected) then button_alpha = 0.4;
     bombard_button = draw_unit_buttons([bomb_window.x2-96, bomb_window.y2-40],"Confirm",[1,1],#bf4040,fa_center,fnt_40k_14b, button_alpha);
+    if (point_and_click(bombard_button)){
+        if (ships_selected>0) {      
+            for(var i=0; i<array_length(ship_ide) i++){
+                if (ship_all[i]==1){
+                    if (obj_ini.ship_class[ship_ide[i]]=="Battle Barge") then bomb_score+=3;
+                    if (obj_ini.ship_class[ship_ide[i]]=="Strike Cruiser") then bomb_score+=1;
+                }
+            }                        
+            // Start bombardment here
+            scr_bomb_world(p_target,obj_controller.selecting_planet,target,bomb_score,str);
+        }        
+    }
     var cancel_button = draw_unit_buttons([bomb_window.x2-166, bomb_window.y2-40],"Cancel",[1,1],#34bc75,fa_center,fnt_40k_14b);
     if (obj_controller.cooldown<=0){
         if( point_and_click(cancel_button)){

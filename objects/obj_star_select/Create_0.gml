@@ -12,6 +12,7 @@ corruption=0;
 ork=0;
 tau=0;
 chaos=0;
+p_data = new PlanetData(0, target);
 torpedo = scr_item_count("Cyclonic Torpedo");
 
 feature= "";
