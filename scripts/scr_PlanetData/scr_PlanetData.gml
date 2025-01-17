@@ -93,7 +93,7 @@ function PlanetData(planet, system) constructor{
     governor = system.p_governor[planet];
 
     problems = system.p_problem[planet];
-    problem_data = system.p_problem_other_data[planet];
+    problems_data = system.p_problem_other_data[planet];
     problem_timers = system.p_timer[planet];
 
     static has_problem = function(problem){
@@ -645,9 +645,10 @@ function PlanetData(planet, system) constructor{
                 }
             }
         }
+
         for (i=0;i<array_length(problems);i++){
             if (problems[i]=="") then continue;
-            problem_data = problems_data[i];
+            problem_data = problem_datas[i];
             if (struct_exists(problem_data, "stage")){
                 if (problem_data.stage == "preliminary"){
                     var mission_string  = $"{problem_data.applicant} Audience";

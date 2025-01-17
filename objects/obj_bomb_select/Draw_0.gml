@@ -47,7 +47,7 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
 
     _total_hers=p_data.corruption+p_data.secret_corruption;
 
-    _influ=p_target.p__influence[obj_controller.selecting_planet];
+    _influ=p_data.population_influences;
 
     var population_string = $"Population: {p_data.display_population()} people";
     draw_text_bold(bomb_window.x1+20, bomb_window.y1+90, population_string);
@@ -99,34 +99,33 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
         // TODO a centralised point to be able to fetch display names from factions identifying number
         str = floor(p_data.planet_forces[target]);
         if (target == 2.5){
-            str = determine_pdf_defence(p_data.pdf,,p_data.fortification_level[0])[0];
+            str = determine_pdf_defence(p_data.pdf,,p_data.fortification_level)[0];
         }
         var _s_strings = ARR_strength_descriptions
-        if (str<array_Length(_s_strings)){
+        if (str<array_length(_s_strings)){
             str_string = _s_strings[str];
         }
 
         var target_string = "Target force:  ";
         draw_text_bold(bomb_window.x1+20, bomb_window.y1+110, target_string);
         if (point_and_click(draw_unit_buttons([bomb_window.x1+12+string_width(target_string), bomb_window.y1+99], string(t_name), [1, 1], #34bc75, fa_center, fnt_info))) {
-            if (targets > 1) {
-                var possibleTargets = [];
-                for (var i=2;i<array_length(p_data.planet_forces);i++){
-                    if (p_data.planet_forces[i]>0){
-                        array_push(possibleTargets, i);
-                    }
-                    if (p_data.pdf > 0){
-                        array_push(possibleTargets, 2.5);
-                    }
-                }
-                
-                // Switch target to the next in the array
-                if (array_length(possibleTargets) > 0) {
-                    var currentIndex = array_get_index(possibleTargets, target);
-                    currentIndex = (currentIndex + 1) mod array_length(possibleTargets);
-                    target = possibleTargets[currentIndex];
+
+            var _possible_targets = [];
+            for (var i=2;i<array_length(p_data.planet_forces);i++){
+                if (p_data.planet_forces[i]>0){
+                    array_push(_possible_targets, i);
                 }
             }
+            if (p_data.pdf > 0){
+                array_push(_possible_targets, 2.5);
+            }            
+            // Switch target to the next in the array
+            if (array_length(_possible_targets) > 0) {
+                var _current_index = array_get_index(_possible_targets, target);
+                _current_index = _current_index<(array_length(_possible_targets)-1) ? _current_index+1: 0 ;
+                target = _possible_targets[_current_index];
+            }
+            
         }
         var strength_string = $"Strength: {str}";
         draw_text_bold(bomb_window.x1+20, bomb_window.y1+130,strength_string);
@@ -213,12 +212,13 @@ if (max_ships>0)and (instance_exists(obj_star_select)){
         if (ships_selected>0) {      
             for(var i=0; i<array_length(ship_ide) i++){
                 if (ship_all[i]==1){
-                    if (obj_ini.ship_class[ship_ide[i]]=="Battle Barge") then bomb_score+=3;
-                    if (obj_ini.ship_class[ship_ide[i]]=="Strike Cruiser") then bomb_score+=1;
+                    var _class = player_ships_class(ship_ide[i]);
+                    if (_class=="capital") then bomb_score+=3;
+                    if (_class=="frigate") then bomb_score+=1;
                 }
             }                        
             // Start bombardment here
-            scr_bomb_world(p_target,obj_controller.selecting_planet,target,bomb_score,str);
+            scr_bomb_world(p_data.system,p_data.planet,target,bomb_score,str);
         }        
     }
     var cancel_button = draw_unit_buttons([bomb_window.x2-166, bomb_window.y2-40],"Cancel",[1,1],#34bc75,fa_center,fnt_40k_14b);
