@@ -57,36 +57,15 @@ if (click_accepted) {
             ){
                 closes=false
             } else if (obj_controller.selecting_planet>0){
-                if (scr_hit(
-                    main_data_slate.XX-4,
-                    main_data_slate.YY,
-                    main_data_slate.XX+main_data_slate.width,
-                    main_data_slate.YY + main_data_slate.height,
-                )){
-                    closes=false;
-                }
-                if (scr_hit(
-                    garrison_data_slate.XX-4,
-                    165,
-                    garrison_data_slate.YY+garrison_data_slate.width,
-                    165 + garrison_data_slate.height,
-                )){
-                    closes=false
-                    if (is_struct(garrison)){
-                        closes=false
-                    }  
-                    if (population){
-                        closes=false
+                closes = !main_data_slate.entered();
+                if (closes){
+                    if (is_struct(garrison) || population){
+                        closes =  !garrison_data_slate.entered();
                     }
                 }
-
+               
                 if (!is_string(feature)){
-                    if (scr_hit(
-                        feature.main_slate.XX,
-                        feature.main_slate.YY,
-                        feature.main_slate.XX+feature.main_slate.width,
-                        feature.main_slate.YY+feature.main_slate.height
-                        )){
+                    if (feature.main_slate.entered()){
                         closes=false;
                     }
                 }
@@ -159,6 +138,7 @@ if (loading!=0){
 
 //the draw and click on planets logic
 planet_selection_action();
+
 draw_set_font(fnt_40k_14b);
 
 if (obj_controller.selecting_planet!=0){
@@ -311,7 +291,7 @@ if (obj_controller.selecting_planet!=0){
                 if (scr_hit(colonist_coords)){
                     tooltip_draw("Planets with higher populations can provide more recruits both for your chapter and to keep a planets PDF bolstered, however colonists from other planets bring with them their home planets influences and evils /n REQ : 1000");
                     if (point_and_click(colonist_coords)){
-                        var doners = potential_doners[irandom(doner_length-1)];
+                        var doners = array_random_element(potential_doners);
                         new_colony_fleet(potential_doners[0][0],potential_doners[0][1],target.id,cur_planet,"bolster_population");
                         obj_controller.requisition -= 1000;
                     }
@@ -336,12 +316,14 @@ if (obj_controller.selecting_planet!=0){
             var building=instance_create(x,y,obj_temp_build);
             building.target=target;
             building.planet=obj_controller.selecting_planet;
-            if (planet_feature_bool(target.p_upgrades[obj_controller.selecting_planet], P_features.Secret_Base)) then building.lair=1;
-            if (planet_feature_bool(target.p_upgrades[obj_controller.selecting_planet], P_features.Arsenal)) then building.arsenal=1;
-            if (planet_feature_bool(target.p_upgrades[obj_controller.selecting_planet], P_features.Gene_Vault)) then building.gene_vault=1;
+            if (p_data.has_upgrade(P_features.Secret_Base)) then building.lair=1;
+            if (p_data.has_upgrade(P_features.Arsenal)) then building.arsenal=1;
+            if (p_data.has_upgrade(P_features.Gene_Vault)) then building.gene_vault=1;
             obj_controller.temp[104]=string(scr_master_loc());
             obj_controller.menu=60;
-            with(obj_star_select){instance_destroy();}
+            with(obj_star_select){
+                instance_destroy();
+            }
         }else if (current_button=="Raid" && instance_nearest(x,y,obj_p_fleet).acted<=1){
             instance_create_layer(x, y, layer_get_all()[0], obj_drop_select,{
                 p_target:target,

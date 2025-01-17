@@ -34,6 +34,7 @@ obj_star_select.target=self.id;
 
 try{
     if (obj_controller.selection_data != false){
+        loading = false;
         var _data = obj_controller.selection_data;
         if (!struct_exists(_data, "system")){
             _data.system = id;

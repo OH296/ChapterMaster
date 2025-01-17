@@ -432,11 +432,7 @@ function HoverBox() constructor{
 }
 
 function exit_adhoc_manage(){
-	menu=0;
-    onceh=1;
-    cooldown=10;
-    click=1;
-    hide_banner=0;
+	scr_toggle_manage();
     if (instance_exists(selection_data.system)){
    		selection_data.system.alarm[3]=2;
     }		

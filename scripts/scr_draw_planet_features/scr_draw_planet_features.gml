@@ -318,6 +318,9 @@ function DataSlateMKTwo()constructor{
 	width=0;
 	XX=0;
 	YY=0;
+	static entered = function(){
+		return scr_hit(XX, YY, XX+width, YY+height);
+	}
 	static draw = function(xx,yy,x_scale=1, y_scale=1){
 		XX=xx;
 		YY=yy;
@@ -558,6 +561,15 @@ function DataSlate() constructor{
 	width=0;
 	height=0;
 	percent_cut=0;
+
+	static entered = function(){
+		return (scr_hit(
+                    XX-4,
+                    YY,
+                    XX + width,
+                    YY + height,
+                ));
+	}
 	static draw = function(xx,yy, scale_x=1, scale_y=1){
 		XX=xx;
 		YY=yy;
