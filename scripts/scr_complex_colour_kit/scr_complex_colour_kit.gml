@@ -301,6 +301,16 @@ function setup_complex_livery_shader(setup_role, game_setup=false){
     }    
 }
 
+function set_complex_shader_area(area, colour){
+    if (is_array(area)){
+        for (var i=0;i<array_length(area);i++){
+            var small_area = area[i];
+            var colour_set = [obj_controller.col_r[colour]/255, obj_controller.col_g[colour]/255, obj_controller.col_b[colour]/255];
+            shader_set_uniform_f_array(shader_get_uniform(full_livery_shader, small_area), colour_set);
+        }  
+    }
+}
+
 function colour_picker(xx,yy) constructor{
 	x=xx;
 	x=yy;
