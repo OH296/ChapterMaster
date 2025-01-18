@@ -729,7 +729,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		},
 		"head":{
 			variation:irandom(100)
-		}
+		},
+		"cloak":{
+			type: spr_none,
+			variant: irandom(100)
+		},
 	}; //body parts list can be extended as much as people want
 
 	static alter_body = function(body_slot, body_item_key, new_body_data, overwrite=true){//overwrite means it will replace any existing data
@@ -899,6 +903,24 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 				body.torso.robes = irandom(2);
 				if (body[$"torso"].robes == 0 && irandom(1) == 0){
 					body[$"head"].hood = 1;
+				}
+			}
+
+			var _cloak_chance = 5;
+			if (role() == obj_ini.role[100][eROLE.Chaplain]) {
+				_cloak_chance += 25;
+			} else if (role() == obj_ini.role[100][eROLE.Librarian]) {
+				_cloak_chance += 75;
+			}
+			if (irandom(100) <= _cloak_chance) {
+				if (global.chapter_name == "Salamanders") {
+					body.cloak.type = spr_cloak_scale;
+				} else if (global.chapter_name == "Space Wolves") {
+					body.cloak.type = spr_cloak_fur;
+				} else {
+					body.cloak.type = spr_cloak_cloth;
+					body.cloak.image_0 = irandom(100);
+					body.cloak.image_1 = irandom(100);
 				}
 			}
 			break;
