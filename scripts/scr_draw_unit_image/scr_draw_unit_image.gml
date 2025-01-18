@@ -67,6 +67,32 @@ function ComplexSet() constructor{
             add_to_area(_area, group[$_area]);
         }
     }
+
+    static complex_helms = function(data,choice){
+        set_complex_shader_area(["eye_lense"], data.helm_lens);
+        if (data.helm_pattern == 0){
+            set_complex_shader_area(["left_head", "right_head","left_muzzle", "right_muzzle"], data.helm_secondary);
+
+        } else if (data.helm_pattern == 2){
+            set_complex_shader_area(["left_head", "right_head"], data.helm_primary);
+            set_complex_shader_area(["left_muzzle", "right_muzzle"], data.helm_secondary);
+        } else if (data.helm_pattern==1 || data.helm_pattern == 3){
+            var _surface_width = sprite_get_width(head)
+            var _surface_height = sprite_get_height(head)
+            var _head_surface = surface_create(_surface_width, _surface_height);
+            shader_reset();
+            surface_set_target(_head_surface);
+            draw_sprite(head, 0, 0, 0);
+            shader_set_uniform_i(shader_get_uniform(helm_shader, "replace_colour"), obj_controller.col_r[data.helm_primary]/255, obj_controller.col_g[data.helm_primary]/255, obj_controller.col_b[data.helm_primary]/255);
+            texture_set_stage(shader_get_sampler_index(helm_shader, "background_texture"), surface_get_texture(_head_surface));
+            shader_set(helm_shader);
+            draw_sprite(spr_helm_stripe, data.helm_pattern==1?0:1, 0, 0);
+            head = sprite_create_from_surface(_head_surface, 0, 0, _surface_width, _surface_height, false, false, 0, 0);
+            surface_reset_target();
+            surface_free(_head_surface);
+            shader_reset();
+        }
+    }
 }
 
 function get_complex_set(set = eARMOUR_SET.MK7){
@@ -159,7 +185,8 @@ function get_complex_set(set = eARMOUR_SET.MK7){
             right_arm : spr_indomitus_right_arm,
             backpack : spr_indomitus_backpack_variants,
             chest_variants : spr_indomitus_chest_variants,
-            leg_variants : spr_indomitus_leg_variants,           
+            leg_variants : spr_indomitus_leg_variants,
+            head : spr_indomitus_head_variants         
         });                         
     }else if (set == eARMOUR_SET.Tartaros){
             set_pieces.add_group({
@@ -1282,11 +1309,26 @@ function scr_draw_unit_image(_background=false){
                     if (struct_exists(body[$ "left_leg"], "bionic")) {
                         complex_set.replace_area("left_leg",spr_bionic_leg_left);
                     }
-                }                
+                } 
+                if (complex_livery){
+                    setup_complex_livery_shader(role());
+                    var _complex_helm = false;
+                    if (unit_role ==_role[eROLE.Sergeant]){
+                        _complex_helm = obj_ini.complex_livery_data.sgt;
+                    }else if(unit_role==_role[eROLE.VeteranSergeant]){
+                        _complex_helm = obj_ini.complex_livery_data.vet_sgt;
+                    }else if(unit_role==_role[eROLE.Captain]){
+                        _complex_helm = obj_ini.complex_livery_data.captain;
+                    }else if(unit_role==_role[eROLE.Veteran] || (unit_role==_role[eROLE.Terminator] && company == 1)){
+                        _complex_helm = obj_ini.complex_livery_data.veteran;
+                    }
+                    if (is_struct(_complex_helm) && struct_exists(complex_set, "head")){
+                        complex_set.complex_helms(_complex_helm, get_body_data("variation","head")%sprite_get_number(complex_set.head));
+                    }
+                }
                 // Draw torso
                 if (!armour_bypass){
                     if (complex_livery){
-                        setup_complex_livery_shader(role());
                         if (struct_exists(complex_set, "armour")){
                             draw_sprite(complex_set.armour,body.torso.armour_choice,x_surface_offset,y_surface_offset);
                             if (struct_exists(complex_set, "chest_variants")){
@@ -1376,87 +1418,7 @@ function scr_draw_unit_image(_background=false){
                 if (dev_trait>=10) and (!modest_livery) then draw_sprite(armour_sprite,dev_trait,x_surface_offset,y_surface_offset);// Devastator Doctrine battle damage
                 // if (tech_brothers_trait>=0) and (modest_livery=0) then draw_sprite(spr_gear_techb,tech_brothers_trait,x_surface_offset,y_surface_offset);// Tech-Brothers bling
                 //sgt helms
-                if (specific_helm!=false){
-                    var return_helm = false;
-                    if (is_array(specific_helm)){
-                        //draw_sprite(specific_helm[0],0,helm_draw[0]+x_surface_offset,y_surface_offset+0);
-                        return_helm =specific_helm[0];
-                        specific_helm=specific_helm[1];
-
-                    }
-                    var helm_pat =-1;
-                    var prime=0;
-                    var sec=0;
-                    var lenne2=0;
-                    var recolour_helm =false;
-                    if (unit_role==_role[eROLE.Sergeant]){
-                        with (obj_ini.complex_livery_data.sgt){
-                            prime=helm_primary;
-                            sec=helm_secondary;
-                            lenne2 =helm_lens;
-                            helm_pat=helm_pattern;
-                            recolour_helm=true;
-                        }
-                    }else if(unit_role==_role[eROLE.VeteranSergeant]){
-                        with (obj_ini.complex_livery_data.vet_sgt){
-                            prime=helm_primary;
-                            sec=helm_secondary;
-                            lenne2 =helm_lens;
-                            helm_pat=helm_pattern;
-                            recolour_helm=true;
-                        }
-                    }else if(unit_role==_role[eROLE.Captain]){
-                        with (obj_ini.complex_livery_data.captain){
-                            prime=helm_primary;
-                            sec=helm_secondary;
-                            lenne2 =helm_lens;
-                            helm_pat=helm_pattern;
-                            recolour_helm=true;
-                        }
-                    }else if(unit_role==_role[eROLE.Veteran] || (unit_role==_role[eROLE.Terminator] && company = 1)){
-                        with (obj_ini.complex_livery_data.veteran){
-                            prime=helm_primary;
-                            sec=helm_secondary;
-                            lenne2 = helm_lens;
-                            helm_pat= helm_pattern;
-                            recolour_helm=true;
-                        }
-                    } else {
-                        return_helm = false;
-                    }
-                    if (recolour_helm){
-                        with (obj_controller){
-                            shader_set_uniform_f_array(colour_to_find1, [30/255,30/255,30/255]);
-                            shader_set_uniform_f_array(colour_to_find2, [200/255,0/255,0/255]);
-                        }
-                        shader_set_uniform_i(shader_get_uniform(sReplaceColor, "u_blend_modes"), 0);                        
-                        set_shader_color(ShaderType.Body,prime);
-                        set_shader_color(ShaderType.Helmet,sec);
-                        set_shader_color(ShaderType.Lens,lenne2);                        
-                        draw_sprite(specific_helm,helm_pat,helm_draw[0]+x_surface_offset,y_surface_offset+0);
-                        shader_set_uniform_i(shader_get_uniform(sReplaceColor, "helm_replace"), prime);
-                        shader_set_uniform_i(shader_get_uniform(sReplaceColor, "helm_second_replace"), sec);
-                        shader_set_uniform_i(shader_get_uniform(sReplaceColor, "helm_lense_replace"), lenne2);                        
-                    }
-                    set_shader_to_base_values();
-                    set_shader_array(shader_array_set);
-
-                    // this allows us to layer rank iconography over custom special helms
-                    if (return_helm!=false){
-                        surface_reset_target();
-                        var special_helm_suface = surface_create(512,512);             
-                        surface_set_target(special_helm_suface);
-                        draw_sprite(return_helm,0,helm_draw[0]+x_surface_offset,y_surface_offset+0);  
-                        surface_reset_target();                 
-                        shader_set_uniform_i(shader_get_uniform(sReplaceColor, "u_blend_modes"), 3);
-                        texture_set_stage(shader_get_sampler_index(sReplaceColor, "background_texture"), surface_get_texture(unit_surface));                   
-                        surface_set_target(unit_surface);                
-                        draw_surface(special_helm_suface,0,0);
-                        surface_free(special_helm_suface);
-                        shader_set(sReplaceColor);
-                        shader_set_uniform_i(shader_get_uniform(sReplaceColor, "u_blend_modes"), 0);                         
-                    }
-                }            
+                           
                 // Apothecary Details
                 if (unit_specialization == UnitSpecialization.Apothecary){
                     if (unit_armour=="Tartaros"){
