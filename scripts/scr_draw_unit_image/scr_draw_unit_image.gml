@@ -841,6 +841,9 @@ function scr_draw_unit_image(_background=false){
                     complex_set = get_complex_set(eARMOUR_SET.MK5);
                     complex_livery = true;
                     //TODO sort this mess out streamline system somehow
+                    if (progenitor_map() == 2){
+                        complex_set.add_to_area("mouth_variants", spr_mk5_samuri_faceplate);
+                    }
                     if (unit_progenitor == ePROGENITOR.DARK_ANGELS){
                         complex_set.add_relative_to_status("crest", spr_da_mk5_helm_crests, 2, get_body_data("crest_variation","head"), self);
                         if (unit_role==_role[eROLE.Captain]){
@@ -889,6 +892,7 @@ function scr_draw_unit_image(_background=false){
                     complex_set = get_complex_set(eARMOUR_SET.MK8);
                     complex_livery = true;
                     if (unit_progenitor == ePROGENITOR.DARK_ANGELS) {
+                        complex_set.add_relative_to_status("crest", spr_da_mk7_helm_crests, 2, get_body_data("crest_variation","head"), self);
                         if (unit_role==_role[eROLE.Captain]){
                             // specific_armour_sprite = spr_da_mk8;
                             armour_draw=[spr_da_mk8,0];
@@ -979,6 +983,12 @@ function scr_draw_unit_image(_background=false){
                                 complex_set.add_to_area("head", spr_special_helm);
                             }
                         }   
+                    }
+                }
+                if (armour_type == ArmourType.Normal){
+                    if (progenitor_map() == 2){
+                        complex_set.add_to_area("crest", spr_mongol_topknots);
+                        complex_set.add_to_area("forehead", spr_mongol_hat);
                     }
                 }
                 if (unit_specialization == UnitSpecialization.Techmarine){
@@ -1204,6 +1214,10 @@ function scr_draw_unit_image(_background=false){
                                 }
                                 var choice = get_body_data("variation","head")%sprite_get_number(complex_set.head);
                                 draw_sprite(complex_set.head,choice,x_surface_offset,y_surface_offset);
+                                if (struct_exists(complex_set, "forehead")){
+                                    var choice = get_body_data("forehead_variation","head")%sprite_get_number(complex_set.forehead);
+                                    draw_sprite(complex_set.forehead,choice,x_surface_offset,y_surface_offset);
+                                }                                
                             }
                             if (struct_exists(complex_set, "mouth_variants")){
                                 var choice = get_body_data("variant","jaw")%sprite_get_number(complex_set.mouth_variants);
@@ -1470,7 +1484,6 @@ function scr_draw_unit_image(_background=false){
             }
             else if (unit_armour=="Terminator Armour" && !armour_bypass){
                 if (unit_role == _role[eROLE.Champion]) {
-                    draw_sprite(spr_laurel,0,x_surface_offset,y_surface_offset-8);
                     draw_sprite(spr_helm_decorations,0,x_surface_offset,y_surface_offset-10);
                 }
                 if (unit_role == _role[eROLE.Sergeant] || unit_role == _role[eROLE.VeteranSergeant]) {
