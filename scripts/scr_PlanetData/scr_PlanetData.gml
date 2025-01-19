@@ -648,7 +648,7 @@ function PlanetData(planet, system) constructor{
 
         for (i=0;i<array_length(problems);i++){
             if (problems[i]=="") then continue;
-            problem_data = problem_datas[i];
+            problem_data = problems_data[i];
             if (struct_exists(problem_data, "stage")){
                 if (problem_data.stage == "preliminary"){
                     var mission_string  = $"{problem_data.applicant} Audience";
