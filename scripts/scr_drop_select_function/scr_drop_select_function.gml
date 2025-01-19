@@ -169,6 +169,7 @@ function drop_select_draw(){
         // draw_text(x2 + 14, y2 + 352, string_hash_to_newline("Selection: " + string(smin) + "/" + string(smax)));
 
         // Target
+        var race_quantity = 0;
         if (purge == DropType.RaidAttack){
             var target_race = "",
                 target_threat = "",
@@ -225,8 +226,7 @@ function drop_select_draw(){
         btn_attack.x1 = btn_back.x1 + btn_attack.width + 10;
         btn_attack.y1 = btn_back.y1;
         if (purge == DropType.RaidAttack){
-            if (attack = 0) then btn_attack.str1 = "RAID!";
-            if (attack = 1) then btn_attack.str1 = "ATTACK!";
+            btn_attack.str1  = (attack) ? "ATTACK!": "RAID!"
             btn_attack.active = (array_length(roster.selected_units) > 0 && race_quantity > 0);
         }
         else if (purge>1){
