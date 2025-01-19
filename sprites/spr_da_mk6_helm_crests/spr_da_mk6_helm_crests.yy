@@ -1,8 +1,8 @@
 {
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
-  "name": "spr_da_mk6_helm",
-  "bbox_bottom": 87,
+  "name": "spr_da_mk6_helm_crests",
+  "bbox_bottom": 69,
   "bbox_left": 64,
   "bbox_right": 102,
   "bbox_top": 23,
@@ -14,7 +14,6 @@
   "For3D": false,
   "frames": [
     {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"dcf40f5c-7b10-4fc2-b3e9-b5a4e0e1ed2c",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"ed9004c4-15c2-495c-9750-e6917bdfee15",},
   ],
   "gridX": 0,
   "gridY": 0,
@@ -33,7 +32,7 @@
   "sequence": {
     "resourceType": "GMSequence",
     "resourceVersion": "1.4",
-    "name": "spr_da_mk6_helm",
+    "name": "spr_da_mk6_helm_crests",
     "autoRecord": true,
     "backdropHeight": 768,
     "backdropImageOpacity": 0.5,
@@ -44,7 +43,7 @@
     "events": {"resourceType":"KeyframeStore<MessageEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "eventStubScript": null,
     "eventToFunction": {},
-    "length": 2.0,
+    "length": 1.0,
     "lockOrigin": false,
     "moments": {"resourceType":"KeyframeStore<MomentsEventKeyframe>","resourceVersion":"1.0","Keyframes":[],},
     "playback": 1,
@@ -55,8 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"dcf40f5c-7b10-4fc2-b3e9-b5a4e0e1ed2c","path":"sprites/spr_da_mk6_helm/spr_da_mk6_helm.yy",},},},"Disabled":false,"id":"33ab751e-df92-4816-adb3-fdc6e3711add","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"ed9004c4-15c2-495c-9750-e6917bdfee15","path":"sprites/spr_da_mk6_helm/spr_da_mk6_helm.yy",},},},"Disabled":false,"id":"bb7b0dfe-510b-42bd-ba66-b0b2836fd7d2","IsCreationKey":false,"Key":1.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"dcf40f5c-7b10-4fc2-b3e9-b5a4e0e1ed2c","path":"sprites/spr_da_mk6_helm_crests/spr_da_mk6_helm_crests.yy",},},},"Disabled":false,"id":"33ab751e-df92-4816-adb3-fdc6e3711add","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,

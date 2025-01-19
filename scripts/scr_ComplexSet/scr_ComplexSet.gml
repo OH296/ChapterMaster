@@ -29,6 +29,39 @@ function ComplexSet() constructor{
         }
     }
 
+    static add_relative_to_status = function(area, add_sprite, status_level, variant, unit){
+    	var _roles = obj_ini.role[100];
+    	var tiers = [
+    		["Chapter Master"],
+    		["Forge Master", "Master of Sanctity","Master of the Apothecarion",string("Chief {0}",_roles[eROLE.Librarian])],
+    		[_roles[eROLE.Captain]],
+    		[_roles[eROLE.HonourGuard]],
+    		[_roles[eROLE.Ancient], _roles[eROLE.Champion]],
+    		[_roles[eROLE.VeteranSergeant], _roles[eROLE.Terminator]],
+    		[_roles[eROLE.Veteran], _roles[eROLE.Sergeant],_roles[eROLE.Chaplain],_roles[eROLE.Apothecary],_roles[eROLE.Techmarine],_roles[eROLE.Librarian]],
+    		["Codiciery", "Lexicanum",_roles[eROLE.Tactical],_roles[eROLE.Assault],_roles[eROLE.Devastator]],
+    		[_roles[eROLE.Scout],]
+    	];
+
+    	var _unit_tier = 8;
+    	if (_unit_tier==8){
+	    	for (var i=0;i<array_length(tiers);i++){
+	    		var tier = tiers[i];
+	    		if (array_contains(tier, unit.role())){
+	    			_unit_tier = i;
+	    		}
+	    	}
+	    }
+    	if (_unit_tier<=status_level){
+    		add_to_area(area, add_sprite);
+    	} else {
+    		var variation_tier = (_unit_tier - status_level)+1;
+    		if (variant%variation_tier == 0){
+    			add_to_area(area, add_sprite);
+    		}
+    	}
+    }
+
     static draw_cloaks = function(unit,x_offset,y_offset){
         var type = unit.get_body_data("type","cloak");
         if (type != spr_none) {
@@ -63,8 +96,8 @@ function ComplexSet() constructor{
             set_complex_shader_area(["left_muzzle", "right_muzzle"], data.helm_secondary);
         } else if (data.helm_pattern==1 || data.helm_pattern == 3){
             set_complex_shader_area(["left_head", "right_head","left_muzzle", "right_muzzle"], data.helm_primary);
-            var _surface_width = sprite_get_width(head)
-            var _surface_height = sprite_get_height(head)
+            var _surface_width = sprite_get_width(head);
+            var _surface_height = sprite_get_height(head);
             var _head_surface = surface_create(_surface_width, 60);
             var _decoration_surface = surface_create(_surface_width, 60);
             shader_reset();

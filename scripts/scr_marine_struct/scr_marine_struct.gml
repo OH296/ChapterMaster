@@ -728,7 +728,8 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			variant: irandom(100),
 		},
 		"head":{
-			variation:irandom(100)
+			variation:irandom(100),
+			crest_variation : irandom(100)
 		},
 		"cloak":{
 			type: spr_none,
