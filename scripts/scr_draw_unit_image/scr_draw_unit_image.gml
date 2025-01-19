@@ -294,11 +294,6 @@ function scr_draw_unit_image(_background=false){
         }
     };
 
-    var _shader_set_multiply_blend = function(_r, _g, _b) {
-        shader_set(shd_multiply_blend);
-        shader_set_uniform_f(shader_get_uniform(shd_multiply_blend, "u_Color"), _r, _g, _b);
-    };
-
     var _role = obj_ini.role[100];
     var complex_set={};    
     var x_surface_offset = 200;
@@ -1134,7 +1129,10 @@ function scr_draw_unit_image(_background=false){
                         } 
                     }                   
                 }
-                draw_unit_arms(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set);
+                if(!complex_livery){
+                    draw_unit_arms(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set);
+                }
+                
                 if (armour_type==ArmourType.Normal && complex_livery){
                     if (struct_exists(body[$ "right_leg"], "bionic")) {
                         complex_set.replace_area("right_leg",spr_bionic_leg_right);
@@ -1167,21 +1165,9 @@ function scr_draw_unit_image(_background=false){
                 if (!armour_bypass){
                     if (complex_livery){
                         if (struct_exists(complex_set, "armour")){
-                            var type = get_body_data("type","cloak");
-                            if (type != spr_none) {
-                                _shader_set_multiply_blend(127, 107, 89);
-                                var choice = get_body_data("variant","cloak")%sprite_get_number(type);
-                                draw_sprite(type,choice,x_surface_offset,y_surface_offset);
-                                if (type == spr_cloak_cloth) {
-                                    _shader_set_multiply_blend(obj_controller.trim_colour_replace[0]*255, obj_controller.trim_colour_replace[1]*255, obj_controller.trim_colour_replace[2]*255);
-                                    var choice = get_body_data("image_0","cloak")%sprite_get_number(spr_cloak_image_0);
-                                    draw_sprite(spr_cloak_image_0,choice,x_surface_offset,y_surface_offset);
-                                    var choice = get_body_data("image_1","cloak")%sprite_get_number(spr_cloak_image_1);
-                                    draw_sprite(spr_cloak_image_1,choice,x_surface_offset,y_surface_offset);
-                                }
-                                shader_reset();
-                                setup_complex_livery_shader(role());
-                            }
+                            complex_set.draw_cloaks(self,x_surface_offset,y_surface_offset );
+                             draw_unit_arms(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, complex_set);
+                             shader_set(full_livery_shader);
                             if (struct_exists(complex_set, "armour")){
                                 var choice = get_body_data("armour_choice","torso")%sprite_get_number(complex_set.armour);
                                 draw_sprite(complex_set.armour,choice,x_surface_offset,y_surface_offset);
