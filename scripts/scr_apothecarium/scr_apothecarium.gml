@@ -3,7 +3,7 @@
 
 function scr_destroy_gene_slave_batch(batch_id, recover_gene=true){
     var _cur_slave = obj_ini.gene_slaves[batch_id];
-    if (revover_gene){
+    if (recover_gene){
         obj_controller.gene_seed+=_cur_slave.num;
         scr_add_item("Gene Pod Incubator", _cur_slave.num);
     }
@@ -190,12 +190,7 @@ function scr_apothecarium(){
         draw_set_color(c_gray);
         draw_rectangle(xx + 659, yy + 788, xx + 838, yy + 811, 0);
         if (point_and_click(_destroy_button)){
-            if (_slave_length>0){
-                for (var i=_slave_length-1; i>=0; i--){
-                    scr_destroy_gene_slave_batch(i);
-                }
-                obj_ini.gene_slaves = [];
-            }
+            destroy_all_gene_slaves(true);
         }
     }
     draw_set_alpha(1);
