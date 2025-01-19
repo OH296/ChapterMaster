@@ -17,6 +17,7 @@ tolerant=0;
 companies=10;
 progenitor=ePROGENITOR.NONE;
 aspirant_trial = 0;
+obj_ini.custom_advisors  = {};
 
 //default sector name to prevent potential crash
 sector_name = "Terra Nova";
