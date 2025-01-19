@@ -953,11 +953,11 @@ function scr_draw_unit_image(_background=false){
                             armour_draw=[spr_da_chaplain,0];
                         }
                     }
-                } else if (unit_armour="Tartaros"){
+                } else if (unit_armour=="Tartaros"){
                     specific_armour_sprite = spr_tartaros_complex;
                     complex_set = get_complex_set(eARMOUR_SET.Tartaros);
                     complex_livery = true;
-                } else if (unit_armour="Terminator Armour"){
+                } else if (unit_armour=="Terminator Armour"){
                     specific_armour_sprite = spr_indomitus_complex;
                     complex_set = get_complex_set(eARMOUR_SET.Indomitus);
                     complex_livery = true;
@@ -969,7 +969,18 @@ function scr_draw_unit_image(_background=false){
                         }
                     }
                 }
-
+                if (unit_role == _role[eROLE.Champion] || unit_role == _role[eROLE.Captain]){
+                    if (unit_armour=="Terminator Armour" || unit_armour="Tartaros"){
+                        complex_set.add_to_area("crown", spr_terminator_laurel);
+                    } else if (armour_type == ArmourType.Normal){
+                        complex_set.add_to_area("crown", spr_laurel);
+                        if (unit_role == _role[eROLE.Champion]) {
+                            if (unit_armour!="MK3 Iron Armour"){
+                                complex_set.add_to_area("head", spr_special_helm);
+                            }
+                        }   
+                    }
+                }
                 if (unit_specialization == UnitSpecialization.Techmarine){
                     if array_contains(["MK5 Heresy", "MK6 Corvus","MK7 Aquila", "MK8 Errant", "Artificer Armour"], unit_armour){
                         if (has_trait("tinkerer") && complex_livery){
@@ -1205,6 +1216,10 @@ function scr_draw_unit_image(_background=false){
                             if (struct_exists(complex_set, "right_eye")){
                                 var choice = get_body_data("variant","right_eye")%sprite_get_number(complex_set.right_eye);
                                 draw_sprite(complex_set.right_eye,choice,x_surface_offset,y_surface_offset);
+                            }
+                            if  (struct_exists(complex_set, "crown")){
+                                var choice = get_body_data("crown_variation","head")%sprite_get_number(complex_set.crown);
+                                draw_sprite(complex_set.crown,choice,x_surface_offset,y_surface_offset);                                
                             }
                             if (struct_exists(complex_set, "gorget")){
                                 var choice = get_body_data("variant","throat")%sprite_get_number(complex_set.gorget);
@@ -1447,14 +1462,7 @@ function scr_draw_unit_image(_background=false){
             // Draw Custom Helmets
             if (armour_type==ArmourType.Normal && !armour_bypass){
                 if (unit_role == _role[eROLE.Champion]) {
-                    if (unit_armour!="MK3 Iron Armour"){
-                        draw_sprite(spr_special_helm,0,x_surface_offset,y_surface_offset);
-                    }
-                    draw_sprite(spr_laurel,0,x_surface_offset,y_surface_offset);
                     draw_sprite(spr_helm_decorations,1,x_surface_offset,y_surface_offset);
-                }
-                if (unit_role == _role[eROLE.Captain]) {
-                    draw_sprite(spr_laurel,0,x_surface_offset,y_surface_offset);
                 }
                 if (unit_role == _role[eROLE.Sergeant] || unit_role == _role[eROLE.VeteranSergeant]) {
                     draw_sprite(spr_helm_decorations,1,x_surface_offset,y_surface_offset);
@@ -1464,9 +1472,6 @@ function scr_draw_unit_image(_background=false){
                 if (unit_role == _role[eROLE.Champion]) {
                     draw_sprite(spr_laurel,0,x_surface_offset,y_surface_offset-8);
                     draw_sprite(spr_helm_decorations,0,x_surface_offset,y_surface_offset-10);
-                }
-                if (unit_role == _role[eROLE.Captain]) {
-                    draw_sprite(spr_laurel,0,x_surface_offset,y_surface_offset-8);
                 }
                 if (unit_role == _role[eROLE.Sergeant] || unit_role == _role[eROLE.VeteranSergeant]) {
                     draw_sprite(spr_helm_decorations,0,x_surface_offset,y_surface_offset-10);

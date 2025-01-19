@@ -1335,6 +1335,7 @@
     {"id":{"name":"spr_weapon_relic_blade","path":"sprites/spr_weapon_relic_blade/spr_weapon_relic_blade.yy",},},
     {"id":{"name":"obj_centerline","path":"objects/obj_centerline/obj_centerline.yy",},},
     {"id":{"name":"obj_pnunit","path":"objects/obj_pnunit/obj_pnunit.yy",},},
+    {"id":{"name":"spr_terminator_laurel","path":"sprites/spr_terminator_laurel/spr_terminator_laurel.yy",},},
     {"id":{"name":"obj_enunit","path":"objects/obj_enunit/obj_enunit.yy",},},
     {"id":{"name":"scr_log","path":"scripts/scr_log/scr_log.yy",},},
     {"id":{"name":"obj_nfort","path":"objects/obj_nfort/obj_nfort.yy",},},
