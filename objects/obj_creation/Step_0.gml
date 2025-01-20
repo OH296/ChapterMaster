@@ -35,7 +35,7 @@ if (slide==1){
             chapter_string=chapter_name;
         }
         scr_creation(2);
-        scr_creation(3.5);
+        scr_creation(3);
         scr_creation(4);
         scr_creation(5);
         scr_creation(6);

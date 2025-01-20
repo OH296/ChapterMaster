@@ -57,6 +57,10 @@ function player_recruit_planet_selection(){
     
     if (_recruit_world_type<2){
         recruiting_name = homeworld_name;
+    } else if (_recruit_world_type==2){
+        if (recruiting_name == homeworld_name){
+            recruiting_name = global.name_generator.generate_star_name();
+        }
     }
     if (fleet_type=1 && _recruit_world_type<2) and (homeworld_name=recruiting_name) then name_bad=1;
     //TODO make a centralised logic for player renaming things in the creation screen

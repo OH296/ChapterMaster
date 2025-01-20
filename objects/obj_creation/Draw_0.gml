@@ -636,10 +636,10 @@ try {
 				draw_set_alpha(1);
 			}
 			draw_sprite(spr_creation_arrow, 4, 927 + 64, 761);
-			if ((popup == "") && ((change_slide >= 70) || (change_slide <= 0)) && (cooldown <= 0) && (mouse_left >= 1)) {
+			if ((popup == "") && ((change_slide >= 70) || (change_slide <= 0)) && (cooldown <= 0) && (scr_click_left())) {
 				if (scr_hit(927 + 64 + 12, 761 + 12, 927 + 128 - 12, 761 + 64 - 12)) {
 					scr_creation(2);
-					scr_creation(3.5);
+					scr_creation(3);
 					scr_creation(4);
 					scr_creation(5);
 					scr_creation(6);

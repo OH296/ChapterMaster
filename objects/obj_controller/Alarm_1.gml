@@ -21,11 +21,11 @@ var xx,yy,ok=0,did=0,_current_system=0,px=0,py=0,rando=0;
 _current_system = find_player_spawn_star();
 
 instance_activate_object(obj_star);
-
+var _player_star;
 // Set player homeworld
 did = instance_exists(_current_system);
 if (did){
-    
+    _player_star = _current_system.id;
     if (obj_ini.fleet_type==ePlayerBase.home_world){
         set_player_homeworld_star(_current_system);
     }
@@ -83,6 +83,12 @@ if (did){
     yy = py;
     instance_activate_object(obj_star);
     instance_deactivate_object(_current_system);
+    with (obj_star){
+        if (system_feature_bool(p_feature, P_features.Recruiting_World)){
+            instance_deactivate_object(id);
+            break;
+        }
+    }
     
     _current_system=instance_nearest(px,py,obj_star);
     _current_system.star="white2";
@@ -527,7 +533,7 @@ with(obj_creation){
 }
 
 
-create_complex_star_routes();
+create_complex_star_routes(_player_star.id);
 
 /* //135 testing crusade object
 instance_create(x,y,obj_crusade);

@@ -550,8 +550,11 @@ function scr_initialize_custom() {
 	progenitor = obj_creation.founding;
 	successors = obj_creation.successors;
 	homeworld_rule = obj_creation.homeworld_rule;
+
     homeworld_relative_loc = obj_creation.buttons.home_spawn_loc_options.current_selection;
-    recruit_relative_loc = obj_creation.buttons.home_spawn_loc_options.current_selection;
+    home_warp_position = obj_creation.buttons.home_warp.current_selection;
+    home_planet_count = obj_creation.buttons.home_planets.current_selection;
+    recruit_relative_loc = obj_creation.buttons.recruit_home_relationship.current_selection;
 
 
 	if(struct_exists(obj_creation, "custom_advisors")){

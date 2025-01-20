@@ -32,13 +32,13 @@ function scr_creation(slide_num) {
 	}
 
 
-	if (floor(slide_num)==3 && (recruiting_name!=homeworld_name || custom == 0)){
+	if (slide_num==3 ){
 	    change_slide=1;
 	    goto_slide=4;
 	    cooldown=8000;
 	    alarm[0]=1;
     
-	    if (slide_num=3.5){
+	    if (slide_num=3){
 
 			
 			if (full_liveries == ""){
