@@ -220,6 +220,7 @@ buttons = {
     ], "Home System Planets"),        
 }
 with (buttons){
+    home_spawn_loc_options.current_selection = 1;
     home_planets.current_selection = 1;
     home_warp.current_selection = 1;
     recruit_home_relationship.current_selection = 1;

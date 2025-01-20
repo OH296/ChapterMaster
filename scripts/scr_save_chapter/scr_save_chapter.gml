@@ -26,6 +26,7 @@ function scr_save_chapter(chapter_id){
 	chap.homeworld_rule = homeworld_rule;
 	chap.recruiting = recruiting;
 	chap.recruiting_exists = recruiting_exists;
+	
 	chap.home_spawn_loc = buttons.home_spawn_loc_options.current_selection;
 	chap.recruit_home_relationship = buttons.recruit_home_relationship.current_selection;
 	chap.home_warp = buttons.home_warp.current_selection;
