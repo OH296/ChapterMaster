@@ -159,10 +159,12 @@ buttons = {
         {
             str1 : "Fringe",
             font : fnt_40k_30b,
+            tooltip : "Your home system sits at the edge of the sector",
         },
         {
             str1 : "Central",
-            font : fnt_40k_30b
+            font : fnt_40k_30b,
+            tooltip : "Your home system is relativly central in the sector",
         },        
     ], "Home Spwan\nLocation"),
 

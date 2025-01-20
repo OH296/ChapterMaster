@@ -263,6 +263,10 @@ function create_complex_star_routes(player_star){
 				}
 			}
 			
+		} else {
+			if (array_contains(full_loci[i], player_star)){
+				player_hub_overide = true;
+			}
 		}
 		set = full_loci[i];
 		if (array_length(set) == 0) then continue;
