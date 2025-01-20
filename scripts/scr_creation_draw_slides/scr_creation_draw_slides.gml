@@ -1015,16 +1015,20 @@ function draw_chapter_homeworld_select(){
             draw_set_font(fnt_40k_30b);
             var _spawn_radio = buttons.home_spawn_loc_options;
             var _max_width = left_data_slate.width-100;
-            _spawn_radio.x1 = 70;
-            _spawn_radio.y1 =  60;
-            _spawn_radio.max_width = _max_width;
+            _spawn_radio.update({
+            	x1 : 70,
+            	y1 : 60,
+            	max_width : _max_width,
+            	allow_changes : custom
+            })
             _spawn_radio.draw();
 
             var _warp_lanes_radio = buttons.home_warp;
             _warp_lanes_radio.update({
             	x1 : 70,
             	y1 : _spawn_radio.y2,
-            	max_width : _max_width
+            	max_width : _max_width,
+            	allow_changes : custom
             });
             _warp_lanes_radio.draw();
 
@@ -1032,7 +1036,8 @@ function draw_chapter_homeworld_select(){
             _home_planets.update({
             	x1 : 70,
             	y1 : _warp_lanes_radio.y2,
-            	max_width : _max_width
+            	max_width : _max_width,
+            	allow_changes : custom
             });  
             _home_planets.draw();          
 

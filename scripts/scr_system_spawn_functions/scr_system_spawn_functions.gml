@@ -101,15 +101,17 @@ function set_player_recruit_planet(recruit_planet){
 
 function set_player_homeworld_star(chosen_star){
 	with (chosen_star){
+		if (obj_ini.recruit_relative_loc==1 && obj_ini.home_planet_count ==0){
+			obj_ini.home_planet_count++;
+		}
 		planets = obj_ini.home_planet_count+1;
 		var _home_star = irandom_range(1,planets);
 
 		player_home_star(_home_star);
-
+		var _planet_types = ARR_planet_types;
 
 		if (obj_ini.recruit_relative_loc==1){
 	       var _possible_planets = [];
-	       var _planet_types = ARR_planet_types;
 	       for (var i=1;i<=planets;i++){
 		       	if (i!=_home_star){
 		       		array_push(_possible_planets, i);
@@ -129,6 +131,11 @@ function set_player_homeworld_star(chosen_star){
 	    	if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(name)+" II|";
 	    } else if (obj_ini.recruit_relative_loc==2){
 	    	create_recruit_system(distance_removed_star(chosen_star.x, chosen_star.y));
+	    	for (var i=1;i<=planets;i++){
+		       	if (i!=_home_star){
+		       		p_type[i] = array_random_element(_planet_types);
+		       	}
+	       	}
 	    }
     }	
 }
