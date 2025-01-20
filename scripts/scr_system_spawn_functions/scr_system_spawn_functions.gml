@@ -101,7 +101,7 @@ function set_player_recruit_planet(recruit_planet){
 
 function set_player_homeworld_star(chosen_star){
 	with (chosen_star){
-		planets = obj_ini.home_planet_count;
+		planets = obj_ini.home_planet_count+1;
 		var _home_star = irandom_range(1,planets);
 
 		player_home_star(_home_star);
