@@ -917,11 +917,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			}
 			if (irandom(100) <= _cloak_chance) {
 				if (global.chapter_name == "Salamanders") {
-					body.cloak.type = spr_cloak_scale;
+					body.cloak.type = "scale";
 				} else if (global.chapter_name == "Space Wolves") {
-					body.cloak.type = spr_cloak_fur;
+					body.cloak.type = "pelt";
 				} else {
-					body.cloak.type = spr_cloak_cloth;
+					body.cloak.type = "cloth";
 					body.cloak.image_0 = irandom(100);
 					body.cloak.image_1 = irandom(100);
 				}
