@@ -300,55 +300,50 @@ function scr_draw_armentarium(){
         research_drop_down = drop_down_results[1];
         stc_research.research_focus = drop_down_results[0]; 
               
-        var hi;
-        draw_set_color(38144);
-        hi = 0;
+        var hi = 0;
         var f, y_loc;
-        draw_sprite_ext(spr_research_bar, 0, xx+359, yy+554, 1, 0.7, 0, c_white, 1)
-        draw_sprite_ext(spr_research_bar, 0, xx+539, yy+554, 1, 0.7, 0, c_white, 1)
-       draw_sprite_ext(spr_research_bar, 0, xx+719, yy+554, 1, 0.7, 0, c_white, 1)
 
-        if (stc_wargear > 0) then speeding_bits[0].draw(xx+359, yy+554);
-        for (f =0;f<6;f++){
-            if (f>=stc_wargear){
-                draw_sprite_ext(spr_research_bar, 1, xx+359, yy+554+((210/6)*f), 1, 0.6, 0, c_white, 1)
-            }            
-               /* y_loc = yy+560+((210/6)*f);
-                if ((speeding_bits[0].current_y()-y_loc)<5 && (speeding_bits[0].current_y()-y_loc)>-5){
-                    stc_flashes[0][f].one_flash_finished=false;
+        draw_set_color(c_gray);
+        var _area_coords = {
+            "wargear" : [xx+350, yy+535, xx+520, yy+800],
+            "vehicles" : [xx+530, yy+535, xx+700, yy+800],
+            "ships" : [xx+710, yy+535, xx+880, yy+800],
+        }
+        var _area_data = {
+            "wargear" : stc_wargear,
+            "vehicles" : stc_vehicles,
+            "ships" : stc_ships,            
+        }
+        var _researches = ["vehicles","wargear", "ships"];
+        for (var i=0;i<array_length(_researches);i++){
+            var _res = _researches[i];
+            var _coords = _area_coords[$ _res];
+            if (stc_research.research_focus == _res){
+                draw_rectangle_array(_coords, false);
+                stc_flashes.draw(_coords[0],yy+560+((210/6)*_area_data[$_res]));
+            } else {
+                if (scr_hit(_area_coords[$ _res])){
+                    draw_set_color(c_white);
+                    draw_rectangle_array(_area_coords[$ _res], false);
+                    tooltip_draw($"Click to change STC research to {_res}");
+                    if (scr_click_left()){
+                        stc_research.research_focus = _res;
+                    }
                 }
-                stc_flashes[0][f].draw_one_flash(xx+359, y_loc);*/
-        } 
-        //draw_rectangle(xx + 351, yy + 539, xx + 368, yy + 539 + hi, 0);
-
-        if (stc_vehicles > 0) then speeding_bits[1].draw(xx+539, yy+554);
-          for (f =0;f<6;f++){
-            if (f>=stc_vehicles){
-                draw_sprite_ext(spr_research_bar, 1, xx+539, yy+554+((210/6)*f), 1, 0.6, 0, c_white, 1)
             }
-            //stc_flashes[1][f].draw_one_flash(xx+539, yy+560+((210/6)*f));
-        }     
-        //draw_rectangle(xx + 531, yy + 539, xx + 548, yy + 539 + hi, 0);
+            draw_set_color(c_gray);
+            draw_sprite_ext(spr_research_bar, 0, _coords[0]+9, _coords[1]+19, 1, 0.7, 0, c_white, 1)
+            if (_area_data[$_res]>0){
+                speeding_bits[0].draw(_coords[0], _coords[1]+19);
+                for (f =0;f<6;f++){
+                    if (f>=_area_data[$_res]){
+                        draw_sprite_ext(spr_research_bar, 1, _coords[0], _coords[1]+20+((210/6)*f), 1, 0.6, 0, c_white, 1)
+                    }
+                }
+            }
+        }
 
-        if (stc_ships > 0) then speeding_bits[2].draw(xx+719, yy+554);
-       for (f =0;f<6;f++){
-            if (f>=stc_ships){
-                draw_sprite_ext(spr_research_bar, 1, xx+719, yy+554+((210/6)*f), 1, 0.6, 0, c_white, 1)
-            }        
-            //stc_flashes[2][f].draw_one_flash(xx+719,yy+ 560+((210/6)*f));
-        }  
-        switch(stc_research.research_focus){
-            case "wargear":
-                stc_flashes.draw(xx+359,yy+560+((210/6)*stc_wargear));
-                break;
-            case "vehicles":
-                stc_flashes.draw(xx+539,yy+560+((210/6)*stc_vehicles));
-                break;
-            case "ships":
-                stc_flashes.draw(xx+719,yy+560+((210/6)*stc_ships));
-                break;
-
-        }              
+        draw_set_color(38144);           
        // draw_rectangle(xx + 711, yy + 539, xx + 728, yy + 539 + hi, 0);
         draw_set_alpha(1);
         draw_set_color(c_gray);
@@ -357,9 +352,9 @@ function scr_draw_armentarium(){
         //draw_rectangle(xx + 711, yy + 539, xx + 728, yy + 749, 1);
 
         draw_set_font(fnt_40k_14);
-        draw_text(xx + 386, yy + 517, string_hash_to_newline("Wargear"));
-        draw_text(xx + 566, yy + 517, string_hash_to_newline("Vehicles"));
-        draw_text(xx + 746, yy + 517, string_hash_to_newline("Ships"));
+        draw_text(xx + 386, yy + 517, "Wargear");
+        draw_text(xx + 566, yy + 517, "Vehicles");
+        draw_text(xx + 746, yy + 517, "Ships");
 
         draw_set_font(fnt_40k_12);
         draw_set_alpha(1);
