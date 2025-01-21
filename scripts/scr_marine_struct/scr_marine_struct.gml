@@ -734,7 +734,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			crown_variation : irandom(100),
 		},
 		"cloak":{
-			type: spr_none,
+			type: "none",
 			variant: irandom(100)
 		},
 	}; //body parts list can be extended as much as people want

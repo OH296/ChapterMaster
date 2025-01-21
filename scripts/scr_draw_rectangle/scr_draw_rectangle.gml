@@ -22,4 +22,4 @@ function draw_rectangle_outline(_x, _y, _x2, _y2, _bg_color = c_black, _outline_
 
     draw_set_color(_cur_color);
     draw_set_alpha(_cur_alpha);
-}
+} 

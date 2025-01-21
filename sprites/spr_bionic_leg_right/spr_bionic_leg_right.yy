@@ -3,7 +3,7 @@
   "resourceVersion": "1.0",
   "name": "spr_bionic_leg_right",
   "bbox_bottom": 220,
-  "bbox_left": 2,
+  "bbox_left": 3,
   "bbox_right": 77,
   "bbox_top": 126,
   "bboxMode": 0,

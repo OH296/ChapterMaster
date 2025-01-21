@@ -284,6 +284,7 @@ function scr_draw_unit_image(_background=false){
                         draw_sprite(_complex_set.left_arm, 0, _x_surface_offset, _y_surface_offset);
                         shader_set(sReplaceColor);
                     } else {
+                        shader_set(sReplaceColor);
                         var _spr_index = (arm_variant[_right_left] - 1) * 2;
                         if (_right_left == 2) {
                             _spr_index += (_specialist_colours >= 2) ? 1 : 0;
@@ -1264,6 +1265,7 @@ function scr_draw_unit_image(_background=false){
                 //sgt helms
                            
                 // Apothecary Details
+                shader_set(sReplaceColor);
                 if (unit_specialization == UnitSpecialization.Apothecary){
                     if (unit_armour=="Tartaros"){
                         draw_sprite(spr_gear_apoth,1, x_surface_offset,y_surface_offset-6);// was y_draw-4 with old tartar
@@ -1561,6 +1563,7 @@ function scr_draw_unit_image(_background=false){
             }
 
             // // Draw weapons
+            shader_set(sReplaceColor);
             if (!new_weapon_draw[1]) {
                 if (ui_weapon[1]!=0) and (sprite_exists(ui_weapon[1])){
                     if (ui_twoh[1]==false) and (ui_twoh[2]==false){

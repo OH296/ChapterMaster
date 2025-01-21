@@ -1,3 +1,4 @@
+
 function ComplexSet() constructor{
     static add_to_area = function(area, add_sprite){
         if (!struct_exists(self, area)){
@@ -64,22 +65,30 @@ function ComplexSet() constructor{
 
     static draw_cloaks = function(unit,x_offset,y_offset){
         var type = unit.get_body_data("type","cloak");
-        if (type != spr_none) {
-		    var _shader_set_multiply_blend = function(_r, _g, _b) {
-		        shader_set(shd_multiply_blend);
-		        shader_set_uniform_f(shader_get_uniform(shd_multiply_blend, "u_Color"), _r, _g, _b);
-		    };        	
-            _shader_set_multiply_blend(127, 107, 89);
-            var choice = unit.get_body_data("variant","cloak")%sprite_get_number(type);
-            draw_sprite(type,choice,x_offset,y_offset);
-            if (type == spr_cloak_cloth) {
-                _shader_set_multiply_blend(obj_controller.trim_colour_replace[0]*255, obj_controller.trim_colour_replace[1]*255, obj_controller.trim_colour_replace[2]*255);
-                var choice = unit.get_body_data("image_0","cloak")%sprite_get_number(spr_cloak_image_0);
-                draw_sprite(spr_cloak_image_0,choice,x_offset,y_offset);
-                var choice = unit.get_body_data("image_1","cloak")%sprite_get_number(spr_cloak_image_1);
-                draw_sprite(spr_cloak_image_1,choice,x_offset,y_offset);
+        if (type != "none") {
+            var _cloaks = {
+                "scale":spr_cloak_scale,
+                "pelt":spr_cloak_fur,
+                "cloth":spr_cloak_cloth,
             }
-            shader_reset();
+            if (struct_exists(_cloaks, type)){
+                var _draw_sprite  = _cloaks[$ type];
+                var _shader_set_multiply_blend = function(_r, _g, _b) {
+                    shader_set(shd_multiply_blend);
+                    shader_set_uniform_f(shader_get_uniform(shd_multiply_blend, "u_Color"), _r, _g, _b);
+                };          
+                _shader_set_multiply_blend(127, 107, 89);
+                var choice = unit.get_body_data("variant","cloak")%sprite_get_number(_draw_sprite);
+                draw_sprite(_draw_sprite,choice,x_offset,y_offset);
+                if (_draw_sprite == spr_cloak_cloth) {
+                    _shader_set_multiply_blend(obj_controller.trim_colour_replace[0]*255, obj_controller.trim_colour_replace[1]*255, obj_controller.trim_colour_replace[2]*255);
+                    var choice = unit.get_body_data("image_0","cloak")%sprite_get_number(spr_cloak_image_0);
+                    draw_sprite(spr_cloak_image_0,choice,x_offset,y_offset);
+                    var choice = unit.get_body_data("image_1","cloak")%sprite_get_number(spr_cloak_image_1);
+                    draw_sprite(spr_cloak_image_1,choice,x_offset,y_offset);
+                }
+                shader_reset();
+            }
             
         }
         shader_set(full_livery_shader);
