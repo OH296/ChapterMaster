@@ -85,8 +85,36 @@ function ComplexSet() constructor{
         shader_set(full_livery_shader);
     }
 
-    static complex_helms = function(data,choice){
+    static draw_head = function(unit, x_surface_offset,y_surface_offset){
+        var choice;
+        if (struct_exists(self, "head")){
+            if (struct_exists(self, "crest")){
+                choice = unit.get_body_data("crest_variation","head")%sprite_get_number(crest);
+                draw_sprite(self.crest,choice,x_surface_offset,y_surface_offset);
+            }
+            var choice = unit.get_body_data("variation","head")%sprite_get_number(head);
+            draw_sprite(head,choice,x_surface_offset,y_surface_offset);
+            
+            if (struct_exists(self, "forehead")){
+                choice = unit.get_body_data("forehead_variation","head")%sprite_get_number(forehead);
+                draw_sprite(forehead,choice,x_surface_offset,y_surface_offset);
+            } 
+            if (struct_exists(self, "mouth_variants")){
+                choice = unit.get_body_data("variant","jaw")%sprite_get_number(mouth_variants);
+                draw_sprite(mouth_variants,choice,x_surface_offset,y_surface_offset);
+            }
+            if (struct_exists(self, "left_eye")){
+                choice = unit.get_body_data("variant","left_eye")%sprite_get_number(left_eye);
+                draw_sprite(left_eye,choice,x_surface_offset,y_surface_offset);
+            }
+            if (struct_exists(self, "right_eye")){
+                choice = unit.get_body_data("variant","right_eye")%sprite_get_number(right_eye);
+                draw_sprite(right_eye,choice,x_surface_offset,y_surface_offset);
+            }                                                                       
+        }
+    }
 
+    static complex_helms = function(data,unit){
         set_complex_shader_area(["eye_lense"], data.helm_lens);
         if (data.helm_pattern == 0){
             set_complex_shader_area(["left_head", "right_head","left_muzzle", "right_muzzle"], data.helm_secondary);
@@ -95,15 +123,18 @@ function ComplexSet() constructor{
             set_complex_shader_area(["left_head", "right_head"], data.helm_primary);
             set_complex_shader_area(["left_muzzle", "right_muzzle"], data.helm_secondary);
         } else if (data.helm_pattern==1 || data.helm_pattern == 3){
-            set_complex_shader_area(["left_head", "right_head","left_muzzle", "right_muzzle"], data.helm_primary);
             var _surface_width = sprite_get_width(head);
             var _surface_height = sprite_get_height(head);
             var _head_surface = surface_create(_surface_width, 60);
             var _decoration_surface = surface_create(_surface_width, 60);
             shader_reset();
             surface_set_target(_head_surface);
-            draw_sprite(head, choice, 0, 0);
+            draw_head(unit, 0, 0);
             surface_reset_target();
+            
+            remove_area("mouth_variants");
+            remove_area("crest");
+            remove_area("forehead");
 
             shader_set(helm_shader);
             surface_set_target(_decoration_surface);
@@ -124,8 +155,10 @@ function ComplexSet() constructor{
             surface_free(_head_surface);
             surface_free(_decoration_surface);
             shader_set(full_livery_shader);
+            set_complex_shader_area(["left_head", "right_head","left_muzzle", "right_muzzle"], data.helm_primary);
         }
     }
+
 }
 
 function get_complex_set(set = eARMOUR_SET.MK7){
@@ -251,18 +284,44 @@ function blend_mode_custom(source_surface, destination_surface, allowed_cross_co
     var _surface_width = surface_get_width(destination_surface);
     var _surface_height = surface_get_height(destination_surface);
 
+    var allowed_colour_r=[];
+    var allowed_colour_g=[];
+    var allowed_colour_b=[];
+    for (var i = 0; i < array_length(allowed_cross_colours); i++) {
+        var allowed_color = allowed_cross_colours[i];
+        array_push(allowed_colour_r, color_get_red(allowed_color));
+        array_push(allowed_colour_g, color_get_green(allowed_color));
+        array_push(allowed_colour_b, color_get_blue(allowed_color));
+    }
+
     // Loop through each pixel
-    for (var _x = 60; _x < 110; _x++) {
-        for (var _y = 0; _y < _surface_height; _y++) {
+    for (var _y = 0; _y < _surface_height; _y++) {
+        var had_colour_this_row = false;
+        for (var _x = 75; _x < 90; _x++) {
+            
             // Get the destination pixel color
 
             var col = surface_getpixel_ext(destination_surface, _x, _y)
             var _alpha = (col >> 24) & 255;
-            if (_alpha<200) then continue;
+            if (_alpha<150){
+                
+                if (_x>=80){
+                    break;
+                };
+                continue;
+            } 
             var dest_color = surface_getpixel(destination_surface, _x, _y);
 
             var scource_alpha = (surface_getpixel_ext(source_surface, _x, _y) >>24 &255);
-            if (_alpha<200) then continue;
+            if (scource_alpha<150){
+                if (had_colour_this_row){
+                    break;
+                } else {
+                    continue;
+                }
+            } else {
+                had_colour_this_row = true;
+            }
             // Extract RGB components
             var dest_r = color_get_red(dest_color);
             var dest_g = color_get_green(dest_color);
@@ -272,13 +331,13 @@ function blend_mode_custom(source_surface, destination_surface, allowed_cross_co
             var is_allowed = false;
             for (var i = 0; i < array_length(allowed_cross_colours); i++) {
                 var allowed_color = allowed_cross_colours[i];
-                if (dest_r == color_get_red(allowed_color) &&
-                    dest_g == color_get_green(allowed_color) &&
-                    dest_b == color_get_blue(allowed_color)) {
-                    is_allowed = true;
-                    break;
-                }
+                if (dest_r!=allowed_colour_r[i]) then continue;
+                if (dest_g!=allowed_colour_g[i]) then continue;
+                if (dest_b!=allowed_colour_b[i]) then continue;
+                is_allowed = true;
+                break;
             }
+            if (!is_allowed) then continue;
             
             // Get the source pixel
             var src_color = surface_getpixel(source_surface, _x, _y);
@@ -287,13 +346,11 @@ function blend_mode_custom(source_surface, destination_surface, allowed_cross_co
             var src_b = color_get_blue(src_color);
             
             // Apply the blending logic
-            if (is_allowed){
-                var final_color = make_color_rgb(src_r, src_g, src_b);
-                // Draw the blended pixel
-                draw_set_color(final_color);
-                draw_point(_x, _y);                
-            }
-            
+
+            var final_color = make_color_rgb(src_r, src_g, src_b);
+            // Draw the blended pixel
+            draw_set_color(final_color);
+            draw_point(_x, _y);                 
         }
     }
 

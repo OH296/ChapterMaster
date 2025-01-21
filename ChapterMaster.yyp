@@ -1251,6 +1251,7 @@
     {"id":{"name":"__init_action","path":"scripts/__init_action/__init_action.yy",},},
     {"id":{"name":"d3d_set_fog","path":"scripts/d3d_set_fog/d3d_set_fog.yy",},},
     {"id":{"name":"scr_PlanetData","path":"scripts/scr_PlanetData/scr_PlanetData.yy",},},
+    {"id":{"name":"spr_psy_hood_complex","path":"sprites/spr_psy_hood_complex/spr_psy_hood_complex.yy",},},
     {"id":{"name":"__init_d3d","path":"scripts/__init_d3d/__init_d3d.yy",},},
     {"id":{"name":"draw_set_blend_mode","path":"scripts/draw_set_blend_mode/draw_set_blend_mode.yy",},},
     {"id":{"name":"instance_create","path":"scripts/instance_create/instance_create.yy",},},

@@ -24,7 +24,7 @@
     {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"dfbcee54-0725-479b-8cf0-d973010417a5","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
-  "origin": 0,
+  "origin": 9,
   "parent": {
     "name": "decorations",
     "path": "folders/Sprites/Marine Viewer/decorations.yy",
@@ -61,7 +61,7 @@
     ],
     "visibleRange": null,
     "volume": 1.0,
-    "xorigin": 0,
+    "xorigin": -2,
     "yorigin": 0,
   },
   "swatchColours": null,

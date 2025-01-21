@@ -187,7 +187,8 @@ function set_shader_array(shader_array){
 
 /// @mixin
 function scr_draw_unit_image(_background=false){
-    var draw_unit_hands = function(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, right_left){
+    static draw_unit_hands = function(x_surface_offset, y_surface_offset, armour_type, specialist_colours, hide_bionics, right_left){
+        shader_set(sReplaceColor);
         if (arm_variant[right_left] == 1) {
             return;
         }
@@ -231,9 +232,11 @@ function scr_draw_unit_image(_background=false){
                 }
             }
         }
+        shader_set(full_livery_shader);
     };
 
-    var draw_unit_arms = function(_x_surface_offset, _y_surface_offset, _armour_type, _specialist_colours, _hide_bionics, _complex_set) {
+    static draw_unit_arms = function(_x_surface_offset, _y_surface_offset, _armour_type, _specialist_colours, _hide_bionics, _complex_set) {
+        shader_set(sReplaceColor);
         if (array_contains([ArmourType.Normal, ArmourType.Terminator, ArmourType.Scout], _armour_type)) {
             var _bionic_options = [];
             var _arm_spr;
@@ -272,12 +275,12 @@ function scr_draw_unit_image(_background=false){
                         draw_sprite(_bionic_spr, _bionic_spr_index, _x_surface_offset, _y_surface_offset);
                     }
                 } else if (arm_variant[_right_left] > 0) {
+                    shader_set(full_livery_shader);
                     if ((_right_left == 1) && struct_exists(_complex_set, "right_arm") && (arm_variant[_right_left] == 1)) {
-                        setup_complex_livery_shader(role());
                         draw_sprite(_complex_set.right_arm, 0, _x_surface_offset, _y_surface_offset);
                         shader_set(sReplaceColor);
                     } else if ((_right_left == 2) && struct_exists(_complex_set, "left_arm") && (arm_variant[_right_left] == 1)) {
-                        setup_complex_livery_shader(role());
+                        shader_set(full_livery_shader);
                         draw_sprite(_complex_set.left_arm, 0, _x_surface_offset, _y_surface_offset);
                         shader_set(sReplaceColor);
                     } else {
@@ -292,6 +295,7 @@ function scr_draw_unit_image(_background=false){
                 }
             }
         }
+        shader_set(full_livery_shader);
     };
 
     var _role = obj_ini.role[100];
@@ -980,7 +984,7 @@ function scr_draw_unit_image(_background=false){
                         complex_set.add_to_area("crown", spr_laurel);
                         if (unit_role == _role[eROLE.Champion]) {
                             if (unit_armour!="MK3 Iron Armour"){
-                                complex_set.add_to_area("head", spr_special_helm);
+                                complex_set.add_to_area("mouth_variants", spr_special_helm);
                             }
                         }   
                     }
@@ -1164,8 +1168,11 @@ function scr_draw_unit_image(_background=false){
                     }
                     if (is_struct(_complex_helm) && struct_exists(complex_set, "head")){
                         surface_reset_target();
-                        complex_set.complex_helms(_complex_helm, get_body_data("variation","head")%sprite_get_number(complex_set.head));
+                        complex_set.complex_helms(_complex_helm, self);
                         surface_set_target(unit_surface);
+                    }
+                    if (psy_hood){
+                        complex_set.replace_area("crown", spr_psy_hood_complex);
                     }
                 }
                 // Draw torso
@@ -1207,30 +1214,8 @@ function scr_draw_unit_image(_background=false){
                                 var choice = get_body_data("trim_variation","right_arm")%sprite_get_number(complex_set.right_trim);
                                 draw_sprite(complex_set.right_trim,choice,x_surface_offset,y_surface_offset);
                             }
-                            if (struct_exists(complex_set, "head")){
-                                if (struct_exists(complex_set, "crest")){
-                                    var choice = get_body_data("crest_variation","head")%sprite_get_number(complex_set.crest);
-                                    draw_sprite(complex_set.crest,choice,x_surface_offset,y_surface_offset);
-                                }
-                                var choice = get_body_data("variation","head")%sprite_get_number(complex_set.head);
-                                draw_sprite(complex_set.head,choice,x_surface_offset,y_surface_offset);
-                                if (struct_exists(complex_set, "forehead")){
-                                    var choice = get_body_data("forehead_variation","head")%sprite_get_number(complex_set.forehead);
-                                    draw_sprite(complex_set.forehead,choice,x_surface_offset,y_surface_offset);
-                                }                                
-                            }
-                            if (struct_exists(complex_set, "mouth_variants")){
-                                var choice = get_body_data("variant","jaw")%sprite_get_number(complex_set.mouth_variants);
-                                draw_sprite(complex_set.mouth_variants,choice,x_surface_offset,y_surface_offset);
-                            }
-                            if (struct_exists(complex_set, "left_eye")){
-                                var choice = get_body_data("variant","left_eye")%sprite_get_number(complex_set.left_eye);
-                                draw_sprite(complex_set.left_eye,choice,x_surface_offset,y_surface_offset);
-                            }
-                            if (struct_exists(complex_set, "right_eye")){
-                                var choice = get_body_data("variant","right_eye")%sprite_get_number(complex_set.right_eye);
-                                draw_sprite(complex_set.right_eye,choice,x_surface_offset,y_surface_offset);
-                            }
+                            complex_set.draw_head(self, x_surface_offset,y_surface_offset);
+
                             if  (struct_exists(complex_set, "crown")){
                                 var choice = get_body_data("crown_variation","head")%sprite_get_number(complex_set.crown);
                                 draw_sprite(complex_set.crown,choice,x_surface_offset,y_surface_offset);                                
@@ -1326,20 +1311,22 @@ function scr_draw_unit_image(_background=false){
                 }
             
                 // Hood
-                if (psy_hood && armour_type != ArmourType.Terminator && !armour_bypass){
-                    var psy_hood_offset_x = 0;
-                    var psy_hood_offset_y = 0;
-                    robes_hood_bypass = true;
-                    if (scr_has_adv("Daemon Binders") && !modest_livery){
-                        var _index = pauldron_trim == 1 ? 0 : 1;
-						draw_sprite(spr_gear_hood2,_index,x_surface_offset+psy_hood_offset_x,y_surface_offset+psy_hood_offset_y);
-                    } else {
-                        // if (unit_armour=="Terminator Armour") {
-                        //     psy_hood_offset_y = -8;
-                        // }
-                        //if (obj_ini.main_color=obj_ini.secondary_color) then draw_sprite(spr_gear_hood1,hood,0,y_surface_offset);
-                        //if (obj_ini.main_color!=obj_ini.secondary_color) then draw_sprite(spr_gear_hood3,hood,0,y_surface_offset);
-                        draw_sprite(spr_psy_hood,2, x_surface_offset+psy_hood_offset_x, y_surface_offset+psy_hood_offset_y);
+                if (!complex_livery){
+                    if (psy_hood && armour_type != ArmourType.Terminator && !armour_bypass){
+                        var psy_hood_offset_x = 0;
+                        var psy_hood_offset_y = 0;
+                        robes_hood_bypass = true;
+                        if (scr_has_adv("Daemon Binders") && !modest_livery){
+                            var _index = pauldron_trim == 1 ? 0 : 1;
+    						draw_sprite(spr_gear_hood2,_index,x_surface_offset+psy_hood_offset_x,y_surface_offset+psy_hood_offset_y);
+                        } else {
+                            // if (unit_armour=="Terminator Armour") {
+                            //     psy_hood_offset_y = -8;
+                            // }
+                            //if (obj_ini.main_color=obj_ini.secondary_color) then draw_sprite(spr_gear_hood1,hood,0,y_surface_offset);
+                            //if (obj_ini.main_color!=obj_ini.secondary_color) then draw_sprite(spr_gear_hood3,hood,0,y_surface_offset);
+                            draw_sprite(spr_psy_hood,2, x_surface_offset+psy_hood_offset_x, y_surface_offset+psy_hood_offset_y);
+                        }
                     }
                 }
             }
