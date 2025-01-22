@@ -234,7 +234,7 @@ function setup_player_combat_ship(){
 	    weapon_cooldown[5]=30;
 	}
 
-	else if (class="Slaughtersong"){turrets=3;
+	else if (class=="Slaughtersong" || class=="Gloriana"){turrets=3;
 		weapons=5;shield_size=3;sprite_index=spr_ship_song;
 	    weapon_facing[1]="most";
 	    weapon_dam[1]=16;

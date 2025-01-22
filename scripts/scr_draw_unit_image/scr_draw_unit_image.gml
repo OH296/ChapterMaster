@@ -1216,11 +1216,6 @@ function scr_draw_unit_image(_background=false){
                                 draw_sprite(complex_set.right_trim,choice,x_surface_offset,y_surface_offset);
                             }
                             complex_set.draw_head(self, x_surface_offset,y_surface_offset);
-
-                            if  (struct_exists(complex_set, "crown")){
-                                var choice = get_body_data("crown_variation","head")%sprite_get_number(complex_set.crown);
-                                draw_sprite(complex_set.crown,choice,x_surface_offset,y_surface_offset);                                
-                            }
                             if (struct_exists(complex_set, "gorget")){
                                 var choice = get_body_data("variant","throat")%sprite_get_number(complex_set.gorget);
                                 draw_sprite(complex_set.gorget,choice,x_surface_offset,y_surface_offset);
