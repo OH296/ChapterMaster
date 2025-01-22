@@ -120,9 +120,9 @@ function ComplexSet() constructor{
                 choice = unit.get_body_data("variant","right_eye")%sprite_get_number(right_eye);
                 draw_sprite(right_eye,choice,x_surface_offset,y_surface_offset);
             }
-            if  (struct_exists(complex_set, "crown")){
-                var choice = get_body_data("crown_variation","head")%sprite_get_number(complex_set.crown);
-                draw_sprite(complex_set.crown,choice,x_surface_offset,y_surface_offset);                                
+            if  (struct_exists(self, "crown")){
+                var choice = unit.get_body_data("crown_variation","head")%sprite_get_number(crown);
+                draw_sprite(crown,choice,x_surface_offset,y_surface_offset);                                
             }                                                                                 
         }
     }
