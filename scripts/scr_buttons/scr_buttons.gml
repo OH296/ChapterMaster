@@ -63,19 +63,21 @@ function UnitButtonObject() constructor{
 	color= #50a076;
 	keystroke = false;
 	tooltip = "";
+	bind_method = "";
 
-	static update = function(data){
-		var _updaters = struct_get_names(data);
-		var i=0
-		for (i=0;i<array_length(_updaters);i++){
-			self[$ _updaters[i]] = data[$ _updaters[i]];
-		}
-	}
 
 	static update_loc = function(){
 		x2 = x1 + w;
 		y2 = y1 + h;		
 	}
+	static update = function(data){
+		var _updaters = struct_get_names(data);
+		var i=0;
+		for (i=0;i<array_length(_updaters);i++){
+			self[$ _updaters[i]] = data[$ _updaters[i]];
+		}
+		update_loc();
+	}	
 
 	update_loc();
 	static move = function(m_direction, with_gap=false, multiplier=1){
@@ -103,11 +105,40 @@ function UnitButtonObject() constructor{
 			tooltip_draw(tooltip);
 		}
 		if (allow_click){
-			return (point_and_click(draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha)) || keystroke);
+			var clicked = point_and_click(draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha)) || keystroke;
+			if (clicked){
+				if (is_callable(bind_method)){
+					bind_method(bind_method);
+				}
+			}
+			return clicked
 		} else {
 			draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha);
 			return false;
 		}
+	}
+}
+
+function purchase_button(req) : UnitButtonObject() constructor{
+	req_value = req;
+	static draw = function(allow_click=true){
+		var _allow_click = obj_controller.requisition >= req_value;
+		if (scr_hit(x1, y1, x2, y2) && tooltip!=""){
+			tooltip_draw(tooltip);
+		}
+		if (allow_click && _allow_click){
+			var clicked = point_and_click(draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha)) || keystroke;
+			if (clicked){
+				if (is_callable(bind_method)){
+					bind_method(bind_method);
+				}
+				obj_controller.requisition -= req_value;
+			}
+			return clicked
+		} else {
+			draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha);
+			return false;
+		}		
 	}
 }
 

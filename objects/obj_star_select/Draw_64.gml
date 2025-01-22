@@ -284,21 +284,13 @@ if (obj_controller.selecting_planet!=0){
             var cur_planet = obj_controller.selecting_planet;
             var half_way =  garrison_data_slate.height/2;
             draw_set_halign(fa_left);
-            var doner_length = array_length(potential_doners);
+            colonist_button.update({
+                x1:xx+20,
+                y1:yy+half_way,
+                allow_click : array_length(potential_doners),
+            });     
+            colonist_button.draw();
 
-            if (doner_length){
-                //TODO swap this out for an object button with a bound tooltip option
-                var colonist_coords = draw_unit_buttons([xx+20, half_way], "Request Colonists");
-                if (scr_hit(colonist_coords)){
-                    tooltip_draw("Planets with higher populations can provide more recruits both for your chapter and to keep a planets PDF bolstered, however colonists from other planets bring with them their home planets influences and evils /n REQ : 1000");
-                    if (point_and_click(colonist_coords)){
-                        var doner = array_random_element(potential_doners);
-                        new_colony_fleet(doner[0],doner[1],target.id,cur_planet,"bolster_population");
-                        obj_controller.requisition -= 1000;
-                    }
-                }
-            }
-            //draw_text(20, half_way, defence_string);
         }
         garrison_data_slate.draw(344+main_data_slate.width-4, 160, 0.6, 0.6);          
     }   
