@@ -122,7 +122,7 @@ function UnitButtonObject() constructor{
 	}
 }
 
-function purchase_button(req) : UnitButtonObject() constructor{
+function PurchaseButton(req) : UnitButtonObject() constructor{
 	req_value = req;
 	static draw = function(allow_click=true){
 		
