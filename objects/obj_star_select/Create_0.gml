@@ -26,7 +26,7 @@ main_data_slate = new DataSlate();
 colonist_button = new purchase_button(1000);
 colonist_button.update({
 	tooltip : "Planets with higher populations can provide more recruits both for your chapter and to keep a planets PDF bolstered, however colonists from other planets bring with them their home planets influences and evils /n REQ : 1000",
-	lable : "Request Colonists",
+	label : "Request Colonists",
 	target : target,
 });
 colonist_button.bind_method = function(){

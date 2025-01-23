@@ -13,6 +13,7 @@ enum ePlayerBase {
 function find_player_spawn_star(){
 	var _spawn_star;
 	var _allowable = false;
+	var _allowables  = ["Temperate","Feudal","Agri","Death","Ice","Desert","Lava"];
 	for (var i=0; i<100; i++){
 		var y_loc, x_loc;
 		if (obj_ini.homeworld_relative_loc = 0){
@@ -24,17 +25,21 @@ function find_player_spawn_star(){
 				y_loc = irandom(room_height);
 			}
 		} else {
-			x_loc = irandom_range(0+(room_width/3), room_width-(room_width/3));
-			y_loc = irandom_range(0+(room_height/3), room_height-(room_height/3));
+			x_loc = irandom_range(0+(room_width/2), room_width-(room_width/2));
+			y_loc = irandom_range(0+(room_height/2), room_height-(room_height/2));
 		}
 		var _chosen_star = instance_nearest(x_loc,y_loc, obj_star);
 		if (instance_exists(_chosen_star)){
-			if (array_contains(_chosen_star.p_type, "Temperate")){
-				_allowable = true;
+			for (var p=0;p<array_length(_chosen_star.p_type);p++){
+				if (array_contains(_allowables, _chosen_star.p_type[p])){
+					_allowable = true;
+				}
 			}
 		}
 		if (_allowable) then break;
+		instance_deactivate_object(obj_star);
 	}
+	instance_activate_object(obj_star);
 	return _chosen_star.id;	    
 }
 
@@ -117,10 +122,9 @@ function set_player_homeworld_star(chosen_star){
 		       		array_push(_possible_planets, i);
 		       		p_type[i] = array_random_element(_planet_types);
 		       	}
-	       		var _recruit_star = array_random_element(_possible_planets)
-				set_player_recruit_planet(_recruit_star);
-
 	       }
+	       	var _recruit_star = array_random_element(_possible_planets)
+			set_player_recruit_planet(_recruit_star);
 	    } else if (obj_ini.recruit_relative_loc==0){
 	    	array_push(p_feature[_home_star], new NewPlanetFeature(P_features.Recruiting_World));//recruiting world
 	    	for (var i=1;i<=planets;i++){

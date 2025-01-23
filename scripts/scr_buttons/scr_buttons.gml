@@ -67,6 +67,9 @@ function UnitButtonObject() constructor{
 
 
 	static update_loc = function(){
+		if (label != ""){
+			w = string_width(label)
+		};
 		x2 = x1 + w;
 		y2 = y1 + h;		
 	}
@@ -122,12 +125,17 @@ function UnitButtonObject() constructor{
 function purchase_button(req) : UnitButtonObject() constructor{
 	req_value = req;
 	static draw = function(allow_click=true){
+		
+		var _but = draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha);
+		var _sh = sprite_get_height(spr_requisition);
+		var _scale = (y2 - y1) / _sh;
+		draw_sprite_ext(spr_requisition,0,x1,y2,_scale,_scale,0,c_white,1);
 		var _allow_click = obj_controller.requisition >= req_value;
 		if (scr_hit(x1, y1, x2, y2) && tooltip!=""){
 			tooltip_draw(tooltip);
 		}
 		if (allow_click && _allow_click){
-			var clicked = point_and_click(draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha)) || keystroke;
+			var clicked = point_and_click(_but) || keystroke;
 			if (clicked){
 				if (is_callable(bind_method)){
 					bind_method(bind_method);
@@ -136,7 +144,6 @@ function purchase_button(req) : UnitButtonObject() constructor{
 			}
 			return clicked
 		} else {
-			draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha);
 			return false;
 		}		
 	}

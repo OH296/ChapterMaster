@@ -222,18 +222,23 @@ function draw_warp_lanes(){
 function create_complex_star_routes(player_star){
 	var north=[], east=[], west=[], south=[], central=[];
 	with (obj_star){
-		if (id == player_star){
+
+		var _home = id == player_star;
+		if (_home){
 			if (obj_ini.home_warp_position==0){//isolated environment
 				instance_deactivate_object(id);
 				continue;
 			}
 		}
-		if (x<700) then array_push(west, id);
-		if (y<700) then array_push(north, id);
-		if (x>room_width-700) then array_push(east, id);
-		if (y>room_height-700) then array_push(south, id);
-		if (x>700) && (y>700) && (x<room_width-700) && (x<room_width-700){
-			array_push(central, id);
+		var _allow_major = (!_home || (obj_ini.home_warp_position == 2 && _home));
+		if (_allow_major){
+			if (x<700) then array_push(west, id);
+			if (y<700) then array_push(north, id);
+			if (x>room_width-700) then array_push(east, id);
+			if (y>room_height-700) then array_push(south, id);
+			if (x>700) && (y>700) && (x<room_width-700) && (x<room_width-700){
+				array_push(central, id);
+			}
 		}
 
 		var nearest_star = distance_removed_star(x,y,1,true,true,false);
