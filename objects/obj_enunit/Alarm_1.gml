@@ -1696,16 +1696,14 @@ if (obj_ncombat.battle_special = "ruins") or(obj_ncombat.battle_special = "ruins
 */
 
 if (men + veh + medi <= 0) {
-	instance_destroy();
+	instance_destroy(id);
 	exit;
 }
 
 if (obj_ncombat.started = 0) {
 	obj_ncombat.enemy_forces += self.men + self.veh + self.medi;
 }
-
-if (!collision_point(x + 10, y, obj_pnunit, 0, 1)) and(!collision_point(x - 10, y, obj_pnunit, 0, 1)) then engaged = 0;
-if (collision_point(x + 10, y, obj_pnunit, 0, 1)) or(collision_point(x - 10, y, obj_pnunit, 0, 1)) then engaged = 1;
+engaged = (collision_point(x + 12, y, obj_pnunit, 0, 1)) or(collision_point(x - 12, y, obj_pnunit, 0, 1));
 
 if (neww = 1) then neww = 0;
 

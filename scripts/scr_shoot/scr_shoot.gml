@@ -121,7 +121,9 @@ function scr_shoot(weapon_index_position, target_object, target_type, damage_dat
 				var damage_per_weapon, hit_number;
 				damage_per_weapon = aggregate_damage;
 				if (aggregate_damage = 0) then damage_per_weapon = shots_fired;
-
+				if (melee_or_ranged != "wall") {
+					shots_fired *= attack_count_mod;
+				}
 				if (melee_or_ranged = "melee") {
 					if (shots_fired > ((target_object.veh + target_object.dreads) * 5)) {
 						doom = ((target_object.veh + target_object.dreads) * 5) / shots_fired;
@@ -132,9 +134,6 @@ function scr_shoot(weapon_index_position, target_object, target_type, damage_dat
 				if (doom != 0) and(shots_fired > 1) {
 					damage_per_weapon = floor((doom * damage_per_weapon));
 					hit_number = floor(hit_number * doom);
-				}
-				if (melee_or_ranged != "wall") {
-					shots_fired *= attack_count_mod;
 				}
 
 				if (damage_per_weapon = 0) then damage_per_weapon = shots_fired * doom;
@@ -202,7 +201,7 @@ function scr_shoot(weapon_index_position, target_object, target_type, damage_dat
 			}
 
 			if (weapon_index_position >= 0) {
-				if (ammo[weapon_index_position] = 0) then stop = 1;
+				if (ammo[weapon_index_position] == 0) then stop = 1;
 				if (ammo[weapon_index_position] > 0) then ammo[weapon_index_position] -= 1;
 			}
 			if (wep[weapon_index_position] == "Missile Silo") then obj_ncombat.player_silos -= min(obj_ncombat.player_silos, 30);
