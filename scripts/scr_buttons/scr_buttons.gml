@@ -111,7 +111,7 @@ function UnitButtonObject() constructor{
 			var clicked = point_and_click(draw_unit_buttons([x1, y1, x2, y2], label, [1,1],color,,,alpha)) || keystroke;
 			if (clicked){
 				if (is_callable(bind_method)){
-					bind_method(bind_method);
+					bind_method();
 				}
 			}
 			return clicked

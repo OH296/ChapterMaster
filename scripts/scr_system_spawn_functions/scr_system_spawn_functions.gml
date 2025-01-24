@@ -11,12 +11,13 @@ enum ePlayerBase {
 }
 
 function find_player_spawn_star(){
+	instance_activate_object(obj_star);
 	var _spawn_star;
 	var _allowable = false;
 	var _allowables  = ["Temperate","Feudal","Agri","Death","Ice","Desert","Lava"];
 	for (var i=0; i<100; i++){
 		var y_loc, x_loc;
-		if (obj_ini.homeworld_relative_loc = 0){
+		if (obj_ini.homeworld_relative_loc == 0){
 			if (irandom(1)){
 				y_loc = choose(0, room_height);
 				x_loc = irandom(room_width);
@@ -37,7 +38,7 @@ function find_player_spawn_star(){
 			}
 		}
 		if (_allowable) then break;
-		instance_deactivate_object(obj_star);
+		instance_deactivate_object(_chosen_star);
 	}
 	instance_activate_object(obj_star);
 	return _chosen_star.id;	    

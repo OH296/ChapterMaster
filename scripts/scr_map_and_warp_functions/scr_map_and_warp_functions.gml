@@ -236,7 +236,7 @@ function create_complex_star_routes(player_star){
 			if (y<700) then array_push(north, id);
 			if (x>room_width-700) then array_push(east, id);
 			if (y>room_height-700) then array_push(south, id);
-			if (x>700) && (y>700) && (x<room_width-700) && (x<room_width-700){
+			if (x>700) && (y>700) && (x<room_width-700) && (y<room_height-700){
 				array_push(central, id);
 			}
 		}
@@ -301,6 +301,7 @@ function create_complex_star_routes(player_star){
 			if (total_joins>3) then break;
 		}
 	}
+	instance_activate_object(obj_star);
 }
 
 function set_map_pan_to_loc(target){
