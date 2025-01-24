@@ -138,7 +138,7 @@ function PurchaseButton(req) : UnitButtonObject() constructor{
 			var clicked = point_and_click(_but) || keystroke;
 			if (clicked){
 				if (is_callable(bind_method)){
-					bind_method(bind_method);
+					bind_method();
 				}
 				obj_controller.requisition -= req_value;
 			}
