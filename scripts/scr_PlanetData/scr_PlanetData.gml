@@ -34,6 +34,9 @@ function PlanetData(planet, system) constructor{
         return _at_war;
     }
 
+    static owner_status = function(){
+    	return obj_controller.faction_status[current_owner];
+    }
     guardsmen = system.p_guardsmen[planet];
     pdf = system.p_pdf[planet];
     fortification_level  = system.p_fortified[planet];

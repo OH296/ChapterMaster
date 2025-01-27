@@ -337,6 +337,7 @@ function drop_select_draw(){
                             combating = 0;
                             instance_activate_all();
                             exit;
+                        
                         }
                         if (obj_controller.known[eFACTION.Chaos] >= 2 && obj_controller.faction_gender[10] = 1){
                             with(obj_drop_select) {

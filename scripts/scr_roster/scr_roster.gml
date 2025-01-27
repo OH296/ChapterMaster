@@ -305,9 +305,11 @@ function Roster() constructor{
         	 	 	}
         	 	}
                 if (_allow){
-                    if (!obj_drop_select.attack){
-    
-                        _allow = array_contains(_raid_allowable, _v_role);
+                    if (instance_exists(obj_drop_select)){
+                        if (!obj_drop_select.attack){
+        
+                            _allow = array_contains(_raid_allowable, _v_role);
+                        }
                     }
                 }
         	 	if (_allow){
@@ -347,15 +349,38 @@ function Roster() constructor{
             meeting = true;
             if (company == 0) and(v <= obj_temp_meeting.dudes) and(obj_temp_meeting.present[v] == 1) then okay = 1;
             else if (company > 0) or(v > obj_temp_meeting.dudes) then okay = 0;
-        }        
+        }
+        var size_count = 0;
+        var _limit = obj_ncombat.man_size_limit;
+        var _has_limit = _limit>0;
+        var _add;
+
         for (var i=0; i<array_length(selected_units);i++){
+            if (_has_limit && _limit == size_count) then break;
+            _add = true;
+
             if (is_struct(selected_units[i])){
-                add_unit_to_battle(selected_units[i], meeting);
+                if (_has_limit){
+
+                    _add = (selected_units[i].get_unit_size()+size_count)<=_limit;
+                }
+                if (_add){
+                    add_unit_to_battle(selected_units[i], meeting);
+                }
             } else {
-                add_vehicle_to_battle(selected_units[i][0], selected_units[i][1], is_roster_unit_local(selected_units[i]));
+                var _vehic = selected_units[i];
+                var _type = obj_ini.veh_role[_vehic[0]][_vehic[1]];
+                if (_has_limit){
+                    _add = (scr_unit_size("",_type, true)+size_count)<=_limit;
+                }
+                if (_add){          
+                    add_vehicle_to_battle(_vehic[0], _vehic[1], is_roster_unit_local(_vehic));
+                }
             }
         }
     }
+
+
     static marines_total = function(){
         var _marines = 0;
         for (var i=0;i<array_length(full_roster_units);i++){
