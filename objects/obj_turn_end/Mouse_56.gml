@@ -190,7 +190,8 @@ __b__ = action_if_number(obj_popup, 0, 0);
 					        roster_location = _loc;
 					        roster_planet = _planet;
 					        determine_full_roster();
-					        selected_units = full_roster_units;
+					        only_locals();
+					        update_roster();
 					        if (array_length(selected_units)){  
 					            setup_battle_formations();
 					            add_to_battle();

@@ -29,7 +29,8 @@ if (battle_special=3.1){
         roster_location = obj_ncombat.battle_loc;
         roster_planet = obj_ncombat.battle_id;
         determine_full_roster();
-        selected_units = full_roster_units;
+        only_locals();
+        update_roster();
         if (array_length(selected_units)){  
             setup_battle_formations();
             add_to_battle();
