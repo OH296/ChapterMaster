@@ -52,6 +52,7 @@ function find_player_spawn_star(){
     }
     name=obj_ini.recruiting_name;
 }*/
+
 function player_home_star(home_planet){
 
         p_type[home_planet]=obj_ini.home_type;
@@ -92,14 +93,16 @@ function player_home_star(home_planet){
 
 function set_player_recruit_planet(recruit_planet){
 	p_type[recruit_planet]=obj_ini.recruiting_type;
-	var recruit_name = obj_ini.recruiting_name;
-    if (recruit_name!="random"){
-        array_push(global.name_generator.star_used_names, recruit_name);
-        if (star_by_name(recruit_name) != "none" ){
-            star_by_name(recruit_name).name = global.name_generator.generate_star_name();
-        }
-        name=recruit_name;
-    } 	
+	if (obj_ini.recruit_relative_loc==2 || obj_ini.fleet_type!=ePlayerBase.home_world){
+		var recruit_name = obj_ini.recruiting_name;
+	    if (recruit_name!="random"){
+	        array_push(global.name_generator.star_used_names, recruit_name);
+	        if (star_by_name(recruit_name) != "none" ){
+	            star_by_name(recruit_name).name = global.name_generator.generate_star_name();
+	        }
+	        name=recruit_name;
+	    }
+	}
 	array_push(p_feature[recruit_planet], new NewPlanetFeature(P_features.Recruiting_World));//recruiting world
 	if (p_type[recruit_planet]=="random") then p_type[recruit_planet]=choose("Death","Temperate","Desert","Ice","Hive", "Fuedal");
 	if (global.chapter_name!="Lamenters") then obj_controller.recruiting_worlds+=string(name)+" II|";

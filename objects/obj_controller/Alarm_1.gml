@@ -62,12 +62,9 @@ if (did){
         add_ship_to_fleet(f, fleet);
     }
     
-    var ii=0;
-    ii+=fleet.capital_number;
-    ii+=round((fleet.frigate_number/2));
-    ii+=round((fleet.escort_number/4));
-    if (ii<=1) then ii=1;
-    fleet.image_index=ii;
+    with (fleet){
+        set_player_fleet_image();
+    }
     
     if (obj_ini.load_to_ships[0]>0){
         scr_start_load(fleet,_current_system,obj_ini.load_to_ships);
@@ -92,7 +89,8 @@ if (did){
     
     _current_system=instance_nearest(px,py,obj_star);
     _current_system.star="white2";
-    _current_system.planet[1]=1;_current_system.planet[2]=1;
+    _current_system.planet[1]=1;
+    _current_system.planet[2]=1;
     _current_system.image_index=4;
     _current_system.p_type[1]="Forge";
     _current_system.p_type[2]="Ice";
