@@ -12,7 +12,7 @@ function scr_alert(colour, alert_type, alert_text, xx=00, yy=00) {
 	    if (obj_turn_end.alert_type[obj_turn_end.alerts]!="-"+string(alert_text)) and (alert_type!="blank") and (colour!="blank"){
 	        obj_turn_end.alerts+=1;
 	        obj_turn_end.alert[obj_turn_end.alerts]=1;
-	        obj_turn_end.alert_color[obj_turn_end.alerts]=colour;
+	        obj_turn_end.alert_color[obj_turn_end.alerts]=colour; // takes green, red, purple, default GM colorcodes(with c_ prefix), decimal, hexadecimal(with $ prefix, 6 or 8 digits) and CSS(with # prefix)
 	        // if (colour="purple") then obj_turn_end.alert_color[obj_turn_end.alerts]="red";
 	        obj_turn_end.alert_type[obj_turn_end.alerts]=alert_type;
 	        obj_turn_end.alert_text[obj_turn_end.alerts]="-"+string(alert_text);

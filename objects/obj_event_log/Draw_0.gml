@@ -42,12 +42,18 @@ if (__b__) {
                 }
                 cur_event = event[t];
                 if (cur_event.text != "") { // 1554
-                    draw_set_color(38144);
-                    if (cur_event.colour = "red") {
+                    if (cur_event.colour == "" || cur_event.colour == "green") {
+                        draw_set_color(38144);
+                    } else if (cur_event.colour == "red") {
                         draw_set_color(c_red);
-                    }
-                    if (cur_event.colour = "purple") {
+                    } else if (cur_event.colour == "yellow") {
+                        draw_set_color(57586);
+                    } else if (cur_event.colour == "purple") {
                         draw_set_color(c_purple);
+                    } else if (cur_event.colour != "") {
+                        draw_set_color(cur_event.colour);
+                    } else {
+                        debugl("DEBUG: color fallthrough in obj_event_log/Draw_0.gml!");
                     }
                     draw_text_ext(xx + 25, yy + 120 + (p * 26), $"{cur_event.date}  (Turn {cur_event.turn}) - {cur_event.text}", -1, 1554);
                     if (cur_event.event_target != "none") {

@@ -15,10 +15,19 @@ if (alerts>0) and (popups_end=1){
     repeat(alerts){
         i+=1;
 
-        draw_set_color(38144);
-        if (alert_color[i] == "red") then draw_set_color(c_red);
-        if (alert_color[i] == "yellow") then draw_set_color(57586);
-        // if (alert_color[i]="purple") then draw_set_color(c_red);
+        if (alert_color[i] == "" || alert_color[i] == "green") {
+            draw_set_color(38144);
+        } else if (alert_color[i] == "red") {
+            draw_set_color(c_red);
+        } else if (alert_color[i] == "yellow") {
+            draw_set_color(57586);
+        } else if (alert_color[i] == "purple") {
+            draw_set_color(c_purple);
+        } else if (alert_color[i] != "") {
+            draw_set_color(alert_color[i]);
+        } else {
+            debugl("DEBUG: color fallthrough in obj_turn_end/Draw_64.gml!");
+        }
         draw_set_alpha(min(1,alert_alpha[i]));
         
         if (obj_controller.zoomed=0){
