@@ -1,3 +1,29 @@
+function set_alert_draw_colour(alert_colour){
+	static default_colour = 38144;
+	static colour_map = {
+		"red" : c_red,
+		"yellow" : 57586,
+		"purple" : c_purple,
+		"green" : 38144,
+	}//TODO set constants for colours
+	if (alert_colour!=""){
+		if (struct_exists(colour_map, alert_colour)){
+			draw_set_color(colour_map[$ alert_colour]);
+		} else {
+			try{
+				draw_set_color(alert_colour);
+			} catch(_exception){
+				debugl("DEBUG: color fallthrough in set_alert_draw_colour!");
+				draw_set_color(default_colour);
+			}
+		}
+	} else {
+		draw_set_color(default_colour);
+	}else {
+        debugl("DEBUG: color fallthrough in set_alert_draw_colour!");
+    }
+}
+
 function scr_alert(colour, alert_type, alert_text, xx=00, yy=00) {
 
 	// color / type / text /x/y
