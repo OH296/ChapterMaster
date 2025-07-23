@@ -537,7 +537,7 @@ function scr_ui_diplomacy() {
 		var txt;
 
 		//draw the meet chaos button
-	    draw_set_halign(fa_left);
+	    /*draw_set_halign(fa_left);
 	    draw_set_color(38144);
 		draw_rectangle(xx+688,yy+240,xx+1028,yy+281,0);
 	    draw_set_color(c_black);
@@ -547,7 +547,7 @@ function scr_ui_diplomacy() {
 	        draw_set_alpha(0.2);
 			draw_rectangle(xx+688,yy+240,xx+1028,yy+281,0);
 			draw_set_alpha(1);
-		};
+		};*/
 	    var x6,y6,x7,y7;
 	    x6=0;y6=0;x7=0;y7=0;
 	    xx-=55;yy+=20;
