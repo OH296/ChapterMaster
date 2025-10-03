@@ -1636,6 +1636,7 @@
     {"id":{"name":"spr_sw_mk7_helm","path":"sprites/spr_sw_mk7_helm/spr_sw_mk7_helm.yy",},},
     {"id":{"name":"spr_sword_pendant","path":"sprites/spr_sword_pendant/spr_sword_pendant.yy",},},
     {"id":{"name":"spr_tartaros_arms","path":"sprites/spr_tartaros_arms/spr_tartaros_arms.yy",},},
+    {"id":{"name":"spr_tartaros_chest_shadows","path":"sprites/spr_tartaros_chest_shadows/spr_tartaros_chest_shadows.yy",},},
     {"id":{"name":"spr_tartaros_chest","path":"sprites/spr_tartaros_chest/spr_tartaros_chest.yy",},},
     {"id":{"name":"spr_tartaros_colors","path":"sprites/spr_tartaros_colors/spr_tartaros_colors.yy",},},
     {"id":{"name":"spr_tartaros_complex","path":"sprites/spr_tartaros_complex/spr_tartaros_complex.yy",},},

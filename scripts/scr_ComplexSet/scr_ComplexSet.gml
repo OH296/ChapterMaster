@@ -1342,7 +1342,6 @@ function ComplexSet(_unit) constructor {
 				break;
 			case "Tartaros":
 				add_group({
-					chest_variants: spr_tartaros_chest,
 					mouth_variants: spr_tartaros_faceplate,
 					left_trim: spr_tartaros_left_trim,
 					right_trim: spr_tartaros_right_trim
