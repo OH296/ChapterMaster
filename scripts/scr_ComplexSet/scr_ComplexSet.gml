@@ -534,21 +534,33 @@ function ComplexSet(_unit) constructor {
 	shadow_enabled = false;
 	component_map_choice = 0;
 
+	// === FULL LIVERY SHADER ===
+	use_shadow_uniform            = shader_get_uniform(full_livery_shader, "use_shadow");
+	shadow_transform_uniform      = shader_get_uniform(full_livery_shader, "In_Shadow_Transform");
+	shadow_sampler                = shader_get_sampler_index(full_livery_shader, "shadow_texture");
 
-	use_shadow_uniform = shader_get_uniform(full_livery_shader, "use_shadow");
-	shadow_transform_uniform = shader_get_uniform(full_livery_shader, "In_Shadow_Transform");
 
-	shadow_sampler = shader_get_sampler_index(full_livery_shader, "shadow_texture");
-	armour_shadow_sampler = shader_get_sampler_index(armour_texture, "shadow_texture");
-	armour_texture_sampler = shader_get_sampler_index(armour_texture, "armour_texture");
+	// === ARMOUR TEXTURE SHADER ===
+	armour_texture_sampler        = shader_get_sampler_index(armour_texture, "armour_texture");
+	armour_shadow_sampler         = shader_get_sampler_index(armour_texture, "shadow_texture");
 
-	texture_blend_uniform = shader_get_uniform(armour_texture, "blend");
-	texture_blend_colour_uniform = shader_get_uniform(armour_texture, "blend_colour");
-	static texture_replace_col_uniform = shader_get_uniform(armour_texture, "replace_colour");
-
-	texture_use_shadow_uniform = shader_get_uniform(armour_texture, "use_shadow");
+	// Shadow + mask uniforms
+	texture_use_shadow_uniform    = shader_get_uniform(armour_texture, "use_shadow");
 	texture_shadow_transform_uniform = shader_get_uniform(armour_texture, "In_Shadow_Transform");
-	texture_mask_transform = shader_get_uniform(armour_texture, "mask_transform");
+
+	// Mask data
+	texture_mask_transform_uniform = shader_get_uniform(armour_texture, "texture_mask_transform"); // NEW
+	texture_mask_array_uniform    = shader_get_uniform(armour_texture, "texture_replace_col");
+	texture_mask_count_uniform    = shader_get_uniform(armour_texture, "mask_count");
+
+	// Colour replacement
+	texture_replace_col_uniform   = shader_get_uniform(armour_texture, "replace_colour");
+
+	// Blending
+	texture_blend_uniform         = shader_get_uniform(armour_texture, "blend");
+	texture_blend_colour_uniform  = shader_get_uniform(armour_texture, "blend_colour");
+
+
 
     if (!surface_exists(global.base_component_surface)) {
 	    global.base_component_surface = surface_create(600,600);
@@ -659,68 +671,93 @@ function ComplexSet(_unit) constructor {
 		}
 	}
 
-	static draw_component_with_textures = function(_sprite, _choice, _tex_names, texture_draws, component_name) {
-		var _return_surface = surface_get_target();
-		surface_reset_target();
-		shader_reset();
+/// draw_component_with_textures(_sprite, _choice, _tex_names, texture_draws, component_name)
+static draw_component_with_textures = function(_sprite, _choice, _tex_names, texture_draws, component_name)
+{
+    var _return_surface = surface_get_target();
+    surface_reset_target();
+    shader_reset();
 
-		surface_set_target(global.base_component_surface);
-		draw_clear_alpha(c_white, 0);
-		
-		shader_set(armour_texture);
-		shader_set_uniform_i(texture_use_shadow_uniform, shadow_enabled);
-		set_component_shadow_packs(component_name, _choice);
+    surface_set_target(global.base_component_surface);
+    draw_clear_alpha(c_white, 0);
 
-		for (var i = 0; i < array_length(_tex_names); i++) {
-			var _tex_data = texture_draws[$ _tex_names[i]];
+    shader_set(armour_texture);
+    shader_set_uniform_i(texture_use_shadow_uniform, shadow_enabled);
+    set_component_shadow_packs(component_name, _choice);
 
-			var tex_frame = 0;
-			if (component_name == "left_pauldron_base") {
-				tex_frame = 1;
-			}
+    // --- Prepare data containers ---
+    var mask_array = [];
+    var transform_array = [];
+    var tex_texture = -1;
 
-			var tex_texture = sprite_get_texture(_tex_data.texture, tex_frame);
+    // --- Collect all mask data ---
+    for (var i = 0; i < array_length(_tex_names); i++)
+    {
+        var _tex_data = texture_draws[$ _tex_names[i]];
+        var tex_frame = (component_name == "left_pauldron_base") ? 1 : 0;
+        tex_texture = sprite_get_texture(_tex_data.texture, tex_frame);
 
-			//TODO fix texture colour blending
-			/*var _blend = 0;
-			if (struct_exists(_tex_data, "blend")) {
-				_blend = 1;
-			}
+        var _mask_transform_data = sprite_get_uvs_transformed(_sprite, _choice, _tex_data.texture, tex_frame);
+        if (!valid_sprite_transform_data(_mask_transform_data)){
+        	continue;
+        }
 
+        for (var t = 0; t < array_length(_tex_data.areas); t++)
+        {
+            array_push(mask_array, _tex_data.areas[t]);           // vec4 RGBA or RGBxA data
+            array_push(transform_array, _mask_transform_data);    // vec4 transform data
+        }
+    }
 
-			shader_set_uniform_i(texture_blend_uniform, _blend);
+	function flatten_vec4_array(_arr) {
+	    var _flat = [];
+	    var _len = array_length(_arr);
+	    
+	    for (var i = 0; i < _len; i++) {
+	        var v = _arr[i];
+	        
+	        // make sure it’s a 4-element array
+	        if (!is_array(v)) v = [0,0,0,0];
+	        var sz = array_length(v);
+	        if (sz < 4) {
+	            // pad missing elements with 1s
+	            for (var j = sz; j < 4; j++){
+	            	array_push(v, 1);
+	            }
+	        } else if (sz > 4) {
+	            // trim extra elements
+	            array_resize(v, 4);
+	        }
 
-			if (_blend) {
-				shader_set_uniform_f_array(texture_blend_colour_uniform, _tex_data.blend);
-			}
-			*/
+	        array_push(_flat, v[0], v[1], v[2], v[3]);
+	    }
+	    
+	    return _flat;
+	}
+    var flat_masks = flatten_vec4_array(mask_array);
+    var flat_transforms = flatten_vec4_array(transform_array);
+    var count = array_length(mask_array);
 
-			try {
-				for (var t = 0; t < array_length(_tex_data.areas); t++) {
-					var _mask_transform_data = sprite_get_uvs_transformed(_sprite, _choice, _tex_data.texture, tex_frame);
-					if (!valid_sprite_transform_data(_mask_transform_data)){
-						continue;
-					}
-					show_debug_message(_tex_data.areas[t]);
-					shader_set_uniform_f_array(texture_mask_transform, _mask_transform_data);
-					texture_set_stage(armour_texture_sampler, tex_texture);
-					shader_set_uniform_f_array(texture_replace_col_uniform, _tex_data.areas[t]);
+    // --- Upload arrays ---
+    shader_set_uniform_i(shader_get_sampler_index(armour_texture, "texture_mask_count"), count);
+    shader_set_uniform_f_array(texture_replace_col_uniform, flat_masks);
+    shader_set_uniform_f_array(texture_mask_transform_uniform, flat_transforms);
 
-					draw_sprite(_sprite, _choice ?? 0, component_final_draw_x, component_final_draw_y);
-				}
-			}
-		}
+    texture_set_stage(armour_texture_sampler, tex_texture);
 
-		surface_reset_target();
-		surface_set_target(_return_surface);
-		shader_reset();
+    // --- Single draw call ---
+    draw_sprite(_sprite, _choice ?? 0, component_final_draw_x, component_final_draw_y);
 
-		shader_set(full_livery_shader);
-		set_component_shadow_packs(component_name, _choice);
+    surface_reset_target();
+    surface_set_target(_return_surface);
+    shader_reset();
 
-		draw_sprite(_sprite, _choice ?? 0, component_final_draw_x, component_final_draw_y);
-		draw_surface(global.base_component_surface, 0, 0);
-	};
+    shader_set(full_livery_shader);
+    set_component_shadow_packs(component_name, _choice);
+
+    draw_sprite(_sprite, _choice ?? 0, component_final_draw_x, component_final_draw_y);
+    draw_surface(global.base_component_surface, 0, 0);
+};
 
 
 	// Main function

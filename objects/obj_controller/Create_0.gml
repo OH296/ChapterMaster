@@ -484,6 +484,7 @@ command_set[9]=1;
 command_set[20]=1;
 command_set[24]=1;
 modest_livery=0;
+chapter_shine = 3;
 progenitor_visuals=0;
 tagged_training=0;
 
