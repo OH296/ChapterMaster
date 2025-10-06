@@ -1,6 +1,7 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 function scr_livery_setup(){
+    chapter_shine = shine_options.current_selection+1;
     add_draw_return_values();
    draw_set_font(fnt_40k_30b);
     draw_set_halign(fa_center);

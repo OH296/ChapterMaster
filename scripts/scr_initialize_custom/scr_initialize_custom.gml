@@ -1323,6 +1323,8 @@ function scr_initialize_custom() {
         }
     }
 
+    chapter_shine = obj_creation.chapter_shine;
+
 
 	/*main_color=obj_creation.main_color;
 	secondary_color=obj_creation.secondary_color;

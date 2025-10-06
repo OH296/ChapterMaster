@@ -97,6 +97,7 @@ complex_selection = "sgt";
 complex_depth_selection = 0;
 //TODO probably make this array based at some point ot match other unit data
 complex_livery_data = complex_livery_default();
+chapter_shine  = 3;
 left_data_slate = new DataSlate();
 right_data_slate = new DataSlate();
 standard_livery_components = 0;

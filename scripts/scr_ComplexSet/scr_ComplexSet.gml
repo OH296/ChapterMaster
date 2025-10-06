@@ -695,16 +695,19 @@ function ComplexSet(_unit) constructor {
 			}
 			*/
 
-			for (var t = 0; t < array_length(_tex_data.areas); t++) {
-				var _mask_transform_data = sprite_get_uvs_transformed(_sprite, _choice, _tex_data.texture, tex_frame);
-				if (!valid_sprite_transform_data(_mask_transform_data)){
-					continue;
-				}
-				shader_set_uniform_f_array(texture_mask_transform, _mask_transform_data);
-				texture_set_stage(armour_texture_sampler, tex_texture);
-				shader_set_uniform_f_array(texture_replace_col_uniform, _tex_data.areas[t]);
+			try {
+				for (var t = 0; t < array_length(_tex_data.areas); t++) {
+					var _mask_transform_data = sprite_get_uvs_transformed(_sprite, _choice, _tex_data.texture, tex_frame);
+					if (!valid_sprite_transform_data(_mask_transform_data)){
+						continue;
+					}
+					show_debug_message(_tex_data.areas[t]);
+					shader_set_uniform_f_array(texture_mask_transform, _mask_transform_data);
+					texture_set_stage(armour_texture_sampler, tex_texture);
+					shader_set_uniform_f_array(texture_replace_col_uniform, _tex_data.areas[t]);
 
-				draw_sprite(_sprite, _choice ?? 0, component_final_draw_x, component_final_draw_y);
+					draw_sprite(_sprite, _choice ?? 0, component_final_draw_x, component_final_draw_y);
+				}
 			}
 		}
 
@@ -725,12 +728,16 @@ function ComplexSet(_unit) constructor {
 		if (array_contains(banned, component_name)) {
 			return "banned component";
 		}
+		show_debug_message(component_name);
 		if (struct_exists(self, component_name)) {
+			show_debug_message(self[$component_name]);
 			shadow_enabled = 0;
 			var _sprite = self[$ component_name];
 			if (!sprite_exists(_sprite)) {
 				return "error failed no sprite found"
 			}
+
+			show_debug_message("fonud sprite");
 
 			component_final_draw_x = x_surface_offset;
 			component_final_draw_y = y_surface_offset;
@@ -745,18 +752,22 @@ function ComplexSet(_unit) constructor {
 				_choice = choice_lock
 			}
 
+			show_debug_message("made choice");
+
 			check_component_overides(component_name, _choice);
 			set_component_shadow_packs(component_name, _choice);
 
 			shader_set_uniform_i(use_shadow_uniform, shadow_enabled);
 
 			var _tex_names = struct_get_names(texture_draws);
-
+			//show_debug_message(texture_draws);
 			if (array_length(_tex_names) > 0) {
 				draw_component_with_textures(_sprite, _choice, _tex_names, texture_draws, component_name);
 			} else {
 				draw_sprite(_sprite, _choice ?? 0, component_final_draw_x, component_final_draw_y);
 			}
+			
+			show_debug_message("main_Draw");
 
 			handle_component_subcomponents(component_name, _choice);
 		}

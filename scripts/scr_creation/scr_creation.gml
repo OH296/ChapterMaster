@@ -288,7 +288,30 @@ function scr_creation(slide_num) {
 					tooltip : "Advanced options for colouring",
 					font: fnt_menu
 				}
-			]) 
+			]);
+    	shine_options  = new RadioSet(       
+	       [ {
+	                   str1 : "1",
+	                   font : fnt_40k_14b,
+	               },
+	               {
+	                   str1 : "2",
+	                   font : fnt_40k_14b,
+	               },
+	               {
+	                   str1 : "3",
+	                   font : fnt_40k_14b,
+	               },
+	               {
+	                   str1 : "4",
+	                   font : fnt_40k_14b,
+	               },         
+	               {
+	                   str1 : "5",
+	                   font : fnt_40k_14b,
+	               }
+	        ]
+	    ,"defualt\nMatt<---->Shine",{tooltip:"This will effect all livery areas unlessspecified else where"});
 			if (full_liveries == ""){
 			    var struct_cols = {
 			        main_color :main_color,
