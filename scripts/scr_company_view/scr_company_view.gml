@@ -248,7 +248,7 @@ function other_manage_data() {
             if (is_specialist(_squad_type) || (_squad_type == ma_role[v])) {
                 n = 0;
             }
-            if (_unit.squad == "none") {
+            if (is_undefined(_unit.get_squad)) {
                 if (is_specialist(_squad_type, SPECIALISTS_HEADS)) {
                     n = 1;
                 }

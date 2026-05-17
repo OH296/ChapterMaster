@@ -145,7 +145,8 @@ function UnitGroup(units) constructor {
         var _all_squads = squad_type == "all";
         for (var i = 0; i < array_length(units); i++) {
             _unit = units[i];
-            if (_unit.squad == "none") {
+            var _squad = _unit.get_squad();
+            if (is_undefined(_squad)) {
                 continue;
             }
             if (array_contains(_squads, _unit.squad)) {
@@ -180,7 +181,8 @@ function UnitGroup(units) constructor {
         var _unit, _squad;
         for (var i = 0; i < array_length(units); i++) {
             _unit = units[i];
-            if (_unit.squad == "none") {
+            _squad = _unit.get_squad();
+            if (is_undefined(_squad)) {
                 continue;
             }
             if (array_contains(_squads, _unit.squad)) {
@@ -432,10 +434,11 @@ function UnitGroup(units) constructor {
             _match_roles.add_units(self, {role: _wanted_role}, true, -1);
             for (var i = 0; i < array_length(_match_roles.units); i++) {
                 var _unit = _match_roles.units[i];
-                if (_unit.squad == "none" || array_contains(_sorted_squads, _unit.squad)) {
+                var _squad = fetch_squad(_unit.squad);
+                if (is_undefined(_squad) || array_contains(_sorted_squads, _unit.squad)) {
                     continue;
                 }
-                var _squad = fetch_squad(_unit.squad);
+
                 var _members_count = array_length(_squad.members);
                 var _conditions = {
                     squad: _unit.squad,
@@ -650,7 +653,7 @@ function SearchConditions(data) constructor {
     };
 
     static squadless_valuate = function() {
-        return oposite_switch(unit.squad == "none");
+        return oposite_switch(is_undefined(unit.get_squad()));
     };
 
     static allegiance_valuate = function() {

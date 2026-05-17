@@ -323,6 +323,7 @@ function scr_emmisary_diplomacy_routes() {
             diplomacy_pathway = "sacrifice_squad";
             var kill_squad, squad_found = false;
             var _squad_ids = get_squad_ids();
+            var __squad_ids = array_shuffle(_squad_ids);
             for (var i = 0; i < array_length(_squad_ids); i++) {
                 kill_squad = fetch_squad(_squad_ids[i]);
                 if (kill_squad.type == "tactical_squad" && array_length(kill_squad.members) > 4) {

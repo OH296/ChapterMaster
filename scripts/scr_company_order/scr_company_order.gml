@@ -40,6 +40,9 @@ function scr_company_order(company) {
         var _squad_ids = get_squad_ids();
         for (i = 0; i < array_length(_squad_ids); i++) {
             var _squad = fetch_squad(_squad_ids[i]);
+            if (is_undefined(_squad)){
+                continue;
+            }
             if (_squad.base_company != co) {
                 if (!bool(array_length(_squad.members))) {
                     array_push(_empty_squads, _squad);
@@ -95,7 +98,9 @@ function scr_company_order(company) {
 
         for (var i = 0; i < array_length(_squads); i++) {
             _squad = fetch_squad(_squads[i]);
-            _squad.members = [];
+            if (!is_undefined(_squad)){
+                _squad.members = [];
+            }
         }
 
         var _temps = [];
@@ -135,7 +140,8 @@ function scr_company_order(company) {
             }
             _struc.company = co;
             _struc.marine_number = i;
-            if (_struc.squad != "none") {
+            var _squad = _struc.get_squad();
+            if (!is_undefined(_squad)) {
                 var _squad = _struc.get_squad();
                 array_push(_squad.members, [co, i]);
             }

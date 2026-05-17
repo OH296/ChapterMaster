@@ -86,8 +86,8 @@ function Roster() constructor {
         var _valid_squad_types = [];
         for (var i = 0; i < array_length(squad_buttons); i++) {
             if (squad_buttons[i].active) {
-                array_push(_valid_squad_types, squad_buttons[i].squad);
-                if (squad_buttons[i].squad == "dreadnought") {
+                array_push(_valid_squad_types, squad_buttons[i]._squad);
+                if (squad_buttons[i]._squad == "dreadnought") {
                     _allow_dreadnoughts = true;
                 }
             }
@@ -175,7 +175,7 @@ function Roster() constructor {
         _button.button_color = CM_GREEN_COLOR;
         _button.width = string_width(display) + 10;
         _button.active = true;
-        _button.squad = squad_id;
+        _button._squad = squad_id;
         array_push(squad_buttons, _button);
     };
 
@@ -279,12 +279,12 @@ function Roster() constructor {
                     _company_present = true;
                     array_push(full_roster_units, _unit);
                     add_role_to_roster(_unit.role());
-                    if (_unit.squad != "none") {
+                    if (_unit._squad != "none") {
                         var _squad_type = _unit.squad_type();
                         if (_squad_type != "none") {
                             if (!array_contains(_squads, _squad_type)) {
                                 array_push(_squads, _squad_type);
-                                var _squad = fetch_squad(_unit.squad);
+                                var _squad = fetch_squad(_unit._squad);
                                 new_squad_button(_squad.display_name, _squad_type);
                             }
                         }
@@ -676,9 +676,9 @@ function add_unit_to_battle(unit, meeting, is_local) {
     if (new_combat.big_mofo > 3) {
         new_combat.big_mofo = 3;
     }
-    if (unit.squad != "none") {
-        var squad = unit.get_squad();
-        switch (squad.formation_place) {
+    var _squad = unit.get_squad();
+    if (!is_undefined(_squad)) {
+        switch (_squad.formation_place) {
             case "assault":
                 col = obj_controller.bat_assault_column;
                 column_decided = true;

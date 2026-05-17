@@ -1,5 +1,8 @@
 function fetch_squad(array_id) {
-    return obj_ini.squads[$ array_id];
+    if (array_id!= "" && struct_exists(obj_ini.squads,array_id)){
+        return obj_ini.squads[$ array_id];
+    }
+    return undefined;
 }
 
 function get_squad_ids() {

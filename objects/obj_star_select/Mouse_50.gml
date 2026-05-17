@@ -46,6 +46,10 @@ if (__b__) {
                         var company_data = obj_controller.company_data;
                         var squad_index = company_data.company_squads[company_data.cur_squad];
                         var current_squad = fetch_squad(squad_index);
+                        if (is_undefined(current_squad)){
+                            instance_destroy();
+                            exit;
+                        }
                         if (sel_plan > 0) {
                             var planet = sel_plan;
                             for (var i = 0; i < array_length(target.p_operatives[planet]); i++) {

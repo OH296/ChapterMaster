@@ -66,11 +66,9 @@ function CompanyStruct(comp) constructor {
                     continue;
                 }
 
-                if (!struct_exists(_squads, _unit.squad)) {
-                    _unit.squad = "none";
-                }
+                var _search_squad = _unit.get_squad();
 
-                if (_unit.squad == "none") {
+                if (is_undefined(_search_squad)) {
                     continue;
                 }
 
@@ -78,8 +76,9 @@ function CompanyStruct(comp) constructor {
                     continue;
                 }
 
-                var _search_squad = _unit.get_squad();
-                _search_squad.update_fulfilment();
+                if (!is_undefined(_search_squad)){
+                    _search_squad.update_fulfilment();
+                }
 
                 if (array_length(_search_squad.members) > 0) {
                     array_push(company_squads, _search_squad);
@@ -463,7 +462,7 @@ function CompanyStruct(comp) constructor {
             _find_squad_member = true;
         }
 
-        if (selected_unit.squad == "none") {
+        if (is_undefined(selected_unit.get_squad)) {
             _find_squad_member = true;
         }
 
@@ -471,7 +470,7 @@ function CompanyStruct(comp) constructor {
             default_member();
         }
 
-        if (selected_unit.squad == "none") {
+        if (is_undefined(selected_unit.get_squad)) {
             exit_squad_view();
             return;
         }
