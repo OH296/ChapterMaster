@@ -208,7 +208,7 @@ jobs:
           # Use Bash parameter expansion: ${parameter//pattern/string}
           # Replaces all occurrences of '/' with '-'
           formattedTagName="${rawTagName//\//-}"
-          releaseName="ChapterMaster $formattedTagName"
+          releaseName="$formattedTagName"
           echo "Calculated release name: $releaseName"
           # Set the output using standard Bash redirection to the GITHUB_OUTPUT file
           echo "release_name=$releaseName" >> $GITHUB_OUTPUT
@@ -261,7 +261,7 @@ jobs:
           body: ${{steps.build_changelog.outputs.changelog}}
           token: ${{ secrets.RELEASE_TOKEN_SECRET }}
           tag_name: ${{ needs.prepare_release.outputs.tag_name }}
-          prerelease: true
-          make_latest: false
+          prerelease: false
+          make_latest: true
           files: |
             ./build_output/${{ needs.gamemaker_build.outputs.built_file }}/*
