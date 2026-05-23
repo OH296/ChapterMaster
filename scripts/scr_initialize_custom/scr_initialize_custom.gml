@@ -1818,8 +1818,6 @@ function scr_initialize_custom() {
         array_push(_swaps, _set);
     }
 
-    json_inject_swaps(squad_types, _swaps);
-
     // LOGGER.debug($"squads object for chapter {chapter_name}");
     // LOGGER.debug($"{custom_squads}");
 
@@ -1842,6 +1840,7 @@ function scr_initialize_custom() {
         }
     }
 
+    json_inject_swaps(squad_types, _swaps);
     // LOGGER.debug($"roles object for chapter {chapter_name} after setting from obj");
     // LOGGER.debug($"{custom_squads}");
 
@@ -2491,7 +2490,7 @@ function scr_initialize_custom() {
             for (var j = 0; j < _override_keys_count; j++) {
                 var _okey_hash = _override_keys[j];
                 var _okey_ins = new_values[$ _okey_hash];
-                LOGGER.info($"{_okey_hash}<{_okey_ins}<{old_values}");
+                // LOGGER.info($"{_okey_hash}<{_okey_ins}<{old_values}");
                 old_values[$ _okey_hash] = _okey_ins;
             }
             return old_values;
