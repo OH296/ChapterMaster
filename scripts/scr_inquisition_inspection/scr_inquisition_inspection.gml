@@ -387,47 +387,45 @@ function inquisitor_inspection_structure() constructor {
             popup = 0.6;
         }
 
-        var planet_label = "";
         if (is_array(planets)) {
             // show first planet for display purposes
-            planet_label = scr_roman(planets[0]);
+            var star_planet = "in the {star.name} system";
         } else {
-            planet_label = scr_roman(planets);
+            var star_planet = $"on {planet_numeral_name(star, planets)}";
         }
-        var star_planet = star.name + planet_label;
 
         // Logging
         if (popup == 1) {
-            scr_event_log("", $"{inquis_string} discovers your Secret Lair on {star_planet}.");
+            scr_event_log("", $"{inquis_string} discovers your Secret Lair {star_planet}.");
         } else if (popup == 2 || popup == 0.2) {
-            scr_event_log("red", $"{inquis_string} discovers your Secret Lair on {star_planet}.", star);
+            scr_event_log("red", $"{inquis_string} discovers your Secret Lair {star_planet}.", star);
         } else if (popup == 3 || popup == 0.3) {
-            scr_event_log("", $"{inquis_string} discovers your Secret Arsenal on {star_planet}.", star);
+            scr_event_log("", $"{inquis_string} discovers your Secret Arsenal {star_planet}.", star);
         } else if (popup == 4 || popup == 0.4) {
-            scr_event_log("red", $"{inquis_string} discovers your Secret Arsenal on {star_planet}.", star);
+            scr_event_log("red", $"{inquis_string} discovers your Secret Arsenal {star_planet}.", star);
         } else if (popup >= 5 || popup == 0.6) {
-            scr_event_log("", $"{inquis_string} discovers your Secret Gene-Vault on {star_planet}.", star);
+            scr_event_log("", $"{inquis_string} discovers your Secret Gene-Vault {star_planet}.", star);
         }
 
         // Popup text
         if (popup == 1) {
             pop_tit = "Inquisition Discovers Lair";
-            pop_txt = $"{inquis_string} has discovered your Secret Lair on {star_planet}. A quick inspection revealed that there was no contraband or heresy, though the Inquisition does not appreciate your secrecy at all.";
+            pop_txt = $"{inquis_string} has discovered your Secret Lair {star_planet}. A quick inspection revealed that there was no contraband or heresy, though the Inquisition does not appreciate your secrecy at all.";
         } else if (popup == 2) {
             pop_tit = "Inquisition Discovers Lair";
-            pop_txt = $"{inquis_string} has discovered your Secret Lair on {star_planet}. A quick inspection turned up heresy, most foul, and it has all been reported to the Inquisition. They are seething, and relations are damaged.";
+            pop_txt = $"{inquis_string} has discovered your Secret Lair {star_planet}. A quick inspection turned up heresy, most foul, and it has all been reported to the Inquisition. They are seething, and relations are damaged.";
         } else if (popup == 3) {
             pop_tit = "Inquisition Discovers Arsenal";
-            pop_txt = $"{inquis_string} has discovered your Secret Arsenal on {star_planet}. A quick inspection revealed that there was no contraband or heresy, though the Inquisition does not appreciate your secrecy at all.";
+            pop_txt = $"{inquis_string} has discovered your Secret Arsenal {star_planet}. A quick inspection revealed that there was no contraband or heresy, though the Inquisition does not appreciate your secrecy at all.";
         } else if (popup == 4) {
             pop_tit = "Inquisition Discovers Arsenal";
-            pop_txt = $"{inquis_string} has discovered your Secret Arsenal on {star_planet}. A quick inspection turned up heresy, most foul, and it has all been reported to the Inquisition. Relations have been heavily damaged.";
+            pop_txt = $"{inquis_string} has discovered your Secret Arsenal {star_planet}. A quick inspection turned up heresy, most foul, and it has all been reported to the Inquisition. Relations have been heavily damaged.";
         } else if (popup == 5) {
             pop_tit = "Inquisition Discovers Gene-Vault";
-            pop_txt = $"{inquis_string} has discovered your Secret Gene-Vault on {star_planet} and reported it. The Inquisition does NOT appreciate your secrecy, nor the mass production of Gene-Seed. Relations are damaged.";
+            pop_txt = $"{inquis_string} has discovered your Secret Gene-Vault {star_planet} and reported it. The Inquisition does NOT appreciate your secrecy, nor the mass production of Gene-Seed. Relations are damaged.";
         } else if (popup == 6) {
             pop_tit = "Inquisition Discovers Gene-Vault";
-            pop_txt = $"{inquis_string} has discovered your Secret Gene-Vault on {star_planet} and reported it. You were warned once already to not sneak about with Gene-Seed stores and Test-Slave incubators. Do not let it happen again or your Chapter will be branded heretics.";
+            pop_txt = $"{inquis_string} has discovered your Secret Gene-Vault {star_planet} and reported it. You were warned once already to not sneak about with Gene-Seed stores and Test-Slave incubators. Do not let it happen again or your Chapter will be branded heretics.";
         }
 
         // Contraband demand text
