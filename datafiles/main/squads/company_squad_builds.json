@@ -34,7 +34,7 @@
         },
         {
           "squad": "tactical_squad",
-          "proportion": 5
+          "proportion": 6
         },
         {
           "squad": "breacher_squad",
@@ -61,7 +61,7 @@
         },
         {
           "squad": "tactical_squad",
-          "proportion": 5
+          "proportion": 6
         },
         {
           "squad": "breacher_squad",
@@ -88,7 +88,7 @@
         },
         {
           "squad": "tactical_squad",
-          "proportion": 5
+          "proportion": 6
         },
         {
           "squad": "breacher_squad",
@@ -115,7 +115,7 @@
         },
         {
           "squad": "tactical_squad",
-          "proportion": 5
+          "proportion": 6
         },
         {
           "squad": "breacher_squad",
@@ -142,19 +142,7 @@
         },
         {
           "squad": "tactical_squad",
-          "proportion": 5
-        },
-        {
-          "squad": "breacher_squad",
-          "proportion": 0
-        },
-        {
-          "squad": "devastator_squad",
-          "proportion": 2
-        },
-        {
-          "squad": "assault_squad",
-          "proportion": 2
+          "proportion": 1
         }
       ]
     },

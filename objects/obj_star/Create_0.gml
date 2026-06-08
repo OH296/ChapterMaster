@@ -28,7 +28,6 @@ storm_image = 0;
 trader = 0;
 visited = 0;
 stored_owner = -1;
-star_surface = 0;
 
 // sets up default planet variables
 var _planet_array_size = 9;
@@ -85,9 +84,9 @@ add_feature = function(planet, feature){
 system_player_ground_forces = 0;
 garrison = false;
 
-for (run = 8; run <= 30; run++) {
-    present_fleet[run] = 0;
-}
+var _array_size = 23;
+present_fleet = array_create(_array_size, 0);
+
 vision = 1;
 // present_fleets=0;
 // tau_fleets=0;

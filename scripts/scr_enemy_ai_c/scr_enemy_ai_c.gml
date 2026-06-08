@@ -1,4 +1,4 @@
-/// @mixin
+/// @self Asset.GMObject.obj_star
 function scr_enemy_ai_c() {
     var rando, contin, i;
     rando = 0;
@@ -66,7 +66,7 @@ function scr_enemy_ai_c() {
                         var fleet;
                         fleet = 0;
                         contin = 2;
-                        if (instance_number(obj_en_fleet) == 0) {
+                        if (!instance_exists(obj_en_fleet)) {
                             contin = 3;
                         }
                         if (instance_number(obj_en_fleet) > 0) {
@@ -388,7 +388,7 @@ function scr_enemy_ai_c() {
                         var fleet;
                         fleet = 0;
                         contin = 2;
-                        if (instance_number(obj_en_fleet) == 0) {
+                        if (!instance_exists(obj_en_fleet)) {
                             contin = 3;
                         }
                         if (instance_number(obj_en_fleet) > 0) {

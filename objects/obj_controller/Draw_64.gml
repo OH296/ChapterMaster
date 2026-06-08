@@ -32,9 +32,11 @@ if (is_test_map == true) {
 try {
     if (menu == eMENU.ARMAMENTARIUM) {
         armamentarium.draw();
+    } else if (menu >= eMENU.SETTINGS && menu <= eMENU.FORMATIONS_SETTINGS){
+        draw_sprite(spr_settings_bg, 0, 0, 0);
     }
 } catch (_exception) {
-    handle_exception(_exception);
+    ERROR_HANDLER.handle_exception(_exception);
     menu = eMENU.DEFAULT;
 }
 
@@ -53,7 +55,7 @@ if (menu == eMENU.DIPLOMACY) {
                 try {
                     trade_attempt.draw_trade_screen();
                 } catch (_exception) {
-                    handle_exception(_exception);
+                    ERROR_HANDLER.handle_exception(_exception);
                     delete trade_attempt;
                     trading = false;
                 }
@@ -265,9 +267,11 @@ try {
         }
     } else if (menu == eMENU.LIBRARIUM) {
         scr_librarium_gui();
+    } else if (menu >= eMENU.SETTINGS && menu <= eMENU.FORMATIONS_SETTINGS) {
+        scr_ui_settings();
     }
 } catch (_exception) {
-    handle_exception(_exception);
+    ERROR_HANDLER.handle_exception(_exception);
     menu = eMENU.DEFAULT;
 }
 
