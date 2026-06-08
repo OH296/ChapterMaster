@@ -25,6 +25,12 @@ if ((board == 0) && (sprite_index != spr_cursor)) {
     image_alpha = 1;
 }
 
+// old_x=mouse_x;
+// old_y=mouse_y;
+
+x = mouse_x;
+y = mouse_y;
+
 if (instance_exists(obj_controller)) {
     if ((keyboard_check(vk_left) || keyboard_check(ord("A"))) && (obj_controller.x > 320)) {
         x -= 6;
@@ -39,3 +45,12 @@ if (instance_exists(obj_controller)) {
         y += 6;
     }
 }
+
+/*
+if (obj_controller.x<320) then x+=12;
+/*if (y<240) then y=240;
+if (x>960) then x=960;
+if (y>720) then y=720;*/
+
+/* */
+/*  */

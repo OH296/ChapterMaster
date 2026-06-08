@@ -1,5 +1,5 @@
 // TODO: Merge all update function into one;
-/// @self Struct.TTRPG_stats
+/// @mixin
 function scr_update_unit_armour(new_armour, from_armoury = true, to_armoury = true, quality = "any") {
     var is_artifact = !is_string(new_armour);
     var artifact_id = 0;
@@ -130,7 +130,6 @@ function scr_update_unit_armour(new_armour, from_armoury = true, to_armoury = tr
     return "complete";
 }
 
-/// @self Struct.TTRPG_stats
 function scr_update_unit_weapon_one(new_weapon, from_armoury = true, to_armoury = true, quality = "any") {
     var is_artifact = !is_string(new_weapon);
     var artifact_id = 0;
@@ -216,7 +215,6 @@ function scr_update_unit_weapon_one(new_weapon, from_armoury = true, to_armoury 
     return "complete";
 }
 
-/// @self Struct.TTRPG_stats
 function scr_update_unit_weapon_two(new_weapon, from_armoury = true, to_armoury = true, quality = "any") {
     var is_artifact = !is_string(new_weapon);
     var change_wep = weapon_two();
@@ -273,7 +271,6 @@ function scr_update_unit_weapon_two(new_weapon, from_armoury = true, to_armoury 
     return "complete";
 }
 
-/// @self Struct.TTRPG_stats
 function scr_update_unit_gear(new_gear, from_armoury = true, to_armoury = true, quality = "any") {
     var is_artifact = !is_string(new_gear);
     var change_gear = gear();
@@ -340,7 +337,7 @@ function scr_update_unit_gear(new_gear, from_armoury = true, to_armoury = true, 
 }
 
 // TODO: Expand restriction tag checking and error logging to other update functions;
-/// @self Struct.TTRPG_stats
+/// @mixin
 function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, to_armoury = true, quality = "any") {
     var is_artifact = !is_string(new_mobility_item);
     var _old_mobility_item = mobility_item();
@@ -443,7 +440,6 @@ function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, t
     return true;
 }
 
-/// @self Struct.TTRPG_stats
 function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury = true, quality = "any") {
     var equip_areas = struct_get_names(update_equipment);
     for (var i = 0; i < array_length(equip_areas); i++) {
@@ -467,7 +463,6 @@ function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury 
     }
 }
 
-/// @self Struct.TTRPG_stats
 function unit_has_equipped(check_equippment) {
     var equip_areas = struct_get_names(check_equippment);
     var _has_equipped = true;

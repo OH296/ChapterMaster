@@ -518,7 +518,7 @@ try {
     try {
         event_end_turn_action();
     } catch (_exception) {
-        ERROR_HANDLER.handle_exception(_exception);
+        handle_exception(_exception);
     }
     // Right here need to sort the battles within the obj_turn_end
     with (obj_turn_end) {
@@ -667,9 +667,8 @@ try {
             set_new_player_fleet_course(complex_route);
         }
     }
-    location_viewer.update_fleet_table();
 } catch (_exception) {
-    ERROR_HANDLER.handle_exception(_exception);
+    handle_exception(_exception);
 }
 
 if (helpful_places != false) {

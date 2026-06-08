@@ -11,7 +11,6 @@
 #macro SPECIALISTS_DREADNOUGHTS "dreadnoughts"
 #macro SPECIALISTS_CAPTAIN_CANDIDATES "captain_candidates"
 #macro SPECIALISTS_TRAINEES "trainees"
-#macro SPECIALISTS_BRANCHES "branches"
 #macro SPECIALISTS_HEADS "heads"
 
 /// @description Retrieves the active roles from the game, either from the obj_creation or obj_ini object.
@@ -45,23 +44,6 @@ function role_groups(group, include_trainee = false, include_heads = true) {
                 "Codiciery",
                 "Lexicanum",
                 _roles[eROLE.HONOURGUARD]
-            ];
-            if (include_trainee) {
-                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TRAINEES));
-            }
-            if (include_heads) {
-                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_HEADS));
-            }
-            break;
-
-        case SPECIALISTS_BRANCHES:
-            _role_list = [
-                _roles[eROLE.CHAPLAIN],
-                _roles[eROLE.APOTHECARY],
-                _roles[eROLE.TECHMARINE],
-                _roles[eROLE.LIBRARIAN],
-                "Codiciery",
-                "Lexicanum",
             ];
             if (include_trainee) {
                 _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TRAINEES));

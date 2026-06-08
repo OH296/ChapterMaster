@@ -1,4 +1,5 @@
 // Restarts variables, ensuring loaded saves are properly initialized
+/// @mixin
 function scr_restart_variables(saved_game) {
     try {
         if (saved_game == 1) {
@@ -62,7 +63,7 @@ function scr_restart_variables(saved_game) {
                 obj_restart_vars.restart_recruiter = obj_creation.recruiter;
                 obj_restart_vars.restart_admiral = obj_creation.admiral;
 
-                obj_restart_vars.restart_squad_distribution = obj_creation.squad_distribution;
+                obj_restart_vars.restart_equal_specialists = obj_creation.equal_specialists;
                 obj_restart_vars.restart_load_to_ships = obj_creation.load_to_ships;
                 obj_restart_vars.restart_successors = obj_creation.successors;
 
@@ -299,14 +300,7 @@ function scr_restart_variables(saved_game) {
             obj_controller.restart_recruiter = obj_restart_vars.restart_recruiter;
             obj_controller.restart_admiral = obj_restart_vars.restart_admiral;
 
-            if (struct_exists(obj_restart_vars, "restart_squad_distribution")) {
-                obj_controller.restart_squad_distribution = obj_restart_vars.restart_squad_distribution;
-            } else if (struct_exists(obj_restart_vars, "restart_equal_specialists")) {
-                // migrate old saves
-                obj_controller.restart_squad_distribution = obj_restart_vars.restart_equal_specialists;
-            } else {
-                obj_controller.restart_squad_distribution = 0;
-            }
+            obj_controller.restart_equal_specialists = obj_restart_vars.restart_equal_specialists;
             obj_controller.restart_load_to_ships = obj_restart_vars.restart_load_to_ships;
             obj_controller.restart_successors = obj_restart_vars.restart_successors;
 
@@ -540,7 +534,7 @@ function scr_restart_variables(saved_game) {
             obj_restart_vars.restart_recruiter = obj_controller.restart_recruiter;
             obj_restart_vars.restart_admiral = obj_controller.restart_admiral;
 
-            obj_restart_vars.restart_squad_distribution = obj_controller.restart_squad_distribution;
+            obj_restart_vars.restart_equal_specialists = obj_controller.restart_equal_specialists;
             obj_restart_vars.restart_load_to_ships = obj_controller.restart_load_to_ships;
             obj_restart_vars.restart_successors = obj_controller.restart_successors;
 
@@ -585,11 +579,10 @@ function scr_restart_variables(saved_game) {
 
         if (saved_game == 4) {}
     } catch (_exception) {
-        ERROR_HANDLER.handle_exception(_exception);
+        handle_exception(_exception);
     }
 }
 
-/// @self Asset.GMObject.obj_creation
 function reset_creation_variables() {
     for (var i = 0; i < 21; i++) {
         world[i] = "";
@@ -767,14 +760,7 @@ function reset_creation_variables() {
     recruiter = obj_restart_vars.restart_recruiter;
     admiral = obj_restart_vars.restart_admiral;
 
-    if (struct_exists(obj_restart_vars, "restart_squad_distribution")) {
-        squad_distribution = obj_restart_vars.restart_squad_distribution;
-    } else if (struct_exists(obj_restart_vars, "restart_equal_specialists")) {
-        // migrate old saves
-        squad_distribution = obj_restart_vars.restart_equal_specialists;
-    } else {
-        squad_distribution = 0;
-    }
+    equal_specialists = obj_restart_vars.restart_equal_specialists;
     load_to_ships = obj_restart_vars.restart_load_to_ships;
     successors = obj_restart_vars.restart_successors;
 

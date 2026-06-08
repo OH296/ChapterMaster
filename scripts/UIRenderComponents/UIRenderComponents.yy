@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"UIRenderComponents",
   "parent":{
-    "name":"Constructors",
-    "path":"folders/Scripts/Constructors.yy",
+    "name":"Render Components",
+    "path":"folders/Scripts/User Interface/Render Components.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

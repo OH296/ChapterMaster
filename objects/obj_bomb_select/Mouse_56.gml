@@ -1,5 +1,7 @@
 // Sets the target based on the mouse click, sets the bombardment score for when the player bombards the target
-if (!instance_exists(obj_saveload)) {
+var __b__;
+__b__ = action_if_number(obj_saveload, 0, 0);
+if (__b__) {
     var xx, yy;
     xx = __view_get(e__VW.XView, 0);
     yy = __view_get(e__VW.YView, 0);

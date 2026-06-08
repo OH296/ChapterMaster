@@ -1,5 +1,6 @@
 // Manages space combat, checks if ships are destroyed and does the targeting and pointing of the ship
 
+var __b__;
 var bull, ok, targe = 0, rdir = 0, dist = 9999, xx = x, yy = y;
 var front = 0, right = 0, left = 0, rear = 0;
 var f = 0, facing = "", ammo = 0, range = 0, wep = "", dam = 0;
@@ -8,7 +9,8 @@ var gud = 0;
 var husk;
 var explo;
 
-if (owner != 6) {
+__b__ = action_if_variable(owner, 6, 0);
+if (!__b__) {
     image_angle = direction;
 
     if (obj_fleet.start != 5) {
@@ -470,7 +472,8 @@ if (owner != 6) {
     }
 }
 // Checks if the enemy fleet is Eldar
-if (owner == 6) {
+__b__ = action_if_variable(owner, 6, 0);
+if (__b__) {
     image_angle = direction;
 
     if (obj_fleet.start != 5) {

@@ -211,7 +211,7 @@ function planet_imperium_ground_total(planet_check) {
 /// @returns {Id.Instance.obj_star | String} Returns the `obj_star` instance that matches `search_name`, or the string `"none"` if no matching star is found.
 function find_star_by_name(search_name) {
     if (!instance_exists(obj_star)) {
-        ERROR_HANDLER.assert_popup("Not a single instance of obj_star exists!");
+        assert_error_popup("Not a single instance of obj_star exists!");
         return "none";
     }
 
@@ -461,7 +461,8 @@ function meet_system_governors(system) {
 }
 
 function scr_planet_image_numbers(p_type) {
-    var image_map = [
+    var image = 0;
+    image_map = [
         "",
         "Lava",
         "Lava",
@@ -486,7 +487,7 @@ function scr_planet_image_numbers(p_type) {
             return i;
         }
     }
-    return 0;
+    return image;
 }
 
 //function scr_get_player_fleets() {

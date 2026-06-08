@@ -2,7 +2,7 @@
 function scr_menu_clear_up(specific_area_function) {
     var spec_func = specific_area_function;
     with (obj_controller) {
-        var menu_action_allowed = !instance_exists(obj_saveload) && !instance_exists(obj_drop_select) && !instance_exists(obj_popup_dialogue) && !instance_exists(obj_ncombat);
+        var menu_action_allowed = action_if_number(obj_saveload, 0, 0) && action_if_number(obj_drop_select, 0, 0) && action_if_number(obj_popup_dialogue, 0, 0) && action_if_number(obj_ncombat, 0, 0);
 
         if (menu_action_allowed) {
             if (combat != 0) {
@@ -61,7 +61,7 @@ function scr_menu_clear_up(specific_area_function) {
     return false;
 }
 
-function scr_change_menu(wanted_menu, specific_area_function = undefined) {
+function scr_change_menu(wanted_menu, specific_area_function = false) {
     var continue_sequence = false;
     if (obj_controller.menu_lock) {
         return false;
@@ -184,15 +184,8 @@ function scr_toggle_setting() {
                 popup = 0;
                 selected = 0;
                 hide_banner = 1;
-                try{
-                    setup_ui_chapter_settings();
-                } catch (_exception){
-                    handle_exception(_exception);
-                    scr_toggle_setting();
-                }
             } else if (settings) {
                 menu = eMENU.SETTINGS;
-                setup_ui_chapter_settings();
                 cooldown = 8000;
                 click = 1;
                 settings = 0;
@@ -444,14 +437,21 @@ function scr_end_turn() {
                 }*/
 
                 if (ok == 1) {
-                    obj_controller.menu = 0;
-                    obj_controller.zui = 0;
-                    obj_controller.invis = false;
-
                     if (global.settings.autosave == true) {
-                        // Autosave every 10 turns
+                        // Autosave
                         if (obj_controller.turn % 10 == 0) {
-                            scr_autosave();
+                            // save every 10 turns
+                            if (!instance_exists(obj_saveload)) {
+                                instance_create(0, 0, obj_saveload);
+                            }
+                            obj_saveload.autosaving = true;
+                            scr_save(0, 0, true);
+                            obj_controller.menu = 0;
+                            obj_controller.zui = 0;
+                            obj_controller.invis = false;
+                            with (obj_saveload) {
+                                instance_destroy();
+                            }
                         }
                     }
                     obj_controller.end_turn_insights = {};

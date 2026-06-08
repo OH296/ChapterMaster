@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Armamentarium",
   "parent":{
-    "name":"Constructors",
-    "path":"folders/Scripts/Constructors.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

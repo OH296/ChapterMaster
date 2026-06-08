@@ -300,7 +300,7 @@ function PlanetData(planet, system) constructor {
 
         planet_forces[13] = system.p_necrons[planet];
     } catch (_exception) {
-        ERROR_HANDLER.handle_exception(_exception);
+        handle_exception(_exception);
     }
 
     static add_forces = function(faction, val) {
@@ -771,7 +771,7 @@ function PlanetData(planet, system) constructor {
                 }
             }
         } catch (_exception) {
-            ERROR_HANDLER.handle_exception(_exception);
+            handle_exception(_exception);
         }
     };
 
@@ -1291,7 +1291,7 @@ function PlanetData(planet, system) constructor {
                     }
                 } catch (_exception) {
                     LOGGER.error(cur_feature);
-                    ERROR_HANDLER.handle_exception(_exception);
+                    handle_exception(_exception);
                 }
             }
         }

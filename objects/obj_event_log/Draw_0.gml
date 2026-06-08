@@ -1,4 +1,6 @@
-if (help == 0) {
+var __b__;
+__b__ = action_if_variable(help, 0, 0);
+if (__b__) {
     var bad = 1;
     if (instance_exists(obj_controller)) {
         if (obj_controller.menu == eMENU.EVENT_LOG) {
@@ -65,7 +67,8 @@ if (help == 0) {
     draw_set_alpha(1);
 }
 
-if (help == 1) {
+__b__ = action_if_variable(help, 1, 0);
+if (__b__) {
     var xx, yy;
     xx = __view_get(e__VW.XView, 0);
     yy = __view_get(e__VW.YView, 0);

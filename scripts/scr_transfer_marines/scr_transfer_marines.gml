@@ -2,14 +2,14 @@ function draw_popup_transfer() {
     main_slate.draw_with_dimensions();
     draw_set_color(CM_GREEN_COLOR);
     draw_text(1292, 145, "Transferring");
+
     draw_set_font(fnt_40k_12);
-
-    companies_select.draw();
-
+    if (((unit_role != obj_ini.role[100][17]) || (obj_controller.command_set[1] != 0)) && (unit_role != "Lexicanum") && (unit_role != "Codiciery")) {
+        companies_select.draw();
+    }
     if (companies_select.changed) {
         target_comp = companies_select.selection_val("val");
     }
-
     if (cancel_button.draw()) {
         instance_destroy();
     }
@@ -151,79 +151,81 @@ function transfer_marines() {
 }
 
 function set_up_transfer_popup() {
-    if (instance_number(obj_popup) > 0) {
-        exit;
-    }
+    if (instance_number(obj_popup) == 0) {
+        var pip = instance_create(0, 0, obj_popup);
+        pip.type = 5.1;
+        pip.company = managing;
 
-    with (obj_controller) {
-        var _first = true;
-        var _marine_count = 0;
-        var _vehicle_count = 0;
-        var _min_exp = 99999999;
-        var _allowed = true;
-        var _selected_role = "None";
-
-        // I think command_set[1] is Allow Astartes Transfer chapter option;
-        var _allow_transfers = command_set[1];
-
+        var god = 0, _marine_count = 0, _vehicle_count = 0, checky = 0, check_number = 0;
+        var _min_exp = 0;
         for (var f = 0; f < array_length(display_unit); f++) {
             if (!(man_sel[f] == 1)) {
                 continue;
             }
-
-            var _type = man[f];
-            var _role = ma_role[f];
-        
-            if (_first) {
-                if (_type == "man") {
-                    _first = false;
-                    _selected_role = _role;
-                } else if (_type == "vehicle") {
-                    _first = false;
-                    _selected_role = _role;
-                }
+            if (god == 1) {
+                break;
             }
-        
-            if (_type == "man") {
+            if ((god == 0) && (man[f] == "man")) {
+                god = 1;
+                pip.unit_role = ma_role[f];
                 _min_exp = min(_min_exp, ma_exp[f]);
-                _marine_count += 1;
+            }
+            if ((god == 0) && (man[f] == "vehicle")) {
+                god = 1;
+                pip.unit_role = ma_role[f];
+            }
 
-                if (!_allow_transfers && _allowed && !is_specialist(_role, SPECIALISTS_BRANCHES, true, false)) {
-                    _allowed = false;
+            if (man[f] == "man") {
+                _marine_count += 1;
+                checky = 1;
+                if (ma_role[f] == obj_ini.role[100][7]) {
+                    checky = 0;
                 }
-            } else if (_type == "vehicle") {
+                if (ma_role[f] == obj_ini.role[100][14]) {
+                    checky = 0;
+                }
+                if (ma_role[f] == obj_ini.role[100][15]) {
+                    checky = 0;
+                }
+                if (ma_role[f] == obj_ini.role[100][16]) {
+                    checky = 0;
+                }
+                if (ma_role[f] == obj_ini.role[100][17]) {
+                    checky = 0;
+                }
+                if (checky == 1) {
+                    check_number += 1;
+                }
+            } else if (man[f] == "vehicle") {
                 _vehicle_count += 1;
             }
         }
-
-        if (!_allowed) {
-            exit;
+        if (_vehicle_count > 1) {
+            pip.unit_role = "Vehicles";
         }
-
+        if (_marine_count > 1) {
+            pip.unit_role = "Marines";
+        }
         if ((_marine_count > 0) && (_vehicle_count > 0)) {
-            _selected_role = "Units";
-        } else if (_vehicle_count > 1) {
-            _selected_role = "Vehicles";
-        } else if (_marine_count > 1) {
-            _selected_role = "Marines";
+            pip.unit_role = "Units";
         }
-
-        if (_marine_count == 0) {
-            _min_exp = -1;
-        }
-
-        var pip = instance_create(0, 0, obj_popup);
-        with (pip) {
-            type = 5.1;
-            company = obj_controller.managing;
-            unit_role = _selected_role;
-            units = _marine_count + _vehicle_count;
-            min_exp = _min_exp;
-            cancel_button = new UnitButtonObject({x1: 1061, y1: 491, style: "pixel", label: "Cancel"});
-            main_slate = new DataSlate({style: "decorated", XX: 1006, YY: 143, set_width: true, width: 571, height: 350});
-            target_comp = 0; // HQ button is selected from the start, this is needed so it actually works without deselection;
-            target_company_radio(min_exp);
-            transfer_button = new UnitButtonObject({x1: 1450, y1: 491, style: "pixel", label: "Transfer"});
+        pip.units = _marine_count + _vehicle_count;
+        if (_marine_count > 0 && check_number > 0 && !command_set[1]) {
+            cooldown = 8000;
+            with (pip) {
+                instance_destroy();
+            }
+        } else {
+            with (pip) {
+                cancel_button = new UnitButtonObject({x1: 1061, y1: 491, style: "pixel", label: "Cancel"});
+                main_slate = new DataSlate({style: "decorated", XX: 1006, YY: 143, set_width: true, width: 571, height: 350});
+                // Inside with(pip), 'min_exp' refers to pip.min_exp
+                if (unit_role == "Vehicles") {
+                    min_exp = -1; // sentinel to bypass gating only for vehicles
+                }
+                target_company_radio(min_exp);
+                transfer_button = new UnitButtonObject({x1: 1450, y1: 491, style: "pixel", label: "Transfer"});
+            }
         }
     }
 }

@@ -1,3 +1,29 @@
+enum eROLE {
+    NONE = 0,
+    CHAPTERMASTER = 1,
+    HONOURGUARD = 2,
+    VETERAN = 3,
+    TERMINATOR = 4,
+    CAPTAIN = 5,
+    DREADNOUGHT = 6,
+    CHAMPION = 7,
+    TACTICAL = 8,
+    DEVASTATOR = 9,
+    ASSAULT = 10,
+    ANCIENT = 11,
+    SCOUT = 12,
+    CHAPLAIN = 14,
+    APOTHECARY = 15,
+    TECHMARINE = 16,
+    LIBRARIAN = 17,
+    SERGEANT = 18,
+    VETERANSERGEANT = 19,
+    LANDRAIDER = 50,
+    RHINO = 51,
+    PREDATOR = 52,
+    LANDSPEEDER = 53,
+    WHIRLWIND = 54,
+}
 
 enum ePROGENITOR {
     NONE,
@@ -717,7 +743,7 @@ function trial_map(trial_name) {
     }
 }
 
-/// @self Asset.GMObject.obj_ini
+/// @mixin obj_ini
 function scr_initialize_custom() {
     // LOGGER.debug("Executing scr_initialize_custom");
 
@@ -1102,7 +1128,7 @@ function scr_initialize_custom() {
         tenth -= 10;
         dreadnought += 1;
     }
-    if ((obj_creation.squad_distribution < 2) && scr_has_disadv("Obliterated")) {
+    if ((obj_creation.equal_specialists < 2) && scr_has_disadv("Obliterated")) {
         techmarines -= 7;
         epistolary -= 2;
         codiciery -= 1;
@@ -1452,7 +1478,6 @@ function scr_initialize_custom() {
 
     var _current_age = ((millenium * 1000) + year) - 10;
 
-    /// @self Asset.GMObject.obj_ini
     var _init_marine_row = function(_idx, _count, _age_val) {
         var _len = _count + 1;
         race[_idx] = array_create(_len, 1);
@@ -1479,6 +1504,17 @@ function scr_initialize_custom() {
 
     initialized = 500;
 
+    defaults_slot = 100;
+
+    function load_default_gear(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
+        role[defaults_slot][_role_id] = _role_name;
+        wep1[defaults_slot][_role_id] = _wep1;
+        wep2[defaults_slot][_role_id] = _wep2;
+        armour[defaults_slot][_role_id] = _armour;
+        mobi[defaults_slot][_role_id] = _mobi;
+        gear[defaults_slot][_role_id] = _gear;
+        race[defaults_slot][_role_id] = 1;
+    }
     var _hi_qual_armour = "Artificer Armour";
     if (scr_has_disadv("Poor Equipment")) {
         _hi_qual_armour = STR_ANY_POWER_ARMOUR;
@@ -1659,24 +1695,7 @@ function scr_initialize_custom() {
     #endregion
 
     #region Squad Loadouts
-    switch (obj_creation.squad_distribution) {
-        case 1: // equal specialists only
-            obj_ini.chapter_squad_arrangement = json_to_gamemaker(
-                working_directory + $"main\\squads\\equal_specialists.json", json_parse);
-            break;
-        case 2: // equal scouts only
-            obj_ini.chapter_squad_arrangement = json_to_gamemaker(
-                working_directory + $"main\\squads\\equal_scouts.json", json_parse);
-            break;
-        case 3: // equal specialists and equal scouts
-            obj_ini.chapter_squad_arrangement = json_to_gamemaker(
-                working_directory + $"main\\squads\\equal_spescout.json", json_parse);
-            break;
-        default: // 0 = standard
-            obj_ini.chapter_squad_arrangement = json_to_gamemaker(
-                working_directory + $"main\\squads\\company_squad_builds.json", json_parse);
-            break;
-    }
+    obj_ini.chapter_squad_arrangement = json_to_gamemaker(working_directory + $"main\\squads\\company_squad_builds.json", json_parse);
 
     var _squad_name = "Squad";
     if (obj_creation.custom != eCHAPTER_TYPE.PREMADE) {
@@ -1978,7 +1997,7 @@ function scr_initialize_custom() {
     // LOGGER.debug(squad_types);
     #endregion
 
-    for (var i = 0; i <= 20; i++) {
+    for (i = 0; i <= 20; i++) {
         if (role[defaults_slot][i] != "") {
             scr_start_allow(i, "wep1", wep1[defaults_slot][i]);
         }
@@ -2319,7 +2338,7 @@ function scr_initialize_custom() {
         }
     }
 
-    var squad_distribution = obj_creation.squad_distribution;
+    var equal_specialists = obj_creation.equal_specialists;
     var scout_company_behaviour = 0;
     if (struct_exists(obj_creation, "scout_company_behaviour")) {
         var scout_company_behaviour = obj_creation.scout_company_behaviour;
@@ -2328,21 +2347,15 @@ function scr_initialize_custom() {
         load_default_gear(eROLE.SCOUT, "Neophyte", "Bolter", "", "Scout Armour", "", "");
     }
 
-    var equal_scouts = (squad_distribution == 2 || squad_distribution == 3);
+    var equal_scouts = 0;
+    if (struct_exists(obj_creation, "equal_scouts")) {
+        var equal_scouts = obj_creation.equal_scouts;
+    }
     obj_ini.equal_scouts = equal_scouts; // for use in squad creation later
 
     var _moved_scouts = 0;
 
     var _coys = struct_get_names(companies);
-    // ensure 10th company is processed last so _moved_scouts is fully accumulated before its tacticals are set
-    var _tenth_idx = -1;
-    for (var _i = 0; _i < array_length(_coys); _i++) {
-        if (_coys[_i] == "tenth") { _tenth_idx = _i; break; }
-    }
-    if (_tenth_idx != -1 && _tenth_idx != array_length(_coys) - 1) {
-        array_delete(_coys, _tenth_idx, 1);
-        array_push(_coys, "tenth");
-    }
     function _is_terminator(_armour) {
         return array_contains(["Terminator Armour", "Tartaros"], _armour);
     }
@@ -2387,7 +2400,7 @@ function scr_initialize_custom() {
         /// comp 8: ass 100
         /// comp 9: dev 100
         /// comp 10: tac 40: scout 50;
-        if (squad_distribution == 1 || squad_distribution == 3) {
+        if (equal_specialists) {
             // LOGGER.info("balancing for equal specialists")
             // LOGGER.info($"equal_scouts? {equal_scouts}")
 
@@ -2624,7 +2637,7 @@ function scr_initialize_custom() {
                     _rolename = roles.captain;
                     _erole = eROLE.CAPTAIN;
                     _wep2 = choose_weighted(global.weapon_list_weighted_ranged_pistols);
-                    if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
+                    if (equal_specialists == false && _coy.coy == 8) {
                         _mobi = "Jump Pack";
                     }
                     if (_coy.coy == 1 && _coy.terminators > 0) {
@@ -2638,7 +2651,7 @@ function scr_initialize_custom() {
                     _rolename = roles.chaplain;
                     _erole = eROLE.CHAPLAIN;
                     _wep2 = choose_weighted(global.weapon_list_weighted_ranged_pistols);
-                    if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
+                    if (equal_specialists == false && _coy.coy == 8) {
                         _mobi = "Jump Pack";
                     }
                     if (_coy.coy == 1 && _coy.terminators > 0) {
@@ -2650,7 +2663,7 @@ function scr_initialize_custom() {
                     commands++;
                     _rolename = roles.apothecary;
                     _erole = eROLE.APOTHECARY;
-                    if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
+                    if (equal_specialists == false && _coy.coy == 8) {
                         _mobi = "Jump Pack";
                     }
                     if (_coy.coy == 1 && _coy.terminators > 0) {
@@ -2681,7 +2694,7 @@ function scr_initialize_custom() {
                     commands++;
                     _rolename = roles.librarian;
                     _erole = eROLE.LIBRARIAN;
-                    if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
+                    if (equal_specialists == false && _coy.coy == 8) {
                         _mobi = "Jump Pack";
                     }
                     if (_coy.coy == 1 && _coy.terminators > 0) {
@@ -3140,7 +3153,7 @@ function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1
     return spawn_unit;
 }
 
-/// @self Asset.GMObject.obj_ini
+///@mixin obj_ini
 function load_chapter_master_equipment() {
     var chapter_master_equip = {};
     switch (obj_ini.master_melee) {

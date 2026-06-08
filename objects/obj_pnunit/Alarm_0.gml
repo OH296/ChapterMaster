@@ -274,5 +274,5 @@ try {
 // LOGGER.debug($"known_attack_powers: {known_attack_powers}");
 catch (_exception) {
     // LOGGER.debug($"known_buff_powers: {known_buff_powers}");
-    ERROR_HANDLER.handle_exception(_exception);
+    handle_exception(_exception);
 }

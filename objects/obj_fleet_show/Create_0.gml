@@ -1,1 +1,1 @@
-alarm_set(0, 450);
+action_set_alarm(450, 0);

@@ -30,6 +30,9 @@ global.alliance_grades = ["Hated", "Hostile","Suspicious","Uneasy","Neutral","Al
 
 #macro SHIP_WEAPON_SLOTS 8
 
+#macro LOGGER global.logger
+
+
 enum eFACTION {
     PLAYER = 1,
     IMPERIUM,
@@ -56,32 +59,7 @@ enum eGENDER {
 function set_gender(){
     return choose(eGENDER.FEMALE, eGENDER.MALE);
 }
-enum eROLE {
-    NONE = 0,
-    CHAPTERMASTER = 1,
-    HONOURGUARD = 2,
-    VETERAN = 3,
-    TERMINATOR = 4,
-    CAPTAIN = 5,
-    DREADNOUGHT = 6,
-    CHAMPION = 7,
-    TACTICAL = 8,
-    DEVASTATOR = 9,
-    ASSAULT = 10,
-    ANCIENT = 11,
-    SCOUT = 12,
-    CHAPLAIN = 14,
-    APOTHECARY = 15,
-    TECHMARINE = 16,
-    LIBRARIAN = 17,
-    SERGEANT = 18,
-    VETERANSERGEANT = 19,
-    LANDRAIDER = 50,
-    RHINO = 51,
-    PREDATOR = 52,
-    LANDSPEEDER = 53,
-    WHIRLWIND = 54,
-}
+
 enum eMENU {
     DEFAULT = 0,
     MANAGE = 1,
@@ -94,9 +72,6 @@ enum eMENU {
     EVENT_LOG = 17,
     DIPLOMACY = 20,
     SETTINGS = 21,
-    COMPANY_SETTINGS = 22,
-    ROLE_SETTINGS = 23,
-    FORMATIONS_SETTINGS = 24,
     GAME_HELP = 30,
 }
 

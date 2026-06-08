@@ -1,1 +1,1 @@
-instance_destroy();
+action_kill_object();

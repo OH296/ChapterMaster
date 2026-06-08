@@ -1,6 +1,6 @@
-/// @self Asset.GMObject.obj_controller
+/// @mixin
 function set_up_equip_popup() {
-    if (!instance_exists(obj_popup)) {
+    if (instance_number(obj_popup) == 0) {
         var f = 0, god = 0, nuuum = 0;
         var o_wep1 = "", o_wep2 = "", o_armour = "", o_gear = "", o_mobi = "";
         var b_wep1 = 0, b_wep2 = 0, b_armour = 0, b_gear = 0, b_mobi = 0;
@@ -169,6 +169,11 @@ function set_up_equip_popup() {
                         str1: "Master Crafted",
                         font: fnt_40k_14b,
                         val: 1,
+                    },
+                    {
+                        str1: "Artificer",
+                        font: fnt_40k_14b,
+                        val: 2,
                     }
                 ];
                 quality_radio = new RadioSet(_quality_options, "", {max_width: 500, x1: 1040, y1: 318});
@@ -190,7 +195,7 @@ function set_up_equip_popup() {
     }
 }
 
-/// @self Asset.GMObject.obj_popup
+/// @mixin
 function reload_items() {
     item_name = [];
     scr_get_item_names(
@@ -205,7 +210,7 @@ function reload_items() {
     );
 }
 
-/// @self Asset.GMObject.obj_popup
+/// @mixin
 function draw_popup_equip() {
     main_slate.draw_with_dimensions();
     draw_set_color(CM_GREEN_COLOR);
@@ -691,7 +696,7 @@ function draw_popup_equip() {
     }
 }
 
-/// @self Asset.GMObject.obj_popup
+/// @mixin
 function reequip_selection() {
     if (n_wep1 == ITEM_NAME_NONE) {
         n_wep1 = "";

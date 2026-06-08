@@ -1,4 +1,3 @@
-/// @self Struct.TTRPG_stats
 function scr_marine_spawn_age() {
     var _age = 0;
     var _minimum_age = 0;
@@ -141,9 +140,8 @@ function scr_marine_spawn_age() {
     update_age(round(_age));
 }
 
-/// @self Struct.TTRPG_stats
+/// @mixin
 function scr_marine_spawn_armour() {
-    /// @self Struct.TTRPG_stats
     var _terminator_armour_roll = function(_score) {
         if (_score > 270) {
             update_armour(choose("Tartaros", "Terminator Armour", "Terminator Armour"), false, false);
@@ -330,7 +328,6 @@ function scr_marine_spawn_armour() {
     }
 }
 
-/// @self Struct.TTRPG_stats
 function scr_marine_game_spawn_constructions() {
     roll_age();
     roll_experience();

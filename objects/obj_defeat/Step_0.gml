@@ -1,8 +1,11 @@
-global.__argument_relative = 1;
-if (fade > 0) {
+action_set_relative(1);
+var __b__;
+__b__ = action_if_variable(fade, 0, 2);
+if (__b__) {
     fade += -1;
 }
-if (goodbye > 0) {
+__b__ = action_if_variable(goodbye, 0, 2);
+if (__b__) {
     fadeout += 1;
 }
 
@@ -13,4 +16,5 @@ if (fadeout == 1) {
 if (fadeout == 60) {
     game_restart();
 }
-global.__argument_relative = 0;
+
+action_set_relative(0);

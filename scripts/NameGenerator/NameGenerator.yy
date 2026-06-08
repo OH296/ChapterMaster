@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"NameGenerator",
   "parent":{
-    "name":"Constructors",
-    "path":"folders/Scripts/Constructors.yy",
+    "name":"Names",
+    "path":"folders/Scripts/Names.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

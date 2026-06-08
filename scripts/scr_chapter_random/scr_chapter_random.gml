@@ -1,4 +1,4 @@
-/// @self Asset.GMObject.obj_creation
+/// @mixin obj_creation
 /// @description  Called when an empty custom chapter icon is picked, or the custom icon in bottom right is picked from the new game menu.
 /// if "Create Custom" is picked, custom_or_random = 0, if "Create Random" is picked, custom_or_random = 1
 /// @param {Real} custom_or_random 0 if Blank Custom, 1 if Random
@@ -67,7 +67,7 @@ function scr_chapter_random(custom_or_random) {
     recruiter = global.name_generator.GenerateFromSet("space_marine");
     admiral = global.name_generator.GenerateFromSet("space_marine");
 
-    squad_distribution = 0;
+    equal_specialists = 0;
     load_to_ships = [
         2,
         0,

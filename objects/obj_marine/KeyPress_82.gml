@@ -1,1 +1,1 @@
-game_restart();
+action_restart_game();

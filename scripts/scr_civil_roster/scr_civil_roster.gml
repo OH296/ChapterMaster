@@ -1,3 +1,4 @@
+/// @mixin
 function scr_civil_roster(_unit_location, _target_location, _is_planet) {
     // Determines who all will be present for the battle
     // Only used on the Chaos Space Marines(?) meeting battle (not sure if its implemented)
@@ -9,8 +10,8 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
     //--------------------------------------------------------------------------------------------------------------------
     // Global objects used.
     //--------------------------------------------------------------------------------------------------------------------
-    var deploying_unit = obj_ini;
-    var new_combat = obj_ncombat;
+    deploying_unit = obj_ini;
+    new_combat = obj_ncombat;
     //???=obj_drop_select;
     //???=obj_controller
     //???=obj_pnunit
@@ -367,7 +368,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.dudes_wep1[targ.men] = deploying_unit.wep1[cooh][va];
                     targ.dudes_wep2[targ.men] = deploying_unit.wep2[cooh][va];
                     targ.dudes_gear[targ.men] = deploying_unit.gear[cooh][va];
-                    targ.dudges_mobi[targ.men] = deploying_unit.mobi[cooh][va];
+                    targ.dudes_mobi[targ.men] = deploying_unit.mobi[cooh][va];
 
                     new_combat.enemy_forces += 1;
                     new_combat.enemy_max += 1;
@@ -381,7 +382,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     if (targ.dudes_gear[targ.men] == "Iron Halo") {
                         dr -= 0.33;
                     }
-                    if (targ.dudges_mobi[targ.men] == "Jump Pack") {
+                    if (targ.dudes_mobi[targ.men] == "Jump Pack") {
                         dr -= 0.1;
                     }
                     if (dr < 0.25) {
@@ -416,7 +417,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     if (deploying_unit.armour[co][v] == "MK5 Heresy") {
                         targ.dudes_ac[targ.men] = 17;
                         targ.dudes_attack[targ.men] += 0.1;
-                        targ.dudes_ranged[targ.men] -= 0.05;
+                        targ.marine_ranged[targ.men] -= 0.05;
                     }
                     if (deploying_unit.armour[co][v] == "MK6 Corvus") {
                         targ.dudes_ac[targ.men] = 18;
@@ -730,13 +731,12 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                         col = obj_controller.bat_hire_column;
                     }
 
-                    /// @type {Asset.GMObject.obj_pnunit}
                     targ = instance_nearest(col * 10, 240, obj_pnunit);
                     targ.men += 1;
                     targ.unit_struct[targ.men] = unit;
-                    targ.marine_co[targ.men] = unit.company;
+                    targ.marine_co[targ.men] = company;
                     targ.marine_id[targ.men] = v;
-                    targ.marine_type[targ.men] = unit.role();
+                    targ.marine_type[targ.men] = _u_role;
                     targ.marine_wep1[targ.men] = deploying_unit.wep1[cooh][va];
                     targ.marine_wep2[targ.men] = deploying_unit.wep2[cooh][va];
                     targ.marine_armour[targ.men] = deploying_unit.armour[cooh][va];

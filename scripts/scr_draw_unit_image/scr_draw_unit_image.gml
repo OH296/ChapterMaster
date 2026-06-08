@@ -36,7 +36,7 @@ enum eARMOUR_TYPE {
 
 function surface_clear_and_free(_surface) {
     surface_set_target(_surface);
-    draw_clear_alpha(c_black, 0);
+    draw_clear_alpha(c_white, 0);
     surface_reset_target();
     surface_free(_surface);
 }
@@ -190,7 +190,7 @@ function set_shader_array(shader_array) {
     }
 }
 
-/// @self Struct.TTRPG_stats
+/// @mixin
 function scr_draw_unit_image(_background = false) {
     var _role = active_roles();
     var complex_set = {};
@@ -488,7 +488,7 @@ function scr_draw_unit_image(_background = false) {
             // if (race()!="1"){draw_set_color(CM_GREEN_COLOR);draw_rectangle(0,x_surface_offset,y_surface_offset+166,0+231,0);}
         }
     } catch (_exception) {
-        ERROR_HANDLER.handle_exception(_exception);
+        handle_exception(_exception);
     }
 
     draw_set_alpha(1);

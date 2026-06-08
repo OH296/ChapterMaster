@@ -585,5 +585,5 @@ try {
     /* */
     /*  */
 } catch (_exception) {
-    ERROR_HANDLER.handle_exception(_exception);
+    handle_exception(_exception);
 }
