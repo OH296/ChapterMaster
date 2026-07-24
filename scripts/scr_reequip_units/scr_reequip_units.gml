@@ -371,7 +371,7 @@ function draw_popup_equip() {
 /// @self Asset.GMObject.obj_popup
 function reequip_selection() {
     for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
-        if (!needed_equipment[i] == ITEM_NAME_NONE){
+        if (needed_equipment[i] == ITEM_NAME_NONE){
             needed_equipment[i] = "";
         }
     }

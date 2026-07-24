@@ -548,6 +548,7 @@ function convert_equipment_array_into_struct(array){
     for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
         _equipment[$ UNIT_EQUIP_SLOTS[i]] = array[i];
     }
+    return _equipment;
 }
 function UnitEquipment(equipment_set, _unit = noone) constructor{
     if (is_array(equipment_set)){
@@ -574,7 +575,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
     present_items = [];
 
     static is_present = function(item_key){
-        array_contains(present_items, item_key);
+        return array_contains(present_items, item_key);
     }
     static slot_map = {
         "wep1" : eEQUIPMENT_SLOT.WEAPON_ONE,
@@ -783,14 +784,14 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         equipment_found_and_valid[slot] = true;
         for (var u = 0; u < array_length(obj_controller.display_unit); u++){
 
-            if ((vehicle_equipment != -1) && (_item_check_array[slot] == _wanted_item)) {
+            if ((vehicle_equipment != -1) && (_item_check_array[u] == _wanted_item)) {
                 _found += 1;
             }
 
-            if (!obj_controller.ma_man){
+            if (!obj_controller.ma_man[u]){
                 continue;
             }
-            var _unit = obj_controller.display_unit[slot];
+            var _unit = obj_controller.display_unit[u];
             if (_item.req_exp > 0){
                 if (_unit.experience < _item.req_exp){
                     _marines_without_exp++;
@@ -798,7 +799,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
                 }
             }
 
-            if (slot == eEQUIPMENT_SLOT.ARMOUR && !armour_data.has_tag("dreadnought")){
+            if (slot == eEQUIPMENT_SLOT.ARMOUR && !get_item("armour").has_tag("dreadnought")){
                 var _unit_armour_data = _unit.get_armour_data();
                 if (_unit_armour_data.has_tag("dreadnought")){
                     equipment_found_and_valid[slot] = false;
@@ -811,25 +812,22 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         equipment_found_and_valid[slot] = equipment_found_and_valid[slot] && _found >= _needed;
 
         if (!equipment_found_and_valid[slot]){
-            warning += $"Not enough {_wanted_item}; {_wanted_item - _found} more are required.";
+            warning += $"Not enough {_wanted_item}; {needed - _found} more are required.";
         }
         if (_marines_without_exp > 0){
             equipment_found_and_valid[slot] = false;
             warning += $"Not {_marines_without_exp} units don't have exp for {_wanted_item}; {_item.req_exp} required.";
         }
-
-        var _updating_armuor = is_present("armour");
-
         
 
         if (_item.has_tag("terminator_only")){
-            if (!armour_data.has_tag("terminator")){
+            if (!get_item("armour").has_tag("terminator")){
                 warning = $"Cannot use {_wanted_item} without Terminator/Dreadnought Armour.";
             }
         }
 
         var _class_locks = ["terminator", "dreadnought"];
-        if (_item.has_tags(_class_locks) && !armour_data.has_tags(_class_locks)){
+        if (_item.has_tags(_class_locks) && !get_item("armour").has_tags(_class_locks)){
             var _armour_required = "";
             for (var r = 0 ; r < array_length(_class_locks); r++){
                 if (_item.has_tag(_class_locks[r])){
