@@ -27,6 +27,8 @@
 //slots align with enum eEQUIPMENT_SLOT ordering for cross compatability
 #macro UNIT_EQUIP_SLOTS [ "wep1", "wep2", "armour", "gear", "mobi", "all"]
 
+#macro STANDARD_EQUIP_SLOT_COUNT 5
+
 
 #macro UNIT_EQUIP_SLOTS_DISPLAY [ "First Weapon", "Second Weapon", "Armour", "Gear", "Back/Mobility", "ALL"]
 
