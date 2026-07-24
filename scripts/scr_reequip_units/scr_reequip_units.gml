@@ -303,7 +303,7 @@ function draw_popup_equip() {
                 box_x + 144,
                 box_y + 20,
             ];
-            check = needed_equipment == item_name[o] ? "x" : " ";
+            check = needed_equipment[equipment_area] == item_name[o] ? "x" : " ";
             item_string = $"[{check}] {item_name[o]}";
             draw_text_transformed(box_x, box_y, item_string, mct, 1, 0);
             if (scr_hit(box)) {
