@@ -1,206 +1,212 @@
 /// @self Asset.GMObject.obj_controller
 function set_up_equip_popup() {
-    if (!instance_exists(obj_popup)) {
-        var _units_selected_for_change = 0;
-        var vih = 0, _unit;
-        var company = managing <= 10 ? managing : 10;
-        var prev_role;
-        var allow = true;
 
-        var _current_equipment = ["","","","",""];
+    static setup_UI_elements(){
+        equipment_area = -1;
+        cancel_button = new UnitButtonObject({
+            x1: 1061,
+            y1: 591,
+            style: "pixel",
+            label: "Cancel",
+        });
+        equip_button = new UnitButtonObject({
+            x1: 1450,
+            y1: 591,
+            style: "pixel",
+            label: "Equip",
+        });
 
-        var _unchangeable_armour = false;
-        // Need to make sure that group selected is all the same type
-        for (var f = 0; f < array_length(display_unit); f++) {
-            // Set different vih depending on _unit type
-            if (man_sel[f] != 1) {
-                continue;
+        main_slate = new DataSlate({
+            style: "decorated",
+            XX: 1006,
+            YY: 143,
+            set_width: true,
+            width: 571,
+            height: 450,
+        });
+
+        var _quality_options = [
+            {
+                str1: "Standard",
+                font: fnt_40k_14b,
+                val: 0,
+            },
+            {
+                str1: "Master Crafted",
+                font: fnt_40k_14b,
+                val: 1,
+            },
+        ];
+        quality_radio = new RadioSet(_quality_options, "", {
+            max_width: 500,
+            x1: 1040,
+            y1: 318,
+        });
+
+        range_melee_radio = new RadioSet([
+            {
+                str1: "Ranged",
+                font: fnt_40k_14b,
+                val: eENGAGEMENT.RANGED,
+            },
+            {
+                str1: "Melee",
+                font: fnt_40k_14b,
+                val: eENGAGEMENT.MELEE,
+            },
+        ], "", {
+            max_width: 500,
+            x1: 1040,
+            y1: 343,
+        });
+
+        weapon1_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 215,
+            label: "",
+            font: fnt_40k_12,
+        });
+        weapon2_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 235,
+            label: "",
+            font: fnt_40k_12,
+        });
+        armour_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 255,
+            label: "",
+            font: fnt_40k_12,
+        });
+        if (_unchangeable_armour) {
+            armour_select.inactive_col = CM_RED_COLOR;
+            armour_select.tooltip = "One or more Marine has Dreadnought armour and cannot be changed";
+            armour_select.active = false;
+        }
+        gear_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 275,
+            label: "",
+            font: fnt_40k_12,
+        });
+        mobility_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 295,
+            label: "",
+            font: fnt_40k_12,
+        });
+        selectors = [weapon1_select , weapon2_select, armour_select, gear_select, mobility_select];
+    }
+    if (instance_exists(obj_popup)) {
+        return;
+    }
+
+    var _units_selected_for_change = 0;
+    var vih = 0, _unit;
+    var company = managing <= 10 ? managing : 10;
+    var prev_role;
+    var allow = true;
+
+    var _current_equipment = ["","","","",""];
+
+    var _unchangeable_armour = false;
+    // Need to make sure that group selected is all the same type
+    for (var f = 0; f < array_length(display_unit); f++) {
+        // Set different vih depending on _unit type
+        if (man_sel[f] != 1) {
+            continue;
+        }
+        if (vih == 0) {
+            if (man[f] == "man" && is_struct(display_unit[f])) {
+                _unit = display_unit[f];
+                vih = _unit.is_dreadnought() ? 6 : 1;
+                if (vih == 6) {
+                    _unchangeable_armour = true;
+                }
+            } else if (man[f] == "vehicle") {
+                if (ma_role[f] == "Land Raider") {
+                    vih = 50;
+                } else if (ma_role[f] == "Rhino") {
+                    vih = 51;
+                } else if (ma_role[f] == "Predator") {
+                    vih = 52;
+                } else if (ma_role[f] == "Land Speeder") {
+                    vih = 53;
+                } else if (ma_role[f] == "Whirlwind") {
+                    vih = 54;
+                }
+                prev_role = ma_role[f];
             }
-            if (vih == 0) {
-                if (man[f] == "man" && is_struct(display_unit[f])) {
+        } else {
+            if (vih == 1 || vih == 6) {
+                if (man[f] == "vehicle") {
+                    allow = false;
+                    break;
+                } else if (man[f] == "man" && is_struct(display_unit[f])) {
                     _unit = display_unit[f];
-                    vih = _unit.is_dreadnought() ? 6 : 1;
-                    if (vih == 6) {
-                        _unchangeable_armour = true;
+                    var _is_dread = _unit.is_dreadnought();
+                    if (_is_dread && vih == 1) {
+                        allow = false;
+                        break;
+                    } else if (!_is_dread && vih == 6) {
+                        allow = false;
+                        break;
                     }
+                }
+            } else if (vih >= 50) {
+                if (man[f] == "man") {
+                    allow = false;
+                    break;
                 } else if (man[f] == "vehicle") {
-                    if (ma_role[f] == "Land Raider") {
-                        vih = 50;
-                    } else if (ma_role[f] == "Rhino") {
-                        vih = 51;
-                    } else if (ma_role[f] == "Predator") {
-                        vih = 52;
-                    } else if (ma_role[f] == "Land Speeder") {
-                        vih = 53;
-                    } else if (ma_role[f] == "Whirlwind") {
-                        vih = 54;
-                    }
-                    prev_role = ma_role[f];
-                }
-            } else {
-                if (vih == 1 || vih == 6) {
-                    if (man[f] == "vehicle") {
+                    if (prev_role != ma_role[f]) {
                         allow = false;
                         break;
-                    } else if (man[f] == "man" && is_struct(display_unit[f])) {
-                        _unit = display_unit[f];
-                        var _is_dread = _unit.is_dreadnought();
-                        if (_is_dread && vih == 1) {
-                            allow = false;
-                            break;
-                        } else if (!_is_dread && vih == 6) {
-                            allow = false;
-                            break;
-                        }
-                    }
-                } else if (vih >= 50) {
-                    if (man[f] == "man") {
-                        allow = false;
-                        break;
-                    } else if (man[f] == "vehicle") {
-                        if (prev_role != ma_role[f]) {
-                            allow = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (vih > 0) {
-                _units_selected_for_change += 1;
-                var _unit_equipment = display_unit[f].unit_equipment_data();
-
-                for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
-                    var _item_name = _unit_equipment.item_names[i];
-
-                    var _no_item = _item_name == "";
-
-                    if (_no_item && _current_equipment[i] == "" ){
-                        continue;
-                    }
-
-                    var _is_assortment = _current_equipment[i] == "Assortment";
-
-                    if (_is_assortment){
-                        continue;
-                    }
-
-                    if (_current_equipment[i] == ""){
-                        _current_equipment[i] = _item_name;
-                    } else if (_current_equipment[i] != _item_name){
-                        _current_equipment[i] = "Assortment"
                     }
                 }
             }
         }
 
-        if (vih > 0 && man_size > 0 && allow) {
-            var pip = instance_create(0, 0, obj_popup);
-            pip.type = ePOPUP_TYPE.EQUIP;
-            pip.current_equipment = _current_equipment
-            pip.needed_equipment = array_create(5, "");
-            pip.equipment_found_and_valid = array_create(5,false);
-            pip.company = managing;
-            pip.unit_count = _units_selected_for_change;
+        if (vih > 0) {
+            _units_selected_for_change += 1;
+            var _unit_equipment = display_unit[f].unit_equipment_data();
 
-            //Forwards vih selection to the vehicle_equipment variable used in mouse_50 obj_popup and weapons_equip script
-            pip.vehicle_equipment = vih;
-            with (pip) {
-                equipment_area = -1;
-                cancel_button = new UnitButtonObject({
-                    x1: 1061,
-                    y1: 591,
-                    style: "pixel",
-                    label: "Cancel",
-                });
-                equip_button = new UnitButtonObject({
-                    x1: 1450,
-                    y1: 591,
-                    style: "pixel",
-                    label: "Equip",
-                });
+            for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+                var _item_name = _unit_equipment.item_names[i];
 
-                main_slate = new DataSlate({
-                    style: "decorated",
-                    XX: 1006,
-                    YY: 143,
-                    set_width: true,
-                    width: 571,
-                    height: 450,
-                });
+                var _no_item = _item_name == "";
 
-                var _quality_options = [
-                    {
-                        str1: "Standard",
-                        font: fnt_40k_14b,
-                        val: 0,
-                    },
-                    {
-                        str1: "Master Crafted",
-                        font: fnt_40k_14b,
-                        val: 1,
-                    },
-                ];
-                quality_radio = new RadioSet(_quality_options, "", {
-                    max_width: 500,
-                    x1: 1040,
-                    y1: 318,
-                });
-
-                range_melee_radio = new RadioSet([
-                    {
-                        str1: "Ranged",
-                        font: fnt_40k_14b,
-                        val: eENGAGEMENT.RANGED,
-                    },
-                    {
-                        str1: "Melee",
-                        font: fnt_40k_14b,
-                        val: eENGAGEMENT.MELEE,
-                    },
-                ], "", {
-                    max_width: 500,
-                    x1: 1040,
-                    y1: 343,
-                });
-
-                weapon1_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 215,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                weapon2_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 235,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                armour_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 255,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                if (_unchangeable_armour) {
-                    armour_select.inactive_col = CM_RED_COLOR;
-                    armour_select.tooltip = "One or more Marine has Dreadnought armour and cannot be changed";
-                    armour_select.active = false;
+                if (_no_item && _current_equipment[i] == "" ){
+                    continue;
                 }
-                gear_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 275,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                mobility_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 295,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                selectors = [weapon1_select , weapon2_select, armour_select, gear_select, mobility_select];
+
+                var _is_assortment = _current_equipment[i] == "Assortment";
+
+                if (_is_assortment){
+                    continue;
+                }
+
+                if (_current_equipment[i] == ""){
+                    _current_equipment[i] = _item_name;
+                } else if (_current_equipment[i] != _item_name){
+                    _current_equipment[i] = "Assortment"
+                }
             }
+        }
+    }
+
+    if (vih > 0 && man_size > 0 && allow) {
+        var pip = instance_create(0, 0, obj_popup);
+        pip.type = ePOPUP_TYPE.EQUIP;
+        pip.current_equipment = _current_equipment;
+        pip.needed_equipment = _current_equipment;
+        pip.equipment_found_and_valid = array_create(5,false);
+        pip.company = managing;
+        pip.unit_count = _units_selected_for_change;
+
+        //Forwards vih selection to the vehicle_equipment variable used in mouse_50 obj_popup and weapons_equip script
+        pip.vehicle_equipment = vih;
+        with (pip) {
+            setup_UI_elements();
         }
     }
 }
@@ -233,13 +239,13 @@ function draw_popup_equip() {
         comp = "HQ";
     }
 
-    if (vehicle_equipment < 6) {
-        draw_text(1292, 175, $"{comp} Company, {unit_count} Marines");
-    } else if (vehicle_equipment == 6) {
-        draw_text(1292, 175, $"{comp} Company, {unit_count} Dreadnoughts");
+    var _descriptor = "Marines";
+    if (vehicle_equipment == 6) {
+        var _descriptor = "Dreadnoughts";
     } else {
-        draw_text(1292, 175, $"{comp} Company, {unit_count} Vehicles");
+        var _descriptor = "Vehicles";
     }
+    draw_text(1292, 175, $"{comp} Company, {unit_count} {Vehicles}");
 
     draw_set_halign(fa_left);
     draw_set_color(CM_GREEN_COLOR);
