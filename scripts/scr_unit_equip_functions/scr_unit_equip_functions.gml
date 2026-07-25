@@ -557,7 +557,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         self.equipment = equipment_set;
     }
     self.equipping_unit = _unit;
-    var _slot_keys = UNIT_EQUIP_SLOTS;
+    var _slot_keys = global.unit_equip_slots;
     var _slot, _item;
     for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
         _slot = _slot_keys[i];
@@ -605,10 +605,10 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         }
     }
 
-    for (var i = 0;i<array_length(UNIT_EQUIP_SLOTS)-1;i++){
-        var _item = self.equipment[$UNIT_EQUIP_SLOTS[i]];
-        if (_item.name != "" && _item.name != ITEM_NAME_NONE){
-            array_push(present_items, UNIT_EQUIP_SLOTS[i]);
+    for (var i = 0;i<array_length(global.unit_equip_slots)-1;i++){
+        var _item = self.equipment[$global.unit_equip_slots[i]];
+        if (_item.name != ""){
+            array_push(present_items, global.unit_equip_slots[i]);
         }
     }
 
@@ -623,7 +623,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
     static equipment_ReactiveString = function(slot){
         var _enum_slot = return_item_enum(slot);
     
-        var _display = UNIT_EQUIP_SLOTS_DISPLAY[_enum_slot];
+        var _display = global.unit_equip_slots_display[_enum_slot];
         var _item = items[_enum_slot];
         var _desc = _item.item_tooltip_desc_gen();
 
