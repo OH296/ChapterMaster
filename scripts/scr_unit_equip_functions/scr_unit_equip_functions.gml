@@ -785,7 +785,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         var _marines_without_exp = 0;
         equipment_found_and_valid[slot] = true;
         for (var u = 0; u < array_length(obj_controller.display_unit); u++){
-            if (!obj_controller.man_sel){
+            if (!obj_controller.man_sel[u]){
                 continue;
             }
             if (_item_check_array[u] == _wanted_item) {
