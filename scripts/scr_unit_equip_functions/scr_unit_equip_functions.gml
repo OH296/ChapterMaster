@@ -775,19 +775,24 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
                 _item_check_array = obj_controller.ma_armour;
                 break;                                                                                     
         }
-        var _needed = units;
         var _found = 0;
         var _wanted_item = item_names[slot];
+        if (_wanted_item == "Assortment"){
+            equipment_found_and_valid[slot] = true;
+            return;            
+        }
         var _item = get_item(slot);
         var _marines_without_exp = 0;
         equipment_found_and_valid[slot] = true;
         for (var u = 0; u < array_length(obj_controller.display_unit); u++){
-
-            if ((vehicle_equipment != -1) && (_item_check_array[u] == _wanted_item)) {
+            if (!obj_controller.man_sel){
+                continue;
+            }
+            if (_item_check_array[u] == _wanted_item) {
                 _found += 1;
             }
 
-            if (!obj_controller.ma_man[u]){
+            if (obj_controller.man[u] != "man"){
                 continue;
             }
             var _unit = obj_controller.display_unit[u];
@@ -808,10 +813,10 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         }
         _found += scr_item_count(_wanted_item);
 
-        equipment_found_and_valid[slot] = equipment_found_and_valid[slot] && _found >= _needed;
+        equipment_found_and_valid[slot] = equipment_found_and_valid[slot] && _found >= needed_count;
 
         if (!equipment_found_and_valid[slot]){
-            warning += $"Not enough {_wanted_item}; {needed - _found} more are required.";
+            warning += $"Not enough {_wanted_item}; {needed_count - _found} more are required.";
         }
         if (_marines_without_exp > 0){
             equipment_found_and_valid[slot] = false;
@@ -837,7 +842,8 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         }
     }
 
-    static check_set_is_equipable = function(){
+    static check_set_is_equipable = function(needed_count = 1){
+        self.needed_count = needed_count;
         warning = "";
         equipment_found_and_valid = array_create(5, true);
         for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
