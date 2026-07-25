@@ -1011,7 +1011,7 @@ function MultiSelect(options_array, title_param, data = {}) constructor {
     standard_loc_data();
 
     // title is now either a ReactiveString instance or noone
-    if (is_string(title_param)) {
+    if (is_string(title_param) && title_param != "") {
         title = new ReactiveString(title_param, x1, y1);
     } else if (is_struct(title_param)) {
         // entire title_param struct becomes the ReactiveString's data packet;
