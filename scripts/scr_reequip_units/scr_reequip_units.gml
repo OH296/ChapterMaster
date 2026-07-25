@@ -349,7 +349,7 @@ function draw_popup_equip() {
 
     draw_set_color(255);
     draw_set_halign(fa_center);
-    draw_text(1292, 570, string_hash_to_newline(warning));
+    draw_text(1292, 570, warning);
 
     if (cancel_button.draw()) {
         instance_destroy();

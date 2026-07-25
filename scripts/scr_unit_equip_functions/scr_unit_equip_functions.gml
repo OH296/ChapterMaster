@@ -722,10 +722,9 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
             valid: true,
             warning: "",
         };
-
+        var _armour_data = get_item("armour");
+        var _mobility_data = get_item("mobi");
         if (is_present("armour") && is_present("mobi")) {
-            var _armour_data = get_item("armour");
-            var _mobility_data = get_item("mobi");
             if (_armour_data.has_tag("terminator") && !_mobility_data.has_tag("terminator") && !_mobility_data.has_tag("terminator_only")) {
                 _result.valid = false;
                 _result.warning = "Cannot use this with Terminator Armour.";
@@ -739,7 +738,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
                 _result.valid = false;
                 _result.warning = "Cannot use this without Dreadnought Armour.";
             }
-        } else if (!is_struct(_armour_data) && is_struct(_mobility_data)) {
+        } else if (!is_present("armour") && is_present("mobi")) {
             if (_mobility_data.has_tag("terminator") || _mobility_data.has_tag("terminator_only")) {
                 _result.valid = false;
                 _result.warning = "Cannot use this without Terminator Armour.";
