@@ -205,6 +205,12 @@ function ComplexSet(_unit) constructor {
     texture_shadow_transform_uniform = shader_get_uniform(armour_texture, "In_Shadow_Transform");
     texture_mask_transform = shader_get_uniform(armour_texture, "mask_transform");
 
+    paint_shine_uniform = shader_get_uniform(full_livery_shader, "paint_shine");
+    metallic_shine_uniform = shader_get_uniform(full_livery_shader, "metalic_shine");
+
+    texture_paint_shine_uniform = shader_get_uniform(armour_texture, "paint_shine");
+    texture_metallic_shine_uniform = shader_get_uniform(armour_texture, "metalic_shine");
+
     if (!surface_exists(global.base_component_surface)) {
         global.base_component_surface = surface_create(600, 600);
     }
@@ -1112,6 +1118,8 @@ function ComplexSet(_unit) constructor {
                             set_draw_shadows(_sprite, _final_index, _final_component.shadows, _final_index);
                         }
                         shader_set_uniform_i(use_shadow_uniform, shadow_enabled);
+                        shader_set_uniform_i(paint_shine_uniform, obj_controller.paint_shine);
+                        shader_set_uniform_i(metallic_shine_uniform, obj_controller.metallic_shine);
                         if (flip_x) {
                             draw_sprite_flipped(_sprite, _sub_choice_final - _choice_count ?? 0, component_final_draw_x, component_final_draw_y);
                         } else {
@@ -1140,6 +1148,8 @@ function ComplexSet(_unit) constructor {
 
         shader_set(armour_texture);
         shader_set_uniform_i(texture_use_shadow_uniform, shadow_enabled);
+        shader_set_uniform_i(texture_paint_shine_uniform, obj_controller.paint_shine);
+        shader_set_uniform_i(texture_metallic_shine_uniform, obj_controller.metallic_shine);
         set_component_shadow_packs(component_name, resolved_original_choice, resolved_sprite, resolved_choice);
 
         var _tex_names = struct_get_names(current_texture_draws);
@@ -1239,7 +1249,8 @@ function ComplexSet(_unit) constructor {
             set_component_shadow_packs(component_name, _choice, _resolved.sprite, _resolved.frame);
 
             shader_set_uniform_i(use_shadow_uniform, shadow_enabled);
-
+            shader_set_uniform_i(paint_shine_uniform, obj_controller.paint_shine);
+            shader_set_uniform_i(metallic_shine_uniform, obj_controller.metallic_shine);
             var _flip_x = false;
             var _component_data = self[$ component_name];
             if (is_struct(_component_data) && struct_exists(_component_data, "flip_x") && _component_data.flip_x) {

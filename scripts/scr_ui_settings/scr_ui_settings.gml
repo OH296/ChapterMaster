@@ -161,6 +161,7 @@ function setup_ui_chapter_settings() {
 
     var _sets = settings_buttons_ui_components;
 
+
     _sets.progenitor_livery = new ToggleButton({
         x1: 50,
         y1: 140,
@@ -244,6 +245,28 @@ function setup_ui_chapter_settings() {
 
     _sets.comany_command_structure = _command_mult;
 
+    _sets.paint_shine_radio = new RadioSet([
+        { str1: "1", font: fnt_40k_14, style: "box" },
+        { str1: "2", font: fnt_40k_14, style: "box" },
+        { str1: "3", font: fnt_40k_14, style: "box" },
+        { str1: "4", font: fnt_40k_14, style: "box" },
+        { str1: "5", font: fnt_40k_14, style: "box" },
+    ], "Paint Shine", {
+        x1: _sets._command_mult.x2 + 40,
+        y1: _sets._command_mult.y1,
+    });
+
+    _sets.metallic_shine_radio = new RadioSet([
+        { str1: "1", font: fnt_40k_14, style: "box" },
+        { str1: "2", font: fnt_40k_14, style: "box" },
+        { str1: "3", font: fnt_40k_14, style: "box" },
+        { str1: "4", font: fnt_40k_14, style: "box" },
+        { str1: "5", font: fnt_40k_14, style: "box" },
+    ], "Metallic Shine", {
+        x1: _sets.paint_shine_radio.x1,
+        y1: _sets.paint_shine_radio.y2 + 20,
+    });
+    
     var _post_boarding = new RadioSet([
         {
             str1: "Board Next Nearest",
@@ -414,6 +437,22 @@ function scr_ui_settings() {
         command_set[25] = _auto_board.toggles[0].active;
 
         command_set[26] = _auto_board.toggles[1].active;
+
+        var _paint_shine = _ui_feats.paint_shine_radio;
+        _paint_shine.draw();
+        for (var i = 0; i < array_length(_paint_shine.toggles); i++) {
+            if (_paint_shine.toggles[i].active) {
+                obj_controller.paint_shine = i + 1;
+            }
+        }
+
+        var _metallic_shine = _ui_feats.metallic_shine_radio;
+        _metallic_shine.draw();
+        for (var i = 0; i < array_length(_metallic_shine.toggles); i++) {
+            if (_metallic_shine.toggles[i].active) {
+                obj_controller.metallic_shine = i + 1;
+            }
+        }
 
         draw_text(937 - 341, 207, "Battle Formations");
         draw_text(937, 207, "Company Settings");
