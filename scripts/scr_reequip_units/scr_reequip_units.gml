@@ -127,7 +127,7 @@ function set_up_equip_popup() {
     // Need to make sure that group selected is all the same type
     for (var f = 0; f < array_length(display_unit); f++) {
         // Set different equip_target_type depending on _unit type
-        if (man_sel[f] != 1) {
+        if (!man_sel[f]) {
             continue;
         }
         if (equip_target_type == eEQUIP_TARGET_TYPE.NONE) {
@@ -205,6 +205,11 @@ function set_up_equip_popup() {
                     _current_equipment[i] = "Assortment"
                 }
             }
+        }
+    }
+    for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+        if (_current_equipment[i] == "" || _current_equipment[i] == 0){
+            _current_equipment[i] = ITEM_NAME_NONE;
         }
     }
 

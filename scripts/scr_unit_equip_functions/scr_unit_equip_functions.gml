@@ -792,6 +792,10 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
                 _found += 1;
             }
 
+            if (_wanted_item == ITEM_NAME_NONE){
+                _found += 1;
+            }
+
             if (obj_controller.man[u] != "man"){
                 continue;
             }
