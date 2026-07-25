@@ -245,28 +245,30 @@ function setup_ui_chapter_settings() {
 
     _sets.comany_command_structure = _command_mult;
 
-    _sets.paint_shine_radio = new RadioSet([
-        { str1: "1", font: fnt_40k_14, style: "box" },
-        { str1: "2", font: fnt_40k_14, style: "box" },
-        { str1: "3", font: fnt_40k_14, style: "box" },
-        { str1: "4", font: fnt_40k_14, style: "box" },
-        { str1: "5", font: fnt_40k_14, style: "box" },
-    ], "Paint Shine", {
-        x1: _sets._command_mult.x2 + 40,
-        y1: _sets._command_mult.y1,
+    var _5_opt_radio = [
+        { str1: "1", font: fnt_40k_14 },
+        { str1: "2", font: fnt_40k_14 },
+        { str1: "3", font: fnt_40k_14 },
+        { str1: "4", font: fnt_40k_14 },
+        { str1: "5", font: fnt_40k_14 }
+    ]
+    _sets.paint_shine_radio = new RadioSet(
+        _5_opt_radio, 
+        "Paint Shine", {
     });
 
-    _sets.metallic_shine_radio = new RadioSet([
-        { str1: "1", font: fnt_40k_14, style: "box" },
-        { str1: "2", font: fnt_40k_14, style: "box" },
-        { str1: "3", font: fnt_40k_14, style: "box" },
-        { str1: "4", font: fnt_40k_14, style: "box" },
-        { str1: "5", font: fnt_40k_14, style: "box" },
-    ], "Metallic Shine", {
+    _sets.paint_shine_radio.current_selection = obj_controller.paint_shine -1;
+
+    _sets.metallic_shine_radio = new RadioSet(
+        _5_opt_radio, 
+        "Metallic Shine",
+        {
         x1: _sets.paint_shine_radio.x1,
         y1: _sets.paint_shine_radio.y2 + 20,
     });
-    
+
+    _sets.metallic_shine_radio.current_selection = obj_controller.metalic_shine -1;
+
     var _post_boarding = new RadioSet([
         {
             str1: "Board Next Nearest",
@@ -369,9 +371,34 @@ function scr_ui_settings() {
         _ui_feats.tagged_training.draw();
         tagged_training = _ui_feats.tagged_training.active;
 
+
         var _com_multi = _ui_feats.comany_command_structure;
 
         _com_multi.draw();
+
+        var _paint_shine = _ui_feats.paint_shine_radio;
+        _paint_shine.update({
+            x1: _com_multi.x2 + 40,
+            y1: _com_multi.y1,
+        })
+        _paint_shine.draw();
+        for (var i = 0; i < array_length(_paint_shine.toggles); i++) {
+            if (_paint_shine.toggles[i].active) {
+                obj_controller.paint_shine = i + 1;
+            }
+        }
+
+        var _metallic_shine = _ui_feats.metallic_shine_radio;
+        _metallic_shine.update({
+            x1: _paint_shine.x2 + 40,
+            y1: _paint_shine.y1,
+        })
+        _metallic_shine.draw();
+        for (var i = 0; i < array_length(_metallic_shine.toggles); i++) {
+            if (_metallic_shine.toggles[i].active) {
+                obj_controller.metallic_shine = i + 1;
+            }
+        }
 
         for (var i = 0; i < array_length(_com_multi.toggles); i++) {
             command_set[3 + i] = _com_multi.toggles[i].active;
@@ -437,22 +464,6 @@ function scr_ui_settings() {
         command_set[25] = _auto_board.toggles[0].active;
 
         command_set[26] = _auto_board.toggles[1].active;
-
-        var _paint_shine = _ui_feats.paint_shine_radio;
-        _paint_shine.draw();
-        for (var i = 0; i < array_length(_paint_shine.toggles); i++) {
-            if (_paint_shine.toggles[i].active) {
-                obj_controller.paint_shine = i + 1;
-            }
-        }
-
-        var _metallic_shine = _ui_feats.metallic_shine_radio;
-        _metallic_shine.draw();
-        for (var i = 0; i < array_length(_metallic_shine.toggles); i++) {
-            if (_metallic_shine.toggles[i].active) {
-                obj_controller.metallic_shine = i + 1;
-            }
-        }
 
         draw_text(937 - 341, 207, "Battle Formations");
         draw_text(937, 207, "Company Settings");

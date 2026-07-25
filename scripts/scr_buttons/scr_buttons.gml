@@ -1105,7 +1105,7 @@ function MultiSelect(options_array, title_param, data = {}) constructor {
                     if (_cur_opt.x2 > _total_max_main) {
                         _total_max_main = _cur_opt.x2;
                     }
-
+ 
                     _cur_main += _cur_opt.w + x_gap;
                 } else {
                     _cur_opt.x1 = _cur_cross;

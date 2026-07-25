@@ -511,7 +511,7 @@ command_set[24] = 1;
 modest_livery = 0;
 progenitor_visuals = 0;
 tagged_training = 0;
-metallic_shine = 3;
+metalic_shine = 3;
 paint_shine = 3;
 
 // ** Default menu items **
