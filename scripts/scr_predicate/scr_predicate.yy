@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_music",
+  "%Name":"scr_predicate",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_music",
+  "name":"scr_predicate",
   "parent":{
-    "name":"Sys",
-    "path":"folders/Scripts/Sys.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

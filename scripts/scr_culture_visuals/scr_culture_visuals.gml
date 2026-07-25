@@ -416,7 +416,8 @@ global.reuseable_drawing_items = {
     "default_backpack_fastening" :{
         sprite : spr_backpack_fastening,
         armours_exclude : [
-            "MK5 Heresy",
+            "MK4 Maximus",
+			"MK5 Heresy",
             "MK6 Corvus",
         ]
     }
@@ -1227,7 +1228,7 @@ global.modular_drawing_items = [
             "mobi": "Heavy Weapons Pack",
         },
         overides: {
-            "chest_fastening": spr_backpack_fastening,
+            "chest_fastening": "default_backpack_fastening"
         },
     },
     {
@@ -1932,10 +1933,11 @@ global.modular_drawing_items = [
     },
     {
         position: "right_trim",
-        sprite: spr_mk3_right_trim,
+		armours: ["MK3 Iron Armour"],
+        sprite: spr_mk4_right_trim,
+        shadows: spr_mk4_right_trim_shadow,
+		flip: true,
         body_types: [0],
-        armours: ["MK3 Iron Armour"],
-        flip: true,
     },
     {
         position: "backpack",
@@ -2036,6 +2038,21 @@ global.modular_drawing_items = [
         sprite: spr_mk4_right_trim,
         shadows: spr_mk4_right_trim_shadow,
 		flip: true,
+    },
+	//MK5 Heresy Sprites
+	{
+        position: "armour",
+        armours: ["MK5 Heresy"],
+        body_types: [0],
+        sprite: spr_mk5_complex,
+        shadows: spr_mk5_complex_shadow,
+    },
+    {
+        position: "backpack",
+        armours: ["MK5 Heresy"],
+        body_types: [0],
+        sprite: spr_mk5_complex_backpack,
+        shadows: spr_mk5_complex_backpack_shadow,
     },
     //Artificer Sprites
     {
