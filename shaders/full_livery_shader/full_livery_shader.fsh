@@ -36,7 +36,7 @@ varying vec4 v_vColour;
 // === SHADOW AUGMENT: new uniforms ===
 uniform sampler2D shadow_texture;
 uniform int use_shadow;
-uniform int metalic_shine;
+uniform int metallic_shine;
 uniform int paint_shine;
 varying vec2 v_vShadowCoord;
 

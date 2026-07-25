@@ -1003,13 +1003,24 @@ function UIDropdown(_options, _width = 180, _on_change = undefined) constructor 
 /// @category UI
 /// @description Multi-option toggle group allowing multiple selections.
 /// @param {array} options_array Array of option labels.
-/// @param {string} title_param Title string.
+/// @param {string|struct} title_param Either a string (used as ReactiveString text), a struct (passed as the ReactiveString's data packet, with text set from within that struct), or omitted/other (title becomes noone).
 /// @param {struct} data Optional overrides.
 function MultiSelect(options_array, title_param, data = {}) constructor {
-    title = title_param;
     x_gap = 10;
     y_gap = 5;
     standard_loc_data();
+
+    // title is now either a ReactiveString instance or noone
+    if (is_string(title_param)) {
+        title = new ReactiveString(title_param, x1, y1);
+    } else if (is_struct(title_param)) {
+        // entire title_param struct becomes the ReactiveString's data packet;
+        // text_param is left as "" since the struct's own "text" value will set it via update()/move_data_to_current_scope
+        title = new ReactiveString("", x1, y1, title_param);
+    } else {
+        title = noone;
+    }
+
     on_change = undefined;
     active_col = CM_GREEN_COLOR;
     inactive_col = c_gray;
@@ -1039,9 +1050,13 @@ function MultiSelect(options_array, title_param, data = {}) constructor {
         var _has_change_method = is_callable(on_change);
 
         var _start_y = y1;
-        if (title != "") {
-            draw_text(x1, y1, title);
-            _start_y += string_height(title) + 10;
+        if (title != noone) {
+            // keep the title anchored to the MultiSelect's current position
+            title.x1 = x1;
+            title.y1 = y1;
+            title.update();
+            title.draw();
+            _start_y += title.h + 10;
         }
 
         var _count = array_length(toggles);

@@ -232,7 +232,13 @@ function setup_ui_chapter_settings() {
         array_push(_tog_buttons, {str1: _role_name, font: fnt_40k_14, tooltip: $"activate to make {_role_name}s a default member of your company command."});
     }
 
-    var _command_mult = new MultiSelect(_tog_buttons, "Company Command Structure", {
+    var _command_mult = new MultiSelect(
+        _tog_buttons, 
+        {
+            text : "Company Command\nStructure",
+            max_width : 100
+        },
+		{
         is_horizontal: false,
         x1: 75,
         y1: 300,
@@ -267,7 +273,7 @@ function setup_ui_chapter_settings() {
         y1: _sets.paint_shine_radio.y2 + 20,
     });
 
-    _sets.metallic_shine_radio.current_selection = obj_controller.metalic_shine -1;
+    _sets.metallic_shine_radio.current_selection = obj_controller.metallic_shine -1;
 
     var _post_boarding = new RadioSet([
         {

@@ -206,10 +206,10 @@ function ComplexSet(_unit) constructor {
     texture_mask_transform = shader_get_uniform(armour_texture, "mask_transform");
 
     paint_shine_uniform = shader_get_uniform(full_livery_shader, "paint_shine");
-    metallic_shine_uniform = shader_get_uniform(full_livery_shader, "metalic_shine");
+    metallic_shine_uniform = shader_get_uniform(full_livery_shader, "metallic_shine");
 
     texture_paint_shine_uniform = shader_get_uniform(armour_texture, "paint_shine");
-    texture_metallic_shine_uniform = shader_get_uniform(armour_texture, "metalic_shine");
+    texture_metallic_shine_uniform = shader_get_uniform(armour_texture, "metallic_shine");
 
     if (!surface_exists(global.base_component_surface)) {
         global.base_component_surface = surface_create(600, 600);
