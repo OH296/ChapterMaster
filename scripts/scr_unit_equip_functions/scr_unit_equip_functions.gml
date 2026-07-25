@@ -546,7 +546,7 @@ function scr_get_unit_equipment(as_UnitEquipment = true){
 function convert_equipment_array_into_struct(array){
     var _equipment = {};
     for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
-        _equipment[$ UNIT_EQUIP_SLOTS[i]] = array[i];
+        _equipment[$ global.unit_equip_slots[i]] = array[i];
     }
     return _equipment;
 }
@@ -752,7 +752,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
     }
 
     static check_item_is_equipable = function(slot){
-        var _key = UNIT_EQUIP_SLOTS[slot];
+        var _key = global.unit_equip_slots[slot];
         if (!is_present(_key)){
             equipment_found_and_valid[slot] = true;
             return;
