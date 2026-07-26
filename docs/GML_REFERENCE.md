@@ -7,7 +7,8 @@ This guide covers the language for developers familiar with JavaScript or other 
 ## Table of Contents
 
 - [Syntax Basics](#syntax-basics)
-- [Variables and Scope](#variables-and-scope)
+- [Variable Scope](#variable-scope)
+- [Variable Categories](#variable-categories)
 - [Functions](#functions)
 - [Constructors](#constructors)
 - [Methods](#methods)
@@ -55,19 +56,29 @@ GameMaker Language (GML) is syntactically similar to JavaScript ES3 but has sign
 | `pointer` | Memory address; used only in specific native-function contexts (`buffer_get_address`, etc.). |
 | `handle` | 64-bit reference to assets, instances, buffers, data structures, etc. |
 
-**Special values:**
 
-| Value | Notes |
-|---|---|
-| `undefined` | Uninitialised variable value. Falsy. |
-| `NaN` | Not-a-number. Not equal to itself (`NaN == NaN` -> `false`). |
-| `infinity` | Positive infinity (all lower-case). |
-| `pointer_null` | Null pointer (~ JS `null`). Falsy. |
-| `pointer_invalid` | Invalid pointer sentinel. |
+### Built-in Constants & Special Values
+
+GML provides several built-in constants. Some act as special data type values, while others act as sentinels for instances and contexts.
+
+| Value | Category | Notes |
+|---|---|---|
+| `true` / `false` | Boolean | Resolves to `1` and `0`. |
+| `undefined` | Special Value | Uninitialised variable value. Falsy. |
+| `NaN` | Special Value | Not-a-number. Not equal to itself (`NaN == NaN` -> `false`). |
+| `infinity` | Special Value | Positive infinity (all lower-case). |
+| `pi` | Math Constant | 3.14159... |
+| `pointer_null` | Pointer | Null pointer (~ JS `null`). Falsy. |
+| `pointer_invalid` | Pointer | Invalid pointer sentinel. |
+| `noone` | Instance Sentinel | "No instance" (legacy value: `-4`). Returned by collision/instance functions when nothing is found. |
+| `all` | Instance Sentinel | "All instances" (legacy value: `-3`). Used in `with()` or instance functions to target everything. |
+| `self` | Context | Current context struct/instance (legacy value: `-1`). |
+| `other` | Context | Other context (event-triggering instance, legacy: `-2`). |
+| `global` | Context | The global struct. |
 
 ### Operators
 
-**Standard:** `+`, `-`, `*`, `/`, `%` (`mod`), `div` (integer division), `&&` (`and`), `||` (`or`), `^^` (`xor`), `!` (`not`).
+**Standard:** `+`, `++`, `-`, `--`, `*`, `/`, `%` (`mod`), `div` (integer division), `&&` (`and`), `||` (`or`), `^^` (`xor`), `!` (`not`).
 
 **Ternary:** `condition ? true_val : false_val`
 
@@ -94,20 +105,17 @@ string("text {0} and {1}", a, b)          // Deferred placeholder substitution
 
 ---
 
-## Variables and Scope
+## Variable Scope
 
-### Variable Kinds
+GML has three primary runtime scopes. At runtime, variable names are resolved in this order (the first match wins):
+1. **local**
+2. **instance**
+3. **global**
+4. **built-in**
 
-Resolution order: **local -> instance -> global -> built-in**.
+### Local Scope
 
-| Kind | Declaration | Scope |
-|---|---|---|
-| **Local** | `var x = 0;` | Current function/event body only. |
-| **Instance** | No keyword, e.g. `health = 100;` | The current instance/struct (`self`). |
-| **Global** | `global.variable` | Entire game. |
-| **Constant** | `#macro`, `enum`, or literal | Compile-time replacement / named value. |
-
-### Block Scoping
+Declared with `var`. Exists only during the current function or event execution. 
 
 `var` is scoped to the **function body**, not to individual blocks. Control-flow constructs (`if`, `for`, `switch`, `try`) do **not** create a new local scope.
 
@@ -120,34 +128,103 @@ function example() {
 }
 ```
 
-Only function bodies introduce a new local scope.
+### Instance Scope
 
-### Symbol Categories
+Declared without a keyword (e.g., `hp = 100;`) or via context (`self.hp = 100;`). Tied to the lifetime of the specific instance or struct executing the code.
 
-Beyond the four scopes, symbols fall into three conceptual categories:
+### Global Scope
 
-| Category | Description |
-|---|---|
-| **Local** | Ephemeral, scoped to a function/event. |
-| **Self** | Members of a data structure (global, object instance, struct instance). |
-| **Independent** | Globally available but not a member of any struct - enums, macros, asset IDs, built-in function identifiers. |
+Declared on the `global` struct (e.g., `global.score = 0;`). Accessible anywhere in the game. The `global` struct acts as a de facto application singleton.
 
-### `self` Context Changes
+### Context Keywords: `self` and `other`
 
-`self` (~ JS `this`) changes depending on context:
+GML uses `self` and `other` to manage scope dynamically.
 
-- **Struct literal body** -> `self` is the struct being defined.
-- **Function body** -> `self` is the instance/struct the function was called on or bound to.
-- **`with` statement** -> `self` becomes the argument's value for the block duration.
-- **Accessor chain** -> `self` implicitly follows the accessed value.
+`self` is the GML equivalent of `this` in JavaScript, referring to the **current scope** of the code being executed.
+
+`other` refers to the **previous scope** before `self` was changed. 
+
+Their behavior is context-dependent:
+
+| Context | `self` refers to... | `other` refers to... |
+|---|---|---|
+| **Collision Event** | The current instance. | The other instance involved in the collision. |
+| **`with` statement** | The instance or struct passed to `with`. | The instance or struct that executed the `with` block. |
+| **Method / Constructor** | The instance or struct the function is bound to or called on. | The caller of the method/constructor (not the bound context). |
+| **Struct literal body** | The struct being defined. | Usually the same as `self`. |
+| **Accessor chain** | Implicitly follows the accessed value. | Usually the same as `self`. |
+| **Elsewhere** | The current instance or struct. | Usually the same as `self`. |
+
+---
+
+## Variable Categories
+
+While scope defines *where* a variable can be accessed, GML features distinct categories of variables based on how they are initialized and stored.
+
+### Static Variables and Methods
+
+The `static` keyword declares a variable or method that is initialized **only once**, on the very first call to the function, and persists across subsequent calls. Static variables are stored in the function's hidden "static struct" rather than in the local scope.
 
 ```gml
-with (obj_player) {
-    x += 10;  // self is obj_player instance
+function counter() {
+    static _count = 0; // Evaluated only on the first call
+    _count++;
+    return _count;
 }
+
+counter(); // returns 1
+counter(); // returns 2
 ```
 
-Instance variables written without `self.` are implicitly on `self`. Undefined variables return `undefined` (access produces no error, but using the value may).
+**Initialization order & behavior:**
+- Static variable initializers run at the **very top** of the function body, *before* any other code executes. This means they are always evaluated regardless of conditionals, wrapping them in an `if` statement does nothing to prevent their initialization.
+- You can reference a static variable before its declaration line in the same function due to this top-of-function hoisting.
+
+**Accessing static variables from outside:**
+You can read a static variable from outside its function using dot syntax, but **you must call the function at least once first**, otherwise, the static struct does not yet exist:
+
+```gml
+counter();               // Must call it first to create the static struct
+show_debug_message(counter._count); // -> 1 (access via function name)
+```
+
+**Static Variables and Inheritance (Critical):**
+Unlike JS prototypes, static variables are strictly scoped to the constructor they are defined in. Child constructors have their own separate static scopes.
+- **Reading** a static variable from a child instance will traverse the inheritance chain to find the parent's static value if the child doesn't have its own.
+- **Writing** (assigning) to a static variable through a child context **creates or modifies a variable on the child's own static struct**, shadowing the parent and leaving the parent's value completely untouched.
+
+```gml
+function Parent() constructor {
+    static value = 10;
+}
+function Child() : Parent() constructor { }
+
+show_debug_message(Child.value); // -> 10 (reads from Parent)
+Child.value = 20;                // Writes to Child's OWN static struct
+show_debug_message(Parent.value);// -> 10 (Parent unchanged!)
+```
+
+**Static Methods:**
+You can also use `static` to define functions inside constructors. These methods are created only once (rather than re-created for every new instance), which saves memory and improves performance when you have many instances:
+
+```gml
+function Player() constructor {
+    static say_hello = function() {
+        show_debug_message("Hello!");
+    };
+}
+var _p1 = new Player();
+var _p2 = new Player();
+// _p1.say_hello and _p2.say_hello reference the exact same function.
+```
+
+### Compile-Time Values (Independent)
+
+Not true variables in the runtime memory sense, but named values resolved at compile-time. They are globally available and not tied to any struct:
+- **Macros:** `#macro NAME value` - Compile-time textual replacement. (Do not use for arrays; each reference creates a new array instance).
+- **Enums:** Named integer constants.
+- **Asset IDs:** References to objects, sprites, sounds, etc. (e.g., `obj_player`).
+- **Built-in function identifiers:** The names of globally hoisted script functions.
 
 ---
 
@@ -175,7 +252,7 @@ function greet(_name = "Unknown") {
 
 ### Hoisting
 
-Functions defined at the top level of **Script** assets are hoisted during boot (`ScriptPrepare()`) before any script statements execute. Cross-script circular references work. Functions defined inside Objects or nested blocks are **not** hoisted.
+Functions defined at the top level of **Script** assets are hoisted globally during boot before any script statements execute (cross-script circular references work). See [Assets](#assets). Functions defined inside Objects or nested blocks are **not** hoisted.
 
 ### Returning
 
@@ -184,17 +261,10 @@ Functions defined at the top level of **Script** assets are hoisted during boot 
 
 ### Static Struct
 
-Every function has an associated static struct for function-level persistent variables:
+Every function has an associated static struct where its `static` variables live. You can retrieve or replace this entire struct using built-in functions:
 
-```gml
-function counter() {
-    static _count = 0;   // Initialised once, persists across calls
-    _count++;
-    return _count;
-}
-```
-
-Retrieve/overwrite with `static_get(function)` / `static_set(function, struct)`.
+- `static_get(function)` - Returns the static struct of the function.
+- `static_set(function, struct)` - Overwrites the function's static struct.
 
 ---
 
@@ -212,11 +282,17 @@ function Marine(_name, _chapter) constructor {
     };
 }
 
+// Inheritance (equivalent to JS `extends`)
+function Apothecary(_name) : Marine(_name) constructor {
+    static heal = function() { /* ... */ };
+}
+
 var _marine = new Marine("Brother Cassius", "Ultramarines");
 ```
 
 - Inside a constructor, `self` refers to the struct being created.
 - Constructor functions are globally available like any script function.
+- Use `static` for methods inside a constructor. This attaches the method to the constructor's static struct once, rather than copying it into every new instance (similar to JS prototype methods).
 
 ---
 
@@ -299,13 +375,7 @@ var             while           with            xor
 ```
 
 - `begin`/`end` are alternative tokens for `{`/`}`.
-- `and`, `or`, `not`, `xor`, `mod`, `div` are keyword operators.
 - `globalvar` is deprecated; use `global.` instead.
-- `delete` de-references a struct, flagging it for garbage collection. Does **not** remove individual fields or array entries.
-- `repeat (n) { ... }` executes the block `n` times.
-- `do { ... } until (condition)` - note `until`, not `while`.
-- `switch` in GML **has fallthrough** (like C/JS). Each `case` must end with an explicit `break` unless you intentionally want to fall through to the next case.
-- `with (expr) { ... }` changes `self` to the given expression.
 
 ### Preprocessor Directives
 
@@ -319,24 +389,6 @@ var             while           with            xor
 ---
 
 ## Constants and Macros
-
-### Core Constants
-
-| Constant | Value |
-|---|---|
-| `true` | `1` |
-| `false` | `0` |
-| `pi` | 3.14159... |
-| `NaN` | Not-a-number |
-| `infinity` | infinity |
-| `self` | Current context struct/instance (legacy numeric value: `-1`) |
-| `other` | Other context (event-triggering instance, legacy: `-2`) |
-| `noone` | No instance (sentinel, legacy: `-4`) |
-| `all` | All instances (legacy: `-3`) |
-| `global` | The global struct |
-| `undefined` | Uninitialised |
-| `pointer_invalid` | Invalid pointer sentinel |
-| `pointer_null` | Null pointer |
 
 ### Enums
 
@@ -376,7 +428,7 @@ Primitives have no internal methods; use library functions instead.
 `min`, `max`, `abs`, `round`, `floor`, `ceil`, `clamp`, `lerp`, `sin`, `cos`, `tan`, `darcsin`, `darccos`, `darctan`, `point_distance`, `point_direction`, `random`, `irandom`, `random_range`, `irandom_range`
 
 **Type checking/conversion:**
-`typeof(x)` (function, not operator), `is_instanceof(x, Constructor)` (checks inheritance chain), `instanceof(x)` (gets the constructor used to create a struct), `bool(x)`, `is_array(x)`, `is_bool(x)`, `is_string(x)`, `is_numeric(x)`, `is_struct(x)`, `is_undefined(x)`, `is_ptr(x)`, `is_int32(x)`, `is_int64(x)`, `is_handle(x)`.
+`typeof(x)` (function, not operator), `is_instanceof(x, Constructor)` (checks inheritance chain), `instanceof(x)` (gets the constructor used to create a struct), `bool(x)`, `is_array(x)`, `is_bool(x)`, `is_string(x)`, `is_numeric(x)`, `is_struct(x)`, `is_undefined(x)`, `is_ptr(x)`, `is_int32(x)`, `is_int64(x)`, `is_handle(x)`, `is_method(x)`, `is_callable(x)`
 
 ---
 
