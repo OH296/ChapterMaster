@@ -430,7 +430,6 @@ function reequip_selection() {
             for (var s = 0; s < STANDARD_EQUIP_SLOT_COUNT; s++){
                 var _temp_array = _veh_temp_arrays[s];
                 var _equipment = needed_equipment[s];
-                var _equip_array = _veh_equip_arrays[s]
                 var _current_item = _temp_array[i];
                 if (_equipment == "Assortment" || _equipment == _current_item){
                     continue;
@@ -440,12 +439,12 @@ function reequip_selection() {
                     scr_add_item(_current_item, 1);
                 }
                 _temp_array[i] = "";
-                _equip_array[_slot] = "";
-                LOGGER.info($"log : {STANDARD_EQUIP_SLOT_COUNT}, {_equipment}, {_veh_equip_arrays}, {_company}, {_slot}");
+                _veh_equip_arrays[s][_slot] = "";
+                LOGGER.info($"log : {STANDARD_EQUIP_SLOT_COUNT}, {_equipment}, {_company}, {_slot}");
 
-                if ((_equipment != ITEM_NAME_NONE) && (_equipment != "")) {
+                if (_equipment != ITEM_NAME_NONE && _equipment != "") {
                     _temp_array[i] = _equipment;
-                    _equip_array[_slot] = _equipment;
+                    _veh_equip_arrays[s][_slot] = _equipment;
                     if (_equipment != "") {
                         scr_add_item(_equipment, -1);
                     }

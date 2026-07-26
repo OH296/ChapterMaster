@@ -830,6 +830,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
 
         if (_item.has_tag("terminator_only")){
             if (!get_item("armour").has_tag("terminator")){
+                equipment_found_and_valid[slot] = false;
                 warning = $"Cannot use {_wanted_item} without Terminator/Dreadnought Armour.";
             }
         }
@@ -842,6 +843,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
                     _armour_required += " " + _class_locks[r];
                 }
             }
+            equipment_found_and_valid[slot] = false;
             warning += $"Cannot use {_wanted_item} without {_armour_required} Armour.";
         }
     }
