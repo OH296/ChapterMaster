@@ -25,6 +25,7 @@
 #macro STR_ANY_TERMINATOR_ARMOUR "Any Terminator Armour"
 
 #macro SHIP_WEAPON_SLOTS 8
+#macro STANDARD_EQUIP_SLOT_COUNT 5
 
 #macro PATH_SAVE_FILES "Save Files/save{0}.json"
 #macro PATH_AUTOSAVE_FILE "Save Files/save0.json"

@@ -84,7 +84,7 @@ cooldown = 0;
 name_bad = 0;
 heheh = 0;
 turn_selection_change = false;
-draw_helms = true;
+default_marine_draw_variables();
 
 var _culture_styles_array = [];
 

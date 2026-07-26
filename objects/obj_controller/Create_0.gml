@@ -502,9 +502,8 @@ command_set[20] = 1;
 command_set[24] = 1;
 
 // Outlier indices
-modest_livery = 0;
-progenitor_visuals = 0;
 tagged_training = 0;
+default_marine_draw_variables();
 
 // ** Default menu items **
 selecting_planet = 0;
