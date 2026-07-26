@@ -438,13 +438,12 @@ function reequip_selection() {
                 if (_current_item != "") {
                     scr_add_item(_current_item, 1);
                 }
-                _temp_array[i] = "";
-                _veh_equip_arrays[s][_slot] = "";
-                LOGGER.info($"log : {STANDARD_EQUIP_SLOT_COUNT}, {_equipment}, {_company}, {_slot}");
+                _temp_array[@ i] = "";
+                _veh_equip_arrays[@ s][@ _slot] = "";
 
                 if (_equipment != ITEM_NAME_NONE && _equipment != "") {
-                    _temp_array[i] = _equipment;
-                    _veh_equip_arrays[s][_slot] = _equipment;
+                    _temp_array[@ i] = _equipment;
+                    _veh_equip_arrays[@ s][@ _slot] = _equipment;
                     if (_equipment != "") {
                         scr_add_item(_equipment, -1);
                     }

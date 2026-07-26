@@ -824,7 +824,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         }
         if (_marines_without_exp > 0){
             equipment_found_and_valid[slot] = false;
-            warning += $"Not {_marines_without_exp} units don't have exp for {_wanted_item}; {_item.req_exp} required.";
+            warning += $"{_marines_without_exp} units don't have exp for {_wanted_item}: {_item.req_exp} required.";
         }
         
 
