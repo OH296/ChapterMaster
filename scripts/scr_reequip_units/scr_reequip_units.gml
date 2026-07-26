@@ -182,7 +182,7 @@ function set_up_equip_popup() {
 
         if (equip_target_type > 0) {
             _units_selected_for_change += 1;
-            var _unit_equipment = UnitEquipment([
+            var _unit_equipment = new UnitEquipment([
                 obj_controller.ma_wep1[f], 
                 obj_controller.ma_wep2[f],
                 obj_controller.ma_armour[f],
@@ -409,23 +409,21 @@ function reequip_selection() {
     }
 
     for (var i = 0; i < array_length(obj_controller.display_unit); i++) {
-        var endcount = 0;
-        if (obj_controller.man[i] == "" || !obj_controller.man_sel[i] || equipment_recipient_type == -1){
+        if (obj_controller.man[i] == "" || !obj_controller.man_sel[i]){
             continue;
         }
-        var check = 0, scout_check = 0;
-        var unit = obj_controller.display_unit[i];
+        var _unit = obj_controller.display_unit[i];
         var standard = master_crafted == 1 ? "master_crafted" : "any";
-        if (is_struct(unit)) {
-            unit.alter_equipment(needed_equipment ,true, true, standard);
+        if (is_struct(_unit)) {
+            _unit.alter_equipment(needed_equipment ,true, true, standard);
             update_man_manage_array(i);
             continue;
-        } else if (is_array(unit) && (equipment_recipient_type > eEQUIP_TARGET_TYPE.DREADNOUGHT)) {
+        } else if (is_array(_unit) && (equipment_recipient_type > eEQUIP_TARGET_TYPE.DREADNOUGHT)) {
 
             var _veh_temp_arrays = [obj_controller.ma_wep1, obj_controller.ma_wep2,obj_controller.ma_armour, obj_controller.ma_gear ,obj_controller.ma_mobi];
 
-            var _company = unit[0];
-            var _slot = unit[1];
+            var _company = _unit[0];
+            var _slot = _unit[1];
             
             var _veh_equip_arrays = [obj_ini.veh_wep1[_company],obj_ini.veh_wep2[_company], obj_ini.veh_wep3[_company], obj_ini.veh_upgrade[_company], obj_ini.veh_acc[_company]];
 
@@ -443,6 +441,7 @@ function reequip_selection() {
                 }
                 _temp_array[i] = "";
                 _equip_array[_slot] = "";
+                LOGGER.info($"log : {STANDARD_EQUIP_SLOT_COUNT}, {_equipment}, {_veh_equip_arrays}, {_company}, {_slot}");
 
                 if ((_equipment != ITEM_NAME_NONE) && (_equipment != "")) {
                     _temp_array[i] = _equipment;
