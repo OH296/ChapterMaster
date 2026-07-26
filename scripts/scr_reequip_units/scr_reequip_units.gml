@@ -1,252 +1,239 @@
+
+
+enum eEQUIP_TARGET_TYPE {
+    NONE = 0,
+    MARINE = 1,
+    DREADNOUGHT,
+    LAND_RAIDER = 50,
+    RHINO = 51,
+    PREDATOR = 52,
+    LAND_SPEEDER = 53,
+    WHIRLWIND = 54,
+}
+
+
 /// @self Asset.GMObject.obj_controller
 function set_up_equip_popup() {
-    if (!instance_exists(obj_popup)) {
-        var nuuum = 0;
-        var o_wep1 = "", o_wep2 = "", o_armour = "", o_gear = "", o_mobi = "";
-        var b_wep1 = 0, b_wep2 = 0, b_armour = 0, b_gear = 0, b_mobi = 0;
-        var vih = 0, _unit;
-        var company = managing <= 10 ? managing : 10;
-        var prev_role;
-        var allow = true;
 
-        var _unchangeable_armour = false;
-        // Need to make sure that group selected is all the same type
-        for (var f = 0; f < array_length(display_unit); f++) {
-            // Set different vih depending on _unit type
-            if (man_sel[f] != 1) {
-                continue;
+    static setup_UI_elements = function(){
+        equipment_area = -1;
+        cancel_button = new UnitButtonObject({
+            x1: 1061,
+            y1: 591,
+            style: "pixel",
+            label: "Cancel",
+        });
+        equip_button = new UnitButtonObject({
+            x1: 1450,
+            y1: 591,
+            style: "pixel",
+            label: "Equip",
+        });
+
+        main_slate = new DataSlate({
+            style: "decorated",
+            XX: 1006,
+            YY: 143,
+            set_width: true,
+            width: 571,
+            height: 450,
+        });
+
+        var _quality_options = [
+            {
+                str1: "Standard",
+                font: fnt_40k_14b,
+                val: 0,
+            },
+            {
+                str1: "Master Crafted",
+                font: fnt_40k_14b,
+                val: 1,
+            },
+        ];
+        quality_radio = new RadioSet(_quality_options, "", {
+            max_width: 500,
+            x1: 1040,
+            y1: 318,
+        });
+
+        range_melee_radio = new RadioSet([
+            {
+                str1: "Ranged",
+                font: fnt_40k_14b,
+                val: eENGAGEMENT.RANGED,
+            },
+            {
+                str1: "Melee",
+                font: fnt_40k_14b,
+                val: eENGAGEMENT.MELEE,
+            },
+        ], "", {
+            max_width: 500,
+            x1: 1040,
+            y1: 343,
+        });
+
+        weapon1_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 215,
+            label: "",
+            font: fnt_40k_12,
+        });
+        weapon2_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 235,
+            label: "",
+            font: fnt_40k_12,
+        });
+        armour_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 255,
+            label: "",
+            font: fnt_40k_12,
+        });
+        if (unchangeable_armour) {
+            armour_select.inactive_col = CM_RED_COLOR;
+            armour_select.tooltip = "One or more Marine has Dreadnought armour and cannot be changed";
+            armour_select.active = false;
+        }
+        gear_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 275,
+            label: "",
+            font: fnt_40k_12,
+        });
+        mobility_select = new UnitButtonObject({
+            x1: 1300,
+            y1: 295,
+            label: "",
+            font: fnt_40k_12,
+        });
+        selectors = [weapon1_select , weapon2_select, armour_select, gear_select, mobility_select];
+    }
+    if (instance_exists(obj_popup)) {
+        return;
+    }
+
+    var _units_selected_for_change = 0;
+    var equip_target_type = eEQUIP_TARGET_TYPE.NONE, _unit;
+    var company = managing <= 10 ? managing : 10;
+    var prev_role;
+    var allow = true;
+
+    var _current_equipment = ["","","","",""];
+
+    var _unchangeable_armour = false;
+    // Need to make sure that group selected is all the same type
+    for (var f = 0; f < array_length(display_unit); f++) {
+        // Set different equip_target_type depending on _unit type
+        if (!man_sel[f]) {
+            continue;
+        }
+        if (equip_target_type == eEQUIP_TARGET_TYPE.NONE) {
+            if (man[f] == "man" && is_struct(display_unit[f])) {
+                _unit = display_unit[f];
+                equip_target_type = _unit.is_dreadnought() ? eEQUIP_TARGET_TYPE.DREADNOUGHT : eEQUIP_TARGET_TYPE.MARINE;
+                if (equip_target_type == eEQUIP_TARGET_TYPE.DREADNOUGHT) {
+                    _unchangeable_armour = true;
+                }
+            } else if (man[f] == "vehicle") {
+                if (ma_role[f] == "Land Raider") {
+                    equip_target_type = eEQUIP_TARGET_TYPE.LAND_RAIDER;
+                } else if (ma_role[f] == "Rhino") {
+                    equip_target_type = eEQUIP_TARGET_TYPE.RHINO;
+                } else if (ma_role[f] == "Predator") {
+                    equip_target_type = eEQUIP_TARGET_TYPE.PREDATOR;
+                } else if (ma_role[f] == "Land Speeder") {
+                    equip_target_type = eEQUIP_TARGET_TYPE.LAND_SPEEDER;
+                } else if (ma_role[f] == "Whirlwind") {
+                    equip_target_type = eEQUIP_TARGET_TYPE.WHIRLWIND;
+                }
+                prev_role = ma_role[f];
             }
-            if (vih == 0) {
-                if (man[f] == "man" && is_struct(display_unit[f])) {
+        } else {
+            if (equip_target_type == eEQUIP_TARGET_TYPE.MARINE || equip_target_type == eEQUIP_TARGET_TYPE.DREADNOUGHT) {
+                if (man[f] == "vehicle") {
+                    allow = false;
+                    break;
+                } else if (man[f] == "man" && is_struct(display_unit[f])) {
                     _unit = display_unit[f];
-                    vih = _unit.is_dreadnought() ? 6 : 1;
-                    if (vih == 6) {
-                        _unchangeable_armour = true;
+                    var _is_dread = _unit.is_dreadnought();
+                    if (_is_dread && equip_target_type == eEQUIP_TARGET_TYPE.MARINE) {
+                        allow = false;
+                        break;
+                    } else if (!_is_dread && equip_target_type == eEQUIP_TARGET_TYPE.DREADNOUGHT) {
+                        allow = false;
+                        break;
                     }
+                }
+            } else if (equip_target_type >= 50) {
+                if (man[f] == "man") {
+                    allow = false;
+                    break;
                 } else if (man[f] == "vehicle") {
-                    if (ma_role[f] == "Land Raider") {
-                        vih = 50;
-                    } else if (ma_role[f] == "Rhino") {
-                        vih = 51;
-                    } else if (ma_role[f] == "Predator") {
-                        vih = 52;
-                    } else if (ma_role[f] == "Land Speeder") {
-                        vih = 53;
-                    } else if (ma_role[f] == "Whirlwind") {
-                        vih = 54;
-                    }
-                    prev_role = ma_role[f];
-                }
-            } else {
-                if (vih == 1 || vih == 6) {
-                    if (man[f] == "vehicle") {
+                    if (prev_role != ma_role[f]) {
                         allow = false;
                         break;
-                    } else if (man[f] == "man" && is_struct(display_unit[f])) {
-                        _unit = display_unit[f];
-                        var _is_dread = _unit.is_dreadnought();
-                        if (_is_dread && vih == 1) {
-                            allow = false;
-                            break;
-                        } else if (!_is_dread && vih == 6) {
-                            allow = false;
-                            break;
-                        }
-                    }
-                } else if (vih >= 50) {
-                    if (man[f] == "man") {
-                        allow = false;
-                        break;
-                    } else if (man[f] == "vehicle") {
-                        if (prev_role != ma_role[f]) {
-                            allow = false;
-                            break;
-                        }
                     }
                 }
             }
+        }
 
-            if (vih > 0) {
-                nuuum += 1;
-                if ((o_wep1 == "") && (ma_wep1[f] != "")) {
-                    o_wep1 = ma_wep1[f];
-                }
-                if ((o_wep2 == "") && (ma_wep2[f] != "")) {
-                    o_wep2 = ma_wep2[f];
-                }
-                if ((o_armour == "") && (ma_armour[f] != "")) {
-                    o_armour = ma_armour[f];
-                }
-                if ((o_gear == "") && (ma_gear[f] != "")) {
-                    o_gear = ma_gear[f];
-                }
-                if ((o_mobi == "") && (ma_mobi[f] != "")) {
-                    o_mobi = ma_mobi[f];
-                }
+        if (equip_target_type > 0) {
+            _units_selected_for_change += 1;
+            var _unit_equipment = new UnitEquipment([
+                obj_controller.ma_wep1[f], 
+                obj_controller.ma_wep2[f],
+                obj_controller.ma_armour[f],
+                obj_controller.ma_gear[f] ,
+                obj_controller.ma_mobi[f]
+            ]);
 
-                if (ma_wep1[f] == "") {
-                    b_wep1 += 1;
-                }
-                if (ma_wep2[f] == "") {
-                    b_wep2 += 1;
-                }
-                if (ma_armour[f] == "") {
-                    b_armour += 1;
-                }
-                if (ma_gear[f] == "") {
-                    b_gear += 1;
-                }
-                if (ma_mobi[f] == "") {
-                    b_mobi += 1;
+            for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+                var _item_name = _unit_equipment.item_names[i];
+
+                var _no_item = _item_name == "";
+
+                if (_no_item && _current_equipment[i] == "" ){
+                    continue;
                 }
 
-                if (((o_wep1 != "") && (ma_wep1[f] != o_wep1)) || (b_wep1 == 1)) {
-                    o_wep1 = "Assortment";
+                var _is_assortment = _current_equipment[i] == "Assortment";
+
+                if (_is_assortment){
+                    continue;
                 }
-                if (((o_wep2 != "") && (ma_wep2[f] != o_wep2)) || (b_wep2 == 1)) {
-                    o_wep2 = "Assortment";
-                }
-                if (((o_armour != "") && (ma_armour[f] != o_armour)) || (b_armour == 1)) {
-                    o_armour = "Assortment";
-                }
-                if (((o_gear != "") && (ma_gear[f] != o_gear)) || (b_gear == 1)) {
-                    o_gear = "Assortment";
-                }
-                if (((o_mobi != "") && (ma_mobi[f] != o_mobi)) || (b_mobi == 1)) {
-                    o_mobi = "Assortment";
+
+                if (_current_equipment[i] == ""){
+                    _current_equipment[i] = _item_name;
+                } else if (_current_equipment[i] != _item_name){
+                    _current_equipment[i] = "Assortment"
                 }
             }
         }
-
-        if (b_wep1 == nuuum) {
-            o_wep1 = "";
+    }
+    for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+        if (_current_equipment[i] == "" || _current_equipment[i] == 0){
+            _current_equipment[i] = ITEM_NAME_NONE;
         }
-        if (b_wep2 == nuuum) {
-            o_wep2 = "";
-        }
-        if (b_armour == nuuum) {
-            o_armour = "";
-        }
-        if (b_gear == nuuum) {
-            o_gear = "";
-        }
-        if (b_mobi == nuuum) {
-            o_mobi = "";
-        }
+    }
 
-        if (vih > 0 && man_size > 0 && allow) {
-            var pip = instance_create(0, 0, obj_popup);
-            pip.type = ePOPUP_TYPE.EQUIP;
-            pip.o_wep1 = o_wep1;
-            pip.o_wep2 = o_wep2;
-            pip.o_armour = o_armour;
-            pip.o_gear = o_gear;
-            pip.n_wep1 = o_wep1;
-            pip.n_wep2 = o_wep2;
-            pip.n_armour = o_armour;
-            pip.n_gear = o_gear;
-            pip.o_mobi = o_mobi;
-            pip.n_mobi = o_mobi;
-            pip.company = managing;
-            pip.units = nuuum;
+    if (equip_target_type > 0 && man_size > 0 && allow) {
+        var pip = instance_create(0, 0, obj_popup);
+        pip.type = ePOPUP_TYPE.EQUIP;
+        pip.current_equipment = _current_equipment;
+        pip.needed_equipment = _current_equipment;
+        pip.equipment_found_and_valid = array_create(5,true);
+        pip.company = managing;
+        pip.unit_count = _units_selected_for_change;
+        pip.unchangeable_armour = _unchangeable_armour;
+        pip.sprite_index = noone;
 
-            //Forwards vih selection to the vehicle_equipment variable used in mouse_50 obj_popup and weapons_equip script
-            pip.vehicle_equipment = vih;
-            with (pip) {
-                equipment_area = -1;
-                cancel_button = new UnitButtonObject({
-                    x1: 1061,
-                    y1: 591,
-                    style: "pixel",
-                    label: "Cancel",
-                });
-                equip_button = new UnitButtonObject({
-                    x1: 1450,
-                    y1: 591,
-                    style: "pixel",
-                    label: "Equip",
-                });
-
-                main_slate = new DataSlate({
-                    style: "decorated",
-                    XX: 1006,
-                    YY: 143,
-                    set_width: true,
-                    width: 571,
-                    height: 450,
-                });
-
-                var _quality_options = [
-                    {
-                        str1: "Standard",
-                        font: fnt_40k_14b,
-                        val: 0,
-                    },
-                    {
-                        str1: "Master Crafted",
-                        font: fnt_40k_14b,
-                        val: 1,
-                    },
-                ];
-                quality_radio = new RadioSet(_quality_options, "", {
-                    max_width: 500,
-                    x1: 1040,
-                    y1: 318,
-                });
-
-                range_melee_radio = new RadioSet([
-                    {
-                        str1: "Ranged",
-                        font: fnt_40k_14b,
-                        val: eENGAGEMENT.RANGED,
-                    },
-                    {
-                        str1: "Melee",
-                        font: fnt_40k_14b,
-                        val: eENGAGEMENT.MELEE,
-                    },
-                ], "", {
-                    max_width: 500,
-                    x1: 1040,
-                    y1: 343,
-                });
-
-                weapon1_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 215,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                weapon2_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 235,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                armour_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 255,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                if (_unchangeable_armour) {
-                    armour_select.inactive_col = CM_RED_COLOR;
-                    armour_select.tooltip = "One or more Marine has Dreadnought armour and cannot be changed";
-                    armour_select.active = false;
-                }
-                gear_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 275,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-                mobility_select = new UnitButtonObject({
-                    x1: 1300,
-                    y1: 295,
-                    label: "",
-                    font: fnt_40k_12,
-                });
-            }
+        //Forwards equip_target_type selection to the equipment_recipient_type variable used in mouse_50 obj_popup and weapons_equip script
+        pip.equipment_recipient_type = equip_target_type;
+        with (pip) {
+            setup_UI_elements();
         }
     }
 }
@@ -256,49 +243,13 @@ function reload_items() {
     item_name = [];
     scr_get_item_names(
         item_name,
-        vehicle_equipment, // eROLE
+        equipment_recipient_type, // eROLE
         equipment_area, // slot
         range_melee_radio.selection_val("val"),
         false, // include company standard
         true, // limit to available equipment
         quality_radio.selection_val("val"),
     );
-}
-
-/// @param {Struct.EquipmentStruct} _armour_data
-/// @param {Struct.EquipmentStruct} _mobility_data
-/// @returns {Struct} { valid: bool, warning: string }
-function check_mobility_armour_compatibility(_armour_data, _mobility_data) {
-    var _result = {
-        valid: true,
-        warning: "",
-    };
-
-    if (is_struct(_armour_data) && is_struct(_mobility_data)) {
-        if (_armour_data.has_tag("terminator") && !_mobility_data.has_tag("terminator") && !_mobility_data.has_tag("terminator_only")) {
-            _result.valid = false;
-            _result.warning = "Cannot use this with Terminator Armour.";
-        } else if (!_armour_data.has_tag("terminator") && _mobility_data.has_tag("terminator_only")) {
-            _result.valid = false;
-            _result.warning = "Cannot use this without Terminator Armour.";
-        } else if (_armour_data.has_tag("dreadnought") && !_mobility_data.has_tag("dreadnought") && !_mobility_data.has_tag("dreadnought_only")) {
-            _result.valid = false;
-            _result.warning = "Cannot use this with Dreadnought Armour.";
-        } else if (!_armour_data.has_tag("dreadnought") && _mobility_data.has_tag("dreadnought_only")) {
-            _result.valid = false;
-            _result.warning = "Cannot use this without Dreadnought Armour.";
-        }
-    } else if (!is_struct(_armour_data) && is_struct(_mobility_data)) {
-        if (_mobility_data.has_tag("terminator") || _mobility_data.has_tag("terminator_only")) {
-            _result.valid = false;
-            _result.warning = "Cannot use this without Terminator Armour.";
-        } else if (_mobility_data.has_tag("dreadnought") || _mobility_data.has_tag("dreadnought_only")) {
-            _result.valid = false;
-            _result.warning = "Cannot use this without Dreadnought Armour.";
-        }
-    }
-
-    return _result;
 }
 
 /// @self Asset.GMObject.obj_popup
@@ -315,13 +266,14 @@ function draw_popup_equip() {
         comp = "HQ";
     }
 
-    if (vehicle_equipment < 6) {
-        draw_text(1292, 175, $"{comp} Company, {units} Marines");
-    } else if (vehicle_equipment == 6) {
-        draw_text(1292, 175, $"{comp} Company, {units} Dreadnoughts");
-    } else {
-        draw_text(1292, 175, $"{comp} Company, {units} Vehicles");
+    //TODO calc once and store in reactive string
+    var _descriptor = "Marines";
+    if (equipment_recipient_type == eEQUIP_TARGET_TYPE.DREADNOUGHT) {
+        var _descriptor = "Dreadnoughts";
+    } else if (equipment_recipient_type > eEQUIP_TARGET_TYPE.DREADNOUGHT){
+        var _descriptor = "Vehicles";
     }
+    draw_text(1292, 175, $"{comp} Company, {unit_count} {_descriptor}");
 
     draw_set_halign(fa_left);
     draw_set_color(CM_GREEN_COLOR);
@@ -329,108 +281,31 @@ function draw_popup_equip() {
     var show_name = "";
     // Need to not show the artifact tags here somehow
 
-    draw_text(1010, 195, "Before");
-    draw_text(1010.5, 195.5, "Before");
+    draw_text_outline(1020, 195, "Before");
 
-    show_name = o_wep1;
-    if (a_wep1 != "") {
-        show_name = a_wep1;
-    }
-    if (o_wep1 != "") {
-        draw_text(1014, 215, string_hash_to_newline(show_name));
-    } else {
-        draw_text(1014, 215, ITEM_NAME_NONE);
+    for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+        var _current = current_equipment[i]
+        if (_current == "") {
+            _current = ITEM_NAME_NONE;    
+        }
+        draw_text(1024, 215 + (i * 20), _current);
     }
 
-    show_name = o_wep2;
-    if (a_wep2 != "") {
-        show_name = a_wep2;
-    }
-    if (o_wep2 != "") {
-        draw_text(1014, 235, string_hash_to_newline(string(show_name)));
-    } else {
-        draw_text(1014, 235, ITEM_NAME_NONE);
-    }
+    draw_text_outline(1296, 195, "After");
 
-    show_name = o_armour;
-    if (a_armour != "") {
-        show_name = a_armour;
+    for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+        var _selector = selectors[i];
+        var _needed = needed_equipment[i];
+        _needed = _needed != "" ? _needed : ITEM_NAME_NONE;
+        var _colour = equipment_found_and_valid[i] ?  CM_GREEN_COLOR : CM_RED_COLOR;
+        _selector.update({label: _needed, color: _colour});
     }
-    if (o_armour != "") {
-        draw_text(1014, 255, string_hash_to_newline(string(show_name)));
-    } else {
-        draw_text(1014, 255, ITEM_NAME_NONE);
-    }
-
-    show_name = o_gear;
-    if (a_gear != "") {
-        show_name = a_gear;
-    }
-    if (o_gear != "") {
-        draw_text(1014, 275, string_hash_to_newline(string(show_name)));
-    } else {
-        draw_text(1014, 275, ITEM_NAME_NONE);
-    }
-
-    show_name = o_mobi;
-    if (a_mobi != "") {
-        show_name = a_mobi;
-    }
-    if (o_mobi != "") {
-        draw_text(1014, 295, string_hash_to_newline(string(show_name)));
-    } else {
-        draw_text(1014, 295, ITEM_NAME_NONE);
-    }
-
-    draw_text(1296, 195, string_hash_to_newline("After"));
-    draw_text(1296.5, 195.5, "After");
-
-    show_name = n_wep1;
-    if ((a_wep1 != "") && (n_wep1 == o_wep1)) {
-        show_name = a_wep1;
-    }
-
-    weapon1_select.update({label: show_name != "" ? show_name : ITEM_NAME_NONE, color: n_good1 == 0 ? CM_RED_COLOR : CM_GREEN_COLOR});
-
-    show_name = n_wep2;
-    if ((a_wep2 != "") && (n_wep2 == o_wep2)) {
-        show_name = a_wep2;
-    }
-
-    weapon2_select.update({label: show_name != "" ? show_name : ITEM_NAME_NONE, color: n_good2 == 0 ? CM_RED_COLOR : CM_GREEN_COLOR});
-
-    show_name = n_armour;
-    if ((a_armour != "") && (n_armour == o_armour)) {
-        show_name = a_armour;
-    }
-
-    armour_select.update({label: show_name != "" ? show_name : ITEM_NAME_NONE, color: n_good3 == 0 ? CM_RED_COLOR : CM_GREEN_COLOR});
-
-    show_name = n_gear;
-    if ((a_gear != "") && (n_gear == o_gear)) {
-        show_name = a_gear;
-    }
-    gear_select.update({label: show_name != "" ? show_name : ITEM_NAME_NONE, color: n_good4 == 0 ? CM_RED_COLOR : CM_GREEN_COLOR});
-
-    show_name = n_mobi;
-    if ((a_mobi != "") && (n_mobi == o_mobi)) {
-        show_name = a_mobi;
-    }
-
-    mobility_select.update({label: show_name != "" ? show_name : ITEM_NAME_NONE, color: n_good5 == 0 ? CM_RED_COLOR : CM_GREEN_COLOR});
 
     draw_set_color(CM_GREEN_COLOR);
-    var _buttons = [
-        weapon1_select,
-        weapon2_select,
-        armour_select,
-        gear_select,
-        mobility_select,
-    ];
 
     var _area_change = false;
-    for (var i = 0; i <= 4; i++) {
-        var _button = _buttons[i];
+    for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+        var _button = selectors[i];
         if (_button.draw(equipment_area != i)) {
             equipment_area = i;
             _area_change = true;
@@ -453,15 +328,6 @@ function draw_popup_equip() {
         var box_y;
         var top = -1;
 
-        var selected_item_name = [
-            n_wep1,
-            n_wep2,
-            n_armour,
-            n_gear,
-            n_mobi,
-        ];
-        selected_item_name = selected_item_name[equipment_area];
-
         for (var o = 0; o < array_length(item_name); o++) {
             box_x = 1016 + (row * 154);
             box_y = 380 + (column * 20);
@@ -471,7 +337,7 @@ function draw_popup_equip() {
                 box_x + 144,
                 box_y + 20,
             ];
-            check = selected_item_name == item_name[o] ? "x" : " ";
+            check = needed_equipment[equipment_area] == item_name[o] ? "x" : " ";
             item_string = $"[{check}] {item_name[o]}";
             draw_text_transformed(box_x, box_y, item_string, mct, 1, 0);
             if (scr_hit(box)) {
@@ -489,252 +355,15 @@ function draw_popup_equip() {
 
         if (top != -1) {
             warning = "";
-            switch (equipment_area) {
-                case 0:
-                    n_wep1 = item_name[top];
-                    sel1 = top;
-                    break;
-                case 1:
-                    n_wep2 = item_name[top];
-                    sel2 = top;
-                    break;
-                case 2:
-                    n_armour = item_name[top];
-                    sel3 = top;
-                    break;
-                case 3:
-                    n_gear = item_name[top];
-                    sel4 = top;
-                    break;
-                case 4:
-                    n_mobi = item_name[top];
-                    sel5 = top;
-                    break;
-            }
+            needed_equipment[equipment_area] = item_name[top]
         }
 
-        if (equipment_area == eEQUIPMENT_SLOT.WEAPON_ONE && (n_wep1 == ITEM_NAME_NONE || n_wep1 == "")) {
-            n_good1 = 1;
-        }
-        if (equipment_area == eEQUIPMENT_SLOT.WEAPON_TWO && (n_wep2 == ITEM_NAME_NONE || n_wep2 == "")) {
-            n_good2 = 1;
-        }
-        if (equipment_area == eEQUIPMENT_SLOT.ARMOUR && (n_armour == ITEM_NAME_NONE || n_armour == "")) {
-            n_good3 = 1;
-        }
-        if (equipment_area == eEQUIPMENT_SLOT.GEAR && (n_gear == ITEM_NAME_NONE || n_gear == "")) {
-            n_good4 = 1;
-        }
-        if (equipment_area == eEQUIPMENT_SLOT.MOBILITY && (n_mobi == ITEM_NAME_NONE || n_mobi == "")) {
-            n_good5 = 1;
-        }
+        var _equip_data = new UnitEquipment(needed_equipment);
+        var _results = _equip_data.check_set_is_equipable(unit_count);
 
-        var weapon_one_data = gear_weapon_data("weapon", n_wep1);
-        var weapon_two_data = gear_weapon_data("weapon", n_wep2);
-        var armour_data = gear_weapon_data("armour", n_armour);
-        var gear_data = gear_weapon_data("gear", n_gear);
-        var mobility_data = gear_weapon_data("mobility", n_mobi);
+        equipment_found_and_valid = _results.equipment_found_and_valid;
+        warning = _results.warning;
 
-        if ((equipment_area == eEQUIPMENT_SLOT.WEAPON_ONE) && is_struct(weapon_one_data)) {
-            // Check numbers
-            req_wep1_num = units;
-            have_wep1_num = 0;
-            var i = -1;
-            repeat (array_length(obj_controller.display_unit)) {
-                i += 1;
-                if ((vehicle_equipment != -1) && (obj_controller.ma_wep1[i] == n_wep1)) {
-                    have_wep1_num += 1;
-                }
-            }
-            have_wep1_num += scr_item_count(n_wep1);
-            if (have_wep1_num >= req_wep1_num || n_wep1 == ITEM_NAME_NONE) {
-                n_good1 = 1;
-            }
-            if (have_wep1_num < req_wep1_num && (n_wep1 != ITEM_NAME_ANY && n_wep1 != ITEM_NAME_NONE)) {
-                n_good1 = 0;
-                warning = "Not enough " + string(n_wep1) + "; " + string(req_wep1_num - have_wep1_num) + " more are required.";
-            }
-
-            //TODO wrap this up in a function
-            if (weapon_one_data.req_exp > 0) {
-                for (var g = 0; g < array_length(obj_controller.display_unit); g++) {
-                    if (obj_controller.man_sel[g] == 1 && is_struct(obj_controller.display_unit[g])) {
-                        if (obj_controller.display_unit[g].experience < weapon_one_data.req_exp) {
-                            n_good1 = 0;
-                            warning = $"A unit must have {weapon_one_data.req_exp}+ EXP to use a {weapon_one_data.name}.";
-                            break;
-                        }
-                    }
-                }
-            }
-            if (is_struct(armour_data)) {
-                if (((!array_contains(armour_data.tags, "terminator")) && (!array_contains(armour_data.tags, "dreadnought"))) && (n_wep1 == "Assault Cannon")) {
-                    n_good1 = 0;
-                    warning = "Cannot use Assault Cannons without Terminator/Dreadnought Armour.";
-                }
-                if ((!array_contains(armour_data.tags, "dreadnought")) && (n_wep1 == "Close Combat Weapon")) {
-                    n_good1 = 0;
-                    warning = "Only " + string(obj_ini.role[100][6]) + " can use Close Combat Weapons.";
-                }
-            }
-        }
-        if ((equipment_area == eEQUIPMENT_SLOT.WEAPON_TWO) && is_struct(weapon_two_data)) {
-            // Check numbers
-            req_wep2_num = units;
-            have_wep2_num = 0;
-            for (var i = 0; i < array_length(obj_controller.display_unit); i++) {
-                if ((vehicle_equipment != -1) && (obj_controller.ma_wep2[i] == n_wep2)) {
-                    have_wep2_num += 1;
-                }
-            }
-            // req_wep2_num+=scr_item_count(n_wep2);
-            have_wep2_num += scr_item_count(n_wep2);
-            // req_wep2_num=units;
-
-            if (have_wep2_num >= req_wep2_num || n_wep2 == ITEM_NAME_NONE) {
-                n_good2 = 1;
-            }
-            if (have_wep2_num < req_wep2_num && (n_wep2 != ITEM_NAME_ANY && n_wep2 != ITEM_NAME_NONE)) {
-                n_good2 = 0;
-                warning = $"Not enough {n_wep2}; {req_wep2_num - have_wep2_num} more are required.";
-            }
-            //TODO standardise exp check
-            if (weapon_two_data.req_exp > 0) {
-                for (var g = 0; g < array_length(obj_controller.display_unit); g++) {
-                    if (obj_controller.man_sel[g] == 1 && is_struct(obj_controller.display_unit[g])) {
-                        if (obj_controller.display_unit[g].experience < weapon_two_data.req_exp) {
-                            n_good2 = 0;
-                            warning = $"A unit must have {weapon_two_data.req_exp}+ EXP to use a {weapon_two_data.name}.";
-                            break;
-                        }
-                    }
-                }
-            }
-            if (is_struct(armour_data)) {
-                if (((!array_contains(armour_data.tags, "terminator")) && (!array_contains(armour_data.tags, "dreadnought"))) && (n_wep2 == "Assault Cannon")) {
-                    n_good2 = 0;
-                    warning = "Cannot use Assault Cannons without Terminator/Dreadnought Armour.";
-                }
-                if ((!array_contains(armour_data.tags, "dreadnought")) && (n_wep2 == "Close Combat Weapon")) {
-                    n_good2 = 0;
-                    warning = "Only " + string(obj_ini.role[100][6]) + " can use Close Combat Weapons.";
-                }
-            }
-        }
-        if (equipment_area == eEQUIPMENT_SLOT.ARMOUR) {
-            if (is_struct(armour_data)) {
-                // Check numbers
-                req_armour_num = units;
-                have_armour_num = 0;
-                for (var i = 0; i < array_length(obj_controller.display_unit); i++) {
-                    if ((vehicle_equipment != -1) && (obj_controller.man_sel[i] == 1) && (obj_controller.ma_armour[i] == n_armour)) {
-                        have_armour_num += 1;
-                    }
-                }
-                have_armour_num += scr_item_count(n_armour);
-
-                if (have_armour_num >= req_armour_num || n_armour == ITEM_NAME_NONE) {
-                    n_good3 = 1;
-                }
-                if (have_armour_num < req_armour_num && (n_armour != ITEM_NAME_ANY && n_armour != ITEM_NAME_NONE)) {
-                    n_good3 = 0;
-                    warning = $"Not enough {n_armour} : {req_armour_num - have_armour_num} more are required.";
-                }
-
-                if (armour_data.has_tag("terminator")) {
-                    if (armour_data.req_exp > 0) {
-                        for (var g = 0; g < array_length(obj_controller.display_unit); g++) {
-                            if (obj_controller.man_sel[g] == 1 && is_struct(obj_controller.display_unit[g])) {
-                                if (obj_controller.display_unit[g].experience < armour_data.req_exp) {
-                                    n_good3 = 0;
-                                    warning = $"A unit must have {armour_data.req_exp}+ EXP to use a {armour_data.name}.";
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if ((string_count("Dread", o_armour) > 0) && (string_count("Dread", n_armour) == 0)) {
-                    n_good4 = 0;
-                    warning = "Marines may not exit Dreadnoughts.";
-                }
-            }
-
-            if (is_struct(mobility_data)) {
-                n_good5 = 1;
-                var _compat = check_mobility_armour_compatibility(armour_data, mobility_data);
-                if (!_compat.valid) {
-                    n_good5 = 0;
-                    warning = _compat.warning;
-                }
-            }
-        }
-        if ((equipment_area == eEQUIPMENT_SLOT.GEAR) && (n_gear != "Assortment") && (n_gear != ITEM_NAME_NONE)) {
-            // Check numbers
-            req_gear_num = units;
-            have_gear_num = 0;
-            var i;
-            i = -1;
-            repeat (array_length(obj_controller.display_unit)) {
-                i += 1;
-                if ((vehicle_equipment != -1) && (obj_controller.man_sel[i] == 1) && (obj_controller.ma_gear[i] == n_gear)) {
-                    have_gear_num += 1;
-                }
-            }
-            have_gear_num += scr_item_count(n_gear);
-
-            if (have_gear_num >= req_gear_num || n_gear == ITEM_NAME_NONE) {
-                n_good4 = 1;
-            }
-            if (have_gear_num < req_gear_num && (n_gear != ITEM_NAME_ANY && n_gear != ITEM_NAME_NONE)) {
-                n_good4 = 0;
-                warning = "Not enough " + string(n_gear) + "; " + string(req_gear_num - have_gear_num) + " more are required.";
-            }
-
-            if (is_struct(armour_data) && is_struct(gear_data)) {
-                /*if (armour_data.has_tag("terminator") && !gear_data.has_tag("terminator") && !gear_data.has_tag("terminator_only")) {
-                    n_good4 = 0;
-                    warning = "Cannot use this with Terminator Armour.";
-                } else if (!armour_data.has_tag("terminator") && gear_data.has_tag("terminator_only")) {
-                    n_good4 = 0;
-                    warning = "Cannot use this without Terminator Armour.";
-                } else*/ if (armour_data.has_tag("dreadnought") && !gear_data.has_tag("dreadnought") && !gear_data.has_tag("dreadnought_only")) {
-                    n_good4 = 0;
-                    warning = "Cannot use this with Dreadnought Armour.";
-                } else if (!armour_data.has_tag("dreadnought") && gear_data.has_tag("dreadnought_only")) {
-                    n_good4 = 0;
-                    warning = "Cannot use this without Dreadnought Armour.";
-                }
-            }
-        }
-        if ((equipment_area == eEQUIPMENT_SLOT.MOBILITY) && (n_mobi != "Assortment") && (n_mobi != ITEM_NAME_NONE) && n_mobi != ITEM_NAME_ANY) {
-            // Check numbers
-            req_mobi_num = units;
-            have_mobi_num = 0;
-            for (var i = 0; i < array_length(obj_controller.display_unit); i++) {
-                if ((vehicle_equipment != -1) && (obj_controller.man_sel[i] == 1) && (obj_controller.ma_mobi[i] == n_mobi)) {
-                    have_mobi_num += 1;
-                }
-            }
-            have_mobi_num += scr_item_count(n_mobi);
-
-            if (have_mobi_num >= req_mobi_num || n_mobi == ITEM_NAME_NONE) {
-                n_good5 = 1;
-            }
-            if (have_mobi_num < req_mobi_num && (n_mobi != ITEM_NAME_ANY && n_mobi != ITEM_NAME_NONE)) {
-                n_good5 = 0;
-                warning = "Not enough " + string(n_mobi) + "; " + string(req_mobi_num - have_mobi_num) + " more are required.";
-            }
-
-            if (is_struct(mobility_data)) {
-                var _compat = check_mobility_armour_compatibility(armour_data, mobility_data);
-                if (!_compat.valid) {
-                    n_good5 = 0;
-                    warning = _compat.warning;
-                }
-            }
-        }
     }
 
     //draw_set_halign(fa_center);
@@ -752,13 +381,19 @@ function draw_popup_equip() {
 
     draw_set_color(255);
     draw_set_halign(fa_center);
-    draw_text(1292, 570, string_hash_to_newline(warning));
+    draw_text(1292, 570, warning);
 
     if (cancel_button.draw()) {
         instance_destroy();
     }
 
-    var _valid = (n_good1 + n_good2 + n_good3 + n_good4 + n_good5) == 5;
+    var _valid = true;
+        for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+            if (!equipment_found_and_valid[i]){
+                _valid = false;
+                break;
+            }
+        }
 
     if (equip_button.draw(_valid)) {
         reequip_selection();
@@ -767,135 +402,54 @@ function draw_popup_equip() {
 
 /// @self Asset.GMObject.obj_popup
 function reequip_selection() {
-    if (n_wep1 == ITEM_NAME_NONE) {
-        n_wep1 = "";
-    }
-    if (n_wep2 == ITEM_NAME_NONE) {
-        n_wep2 = "";
-    }
-    if (n_armour == ITEM_NAME_NONE) {
-        n_armour = "";
-    }
-    if (n_gear == ITEM_NAME_NONE) {
-        n_gear = "";
-    }
-    if (n_mobi == ITEM_NAME_NONE) {
-        n_mobi = "";
+    for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
+        if (needed_equipment[i] == ITEM_NAME_NONE){
+            needed_equipment[i] = "";
+        }
     }
 
     for (var i = 0; i < array_length(obj_controller.display_unit); i++) {
-        var endcount = 0;
+        if (obj_controller.man[i] == "" || !obj_controller.man_sel[i]){
+            continue;
+        }
+        var _unit = obj_controller.display_unit[i];
+        var standard = master_crafted == 1 ? "master_crafted" : "any";
+        if (is_struct(_unit)) {
+            _unit.alter_equipment(needed_equipment ,true, true, standard);
+            update_man_manage_array(i);
+            continue;
+        } else if (is_array(_unit) && (equipment_recipient_type > eEQUIP_TARGET_TYPE.DREADNOUGHT)) {
 
-        if ((obj_controller.man[i] != "") && obj_controller.man_sel[i] && (vehicle_equipment != -1)) {
-            var check = 0, scout_check = 0;
-            var unit = obj_controller.display_unit[i];
-            var standard = master_crafted == 1 ? "master_crafted" : "any";
-            if (is_struct(unit)) {
-                unit.update_armour(n_armour, true, true, standard);
-                unit.update_mobility_item(n_mobi, true, true, standard);
-                unit.update_weapon_one(n_wep1, true, true, standard);
-                unit.update_weapon_two(n_wep2, true, true, standard);
-                unit.update_gear(n_gear, true, true, standard);
+            var _veh_temp_arrays = [obj_controller.ma_wep1, obj_controller.ma_wep2,obj_controller.ma_armour, obj_controller.ma_gear ,obj_controller.ma_mobi];
 
-                update_man_manage_array(i);
-                continue;
-            } else if (is_array(unit)) {
-                // NOPE
-                if ((check == 0) && (n_armour != obj_controller.ma_armour[i]) && (n_armour != "Assortment") && (vehicle_equipment != 1) && (vehicle_equipment != 6)) {
-                    //vehicle wep3
-                    if (obj_controller.ma_armour[i] != "") {
-                        scr_add_item(obj_controller.ma_armour[i], 1);
-                    }
-                    obj_controller.ma_armour[i] = "";
-                    obj_ini.veh_wep3[unit[0]][unit[1]] = "";
+            var _company = _unit[0];
+            var _slot = _unit[1];
+            
+            var _veh_equip_arrays = [obj_ini.veh_wep1[_company],obj_ini.veh_wep2[_company], obj_ini.veh_wep3[_company], obj_ini.veh_upgrade[_company], obj_ini.veh_acc[_company]];
 
-                    if ((n_armour != ITEM_NAME_NONE) && (n_armour != "")) {
-                        obj_controller.ma_armour[i] = n_armour;
-                        obj_ini.veh_wep3[unit[0]][unit[1]] = n_armour;
-                        if (n_armour != "") {
-                            scr_add_item(n_armour, -1);
-                        }
-                    }
-                }
-                check = 0;
-                if ((n_wep1 == obj_controller.ma_wep1[i]) || (n_wep1 == "Assortment")) {
-                    check = 1;
+            for (var s = 0; s < STANDARD_EQUIP_SLOT_COUNT; s++){
+                var _temp_array = _veh_temp_arrays[s];
+                var _equipment = needed_equipment[s];
+                var _current_item = _temp_array[i];
+                if (_equipment == "Assortment" || _equipment == _current_item){
+                    continue;
                 }
 
-                if (check == 0) {
-                    if ((n_wep1 != obj_controller.ma_wep1[i]) && (n_wep1 != "Assortment") && (vehicle_equipment != 1) && (vehicle_equipment != 6)) {
-                        // vehicle wep1
-                        if ((obj_controller.ma_wep1[i] != "") && (obj_controller.ma_wep1[i] != n_wep1)) {
-                            scr_add_item(obj_controller.ma_wep1[i], 1);
-                            obj_controller.ma_wep1[i] = "";
-                            obj_ini.veh_wep1[unit[0]][unit[1]] = "";
-                        }
-                        if (n_wep1 != "") {
-                            scr_add_item(n_wep1, -1);
-                            obj_controller.ma_wep1[i] = n_wep1;
-                            obj_ini.veh_wep1[unit[0]][unit[1]] = n_wep1;
-                        }
+                if (_current_item != "") {
+                    scr_add_item(_current_item, 1);
+                }
+                _temp_array[@ i] = "";
+                _veh_equip_arrays[@ s][@ _slot] = "";
+
+                if (_equipment != ITEM_NAME_NONE && _equipment != "") {
+                    _temp_array[@ i] = _equipment;
+                    _veh_equip_arrays[@ s][@ _slot] = _equipment;
+                    if (_equipment != "") {
+                        scr_add_item(_equipment, -1);
                     }
                 }
-                // End swap weapon1
-
-                check = 0;
-
-                if ((n_wep2 == obj_controller.ma_wep2[i]) || (n_wep2 == "Assortment")) {
-                    check = 1;
-                }
-
-                if ((check == 0) && (n_wep2 != obj_controller.ma_wep2[i]) && (n_wep2 != "Assortment") && (vehicle_equipment != 1) && (vehicle_equipment != 6)) {
-                    // vehicle wep2
-                    if ((obj_controller.ma_wep2[i] != "") && (obj_controller.ma_wep2[i] != n_wep2)) {
-                        scr_add_item(obj_controller.ma_wep2[i], 1);
-                        obj_controller.ma_wep2[i] = "";
-                        obj_ini.veh_wep2[unit[0]][unit[1]] = "";
-                    }
-                    if (n_wep2 != "") {
-                        scr_add_item(n_wep2, -1);
-                        obj_controller.ma_wep2[i] = n_wep2;
-                        obj_ini.veh_wep2[unit[0]][unit[1]] = n_wep2;
-                    }
-                }
-                // End swap weapon2
-
-                check = 0;
-
-                if ((check == 0) && (n_gear != obj_controller.ma_gear[i]) && (n_gear != "Assortment") && (vehicle_equipment != 1) && (vehicle_equipment != 6)) {
-                    //vehicle upgrade item
-                    if (obj_controller.ma_gear[i] != "") {
-                        scr_add_item(obj_controller.ma_gear[i], 1);
-                    }
-                    obj_controller.ma_gear[i] = "";
-                    obj_ini.veh_upgrade[unit[0]][unit[1]] = "";
-                    if ((n_gear != ITEM_NAME_NONE) && (n_gear != "")) {
-                        obj_controller.ma_gear[i] = n_gear;
-                        obj_ini.veh_upgrade[unit[0]][unit[1]] = n_gear;
-                    }
-                    if (n_gear != "") {
-                        scr_add_item(n_gear, -1);
-                    }
-                }
-                // End gear and upgrade
-
-                check = 0;
-                if ((check == 0) && (n_mobi != obj_controller.ma_mobi[i]) && (n_mobi != "Assortment") && (vehicle_equipment != 1) && (vehicle_equipment != 6)) {
-                    //vehicle accessory item
-                    if (obj_controller.ma_mobi[i] != "") {
-                        scr_add_item(obj_controller.ma_mobi[i], 1);
-                    }
-                    obj_controller.ma_mobi[i] = "";
-                    obj_ini.veh_acc[unit[0]][unit[1]] = "";
-                    obj_controller.ma_mobi[i] = n_mobi;
-                    obj_ini.veh_acc[unit[0]][unit[1]] = n_mobi;
-                    if (n_mobi != "") {
-                        scr_add_item(n_mobi, -1);
-                    }
-                }
-                // End mobility and accessory
             }
-        } // End that [i]
+        }
     } // End repeat
 
     obj_controller.cooldown = 10;
