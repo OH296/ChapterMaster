@@ -30,6 +30,16 @@ function valid_sprite_transform_data(data) {
     return is_array(data) && array_length(data) == 4;
 }
 
+
+/// @desc Variables needded either in obj_creation or obj_controller to draw a marine sprite
+function default_marine_draw_variables(){
+    metallic_shine = 3;
+    paint_shine = 3;
+    modest_livery = false;
+    progenitor_visuals = false;
+    draw_helms = true;
+}
+
 /// @desc Returns a transform array that can be used in a shader to align the UVs of _spr2 with _spr1 (takes cropping into account)
 /// @param {Asset.GMSprite} _spr1 The sprite align the UVs to
 /// @param {Real} _subimg1 The sprite subimage to align the UVs to
