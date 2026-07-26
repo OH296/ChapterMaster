@@ -182,7 +182,13 @@ function set_up_equip_popup() {
 
         if (equip_target_type > 0) {
             _units_selected_for_change += 1;
-            var _unit_equipment = display_unit[f].unit_equipment_data();
+            var _unit_equipment = UnitEquipment([
+                obj_controller.ma_wep1[f], 
+                obj_controller.ma_wep2[f],
+                obj_controller.ma_armour[f],
+                obj_controller.ma_gear[f] ,
+                obj_controller.ma_mobi[f]
+            ]);
 
             for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++){
                 var _item_name = _unit_equipment.item_names[i];
@@ -418,21 +424,23 @@ function reequip_selection() {
 
             var _veh_temp_arrays = [obj_controller.ma_wep1, obj_controller.ma_wep2,obj_controller.ma_armour, obj_controller.ma_gear ,obj_controller.ma_mobi];
 
+            var _company = unit[0];
+            var _slot = unit[1];
+            
             var _veh_equip_arrays = [obj_ini.veh_wep1[_company],obj_ini.veh_wep2[_company], obj_ini.veh_wep3[_company], obj_ini.veh_upgrade[_company], obj_ini.veh_acc[_company]];
 
-            var _company = unit[0];
-            var _slot = unit[0];
+            var _temp_array = _veh_temp_arrays[i];
 
             for (var s = 0; s < STANDARD_EQUIP_SLOT_COUNT; s++){
                 var _equipment = needed_equipment[s];
-                var _temp_array = _veh_temp_arrays[i];
                 var _equip_array = _veh_equip_arrays[i]
-                if (_equipment == "Assortment" || _equipment == _temp_array[s]){
+                var _current_item = _temp_array[s];
+                if (_equipment == "Assortment" || _equipment == _current_item){
                     continue;
                 }
 
-                if (_temp_array[i] != "") {
-                    scr_add_item(_temp_array[i], 1);
+                if (_current_item != "") {
+                    scr_add_item(_current_item, 1);
                 }
                 _temp_array[i] = "";
                 _equip_array[_slot] = "";

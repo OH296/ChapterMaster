@@ -605,7 +605,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
         }
     }
 
-    for (var i = 0;i<array_length(global.unit_equip_slots)-1;i++){
+    for (var i = 0;i<STANDARD_EQUIP_SLOT_COUNT;i++){
         var _item = self.equipment[$global.unit_equip_slots[i]];
         if (_item.name != ""){
             array_push(present_items, global.unit_equip_slots[i]);
@@ -842,7 +842,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor{
                     _armour_required += " " + _class_locks[r];
                 }
             }
-            warning = $"Cannot use {_wanted_item} without {_armour_required} Armour.";
+            warning += $"Cannot use {_wanted_item} without {_armour_required} Armour.";
         }
     }
 
