@@ -85,6 +85,8 @@ name_bad = 0;
 heheh = 0;
 turn_selection_change = false;
 draw_helms = true;
+paint_shine = 3;
+metallic_shine = 3;
 
 var _culture_styles_array = [];
 

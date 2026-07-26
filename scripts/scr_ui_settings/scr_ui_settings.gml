@@ -260,18 +260,21 @@ function setup_ui_chapter_settings() {
     ]
     _sets.paint_shine_radio = new RadioSet(
         _5_opt_radio, 
-        "Paint Shine", {
-    });
+        {
+            text : "Paint Shine",
+            tooltip : "How shiny the majority of marine paint and components will be drawn"
+        }
+        );
 
     _sets.paint_shine_radio.current_selection = obj_controller.paint_shine -1;
 
     _sets.metallic_shine_radio = new RadioSet(
         _5_opt_radio, 
-        "Metallic Shine",
         {
-        x1: _sets.paint_shine_radio.x1,
-        y1: _sets.paint_shine_radio.y2 + 20,
-    });
+            text : "Metallic Shine",
+            tooltip : "How shiny the trim and metallic components of marines will be drawn"
+        },
+    );
 
     _sets.metallic_shine_radio.current_selection = obj_controller.metallic_shine -1;
 

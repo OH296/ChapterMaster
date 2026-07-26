@@ -97,7 +97,8 @@ function ComplexSet(_unit) constructor {
     subcomponents = {};
     unit_armour = _unit.armour();
     draw_unit = _unit;
-    draw_helms = instance_exists(obj_creation) ? obj_creation.draw_helms : obj_controller.draw_helms;
+    main_object = instance_exists(obj_creation) ? obj_creation : obj_controller;
+    draw_helms = main_object.draw_helms;
 
     equipment_data = draw_unit.unit_equipment_data();
     current_texture_draws = {};
@@ -1117,9 +1118,7 @@ function ComplexSet(_unit) constructor {
                         if (struct_exists(_final_component, "shadows")) {
                             set_draw_shadows(_sprite, _final_index, _final_component.shadows, _final_index);
                         }
-                        shader_set_uniform_i(use_shadow_uniform, shadow_enabled);
-                        shader_set_uniform_i(paint_shine_uniform, obj_controller.paint_shine);
-                        shader_set_uniform_i(metallic_shine_uniform, obj_controller.metallic_shine);
+                        set_main_shader_uniforms();
                         if (flip_x) {
                             draw_sprite_flipped(_sprite, _sub_choice_final - _choice_count ?? 0, component_final_draw_x, component_final_draw_y);
                         } else {
@@ -1134,6 +1133,17 @@ function ComplexSet(_unit) constructor {
         }
     };
 
+    static set_main_shader_uniforms = function(){
+        shader_set_uniform_i(use_shadow_uniform, shadow_enabled);
+        shader_set_uniform_i(paint_shine_uniform, main_object.paint_shine);
+        shader_set_uniform_i(metallic_shine_uniform, main_object.metallic_shine);
+    }
+
+    static set_texture_uniforms = function(){
+        shader_set_uniform_i(texture_use_shadow_uniform, shadow_enabled);
+        shader_set_uniform_i(texture_paint_shine_uniform, main_object.paint_shine);
+        shader_set_uniform_i(texture_metallic_shine_uniform, main_object.metallic_shine);
+    }
     /// @param {Asset.GMSprite} resolved_sprite
     /// @param {Real} resolved_choice
     /// @param {String} component_name
@@ -1147,9 +1157,6 @@ function ComplexSet(_unit) constructor {
         draw_clear_alpha(c_black, 0);
 
         shader_set(armour_texture);
-        shader_set_uniform_i(texture_use_shadow_uniform, shadow_enabled);
-        shader_set_uniform_i(texture_paint_shine_uniform, obj_controller.paint_shine);
-        shader_set_uniform_i(texture_metallic_shine_uniform, obj_controller.metallic_shine);
         set_component_shadow_packs(component_name, resolved_original_choice, resolved_sprite, resolved_choice);
 
         var _tex_names = struct_get_names(current_texture_draws);
@@ -1248,9 +1255,7 @@ function ComplexSet(_unit) constructor {
             check_component_overides(component_name, _choice);
             set_component_shadow_packs(component_name, _choice, _resolved.sprite, _resolved.frame);
 
-            shader_set_uniform_i(use_shadow_uniform, shadow_enabled);
-            shader_set_uniform_i(paint_shine_uniform, obj_controller.paint_shine);
-            shader_set_uniform_i(metallic_shine_uniform, obj_controller.metallic_shine);
+            set_main_shader_uniforms();
             var _flip_x = false;
             var _component_data = self[$ component_name];
             if (is_struct(_component_data) && struct_exists(_component_data, "flip_x") && _component_data.flip_x) {
@@ -2164,7 +2169,7 @@ function ComplexSet(_unit) constructor {
             y_surface_offset = 0;
             set_complex_shader_area(["left_head", "right_head", "left_muzzle", "right_muzzle"], data.helm_primary);
 
-            var _obj = instance_exists(obj_controller) ? obj_controller : obj_creation;
+            var _obj = main_object;
             var _blend = [
                 _obj.col_r[data.helm_secondary] / 255,
                 _obj.col_g[data.helm_secondary] / 255,
