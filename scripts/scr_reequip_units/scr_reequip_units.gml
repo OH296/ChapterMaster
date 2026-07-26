@@ -429,12 +429,11 @@ function reequip_selection() {
             
             var _veh_equip_arrays = [obj_ini.veh_wep1[_company],obj_ini.veh_wep2[_company], obj_ini.veh_wep3[_company], obj_ini.veh_upgrade[_company], obj_ini.veh_acc[_company]];
 
-            var _temp_array = _veh_temp_arrays[i];
-
             for (var s = 0; s < STANDARD_EQUIP_SLOT_COUNT; s++){
+                var _temp_array = _veh_temp_arrays[s];
                 var _equipment = needed_equipment[s];
-                var _equip_array = _veh_equip_arrays[i]
-                var _current_item = _temp_array[s];
+                var _equip_array = _veh_equip_arrays[s]
+                var _current_item = _temp_array[i];
                 if (_equipment == "Assortment" || _equipment == _current_item){
                     continue;
                 }
