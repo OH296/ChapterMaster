@@ -31,7 +31,7 @@ function valid_sprite_transform_data(data) {
 }
 
 
-/// @desc Variables needded either in obj_creation or obj_controller to draw a marine sprite
+/// @desc Variables needed either in obj_creation or obj_controller to draw a marine sprite
 function default_marine_draw_variables(){
     metallic_shine = 3;
     paint_shine = 3;
