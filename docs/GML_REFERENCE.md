@@ -52,7 +52,9 @@ GameMaker Language (GML) is syntactically similar to JavaScript ES3 but has sign
 
 ## Asset Types
 
-GameMaker projects consist of globally referenceable assets. The primary code-carrying assets:
+GameMaker projects consist of globally referenceable assets.
+
+The primary code-carrying assets:
 
 ### Scripts
 
@@ -69,7 +71,7 @@ Objects in GameMaker are **blueprints** (similar to JavaScript classes) from whi
   - `Draw` - runs every frame when the instance is visible (like a `render()` method).
   - `Alarm` - timed callbacks, set with `alarm[0] = steps;`.
   - Collision events, Input events, etc. - triggered by engine‑detected interactions.
-- **Built‑in Instance Variables** - every Object comes with a rich set of default fields (e.g., `x`, `y`, `speed`, `direction`, `image_index`, `visible`, `solid`). These are analogous to predefined properties on a class that the engine uses for movement, rendering, and collision. You can also define your own custom variables inside events (e.g., `hp = 100` in the `Create` event).
+- **Built‑in Instance Variables** - every Object comes with a rich set of default fields (e.g., `x`, `y`, `speed`, `direction`, `image_index`, `visible`, `solid`). These are analogous to predefined properties on a class that the engine uses for movement, rendering, and collision.
 - **Inheritance** - Objects can have a **Parent** Object. A child inherits all events and instance variables from its parent, and can override them by defining its own events. The child's events can call the parent's version with `event_inherited()`.
 
 ---
@@ -82,7 +84,6 @@ Objects in GameMaker are **blueprints** (similar to JavaScript classes) from whi
 // Single-line comment
 /* Multi-line comment */
 
-/// GML JSDoc uses triple-slash single-line comments, not /** */
 /// @param {real} value
 /// @returns {bool}
 ```
@@ -129,21 +130,15 @@ GML provides several built-in constants. Some act as special data type values, w
 
 ### Operators
 
-**Standard:** `+`, `++`, `-`, `--`, `*`, `/`, `%` (`mod`), `div` (integer division), `&&` (`and`), `||` (`or`), `^^` (`xor`), `!` (`not`).
-
-**Ternary:** `condition ? true_val : false_val`
-
-**Comparison:** `<`, `>`, `<=`, `>=`, `==`, `!=`
-
-**Nullish coalescing:** `??`, with assignment `??=`
-
-**Bitwise:** `|`, `&`, `^`, `<<`, `>>`
-
-**Compound assignment:** `+=`, `-=`, `*=`, `/=`, `|=`, `&=`, `^=`, `??=`
-
-**Literal prefixes:**
-- Binary: `0b10` -> `2`
-- Hex: `0x001122` or `$001122`
+- **Standard:** `+`, `++`, `-`, `--`, `*`, `/`, `%` (`mod`), `div` (integer division), `&&` (`and`), `||` (`or`), `^^` (`xor`), `!` (`not`).
+- **Ternary:** `condition ? true_val : false_val`
+- **Comparison:** `<`, `>`, `<=`, `>=`, `==`, `!=`
+- **Nullish coalescing:** `??`, with assignment `??=`
+- **Bitwise:** `|`, `&`, `^`, `<<`, `>>`
+- **Compound assignment:** `+=`, `-=`, `*=`, `/=`, `|=`, `&=`, `^=`, `??=`
+- **Literal prefixes:**
+  - Binary: `0b10` -> `2`
+  - Hex: `0x001122` or `$001122`
 
 ### String Interpolation
 
@@ -156,7 +151,7 @@ string("text {0} and {1}", a, b) // Deferred placeholder substitution
 
 ## Variable Scope
 
-GML has three primary runtime scopes. At runtime, variable names are resolved in this order (the first match wins):
+GML has three primary runtime scopes. At runtime, variable names are resolved in this order (the first match overshadows):
 1. **local**
 2. **instance**
 3. **global**
@@ -164,28 +159,14 @@ GML has three primary runtime scopes. At runtime, variable names are resolved in
 
 ### Local Scope
 
-Declared with `var`. Scoped to the **function body**, not to individual blocks. Exists only during the current function or event execution.
-
-Control-flow constructs (`if`, `for`, `switch`, `try`) do **not** create a new local scope.
-
-```gml
-function example() {
-    for (var i = 0; i < 10; i++) {
-        var _inner = i;
-    }
-    // _inner is accessible here! (unlike JS let)
-}
-```
+- Bound to the current function body or event.
+- Control-flow blocks (`if`, `for`, `switch`, `try`) do **not** create a new local scope.
 
 ### Instance Scope
 
-Declared without a keyword (e.g., `hp = 100;`) or via context (`self.hp = 100;`). Tied to the lifetime of the specific instance or struct executing the code.
+- Bound to the executing object instance or struct.
 
-### Global Scope
-
-Declared on the `global` struct (e.g., `global.score = 0;`). Accessible anywhere in the game. The `global` struct acts as a de facto application singleton.
-
-### Context Keywords: `self` and `other`
+**Context Keywords: `self` and `other`**
 
 GML uses `self` and `other` to manage scope dynamically.
 
@@ -204,76 +185,52 @@ Their behavior is context-dependent:
 | **Accessor chain** | Implicitly follows the accessed value. | Usually the same as `self`. |
 | **Elsewhere** | The current instance or struct. | Usually the same as `self`. |
 
+### Global Scope
+
+- Global functions (scripts), `global.` struct, and `enums` are accessible from anywhere in the code.
+
 ---
 
 ## Variable Categories
 
 While scope defines *where* a variable can be accessed, GML features distinct categories of variables based on how they are initialized and stored.
 
-### Static Variables and Methods
+### Local
 
-The `static` keyword declares a variable or method that is initialized **only once**, on the very first call to the function, and persists across subsequent calls. Static variables are stored in the function's hidden "static struct" rather than in the local scope.
+- Declared with `var`.
+- Scoped to the **function or event body**, not to individual blocks.
+- Exists only during the current function or event execution.
 
-```gml
-function counter() {
-    static _count = 0; // Evaluated only on the first call
-    _count++;
-    return _count;
-}
+### Instance
 
-counter(); // returns 1
-counter(); // returns 2
-```
+- Declared without a keyword (e.g., `hp = 100;`) or via context (`self.hp = 100;`).
+- Bound to the lifetime of the specific instance or struct.
 
-**Initialization order & behavior:**
-- Static variable initializers run at the **very top** of the function body, *before* any other code executes. This means they are always evaluated regardless of conditionals, wrapping them in an `if` statement does nothing to prevent their initialization.
-- You can reference a static variable before its declaration line in the same function due to this top-of-function hoisting.
+### Static
 
-**Accessing static variables from outside:**
-You can read a static variable from outside its function using dot syntax, but **you must call the function at least once first**, otherwise, the static struct does not yet exist:
+- **Initialized Once** on the first function (`constructor` functions included) call and stored in the function's static struct.
+- **Persists** across calls without polluting instance memory.
+- **Hoisting:** Initializers run at the top of the function body before any standard code executes.
+- **External Access:** Accessible via `function_name.variable`, but the function **must execute at least once** first to instantiate its static struct.
+- **Inheritance:** Reading traverses child-to-parent static structs. Writing via a child constructor assigns directly to the child static struct without modifying the parent.
 
-```gml
-counter();               // Must call it first to create the static struct
-show_debug_message(counter._count); // -> 1 (access via function name)
-```
+### Global
 
-**Static Variables and Inheritance (Critical):**
-Unlike JS prototypes, static variables are strictly scoped to the constructor they are defined in. Child constructors have their own separate static scopes.
-- **Reading** a static variable from a child instance will traverse the inheritance chain to find the parent's static value if the child doesn't have its own.
-- **Writing** (assigning) to a static variable through a child context **creates or modifies a variable on the child's own static struct**, shadowing the parent and leaving the parent's value completely untouched.
+- Declared on the `global` struct (e.g., `global.score = 0;`).
+- Accessible from anywhere.
+- The `global` struct acts as a de facto application singleton.
 
-```gml
-function Parent() constructor {
-    static value = 10;
-}
-function Child() : Parent() constructor { }
+### Constant
 
-show_debug_message(Child.value); // -> 10 (reads from Parent)
-Child.value = 20;                // Writes to Child's OWN static struct
-show_debug_message(Parent.value);// -> 10 (Parent unchanged!)
-```
-
-**Static Methods:**
-You can also use `static` to define functions inside constructors. These methods are created only once (rather than re-created for every new instance), which saves memory and improves performance when you have many instances:
-
-```gml
-function Player() constructor {
-    static say_hello = function() {
-        show_debug_message("Hello!");
-    };
-}
-var _p1 = new Player();
-var _p2 = new Player();
-// _p1.say_hello and _p2.say_hello reference the exact same function.
-```
-
-### Compile-Time Values (Independent)
-
-Not true variables in the runtime memory sense, but named values resolved at compile-time. They are globally available and not tied to any struct:
-- **Macros:** `#macro NAME value` - Compile-time textual replacement. (Do not use for arrays; each reference creates a new array instance).
 - **Enums:** Named integer constants.
+
+### Compile-Time
+
+Not true variables in the runtime memory sense, but named values resolved at compile-time. They are globally available and not tied to any struct.
+
+- **Macros:** Compile-time textual replacement. Do not use for arrays; each reference creates a new array instance.
 - **Asset IDs:** References to objects, sprites, sounds, etc. (e.g., `obj_player`).
-- **Built-in function identifiers:** The names of globally hoisted script functions.
+- **Function identifiers:** The names of globally hoisted script functions.
 
 ---
 
@@ -287,7 +244,7 @@ function do_something(_arg1, _arg2) {
     return _arg1 + _arg2;
 }
 
-// Anonymous function
+// Anonymous function (method)
 var _fn = function(_x) { return _x * 2; };
 ```
 
@@ -460,6 +417,7 @@ Values start at 0 and auto-increment.
 
 - Compile-time textual replacement.
 - **Do not** use `#macro` for arrays - each reference creates a new array instance.
+- **Do not** add `=` during assignment, or `;` at the end.
 
 ---
 
@@ -467,17 +425,41 @@ Values start at 0 and auto-increment.
 
 Primitives have no internal methods; use library functions instead.
 
-**Strings:**
-`string_length`, `string_copy`, `string_pos`, `string_repeat`, `string_upper`, `string_lower`, `string_hash_to_newline`, `string_delete`, `string_insert`, `string_replace`, `string_count`
+### Strings
 
-**Arrays:**
-`array_length`, `array_push`, `array_pop`, `array_sort`, `array_shift`, `array_unshift`, `array_resize`, `array_copy`, `array_create`, `array_equals`, `array_filter`, `array_map`, `array_reduce`, `array_find`
+string_length, string_copy, string_pos, string_repeat, string_upper, string_lower, string_hash_to_newline, string_delete, string_insert, string_replace, string_count, string_ext, ansi_char, chr, ord, string_byte_at, string_byte_length, string_set_byte_at, string_char_at, string_ord_at, string_pos_ext, string_last_pos, string_last_pos_ext, string_starts_with, string_ends_with, string_digits, string_format, string_letters, string_lettersdigits, string_replace_all, string_trim, string_trim_start, string_trim_end, string_split, string_split_ext, string_join, string_join_ext, string_concat, string_concat_ext, string_width, string_width_ext, string_height, string_height_ext, string_foreach
 
-**Math:**
-`min`, `max`, `abs`, `round`, `floor`, `ceil`, `clamp`, `lerp`, `sin`, `cos`, `tan`, `darcsin`, `darccos`, `darctan`, `point_distance`, `point_direction`, `random`, `irandom`, `random_range`, `irandom_range`
+### Arrays
 
-**Type checking/conversion:**
-`typeof(x)` (function, not operator), `is_instanceof(x, Constructor)` (checks inheritance chain), `instanceof(x)` (gets the constructor used to create a struct), `bool(x)`, `is_array(x)`, `is_bool(x)`, `is_string(x)`, `is_numeric(x)`, `is_struct(x)`, `is_undefined(x)`, `is_ptr(x)`, `is_int32(x)`, `is_int64(x)`, `is_handle(x)`, `is_method(x)`, `is_callable(x)`
+array_length, array_push, array_pop, array_sort, array_shift, array_resize, array_copy, array_create, array_equals, array_filter, array_map, array_reduce, array_get, array_set, array_insert, array_delete, array_get_index, array_contains, array_contains_ext, array_reverse, array_shuffle, array_first, array_last, array_find_index, array_any, array_all, array_foreach, array_concat, array_union, array_intersection, array_unique, array_copy_while, array_create_ext, array_filter_ext, array_map_ext, array_unique_ext, array_reverse_ext, array_shuffle_ext
+
+### Structs
+
+struct_exists, struct_get, struct_set, struct_remove, struct_get_names, struct_names_count, struct_foreach, struct_get_from_hash, struct_set_from_hash, struct_exists_from_hash, struct_remove_from_hash, variable_get_hash, variable_clone
+
+### Math
+
+min, max, abs, round, floor, ceil, clamp, lerp, sin, cos, tan, darcsin, darccos, darctan, point_distance, point_direction, frac, sign, mean, median, math_set_epsilon, math_get_epsilon, exp, ln, power, sqr, sqrt, log2, log10, logn
+
+### Random
+
+random, irandom, random_range, irandom_range, choose, randomise, random_set_seed, random_get_seed
+
+### Variables
+
+variable_instance_exists, variable_instance_get_names, variable_instance_names_count, variable_instance_get, variable_instance_set, variable_global_exists, variable_global_get, variable_global_set
+
+### Type Checking
+
+nameof(x), typeof(x) (function, not operator), is_instanceof(x, Constructor) (checks inheritance chain), instanceof(x) (gets the constructor used to create a struct), is_array(x), is_bool(x), is_string(x), is_numeric(x), is_struct(x), is_undefined(x), is_ptr(x), is_int32(x), is_int64(x), is_handle(x), is_method(x), is_callable(x), is_real(x), is_nan(x), is_infinity(x)
+
+### Type Conversion
+
+string(x), bool(x), real(x), ptr(x), ref_create(dbgrefOrStruct, dbgrefOrIndex[, index]), int64(x), handle_parse(x)
+
+### Methods
+
+method, method_get_self, method_get_index, method_call
 
 ---
 
