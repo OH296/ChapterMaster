@@ -256,7 +256,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                         obj_controller.turn,
                     ],
                 ]; //marines_promotion and demotion history
-                marine_ascension = (obj_controller.millenium * 1000) + obj_controller.year; // on what day did this marine begin to exist
+                marine_ascension = obj_controller.turn; // on what day did this marine begin to exist
             } else {
                 role_history = [];
                 marine_ascension = 0; // on what turn did this marine begin to exist
@@ -923,10 +923,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     age = 0;
-
-    static update_age = function(new_val) {
-        age = new_val;
-    };
 
     //TODO build epithets in to marine profile
     static add_epithet = function(epithet) {

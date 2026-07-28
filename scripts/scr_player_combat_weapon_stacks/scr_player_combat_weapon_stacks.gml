@@ -382,7 +382,6 @@ function scr_add_unit_to_roster(unit, is_local = false, is_ally = false) {
     array_push(marine_exp, unit.experience);
     array_push(marine_powers, unit.specials);
     array_push(marine_ranged, unit.ranged_attack());
-    array_push(marine_powers, unit.specials);
     array_push(marine_ac, unit.armour_calc());
     array_push(marine_attack, unit.melee_attack());
     array_push(marine_local, is_local);
