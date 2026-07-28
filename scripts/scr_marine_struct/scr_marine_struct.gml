@@ -2004,12 +2004,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static in_jail = function() {
-        return god_status() >= 10;
+        return god_status >= 10;
     };
 
-    static god_status = function() {
-        return obj_ini.god[company][marine_number];
-    };
+    god_status = 0;
 
     static forge_point_generation = unit_forge_point_generation;
 

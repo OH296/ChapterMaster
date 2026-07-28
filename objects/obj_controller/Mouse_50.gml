@@ -31,7 +31,7 @@ if ((menu == eMENU.RECLUSIAM) && (cooldown <= 0) && (penitorium > 0)) {
             if ((mouse_x >= xx + 1508) && (mouse_x < xx + 1567)) {
                 cooldown = 20;
                 var c = penit_co[qp], e = penit_id[qp];
-                obj_ini.god[c][e] -= 10;
+                obj_ini.TTRPG[c][e].god_status -= 10;
                 re = 1;
             }
         }
@@ -44,8 +44,8 @@ if ((menu == eMENU.RECLUSIAM) && (cooldown <= 0) && (penitorium > 0)) {
         penitorium = 0;
         var p = 0;
         for (var c = 0; c < 11; c++) {
-            for (var e = 0; e < array_length(obj_ini.god[c]); e++) {
-                if (obj_ini.god[c][e] == 10) {
+            for (var e = 0; e < array_length(obj_ini.TTRPG[c]); e++) {
+                if (obj_ini.TTRPG[c][e].god_status == 10) {
                     p += 1;
                     penit_co[p] = c;
                     penit_id[p] = e;

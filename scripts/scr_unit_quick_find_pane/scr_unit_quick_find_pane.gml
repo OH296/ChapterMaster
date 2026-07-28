@@ -673,7 +673,7 @@ function jail_selection() {
         _unit = display_unit[f];
         if (_unit.controllable()) {
             if (is_struct(display_unit[f]) && !_unit.in_jail()) {
-                obj_ini.god[_unit.company][_unit.marine_number] += 10;
+                display_unit[f].god_status += 10;
                 ma_god[f] += 10;
                 man_sel[f] = 0;
             }

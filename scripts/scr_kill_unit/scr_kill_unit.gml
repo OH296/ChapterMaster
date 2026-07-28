@@ -36,7 +36,6 @@ function scr_wipe_unit(company, unit_slot) {
     array_set(obj_ini.role[company], unit_slot, "");
     array_set(obj_ini.armour[company], unit_slot, "");
     array_set(obj_ini.gear[company], unit_slot, "");
-    array_set(obj_ini.god[company], unit_slot, 0);
     array_set(obj_ini.age[company], unit_slot, 0);
     array_set(obj_ini.mobi[company], unit_slot, "");
     array_set(obj_ini.TTRPG[company], unit_slot, undefined);

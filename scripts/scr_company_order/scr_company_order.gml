@@ -112,9 +112,20 @@ function scr_company_order(company) {
         var _temps = [];
         for (var i = 0; i < array_length(_company_marines.units); i++) {
             var _unit = _company_marines.units[i];
-            array_push(_temps, {unit: _unit, race: _unit.race(), name: _unit.name(), role: _unit.role(), wep1: _unit.weapon_one(true), wep2: _unit.weapon_two(true), armour: _unit.armour(true), gear: _unit.gear(true), mobi: _unit.mobility_item(true), age: _unit.age(), spe: _unit.specials(), god: _unit.god_status()});
+            array_push(_temps, {unit: _unit, race: _unit.race(), name: _unit.name(), role: _unit.role(), wep1: _unit.weapon_one(true), wep2: _unit.weapon_two(true), armour: _unit.armour(true), gear: _unit.gear(true), mobi: _unit.mobility_item(true), age: _unit.age(), spe: _unit.specials(), god: _unit.god_status});
         }
 
+        TTRPG[co] = array_create(_temps, 0);
+        race[co] = array_create(_temps, 0);
+        name[co] = array_create(_temps, 0);
+        role[co] = array_create(_temps, 0);
+        wep1[co] = array_create(_temps, 0);
+        wep2[co] = array_create(_temps, 0);
+        armour[co] = array_create(_temps, 0);
+        gear[co] = array_create(_temps, 0);
+        mobi[co] = array_create(_temps, 0);
+        age[co] = array_create(_temps, 0);
+        spe[co] = array_create(_temps, 0);
         for (var i = 0; i < array_length(_temps); i++) {
             var _unit = _temps[i];
             var _struc = _unit.unit;
@@ -129,7 +140,6 @@ function scr_company_order(company) {
             mobi[co][i] = _unit.mobi;
             age[co][i] = _unit.age;
             spe[co][i] = _unit.spe;
-            god[co][i] = _unit.god;
             if (_struc.marine_number != i) {
                 if (TTRPG[_struc.company][_struc.marine_number].uid == _struc.uid) {
                     TTRPG[_struc.company][_struc.marine_number] = new TTRPG_stats("chapter", _struc.company, _struc.marine_number, "blank");

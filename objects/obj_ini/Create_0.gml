@@ -118,29 +118,29 @@ veh_acc = array_create_2d(_max_companies, _max_vehicles, "");
 defaults_slot = 100;
 
 /// @type {Array<Array<Real>>}
-race = array_create_2d(11, 501, 0);
+race = array_create(11, 501);
 /// @type {Array<Array<String>>}
-name = array_create_2d(11, 501, "");
+name = array_create(11, []);
 /// @type {Array<Array<String>>}
-role = array_create_2d(11, 501, "");
+role = array_create(11, []);
 /// @type {Array<Array<String>>}
-wep1 = array_create_2d(11, 501, "");
+wep1 = array_create(11, []);
 /// @type {Array<Array<String>>}
-spe = array_create_2d(11, 501, "");
+spe = array_create(11, []);
 /// @type {Array<Array<String>>}
-wep2 = array_create_2d(11, 501, "");
+wep2 = array_create(11, []);
 /// @type {Array<Array<String>>}
-armour = array_create_2d(11, 501, "");
+armour = array_create(11, []);
 /// @type {Array<Array<String>>}
-gear = array_create_2d(11, 501, "");
+gear = array_create(11, []);
 /// @type {Array<Array<String>>}
-mobi = array_create_2d(11, 501, "");
+mobi = array_create(11, []);
 /// @type {Array<Array<Real>>}
-age = array_create_2d(11, 501, 0);
-/// @type {Array<Array<Real>>}
-god = array_create_2d(11, 501, 0);
+age = array_create_2d(11, []);
+/// @type {Array<Ar<Real>>}
+god = array_create(11, []);
 /// @type {Array<Array<Struct.TTRPG_stats>>}
-TTRPG = array_create_2d(11, 501, undefined);
+TTRPG = array_create(11, []);
 
 load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
     role[defaults_slot][_role_id] = _role_name;

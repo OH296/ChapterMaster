@@ -289,22 +289,23 @@ try {
     }
     var p = 0;
     for (var c = 0; c < 11; c++) {
-        for (var e = 0; e < array_length(obj_ini.god[c]); e++) {
-            if (obj_ini.god[c][e] == 10) {
-                var unit = fetch_unit([c, e]);
-                if (!is_struct(unit)) {
+        for (var e = 0; e < array_length(obj_ini.TTRPG[c]); e++) {
+            var _unit = fetch_unt([c,e]);
+            if (_unit.god_status == 10) {
+                var _unit = fetch_unit([c, e]);
+                if (!is_struct(_unit)) {
                     continue;
                 }
                 p += 1;
                 penit_co[p] = c;
                 penit_id[p] = e;
                 penitorium += 1;
-                unit.alter_loyalty(-1);
-                if ((unit.corruption < 90) && (unit.corruption > 0)) {
+                _unit.alter_loyalty(-1);
+                if ((_unit.corruption < 90) && (_unit.corruption > 0)) {
                     var heresy_old = 0, heresy_new = 0;
-                    heresy_old = round((unit.corruption * unit.corruption) / 50) - 0.5;
-                    heresy_new = (heresy_old * 50) / unit.corruption;
-                    unit.corruption = max(0, heresy_new);
+                    heresy_old = round((_unit.corruption * _unit.corruption) / 50) - 0.5;
+                    heresy_new = (heresy_old * 50) / _unit.corruption;
+                    _unit.corruption = max(0, heresy_new);
                 }
             }
         }

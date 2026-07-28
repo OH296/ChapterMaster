@@ -860,7 +860,7 @@ function stat_valuator(search_params, _unit) {
 function collect_by_religeon(religion, sub_cult = "", location = "") {
     var _units = [], _unit, count = 0, _add = false;
     for (var com = 0; com <= obj_ini.companies; com++) {
-        for (var i = 1; i < array_length(obj_ini.TTRPG[com]); i++) {
+        for (var i = 0; i < array_length(obj_ini.TTRPG[com]); i++) {
             _add = false;
             _unit = fetch_unit([com, i]);
             if (!is_struct(_unit)) {

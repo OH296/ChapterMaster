@@ -38,7 +38,7 @@ function scr_role_count(target_role, search_location = "", return_type = "count"
             if (!is_struct(unit) || unit.name() == "") {
                 continue;
             }
-            if ((unit.role() == target_role) && (obj_ini.god[coom][i] < 10)) {
+            if ((unit.role() == target_role) && (obj_ini.TTRPG[coom][i].god_status < 10)) {
                 count += 1;
                 if (return_type == "units") {
                     var _u = fetch_unit([coom, i]);
