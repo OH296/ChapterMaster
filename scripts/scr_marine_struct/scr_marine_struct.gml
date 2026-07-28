@@ -922,13 +922,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return true;
     };
 
-    static age = function() {
-        var real_age = obj_ini.age[company][marine_number];
-        return real_age;
-    }; // age
+    age = 0;
 
     static update_age = function(new_val) {
-        obj_ini.age[company][marine_number] = new_val;
+        age = new_val;
     };
 
     //TODO build epithets in to marine profile
@@ -2020,7 +2017,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     static roll_age = scr_marine_spawn_age;
 
     static roll_experience = function() {
-        var _age_bonus = age();
+        var _age_bonus = age;
         var _gauss_sd_mod = 14;
 
         var _exp = _age_bonus;
@@ -2029,7 +2026,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static assign_reactionary_traits = function() {
-        var _age = age();
+        var _age = age;
         var _exp = experience;
         var _total_score = _age + _exp;
 

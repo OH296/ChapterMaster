@@ -18,7 +18,6 @@ function scr_move_unit_info(start_company, end_company, start_slot, end_slot, ev
     obj_ini.wep2[end_company][end_slot] = obj_ini.wep2[start_company][start_slot];
     obj_ini.gear[end_company][end_slot] = obj_ini.gear[start_company][start_slot];
     obj_ini.armour[end_company][end_slot] = obj_ini.armour[start_company][start_slot];
-    obj_ini.age[end_company][end_slot] = obj_ini.age[start_company][start_slot];
     obj_ini.mobi[end_company][end_slot] = obj_ini.mobi[start_company][start_slot];
 
     var _temp_struct = fetch_unit([end_company, end_slot]);

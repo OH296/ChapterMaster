@@ -76,7 +76,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
             }
         }
 
-        obj_ini.age[target_company][_company_slot] = (obj_controller.millenium * 1000) + obj_controller.year;
+        _unit.age = (obj_controller.millenium * 1000) + obj_controller.year;
 
         switch (spawn_name) {
             case "":

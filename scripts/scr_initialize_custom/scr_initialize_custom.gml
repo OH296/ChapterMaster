@@ -1478,8 +1478,6 @@ function scr_initialize_custom() {
         armour[_idx] = array_create(_len, "");
         gear[_idx] = array_create(_len, "");
         mobi[_idx] = array_create(_len, "");
-        age[_idx] = array_create(_len, _age_val);
-        god[_idx] = array_create(_len, 0);
     };
 
     _init_marine_row(0, 500, _current_age);
@@ -2013,9 +2011,8 @@ function scr_initialize_custom() {
             chaos[c][i] = 0;
             gear[c][i] = "";
             mobi[c][i] = "";
-            age[c][i] = ((millenium * 1000) + year) - 10;
-            god[c][i] = 0;
             TTRPG[c][i] = new TTRPG_stats("chapter", c, i, "blank");
+            TTRPG[c][i].age = ((millenium * 1000) + year) - 10;
         }
     }
 

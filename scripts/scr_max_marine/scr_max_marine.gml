@@ -30,8 +30,8 @@ function scr_max_marine(max_type) {
                         man_i = i;
                     }
                 } else if (max_type == "age") {
-                    if (obj_ini.age[c][i] < value) {
-                        value = obj_ini.age[c][i];
+                    if (unit.age < value) {
+                        value = unit.age;
                         man_c = c;
                         man_i = i;
                     }
