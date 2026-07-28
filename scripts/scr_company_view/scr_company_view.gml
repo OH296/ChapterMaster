@@ -49,6 +49,17 @@ function find_company_open_slot(target_company) {
             break;
         }
     }
+    if (good == -1){
+        array_push(race[target_company], "");
+        array_push(name[target_company],"");
+        array_push(role[target_company],"");
+        array_push(wep1[target_company], "");
+        array_push(wep2[target_company] , "");
+        array_push(armour[target_company] , "");
+        array_push(gear[target_company] , "");
+        array_push(mobi[target_company] , "");
+        array_push(TTRPG[target_company],undefined);        
+    }
     return good;
 }
 

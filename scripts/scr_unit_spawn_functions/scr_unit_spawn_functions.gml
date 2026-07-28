@@ -1,6 +1,5 @@
 /// @self Struct.TTRPG_stats
 function scr_marine_spawn_age() {
-    var _age = 0;
     var _minimum_age = 0;
     var _maximum_age = 0;
     var _apply_gauss = false;
@@ -130,15 +129,14 @@ function scr_marine_spawn_age() {
     if (_apply_gauss == true) {
         if (_maximum_age != 0) {
             _gauss_sd_mod = (_maximum_age - _minimum_age) / _gauss_sd_mod;
-            _age = gauss_positive(_minimum_age, _gauss_sd_mod);
+            age = round(gauss_positive(_minimum_age, _gauss_sd_mod));
         } else {
-            _age = gauss_positive(_minimum_age, _minimum_age / _gauss_sd_mod);
+            age = round(gauss_positive(_minimum_age, _minimum_age / _gauss_sd_mod));
         }
     } else {
-        _age = irandom_range(_minimum_age, _maximum_age);
+        age = irandom_range(_minimum_age, _maximum_age);
     }
 
-    update_age(round(_age));
 }
 
 /// @self Struct.TTRPG_stats
@@ -154,10 +152,9 @@ function scr_marine_spawn_armour() {
         }
     };
 
-    var _age = age();
     var _role = role();
     var _exp = experience;
-    var _total_score = _age + _exp + (scr_has_adv("Crafters") ? 50 : 0);
+    var _total_score = age + _exp + (scr_has_adv("Crafters") ? 50 : 0);
     var _company = company;
 
     var _armour_weighted_lists = {

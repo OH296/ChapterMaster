@@ -2997,7 +2997,9 @@ function scr_initialize_custom() {
     //   ** sets up the starting squads**
     LOGGER.info("set up the starting squads");
     obj_ini.squads = {};
+    sort_all_companies();
     game_start_squads();
+    sort_all_companies();
 }
 
 /// @description helper function to streamline code inside of scr_initialize_custom, should only be used as part of game setup and not during normal gameplay
