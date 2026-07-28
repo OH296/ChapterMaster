@@ -938,7 +938,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
         array_push(epithets, epithet);
     };
-
     static name = function() {
         return obj_ini.name[company][marine_number];
     }; // get marine name
@@ -1045,12 +1044,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return obj_ini.artifact[wep];
     };
 
-    static specials = function() {
-        return obj_ini.spe[company][marine_number];
-    };
+    specials = "";
 
     static specials_array = function() {
-        var _specials_array = string_split(obj_ini.spe[company][marine_number], "|", true);
+        var _specials_array = string_split(specials, "|", true);
         return _specials_array;
     };
 
@@ -1067,7 +1064,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         var _powers_known_count = 0;
         var _discipline_powers_max = 0;
         var _powers_learned = 0;
-        var _abilities_string = specials();
+        var _abilities_string = specials;
 
         var _discipline_prefix = get_discipline_data(obj_ini.psy_powers, "prefix");
         var _discipline_powers = get_discipline_data(obj_ini.psy_powers, "powers");
@@ -1081,7 +1078,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             if (string_count(string(_power_index), _abilities_string) == 0) {
                 _powers_known_count++;
                 _powers_learned++;
-                obj_ini.spe[company][marine_number] += string(_discipline_prefix) + string(_power_index) + "|";
+                specials += string(_discipline_prefix) + string(_power_index) + "|";
                 array_push(powers_known, _discipline_powers[_power_index]);
             }
         }

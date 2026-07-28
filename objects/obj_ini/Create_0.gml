@@ -126,8 +126,6 @@ role = array_create(11, []);
 /// @type {Array<Array<String>>}
 wep1 = array_create(11, []);
 /// @type {Array<Array<String>>}
-spe = array_create(11, []);
-/// @type {Array<Array<String>>}
 wep2 = array_create(11, []);
 /// @type {Array<Array<String>>}
 armour = array_create(11, []);
@@ -135,10 +133,6 @@ armour = array_create(11, []);
 gear = array_create(11, []);
 /// @type {Array<Array<String>>}
 mobi = array_create(11, []);
-/// @type {Array<Array<Real>>}
-age = array_create_2d(11, []);
-/// @type {Array<Ar<Real>>}
-god = array_create(11, []);
 /// @type {Array<Array<Struct.TTRPG_stats>>}
 TTRPG = array_create(11, []);
 

@@ -178,8 +178,9 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
 
             // Option4 here if all the right conditions are met
             var born = false;
-            for (var i = 1; i <= 200; i++) {
-                if ((obj_ini.role[0][i] == obj_ini.role[100][eROLE.CHAPTERMASTER]) && (string_count("$", obj_ini.spe[0][i]) > 0)) {
+            for (var i = 0; i < array_length(obj_ini.TTRPG[0]); i++) {
+                var _unit = fetch_unit([o, i]);
+                if ((_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) && (string_count("$", _unit.specials) > 0)) {
                     born = true;
                 }
             }

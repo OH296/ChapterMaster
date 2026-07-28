@@ -366,7 +366,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.dudes_num[targ.men] = 1;
                     targ.dudes_hp[targ.men] = unit.hp();
                     targ.dudes_exp[targ.men] = unit.experience;
-                    targ.dudes_powers[targ.men] = deploying_unit.spe[cooh][va];
+                    targ.dudes_powers[targ.men] = unit.specials;
                     targ.dudes_wep1[targ.men] = deploying_unit.wep1[cooh][va];
                     targ.dudes_wep2[targ.men] = deploying_unit.wep2[cooh][va];
                     targ.dudes_gear[targ.men] = deploying_unit.gear[cooh][va];
@@ -700,7 +700,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                         col = obj_controller.bat_command_column;
                         new_combat.important_dudes += 1;
                         new_combat.big_mofo = 1;
-                        if (string_count("0", deploying_unit.spe[cooh][va]) > 0) {
+                        if (string_count("0", deploying_unit.specials) > 0) {
                             new_combat.chapter_master_psyker = 1;
                         } else {
                             new_combat.chapter_master_psyker = 0;
@@ -747,7 +747,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.marine_mobi[targ.men] = unit.mobility_item();
                     targ.marine_hp[targ.men] = unit.hp();
                     targ.marine_exp[targ.men] = unit.experience;
-                    targ.marine_powers[targ.men] = deploying_unit.spe[cooh][va];
+                    targ.marine_powers[targ.men] = deploying_unit.specials;
                     targ.marine_ranged[targ.men] = unit.ranged_attack();
                     targ.marine_ac[targ.men] = unit.armour_calc();
                     targ.marine_attack[targ.men] = unit.melee_attack();

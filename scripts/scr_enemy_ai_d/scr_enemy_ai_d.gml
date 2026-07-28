@@ -164,9 +164,10 @@ function scr_enemy_ai_d() {
                 scr_event_log("red", $"Chief {obj_ini.role[100][17]} reports a disturbance in the warp.  He claims it is like a shadow.");
             }
             if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (woop == 0) && yep) {
-                for (var q = 1; q <= 90; q++) {
-                    if (obj_ini.role[0][q] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
-                        if (string_count("0", obj_ini.spe[0][q]) > 0) {
+                for (var q = 0; q < array_length(obj_ini.TTRPG[0]); q++) {
+                    var _unit = fetch_unit([0, q]);
+                    if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                        if (string_count("0", _unit.special) > 0) {
                             scr_popup("Shadow in the Warp", "You are distracted and bothered by a nagging sensation in the warp.  It feels as though a shadow descends upon your sector.", "shadow", "");
                             scr_event_log("red", "You sense a disturbance in the warp.  It feels something like a massive shadow.");
                         }

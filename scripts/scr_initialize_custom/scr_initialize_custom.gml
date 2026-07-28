@@ -1473,7 +1473,6 @@ function scr_initialize_custom() {
         name[_idx] = array_create(_len, "");
         role[_idx] = array_create(_len, "");
         wep1[_idx] = array_create(_len, "");
-        spe[_idx] = array_create(_len, "");
         wep2[_idx] = array_create(_len, "");
         armour[_idx] = array_create(_len, "");
         gear[_idx] = array_create(_len, "");
@@ -2005,7 +2004,6 @@ function scr_initialize_custom() {
             name[c][i] = "";
             role[c][i] = "";
             wep1[c][i] = "";
-            spe[c][i] = "";
             wep2[c][i] = "";
             armour[c][i] = "";
             chaos[c][i] = 0;
@@ -2026,7 +2024,7 @@ function scr_initialize_custom() {
         chapter_master.add_bionics("none", "standard", false);
     }
 
-    spe[_company_i][_marine_i] = "";
+    chapter_master.specials = "";
     chapter_master.add_trait("lead_example");
 
     //builds in which of the three chapter master types your CM is
@@ -2034,12 +2032,12 @@ function scr_initialize_custom() {
     switch (obj_creation.chapter_master_specialty) {
         case 1:
             chapter_master.add_exp(550);
-            spe[_company_i][_marine_i] += "$";
+            chapter_master.specials += "$";
             chapter_master.add_trait("charismatic");
             break;
         case 2:
             chapter_master.add_exp(650);
-            spe[_company_i][_marine_i] += "@";
+            chapter_master.specials += "@";
             chapter_master.add_trait("paragon");
             break;
         case 3:
