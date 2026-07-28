@@ -176,14 +176,12 @@ if (global.load == -1) {
 /// Called from save function to take all object variables and convert them to a json savable format and return it
 serialize = function() {
     var _marines = array_create(0);
-    for (var _coy = 0; _coy <= 10; _coy++) {
-        for (var _mar = 0; _mar <= 500; _mar++) {
+    for (var _coy = 0; _coy <= obj_ini.companies; _coy++) {
+        for (var _mar = 0; _mar < array_length(obj_ini.TTRPG[_coy]); _mar++) {
             if (name[_coy][_mar] != "") {
                 var _marine_json = jsonify_marine_struct(_coy, _mar, false);
                 array_push(_marines, _marine_json);
-            } else if (_mar > 0 && _mar <= 499 && name[_coy][_mar + 1] == "") {
-                break;
-            }
+            } 
         }
     }
 
