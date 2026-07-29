@@ -60,7 +60,7 @@ function find_company_open_slot(target_company) {
         array_push(obj_ini.gear[target_company], "");
         array_push(obj_ini.mobi[target_company], "");
         array_push(obj_ini.TTRPG[target_company], undefined);
-        good = array_length(obj_ini.TTRPG) - 1;
+        good = array_length(obj_ini.TTRPG[target_company]) - 1;
     }
     return good;
 }

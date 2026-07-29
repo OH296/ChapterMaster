@@ -13,9 +13,8 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
         "Flash Git",
     ];
     var _gear = {};
-    var _company_slot = 0;
 
-    _company_slot = find_company_open_slot(target_company);
+    var _company_slot = find_company_open_slot(target_company);
 
     scr_wipe_unit(target_company, _company_slot);
     var _unit = fetch_unit([target_company, _company_slot]);

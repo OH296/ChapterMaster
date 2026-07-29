@@ -5,7 +5,6 @@ function scr_crusade() {
 
     var unit;
     var co = 0, i = 0, apoth = 0, death_determination = 0, death_determination_2 = 0, roll3 = 0, type = "", artifacts = 0, clean = 0;
-    good = 0;
     seed = 0;
     marines_lost = 0;
     var heroics_strings = [];
@@ -58,18 +57,14 @@ function scr_crusade() {
 
     var death_data = death_sets[$ type];
 
-    for (co = 0; co <= 10; co++) {
+    for (co = 0; co <= company_length(co); co++) {
         clean[co] = 0;
     }
     var total_ship_id = array_concat(capital_num, frigate_num, escort_num);
 
-    for (co = 0; co <= 10; co++) {
-        for (i = 0; i <= 500; i++) {
-            good = 0;
+    for (co = 0; co <= obj_ini.company_length(); co++) {
+        for (i = 0; i <= company_length(co)); i++) {
             dead = false;
-            if (obj_ini.name[co][i] == "") {
-                continue;
-            }
             unit = fetch_unit([co, i]);
             if (!is_struct(unit)) {
                 continue;

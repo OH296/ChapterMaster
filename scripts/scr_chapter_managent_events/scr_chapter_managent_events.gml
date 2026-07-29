@@ -273,10 +273,8 @@ function new_forge_master_chosen(pick) {
         reset_popup_options();
         if (pick.company > 0) {
             for (var i = 0; i < array_length(obj_ini.TTRPG[0]); i++) {
-                if (obj_ini.TTRPG[0][i].name() == "") {
-                    scr_move_unit_info(pick.company, 0, pick.marine_number, i);
-                    break;
-                }
+                scr_move_unit_info(pick.company, 0, pick.marine_number, i);
+                break;
             }
         }
     }
