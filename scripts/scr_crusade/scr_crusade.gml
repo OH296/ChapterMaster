@@ -57,13 +57,13 @@ function scr_crusade() {
 
     var death_data = death_sets[$ type];
 
-    for (co = 0; co <= company_length(co); co++) {
+    for (co = 0; co <= companies; co++) {
         clean[co] = 0;
     }
     var total_ship_id = array_concat(capital_num, frigate_num, escort_num);
 
-    for (co = 0; co <= obj_ini.company_length(); co++) {
-        for (i = 0; i <= company_length(co)); i++) {
+    for (co = 0; co <= obj_ini.companies; co++) {
+        for (i = 0; i < company_length(co); i++) {
             dead = false;
             unit = fetch_unit([co, i]);
             if (!is_struct(unit)) {

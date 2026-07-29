@@ -3,44 +3,34 @@ function scr_max_marine(max_type) {
 
     // Returns the marine with the highest value
 
-    var man_c, man_i, c, i, value, unit;
+    var man_c, man_i, value, unit;
     man_c = 0;
     man_i = 0;
-    c = 0;
-    i = 0;
     value = 0;
 
-    i = -1;
-    c = -1;
-    repeat (11) {
-        c += 1;
-        i = 0;
-        repeat (305) {
-            i += 1; // man_c[i]=0;man_i[i]=0;
-
-            if (obj_ini.name[c][i] != "") {
-                unit = fetch_unit([c, i]);
-                if (!is_struct(unit)) {
-                    continue;
+    for (co = 0; co <= obj_ini.companies; co++) {
+        for (var i = 0; i < company_length(co); i++) {
+            unit = fetch_unit([c, i]);
+            if (!is_struct(unit)) {
+                continue;
+            }
+            if (max_type == "chaos") {
+                if (unit.corruption > value) {
+                    value = unit.corruption;
+                    man_c = c;
+                    man_i = i;
                 }
-                if (max_type == "chaos") {
-                    if (unit.corruption > value) {
-                        value = unit.corruption;
-                        man_c = c;
-                        man_i = i;
-                    }
-                } else if (max_type == "age") {
-                    if (unit.age < value) {
-                        value = unit.age;
-                        man_c = c;
-                        man_i = i;
-                    }
-                } else if (max_type == "exp") {
-                    if (unit.experience > value) {
-                        value = unit.experience;
-                        man_c = c;
-                        man_i = i;
-                    }
+            } else if (max_type == "age") {
+                if (unit.age < value) {
+                    value = unit.age;
+                    man_c = c;
+                    man_i = i;
+                }
+            } else if (max_type == "exp") {
+                if (unit.experience > value) {
+                    value = unit.experience;
+                    man_c = c;
+                    man_i = i;
                 }
             }
         }
