@@ -1,3 +1,15 @@
+load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
+    default_role_data[_role_id] = {
+        role : _role_name,
+        wep1 : _wep1,
+        wep2 : _wep2,
+        armour : _armour,
+        mobi : _mobi,
+        gear : _gear,
+        race : 1
+    }}
+};
+
 /// @self Asset.GMObject.obj_creation
 function role_setup_objects() {
     specialist_distribution_box = new ToggleButton({

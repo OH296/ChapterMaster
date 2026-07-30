@@ -537,26 +537,28 @@ chapter_trait_meta = [];
 
 setup_chapter_traits();
 
-race = [];
-role = [];
-wep1 = [];
-wep2 = [];
-armour = [];
-gear = [];
-mobi = [];
 
-// Default Marine Loadouts
-for (var slot = 99; slot <= 103; slot++) {
-    for (var i = 0; i <= 50; i++) {
-        race[slot][i] = 1;
-        role[slot][i] = "";
-        wep1[slot][i] = "";
-        wep2[slot][i] = "";
-        armour[slot][i] = "";
-        gear[slot][i] = "";
-        mobi[slot][i] = "";
+function role_data_set(){
+    return {
+        role : "",
+        wep1 : "",
+        wep2 : "",
+        armour : "",
+        mobi : "",
+        gear : "",
+        race : 1
     }
 }
+player_role_data = [];
+default_role_data = [];
+
+// Default Marine Loadouts
+
+for (var i = 0; i <= 50; i++) {
+    player_role_data[i] = role_data_set();
+    default_role_data[i] = role_data_set();
+}
+
 
 defaults_slot = 100;
 
@@ -568,15 +570,7 @@ defaults_slot = 100;
 /// @param {String} _armour
 /// @param {String} _mobi
 /// @param {String} _gear
-load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
-    role[defaults_slot][_role_id] = _role_name;
-    wep1[defaults_slot][_role_id] = _wep1;
-    wep2[defaults_slot][_role_id] = _wep2;
-    armour[defaults_slot][_role_id] = _armour;
-    mobi[defaults_slot][_role_id] = _mobi;
-    gear[defaults_slot][_role_id] = _gear;
-    race[defaults_slot][_role_id] = 1;
-};
+
 
 load_default_gear(eROLE.CHAPTERMASTER, "Chapter Master", "Power Sword", "Bolter", "Artificer Armour", "", "");
 load_default_gear(eROLE.HONOURGUARD, "Honour Guard", "Power Sword", "Bolter", "Artificer Armour", "", "");

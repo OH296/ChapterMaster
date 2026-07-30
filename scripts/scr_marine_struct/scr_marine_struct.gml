@@ -943,16 +943,18 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return new_name;
     };
 
+    gear1 = "";
     static gear = function(raw = false) {
-        var wep = obj_ini.gear[company][marine_number];
+        var wep = gear1;
         if (is_string(wep) || raw) {
             return wep;
         }
         return obj_ini.artifact[wep];
     };
 
+    wep1 = "";
     static weapon_one = function(raw = false) {
-        var wep = obj_ini.wep1[company][marine_number];
+        var wep = wep1;
         if (is_string(wep) || raw) {
             return wep;
         }

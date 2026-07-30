@@ -107,22 +107,6 @@ var _arrays_count = 103;
 var _empty_array = [];
 
 LOGGER.info("Set Game Arrays and Statics");
-r_race = array_create_advanced(_arrays_count, _empty_array);
-r_role = array_create_advanced(_arrays_count, _empty_array);
-r_wep1 = array_create_advanced(_arrays_count, _empty_array);
-r_wep2 = array_create_advanced(_arrays_count, _empty_array);
-r_armour = array_create_advanced(_arrays_count, _empty_array);
-r_gear = array_create_advanced(_arrays_count, _empty_array);
-r_mobi = array_create_advanced(_arrays_count, _empty_array);
-
-var _empty_size = 21;
-r_race[100] = array_create(_empty_size, 0);
-r_role[100] = array_create(_empty_size, "");
-r_wep1[100] = array_create(_empty_size, "");
-r_wep2[100] = array_create(_empty_size, "");
-r_armour[100] = array_create(_empty_size, "");
-r_gear[100] = array_create(_empty_size, "");
-r_mobi[100] = array_create(_empty_size, "");
 
 var _roles_data = {};
 
@@ -268,30 +252,6 @@ var _max_id = 0;
 
 for (var k = 0, _kl = array_length(_role_keys); k < _kl; k++) {
     _max_id = max(_max_id, real(_role_keys[k]));
-}
-
-for (var i = 101; i < 103; i++) {
-    var _target_size = _max_id + 1;
-
-    r_role[i] = array_create(_target_size, "");
-    r_wep1[i] = array_create(_target_size, "");
-    r_wep2[i] = array_create(_target_size, "");
-    r_armour[i] = array_create(_target_size, "");
-    r_mobi[i] = array_create(_target_size, "");
-    r_gear[i] = array_create(_target_size, "");
-
-    for (var j = 0, jl = array_length(_role_keys); j < jl; j++) {
-        var _key = _role_keys[j];
-        var _id = real(_key);
-        var _data = _roles_data[$ _key];
-
-        r_role[i][_id] = _data.name;
-        r_wep1[i][_id] = _data.w1;
-        r_wep2[i][_id] = _data.w2;
-        r_armour[i][_id] = _data.arm;
-        r_mobi[i][_id] = _data.mob;
-        r_gear[i][_id] = _data.gear;
-    }
 }
 
 // ** Sets cheatcode values **

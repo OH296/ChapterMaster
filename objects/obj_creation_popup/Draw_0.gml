@@ -163,15 +163,8 @@ try {
                 for (var i = 0; i < array_length(possible_custom_roles); i++) {
                     var _role_pair = possible_custom_roles[i];
                     if (_role_pair[1] == _role_id) {
-                        var c_role = {
-                            name: obj_creation.role[100][_role_id],
-                            wep1: obj_creation.wep1[100][_role_id],
-                            wep2: obj_creation.wep2[100][_role_id],
-                            gear: obj_creation.gear[100][_role_id],
-                            mobi: obj_creation.mobi[100][_role_id],
-                            armour: obj_creation.armour[100][_role_id],
-                        };
-                        variable_struct_set(obj_creation.custom_roles, _role_pair[0], c_role);
+                        var _p_role_data = obj_creation.player_role_data[_role_id];
+                        variable_struct_set(obj_creation.custom_roles, _role_pair[0], _p_role_data);
                         break;
                     }
                 }
@@ -234,23 +227,10 @@ try {
 
                 if (mouse_button_clicked()) {
                     var buh = item_name[h] == ITEM_NAME_NONE ? "" : item_name[h];
-                    switch (target_gear) {
-                        case 0:
-                            obj_creation.wep1[co][ide] = buh;
-                            break;
-                        case 1:
-                            obj_creation.wep2[co][ide] = buh;
-                            break;
-                        case 2:
-                            obj_creation.armour[co][ide] = buh;
-                            break;
-                        case 3:
-                            obj_creation.gear[co][ide] = buh;
-                            break;
-                        case 4:
-                            obj_creation.mobi[co][ide] = buh;
-                            break;
-                    }
+                    var _player_data = obj_creation.player_role_data[ide];
+
+                    _player_data[$ global.unit_equip_slots[target_gear]] = buh
+
                 }
             }
         }
@@ -278,23 +258,8 @@ try {
 
                 if (point_and_click(_button)) {
                     var buh = item_name[h] == ITEM_NAME_NONE ? "" : item_name[h];
-                    switch (target_gear) {
-                        case 0:
-                            obj_creation.wep1[co][ide] = buh;
-                            break;
-                        case 1:
-                            obj_creation.wep2[co][ide] = buh;
-                            break;
-                        case 2:
-                            obj_creation.armour[co][ide] = buh;
-                            break;
-                        case 3:
-                            obj_creation.gear[co][ide] = buh;
-                            break;
-                        case 4:
-                            obj_creation.mobi[co][ide] = buh;
-                            break;
-                    }
+                    var _player_data = obj_creation.player_role_data[ide];
+                    _player_data[$ global.unit_equip_slots[target_gear]] = buh
                 }
             }
             tab = 1;
