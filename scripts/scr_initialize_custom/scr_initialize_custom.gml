@@ -828,6 +828,9 @@ function scr_initialize_custom() {
     occulobe = obj_creation.occulobe;
     mucranoid = obj_creation.mucranoid;
 
+    player_role_data = obj_creation.player_role_data;
+    default_role_data = obj_creation.default_role_data;
+
     chapter_data = new ChapterGameData();
 
     adv = [];
@@ -1593,14 +1596,7 @@ function scr_initialize_custom() {
                 eROLE.VETERANSERGEANT,
             ],
         ];
-        var possible_custom_attributes = [
-            "name",
-            "wep1",
-            "wep2",
-            "mobi",
-            "gear",
-            "armour",
-        ];
+        var possible_custom_attributes = global.unit_equip_slots;
         /**
 		 * check whether the json structure exists to populate custom role names and 
 		 * attributes then set them using the map above 
@@ -1614,26 +1610,7 @@ function scr_initialize_custom() {
                     var attribute = possible_custom_attributes[a];
                     if (struct_exists(c_roles[$ c_rolename], attribute)) {
                         var value = c_roles[$ c_rolename][$ attribute];
-                        switch (attribute) {
-                            case "name":
-                                role[defaults_slot][c_roleid] = value;
-                                break;
-                            case "wep1":
-                                wep1[defaults_slot][c_roleid] = value;
-                                break;
-                            case "wep2":
-                                wep2[defaults_slot][c_roleid] = value;
-                                break;
-                            case "armour":
-                                armour[defaults_slot][c_roleid] = value;
-                                break;
-                            case "gear":
-                                gear[defaults_slot][c_roleid] = value;
-                                break;
-                            case "mobi":
-                                mobi[defaults_slot][c_roleid] = value;
-                                break;
-                        }
+                        player_role_data[c_roleid][$ attribute] = value;
                     }
                 }
             }
@@ -1769,18 +1746,19 @@ function scr_initialize_custom() {
             "{squad_name}": _squad_name,
         },
     ];
-    var _roles_player = obj_ini.role[100];
-    var _default_player = obj_ini.role[101];
+
+    var _roles_player = player_role_data;
+    var _default_player = default_role_data;
     for (var i = 1; i < 20; i++) {
-        if (_roles_player[i] == "") {
+        if (_roles_player[i].role == "") {
             continue;
         }
 
-        if (_default_player[i] == "") {
+        if (_default_player[i].role == "") {
             continue;
         }
         var _set = {};
-        variable_struct_set(_set, _default_player[i], _roles_player[i]);
+        variable_struct_set(_set, _default_player[i].role, _roles_player[i].role);
 
         array_push(_swaps, _set);
     }
@@ -1788,13 +1766,13 @@ function scr_initialize_custom() {
     for (var i = 1; i < 20; i++) {
         var _set = {};
         var _key = $"wep1[{i}]";
-        var _val = obj_ini.wep1[100][i];
+        var _val = _roles_player[i].wep1;
         variable_struct_set(_set, _key, _val);
         array_push(_swaps, _set);
 
         _set = {};
         _key = $"wep2[{i}]";
-        _val = obj_ini.wep2[100][i];
+        _val = _roles_player[i].wep2;
         variable_struct_set(_set, _key, _val);
         array_push(_swaps, _set);
     }
@@ -1824,11 +1802,11 @@ function scr_initialize_custom() {
         squad_types.assault_squad.loadout = {
             "required": {
                 "wep1": [
-                    wep1[100][10],
+                    _default_player[10].wep1,
                     5,
                 ],
                 "wep2": [
-                    wep2[100][10],
+                    _default_player[10].wep2,
                     5,
                 ],
             },

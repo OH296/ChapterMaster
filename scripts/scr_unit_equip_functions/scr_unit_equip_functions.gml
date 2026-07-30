@@ -443,29 +443,44 @@ function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, t
 
 /// @self Struct.TTRPG_stats
 function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury = true, quality = "any") {
+    var _outcome_desc = "";
+    static no_equip = "Not enough equipment:";
+    var _missing_items = "";
+    var _success = true;
     if (is_array(update_equipment)) {
         update_equipment = convert_equipment_array_into_struct(update_equipment);
     }
     var equip_areas = struct_get_names(update_equipment);
     for (var i = 0; i < array_length(equip_areas); i++) {
+        var _item = update_equipment[$ equip_areas[i]];
         switch (equip_areas[i]) {
             case "wep1":
-                update_weapon_one(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                var _outcome = update_weapon_one(_item, from_armoury, to_armoury, quality);
                 break;
             case "wep2":
-                update_weapon_two(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                var _outcome = update_weapon_two(_item, from_armoury, to_armoury, quality);
                 break;
             case "mobi":
-                update_mobility_item(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                var _outcome = update_mobility_item(_item, from_armoury, to_armoury, quality);
                 break;
             case "armour":
-                update_armour(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                var _outcome = update_armour(_item, from_armoury, to_armoury, quality);
                 break;
             case "gear":
-                update_gear(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                var _outcome = update_gear(_item, from_armoury, to_armoury, quality);
                 break;
         }
+        if (_outcome == "no_items"){
+            _missing_items +=  $"{_missing_items == "" ? "" : ","} {_item}";
+            _success = false;
+        }
     }
+
+    if (_missing_items != ""){
+        _outcome_desc += no_equip + _missing_items;
+    }
+    var _final_outcome = {success : _final_outcome,description :_outcome_desc};
+
 }
 
 /// @self Struct.TTRPG_stats

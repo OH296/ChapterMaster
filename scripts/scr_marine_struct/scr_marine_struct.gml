@@ -402,16 +402,34 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     static handle_stat_growth = unit_stat_growth;
 
+    static move_to_company(new_company){
+        var _slot = find_company_open_slot(new_company);
+        var _old_loc = [company, marine_number];
+        obj_ini.TTRPG[new_company][_slot] = self;
+        company = new_company;
+        marine_number = _slot;
+        movement_after_math();
+        var _old_company_length = array_length(obj_ini.TTRP[_old_loc[0]]);
+        for (var i = _old_loc[1] + 1; i < _old_company_length ; i++){
+            var _unit = fetch_unit[_old_loc[0] , i];
+            _unit.movement_after_math(_old_loc[0] ,i -1 );
+            _unit.marine_number = i -1; 
+        }
+        array_delete(obj_ini.TTRP[_old_loc[0]] , _old_loc[1] , 1);
+    }
+
+    armour1 = "";
     static armour = function(raw = false) {
-        var wep = obj_ini.armour[company][marine_number];
+        var wep = armour1;
         if (is_string(wep) || raw) {
             return wep;
         }
         return obj_ini.artifact[wep];
     };
 
+    current_role = "";
     static role = function() {
-        return obj_ini.role[company][marine_number];
+        return current_role;
     };
 
     static squad_role = function() {

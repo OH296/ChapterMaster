@@ -16,6 +16,8 @@ commands = 0;
 
 heh1 = 0;
 heh2 = 0;
+player_role_data = [];
+default_role_data = [];
 
 companies = 10;
 progenitor = ePROGENITOR.NONE;

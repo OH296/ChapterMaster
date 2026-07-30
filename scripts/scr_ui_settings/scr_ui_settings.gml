@@ -626,11 +626,12 @@ function setup_role_settings_buttons() {
     role_settings_ui = {};
     var _button_x = 830;
     var _settings = obj_controller.settings;
+    var _role_data = obj_ini.player_role_data[_settings];
     role_settings_ui.main_weapon_button = new UnitButtonObject({
         style: "pixel",
         x1: _button_x,
         y1: 185,
-        label: $"Main Weapon: {obj_ini.wep1[100][_settings]}",
+        label: $"Main Weapon: {_role_data.wep1}",
         set_width: true,
         w: 250,
         active: true,
@@ -641,7 +642,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.main_weapon_button.y2,
-        label: $"Secondary Weapon: {obj_ini.wep2[100][_settings]}",
+        label: $"Secondary Weapon: {_role_data.wep2}",
         set_width: true,
         w: 250,
         active: true,
@@ -652,7 +653,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.secondary_weapon_button.y2,
-        label: $"Armour: {obj_ini.armour[100][_settings]}",
+        label: $"Armour: {_role_data.armour_role_data}",
         set_width: true,
         w: 250,
         active: true,
@@ -663,7 +664,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.armour_button.y2,
-        label: $"Special Item: {obj_ini.gear[100][_settings]}",
+        label: $"Special Item: {_role_data.gear}",
         set_width: true,
         w: 250,
         active: true,
@@ -674,7 +675,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.gear_button.y2,
-        label: $"Mobility Item: {obj_ini.mobi[100][_settings]}",
+        label: $"Mobility Item: {_role_data.mobi}",
         set_width: true,
         w: 250,
         active: true,
