@@ -73,9 +73,6 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
             // TODO: Implement Chaos Spawn (Race 12, Possessed Claws)
         }
     }
-
-    _unit.age = (obj_controller.millenium * 1000) + obj_controller.year;
-
     switch (spawn_name) {
         case "":
         case "imperial":
@@ -123,6 +120,8 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
     _unit.add_exp(spawn_exp);
     _unit.allocate_unit_to_fresh_spawn(home_spot);
     _unit.update_role(man_role);
+    _unit.age = (obj_controller.millenium * 1000) + obj_controller.year;
+
     with (obj_ini) {
         scr_company_order(target_company);
     }

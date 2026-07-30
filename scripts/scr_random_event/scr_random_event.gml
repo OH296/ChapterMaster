@@ -709,7 +709,7 @@ function scr_random_event(execute_now) {
         var cm_is_psyker = false;
         for (var i = 0; i < array_length(TTRPG[0]); i++) {
             var _unit = fetch_unit([0 ,i]);
-            if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER] && string_count("0", _unit.special) > 0) {
+            if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER] && string_count("0", _unit.specials) > 0) {
                 cm_is_psyker = true;
                 break;
             }

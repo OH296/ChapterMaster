@@ -118,7 +118,7 @@ veh_acc = array_create_2d(_max_companies, _max_vehicles, "");
 defaults_slot = 100;
 
 /// @type {Array<Array<Real>>}
-race = array_create(11, 501);
+race = array_create(11, []);
 /// @type {Array<Array<String>>}
 name = array_create(11, []);
 /// @type {Array<Array<String>>}
