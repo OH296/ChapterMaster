@@ -2922,21 +2922,13 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
                 if (rando == 5) {
                     obj_controller.useful_info += "CM|";
 
-                    var him_c = 0, him_i = 0, him_num = 0, him_cor = 0, split = "";
+                    var _unit = scr_max_marine("chaos");
 
-                    split = scr_max_marine("chaos");
-
-                    explode_script(split, "|");
-                    him_c = real(explode[0]);
-                    him_i = real(explode[1]);
-                    him_num = string(explode[2]);
-                    him_cor = real(explode[3]);
-
-                    if (him_cor == 0) {
+                    if (_unit.company == 0) {
                         diplo_text = "I have looked into the strands of fate, with your chapter, and found that the future is not suspect for any of your men.  None of them have their minds poisoned by the taint of chaos.";
                     }
-                    if (him_cor > 0) {
-                        diplo_text = "I have looked into the strands of fate, with your chapter.  Your 'battle brother' " + string(him_num) + " has a clouded, dark future- it is advised you watch him carefully.";
+                    else if (_unit.company > 0) {
+                        diplo_text = $"I have looked into the strands of fate, with your chapter.  Your 'battle brother' {_unit.name_role()} has a clouded, dark future- it is advised you watch him carefully.";
                     }
                 }
                 // * Next random event *

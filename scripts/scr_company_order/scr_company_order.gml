@@ -17,7 +17,7 @@ function sort_all_companies_to_map(map) {
 }
 
 function company_length(company){
-    return obj_ini.TTRPG[company];
+    return array_length(obj_ini.TTRPG[company]);
 }
 
 function scr_company_order(company) {

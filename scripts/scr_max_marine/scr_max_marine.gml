@@ -17,24 +17,24 @@ function scr_max_marine(max_type) {
             if (max_type == "chaos") {
                 if (unit.corruption > value) {
                     value = unit.corruption;
-                    man_c = c;
+                    man_c = co;
                     man_i = i;
                 }
             } else if (max_type == "age") {
                 if (unit.age < value) {
                     value = unit.age;
-                    man_c = c;
+                    man_c = co;
                     man_i = i;
                 }
             } else if (max_type == "exp") {
                 if (unit.experience > value) {
                     value = unit.experience;
-                    man_c = c;
+                    man_c = co;
                     man_i = i;
                 }
             }
         }
     }
 
-    return string(man_c) + "|" + string(man_i) + "|" + string(obj_ini.name[man_c][man_i]) + "|" + string(value) + "|";
+    return fetch_unit([man_c, man_i]);
 }
