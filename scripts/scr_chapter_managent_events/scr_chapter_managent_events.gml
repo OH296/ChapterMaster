@@ -133,7 +133,7 @@ function setup_new_forge_master_popup(techs) {
     };
 
     for (var i = array_length(techs) - 1; i >= 0; i--) {
-        if (techs[i].role() != obj_ini.role[100][16]) {
+        if (techs[i].role() != obj_ini.player_role_data[eROLE.TECHMARINE].role) {
             array_delete(techs, i, 1);
         }
     }

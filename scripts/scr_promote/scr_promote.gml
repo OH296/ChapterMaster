@@ -47,9 +47,9 @@ function setup_promotion_popup() {
                 // Gets the number of marines in the target company
                 var unit, squad_mover, moveable;
                 var role_squad_equivilances = {}; //this is the only way to set variables as keys in gml
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][8], "tactical_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][9], "devastator_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][10], "assault_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.TACTICAL].role, "tactical_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.DEVASTATOR].role, "devastator_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.ASSAULT].role, "assault_squad");
                 variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.SCOUT].role, "scout_squad");
                 variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.VETERAN].role, "veteran_squad");
                 variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.TERMINATOR].role, "terminator_squad");

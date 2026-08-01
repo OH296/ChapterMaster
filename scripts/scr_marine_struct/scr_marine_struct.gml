@@ -1048,7 +1048,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             qual_string = "no_items";
         }
         if (new_weapon == "Company Standard") {
-            if (role() != obj_ini.role[100][11]) {
+            if (role() != obj_ini.player_role_data[eROLE.ANCIENT].role) {
                 viable = false;
                 qual_string = "wrong_role";
             }

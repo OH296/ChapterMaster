@@ -1581,24 +1581,24 @@ function scr_initialize_custom() {
     }
 
     var roles = {
-        chapter_master: role[defaults_slot][eROLE.CHAPTERMASTER],
-        honour_guard: role[defaults_slot][eROLE.HONOURGUARD],
-        veteran: role[defaults_slot][eROLE.VETERAN],
-        terminator: role[defaults_slot][eROLE.TERMINATOR],
-        captain: role[defaults_slot][eROLE.CAPTAIN],
-        dreadnought: role[defaults_slot][eROLE.DREADNOUGHT],
-        champion: role[defaults_slot][eROLE.CHAMPION],
-        tactical: role[defaults_slot][eROLE.TACTICAL],
-        devastator: role[defaults_slot][eROLE.DEVASTATOR],
-        assault: role[defaults_slot][eROLE.ASSAULT],
-        ancient: role[defaults_slot][eROLE.ANCIENT],
-        scout: role[defaults_slot][eROLE.SCOUT],
-        chaplain: role[defaults_slot][eROLE.CHAPLAIN],
-        apothecary: role[defaults_slot][eROLE.APOTHECARY],
-        techmarine: role[defaults_slot][eROLE.TECHMARINE],
-        librarian: role[defaults_slot][eROLE.LIBRARIAN],
-        sergeant: role[defaults_slot][eROLE.SERGEANT],
-        veteran_sergeant: role[defaults_slot][eROLE.VETERANSERGEANT],
+        chapter_master: player_role_data[eROLE.CHAPTERMASTER].role,
+        honour_guard: player_role_data[eROLE.HONOURGUARD].role,
+        veteran: player_role_data[eROLE.VETERAN].role,
+        terminator: player_role_data[eROLE.TERMINATOR].role,
+        captain: player_role_data[eROLE.CAPTAIN].role,
+        dreadnought: player_role_data[eROLE.DREADNOUGHT].role,
+        champion: player_role_data[eROLE.CHAMPION].role,
+        tactical: player_role_data[eROLE.TACTICAL].role,
+        devastator: player_role_data[eROLE.DEVASTATOR].role,
+        assault: player_role_data[eROLE.ASSAULT].role,
+        ancient: player_role_data[eROLE.ANCIENT].role,
+        scout: player_role_data[eROLE.SCOUT].role,
+        chaplain: player_role_data[eROLE.CHAPLAIN].role,
+        apothecary: player_role_data[eROLE.APOTHECARY].role,
+        techmarine: player_role_data[eROLE.TECHMARINE].role,
+        librarian: player_role_data[eROLE.LIBRARIAN].role,
+        sergeant: player_role_data[eROLE.SERGEANT].role,
+        veteran_sergeant: player_role_data[eROLE.VETERANSERGEANT].role,
     };
 
     #endregion
@@ -1839,7 +1839,7 @@ function scr_initialize_custom() {
                         "min": 4,
                         "loadout": {
                             //tactical breacher marine
-                            "required": {"wep1": [wep1[100][8], 7], "wep2": ["Boarding Shield", "max"], "armour": ["MK3 Iron Armour", "max"], "gear": ["Plasma Bomb", "max"], "mobi": ["", "max"]},
+                            "required": {"wep1": [player_role_data[eROLE.TACTICAL].wep1, 7], "wep2": ["Boarding Shield", "max"], "armour": ["MK3 Iron Armour", "max"], "gear": ["Plasma Bomb", "max"], "mobi": ["", "max"]},
                             "option": {"wep1": [[["Flamer", "Flamer", "Flamer", "Grav-Gun", "Meltagun", "Lascutter"], 2]]},
                         },
                         "role": $"Breacher",
@@ -2465,7 +2465,7 @@ function scr_initialize_custom() {
                 case "devastators":
                     _rolename = roles.devastator;
                     _erole = eROLE.DEVASTATOR;
-                    if (wep1[defaults_slot][eROLE.DEVASTATOR] == "Heavy Ranged") {
+                    if (player_role_data[eROLE.DEVASTATOR].wep1 == "Heavy Ranged") {
                         _wep1 = choose("Multi-Melta", "Lascannon", "Missile Launcher", "Heavy Bolter");
                     }
                     break;
@@ -2562,7 +2562,7 @@ function scr_initialize_custom() {
                     }
                     if (_coy.coy == 1 && _coy.terminators > 0) {
                         _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
-                        _wep2 = wep2[defaults_slot][eROLE.TERMINATOR];
+                        _wep2 = player_role_data[eROLE.TERMINATOR].wep2;
                     }
                     break;
                 case "apothecaries":
@@ -2574,8 +2574,8 @@ function scr_initialize_custom() {
                     }
                     if (_coy.coy == 1 && _coy.terminators > 0) {
                         _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
-                        _wep1 = wep1[defaults_slot][eROLE.TERMINATOR];
-                        _wep2 = wep2[defaults_slot][eROLE.TERMINATOR];
+                        _wep1 = player_role_data[eROLE.TERMINATOR].wep1;
+                        _wep2 = player_role_data[eROLE.TERMINATOR].wep2;
                     }
                     break;
                 case "techmarines":
@@ -2585,7 +2585,7 @@ function scr_initialize_custom() {
                     if (_coy.coy == 1) {
                         if (_coy.terminators > 0) {
                             _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
-                            _wep2 = wep2[defaults_slot][eROLE.TERMINATOR];
+                            _wep2 = player_role_data[eROLE.TERMINATOR].wep2;
                         }
                         if (!_is_terminator(_armour)) {
                             if (scr_has_disadv("Poor Equipment")) {
@@ -2605,7 +2605,7 @@ function scr_initialize_custom() {
                     }
                     if (_coy.coy == 1 && _coy.terminators > 0) {
                         _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
-                        _wep2 = wep2[defaults_slot][eROLE.TERMINATOR];
+                        _wep2 = player_role_data[eROLE.TERMINATOR].wep2;
                     }
                     break;
                 case "champions":
@@ -2614,7 +2614,7 @@ function scr_initialize_custom() {
                     if (_coy.coy == 1 && _coy.terminators > 0) {
                         _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
                         _wep1 = "Thunder Hammer";
-                        _wep2 = wep2[defaults_slot][eROLE.TERMINATOR];
+                        _wep2 = player_role_data[eROLE.TERMINATOR].wep2;
                         if (global.chapter_name == "Dark Angels") {
                             _wep1 = "Heavy Thunder Hammer";
                             _wep2 = "";
@@ -2626,7 +2626,7 @@ function scr_initialize_custom() {
                     _erole = eROLE.ANCIENT;
                     if (_coy.coy == 1 && _coy.terminators > 0) {
                         _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
-                        _wep2 = wep2[defaults_slot][eROLE.TERMINATOR];
+                        _wep2 = player_role_data[eROLE.TERMINATOR].wep2;
                     }
                     break;
 
@@ -2830,8 +2830,8 @@ function scr_initialize_custom() {
 
     if (scr_has_disadv("Sieged")) {
         scr_add_item("Narthecium", 4);
-        scr_add_item(wep1[defaults_slot][eROLE.APOTHECARY], 4);
-        scr_add_item(wep2[defaults_slot][eROLE.APOTHECARY], 4);
+        scr_add_item(player_role_data[eROLE.APOTHECARY].wep1, 4);
+        scr_add_item(player_role_data[eROLE.APOTHECARY].wep2, 4);
         scr_add_item("Psychic Hood", 4);
         scr_add_item("Crozius Arcanum", 4);
         scr_add_item("Servo-arm", 4);
@@ -3009,7 +3009,7 @@ function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1
         } else if (role_name == "Codiciery") {
             spawn_unit.psionic = irandom_range(5, 7);
             if (roll_dice_unit(spawn_unit, 1, 6, "high") < 4) {
-                spawn_unit.update_gear(obj_ini.gear[obj_ini.defaults_slot][eROLE.TACTICAL], false, false);
+                spawn_unit.update_gear(obj_ini.player_role_data[eROLE.TACTICAL].gear, false, false);
             }
             if (roll_dice_unit(spawn_unit, 1, 6, "high") < 4) {
                 spawn_unit.update_weapon_one(choose("Force Axe", "Force Sword"), false, false);
@@ -3017,7 +3017,7 @@ function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1
         } else if (role_name == "Lexicanum") {
             spawn_unit.psionic = irandom_range(2, 4);
             spawn_unit.update_weapon_one(choose("Force Axe", "Force Sword"), false, false);
-            spawn_unit.update_gear(obj_ini.gear[obj_ini.defaults_slot][eROLE.TACTICAL], false, false);
+            spawn_unit.update_gear(obj_ini.player_role_data[eROLE.TACTICAL].gear, false, false);
         }
         spawn_unit.update_powers();
     }

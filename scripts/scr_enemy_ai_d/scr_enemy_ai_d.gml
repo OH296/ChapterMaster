@@ -156,12 +156,12 @@ function scr_enemy_ai_d() {
         }
 
         if (has_problem_planet_and_time(i, "Hive Fleet", 3) > -1) {
-            var woop = scr_role_count("Chief " + string(obj_ini.role[100][17]), "");
+            var woop = scr_role_count("Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role), "");
             var yep = !scr_has_disadv("Psyker Intolerant");
 
             if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (woop != 0) && yep) {
-                scr_popup("Shadow in the Warp", $"Chief {obj_ini.role[100][17]} " + string(obj_ini.name[0][5]) + " reports a disturbance in the warp.  He claims it is like a shadow.", "shadow", "");
-                scr_event_log("red", $"Chief {obj_ini.role[100][17]} reports a disturbance in the warp.  He claims it is like a shadow.");
+                scr_popup("Shadow in the Warp", $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role} " + string(obj_ini.name[0][5]) + " reports a disturbance in the warp.  He claims it is like a shadow.", "shadow", "");
+                scr_event_log("red", $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role} reports a disturbance in the warp.  He claims it is like a shadow.");
             }
             if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (woop == 0) && yep) {
                 for (var q = 0; q < array_length(obj_ini.TTRPG[0]); q++) {

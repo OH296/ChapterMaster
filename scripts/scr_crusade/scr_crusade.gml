@@ -104,7 +104,7 @@ function scr_crusade() {
                                 array_push(heroics_strings, heroic_death);
                             }
                         }
-                    } else if (unit.role() == obj_ini.role[100][11] || unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+                    } else if (unit.role() == obj_ini.player_role_data[eROLE.ANCIENT].role || unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         _dead = false;
                     }
                 }
@@ -182,10 +182,10 @@ function scr_crusade() {
 
     if (obj_ini.doomed == 0) {
         if ((apoth > 0) && (seed > 0)) {
-            tixt += "  The " + string(apoth) + " surviving " + string(obj_ini.role[100][15]) + " were able to recover " + string(seed) + " Gene-Seed.";
+            tixt += "  The " + string(apoth) + " surviving " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + " were able to recover " + string(seed) + " Gene-Seed.";
         }
         if ((apoth == 0) && (seed > 0)) {
-            tixt += "  You had no able-bodied " + string(obj_ini.role[100][15]) + ", or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(seed) + " of your Gene-Seed.";
+            tixt += "  You had no able-bodied " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + ", or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(seed) + " of your Gene-Seed.";
         }
     }
     if (obj_ini.doomed == 1) {

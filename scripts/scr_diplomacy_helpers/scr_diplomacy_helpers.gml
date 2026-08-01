@@ -289,7 +289,7 @@ function scr_emmisary_diplomacy_routes() {
         scr_diplomacy_hit(1,, function() {
             cooldown = 8000;
             diplomacy_pathway = "sacrifice_champ";
-            var champ = scr_random_marine(obj_ini.role[100][7], 0);
+            var champ = scr_random_marine(obj_ini.player_role_data[eROLE.CHAMPION].role, 0);
             if (champ != "none") {
                 var chapter_master = fetch_unit([0, 1]);
                 chapter_master.add_trait("blood_for_blood");

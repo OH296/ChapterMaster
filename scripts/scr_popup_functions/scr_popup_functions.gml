@@ -303,7 +303,7 @@ function calculate_equipment_needs() {
         req_wep2_num = 0;
         req_mobi = "";
         req_mobi_num = 0;
-        req_gear = obj_ini.gear[100][17];
+        req_gear = obj_ini.player_role_data[eROLE.LIBRARIAN].gear;
         req_gear_num = units;
     } else if (rall == "Lexicanum") {
         req_armour = "";
@@ -314,7 +314,7 @@ function calculate_equipment_needs() {
         req_wep2_num = 0;
         req_mobi = "";
         req_mobi_num = 0;
-    } else if (rall == obj_ini.role[100][11]) {
+    } else if (rall == obj_ini.player_role_data[eROLE.ANCIENT].role) {
         req_armour = STR_ANY_POWER_ARMOUR;
         req_armour_num = units;
         req_wep2 = "Company Standard";

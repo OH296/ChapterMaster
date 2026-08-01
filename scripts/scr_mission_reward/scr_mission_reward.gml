@@ -69,7 +69,7 @@ function scr_mission_reward(mission, star, planet) {
             }
         }
 
-        var tixt = $"The journey into the Mars Catacombs was a success.  Your {techs_alive} remaining {obj_ini.role[100][16]}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {star.name} {scr_roman(planet)}.\n";
+        var tixt = $"The journey into the Mars Catacombs was a success.  Your {techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {star.name} {scr_roman(planet)}.\n";
         tixt += $"\n{found_requisition} Requisition from salvage";
         if (found_artifact > 0) {
             tixt += $"\n{string_plural("Unidentified Artifacts", found_artifact)}  recovered";
@@ -83,7 +83,7 @@ function scr_mission_reward(mission, star, planet) {
         }
 
         scr_popup("Mechanicus Mission Completed", tixt, "mechanicus", "");
-        tixt = "Mechanicus Mission Completed: {techs_alive}/{techs_alive+techs_lost} of your {obj_ini.role[100][16]}s return with ";
+        tixt = "Mechanicus Mission Completed: {techs_alive}/{techs_alive+techs_lost} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s return with ";
         tixt += string(found_requisition) + " Requisition, ";
         if (found_artifact > 0) {
             tixt += $"\n{found_artifact} : {string_plural("Unidentified Artifacts", found_artifact)}  recovered";
@@ -114,7 +114,7 @@ function scr_mission_reward(mission, star, planet) {
         }
 
         if (result == "New") {
-            scr_popup("Mechanicus Mission Completed", $"Your {obj_ini.role[100][16]} have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  300 Requisition has been given to your Chapter and relations are better than before.", "mechanicus", "");
+            scr_popup("Mechanicus Mission Completed", $"Your {obj_ini.player_role_data[eROLE.TECHMARINE].role} have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  300 Requisition has been given to your Chapter and relations are better than before.", "mechanicus", "");
             obj_controller.requisition += 300;
             obj_controller.disposition[3] += 2;
             var onceh = 0;
@@ -146,7 +146,7 @@ function scr_mission_reward(mission, star, planet) {
             }
         }
         if (result == "Land Raider") {
-            scr_popup("Mechanicus Mission Completed", "Your " + string(obj_ini.role[100][16]) + " have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  A new Land Raider has been provided in return.", "mechanicus", "");
+            scr_popup("Mechanicus Mission Completed", "Your " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + " have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  A new Land Raider has been provided in return.", "mechanicus", "");
             var onceh = 0;
             obj_controller.disposition[3] += 1;
             for (var com = 0; com <= 10; com++) {
@@ -163,7 +163,7 @@ function scr_mission_reward(mission, star, planet) {
             }
         }
         if (result == "Requisition") {
-            scr_popup("Mechanicus Mission Completed", "Your " + string(obj_ini.role[100][16]) + " have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  600 Requisition has been given to your Chapter as compensation.", "mechanicus", "");
+            scr_popup("Mechanicus Mission Completed", "Your " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + " have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  600 Requisition has been given to your Chapter as compensation.", "mechanicus", "");
             obj_controller.requisition += 600;
             obj_controller.disposition[3] += 1;
         }

@@ -76,13 +76,13 @@ function scr_ui_advisors() {
         draw_set_alpha(1);
         draw_set_color(c_gray);
         if (temp[36] != "0") {
-            blurp = $"Sir!  You requested a report?  Currently, we have deployed {temp[36]} {obj_ini.role[100][14]}s to watch over the health of our Battle-Brothers in the field.  We have an additional " + string(temp[37]) + " " + string(obj_ini.role[100][14]) + "s who await only your order to carry the word to the troops.";
+            blurp = $"Sir!  You requested a report?  Currently, we have deployed {temp[36]} {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s to watch over the health of our Battle-Brothers in the field.  We have an additional " + string(temp[37]) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s who await only your order to carry the word to the troops.";
         }
         if (temp[36] == "0") {
             blurp = "Sir!  You requested a report?  Currently, we have {temp[37]} {obj_ini.role[100, 14]}s who await only your order to carry the word to the troops.";
         }
         if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-            blurp += "##Currently, we are training additional " + string(obj_ini.role[100][14]) + " at a ";
+            blurp += "##Currently, we are training additional " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + " at a ";
             var _recruit_rates = global.recruitment_rates;
             blurp += _recruit_rates[training_chaplain];
             if (training_chaplain > 0 && training_chaplain <= 6) {
@@ -136,15 +136,15 @@ function scr_ui_advisors() {
         draw_set_color(c_gray);
 
         if (menu_adept == 1) {
-            blurp = "Your Chapter contains " + string(temp[36]) + " " + string(obj_ini.role[100][14]) + "s.##";
+            blurp = "Your Chapter contains " + string(temp[36]) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s.##";
             if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-                blurp += "Training of further " + string(obj_ini.role[100][14]) + "s";
+                blurp += "Training of further " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s";
                 if (training_chaplain >= 0 && training_chaplain <= 6) {
                     var _recruit_pace = global.recruitment_pace_descriptions;
                     blurp += _recruit_pace[training_chaplain];
                 }
                 if (training_chaplain > 0) {
-                    blurp += "  The next " + string(obj_ini.role[100][14]) + " is expected in " + string(eta) + " months.";
+                    blurp += "  The next " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + " is expected in " + string(eta) + " months.";
                 }
             }
         }
@@ -165,7 +165,7 @@ function scr_ui_advisors() {
         if (menu_adept == 0) {
             if (fest_scheduled == 0) {
                 if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-                    blurp2 = "As our bolters are charged with death for the Emperor's enemies, our thoughts are charged with his wisdom.  As our bodies are armoured with Adamantium, our souls are protected with our loyalty- loyalty to Him, and loyalty to our brothers.  The bonds of this brotherhood are worth revering, even if a lull in duty invites doubt and heresy.  Should you wish to schedule a rousing event, or challenge, I will make it so.  Under the careful watch of our " + string(obj_ini.role[100][14]) + "s, our brothers' spirits may be lifted.";
+                    blurp2 = "As our bolters are charged with death for the Emperor's enemies, our thoughts are charged with his wisdom.  As our bodies are armoured with Adamantium, our souls are protected with our loyalty- loyalty to Him, and loyalty to our brothers.  The bonds of this brotherhood are worth revering, even if a lull in duty invites doubt and heresy.  Should you wish to schedule a rousing event, or challenge, I will make it so.  Under the careful watch of our " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s, our brothers' spirits may be lifted.";
                 }
                 if (global.chapter_name == "Space Wolves") {
                     blurp2 = "";
@@ -281,13 +281,13 @@ function scr_ui_advisors() {
                 }
                 if (fest_type == "Chapter Relic") {
                     if (fest_feature1 == 1) {
-                        blurp2 += "  Our " + string(obj_ini.role[100][16]) + "s aim to create a weapon.";
+                        blurp2 += "  Our " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + "s aim to create a weapon.";
                     }
                     if (fest_feature2 == 1) {
-                        blurp2 += "  Our " + string(obj_ini.role[100][16]) + "s aim to create a suit of armour.";
+                        blurp2 += "  Our " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + "s aim to create a suit of armour.";
                     }
                     if (fest_feature3 == 1) {
-                        blurp2 += "  Our " + string(obj_ini.role[100][16]) + "s aim to hone and strengthen an already existing relic.";
+                        blurp2 += "  Our " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + "s aim to hone and strengthen an already existing relic.";
                     }
                 }
                 if (fest_type == "Imperial Mass") {

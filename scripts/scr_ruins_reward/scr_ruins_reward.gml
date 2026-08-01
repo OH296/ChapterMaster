@@ -206,7 +206,7 @@ function scr_ruins_reward(_star_system, _pid_idx, _ruins) {
         case eLOOT_TYPE.STARSHIP:
             _popup.image = "ruins_ship";
             _popup.title = "Ancient Ruins: Starship";
-            _popup.text = $"The ground beneath one of your battle brothers crumbles, and he falls a great height. The other marines go down in pursuit. Within a great chamber they find the remains of an ancient starship. Though derelict, it is possible to land {obj_ini.role[100][16]}s to repair the ship. 10,000 Requisition will be needed to make it operational.";
+            _popup.text = $"The ground beneath one of your battle brothers crumbles, and he falls a great height. The other marines go down in pursuit. Within a great chamber they find the remains of an ancient starship. Though derelict, it is possible to land {obj_ini.player_role_data[eROLE.TECHMARINE].role}s to repair the ship. 10,000 Requisition will be needed to make it operational.";
             _ruins.find_starship();
             scr_event_log("", $"Ancient Starship discovered on {_planet_name}.", _star_system.name);
             break;

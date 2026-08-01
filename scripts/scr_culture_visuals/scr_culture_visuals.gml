@@ -2211,7 +2211,7 @@ function DummyMarine() constructor {
             if (obj_creation.livery_selection_options.current_selection == 2) {
                 return role[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
             } else {
-                return role[100][eROLE.TACTICAL];
+                return player_role_data[eROLE.TACTICAL].role;
             }
         }
     };

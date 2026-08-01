@@ -129,14 +129,14 @@ get_unit_promotion_options = function() {
     array_set_value(role_exp, 0);
     var i = 0;
     // this area does the required exp for roles per company
-    if (unit_role == obj_ini.role[100][16]) {
+    if (unit_role == obj_ini.player_role_data[eROLE.TECHMARINE].role) {
         //techmarine
-        role_name[1] = obj_ini.role[100][16];
+        role_name[1] = obj_ini.player_role_data[eROLE.TECHMARINE].role;
         role_exp[1] = 5;
         spec = 1;
-    } else if (unit_role == obj_ini.role[100][15]) {
+    } else if (unit_role == obj_ini.player_role_data[eROLE.APOTHECARY].role) {
         //apothecary
-        role_name[1] = obj_ini.role[100][15];
+        role_name[1] = obj_ini.player_role_data[eROLE.APOTHECARY].role;
         role_exp[1] = 5;
         spec = 1;
     } else if (unit_role == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
@@ -144,19 +144,19 @@ get_unit_promotion_options = function() {
         role_name[1] = "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role);
         role_exp[1] = 400;
         spec = 0;
-    } else if (unit_role == obj_ini.role[100][14] && global.chapter_name != "Space Wolves" && global.chapter_name != "Iron Hands") {
+    } else if (unit_role == obj_ini.player_role_data[eROLE.CHAPLAIN].role && global.chapter_name != "Space Wolves" && global.chapter_name != "Iron Hands") {
         //chaplain
-        role_name[1] = obj_ini.role[100][14];
+        role_name[1] = obj_ini.player_role_data[eROLE.CHAPLAIN].role;
         role_exp[1] = 5;
         spec = 1;
     } else if (unit_role == "Lexicanum") {
-        role_name[1] = obj_ini.role[100][17];
+        role_name[1] = obj_ini.player_role_data[eROLE.LIBRARIAN].role;
         role_exp[1] = 125;
         spec = 1;
         role_name[2] = "Codiciery";
         role_exp[2] = 80;
     } else if (unit_role == "Codiciery" && target_comp == 0) {
-        role_name[1] = obj_ini.role[100][17];
+        role_name[1] = obj_ini.player_role_data[eROLE.LIBRARIAN].role;
         role_exp[1] = 125;
         spec = 1;
     }
@@ -168,16 +168,16 @@ get_unit_promotion_options = function() {
                 role_name[i] = obj_ini.player_role_data[eROLE.CAPTAIN].role;
                 role_exp[i] = 80; //all captains are equalish
             }
-            if (scr_role_count(obj_ini.role[100][11], "1") == 0) {
+            if (scr_role_count(obj_ini.player_role_data[eROLE.ANCIENT].role, "1") == 0) {
                 //company ancient
                 i += 1;
-                role_name[i] = obj_ini.role[100][11];
+                role_name[i] = obj_ini.player_role_data[eROLE.ANCIENT].role;
                 role_exp[i] = company_promote_data[target_comp].exp + 10;
             }
-            if (scr_role_count(obj_ini.role[100][7], "1") == 0) {
+            if (scr_role_count(obj_ini.player_role_data[eROLE.CHAMPION].role, "1") == 0) {
                 //company champ
                 i += 1;
-                role_name[i] = obj_ini.role[100][7];
+                role_name[i] = obj_ini.player_role_data[eROLE.CHAMPION].role;
                 role_exp[i] = company_promote_data[target_comp].exp + 10; //may as well have this liniked to weapon skill
             }
             i += 1;
@@ -188,7 +188,7 @@ get_unit_promotion_options = function() {
         if (obj_controller.command_set[2] == 1) {
             if (array_contains([2, 3, 4, 5, 6, 7], target_comp)) {
                 i += 1;
-                role_name[i] = obj_ini.role[100][8]; //tacts
+                role_name[i] = obj_ini.player_role_data[eROLE.TACTICAL].role; //tacts
                 role_exp[i] = company_promote_data[target_comp].exp;
                 if (obj_controller.command_set[2] == 0) {
                     role_exp[i] = 0;
@@ -197,7 +197,7 @@ get_unit_promotion_options = function() {
 
             if (array_contains([2, 3, 4, 5, 8], target_comp)) {
                 i += 1;
-                role_name[i] = obj_ini.role[100][10]; //assualts
+                role_name[i] = obj_ini.player_role_data[eROLE.ASSAULT].role; //assualts
                 role_exp[i] = company_promote_data[target_comp].exp;
                 if (obj_controller.command_set[2] == 0) {
                     role_exp[i] = 0;
@@ -206,7 +206,7 @@ get_unit_promotion_options = function() {
 
             if (array_contains([2, 3, 4, 5, 9], target_comp)) {
                 i += 1;
-                role_name[i] = obj_ini.role[100][9]; //devs
+                role_name[i] = obj_ini.player_role_data[eROLE.DEVASTATOR].role; //devs
                 role_exp[i] = company_promote_data[target_comp].exp;
                 if (obj_controller.command_set[2] == 0) {
                     role_exp[i] = 0;
@@ -235,15 +235,15 @@ get_unit_promotion_options = function() {
             }
         } else {
             i += 1;
-            role_name[i] = obj_ini.role[100][8]; //tacts
+            role_name[i] = obj_ini.player_role_data[eROLE.TACTICAL].role; //tacts
             role_exp[i] = 0;
 
             i += 1;
-            role_name[i] = obj_ini.role[100][10]; //assualts
+            role_name[i] = obj_ini.player_role_data[eROLE.ASSAULT].role; //assualts
             role_exp[i] = 0;
 
             i += 1;
-            role_name[i] = obj_ini.role[100][9]; //devs
+            role_name[i] = obj_ini.player_role_data[eROLE.DEVASTATOR].role; //devs
             role_exp[i] = 0;
 
             i += 1;

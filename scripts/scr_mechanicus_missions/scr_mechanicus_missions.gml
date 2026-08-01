@@ -149,7 +149,7 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
 
     if (array_length(_forge_stars)) {
         array_push(mechanicus_missions, "mech_bionics");
-        if (scr_role_count(obj_ini.role[100][16], "") >= 6) {
+        if (scr_role_count(obj_ini.player_role_data[eROLE.TECHMARINE].role, "") >= 6) {
             array_push(mechanicus_missions, "mech_raider");
         }
     }
@@ -191,7 +191,7 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
         };
         var _name = star.name;
         if (chosen_mission == "mech_raider") {
-            text = $"The Adeptus Mechanicus are trusting you with a special mission.  They wish for you to bring a Land Raider and six {obj_ini.role[100][16]} to a Forge World in {_name} for testing and training, for a duration of 24 months. You have four years to complete this.  Can your chapter handle this mission?";
+            text = $"The Adeptus Mechanicus are trusting you with a special mission.  They wish for you to bring a Land Raider and six {obj_ini.player_role_data[eROLE.TECHMARINE].role} to a Forge World in {_name} for testing and training, for a duration of 24 months. You have four years to complete this.  Can your chapter handle this mission?";
             _mission_data.options = [
                 {
                     str1: "Accept",
@@ -217,7 +217,7 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
             ];
             _evented = true;
         } else {
-            text = $"The local Adeptus Mechanicus are preparing to embark on a voyage to Mars, to delve into the catacombs in search of lost technology.  Due to your close relations they have made the offer to take some of your {obj_ini.role[100][16]}s with them for both their unique abilities to function as both scientific helpers and as helpers (high Weapon Skill and Technology is reccomended).  Can your chapter handle this mission?";
+            text = $"The local Adeptus Mechanicus are preparing to embark on a voyage to Mars, to delve into the catacombs in search of lost technology.  Due to your close relations they have made the offer to take some of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s with them for both their unique abilities to function as both scientific helpers and as helpers (high Weapon Skill and Technology is reccomended).  Can your chapter handle this mission?";
             _mission_data.options = [
                 {
                     str1: "Accept",
@@ -311,8 +311,8 @@ function accept_mechanicus_land_raider_mission() {
         var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
 
         _planet.add_problem("mech_raider", _mission_time, {completion: 0, required_months: 24});
-        text = $"The Adeptus Mechanicus await your forces at {_mission_loc}.  They are expecting six {obj_ini.role[100][16]}s and a Land Raider.";
-        scr_event_log("", $"Mechanicus Mission Accepted: Six of your {obj_ini.role[100][16]}s and a Land Raider are to be stationed at {_mission_loc} for {_mission_time} months.", _star.name);
+        text = $"The Adeptus Mechanicus await your forces at {_mission_loc}.  They are expecting six {obj_ini.player_role_data[eROLE.TECHMARINE].role}s and a Land Raider.";
+        scr_event_log("", $"Mechanicus Mission Accepted: Six of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s and a Land Raider are to be stationed at {_mission_loc} for {_mission_time} months.", _star.name);
         with (_star) {
             new_star_event_marker("green");
         }
@@ -360,8 +360,8 @@ function accept_mechanicus_mars_mission() {
 
         _planet.add_problem("mech_bionics", _mission_time, {completion: 0, required_months: 24});
         _planet.add_problem("mech_mars", _mission_time);
-        text = $"The Adeptus Mechanicus await your {obj_ini.role[100][16]}s at {_mission_loc}.  They are willing to hold on the voyage for up to {_mission_time} months.";
-        scr_event_log("", $"Mechanicus Mission Accepted: {obj_ini.role[100][16]}s are expected at {_mission_loc} within 30 months, for the voyage to Mars.", _star.name);
+        text = $"The Adeptus Mechanicus await your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s at {_mission_loc}.  They are willing to hold on the voyage for up to {_mission_time} months.";
+        scr_event_log("", $"Mechanicus Mission Accepted: {obj_ini.player_role_data[eROLE.TECHMARINE].role}s are expected at {_mission_loc} within 30 months, for the voyage to Mars.", _star.name);
         with (_star) {
             new_star_event_marker("green");
         }
@@ -424,7 +424,7 @@ function mechanicus_mars_mission_target_time_elapsed(planet) {
         if (techs_taken >= 5) {
             obj_controller.disposition[3] += max(techs_taken, 4);
         }
-        var _text = $"Mechanicus Ship departs for the Mars catacombs.  Onboard are {techs_taken} of your {obj_ini.role[100][16]}s.";
+        var _text = $"Mechanicus Ship departs for the Mars catacombs.  Onboard are {techs_taken} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s.";
         scr_alert("", "mission", _text, 0, 0);
         scr_event_log("green", _text);
         var flit = create_enemy_fleet(x, y, eFACTION.MECHANICUS);

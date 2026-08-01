@@ -163,14 +163,14 @@ if (string_count("_attack", battle_special) > 0) {
 }
 
 if ((tacticals > 0) && (veterans > 0)) {
-    p2 = string(tacticals + veterans) + " " + string(obj_ini.role[100][8]) + "s, ";
+    p2 = string(tacticals + veterans) + " " + string(obj_ini.player_role_data[eROLE.TACTICAL].role) + "s, ";
 }
 if ((tacticals > 0) && (veterans == 0)) {
     if (tacticals == 1) {
-        p2 = string(tacticals) + " " + string(obj_ini.role[100][8]) + ", ";
+        p2 = string(tacticals) + " " + string(obj_ini.player_role_data[eROLE.TACTICAL].role) + ", ";
     }
     if (tacticals > 1) {
-        p2 = string(tacticals) + " " + string(obj_ini.role[100][8]) + "s, ";
+        p2 = string(tacticals) + " " + string(obj_ini.player_role_data[eROLE.TACTICAL].role) + "s, ";
     }
 }
 if ((tacticals == 0) && (veterans > 0)) {
@@ -184,18 +184,18 @@ if ((tacticals == 0) && (veterans > 0)) {
 
 if (assaults > 0) {
     if (assaults == 1) {
-        p2 += string(assaults) + " " + string(obj_ini.role[100][10]) + ", ";
+        p2 += string(assaults) + " " + string(obj_ini.player_role_data[eROLE.ASSAULT].role) + ", ";
     }
     if (assaults > 1) {
-        p2 += string(assaults) + " " + string(obj_ini.role[100][10]) + "s, ";
+        p2 += string(assaults) + " " + string(obj_ini.player_role_data[eROLE.ASSAULT].role) + "s, ";
     }
 }
 if (devastators > 0) {
     if (devastators == 1) {
-        p2 += string(devastators) + " " + string(obj_ini.role[100][9]) + ", ";
+        p2 += string(devastators) + " " + string(obj_ini.player_role_data[eROLE.DEVASTATOR].role) + ", ";
     }
     if (devastators > 1) {
-        p2 += string(devastators) + " " + string(obj_ini.role[100][9]) + "s, ";
+        p2 += string(devastators) + " " + string(obj_ini.player_role_data[eROLE.DEVASTATOR].role) + "s, ";
     }
 }
 
@@ -210,45 +210,45 @@ if ((temp < 200) && (terminators > 0)) {
 
 if ((temp < 200) && (chaplains > 0)) {
     if (chaplains == 1) {
-        p2 += string(chaplains) + " " + string(obj_ini.role[100][14]) + ", ";
+        p2 += string(chaplains) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + ", ";
     }
     if (chaplains > 1) {
-        p2 += string(chaplains) + " " + string(obj_ini.role[100][14]) + ", ";
+        p2 += string(chaplains) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + ", ";
     }
 }
 
 if ((temp < 200) && (apothecaries > 0)) {
     if (apothecaries == 1) {
-        p2 += string(apothecaries) + " " + string(obj_ini.role[100][15]) + ", ";
+        p2 += string(apothecaries) + " " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + ", ";
     }
     if (apothecaries > 1) {
-        p2 += string(apothecaries) + " " + string(obj_ini.role[100][15]) + ", ";
+        p2 += string(apothecaries) + " " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + ", ";
     }
 }
 
 if ((temp < 200) && (librarians > 0)) {
     if (librarians == 1) {
-        p2 += string(librarians) + " " + string(obj_ini.role[100][17]) + ", ";
+        p2 += string(librarians) + " " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role) + ", ";
     }
     if (librarians > 1) {
-        p2 += string(librarians) + " " + string(obj_ini.role[100][17]) + ", ";
+        p2 += string(librarians) + " " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role) + ", ";
     }
 }
 
 if ((temp < 200) && (techmarines > 0)) {
     if (techmarines == 1) {
-        p2 += string(techmarines) + " " + string(obj_ini.role[100][16]) + ", ";
+        p2 += string(techmarines) + " " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + ", ";
     }
     if (techmarines > 1) {
-        p2 += string(techmarines) + " " + string(obj_ini.role[100][16]) + ", ";
+        p2 += string(techmarines) + " " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + ", ";
     }
 }
 if ((temp < 200) && (sgts > 0)) {
     if (techmarines == 1) {
-        p2 += string(techmarines) + " " + string(obj_ini.role[100][18]) + ", ";
+        p2 += string(techmarines) + " " + string(obj_ini.player_role_data[eROLE.SERGEANT].role) + ", ";
     }
     if (techmarines > 1) {
-        p2 += string(techmarines) + " " + string(obj_ini.role[100][18]) + ", ";
+        p2 += string(techmarines) + " " + string(obj_ini.player_role_data[eROLE.SERGEANT].role) + ", ";
     }
 }
 if ((temp < 200) && (vet_sgts > 0)) {
@@ -607,7 +607,7 @@ if ((temp >= 100) && (threat > 1) && (big_mofo > 0) && (big_mofo < 10) && !dropp
         p1 = "The Master of Sanctity ";
     }
     if (big_mofo == 3) {
-        p1 = "Chief " + string(obj_ini.role[100][17]) + " ";
+        p1 = "Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role) + " ";
     }
     if (big_mofo == 5) {
         p1 = "A Captain ";

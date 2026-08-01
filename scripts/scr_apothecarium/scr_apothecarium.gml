@@ -45,7 +45,7 @@ function scr_apothecarium() {
     var xx = camera_get_view_x(view_camera[0]);
     var yy = camera_get_view_y(view_camera[0]);
     var eta = 0;
-    var _apoth_screen_text = "Milord, I come with a report.  Our Chapter currently boasts " + string(obj_controller.temp[36]) + " " + string(obj_ini.role[100][15]) + " working on a variety of things, from field-duty to research to administrative duties.  ";
+    var _apoth_screen_text = "Milord, I come with a report.  Our Chapter currently boasts " + string(obj_controller.temp[36]) + " " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + " working on a variety of things, from field-duty to research to administrative duties.  ";
 
     draw_sprite(spr_rock_bg, 0, xx, yy);
 
@@ -87,15 +87,15 @@ function scr_apothecarium() {
     }
 
     if (obj_controller.training_apothecary == 0) {
-        _apoth_screen_text += "Our Brothers are currently not assigned to train further " + string(obj_ini.role[100][15]) + "; no more can be trained until Apothcarium funds are increased.";
+        _apoth_screen_text += "Our Brothers are currently not assigned to train further " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + "; no more can be trained until Apothcarium funds are increased.";
     }
     if (obj_controller.training_apothecary > 0) {
-        _apoth_screen_text += "Our Brothers assigned to the training of future " + string(obj_ini.role[100][15]) + "s have taken up a ";
+        _apoth_screen_text += "Our Brothers assigned to the training of future " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + "s have taken up a ";
         if (obj_controller.training_apothecary >= 1 && obj_controller.training_apothecary <= 6) {
             var _recruit_rates = global.recruitment_rates;
             _apoth_screen_text += _recruit_rates[obj_controller.training_apothecary];
         }
-        _apoth_screen_text += " pace and expect to graduate an additional " + string(obj_ini.role[100][15]) + " in ";
+        _apoth_screen_text += " pace and expect to graduate an additional " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + " in ";
         var training_points_values = global.apothecary_training_tiers;
         eta = floor((47 - obj_controller.apothecary_recruit_points) / training_points_values[obj_controller.training_apothecary]) + 1;
         _apoth_screen_text += string(eta) + " months.";
@@ -105,10 +105,10 @@ function scr_apothecarium() {
         _apoth_screen_text += "##My lord, our stocks of gene-seed are empty.  It would be best to have some come mechanicus tithe.##Further training of Neophytes is halted until our stocks replenish.";
     }
     if ((obj_controller.gene_seed > 0) && (obj_controller.gene_seed <= 10)) {
-        _apoth_screen_text += "##My Brother " + string(obj_ini.role[100][15]) + "s assigned to the gene-vault have informed me that our stocks are nearly gone.  They only number " + string(obj_controller.gene_seed) + "; this includes those recently recovered from our fallen comerades-in-arms.";
+        _apoth_screen_text += "##My Brother " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + "s assigned to the gene-vault have informed me that our stocks are nearly gone.  They only number " + string(obj_controller.gene_seed) + "; this includes those recently recovered from our fallen comerades-in-arms.";
     }
     if (obj_controller.gene_seed > 10) {
-        _apoth_screen_text += "##My Brother " + string(obj_ini.role[100][15]) + "s assigned to the gene-vault have informed me that our stocks of gene-seed currently number " + string(obj_controller.gene_seed) + ".  This includes those recently recovered from our fallen comerades-in-arms.";
+        _apoth_screen_text += "##My Brother " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + "s assigned to the gene-vault have informed me that our stocks of gene-seed currently number " + string(obj_controller.gene_seed) + ".  This includes those recently recovered from our fallen comerades-in-arms.";
     }
     if (obj_controller.gene_seed > 0) {
         _apoth_screen_text += "##The stocks are stable and show no sign of mutation.";
@@ -116,13 +116,13 @@ function scr_apothecarium() {
 
     if (obj_controller.menu_adept == 1) {
         var _recruit_pace = global.recruitment_pace_descriptions;
-        _apoth_screen_text = "Your Chapter contains " + string(obj_controller.temp[36]) + " " + string(obj_ini.role[100][15]) + ".##";
-        _apoth_screen_text += "Training of further " + string(obj_ini.role[100][15]) + "s";
+        _apoth_screen_text = "Your Chapter contains " + string(obj_controller.temp[36]) + " " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + ".##";
+        _apoth_screen_text += "Training of further " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + "s";
         if (obj_controller.training_apothecary >= 0 && obj_controller.training_apothecary <= 6) {
             _apoth_screen_text += _recruit_pace[obj_controller.training_apothecary];
         }
         if (obj_controller.training_apothecary > 0) {
-            _apoth_screen_text += "  The next " + string(obj_ini.role[100][15]) + " is expected in " + string(eta) + " months.";
+            _apoth_screen_text += "  The next " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + " is expected in " + string(eta) + " months.";
         }
         _apoth_screen_text += "##You have " + string(obj_controller.gene_seed) + " gene-seed stocked.";
     }

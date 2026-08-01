@@ -159,16 +159,16 @@ function scr_special_view(command_group) {
             // Squads
             if (squads > 0) {
                 var n = 1;
-                if (squad_typ == obj_ini.role[100][15]) {
+                if (squad_typ == obj_ini.player_role_data[eROLE.APOTHECARY].role) {
                     n = 0;
                 }
-                if (squad_typ == obj_ini.role[100][14]) {
+                if (squad_typ == obj_ini.player_role_data[eROLE.CHAPLAIN].role) {
                     n = 0;
                 }
-                if (squad_typ == obj_ini.role[100][17]) {
+                if (squad_typ == obj_ini.player_role_data[eROLE.LIBRARIAN].role) {
                     n = 0;
                 }
-                if (squad_typ == obj_ini.role[100][16]) {
+                if (squad_typ == obj_ini.player_role_data[eROLE.TECHMARINE].role) {
                     n = 0;
                 }
                 if (squad_typ == "Codiciery") {

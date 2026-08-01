@@ -62,7 +62,7 @@ function role_setup_objects() {
         style: "box",
         x1: 500,
         y1: 250,
-        tooltip: $"Specialist Distribution\nCheck if you wish for your Companies to be uniform and each contain {role[100][10]}s and {role[100][9]}s.",
+        tooltip: $"Specialist Distribution\nCheck if you wish for your Companies to be uniform and each contain {player_role_data[eROLE.ASSAULT].role}s and {player_role_data[eROLE.DEVASTATOR].role}s.",
         active: (squad_distribution == 1 || squad_distribution == 3),
         clicked_check_default: true,
     });

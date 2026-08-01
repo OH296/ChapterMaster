@@ -284,7 +284,7 @@ function UnitGroup(units) constructor {
 
         //if a new sergeant is needed find the marine with the highest experience in the squad
         //(which if everything works right should be a marine with the old_guard, seasoned, or ancient trait)
-        /*and ((squad_fulfilment[$ obj_ini.role[100][8]] > 4)or (squad_fulfilment[$ obj_ini.role[100][10]] > 4) or (squad_fulfilment[$ obj_ini.role[100][9]] > 4)or (squad_fulfilment[$ obj_ini.player_role_data[eROLE.VETERAN].role] > 4) )*/
+        /*and ((squad_fulfilment[$ obj_ini.player_role_data[eROLE.TACTICAL].role] > 4)or (squad_fulfilment[$ obj_ini.player_role_data[eROLE.ASSAULT].role] > 4) or (squad_fulfilment[$ obj_ini.player_role_data[eROLE.DEVASTATOR].role] > 4)or (squad_fulfilment[$ obj_ini.player_role_data[eROLE.VETERAN].role] > 4) )*/
 
         var _members = squad.get_members(true);
         var _exp_unit = 0;

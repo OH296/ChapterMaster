@@ -3,14 +3,14 @@
 /// @param {Real} req_exp
 function specialistfunct(specialist, req_exp) {
     var spec_tips = [
-        string("{0} Potential", obj_ini.role[100][16]),
-        string("{0} Potential", obj_ini.role[100][15]),
-        string("{0} Potential", obj_ini.role[100][14]),
-        string("{0} Potential", obj_ini.role[100][17]),
-        string("{0} Applicant", obj_ini.role[100][16]),
-        string("{0} Applicant", obj_ini.role[100][15]),
-        string("{0} Applicant", obj_ini.role[100][14]),
-        string("{0} Applicant", obj_ini.role[100][17]),
+        string("{0} Potential", obj_ini.player_role_data[eROLE.TECHMARINE].role),
+        string("{0} Potential", obj_ini.player_role_data[eROLE.APOTHECARY].role),
+        string("{0} Potential", obj_ini.player_role_data[eROLE.CHAPLAIN].role),
+        string("{0} Potential", obj_ini.player_role_data[eROLE.LIBRARIAN].role),
+        string("{0} Applicant", obj_ini.player_role_data[eROLE.TECHMARINE].role),
+        string("{0} Applicant", obj_ini.player_role_data[eROLE.APOTHECARY].role),
+        string("{0} Applicant", obj_ini.player_role_data[eROLE.CHAPLAIN].role),
+        string("{0} Applicant", obj_ini.player_role_data[eROLE.LIBRARIAN].role),
         string("Promote to Marine"),
     ];
 
@@ -111,7 +111,7 @@ function spec_data_set(specialist) {
 
     var random_marine = scr_random_marine(
         // TODO LOW SEARCH_OPTIONAL // Make this function handle optional search_params
-        [obj_ini.role[100][8], obj_ini.role[100][18], obj_ini.role[100][10], obj_ini.role[100][9]],
+        [obj_ini.player_role_data[eROLE.TACTICAL].role, obj_ini.player_role_data[eROLE.SERGEANT].role, obj_ini.player_role_data[eROLE.ASSAULT].role, obj_ini.player_role_data[eROLE.DEVASTATOR].role],
         _data.min_exp,
         _search,
     );
@@ -195,7 +195,7 @@ function chaplain_training() {
     var training_points_values = global.chaplain_training_tiers;
     if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
         chaplain_points += training_points_values[training_chaplain];
-        var novice_type = string("{0} Aspirant", obj_ini.role[100][14]);
+        var novice_type = string("{0} Aspirant", obj_ini.player_role_data[eROLE.CHAPLAIN].role);
 
         if (training_chaplain > 0) {
             recruit_count = scr_role_count(novice_type, "");
@@ -266,7 +266,7 @@ function librarian_training() {
     psyker_points += training_points_values[training_psyker];
 
     var goal = 48;
-    var novice_type = string("{0} Aspirant", obj_ini.role[100][17]);
+    var novice_type = string("{0} Aspirant", obj_ini.player_role_data[eROLE.LIBRARIAN].role);
 
     if (training_psyker > 0) {
         recruit_count = scr_role_count(novice_type, "");

@@ -34,25 +34,25 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
                 manz += 1;
                 if (unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
                     cap += 1;
-                } else if (unit.role() == obj_ini.role[100][15]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.APOTHECARY].role) {
                     apo += 1;
-                } else if (unit.role() == obj_ini.role[100][14]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.CHAPLAIN].role) {
                     chap += 1;
-                } else if (unit.role() == obj_ini.role[100][17]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.LIBRARIAN].role) {
                     lib += 1;
-                } else if (unit.role() == obj_ini.role[100][16]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.TECHMARINE].role) {
                     tech += 1;
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                     drea += 1;
                 } else if (unit.role() == $"Venerable {obj_ini.player_role_data[eROLE.DREADNOUGHT].role}") {
                     vdrea += 1;
-                } else if (unit.role() == obj_ini.role[100][11]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.ANCIENT].role) {
                     bear += 1;
-                } else if (unit.role() == obj_ini.role[100][8]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.TACTICAL].role) {
                     tct += 1;
-                } else if (unit.role() == obj_ini.role[100][10]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.ASSAULT].role) {
                     assa += 1;
-                } else if (unit.role() == obj_ini.role[100][9]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.DEVASTATOR].role) {
                     dev += 1;
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.SCOUT].role) {
                     sco += 1;
@@ -62,7 +62,7 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
                     ve += 1;
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
                     ter += 1;
-                } else if (unit.role() == obj_ini.role[100][18]) {
+                } else if (unit.role() == obj_ini.player_role_data[eROLE.SERGEANT].role) {
                     sgt++;
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.VETERANSERGEANT].role) {
                     vet_sgt++;
@@ -107,7 +107,7 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
         selecting_dudes += ", ";
     }
     if (chap > 0) {
-        selecting_dudes += string(chap) + " " + string(obj_ini.role[100][14]);
+        selecting_dudes += string(chap) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role);
         if (chap > 1) {
             selecting_dudes += "s";
         }
@@ -121,14 +121,14 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
         selecting_dudes += ", ";
     }
     if (apo > 0) {
-        selecting_dudes += string(apo) + " " + string(obj_ini.role[100][15]);
+        selecting_dudes += string(apo) + " " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role);
         if (apo > 1) {
             selecting_dudes += "s";
         }
         selecting_dudes += ", ";
     }
     if (lib > 0) {
-        selecting_dudes += string(lib) + " " + string(obj_ini.role[100][17]);
+        selecting_dudes += string(lib) + " " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role);
         if (lib > 1) {
             selecting_dudes += "s";
         }
@@ -149,7 +149,7 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
         selecting_dudes += ", ";
     }
     if (bear > 0) {
-        selecting_dudes += string(bear) + " " + string(obj_ini.role[100][11]);
+        selecting_dudes += string(bear) + " " + string(obj_ini.player_role_data[eROLE.ANCIENT].role);
         if (bear > 1) {
             selecting_dudes += "s";
         }
@@ -163,7 +163,7 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
         selecting_dudes += ", ";
     }
     if (tech > 0) {
-        selecting_dudes += string(tech) + " " + string(obj_ini.role[100][16]);
+        selecting_dudes += string(tech) + " " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role);
         if (tech > 1) {
             selecting_dudes += "s";
         }
@@ -184,14 +184,14 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
         selecting_dudes += ", ";
     }
     if (tct > 0) {
-        selecting_dudes += string(tct) + " " + string(obj_ini.role[100][8]);
+        selecting_dudes += string(tct) + " " + string(obj_ini.player_role_data[eROLE.TACTICAL].role);
         if (tct > 1) {
             selecting_dudes += "s";
         }
         selecting_dudes += ", ";
     }
     if (dev > 0) {
-        selecting_dudes += string(dev) + " " + string(obj_ini.role[100][9]);
+        selecting_dudes += string(dev) + " " + string(obj_ini.player_role_data[eROLE.DEVASTATOR].role);
         if (dev > 1) {
             selecting_dudes += "s";
         }
@@ -219,7 +219,7 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
         selecting_dudes += ", ";
     }
     if (sgt > 0) {
-        selecting_dudes += string(sgt) + " " + string(obj_ini.role[100][18]);
+        selecting_dudes += string(sgt) + " " + string(obj_ini.player_role_data[eROLE.SERGEANT].role);
         if (sgt > 1) {
             selecting_dudes += "s";
         }

@@ -167,24 +167,24 @@ function event_end_turn_action() {
 
                 LOGGER.warning($"comp: {comp}, marine_num: {marine_num}");
 
-                var killy = 0, tixt = $"{obj_ini.role[100][16]} {marine_name} has finished his work- ";
+                var killy = 0, tixt = $"{obj_ini.player_role_data[eROLE.TECHMARINE].role} {marine_name} has finished his work- ";
 
                 if (item == "Icon") {
                     tixt += $"it is a {global.chapter_name} Icon wrought in metal, finely decorated.  Pride for his chapter seems to have overtaken him.  There are no corrections to be made and the item is placed where many may view it.";
                 }
                 if (item == "Statue") {
-                    tixt += "it is a small, finely crafted statue wrought in metal.  The " + string(obj_ini.role[100][16]) + " is scolded for the waste of material, but none daresay the quality of the piece.";
+                    tixt += "it is a small, finely crafted statue wrought in metal.  The " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + " is scolded for the waste of material, but none daresay the quality of the piece.";
                 }
                 if (item == "Bike") {
                     scr_add_item("Bike", 1);
-                    tixt += "it is a finely crafted Bike, conforming mostly to STC standards.  The other " + string(obj_ini.role[100][16]) + " are surprised at the rapid pace of his work.";
+                    tixt += "it is a finely crafted Bike, conforming mostly to STC standards.  The other " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + " are surprised at the rapid pace of his work.";
                 }
                 if (item == "Rhino") {
                     scr_add_vehicle("Rhino", 0, {}, "Storm Bolter", "Storm Bolter", "", "Artificer Hull", "Dozer Blades");
-                    tixt += "it is a finely crafted Rhino, conforming to STC standards.  The other " + string(obj_ini.role[100][16]) + " are surprised at the rapid pace of his work.";
+                    tixt += "it is a finely crafted Rhino, conforming to STC standards.  The other " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + " are surprised at the rapid pace of his work.";
                 }
                 if (item == "Artifact") {
-                    scr_event_log("", string(obj_ini.role[100][16]) + " " + string(marine_name) + " constructs an Artifact.");
+                    scr_event_log("", string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + " " + string(marine_name) + " constructs an Artifact.");
                     var _last_artifact = scr_add_artifact("random_nodemon", "", 0);
 
                     tixt += $"some form of divine inspiration has seemed to have taken hold of him.  An artifact {obj_ini.artifact[_last_artifact]} has been crafted.";
@@ -194,7 +194,7 @@ function event_end_turn_action() {
                     tixt += "some form of horrendous statue.  A weird amalgram of limbs and tentacles, the sheer atrocity of it is made worse by the tiny, baby-like form, the once natural shape of a human child twisted nearly beyond recognition.";
                 } else if (item == "robot") {
                     _unit.edit_corruption(choose(2, 4, 6, 8, 10));
-                    tixt += $"some form of small, box-like robot.  It seems to teeter around haphazardly, nearly falling over with each step. {_unit.name()} maintains that it has no AI, though the other " + string(obj_ini.role[100][16]) + " express skepticism.";
+                    tixt += $"some form of small, box-like robot.  It seems to teeter around haphazardly, nearly falling over with each step. {_unit.name()} maintains that it has no AI, though the other " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + " express skepticism.";
                     _unit.add_trait("tech_heretic");
                 } else if (item == "demon") {
                     _unit.edit_corruption(choose(8, 12, 16, 20));
@@ -203,7 +203,7 @@ function event_end_turn_action() {
                 } else if (item == "fusion") {
                     //TODO if tech heretic chosen don't kill the dude
                     // _unit.corruption+=choose(70);
-                    tixt += $"some kind of ill-mannered ascension.  One of your battle-brothers enters the armamentarium to find {marine_name} fused to a vehicle, his flesh twisted and submerged into the frame.  Mechendrites and weapons fire upon the marine without warning, a windy scream eminating from the abomination.  It takes several battle-brothers to take out what was once a " + string(obj_ini.role[100][16]) + ".";
+                    tixt += $"some kind of ill-mannered ascension.  One of your battle-brothers enters the armamentarium to find {marine_name} fused to a vehicle, his flesh twisted and submerged into the frame.  Mechendrites and weapons fire upon the marine without warning, a windy scream eminating from the abomination.  It takes several battle-brothers to take out what was once a " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + ".";
 
                     // This is causing the problem
 

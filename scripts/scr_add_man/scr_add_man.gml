@@ -93,11 +93,11 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
     if (!array_contains(non_marine_roles, man_role)) {
         if (man_role == obj_ini.player_role_data[eROLE.SCOUT].role) {
             _gear = {
-                wep2: obj_ini.wep2[100][12],
-                wep1: obj_ini.wep1[100][12],
-                armour: obj_ini.armour[100][12],
-                gear: obj_ini.gear[100][12],
-                mobi: obj_ini.mobi[100][12],
+                wep2: obj_ini.player_role_data[eROLE.SCOUT].wep2,
+                wep1: obj_ini.player_role_data[eROLE.SCOUT].wep1,
+                armour: obj_ini.player_role_data[eROLE.SCOUT].armour,
+                gear: obj_ini.player_role_data[eROLE.SCOUT].gear,
+                mobi: obj_ini.player_role_data[eROLE.SCOUT].mobi,
             };
         }
 

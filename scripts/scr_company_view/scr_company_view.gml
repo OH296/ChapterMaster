@@ -324,9 +324,9 @@ function other_manage_data() {
             }
         } else if ((_unit.role() == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_exp[v] >= 400)) {
             ma_promote[v] = 1;
-        } else if ((_unit.role() == obj_ini.role[100][15]) || (ma_role[v] == obj_ini.role[100][14])) {
+        } else if ((_unit.role() == obj_ini.player_role_data[eROLE.APOTHECARY].role) || (ma_role[v] == obj_ini.player_role_data[eROLE.CHAPLAIN].role)) {
             ma_promote[v] = 1;
-        } else if (_unit.role() == obj_ini.role[100][16]) {
+        } else if (_unit.role() == obj_ini.player_role_data[eROLE.TECHMARINE].role) {
             ma_promote[v] = 1;
         }
 

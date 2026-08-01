@@ -66,7 +66,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         col = obj_controller.bat_scout_column;
                         obj_ncombat.scouts += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][8]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.TACTICAL].role) {
                         col = obj_controller.bat_tactical_column;
                         obj_ncombat.tacticals += 1;
                     }
@@ -74,15 +74,15 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         col = obj_controller.bat_veteran_column;
                         obj_ncombat.veterans += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][9]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.DEVASTATOR].role) {
                         col = obj_controller.bat_devastator_column;
                         obj_ncombat.devastators += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][10]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.ASSAULT].role) {
                         col = obj_controller.bat_assault_column;
                         obj_ncombat.assaults += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][17]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.LIBRARIAN].role) {
                         col = obj_controller.bat_librarian_column;
                         obj_ncombat.librarians += 1;
                     }
@@ -98,7 +98,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         col = obj_controller.bat_librarian_column;
                         obj_ncombat.librarians += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][16]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.TECHMARINE].role) {
                         col = obj_controller.bat_techmarine_column;
                         obj_ncombat.techmarines += 1;
                     }
@@ -119,11 +119,11 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         obj_ncombat.terminators += 1;
                     }
 
-                    if ((unit.role() == obj_ini.role[100][15]) || (unit.role() == obj_ini.role[100][14])) {
-                        if (unit.role() == obj_ini.role[100][15]) {
+                    if ((unit.role() == obj_ini.player_role_data[eROLE.APOTHECARY].role) || (unit.role() == obj_ini.player_role_data[eROLE.CHAPLAIN].role)) {
+                        if (unit.role() == obj_ini.player_role_data[eROLE.APOTHECARY].role) {
                             obj_ncombat.apothecaries += 1;
                         }
-                        if (unit.role() == obj_ini.role[100][14]) {
+                        if (unit.role() == obj_ini.player_role_data[eROLE.CHAPLAIN].role) {
                             obj_ncombat.chaplains += 1;
                             if (obj_ncombat.big_mofo > 5) {
                                 obj_ncombat.big_mofo = 5;
@@ -142,17 +142,17 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         }
                     }
 
-                    if ((unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) || (unit.role() == obj_ini.role[100][11]) || (unit.role() == obj_ini.role[100][7])) {
+                    if ((unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) || (unit.role() == obj_ini.player_role_data[eROLE.ANCIENT].role) || (unit.role() == obj_ini.player_role_data[eROLE.CHAMPION].role)) {
                         if (unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
                             obj_ncombat.captains += 1;
                             if (obj_ncombat.big_mofo > 5) {
                                 obj_ncombat.big_mofo = 5;
                             }
                         }
-                        if (unit.role() == obj_ini.role[100][11]) {
+                        if (unit.role() == obj_ini.player_role_data[eROLE.ANCIENT].role) {
                             obj_ncombat.standard_bearers += 1;
                         }
-                        if (unit.role() == obj_ini.role[100][7]) {
+                        if (unit.role() == obj_ini.player_role_data[eROLE.CHAMPION].role) {
                             obj_ncombat.champions += 1;
                         }
 
@@ -196,7 +196,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         col = obj_controller.bat_command_column;
                         obj_ncombat.important_dudes += 1;
                     }
-                    if (unit.role() == "Chief " + string(obj_ini.role[100][17])) {
+                    if (unit.role() == "Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role)) {
                         col = obj_controller.bat_command_column;
                         obj_ncombat.important_dudes += 1;
                         if (obj_ncombat.big_mofo > 3) {
