@@ -10,7 +10,7 @@ function scr_max_marine(max_type) {
 
     for (co = 0; co <= obj_ini.companies; co++) {
         for (var i = 0; i < company_length(co); i++) {
-            unit = fetch_unit([c, i]);
+            unit = fetch_unit([co, i]);
             if (!is_struct(unit)) {
                 continue;
             }
