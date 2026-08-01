@@ -68,7 +68,7 @@ function specialistfunct(specialist, req_exp) {
             break;
     }
 
-    if (role() == obj_ini.role[100][12]) {
+    if (role() == obj_ini.player_role_data[eROLE.SCOUT].role) {
         colors[0] = c_fuchsia;
     }
 
@@ -77,7 +77,7 @@ function specialistfunct(specialist, req_exp) {
     }
 
     if (experience >= req_exp) {
-        if (!(role() == obj_ini.role[100][12])) {
+        if (!(role() == obj_ini.player_role_data[eROLE.SCOUT].role)) {
             spec_tip = tips_list[1];
         } else {
             spec_tip = tips_list[2];
@@ -182,7 +182,7 @@ function apothecary_training() {
 
         } else {
             training_apothecary = 0;
-            scr_alert("red", "recruitment", $"No marines available for {obj_ini.role[100][eROLE.APOTHECARY]} training", 0, 0);
+            scr_alert("red", "recruitment", $"No marines available for {obj_ini.player_role_data[eROLE.APOTHECARY].role} training", 0, 0);
         }
     }
 }
@@ -251,7 +251,7 @@ function chaplain_training() {
 
                 } else {
                     training_chaplain = 0;
-                    scr_alert("red", "recruitment", $"No remaining {obj_ini.role[100][eROLE.CHAPLAIN]} applicant marines for training", 0, 0);
+                    scr_alert("red", "recruitment", $"No remaining {obj_ini.player_role_data[eROLE.CHAPLAIN].role} applicant marines for training", 0, 0);
                 }
             }
         }

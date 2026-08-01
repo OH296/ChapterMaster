@@ -470,7 +470,7 @@ function protect_raiders_suppress_information() {
     title = "Captains Disgruntled";
     options1 = "continue";
     pathway = "";
-    var _caps = scr_role_count(obj_ini.roles[100][eROLE.CAPTAIN]);
+    var _caps = scr_role_count(obj_ini.player_role_data[eROLE.CAPTAIN].role);
     var _worst = -1;
     var _worst_hit = -1;
     for (var i = 0; i < array_length(_caps); i++) {

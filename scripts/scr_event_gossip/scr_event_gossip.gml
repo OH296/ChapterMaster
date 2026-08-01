@@ -502,7 +502,7 @@ function scr_event_gossip(argument0) {
 
         if ((blah == "captain_promote") && (cn.recent_number[gossip_recent[that]] == attend_co[argument0])) {
             rando = choose(1, 2);
-            words += "gives a cheer to " + string(cn.recent_keyword[gossip_recent[that]]) + ", for his promotion to " + string(obj_ini.role[100][5]) + ".";
+            words += "gives a cheer to " + string(cn.recent_keyword[gossip_recent[that]]) + ", for his promotion to " + string(obj_ini.player_role_data[eROLE.CAPTAIN].role) + ".";
             if (rando == 1) {
                 words += "  May he lead the company to glory!";
             }
@@ -512,7 +512,7 @@ function scr_event_gossip(argument0) {
         }
         if ((blah == "terminator_promote") && (cn.recent_number[gossip_recent[that]] == attend_co[argument0])) {
             rando = choose(1, 2);
-            words += "gives a cheer to " + string(cn.recent_keyword[gossip_recent[that]]) + ", for his promotion to " + string(obj_ini.role[100][4]) + ".";
+            words += "gives a cheer to " + string(cn.recent_keyword[gossip_recent[that]]) + ", for his promotion to " + string(obj_ini.player_role_data[eROLE.TERMINATOR].role) + ".";
             if (rando == 1) {
                 words += "  Let the enemies of man die at his feet!";
             }
@@ -522,7 +522,7 @@ function scr_event_gossip(argument0) {
         }
         if ((blah == "honor_promote") && (cn.recent_number[gossip_recent[that]] == attend_co[argument0])) {
             rando = choose(1, 2);
-            words += "gives a cheer to " + string(cn.recent_keyword[gossip_recent[that]]) + ", for his promotion to " + string(obj_ini.role[100][2]) + ".";
+            words += "gives a cheer to " + string(cn.recent_keyword[gossip_recent[that]]) + ", for his promotion to " + string(obj_ini.player_role_data[eROLE.HONOURGUARD].role) + ".";
             if (rando >= 1) {
                 words += "  Let the enemies of man die at his feet!";
             }

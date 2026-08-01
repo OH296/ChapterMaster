@@ -180,7 +180,7 @@ function scr_special_view(command_group) {
                 if (squad_typ == ma_role[i]) {
                     n = 0;
                 }
-                if ((squad_typ == obj_ini.role[100][eROLE.LIBRARIAN]) && (ma_role[i] == "Codiciery")) {
+                if ((squad_typ == obj_ini.player_role_data[eROLE.LIBRARIAN].role) && (ma_role[i] == "Codiciery")) {
                     n = 1;
                 }
                 if ((squad_typ == "Codiciery") && (ma_role[i] == "Lexicanum")) {
@@ -190,13 +190,13 @@ function scr_special_view(command_group) {
                 if (squad_typ == "Master of Sanctity") {
                     n = 1;
                 }
-                if (squad_typ == "Chief " + string(obj_ini.role[100][eROLE.LIBRARIAN])) {
+                if (squad_typ == "Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role)) {
                     n = 1;
                 }
                 if (squad_typ == "Forge Master") {
                     n = 1;
                 }
-                if (squad_typ == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (squad_typ == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     n = 1;
                 }
                 if (squad_typ == "Master of the Apothecarion") {
@@ -209,7 +209,7 @@ function scr_special_view(command_group) {
                 if ((ma_wid[i] + (ma_lid[i] / 100)) != squad_loc) {
                     n = 1;
                 }
-                if (squad_typ == obj_ini.role[100][6]) {
+                if (squad_typ == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                     n = 2;
                 }
 

@@ -8,7 +8,7 @@ function add_marines_to_recovery() {
                 var _role_priority_bonus = 0;
                 var _chief_librarian = $"Chief {_roles[eROLE.LIBRARIAN]}";
                 switch (_unit.role()) {
-                    case obj_ini.role[100][eROLE.CHAPTERMASTER]:
+                    case obj_ini.player_role_data[eROLE.CHAPTERMASTER].role:
                         _role_priority_bonus = 720;
                         break;
                     case "Forge Master":
@@ -277,7 +277,7 @@ function after_combat_recover_marine_gene_seed(unit) {
         var recent = true;
         if (is_specialist(unit.role, SPECIALISTS_TRAINEES)) {
             recent = false;
-        } else if (array_contains([string("Venerable {0}", obj_ini.role[100][6]), "Codiciery", "Lexicanum"], unit.role())) {
+        } else if (array_contains([string("Venerable {0}", obj_ini.player_role_data[eROLE.DREADNOUGHT].role), "Codiciery", "Lexicanum"], unit.role())) {
             recent = false;
         }
         if (recent == true) {
@@ -291,7 +291,7 @@ function after_combat_recover_marine_gene_seed(unit) {
     // show_message("ded; increase final deaths");
 
     if (obj_controller.blood_debt == 1) {
-        if (unit.role() == obj_ini.role[100][eROLE.SCOUT]) {
+        if (unit.role() == obj_ini.player_role_data[eROLE.SCOUT].role) {
             obj_controller.penitent_current += 2;
         } else {
             obj_controller.penitent_current += 4;

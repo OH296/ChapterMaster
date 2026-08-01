@@ -166,7 +166,7 @@ function scr_enemy_ai_d() {
             if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (woop == 0) && yep) {
                 for (var q = 0; q < array_length(obj_ini.TTRPG[0]); q++) {
                     var _unit = fetch_unit([0, q]);
-                    if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                    if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         if (string_count("0", _unit.specials) > 0) {
                             scr_popup("Shadow in the Warp", "You are distracted and bothered by a nagging sensation in the warp.  It feels as though a shadow descends upon your sector.", "shadow", "");
                             scr_event_log("red", "You sense a disturbance in the warp.  It feels something like a massive shadow.");

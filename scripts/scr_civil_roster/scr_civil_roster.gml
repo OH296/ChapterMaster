@@ -140,12 +140,12 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     new_combat.fighting[cooh][va] = 1;
                 }
                 if (new_combat.battle_special == "cs_meeting_battle7") {
-                    if (unit.role() != obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                    if (unit.role() != obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         new_combat.fighting[cooh][va] = -5;
                     }
                 }
 
-                if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     new_combat.fighting[cooh][va] = 1;
                 }
                 if (new_combat.fighting[cooh][va] == 1) {
@@ -696,7 +696,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                         }
                     }
 
-                    if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         col = obj_controller.bat_command_column;
                         new_combat.important_dudes += 1;
                         new_combat.big_mofo = 1;

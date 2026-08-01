@@ -386,7 +386,7 @@ function mechanicus_mars_mission_target_time_elapsed(planet) {
             if (!is_struct(_unit) || _unit.name() == "") {
                 continue;
             }
-            if (_unit.role() == obj_ini.role[100][eROLE.TECHMARINE]) {
+            if (_unit.role() == obj_ini.player_role_data[eROLE.TECHMARINE].role) {
                 // Case 1: on planet
                 if ((_unit.location_string == name) && (_unit.planet_location == planet)) {
                     p_player[planet] -= _unit.get_unit_size();

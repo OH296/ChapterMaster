@@ -588,7 +588,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
     } else if (unit.IsSpecialist(SPECIALISTS_DREADNOUGHTS)) {
         col = obj_controller.bat_dreadnought_column; //dreadnoughts
         new_combat.dreadnoughts++;
-    } else if (_unit_role == obj_ini.role[100][4]) {
+    } else if (_unit_role == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
         //terminators
         col = obj_controller.bat_terminator_column;
         new_combat.terminators++;
@@ -659,7 +659,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         }
     }
 
-    if (_unit_role == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+    if (_unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
         col = obj_controller.bat_command_column;
         new_combat.important_dudes++;
         new_combat.big_mofo = 1;

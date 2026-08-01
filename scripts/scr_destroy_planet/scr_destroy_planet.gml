@@ -47,14 +47,14 @@ function scr_destroy_planet(destruction_method) {
                 continue;
             }
             if ((unit.location_string == you.name) && (unit.planet_location == baid)) {
-                if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     obj_controller.alarm[7] = 15;
                     if (global.defeat <= 1) {
                         global.defeat = 1;
                     }
                 }
 
-                if (obj_ini.race[cah][ed] == 1) {
+                if (unit.base_group == "astartes") {
                     var comm = unit.IsSpecialist(, true);
 
                     if (comm == false) {

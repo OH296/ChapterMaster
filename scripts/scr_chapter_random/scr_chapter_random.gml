@@ -952,7 +952,7 @@ function scr_chapter_random(custom_or_random) {
     if (ran2 == 93) {
         phrase2 = "Wizards";
         col_second = "Purple";
-        role[100][eROLE.LIBRARIAN] = "Wizard";
+        player_role_data[eROLE.LIBRARIAN].role = "Wizard";
         chapter_master_specialty = 3;
     }
     if (ran2 == 94) {

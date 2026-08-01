@@ -91,7 +91,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
     }
 
     if (!array_contains(non_marine_roles, man_role)) {
-        if (man_role == obj_ini.role[100][12]) {
+        if (man_role == obj_ini.player_role_data[eROLE.SCOUT].role) {
             _gear = {
                 wep2: obj_ini.wep2[100][12],
                 wep1: obj_ini.wep1[100][12],

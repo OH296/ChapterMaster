@@ -180,7 +180,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             var born = false;
             for (var i = 0; i < array_length(obj_ini.TTRPG[0]); i++) {
                 var _unit = fetch_unit([0, i]);
-                if ((_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) && (string_count("$", _unit.specials) > 0)) {
+                if ((_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) && (string_count("$", _unit.specials) > 0)) {
                     born = true;
                 }
             }
@@ -347,7 +347,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
 
             var born = false;
             for (var ii = 1; ii < 200; ii++) {
-                if (obj_ini.role[0][ii] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (obj_ini.role[0][ii] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     var _unit = fetch_unit([0, ii]);
                     if (is_struct(_unit)) {
                         _unit.corruption += floor(random_range(30, 50));

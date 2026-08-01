@@ -82,11 +82,12 @@ try {
         if (recruit_name[i] == "") {
             continue;
         }
+        var _recruit_role = obj_ini.player_role_data[eROLE.SCOUT]
         if (recruit_distance[i] <= 0) {
             recruit_training[i] -= 1;
         }
         if (recruit_training[i] <= 0) {
-            scr_add_man(obj_ini.role[100][12], 10, recruit_exp[i], recruit_name[i], recruit_corruption[i], false, "default", recruit_data[i]);
+            scr_add_man(_recruit_role.role, 10, recruit_exp[i], recruit_name[i], recruit_corruption[i], false, "default", recruit_data[i]);
             if (recruit_first == "") {
                 recruit_first = recruit_name[i];
             }
@@ -106,9 +107,9 @@ try {
         scr_company_order(10);
     }
     if (recruits_finished == 1) {
-        scr_alert("green", "recruitment", $"{obj_ini.role[100][12]} {recruit_first} has joined X Company.", 0, 0);
+        scr_alert("green", "recruitment", $"{_recruit_role.role} {recruit_first} has joined X Company.", 0, 0);
     } else if (recruits_finished > 1) {
-        scr_alert("green", "recruitment", $"{recruits_finished}x {obj_ini.role[100][12]} have joined X Company.", 0, 0);
+        scr_alert("green", "recruitment", $"{recruits_finished}x {_recruit_role.role} have joined X Company.", 0, 0);
     }
 
     recruits = total_recruits;

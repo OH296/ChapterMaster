@@ -15,7 +15,7 @@ if ((menu == eMENU.RECLUSIAM) && (cooldown <= 0) && (penitorium > 0)) {
                 cooldown = 20;
                 var c = penit_co[qp], e = penit_id[qp];
 
-                if (obj_ini.role[c][e] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (obj_ini.role[c][e] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     alarm[7] = 5;
                     global.defeat = 3;
                 }

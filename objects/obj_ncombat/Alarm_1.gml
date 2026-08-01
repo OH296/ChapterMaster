@@ -175,10 +175,10 @@ if ((tacticals > 0) && (veterans == 0)) {
 }
 if ((tacticals == 0) && (veterans > 0)) {
     if (veterans == 1) {
-        p2 = string(veterans) + " " + string(obj_ini.role[100][3]) + ", ";
+        p2 = string(veterans) + " " + string(obj_ini.player_role_data[eROLE.VETERAN].role) + ", ";
     }
     if (veterans > 1) {
-        p2 = string(veterans) + " " + string(obj_ini.role[100][3]) + "s, ";
+        p2 = string(veterans) + " " + string(obj_ini.player_role_data[eROLE.VETERAN].role) + "s, ";
     }
 }
 
@@ -253,19 +253,19 @@ if ((temp < 200) && (sgts > 0)) {
 }
 if ((temp < 200) && (vet_sgts > 0)) {
     if (techmarines == 1) {
-        p2 += string(techmarines) + " " + string(obj_ini.role[100][19]) + ", ";
+        p2 += string(techmarines) + " " + string(obj_ini.player_role_data[eROLE.VETERANSERGEANT].role) + ", ";
     }
     if (techmarines > 1) {
-        p2 += string(techmarines) + " " + string(obj_ini.role[100][19]) + ", ";
+        p2 += string(techmarines) + " " + string(obj_ini.player_role_data[eROLE.VETERANSERGEANT].role) + ", ";
     }
 }
 
 if (scouts > 0) {
     if (scouts == 1) {
-        p2 += string(scouts) + " " + string(obj_ini.role[100][12]) + ", ";
+        p2 += string(scouts) + " " + string(obj_ini.player_role_data[eROLE.SCOUT].role) + ", ";
     }
     if (scouts > 1) {
-        p2 += string(scouts) + " " + string(obj_ini.role[100][12]) + "s, ";
+        p2 += string(scouts) + " " + string(obj_ini.player_role_data[eROLE.SCOUT].role) + "s, ";
     }
 }
 
@@ -310,10 +310,10 @@ if ((standard_bearers > 1) && (!dropping)) {
 if (dreadnoughts + predators + land_raiders > 3) {
     p6 = "  Forming up the armoured division is ";
     if (dreadnoughts == 1) {
-        p6 += string(dreadnoughts) + " " + string(obj_ini.role[100][6]) + ", ";
+        p6 += string(dreadnoughts) + " " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role) + ", ";
     }
     if (dreadnoughts > 1) {
-        p6 += string(dreadnoughts) + " " + string(obj_ini.role[100][6]) + "s, ";
+        p6 += string(dreadnoughts) + " " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role) + "s, ";
     }
 
     if (rhinos == 1) {

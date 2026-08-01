@@ -41,7 +41,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                     okay = 1;
                 }
 
-                if ((string_count("spyrer", obj_ncombat.battle_special) > 0) && ((obj_ini.role[co][v] == obj_ini.role[100][6]) || (unit.role() == "Venerable " + string(obj_ini.role[100][6])))) {
+                if ((string_count("spyrer", obj_ncombat.battle_special) > 0) && ((obj_ini.role[co][v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) || (unit.role() == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)))) {
                     okay = 0;
                 }
                 if (string_count("spyrer", obj_ncombat.battle_special) > 0) {
@@ -62,7 +62,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
 
                     var col = 0, targ = 0;
 
-                    if (unit.role() == obj_ini.role[100][12]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.SCOUT].role) {
                         col = obj_controller.bat_scout_column;
                         obj_ncombat.scouts += 1;
                     }
@@ -70,7 +70,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         col = obj_controller.bat_tactical_column;
                         obj_ncombat.tacticals += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][3]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.VETERAN].role) {
                         col = obj_controller.bat_veteran_column;
                         obj_ncombat.veterans += 1;
                     }
@@ -102,19 +102,19 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         col = obj_controller.bat_techmarine_column;
                         obj_ncombat.techmarines += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][2]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.HONOURGUARD].role) {
                         col = obj_controller.bat_honor_column;
                         obj_ncombat.honors += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][6]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                         col = obj_controller.bat_dreadnought_column;
                         obj_ncombat.dreadnoughts += 1;
                     }
-                    if (unit.role() == "Venerable " + string(obj_ini.role[100][6])) {
+                    if (unit.role() == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
                         col = obj_controller.bat_dreadnought_column;
                         obj_ncombat.dreadnoughts += 1;
                     }
-                    if (unit.role() == obj_ini.role[100][4]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
                         col = obj_controller.bat_terminator_column;
                         obj_ncombat.terminators += 1;
                     }
@@ -142,8 +142,8 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         }
                     }
 
-                    if ((unit.role() == obj_ini.role[100][5]) || (unit.role() == obj_ini.role[100][11]) || (unit.role() == obj_ini.role[100][7])) {
-                        if (unit.role() == obj_ini.role[100][5]) {
+                    if ((unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) || (unit.role() == obj_ini.role[100][11]) || (unit.role() == obj_ini.role[100][7])) {
+                        if (unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
                             obj_ncombat.captains += 1;
                             if (obj_ncombat.big_mofo > 5) {
                                 obj_ncombat.big_mofo = 5;
@@ -176,7 +176,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         }
                     }
 
-                    if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         col = obj_controller.bat_command_column;
                         obj_ncombat.important_dudes += 1;
                         obj_ncombat.big_mofo = 1;

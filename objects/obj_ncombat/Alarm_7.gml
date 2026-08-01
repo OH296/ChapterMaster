@@ -54,7 +54,7 @@ try {
                 instance_create(x, y, obj_temp_meeting);
                 var master_present = 0;
 
-                var master_index = array_get_index(obj_ini.role[0], obj_ini.role[100][eROLE.CHAPTERMASTER]);
+                var master_index = array_get_index(obj_ini.role[0], obj_ini.player_role_data[eROLE.CHAPTERMASTER].role);
                 var _fetched_chaos = fetch_unit([0, master_index]);
                 if (!is_struct(_fetched_chaos)) {
                     LOGGER.error($"fetch_unit guardrail triggered for chapter master [0, {master_index}] in cs_meeting post-battle");
@@ -72,10 +72,10 @@ try {
                         if (_unit.planet_location == floor(chaos_meeting)) {
                             good += 1;
                         }
-                        if ((obj_ini.role[co][i] != obj_ini.role[100][6]) && (obj_ini.role[co][i] != "Venerable " + string(obj_ini.role[100][6]))) {
+                        if ((obj_ini.role[co][i] != obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (obj_ini.role[co][i] != "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role))) {
                             good += 1;
                         }
-                        if ((string_count("Dread", obj_ini.armour[co][i]) == 0) || (obj_ini.role[co][i] == obj_ini.role[100][eROLE.CHAPTERMASTER])) {
+                        if ((string_count("Dread", obj_ini.armour[co][i]) == 0) || (obj_ini.role[co][i] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role)) {
                             good += 1;
                         }
 
@@ -85,7 +85,7 @@ try {
                             obj_temp_meeting.present[otm] = 1;
                             obj_temp_meeting.co[otm] = co;
                             obj_temp_meeting.ide[otm] = i;
-                            if (obj_ini.role[co][i] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                            if (obj_ini.role[co][i] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                                 master_present = 1;
                             }
                         }

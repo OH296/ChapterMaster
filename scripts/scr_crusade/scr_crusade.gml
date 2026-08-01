@@ -90,7 +90,7 @@ function scr_crusade() {
                 var _dead = false;
                 if (death_determination > death_data[0] || death_determination_2 > death_data[1]) {
                     _dead = true;
-                    if (unit.role() == obj_ini.role[100][5]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
                         if (irandom(20) < unit.luck) {
                             _dead = false;
                         } else {
@@ -104,7 +104,7 @@ function scr_crusade() {
                                 array_push(heroics_strings, heroic_death);
                             }
                         }
-                    } else if (unit.role() == obj_ini.role[100][11] || unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                    } else if (unit.role() == obj_ini.role[100][11] || unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         _dead = false;
                     }
                 }

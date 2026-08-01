@@ -490,7 +490,7 @@ try {
     }
 
     if (menu == eMENU.DEFAULT && !instances_exist_any([obj_ncombat, obj_fleet_controller])) {
-        if (!array_contains(obj_ini.role[0], obj_ini.role[100][eROLE.CHAPTERMASTER]) && (alarm[7] == -1)) {
+        if (!array_contains(obj_ini.role[0], obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) && (alarm[7] == -1)) {
             alarm[7] = 15;
         }
     }

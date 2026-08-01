@@ -355,7 +355,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             }
 
             var _cloak_chance = 5;
-            if (role() == obj_ini.role[100][eROLE.CHAPLAIN]) {
+            if (role() == obj_ini.player_role_data[eROLE.CHAPLAIN].role) {
                 _cloak_chance += 25;
             } else if (IsSpecialist(SPECIALISTS_LIBRARIANS)) {
                 _cloak_chance += 75;
@@ -457,7 +457,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             return "no change";
         }
         if (base_group == "astartes") {
-            if (role() == obj_ini.role[100][12] && new_role != obj_ini.role[100][12]) {
+            if (role() == obj_ini.player_role_data[eROLE.SCOUT].role && new_role != obj_ini.player_role_data[eROLE.SCOUT].role) {
                 if (!get_body_data("black_carapace", "torso")) {
                     alter_body("torso", "black_carapace", true);
                     stat_boosts({strength: 4, constitution: 4, dexterity: 4}); //will decide on if these are needed
@@ -480,7 +480,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         if (instance_exists(obj_controller)) {
             array_push(role_history, [role(), obj_controller.turn]);
         }
-        if (new_role == obj_ini.role[100][5]) {
+        if (new_role == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
             if (company == 2) {
                 obj_ini.watch_master_name = name();
             }
@@ -509,11 +509,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                 obj_ini.recruiter_name = name();
             }
             scr_recent("captain_promote", name(), company);
-        } else if (new_role == obj_ini.role[100][4]) {
+        } else if (new_role == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
             scr_recent("terminator_promote", name(), company);
-        } else if (new_role == obj_ini.role[100][2]) {
+        } else if (new_role == obj_ini.player_role_data[eROLE.HONOURGUARD].role) {
             scr_recent("honor_promote", name(), company);
-        } else if (new_role == obj_ini.role[100][6]) {
+        } else if (new_role == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
             var dread_weapons = [
                 "Close Combat Weapon",
                 "Force Staff",
@@ -600,7 +600,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         } else if (array_contains(global.list_terminator_armour, arm)) {
             sz += 1;
         }
-        if (unit_role == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+        if (unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
             sz++;
         }
         size = sz;
@@ -1174,7 +1174,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         if (role() == "Lexicanum" && psionic >= 5 && experience > 50) {
             update_role("Codiciery");
         } else if (role() == "Codiciery" && psionic >= 8 && experience > 100) {
-            update_role(obj_ini.role[100][eROLE.LIBRARIAN]);
+            update_role(obj_ini.player_role_data[eROLE.LIBRARIAN].role);
         }
     };
 

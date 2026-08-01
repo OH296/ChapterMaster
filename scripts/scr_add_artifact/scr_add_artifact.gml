@@ -625,7 +625,7 @@ function ArtifactStruct(Index) constructor {
         var _dwarn = false;
         if (has_tag("daemonic") || has_tag("chaos")) {
             unit.corruption += irandom(10 + 2);
-            if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+            if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                 _dwarn = true;
             }
         }

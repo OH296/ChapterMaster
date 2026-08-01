@@ -50,9 +50,9 @@ function setup_promotion_popup() {
                 variable_struct_set(role_squad_equivilances, obj_ini.role[100][8], "tactical_squad");
                 variable_struct_set(role_squad_equivilances, obj_ini.role[100][9], "devastator_squad");
                 variable_struct_set(role_squad_equivilances, obj_ini.role[100][10], "assault_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][12], "scout_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][3], "veteran_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][4], "terminator_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.SCOUT].role, "scout_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.VETERAN].role, "veteran_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.TERMINATOR].role, "terminator_squad");
 
                 for (var i = 0; i < array_length(obj_controller.display_unit) && mahreens < 500; i++) {
                     if ((obj_controller.man[i] == "man") && (obj_controller.man_sel[i] == 1) && (obj_controller.ma_exp[i] >= min_exp)) {

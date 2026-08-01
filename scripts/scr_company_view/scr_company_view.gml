@@ -255,16 +255,16 @@ function other_manage_data() {
                 if (is_specialist(_squad_type, SPECIALISTS_HEADS)) {
                     n = 1;
                 }
-                if ((_squad_type == obj_ini.role[100][6]) && (_squad_type != ma_role[v]) && (_squad_type != "Venerable " + string(ma_role[v]))) {
+                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (_squad_type != ma_role[v]) && (_squad_type != "Venerable " + string(ma_role[v]))) {
                     n = 2;
                 }
-                if ((_squad_type == obj_ini.role[100][6]) && (ma_role[v] == obj_ini.role[100][6])) {
+                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
                     n = 0;
                 }
-                if ((_squad_type == obj_ini.role[100][6]) && (ma_role[v] == "Venerable " + string(obj_ini.role[100][6]))) {
+                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_role[v] == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role))) {
                     n = 0;
                 }
-                if ((_squad_type == "Venerable " + string(obj_ini.role[100][6])) && (ma_role[v] == obj_ini.role[100][6])) {
+                if ((_squad_type == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) && (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
                     n = 0;
                 }
                 if (_squad_loc[0] == eLOCATION_TYPES.SHIP) {
@@ -318,11 +318,11 @@ function other_manage_data() {
             _squad_loc = _unit_loc;
         }
 
-        if ((ma_role[v] == obj_ini.role[100][3]) || (ma_role[v] == obj_ini.role[100][4])) {
+        if ((ma_role[v] == obj_ini.player_role_data[eROLE.VETERAN].role) || (ma_role[v] == obj_ini.player_role_data[eROLE.TERMINATOR].role)) {
             if ((_unit.company == 1) && (ma_exp[v] >= 140)) {
                 ma_promote[v] = 1;
             }
-        } else if ((_unit.role() == obj_ini.role[100][6]) && (ma_exp[v] >= 400)) {
+        } else if ((_unit.role() == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_exp[v] >= 400)) {
             ma_promote[v] = 1;
         } else if ((_unit.role() == obj_ini.role[100][15]) || (ma_role[v] == obj_ini.role[100][14])) {
             ma_promote[v] = 1;

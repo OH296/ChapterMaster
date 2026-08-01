@@ -28,7 +28,7 @@ function scr_income() {
     income_training = 0;
 
     if (faction_status[eFACTION.MECHANICUS] != "War") {
-        var _chapter_tech_count = scr_role_count(obj_ini.role[100][eROLE.TECHMARINE], "");
+        var _chapter_tech_count = scr_role_count(obj_ini.player_role_data[eROLE.TECHMARINE].role, "");
         if (_chapter_tech_count >= ((disposition[3] / 2) + 5)) {
             training_techmarine = 0;
         }

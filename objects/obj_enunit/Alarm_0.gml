@@ -71,7 +71,7 @@ if (!engaged) {
                 var cm_block = noone;
                 with (obj_pnunit) {
                     for (var u = 0; u < array_length(unit_struct); u++) {
-                        if (marine_type[u] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                        if (marine_type[u] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                             cm_present = true;
                             cm_index = u;
                             cm_block = id;

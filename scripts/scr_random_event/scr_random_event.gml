@@ -265,7 +265,7 @@ function scr_random_event(execute_now) {
         }
     } else if (chosen_event == eEVENT.PROMOTION) {
         LOGGER.info("RE: Promotion");
-        var marine_and_company = scr_random_marine([obj_ini.role[100][8], obj_ini.role[100][12], obj_ini.role[100][9], obj_ini.role[100][10]], 0);
+        var marine_and_company = scr_random_marine([obj_ini.role[100][8], obj_ini.player_role_data[eROLE.SCOUT].role, obj_ini.role[100][9], obj_ini.role[100][10]], 0);
         if (marine_and_company == "none") {
             LOGGER.error("RE: Promotion, couldn't pick a space marine");
             exit;
@@ -709,7 +709,7 @@ function scr_random_event(execute_now) {
         var cm_is_psyker = false;
         for (var i = 0; i < array_length(TTRPG[0]); i++) {
             var _unit = fetch_unit([0 ,i]);
-            if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER] && string_count("0", _unit.specials) > 0) {
+            if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role && string_count("0", _unit.specials) > 0) {
                 cm_is_psyker = true;
                 break;
             }

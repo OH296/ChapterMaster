@@ -3004,7 +3004,7 @@ function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1
             spawn_unit.add_trait("favoured_by_the_warp");
         }
 
-        if (role_name == obj_ini.role[100][eROLE.LIBRARIAN]) {
+        if (role_name == obj_ini.player_role_data[eROLE.LIBRARIAN].role) {
             spawn_unit.psionic = irandom_range(8, 10);
         } else if (role_name == "Codiciery") {
             spawn_unit.psionic = irandom_range(5, 7);

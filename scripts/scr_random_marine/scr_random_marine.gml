@@ -57,7 +57,7 @@ function scr_random_marine(role, exp_req, search_params = {}) {
 
                 //check correct search param roles
                 var unit_role = unit.role();
-                if (unit_role == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     array_delete(marine_list, list_place, 1);
                     comp_size--;
                     continue;

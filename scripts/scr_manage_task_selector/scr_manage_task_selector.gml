@@ -72,14 +72,14 @@ function task_selector_man_manage() {
                     };
                     break;
                 case "captain_promote":
-                    _unit.update_role(obj_ini.role[100][eROLE.CAPTAIN]);
+                    _unit.update_role(obj_ini.player_role_data[eROLE.CAPTAIN].role);
                     _unit.squad = "none";
                     _unit.move_to_company(selection_data.target_company);
                     managing = selection_data.target_company;
                     update_general_manage_view();
                     exit;
                 case "champion_promote":
-                    _unit.update_role(obj_ini.role[100][eROLE.CHAMPION]);
+                    _unit.update_role(obj_ini.player_role_data[eROLE.CHAMPION].role);
                     _unit.squad = "none";
 
                     with (obj_ini) {
@@ -90,7 +90,7 @@ function task_selector_man_manage() {
                     update_general_manage_view();
                     exit;
                 case "ancient_promote":
-                    _unit.update_role(obj_ini.role[100][eROLE.ANCIENT]);
+                    _unit.update_role(obj_ini.player_role_data[eROLE.ANCIENT].role);
                     _unit.squad = "none";
 
                     with (obj_ini) {

@@ -139,9 +139,9 @@ get_unit_promotion_options = function() {
         role_name[1] = obj_ini.role[100][15];
         role_exp[1] = 5;
         spec = 1;
-    } else if (unit_role == obj_ini.role[100][6]) {
+    } else if (unit_role == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
         //venerable dreadnought
-        role_name[1] = "Venerable " + string(obj_ini.role[100][6]);
+        role_name[1] = "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role);
         role_exp[1] = 400;
         spec = 0;
     } else if (unit_role == obj_ini.role[100][14] && global.chapter_name != "Space Wolves" && global.chapter_name != "Iron Hands") {
@@ -162,10 +162,10 @@ get_unit_promotion_options = function() {
     }
     if (target_comp > 0 && target_comp <= 10 && spec == 0) {
         if (units == 1) {
-            if (scr_role_count(obj_ini.role[100][5], "1") == 0) {
+            if (scr_role_count(obj_ini.player_role_data[eROLE.CAPTAIN].role, "1") == 0) {
                 //captain
                 i += 1;
-                role_name[i] = obj_ini.role[100][5];
+                role_name[i] = obj_ini.player_role_data[eROLE.CAPTAIN].role;
                 role_exp[i] = 80; //all captains are equalish
             }
             if (scr_role_count(obj_ini.role[100][11], "1") == 0) {
@@ -181,7 +181,7 @@ get_unit_promotion_options = function() {
                 role_exp[i] = company_promote_data[target_comp].exp + 10; //may as well have this liniked to weapon skill
             }
             i += 1;
-            role_name[i] = obj_ini.role[100][6]; //dreadnought
+            role_name[i] = obj_ini.player_role_data[eROLE.DREADNOUGHT].role; //dreadnought
             role_exp[i] = 200;
         }
 
@@ -215,13 +215,13 @@ get_unit_promotion_options = function() {
 
             if (target_comp == 1) {
                 i += 1;
-                role_name[i] = obj_ini.role[100][4]; //terminators
+                role_name[i] = obj_ini.player_role_data[eROLE.TERMINATOR].role; //terminators
                 role_exp[i] = 100;
             }
 
             if (target_comp == 10) {
                 i += 1;
-                role_name[i] = obj_ini.role[100][12]; //scouts
+                role_name[i] = obj_ini.player_role_data[eROLE.SCOUT].role; //scouts
                 role_exp[i] = company_promote_data[target_comp].exp;
                 if (obj_controller.command_set[2] == 0) {
                     role_exp[i] = 0;
@@ -230,7 +230,7 @@ get_unit_promotion_options = function() {
 
             if (target_comp == 1) {
                 i += 1;
-                role_name[i] = obj_ini.role[100][3]; //veterans
+                role_name[i] = obj_ini.player_role_data[eROLE.VETERAN].role; //veterans
                 role_exp[i] = 100;
             }
         } else {
@@ -247,21 +247,21 @@ get_unit_promotion_options = function() {
             role_exp[i] = 0;
 
             i += 1;
-            role_name[i] = obj_ini.role[100][4]; //terminators
+            role_name[i] = obj_ini.player_role_data[eROLE.TERMINATOR].role; //terminators
             role_exp[i] = 100;
 
             i += 1;
-            role_name[i] = obj_ini.role[100][12]; //scouts
+            role_name[i] = obj_ini.player_role_data[eROLE.SCOUT].role; //scouts
             role_exp[i] = 0;
 
             i += 1;
-            role_name[i] = obj_ini.role[100][3]; //veterans
+            role_name[i] = obj_ini.player_role_data[eROLE.VETERAN].role; //veterans
             role_exp[i] = 0;
         }
     }
     if ((target_comp == 0 || target_comp > 10) && (spec == 0)) {
         i += 1;
-        role_name[i] = obj_ini.role[100][2]; //honor guard
+        role_name[i] = obj_ini.player_role_data[eROLE.HONOURGUARD].role; //honor guard
         role_exp[i] = 140;
         if (obj_controller.command_set[2] == 0) {
             role_exp[i] = 0;

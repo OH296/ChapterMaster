@@ -750,17 +750,17 @@ function scr_enemy_ai_e() {
                 }
                 var _is_unit_real_and_here = _unit.role() != "" && _unit.location_string == name;
                 var _is_this_a_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
-                var _unit_does_not_have_dreadnought_role = _unit.role() != obj_ini.role[100][6];
-                var _unit_is_not_venerable = _unit.role() != "Venerable " + string(obj_ini.role[100][6]);
+                var _unit_does_not_have_dreadnought_role = _unit.role() != obj_ini.player_role_data[eROLE.DREADNOUGHT].role;
+                var _unit_is_not_venerable = _unit.role() != "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role);
                 var _unit_does_not_have_dreadnought_armour = string_count("Dread", obj_ini.armour[co][i]) == 0;
-                var _is_chapter_master = _unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER];
+                var _is_chapter_master = _unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role;
                 if (_is_unit_real_and_here && _is_this_a_chaos_meeting && _unit_does_not_have_dreadnought_role && _unit_is_not_venerable && (_unit_does_not_have_dreadnought_armour || _is_chapter_master)) {
                     _meeting.dudes += 1;
                     otm = _meeting.dudes;
                     _meeting.present[otm] = 1;
                     _meeting.co[otm] = co;
                     _meeting.ide[otm] = i;
-                    if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                    if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         master_present = true;
                     }
                 }

@@ -64,10 +64,10 @@ function scr_event_dudes(do_action, is_planet, system_name, location_id) {
                     adding = true;
             }
 
-            if (obj_ini.role[coh][ide] == obj_ini.role[100][6]) {
+            if (obj_ini.role[coh][ide] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                 adding = false;
             }
-            if (obj_ini.role[coh][ide] == "Venerable " + string(obj_ini.role[100][6])) {
+            if (obj_ini.role[coh][ide] == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
                 adding = false;
             }
             if (string_count("Dread", obj_ini.armour[coh][ide]) > 0) {

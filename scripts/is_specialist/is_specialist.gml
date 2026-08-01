@@ -17,7 +17,11 @@
 /// @description Retrieves the active roles from the game, either from the obj_creation or obj_ini object.
 /// @returns {Array<String>}
 function active_roles() {
-    var _roles = instance_exists(obj_creation) ? obj_creation.role[100] : obj_ini.role[100];
+    var _obj = instance_exists(obj_creation) ? obj_creation.player_role_data: obj_ini.player_role_data;
+    var _roles = [];
+    for (var i = 0; i < array_length(_obj); i++){
+        array_push(_roles, struct_exists(_obj[i], "role") ? _obj[i].role : "");
+    }
     return _roles;
 }
 
@@ -155,7 +159,7 @@ function role_groups(group, include_trainee = false, include_heads = true) {
                 "Master of Sanctity",
                 $"Chief {_roles[eROLE.LIBRARIAN]}",
                 "Forge Master",
-                string(obj_ini.role[100][eROLE.CHAPTERMASTER]),
+                string(obj_ini.player_role_data[eROLE.CHAPTERMASTER].role),
                 "Master of the Apothecarion",
             ];
             break;

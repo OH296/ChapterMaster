@@ -24,7 +24,7 @@ function scr_master_loc() {
                     if (!is_struct(unit)) {
                         continue;
                     }
-                    if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                    if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                         if ((unit.planet_location > 0) && (unit.ship_location < 0)) {
                             lick = $"{unit.location_string}." + string(unit.planet_location);
                         }

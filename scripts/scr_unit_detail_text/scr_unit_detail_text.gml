@@ -2,7 +2,7 @@
 function scr_unit_detail_text() {
     var unit_data_string = "";
     var is_astartes = false;
-    var is_superior = array_contains([obj_ini.role[100][18], obj_ini.role[100][19]], role());
+    var is_superior = array_contains([obj_ini.role[100][18], obj_ini.player_role_data[eROLE.VETERANSERGEANT].role], role());
     var unit_name = name();
     var unit_role = role();
     var body_augmentations = {
@@ -78,7 +78,7 @@ function scr_unit_detail_text() {
 
     // Psyker text
     unit_data_string += $"Has an Assignment rating of {_psionic_assignment} ({psionic}) ";
-    var is_lib = array_contains(["Lexicanum", "Codiciery", obj_ini.role[100][17]], role()) || role() == obj_ini.role[100][eROLE.CHAPTERMASTER];
+    var is_lib = array_contains(["Lexicanum", "Codiciery", obj_ini.role[100][17]], role()) || role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role;
     if (psionic < -6) {
         unit_data_string += ", so inert in the Warp as to actually exhibit negative psychic influence upon others.";
     } else if (psionic < 0) {
