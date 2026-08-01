@@ -16,7 +16,10 @@ function mechanicus_missions_end_turn(planet) {
     var bionics_planet_slot = has_problem_planet_with_time(planet, "mech_bionics");
     if (bionics_planet_slot > -1) {
         var check1 = scr_bionics_count("star", name, planet, "number");
-        if (check1 >= 10) {
+        var _pdata = get_planet_data(planet);
+        var _units = _pdata.collect_planet_group();
+        var _bionics = _units.tally_attr("bionics");
+        if (_bionics >= 10) {
             var _prob_data = p_problem_other_data[planet][bionics_planet_slot];
             var percent_complete = increment_mission_completion(_prob_data);
             scr_alert("", $"mission", $"Mechanicus Mission on {planet_numeral_name(planet, id)} is {floor(percent_complete)}% complete.", 0, 0);

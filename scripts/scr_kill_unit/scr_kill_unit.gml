@@ -52,7 +52,7 @@ function kill_and_recover(company, unit_slot, equipment = true, gene_seed_collec
             obj_controller.gene_seed += 1;
         }
     }
-    if (obj_ini.race[company][unit_slot] == 1) {
+    if (obj_ini.base_group == "astartes") {
         if (is_specialist(obj_ini.role[company][unit_slot])) {
             obj_controller.command -= 1;
         } else {

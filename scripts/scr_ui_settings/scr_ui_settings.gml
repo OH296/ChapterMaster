@@ -74,7 +74,7 @@ function setup_ui_chapter_settings() {
     for (var i = 0; i < array_length(_role_order); i++) {
         var _role_id = _role_order[i];
 
-        var _active = obj_ini.race[100][_role_id] != 0;
+        var _active = obj_ini.player_role_data[_role_id].available_to_player;
         var _button = new UnitButtonObject({
             style: "pixel",
             x1: _but_x,

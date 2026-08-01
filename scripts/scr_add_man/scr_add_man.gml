@@ -27,43 +27,35 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
             case "Skitarii":
                 spawn_exp = 10;
                 _unit = new TTRPG_stats("mechanicus", target_company, _company_slot, "skitarii");
-                _unit.unit_race = 3
                 break;
             case "Techpriest":
                 spawn_exp = 100;
-                obj_ini.race[target_company][_company_slot] = 3;
                 _unit = new TTRPG_stats("mechanicus", target_company, _company_slot, "tech_priest");
                 break;
             case "Crusader":
                 spawn_exp = 10;
-                obj_ini.race[target_company][_company_slot] = 4;
                 _unit = new TTRPG_stats("inquisition", target_company, _company_slot, "inquisition_crusader");
                 break;
             // TODO: Implement Sanctioned Psyker (Race 4, Psychic powers, Force Staff)
             case "Sister of Battle":
                 spawn_exp = 20;
-                obj_ini.race[target_company][_company_slot] = 5;
                 _unit = new TTRPG_stats("adeptus_sororitas", target_company, _company_slot, "sister_of_battle");
                 break;
             case "Sister Hospitaler":
                 spawn_exp = 50;
-                obj_ini.race[target_company][_company_slot] = 5;
                 _unit = new TTRPG_stats("adeptus_sororitas", target_company, _company_slot, "sister_hospitaler");
                 break;
             // TODO: Implement Prioress (Race 5, Sororitas leader gear/stats)
             case "Ranger":
                 spawn_exp = 180;
-                obj_ini.race[target_company][_company_slot] = 6;
                 _unit = new TTRPG_stats("Eldari", target_company, _company_slot, "eldar_ranger");
                 break;
             case "Ork Sniper":
                 spawn_exp = 20;
-                obj_ini.race[target_company][_company_slot] = eFACTION.ORK;
                 _unit = new TTRPG_stats("ork", target_company, _company_slot, "ork_sniper");
                 break;
             case "Flash Git":
                 spawn_exp = 40;
-                obj_ini.race[target_company][_company_slot] = eFACTION.ORK;
                 _unit = new TTRPG_stats("ork", target_company, _company_slot, "flash_git");
                 break;
             // TODO: Implement Warboss (Race 7)
@@ -99,7 +91,6 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
     }
 
     if (!array_contains(non_marine_roles, man_role)) {
-        obj_ini.race[target_company][_company_slot] = eFACTION.PLAYER;
         if (man_role == obj_ini.role[100][12]) {
             _gear = {
                 wep2: obj_ini.wep2[100][12],

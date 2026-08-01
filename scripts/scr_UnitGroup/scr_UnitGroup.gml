@@ -41,6 +41,14 @@ function UnitGroup(units) constructor {
         return false;
     };
 
+    static tally_attr = function(attrib){
+        var _tally = 0;
+        for (var i = 0; i < array_length(units); i++) {
+            _tally += units[i][$ attrib];
+        }
+        return _tally
+    }
+
     static get_from = function(search_conditions = {}, as_UnitGroup = true, remove_from = false) {
         var _wanted = [];
         var conditions = new SearchConditions(search_conditions);

@@ -367,7 +367,6 @@ function after_combat_dead_marine_equipment_recovered(unit) {
         if (obj_ncombat.dropping && obj_ncombat.defeat) {
             _specific_item_chance = 9999;
         }
-        //if (obj_ini.race[marine_co[i], marine_id[i]]!=1) then _specific_item_chance=9999;
 
         var _specific_type_recovery = basic_recover_chance + _item.recovery_chance;
 

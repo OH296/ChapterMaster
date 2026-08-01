@@ -225,7 +225,7 @@ function problem_end_turn_checks() {
                 for (var co = 0; co <= obj_ini.companies; co++) {
                     me = 0;
                     for (me = 0; me < array_length(obj_ini.role[co]); me++) {
-                        if ((obj_ini.race[co][me] == 1) && (obj_ini.role[co][me] != "")) {
+                        if (obj_ini.base_group == "astartes") {
                             _unit = fetch_unit([co, me]);
                             if (!is_struct(_unit)) {
                                 continue;

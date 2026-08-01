@@ -43,22 +43,14 @@ function reset_manage_arrays() {
 
 function find_company_open_slot(target_company) {
     var good = -1;
-    for (var i = 0; i < array_length(obj_ini.name[target_company]); i++) {
-        if ((obj_ini.name[target_company][i] == "") || (obj_ini.role[target_company][i] == "")) {
+    var _company_length = array_length(obj_ini.name[target_company]);
+    for (var i = 0; i < _company_length; i++) {
+        if (is_undefined(obj_ini.TTRPG[target_company]) {
             good = i;
             break;
         }
     }
     if (good == -1) {
-        good = array_length(obj_ini.name[target_company]);
-        array_push(obj_ini.race[target_company], 0);
-        array_push(obj_ini.name[target_company], "");
-        array_push(obj_ini.role[target_company], "");
-        array_push(obj_ini.wep1[target_company], "");
-        array_push(obj_ini.wep2[target_company], "");
-        array_push(obj_ini.armour[target_company], "");
-        array_push(obj_ini.gear[target_company], "");
-        array_push(obj_ini.mobi[target_company], "");
         array_push(obj_ini.TTRPG[target_company], undefined);
         good = array_length(obj_ini.TTRPG[target_company]) - 1;
     }

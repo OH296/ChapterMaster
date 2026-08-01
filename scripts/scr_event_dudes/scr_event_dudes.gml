@@ -59,13 +59,9 @@ function scr_event_dudes(do_action, is_planet, system_name, location_id) {
             }
 
             if ((is_planet == 0) && (unit.ship_location == location_id)) {
-                if ((obj_ini.race[coh][ide] == 1) || (obj_ini.race[coh][ide] == 5)) {
                     adding = true;
-                }
             } else if ((is_planet == 1) && (unit.location_string == system_name) && (unit.planet_location == location_id)) {
-                if ((obj_ini.race[coh][ide] == 1) || (obj_ini.race[coh][ide] == 5)) {
                     adding = true;
-                }
             }
 
             if (obj_ini.role[coh][ide] == obj_ini.role[100][6]) {
@@ -123,9 +119,10 @@ function scr_event_dudes(do_action, is_planet, system_name, location_id) {
                     if (obj_controller.trim == 3) {
                         obj_event.avatar_image[obj_event.avatars] = 2;
                     }
-                    if (obj_ini.race[coh][ide] == 5) {
+                    /*if (obj_ini.race[coh][ide] == 5) {
                         obj_event.avatar_image[obj_event.avatars] = 3;
-                    }
+                    }*/
+                    //replace with check agaiinsst role or base_group
                     obj_event.avatar_co[obj_event.avatars] = coh;
                     obj_event.avatar_id[obj_event.avatars] = ide;
                 }
