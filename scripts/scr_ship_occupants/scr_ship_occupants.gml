@@ -3,7 +3,8 @@ function scr_ship_occupants(target_ship_id) {
 
     // Crew
     for (var co = 0; co < obj_ini.companies; co++) {
-        for (var i = 0; i <= company_length(co); i++) {
+        var _co_length = company_length(co);
+        for (var i = 0; i < _co_length; i++) {
             if (obj_ini.role[co][i] == "") {
                 continue;
             }
