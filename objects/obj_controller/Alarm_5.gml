@@ -292,21 +292,23 @@ try {
     for (var c = 0; c < 11; c++) {
         for (var e = 0; e < array_length(obj_ini.TTRPG[c]); e++) {
             var _unit = fetch_unit([c,e]);
-            if (_unit.god_status == 10) {
-                if (!is_struct(_unit)) {
-                    continue;
-                }
-                p += 1;
-                penit_co[p] = c;
-                penit_id[p] = e;
-                penitorium += 1;
-                _unit.alter_loyalty(-1);
-                if ((_unit.corruption < 90) && (_unit.corruption > 0)) {
-                    var heresy_old = 0, heresy_new = 0;
-                    heresy_old = round((_unit.corruption * _unit.corruption) / 50) - 0.5;
-                    heresy_new = (heresy_old * 50) / _unit.corruption;
-                    _unit.corruption = max(0, heresy_new);
-                }
+            if (!is_struct(_unit)) {
+                continue;
+            }
+            if (_unit.god_status != 10) {
+                continue;
+            }
+
+            p += 1;
+            penit_co[p] = c;
+            penit_id[p] = e;
+            penitorium += 1;
+            _unit.alter_loyalty(-1);
+            if ((_unit.corruption < 90) && (_unit.corruption > 0)) {
+                var heresy_old = 0, heresy_new = 0;
+                heresy_old = round((_unit.corruption * _unit.corruption) / 50) - 0.5;
+                heresy_new = (heresy_old * 50) / _unit.corruption;
+                _unit.corruption = max(0, heresy_new);
             }
         }
     }
