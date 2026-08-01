@@ -116,32 +116,15 @@ function scr_company_order(company) {
         var _temps = [];
         for (var i = 0; i < array_length(_company_marines.units); i++) {
             var _unit = _company_marines.units[i];
-            array_push(_temps, {unit: _unit, race: _unit.race(), name: _unit.name(), role: _unit.role(), wep1: _unit.weapon_one(true), wep2: _unit.weapon_two(true), armour: _unit.armour(true), gear: _unit.gear(true), mobi: _unit.mobility_item(true)});
+            array_push(_temps, {unit: _unit);
         }
 
         var _new_length = array_length(_temps);
         TTRPG[co] = array_create(_new_length, 0);
-        race[co] = array_create(_new_length, 0);
-        name[co] = array_create(_new_length, 0);
-        role[co] = array_create(_new_length, 0);
-        wep1[co] = array_create(_new_length, 0);
-        wep2[co] = array_create(_new_length, 0);
-        armour[co] = array_create(_new_length, 0);
-        gear[co] = array_create(_new_length, 0);
-        mobi[co] = array_create(_new_length, 0);
         for (var i = 0; i < array_length(_temps); i++) {
             var _unit = _temps[i];
             var _struc = _unit.unit;
             TTRPG[co][i] = _struc;
-            race[co][i] = _unit.race;
-            name[co][i] = _unit.name;
-            role[co][i] = _unit.role;
-            wep1[co][i] = _unit.wep1;
-            wep2[co][i] = _unit.wep2;
-            armour[co][i] = _unit.armour;
-            gear[co][i] = _unit.gear;
-            mobi[co][i] = _unit.mobi;
-            _struc.company = co;
             _struc.marine_number = i;
             if (_struc.squad != "none") {
                 var _squad = _struc.get_squad();

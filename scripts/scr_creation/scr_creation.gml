@@ -67,7 +67,8 @@ function update_creation_roles_radio(start_role = 1) {
     var _role_data = [];
 
     for (var i = start_role; i <= 19; i++) {
-        if (race[100][i] != 0 && role[100][i] != "") {
+        var _role_data = player_role_data[i];
+        if (_role_data.available_to_player && _role_data.role != "") {
             array_push(_role_data, {str1: role[100][i], font: fnt_40k_14b, role_id: i});
         }
     }
@@ -184,18 +185,15 @@ function scr_creation(slide_num) {
         if (name_bad == 0) {
             change_slide = true;
             goto_slide = 3;
-            race[100][17] = 1;
+            player_role_data[eROLE.LIBRARIAN].available_to_player = true;
         }
     }
 
     if (slide_num == eCREATION_SLIDES.CHAPTERTRAITS && custom == eCHAPTER_TYPE.PREMADE) {
         change_slide = true;
         goto_slide = 3;
-        race[100][eROLE.CHAPLAIN] = 1;
-        race[100][eROLE.LIBRARIAN] = 1;
-        if (chapter_name == "Iron Hands" || chapter_name == "Space Wolves") {
-            race[100][eROLE.CHAPLAIN] = 0;
-        }
+        player_role_data[eROLE.LIBRARIAN].available_to_player = true;
+        player_role_data[eROLE.CHAPLAIN].available_to_player = chapter_name != "Iron Hands" && chapter_name != "Space Wolves";
     }
 
     if (slide_num == eCREATION_SLIDES.CHAPTERHOME) {

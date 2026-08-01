@@ -28,14 +28,6 @@ function scr_kill_unit(company, unit_slot) {
 }
 
 function scr_wipe_unit(company, unit_slot) {
-    array_set(obj_ini.race[company], unit_slot, 0);
-    array_set(obj_ini.name[company], unit_slot, "");
-    array_set(obj_ini.wep1[company], unit_slot, "");
-    array_set(obj_ini.wep2[company], unit_slot, "");
-    array_set(obj_ini.role[company], unit_slot, "");
-    array_set(obj_ini.armour[company], unit_slot, "");
-    array_set(obj_ini.gear[company], unit_slot, "");
-    array_set(obj_ini.mobi[company], unit_slot, "");
     array_set(obj_ini.TTRPG[company], unit_slot, undefined);
 }
 

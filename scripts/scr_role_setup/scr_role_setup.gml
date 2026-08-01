@@ -1,14 +1,58 @@
-load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
-    default_role_data[_role_id] = {
-        role : _role_name,
-        wep1 : _wep1,
-        wep2 : _wep2,
-        armour : _armour,
-        mobi : _mobi,
-        gear : _gear,
-        race : 1
-    }}
-};
+
+
+function setup_default_gears = function(){
+    load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
+        default_role_data[_role_id] = {
+            role : _role_name,
+            wep1 : _wep1,
+            wep2 : _wep2,
+            armour : _armour,
+            mobi : _mobi,
+            gear : _gear,
+            available_to_player : 1
+        }}
+    };
+    load_default_gear(eROLE.HONOURGUARD, "Honour Guard", "Power Sword", "Bolter", "Artificer Armour", "", "");
+    load_default_gear(eROLE.VETERAN, "Veteran", "Combiflamer", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.TERMINATOR, "Terminator", "Power Fist", "Storm Bolter", "Terminator Armour", "", "");
+    load_default_gear(eROLE.CAPTAIN, "Captain", "Power Sword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Iron Halo");
+    load_default_gear(eROLE.DREADNOUGHT, "Dreadnought", "Dreadnought Lightning Claw", "Twin Linked Lascannon", "Dreadnought", "", "");
+    load_default_gear(eROLE.CHAMPION, "Champion", "Power Sword", STR_ANY_POWER_ARMOUR, STR_ANY_POWER_ARMOUR, "", "Combat Shield");
+    load_default_gear(eROLE.TACTICAL, "Tactical", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.DEVASTATOR, "Devastator", "", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.ASSAULT, "Assault", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "Jump Pack", "");
+    load_default_gear(eROLE.ANCIENT, "Ancient", "Company Standard", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.SCOUT, "Scout", "Bolter", "Combat Knife", "Scout Armour", "", "");
+    load_default_gear(eROLE.CHAPLAIN, "Chaplain", "Crozius Arcanum", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Rosarius");
+    load_default_gear(eROLE.APOTHECARY, "Apothecary", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Narthecium");
+    load_default_gear(eROLE.TECHMARINE, "Techmarine", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
+    load_default_gear(eROLE.LIBRARIAN, "Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
+    load_default_gear(eROLE.SERGEANT, "Sergeant", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.VETERANSERGEANT, "Veteran Sergeant", "Chainsword", "Plasma Pistol", STR_ANY_POWER_ARMOUR, "", "");
+}
+
+function update_role_data_wth_defaults(){
+    for (var i = 0; i < array_length(player_role_data); i++) {
+        var _role_data = player_role_data[i];
+        var _default_data = default_role_data[i];
+        var _keys = global.role_data_keys;
+        for (var k=0;k<array_length(_keys);k++){
+            var _key = _keys[k];
+            var _set_with_default = false;
+            if (!struct_exsts(_role_data, _key)){
+                _set_with_default = true;
+            } else {
+                var _val = _role_data[$ key];
+                if (_val == "" || _val == "default"){
+                    _set_with_default = true;
+                }
+            }
+            if (_set_with_default == true){
+                _role_data[i][$key] = variable_clone(_default_data[i][$key]);
+            }
+        }
+    }
+}
 
 /// @self Asset.GMObject.obj_creation
 function role_setup_objects() {
@@ -143,23 +187,29 @@ function scr_role_setup() {
         draw_text_transformed(444, 550, string_hash_to_newline("Advisor Names"), 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14b);
         draw_set_halign(fa_right);
-        if (race[100][15] != 0) {
+        var _apoths_allowed = player_role_data[eROLE.APOTHECARY].available_to_player;
+        var _chaps_allowed = player_role_data[eROLE.CHAPLAINA].available_to_player;
+        var _libs_allowed = player_role_data[eROLE.LIBRARIAN].available_to_player;
+        var _techs_allowed = player_role_data[eROLE.TECHMARINE].available_to_player;
+
+
+        if (_apoths_allowed) {
             draw_text(594, 575, "Chief Apothecary: ");
         }
-        if (race[100][14] != 0) {
+        if (player_role_data[eROLE.CHAPLAINA].available_to_player) {
             draw_text(594, 597, "High Chaplain: ");
         }
-        if (race[100][17] != 0) {
+        if (player_role_data[eROLE.LIBRARIAN].available_to_player) {
             draw_text(594, 619, "Chief Librarian: ");
         }
-        if (race[100][16] != 0) {
+        if (player_role_data[eROLE.TECHMARINE].available_to_player) {
             draw_text(594, 641, "Forge Master: ");
         }
         draw_text(594, 663, "Master of Recruits: ");
         draw_text(594, 685, "Master of the Fleet: ");
         draw_set_halign(fa_left);
 
-        if (race[100][15] != 0) {
+        if (_apoths_allowed0) {
             draw_set_color(CM_GREEN_COLOR);
             if (hapothecary == "") {
                 draw_set_color(c_red);
@@ -204,7 +254,7 @@ function scr_role_setup() {
             }
         }
 
-        if (race[100][14] != 0) {
+        if (_chaps_allowed) {
             draw_set_color(CM_GREEN_COLOR);
             if (hchaplain == "") {
                 draw_set_color(c_red);
@@ -249,7 +299,7 @@ function scr_role_setup() {
             }
         }
 
-        if (race[100][17] != 0) {
+        if (_libs_allowed) {
             draw_set_color(CM_GREEN_COLOR);
             if (clibrarian == "") {
                 draw_set_color(c_red);
@@ -294,7 +344,7 @@ function scr_role_setup() {
             }
         }
 
-        if (race[100][16] != 0) {
+        if (techs_allowed != 0) {
             draw_set_color(CM_GREEN_COLOR);
             if (fmaster == "") {
                 draw_set_color(c_red);

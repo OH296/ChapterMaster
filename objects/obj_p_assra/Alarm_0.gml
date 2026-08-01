@@ -1,24 +1,24 @@
-var co = 0, i = 0, o = 0, unit;
+var co = 0, i = 0, o = 0, _unit;
 
 for (o = 0; o < array_length(origin.board_co); o++) {
     co = origin.board_co[o];
     i = origin.board_id[o];
-    unit = fetch_unit([co, i]);
-    if (!is_struct(unit)) {
+    _unit = fetch__unit([co, i]);
+    if (!is_struct(_unit)) {
         continue;
     }
-    if ((unit.hp() <= -15) && (obj_ini.race[co][i] == 1) && (unit.name() != "")) {
+    if ((_unit.hp() <= -15) && (_unnit.base_group != "astartes") {
         var seed_lost = 0;
         if (apothecary <= 0) {
-            if (unit.IsSpecialist(SPECIALISTS_STANDARD)) {
+            if (_unit.IsSpecialist(SPECIALISTS_STANDARD)) {
                 obj_fleet.fallen_command += 1;
             } else {
                 obj_fleet.fallen += 1;
             }
 
             if (apothecary_had > 0) {
-                if (unit.base_group == "astartes") {
-                    var age = unit.age;
+                if (_unit.base_group == "astartes") {
+                    var age = _unit.age;
                     if ((age <= ((obj_controller.millenium * 1000) + obj_controller.year) - 10) && (obj_ini.zygote == 0)) {
                         seed_lost += 1;
                     }
@@ -29,23 +29,23 @@ for (o = 0; o < array_length(origin.board_co); o++) {
             }
 
             // obj_fleet.marines_lost+=1;
-            if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+            if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
                 obj_controller.alarm[7] = 1;
                 if (global.defeat <= 1) {
                     global.defeat = 1;
                 }
             }
-            if (unit.weapon_one() == "Company Standard" || unit.weapon_two() == "Company Standard") {
+            if (_unit.weapon_one() == "Company Standard" || _unit.weapon_two() == "Company Standard") {
                 scr_loyalty("Lost Standard", "+");
             }
 
-            scr_kill_unit(co, i);
+            scr_kill__unit(co, i);
 
             if (obj_fleet.capital + obj_fleet.frigate + obj_fleet.escort > 0) {
                 obj_controller.gene_seed += seed_lost;
             }
         } else if (apothecary > 0) {
-            unit.add_or_sub_health(irandom_range(9, 14));
+            _unit.add_or_sub_health(irandom_range(9, 14));
             apothecary -= 0.5;
         }
     }

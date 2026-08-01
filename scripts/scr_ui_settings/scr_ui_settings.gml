@@ -861,6 +861,8 @@ function scr_draw_mass_equip_gui() {
         var column_width = 146;
         var column_gap = 3;
 
+        var _role = player_role_data[role];
+
         for (var h = 0; h < array_length(item_name); h++) {
             if (h > 0 && h % items_per_column == 0) {
                 x3 += column_width;
@@ -883,29 +885,8 @@ function scr_draw_mass_equip_gui() {
 
                 if (mouse_button_clicked()) {
                     var buh = item_name[h] == ITEM_NAME_NONE ? "" : item_name[h];
+                    _role[$ global.unit_equip_slots[tab]] = buh;
 
-                    switch (tab) {
-                        // slots
-                        case 0:
-                            obj_ini.wep1[100][role] = buh;
-                            break;
-                        case 1:
-                            obj_ini.wep2[100][role] = buh;
-                            break;
-                        case 2:
-                            obj_ini.armour[100][role] = buh;
-                            // No bikes or jump packs for Terminators
-                            if (array_contains(global.list_terminator_armour, buh) || buh == STR_ANY_TERMINATOR_ARMOUR) {
-                                obj_ini.mobi[100][role] = "";
-                            }
-                            break;
-                        case 3:
-                            obj_ini.gear[100][role] = buh;
-                            break;
-                        case 4:
-                            obj_ini.mobi[100][role] = buh;
-                            break;
-                    }
                     tab = -1;
                     refresh = true;
                     with (obj_controller) {

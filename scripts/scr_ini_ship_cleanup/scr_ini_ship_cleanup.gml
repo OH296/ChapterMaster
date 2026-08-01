@@ -4,7 +4,7 @@ function scr_kill_ship(index) {
             var _units_on_ship = [];
             var _unit;
             for (var co = 0; co <= companies; co++) {
-                for (var i = 0; i < array_length(name[co]); i++) {
+                for (var i = 0; i < array_length(TTRPG[co]); i++) {
                     _unit = fetch_unit([co, i]);
                     if (!is_struct(_unit)) {
                         continue;

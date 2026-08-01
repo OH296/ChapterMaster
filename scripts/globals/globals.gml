@@ -131,6 +131,16 @@ global.unit_equip_slots = [
     "all",
 ];
 
+global.role_data_keys = [
+    "wep1",
+    "wep2",
+    "armour",
+    "gear",
+    "mobi",
+    "role",
+    "available_to_player"
+]
+
 // Human-readable labels for equipment slots.
 global.unit_equip_slots_display = [
     "First Weapon",

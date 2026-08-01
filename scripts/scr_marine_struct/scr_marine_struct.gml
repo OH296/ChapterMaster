@@ -149,6 +149,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     unit_health = 0;
     bionics = 0;
     size = 0;
+    unit_race = 1;
 
     // Progression
     experience = 0;
@@ -189,7 +190,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     //takes dict and plumbs dict values into unit struct
     if (array_contains(variable_struct_get_names(global.base_stats), class)) {
-        load_json_data(global.base_stats[$ class]);
+        move_data_to_current_scope(global.base_stats[$ class] , true);
     }
 
     var stats = [
@@ -227,7 +228,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     }
 
     if (struct_exists(self, "start_gear")) {
-        if (base_group != "marine") {
+        if (base_group != "astartes") {
             alter_equipment(start_gear, false, false);
         } else {
             alter_equipment(start_gear, true, true);
@@ -428,6 +429,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     current_role = "";
+
     static role = function() {
         return current_role;
     };
@@ -806,7 +808,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static race = function() {
-        return obj_ini.race[company][marine_number];
+        return unit_race;
     };
 
     static alter_loyalty = function(alt_val) {
@@ -952,9 +954,14 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
         array_push(epithets, epithet);
     };
-    static name = function() {
+    unit_name = "";
+    static name = function(update) {
         return obj_ini.name[company][marine_number];
     }; // get marine name
+
+    static set_name = function(val){
+        unit_name = val;
+    }
 
     static set_name = function(new_name) {
         obj_ini.name[company][marine_number] = new_name;
@@ -2052,17 +2059,24 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
     };
 
-    static set_default_equipment = function(from_armoury = true, to_armoury = true, quality = "any") {
-        var role_match = -1;
+    static get_role_data = function(){
         for (var i = 0; i < 24; i++) {
-            if (obj_ini.role[100][i] == role()) {
-                role_match = i;
-                break;
+            var _role_data == obj_ini.player_role_data[i];
+            if (_role_data.role == role()) {
+                return _role_data;
             }
         }
-        if (role_match != -1) {
-            alter_equipment({"wep1": obj_ini.wep1[100][role_match], "wep2": obj_ini.wep2[100][role_match], "mobi": obj_ini.mobi[100][role_match], "armour": obj_ini.armour[100][role_match], "gear": obj_ini.gear[100][role_match]}, from_armoury, to_armoury, quality);
+        return undefined;        
+    }
+
+    static set_default_equipment = function(from_armoury = true, to_armoury = true, quality = "any") {
+        var role_match = -1;
+        var _data = get_role_data()
+        if (is_undefined(_data)){
+            return "no_role_found";
         }
+ 
+         alter_equipment(_data, from_armoury, to_armoury, quality);
     };
 
     static equipped_artifacts = function() {

@@ -31,82 +31,82 @@ function transfer_marines() {
             break;
         }
     }
-
-    // The MAHREENS and TARGET/FROM seems to check out
-    for (var w = 0; w < array_length(obj_controller.display_unit); w++) {
-        if (obj_controller.man_sel[w] == 1) {
-            if (obj_controller.man[w] == "man" && is_struct(obj_controller.display_unit[w])) {
-                var moveable = true;
-                var unit = obj_controller.display_unit[w];
-                if (unit.squad != "none") {
-                    // this evaluates if you are tryin to move a whole squad and if so moves teh squad to a new company
-                    var move_squad = unit.squad;
-                    var squad = fetch_squad(move_squad);
-                    var move_members = squad.members;
-                    for (var mem = 0; mem < array_length(move_members); mem++) {
-                        //check all members have been selected and are in the same company
-                        if (w + mem < array_length(obj_controller.display_unit)) {
-                            if (!is_struct(obj_controller.display_unit[w + mem])) {
-                                continue;
-                            }
-                            if (obj_controller.man_sel[w + mem] != 1 || obj_controller.display_unit[w + mem].squad != move_squad) {
-                                moveable = false;
-                                break;
-                            }
-                        } else {
-                            moveable = false;
-                            break;
-                        }
+    function transfer_unit(array_index){
+        var moveable = true;
+        var unit = obj_controller.display_unit[array_index];
+        if (unit.squad != "none") {
+            // this evaluates if you are tryin to move a whole squad and if so moves teh squad to a new company
+            var move_squad = unit.squad;
+            var squad = fetch_squad(move_squad);
+            var move_members = squad.members;
+            for (var mem = 0; mem < array_length(move_members); mem++) {
+                //check all members have been selected and are in the same company
+                if (array_index + mem < array_length(obj_controller.display_unit)) {
+                    if (!is_struct(obj_controller.display_unit[w + mem])) {
+                        continue;
                     }
-                    //move squad
-                    if (moveable) {
-                        for (var mem = 0; mem < array_length(move_members); mem++) {
-                            obj_controller.man_sel[w + mem] = 0;
-                            var member_unit = fetch_unit(move_members[mem]);
-                            if (!is_struct(member_unit)) {
-                                continue;
-                            }
-                            unit.move_to_company(target_comp, false);
-                            scr_move_unit_info(member_unit.company, target_comp, member_unit.marine_number, mahreens, false);
-                            _unit.squad = move_squad;
-                            squad.members[mem][0] = target_comp;
-                            squad.members[mem][1] = mahreens;
-                            mahreens++;
-                        }
-                        squad.base_company = target_comp;
+                    if (obj_controller.man_sel[array_index + mem] != 1 || obj_controller.display_unit[array_index + mem].squad != move_squad) {
+                        moveable = false;
+                        break;
                     }
                 } else {
                     moveable = false;
+                    break;
                 }
-                //move individual
-                if (!moveable) {
-                    unit.move_to_company(target_comp)
-                    mahreens++;
+            }
+            //move squad
+            if (moveable) {
+                for (var mem = 0; mem < array_length(move_members); mem++) {
+                    obj_controller.man_sel[array_index + mem] = 0;
+                    var member_unit = fetch_unit(move_members[mem]);
+                    if (!is_struct(member_unit)) {
+                        continue;
+                    }
+                    unit.move_to_company(target_comp, false);
+                    scr_move_unit_info(member_unit.company, target_comp, member_unit.marine_number, mahreens, false);
+                    _unit.squad = move_squad;
+                    squad.members[mem][0] = _unit.company;
+                    squad.members[mem][1] = _unit.marine_number;
                 }
-                var check = 0;
-            } else if (obj_controller.man[w] == "vehicle" && is_array(obj_controller.display_unit[w])) {
-                // This seems to execute the correct number of times
-                var check = 0;
-                var veh_data = obj_controller.display_unit[w];
-                // Check if the target company is within the allowed range
-                if ((target_comp >= 1) && (target_comp <= 10)) {
-                    obj_ini.veh_race[target_comp][vehi] = obj_ini.veh_race[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_loc[target_comp][vehi] = obj_ini.veh_loc[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_role[target_comp][vehi] = obj_ini.veh_role[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_wep1[target_comp][vehi] = obj_ini.veh_wep1[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_wep2[target_comp][vehi] = obj_ini.veh_wep2[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_wep3[target_comp][vehi] = obj_ini.veh_wep3[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_upgrade[target_comp][vehi] = obj_ini.veh_upgrade[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_acc[target_comp][vehi] = obj_ini.veh_acc[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_hp[target_comp][vehi] = obj_ini.veh_hp[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_chaos[target_comp][vehi] = obj_ini.veh_chaos[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_lid[target_comp][vehi] = obj_ini.veh_lid[veh_data[0]][veh_data[1]];
-                    obj_ini.veh_wid[target_comp][vehi] = obj_ini.veh_wid[veh_data[0]][veh_data[1]];
+                squad.base_company = target_comp;
+            }
+        } else {
+            moveable = false;
+        }
+        //move individual
+        if (!moveable) {
+            unit.move_to_company(target_comp)
+        }
+    }
 
-                    destroy_vehicle(veh_data[0], veh_data[1]);
+    // The MAHREENS and TARGET/FROM seems to check out
+    for (var w = 0; w < array_length(obj_controller.display_unit); w++) {
+        if (!obj_controller.man_sel[w]) {
+            continue;
+        }
+        if (obj_controller.man[w] == "man" && is_struct(obj_controller.display_unit[w])) {
+            transfer_unit(w);
+        } else if (obj_controller.man[w] == "vehicle" && is_array(obj_controller.display_unit[w])) {
+            // This seems to execute the correct number of times
+            var veh_data = obj_controller.display_unit[w];
+            // Check if the target company is within the allowed range
+            if ((target_comp >= 1) && (target_comp <= 10)) {
+                obj_ini.veh_race[target_comp][vehi] = obj_ini.veh_race[veh_data[0]][veh_data[1]];
+                obj_ini.veh_loc[target_comp][vehi] = obj_ini.veh_loc[veh_data[0]][veh_data[1]];
+                obj_ini.veh_role[target_comp][vehi] = obj_ini.veh_role[veh_data[0]][veh_data[1]];
+                obj_ini.veh_wep1[target_comp][vehi] = obj_ini.veh_wep1[veh_data[0]][veh_data[1]];
+                obj_ini.veh_wep2[target_comp][vehi] = obj_ini.veh_wep2[veh_data[0]][veh_data[1]];
+                obj_ini.veh_wep3[target_comp][vehi] = obj_ini.veh_wep3[veh_data[0]][veh_data[1]];
+                obj_ini.veh_upgrade[target_comp][vehi] = obj_ini.veh_upgrade[veh_data[0]][veh_data[1]];
+                obj_ini.veh_acc[target_comp][vehi] = obj_ini.veh_acc[veh_data[0]][veh_data[1]];
+                obj_ini.veh_hp[target_comp][vehi] = obj_ini.veh_hp[veh_data[0]][veh_data[1]];
+                obj_ini.veh_chaos[target_comp][vehi] = obj_ini.veh_chaos[veh_data[0]][veh_data[1]];
+                obj_ini.veh_lid[target_comp][vehi] = obj_ini.veh_lid[veh_data[0]][veh_data[1]];
+                obj_ini.veh_wid[target_comp][vehi] = obj_ini.veh_wid[veh_data[0]][veh_data[1]];
 
-                    vehi++;
-                }
+                destroy_vehicle(veh_data[0], veh_data[1]);
+
+                vehi++;
             }
         }
     }

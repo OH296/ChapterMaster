@@ -521,7 +521,7 @@ function power_conditions_check(conditions_array) {
 
 /// @self Asset.GMObject.obj_creation
 function player_select_powers() {
-    if (race[100][17] != 0) {
+    if (player_role_data[eROLE.LIBRARIAN].available_to_player) {
         var _starting_powers = global.psy_disciplines_starting;
         var _discipline_index = array_get_index(_starting_powers, discipline);
         if (_discipline_index == -1) {

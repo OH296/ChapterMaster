@@ -138,16 +138,6 @@ mobi = array_create(11, []);
 /// @type {Array<Array<Struct.TTRPG_stats>>}
 TTRPG = array_create(11, []);
 
-load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
-    role[defaults_slot][_role_id] = _role_name;
-    wep1[defaults_slot][_role_id] = _wep1;
-    wep2[defaults_slot][_role_id] = _wep2;
-    armour[defaults_slot][_role_id] = _armour;
-    mobi[defaults_slot][_role_id] = _mobi;
-    gear[defaults_slot][_role_id] = _gear;
-    race[defaults_slot][_role_id] = 1;
-};
-
 check_number = 0;
 year_fraction = 0;
 year = 0;
@@ -180,10 +170,8 @@ serialize = function() {
     var _marines = array_create(0);
     for (var _coy = 0; _coy <= obj_ini.companies; _coy++) {
         for (var _mar = 0; _mar < array_length(obj_ini.TTRPG[_coy]); _mar++) {
-            if (name[_coy][_mar] != "") {
-                var _marine_json = jsonify_marine_struct(_coy, _mar, false);
-                array_push(_marines, _marine_json);
-            } 
+            var _marine_json = jsonify_marine_struct(_coy, _mar, false);
+            array_push(_marines, _marine_json);
         }
     }
 
@@ -221,7 +209,6 @@ serialize = function() {
         "temp",
         "serialize",
         "deserialize",
-        "load_default_gear",
         "role_spawn_buffs",
         "TTRPG",
         "squads",
