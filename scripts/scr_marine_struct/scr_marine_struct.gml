@@ -405,14 +405,14 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     static move_to_company(new_company){
         var _slot = find_company_open_slot(new_company);
         var _old_loc = [company, marine_number];
+        movement_after_math(new_company , _slot);
         obj_ini.TTRPG[new_company][_slot] = self;
         company = new_company;
         marine_number = _slot;
-        movement_after_math();
         var _old_company_length = array_length(obj_ini.TTRP[_old_loc[0]]);
         for (var i = _old_loc[1] + 1; i < _old_company_length ; i++){
             var _unit = fetch_unit[_old_loc[0] , i];
-            _unit.movement_after_math(_old_loc[0] ,i -1 );
+            _unit.movement_after_math(_old_loc[0] ,i -1, false);
             _unit.marine_number = i -1; 
         }
         array_delete(obj_ini.TTRP[_old_loc[0]] , _old_loc[1] , 1);

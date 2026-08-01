@@ -66,11 +66,8 @@ function transfer_marines() {
                             if (!is_struct(member_unit)) {
                                 continue;
                             }
+                            unit.move_to_company(target_comp, false);
                             scr_move_unit_info(member_unit.company, target_comp, member_unit.marine_number, mahreens, false);
-                            var _unit = fetch_unit([target_comp, mahreens]);
-                            if (!is_struct(_unit)) {
-                                continue;
-                            }
                             _unit.squad = move_squad;
                             squad.members[mem][0] = target_comp;
                             squad.members[mem][1] = mahreens;
@@ -83,7 +80,7 @@ function transfer_marines() {
                 }
                 //move individual
                 if (!moveable) {
-                    scr_move_unit_info(unit.company, target_comp, unit.marine_number, mahreens, true);
+                    unit.move_to_company(target_comp)
                     mahreens++;
                 }
                 var check = 0;
