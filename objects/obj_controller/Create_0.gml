@@ -75,6 +75,7 @@
 var _name_gen = global.name_generator;
 LOGGER.info("Creating Controller");
 scr_colors_initialize();
+sector_handler = new SectorHandler(); 
 target_navy_number = 5;
 global.defeat = 0;
 tutorial = 0;
@@ -553,20 +554,7 @@ stc_research = {
     ships: 0,
     research_focus: "wargear",
 };
-// ** Resets the years **
-check_number = 0;
-year_fraction = 0;
-year = 0;
-millenium = 0;
 
-if (instance_exists(obj_ini)) {
-    if (obj_ini.millenium != 0) {
-        check_number = obj_ini.check_number;
-        year_fraction = 0; // 84 per turn
-        year = obj_ini.year;
-        millenium = obj_ini.millenium;
-    }
-}
 // ** Penitent and blood debt reset **
 penitent = 0;
 penitent_current = 0;
@@ -1393,7 +1381,7 @@ if (global.load == -1) {
 
 // **** INTRO SCREEN ****
 #region Intro Scroll
-temp[30] = string(check_number) + " " + string(year_fraction) + " " + string(year) + ".M" + string(millenium); // Date
+temp[30] = sector_handler.date(); // Date
 temp[31] = string_upper(adept_name); // Adept name
 temp[32] = string_upper(obj_ini.name[0][0]); // Master name
 temp[33] = string_upper(scr_thought()); // Thought of the day

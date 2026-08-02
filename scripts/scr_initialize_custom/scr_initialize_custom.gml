@@ -1997,6 +1997,7 @@ function scr_initialize_custom() {
     //loads up marine traits potential modding potential;
     // initialize_marine_traits();
 
+    var _game_year = obj_controller.sector_handler.game_year;
     #region Chapter HQ
     for (var c = 0; c < 11; c++) {
         for (var i = 0; i < 501; i++) {
@@ -2009,7 +2010,9 @@ function scr_initialize_custom() {
             gear[c][i] = "";
             mobi[c][i] = "";
             TTRPG[c][i] = new TTRPG_stats("chapter", c, i, "blank");
-            TTRPG[c][i].age = ((millenium * 1000) + year) - 10;
+            var _unit = TTRPG[c][i];
+            _unit.born = _game_year - 50;
+            _unit.marine_ascension = _game_year - 10;
         }
     }
 

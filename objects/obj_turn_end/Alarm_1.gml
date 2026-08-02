@@ -98,15 +98,5 @@ if (popups_end == 1) {
     obj_controller.menu = 0;
     combating = 0;
 
-    with (obj_controller) {
-        year_fraction += 84;
-        if (year_fraction > 999) {
-            year += 1;
-            year_fraction = 0;
-        }
-        if (year >= 1000) {
-            millenium += 1;
-            year -= 1000;
-        }
-    }
+    obj_controller.sector_handler.increment_date();
 }

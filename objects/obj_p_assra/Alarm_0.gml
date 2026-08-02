@@ -7,7 +7,7 @@ for (o = 0; o < array_length(origin.board_co); o++) {
     if (!is_struct(unit)) {
         continue;
     }
-    if ((unit.hp() <= -15) && (obj_ini.race[co][i] == 1) && (unit.name() != "")) {
+    if (unit.hp() <= -15 && obj_ini.race[co][i] == 1) {
         var seed_lost = 0;
         if (apothecary <= 0) {
             if (unit.IsSpecialist(SPECIALISTS_STANDARD)) {
@@ -18,13 +18,7 @@ for (o = 0; o < array_length(origin.board_co); o++) {
 
             if (apothecary_had > 0) {
                 if (unit.base_group == "astartes") {
-                    var age = unit.age;
-                    if ((age <= ((obj_controller.millenium * 1000) + obj_controller.year) - 10) && (obj_ini.zygote == 0)) {
-                        seed_lost += 1;
-                    }
-                    if (age <= ((obj_controller.millenium * 1000) + obj_controller.year) - 5) {
-                        seed_lost += 1;
-                    }
+                    seed_lost = unit.recoverable_geneseed();
                 }
             }
 

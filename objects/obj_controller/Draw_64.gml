@@ -166,17 +166,7 @@ if (!zoomed && !zui) {
     draw_text_transformed(1520 + new_banner_x, 208, string(global.chapter_name), chapter_master_name_width, 1, 0);
     draw_text_transformed(1520.5 + new_banner_x, 208.5, string(global.chapter_name), chapter_master_name_width, 1, 0);
     // Shows the date to be displayed
-    var yf = "";
-    if (year_fraction < 10) {
-        yf = "00" + string(year_fraction);
-    }
-    if ((year_fraction >= 10) && (year_fraction < 100)) {
-        yf = "0" + string(year_fraction);
-    }
-    if (year_fraction >= 100) {
-        yf = string(year_fraction);
-    }
-    draw_text(1520 + new_banner_x, 228, string(check_number) + " " + string(yf) + " " + string(year) + ".M" + string(millenium));
+    draw_text(1520 + new_banner_x, 228, sector_handler.date());
     // Shows the income on the menu
     var inc = "";
     if (income_last > 0) {
