@@ -986,7 +986,7 @@ function scr_initialize_custom() {
     if (obj_creation.chapter_year != 0) {
         year = obj_creation.chapter_year;
     }
-    millenium = 41;
+    millenium = obj_creation.millenium;
 
     #region Determine Total Number of Marines per Company and Role
     var intolerant = 0;

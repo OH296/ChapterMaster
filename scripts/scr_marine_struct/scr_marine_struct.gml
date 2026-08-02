@@ -102,7 +102,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     job = "none";
     manage_tags = [];
     spawn_data = other_spawn_data;
-    born = obj_controller.sector_handler.game_year();
+
+    
+    if (instance_exists(obj_controller)){
+        born = obj_controller.sector_handler.game_year();
+    } else { 
+        born = 4000;
+    }
 
     // Core RPG Stats
     constitution = 0;

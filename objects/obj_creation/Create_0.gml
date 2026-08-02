@@ -30,6 +30,8 @@ custom_y = 463;
 // y coord of Other section heading
 other_y = 593;
 
+millenium = 41;
+
 var view = new DebugView("Obj Creation Grid", self);
 view.add_section("Icon Grid").add_slider_int("max_cols", 1, 15).add_slider_int("icon_width", 1, 100).add_slider_int("icon_height", 1, 100).add_slider_int("icon_grid_left_edge", 1, 1000).add_slider_int("icon_gap_y", 1, 300).add_slider_int("icon_gap_x", 1, 300).add_slider_int("icon_row_gap", 1, 300).add_section("Heading Positions").add_slider_int("founding_y", 1, 1000).add_slider_int("successor_y", 1, 1000).add_slider_int("custom_y", 1, 1000).add_slider_int("other_y", 1, 1000).hide();
 

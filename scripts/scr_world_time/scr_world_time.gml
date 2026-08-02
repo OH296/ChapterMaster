@@ -12,7 +12,7 @@ function SectorHandler() constructor{
 	static date = function(){
         var yf = "";
         if (year_fraction < 10) {
-            yf = "00" + string(obj_controller.year_fraction);
+            yf = "00" + string(year_fraction);
         }
         if ((year_fraction >= 10) && (year_fraction < 100)) {
             yf = "0" + string(year_fraction);
@@ -40,6 +40,10 @@ function SectorHandler() constructor{
 	}
 
 	static get_time_from_current_year = function(age_from_year){
+		return game_year() - age_from_year;
+	}
+
+	static get_creation_year = function(age){
 		return game_year() - age;
 	}
 }

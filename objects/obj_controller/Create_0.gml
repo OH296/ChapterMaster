@@ -573,10 +573,10 @@ if (instance_exists(obj_ini)) {
     penitent_max = obj_ini.penitent_max;
 
     if (scr_has_disadv("Blood Debt")) {
-        penitent_end = millenium + year + (obj_ini.penitent_end / 12);
+        penitent_end = sector_handler.game_year() + (obj_ini.penitent_end / 12);
         blood_debt = 1;
     } else {
-        penitent_end = millenium + year + obj_ini.penitent_end;
+        penitent_end = sector_handler.game_year() + obj_ini.penitent_end;
     }
 
     if (string_count(obj_ini.TTRPG[0][0].specials, "$") > 0) {
