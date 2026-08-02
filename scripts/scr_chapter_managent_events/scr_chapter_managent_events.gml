@@ -272,12 +272,8 @@ function new_forge_master_chosen(pick) {
         }
         reset_popup_options();
         if (pick.company > 0) {
-            for (var i = 1; i < 500; i++) {
-                if (obj_ini.name[0][i] == "") {
-                    scr_move_unit_info(pick.company, 0, pick.marine_number, i);
-                    break;
-                }
-            }
+            var _company_slot = find_company_open_slot(0);
+            scr_move_unit_info(pick.company, 0, pick.marine_number, _company_slot);
         }
     }
 }

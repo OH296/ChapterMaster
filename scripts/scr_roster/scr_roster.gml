@@ -663,7 +663,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         col = obj_controller.bat_command_column;
         new_combat.important_dudes++;
         new_combat.big_mofo = 1;
-        if (string_count("0", obj_ini.spe[cooh][va]) > 0) {
+        if (string_count("0", unit.specials) > 0) {
             new_combat.chapter_master_psyker = 1;
         } else {
             new_combat.chapter_master_psyker = 0;

@@ -118,29 +118,23 @@ veh_acc = array_create_2d(_max_companies, _max_vehicles, "");
 defaults_slot = 100;
 
 /// @type {Array<Array<Real>>}
-race = array_create_2d(11, 501, 0);
+race = array_create(11, []);
 /// @type {Array<Array<String>>}
-name = array_create_2d(11, 501, "");
+name = array_create(11, []);
 /// @type {Array<Array<String>>}
-role = array_create_2d(11, 501, "");
+role = array_create(11, []);
 /// @type {Array<Array<String>>}
-wep1 = array_create_2d(11, 501, "");
+wep1 = array_create(11, []);
 /// @type {Array<Array<String>>}
-spe = array_create_2d(11, 501, "");
+wep2 = array_create(11, []);
 /// @type {Array<Array<String>>}
-wep2 = array_create_2d(11, 501, "");
+armour = array_create(11, []);
 /// @type {Array<Array<String>>}
-armour = array_create_2d(11, 501, "");
+gear = array_create(11, []);
 /// @type {Array<Array<String>>}
-gear = array_create_2d(11, 501, "");
-/// @type {Array<Array<String>>}
-mobi = array_create_2d(11, 501, "");
-/// @type {Array<Array<Real>>}
-age = array_create_2d(11, 501, 0);
-/// @type {Array<Array<Real>>}
-god = array_create_2d(11, 501, 0);
+mobi = array_create(11, []);
 /// @type {Array<Array<Struct.TTRPG_stats>>}
-TTRPG = array_create_2d(11, 501, undefined);
+TTRPG = array_create(11, []);
 
 load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
     role[defaults_slot][_role_id] = _role_name;
@@ -182,14 +176,12 @@ if (global.load == -1) {
 /// Called from save function to take all object variables and convert them to a json savable format and return it
 serialize = function() {
     var _marines = array_create(0);
-    for (var _coy = 0; _coy <= 10; _coy++) {
-        for (var _mar = 0; _mar <= 500; _mar++) {
+    for (var _coy = 0; _coy <= obj_ini.companies; _coy++) {
+        for (var _mar = 0; _mar < array_length(obj_ini.TTRPG[_coy]); _mar++) {
             if (name[_coy][_mar] != "") {
                 var _marine_json = jsonify_marine_struct(_coy, _mar, false);
                 array_push(_marines, _marine_json);
-            } else if (_mar > 0 && _mar <= 499 && name[_coy][_mar + 1] == "") {
-                break;
-            }
+            } 
         }
     }
 

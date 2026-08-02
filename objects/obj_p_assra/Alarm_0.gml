@@ -18,7 +18,7 @@ for (o = 0; o < array_length(origin.board_co); o++) {
 
             if (apothecary_had > 0) {
                 if (unit.base_group == "astartes") {
-                    var age = obj_ini.age[co][i];
+                    var age = unit.age;
                     if ((age <= ((obj_controller.millenium * 1000) + obj_controller.year) - 10) && (obj_ini.zygote == 0)) {
                         seed_lost += 1;
                     }

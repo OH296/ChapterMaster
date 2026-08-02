@@ -28,7 +28,6 @@ function scr_kill_unit(company, unit_slot) {
 }
 
 function scr_wipe_unit(company, unit_slot) {
-    array_set(obj_ini.spe[company], unit_slot, "");
     array_set(obj_ini.race[company], unit_slot, 0);
     array_set(obj_ini.name[company], unit_slot, "");
     array_set(obj_ini.wep1[company], unit_slot, "");
@@ -36,8 +35,6 @@ function scr_wipe_unit(company, unit_slot) {
     array_set(obj_ini.role[company], unit_slot, "");
     array_set(obj_ini.armour[company], unit_slot, "");
     array_set(obj_ini.gear[company], unit_slot, "");
-    array_set(obj_ini.god[company], unit_slot, 0);
-    array_set(obj_ini.age[company], unit_slot, 0);
     array_set(obj_ini.mobi[company], unit_slot, "");
     array_set(obj_ini.TTRPG[company], unit_slot, undefined);
 }
@@ -55,10 +52,11 @@ function kill_and_recover(company, unit_slot, equipment = true, gene_seed_collec
         unit.alter_equipment(strip, false, true);
     }
     if (gene_seed_collect && unit.base_group == "astartes") {
-        if (unit.age() > 30 && !obj_ini.zygote && !obj_ini.doomed) {
+
+        if (unit.marine_ascension > 30 && !obj_ini.zygote && !obj_ini.doomed) {
             obj_controller.gene_seed += 1;
         }
-        if (unit.age() > 50 && !obj_ini.doomed) {
+        if (unit.marine_ascension > 100 && !obj_ini.doomed) {
             obj_controller.gene_seed += 1;
         }
     }

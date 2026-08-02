@@ -301,7 +301,7 @@ function after_combat_recover_marine_gene_seed(unit) {
     }
 
     if (unit.base_group == "astartes") {
-        var _birthday = unit.age();
+        var _birthday = unit.age;
         var _current_year = (obj_controller.millenium * 1000) + obj_controller.year;
         var _seed_harvestable = 0;
         var _seed_lost = 0;

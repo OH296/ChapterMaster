@@ -236,8 +236,8 @@ function scr_toggle_reclu() {
                 // Get list of jailed marines
                 var p = 0;
                 for (var c = 0; c < 11; c++) {
-                    for (var e = 0; e < array_length(obj_ini.god[c]); e++) {
-                        if (obj_ini.god[c][e] == 10) {
+                    for (var e = 0; e < array_length(obj_ini.TTRPG[c]); e++) {
+                        if (obj_ini.TTRPG[c][e].god_status == 10) {
                             p += 1;
                             penit_co[p] = c;
                             penit_id[p] = e;

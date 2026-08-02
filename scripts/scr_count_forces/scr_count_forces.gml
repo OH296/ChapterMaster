@@ -6,7 +6,6 @@ function scr_count_forces(_unit_location, _target_location, _is_planet, _return_
     var _marine_count = 0;
     var _vehicle_count = 0;
     var _max_companies = 11;
-    var _safety_limit = 500;
 
     for (var _company = 0; _company < _max_companies; _company++) {
         var _veh_race = obj_ini.veh_race[_company];
@@ -14,7 +13,7 @@ function scr_count_forces(_unit_location, _target_location, _is_planet, _return_
         var _veh_wid = obj_ini.veh_wid[_company];
         var _veh_len = array_length(_veh_race);
 
-        for (var i = 0; i < _safety_limit; i++) {
+        for (var i = 0; i < array_length(obj_ini.TTRPG[_company]); i++) {
             var _unit = fetch_unit([_company, i]);
             var _marine_exists = is_struct(_unit) && _unit.name() != "";
             var _vehicle_exists = i < _veh_len;

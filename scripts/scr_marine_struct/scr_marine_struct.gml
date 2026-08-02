@@ -256,7 +256,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                         obj_controller.turn,
                     ],
                 ]; //marines_promotion and demotion history
-                marine_ascension = (obj_controller.millenium * 1000) + obj_controller.year; // on what day did this marine begin to exist
+                marine_ascension = obj_controller.turn; // on what day did this marine begin to exist
             } else {
                 role_history = [];
                 marine_ascension = 0; // on what turn did this marine begin to exist
@@ -922,14 +922,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return true;
     };
 
-    static age = function() {
-        var real_age = obj_ini.age[company][marine_number];
-        return real_age;
-    }; // age
-
-    static update_age = function(new_val) {
-        obj_ini.age[company][marine_number] = new_val;
-    };
+    age = 0;
 
     //TODO build epithets in to marine profile
     static add_epithet = function(epithet) {
@@ -941,7 +934,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
         array_push(epithets, epithet);
     };
-
     static name = function() {
         return obj_ini.name[company][marine_number];
     }; // get marine name
@@ -1048,12 +1040,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return obj_ini.artifact[wep];
     };
 
-    static specials = function() {
-        return obj_ini.spe[company][marine_number];
-    };
+    specials = "";
 
     static specials_array = function() {
-        var _specials_array = string_split(obj_ini.spe[company][marine_number], "|", true);
+        var _specials_array = string_split(specials, "|", true);
         return _specials_array;
     };
 
@@ -1070,7 +1060,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         var _powers_known_count = 0;
         var _discipline_powers_max = 0;
         var _powers_learned = 0;
-        var _abilities_string = specials();
+        var _abilities_string = specials;
 
         var _discipline_prefix = get_discipline_data(obj_ini.psy_powers, "prefix");
         var _discipline_powers = get_discipline_data(obj_ini.psy_powers, "powers");
@@ -1084,7 +1074,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             if (string_count(string(_power_index), _abilities_string) == 0) {
                 _powers_known_count++;
                 _powers_learned++;
-                obj_ini.spe[company][marine_number] += string(_discipline_prefix) + string(_power_index) + "|";
+                specials += string(_discipline_prefix) + string(_power_index) + "|";
                 array_push(powers_known, _discipline_powers[_power_index]);
             }
         }
@@ -2004,12 +1994,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static in_jail = function() {
-        return god_status() >= 10;
+        return god_status >= 10;
     };
 
-    static god_status = function() {
-        return obj_ini.god[company][marine_number];
-    };
+    god_status = 0;
 
     static forge_point_generation = unit_forge_point_generation;
 
@@ -2022,7 +2010,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     static roll_age = scr_marine_spawn_age;
 
     static roll_experience = function() {
-        var _age_bonus = age();
+        var _age_bonus = age;
         var _gauss_sd_mod = 14;
 
         var _exp = _age_bonus;
@@ -2031,7 +2019,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static assign_reactionary_traits = function() {
-        var _age = age();
+        var _age = age;
         var _exp = experience;
         var _total_score = _age + _exp;
 

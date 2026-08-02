@@ -10,7 +10,6 @@ function scr_move_unit_info(start_company, end_company, start_slot, end_slot, ev
     if (eval_squad) {
         unit.movement_after_math(end_company, end_slot);
     }
-    obj_ini.spe[end_company][end_slot] = obj_ini.spe[start_company][start_slot];
     obj_ini.race[end_company][end_slot] = obj_ini.race[start_company][start_slot];
     obj_ini.name[end_company][end_slot] = obj_ini.name[start_company][start_slot];
     obj_ini.wep1[end_company][end_slot] = obj_ini.wep1[start_company][start_slot];
@@ -18,8 +17,6 @@ function scr_move_unit_info(start_company, end_company, start_slot, end_slot, ev
     obj_ini.wep2[end_company][end_slot] = obj_ini.wep2[start_company][start_slot];
     obj_ini.gear[end_company][end_slot] = obj_ini.gear[start_company][start_slot];
     obj_ini.armour[end_company][end_slot] = obj_ini.armour[start_company][start_slot];
-    obj_ini.god[end_company][end_slot] = obj_ini.god[start_company][start_slot];
-    obj_ini.age[end_company][end_slot] = obj_ini.age[start_company][start_slot];
     obj_ini.mobi[end_company][end_slot] = obj_ini.mobi[start_company][start_slot];
 
     var _temp_struct = fetch_unit([end_company, end_slot]);

@@ -707,8 +707,9 @@ function scr_random_event(execute_now) {
         var psyker_intolerant = scr_has_disadv("Psyker Intolerant");
         var has_chief_psyker = scr_role_count("Chief " + string(obj_ini.role[100][17]), "") >= 1;
         var cm_is_psyker = false;
-        for (var i = 1; i < 100; i++) {
-            if (obj_ini.role[0][i] == obj_ini.role[100][eROLE.CHAPTERMASTER] && string_count("0", obj_ini.spe[0][i]) > 0) {
+        for (var i = 0; i < array_length(TTRPG[0]); i++) {
+            var _unit = fetch_unit([0 ,i]);
+            if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER] && string_count("0", _unit.specials) > 0) {
                 cm_is_psyker = true;
                 break;
             }

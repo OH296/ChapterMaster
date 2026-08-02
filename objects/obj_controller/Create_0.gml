@@ -591,7 +591,7 @@ if (instance_exists(obj_ini)) {
         penitent_end = millenium + year + obj_ini.penitent_end;
     }
 
-    if (string_count(obj_ini.spe[0][1], "$") > 0) {
+    if (string_count(obj_ini.TTRPG[0][0].specials, "$") > 0) {
         born_leader = 1;
     }
 }

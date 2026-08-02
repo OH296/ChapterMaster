@@ -1473,13 +1473,10 @@ function scr_initialize_custom() {
         name[_idx] = array_create(_len, "");
         role[_idx] = array_create(_len, "");
         wep1[_idx] = array_create(_len, "");
-        spe[_idx] = array_create(_len, "");
         wep2[_idx] = array_create(_len, "");
         armour[_idx] = array_create(_len, "");
         gear[_idx] = array_create(_len, "");
         mobi[_idx] = array_create(_len, "");
-        age[_idx] = array_create(_len, _age_val);
-        god[_idx] = array_create(_len, 0);
     };
 
     _init_marine_row(0, 500, _current_age);
@@ -2007,15 +2004,12 @@ function scr_initialize_custom() {
             name[c][i] = "";
             role[c][i] = "";
             wep1[c][i] = "";
-            spe[c][i] = "";
             wep2[c][i] = "";
             armour[c][i] = "";
-            chaos[c][i] = 0;
             gear[c][i] = "";
             mobi[c][i] = "";
-            age[c][i] = ((millenium * 1000) + year) - 10;
-            god[c][i] = 0;
             TTRPG[c][i] = new TTRPG_stats("chapter", c, i, "blank");
+            TTRPG[c][i].age = ((millenium * 1000) + year) - 10;
         }
     }
 
@@ -2029,7 +2023,7 @@ function scr_initialize_custom() {
         chapter_master.add_bionics("none", "standard", false);
     }
 
-    spe[_company_i][_marine_i] = "";
+    chapter_master.specials = "";
     chapter_master.add_trait("lead_example");
 
     //builds in which of the three chapter master types your CM is
@@ -2037,12 +2031,12 @@ function scr_initialize_custom() {
     switch (obj_creation.chapter_master_specialty) {
         case 1:
             chapter_master.add_exp(550);
-            spe[_company_i][_marine_i] += "$";
+            chapter_master.specials += "$";
             chapter_master.add_trait("charismatic");
             break;
         case 2:
             chapter_master.add_exp(650);
-            spe[_company_i][_marine_i] += "@";
+            chapter_master.specials += "@";
             chapter_master.add_trait("paragon");
             break;
         case 3:
