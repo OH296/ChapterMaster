@@ -140,6 +140,7 @@ function scr_marine_spawn_age() {
 
     born = obj_ini.sector_handler.get_creation_year(_age);
 
+    marine_ascension = born + 17;
 }
 
 /// @self Struct.TTRPG_stats
