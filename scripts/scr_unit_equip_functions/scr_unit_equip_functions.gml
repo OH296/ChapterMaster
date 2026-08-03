@@ -97,7 +97,7 @@ function scr_update_unit_armour(new_armour, from_armoury = true, to_armoury = tr
     }
 
     var portion = hp_portion();
-    obj_ini.armour[company][marine_number] = is_artifact ? artifact_id : new_armour;
+    armour1 = is_artifact ? artifact_id : new_armour;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
@@ -204,7 +204,7 @@ function scr_update_unit_weapon_one(new_weapon, from_armoury = true, to_armoury 
         }
     }
 
-    obj_ini.wep1[company][marine_number] = is_artifact ? artifact_id : new_weapon;
+    wep1 = is_artifact ? artifact_id : new_weapon;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
@@ -262,7 +262,7 @@ function scr_update_unit_weapon_two(new_weapon, from_armoury = true, to_armoury 
         }
     }
 
-    obj_ini.wep2[company][marine_number] = is_artifact ? artifact_id : new_weapon;
+    wep2 = is_artifact ? artifact_id : new_weapon;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
@@ -328,7 +328,7 @@ function scr_update_unit_gear(new_gear, from_armoury = true, to_armoury = true, 
     }
 
     var portion = hp_portion();
-    obj_ini.gear[company][marine_number] = is_artifact ? artifact_id : new_gear;
+    gear1 = is_artifact ? artifact_id : new_gear;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
@@ -427,7 +427,7 @@ function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, t
     }
 
     var portion = hp_portion();
-    obj_ini.mobi[company][marine_number] = is_artifact ? artifact_id : new_mobility_item;
+    mobi1 = is_artifact ? artifact_id : new_mobility_item;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);

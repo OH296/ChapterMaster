@@ -2206,10 +2206,14 @@ function DummyMarine() constructor {
         return "jeff";
     };
 
+    static role(){
+        return obj_creation.livery_picker.role_set > 0 ? obj_creation.livery_picker.role_set : eROLE.TACTICAL;
+    }
+
     static role = function() {
         with (obj_creation) {
             if (obj_creation.livery_selection_options.current_selection == 2) {
-                return role[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
+                return player_role_data[role()].role;
             } else {
                 return player_role_data[eROLE.TACTICAL].role;
             }
@@ -2218,7 +2222,7 @@ function DummyMarine() constructor {
 
     static weapon_one = function() {
         with (obj_creation) {
-            return wep1[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
+            return player_role_data[role()].wep1;
         }
     };
 
@@ -2228,7 +2232,7 @@ function DummyMarine() constructor {
 
     static weapon_two = function() {
         with (obj_creation) {
-            return wep2[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
+            return player_role_data[role()].wep2;
         }
     };
 
@@ -2240,7 +2244,7 @@ function DummyMarine() constructor {
         var _armour = "";
         with (obj_creation) {
             if (!livery_picker.freeze_armour) {
-                _armour = armour[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
+                _armour = player_role_data[role()].armour;
                 if (array_contains(armours, _armour) || _armour == STR_ANY_POWER_ARMOUR) {
                     _armour = array_random_element(armours);
                 } else if (array_contains(global.list_terminator_armour, _armour) || _armour == STR_ANY_POWER_ARMOUR) {
@@ -2264,13 +2268,13 @@ function DummyMarine() constructor {
 
     static gear = function() {
         with (obj_creation) {
-            return gear[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
+            return player_role_data[role()].gear;
         }
     };
 
     static mobility_item = function() {
         with (obj_creation) {
-            return mobi[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
+            return player_role_data[role()].mobi;
         }
     };
 

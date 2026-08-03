@@ -25,24 +25,29 @@ function scr_event_gossip(argument0) {
         p += 1;
         gossip[p] = "past_battles";
     }
-    if (string_count("&", obj_ini.armour[attend_co[argument0]][attend_id[argument0]]) > 0) {
+
+    var _comp = attend_co[argument0];
+    var _num = attend_id[argument0];
+    var _unit = fetch_unit([_comp, _num]);
+
+    if (is_struct(_unit.armour(true))) {
         p += 1;
         gossip[p] = "artifact_armour";
     }
-    if (string_count("&", obj_ini.wep1[attend_co[argument0]][attend_id[argument0]]) > 0) {
+    if (is_struct(_unit.weapon_one(true))) {
         p += 1;
         gossip[p] = "artifact_wep";
     }
-    if (string_count("&", obj_ini.wep2[attend_co[argument0]][attend_id[argument0]]) > 0) {
+    if (is_struct(_unit.weapon_two(true))){
         p += 1;
         gossip[p] = "artifact_wep";
     }
     // if (string_count("&",obj_ini.gear[attend_co[argument0],attend_id[argument0]])>0){p+=1;gossip[p]="artifact_gear";}
-    if (obj_ini.mobi[attend_co[argument0]][attend_id[argument0]] == "Bike") {
+    if (_unit.mobility_item() == "Bike") {
         p += 1;
         gossip[p] = "mah_bike";
     }
-    if (obj_ini.mobi[attend_co[argument0]][attend_id[argument0]] == "Jump Pack") {
+    if (_unit.mobility_item() == "Jump Pack") {
         p += 1;
         gossip[p] = "mah_jump";
     }

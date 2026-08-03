@@ -535,8 +535,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
     };
 
+    mobi1 = "";
     static mobility_item = function(raw = false) {
-        var wep = obj_ini.mobi[company][marine_number];
+        var wep = mobi1;
         if (is_string(wep) || raw) {
             return wep;
         }
@@ -1060,9 +1061,10 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         ];
     };
 
+    wep2 = "";
     static weapon_two = function(raw = false) {
-        var wep = obj_ini.wep2[company][marine_number];
-        if (is_string(wep) || raw) {
+        var _wep = wep2;
+        if (is_string(_wep) || raw) {
             return wep;
         }
         var arti = fetch_artifact(wep);

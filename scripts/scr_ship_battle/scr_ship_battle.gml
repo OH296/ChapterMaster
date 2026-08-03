@@ -171,7 +171,7 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         if (co == 10) {
                             col = obj_controller.bat_scout_column;
                         }
-                        if (obj_ini.mobi[co][v] == "Jump Pack") {
+                        if (unit.mobility_item == "Jump Pack") {
                             col = obj_controller.bat_assault_column;
                         }
                     }

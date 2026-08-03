@@ -602,7 +602,9 @@ function add_unit_to_battle(unit, meeting, is_local) {
             if (company == 10) {
                 col = obj_controller.bat_scout_column;
             }
-            if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+
+            //TODO update to check item tag for jup
+            if (unit.mobility_item() == "Jump Pack") {
                 col = obj_controller.bat_assault_column;
             }
         }
@@ -654,7 +656,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         if (company == 10) {
             col = obj_controller.bat_scout_column;
         }
-        if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+        if (unit.mobility_item() == "Jump Pack") {
             col = obj_controller.bat_assault_column;
         }
     }
