@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_add_artifact",
+  "%Name":"NotificationAlert",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_add_artifact",
+  "name":"NotificationAlert",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Constructors",
+    "path":"folders/Scripts/Constructors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
