@@ -181,7 +181,7 @@ function scr_unit_detail_text() {
                         mutation_string += "Suffers from a faulty Ossmodula, and takes longer to heal from injuries.";
                         break;
                     case "zygote":
-                        mutation_string += "One of his Zygotes is faulty or missing. And there for will produce no extra gene seed";
+                        mutation_string += "One of his Zygotes is faulty or missing, and therefore will produce no extra gene seed other than the one implanted.";
                         break;
                     case "betchers":
                         mutation_string += "Missing his Betchers Gland and therefore cannot spit acid.";
