@@ -186,7 +186,7 @@ try {
                         }
                     }
 
-                    if (string_count("&", obj_ini.armour[co][i]) > 0) {
+                    if (string_count("&", _armour) > 0) {
                         yes = true;
                     } else if (_armour == req_armour) {
                         yes = true;

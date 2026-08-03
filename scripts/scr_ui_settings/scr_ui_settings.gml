@@ -934,7 +934,7 @@ function scr_draw_role_settings_ui() {
             var _but = _buttons[i];
             var _allow_click = true;
             if (i == eEQUIPMENT_SLOT.GEAR) {
-                var _armour = obj_ini.armour[100][_index];
+                var _armour = obj_ini.player_role_data[_index].armour;
                 var _armour_tags = gear_weapon_data("armour", _armour, "tags");
                 if (_armour_tags != 0) {
                     if (array_contains(_armour_tags, "terminator") || array_contains(_armour_tags, "dreadnought")) {

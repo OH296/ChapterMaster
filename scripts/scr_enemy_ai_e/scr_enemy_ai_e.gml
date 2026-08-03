@@ -742,27 +742,28 @@ function scr_enemy_ai_e() {
 
         var otm = 0;
         var master_present = false;
-        for (var co = 0; co <= 10; co++) {
-            for (var i = 1; i <= 200; i++) {
+        var _is_a_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
+        for (var co = 0; co <= 10 && _is_a_chaos_meeting; co++) {
+            for (var i = 0; i <= array_length(obj_ini.TTRPG[co]); i++) {
                 var _unit = fetch_unit([co, i]);
                 if (!is_struct(_unit)) {
                     continue;
                 }
-                var _is_unit_real_and_here = _unit.role() != "" && _unit.location_string == name;
-                var _is_this_a_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
-                var _unit_does_not_have_dreadnought_role = _unit.role() != obj_ini.player_role_data[eROLE.DREADNOUGHT].role;
-                var _unit_is_not_venerable = _unit.role() != "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role);
-                var _unit_does_not_have_dreadnought_armour = string_count("Dread", obj_ini.armour[co][i]) == 0;
-                var _is_chapter_master = _unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role;
-                if (_is_unit_real_and_here && _is_this_a_chaos_meeting && _unit_does_not_have_dreadnought_role && _unit_is_not_venerable && (_unit_does_not_have_dreadnought_armour || _is_chapter_master)) {
-                    _meeting.dudes += 1;
-                    otm = _meeting.dudes;
-                    _meeting.present[otm] = 1;
-                    _meeting.co[otm] = co;
-                    _meeting.ide[otm] = i;
-                    if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
-                        master_present = true;
-                    }
+                if (_unit.is_dreadnought() && !role_compare(_unit, eROLE.CHAPTERMASTER)){
+                    continue;
+                }
+                if (_unit.location_string != name){
+                    continue;
+                }
+
+
+                _meeting.dudes += 1;
+                otm = _meeting.dudes;
+                _meeting.present[otm] = 1;
+                _meeting.co[otm] = co;
+                _meeting.ide[otm] = i;
+                if (co <= 0) {
+                    master_present = role_compare(_unit, eROLE.CHAPTERMASTER);
                 }
             }
         }
