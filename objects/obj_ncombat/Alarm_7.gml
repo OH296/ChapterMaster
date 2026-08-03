@@ -19,8 +19,9 @@ try {
                     var nco = dude_co[q];
                     var nid = dude_id[q];
                     cleann[nco] = true;
+                    var _unit = obj_ini.TTRPG[nco][nid];
 
-                    commandy = is_specialist(obj_ini.role[nco][nid]);
+                    commandy = _unit.IsSpecialist();
                     if (commandy == true) {
                         obj_controller.command -= 1;
                     }
@@ -28,7 +29,7 @@ try {
                         obj_controller.marines -= 1;
                     }
 
-                    obj_ncombat.world_size += scr_unit_size(obj_ini.armour[nco][nid], obj_ini.role[nco][nid], true, obj_ini.mobi[nco][nid]);
+                    obj_ncombat.world_size += scr_unit_size(_unit.armour(), _unit.role(), true, _unit.mobility_item());
 
                     var recover = !obj_ncombat.defeat;
                     kill_and_recover(nco, nid, recover, recover);

@@ -263,10 +263,6 @@ function scr_toggle_lib() {
             }
             if (menu != eMENU.LIBRARIUM) {
                 menu = eMENU.LIBRARIUM;
-
-                if ((artifacts > 0) && (menu_artifact == 0)) {
-                    menu_artifact = 1;
-                }
                 temp[36] = scr_role_count(obj_ini.player_role_data[eROLE.LIBRARIAN].role, "");
                 temp[37] = scr_role_count("Codiciery", "");
                 temp[38] = scr_role_count("Lexicanum", "");
