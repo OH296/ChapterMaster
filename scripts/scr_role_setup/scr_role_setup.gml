@@ -1,6 +1,19 @@
 
 
-function setup_default_gears = function(){
+function role_data_set(){
+    return {
+        role : "",
+        wep1 : "",
+        wep2 : "",
+        armour : "",
+        mobi : "",
+        gear : "",
+        available_to_player : false
+    }
+}
+
+function setup_default_gears (){
+    default_role_data = [];
     load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
         default_role_data[_role_id] = {
             role : _role_name,
@@ -9,9 +22,11 @@ function setup_default_gears = function(){
             armour : _armour,
             mobi : _mobi,
             gear : _gear,
-            available_to_player : 1
-        }}
+            available_to_player : true
+        }
     };
+
+    load_default_gear(eROLE.CHAPTERMASTER, "Chapter Master", "Power Sword", "Bolter", "Artificer Armour", "", "");
     load_default_gear(eROLE.HONOURGUARD, "Honour Guard", "Power Sword", "Bolter", "Artificer Armour", "", "");
     load_default_gear(eROLE.VETERAN, "Veteran", "Combiflamer", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.TERMINATOR, "Terminator", "Power Fist", "Storm Bolter", "Terminator Armour", "", "");
@@ -29,6 +44,12 @@ function setup_default_gears = function(){
     load_default_gear(eROLE.LIBRARIAN, "Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
     load_default_gear(eROLE.SERGEANT, "Sergeant", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.VETERANSERGEANT, "Veteran Sergeant", "Chainsword", "Plasma Pistol", STR_ANY_POWER_ARMOUR, "", "");
+
+    for (var i = 0; i < array_length(player_role_data); i++) {
+        if (default_role_data[i] == 0){
+            default_role_data[i] = role_data_set();
+        }
+    }
 }
 
 function update_role_data_wth_defaults(){
@@ -188,7 +209,7 @@ function scr_role_setup() {
         draw_set_font(fnt_40k_14b);
         draw_set_halign(fa_right);
         var _apoths_allowed = player_role_data[eROLE.APOTHECARY].available_to_player;
-        var _chaps_allowed = player_role_data[eROLE.CHAPLAINA].available_to_player;
+        var _chaps_allowed = player_role_data[eROLE.CHAPLAIN].available_to_player;
         var _libs_allowed = player_role_data[eROLE.LIBRARIAN].available_to_player;
         var _techs_allowed = player_role_data[eROLE.TECHMARINE].available_to_player;
 
@@ -196,7 +217,7 @@ function scr_role_setup() {
         if (_apoths_allowed) {
             draw_text(594, 575, "Chief Apothecary: ");
         }
-        if (player_role_data[eROLE.CHAPLAINA].available_to_player) {
+        if (player_role_data[eROLE.CHAPLAIN].available_to_player) {
             draw_text(594, 597, "High Chaplain: ");
         }
         if (player_role_data[eROLE.LIBRARIAN].available_to_player) {
@@ -209,7 +230,7 @@ function scr_role_setup() {
         draw_text(594, 685, "Master of the Fleet: ");
         draw_set_halign(fa_left);
 
-        if (_apoths_allowed0) {
+        if (_apoths_allowed) {
             draw_set_color(CM_GREEN_COLOR);
             if (hapothecary == "") {
                 draw_set_color(c_red);

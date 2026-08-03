@@ -64,12 +64,12 @@ function set_complex_livery_buttons() {
 
 /// @self Asset.GMObject.obj_creation
 function update_creation_roles_radio(start_role = 1) {
-    var _role_data = [];
+    var _role_choice_array = [];
 
-    for (var i = start_role; i <= 19; i++) {
+    for (var i = start_role; i < array_length(player_role_data); i++) {
         var _role_data = player_role_data[i];
         if (_role_data.available_to_player && _role_data.role != "") {
-            array_push(_role_data, {str1: role[100][i], font: fnt_40k_14b, role_id: i});
+            array_push(_role_choice_array, {str1: _role_data.role, font: fnt_40k_14b, role_id: i});
         }
     }
 
@@ -79,7 +79,7 @@ function update_creation_roles_radio(start_role = 1) {
         y1: 220,
         y_gap: 1,
     };
-    roles_radio = new RadioSet(_role_data, "Role Settings", _radio_data);
+    roles_radio = new RadioSet(_role_choice_array, "Role Settings", _radio_data);
     roles_radio.current_selection = -1;
 }
 

@@ -6,7 +6,7 @@ function scr_kill_unit(company, unit_slot) {
             array_push(obj_ini.previous_forge_masters, _unit.name());
         }
 
-        if (compare_role(_unit eROLE.CHAPTERMASTER)) {
+        if (compare_role(_unit, eROLE.CHAPTERMASTER)) {
             tek = "c";
             alarm[7] = 5;
             global.defeat = 1;

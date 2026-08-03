@@ -542,30 +542,9 @@ chapter_trait_meta = [];
 
 setup_chapter_traits();
 
-
-function role_data_set(){
-    return {
-        role : "",
-        wep1 : "",
-        wep2 : "",
-        armour : "",
-        mobi : "",
-        gear : "",
-        race : 1
-    }
-}
 player_role_data = [];
-default_role_data = [];
-
-// Default Marine Loadouts
-
-for (var i = 0; i <= 50; i++) {
-    player_role_data[i] = role_data_set();
-    default_role_data[i] = role_data_set();
-}
-
-
-defaults_slot = 100;
+setup_default_gears();
+player_role_data = variable_clone(default_role_data)
 
 /// @description
 /// @param {Real} _role_id
@@ -576,8 +555,6 @@ defaults_slot = 100;
 /// @param {String} _mobi
 /// @param {String} _gear
 
-
-setup_default_gears();
 
 col = [];
 col_r = [];

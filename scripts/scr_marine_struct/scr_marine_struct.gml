@@ -410,7 +410,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     static handle_stat_growth = unit_stat_growth;
 
-    static move_to_company(new_company){
+    static move_to_company = function(new_company){
         var _slot = find_company_open_slot(new_company);
         var _old_loc = [company, marine_number];
         movement_after_math(new_company , _slot);
@@ -2084,7 +2084,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     static get_role_data = function(){
         for (var i = 0; i < 24; i++) {
-            var _role_data == obj_ini.player_role_data[i];
+            var _role_data = obj_ini.player_role_data[i];
             if (_role_data.role == role()) {
                 return _role_data;
             }

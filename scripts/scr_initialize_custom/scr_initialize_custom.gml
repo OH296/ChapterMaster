@@ -1471,8 +1471,6 @@ function scr_initialize_custom() {
         _hi_qual_armour = STR_ANY_POWER_ARMOUR;
     }
 
-    setup_default_gears();
-
     if (variable_instance_exists(obj_creation, "custom_roles")) {
         var c_roles = obj_creation.custom_roles;
         var possible_custom_roles = [

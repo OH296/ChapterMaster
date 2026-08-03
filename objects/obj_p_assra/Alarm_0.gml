@@ -7,7 +7,7 @@ for (o = 0; o < array_length(origin.board_co); o++) {
     if (!is_struct(_unit)) {
         continue;
     }
-    if ((_unit.hp() <= -15) && (_unnit.base_group != "astartes") {
+    if (_unit.hp() <= -15 && _unit.base_group != "astartes") {
         var seed_lost = 0;
         if (apothecary <= 0) {
             if (_unit.IsSpecialist(SPECIALISTS_STANDARD)) {
@@ -23,7 +23,7 @@ for (o = 0; o < array_length(origin.board_co); o++) {
             }
 
             // obj_fleet.marines_lost+=1;
-            if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+            if (role_compare(_unit, eROLE.CHAPTERMASTER)) {
                 obj_controller.alarm[7] = 1;
                 if (global.defeat <= 1) {
                     global.defeat = 1;

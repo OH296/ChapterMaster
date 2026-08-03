@@ -210,9 +210,8 @@ function scr_chapter_new(chapter_identifier) {
 
     points = 100;
     maxpoints = 100;
-    player_role_data = [];
-    default_role_data = [];
     setup_default_gears();
+    player_role_data = variable_clone(default_role_data);
 
     for (var c = 0; c < array_length(all_chapters); c++) {
         if (chapter_identifier == all_chapters[c].name && all_chapters[c].json == true) {

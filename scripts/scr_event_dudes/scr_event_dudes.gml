@@ -27,30 +27,22 @@ function scr_event_dudes(do_action, is_planet, system_name, location_id) {
         }
     }
 
-    var coh, ide, oc, ocn, ty, g, good, blur, _unit;
-    coh = -1;
+    var  ty, g, good, blur;
     ide = 0;
-    ide = -1;
     ty = 0;
     g = 0;
     good = 0;
     blur = "";
-    repeat (200) {
-        ide += 1;
-        oc[ide] = "";
-        ocn[ide] = 0;
-    }
 
-    co = -1;
-    ide = 0;
-    repeat (11) {
-        coh += 1;
-        ide = 0;
-        for (var ide = 0; ide < array_length(obj_ini.TTRPG[coh]), ide++) {
-            ide += 1;
+    var oc = array_create(200, "");
+    var ocn = array_create(200, 0);
+
+
+    for (var coh = 0; coh <= obj_ini.companies; coh++) {
+        for (var ide = 0; ide < array_length(obj_ini.TTRPG[coh]); ide++) {
             var adding;
             adding = false;
-            _unit = fetch_unit([coh, ide]);
+            var _unit = fetch_unit([coh, ide]);
             
 
             if ((is_planet == 0) && (_unit.ship_location == location_id)) {

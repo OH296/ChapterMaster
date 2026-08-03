@@ -116,7 +116,7 @@ function scr_company_order(company) {
         var _temps = [];
         for (var i = 0; i < array_length(_company_marines.units); i++) {
             var _unit = _company_marines.units[i];
-            array_push(_temps, {unit: _unit);
+            array_push(_temps, {unit: _unit});
         }
 
         var _new_length = array_length(_temps);

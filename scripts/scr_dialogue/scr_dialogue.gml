@@ -347,7 +347,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
 
             var born = false;
             for (var ii = 0; ii < array_length(obj_ini.TTRPG[0]); ii++) {
-                var _unit - fetch_unit([0,ii]);
+                var _unit = fetch_unit([0,ii]);
                 if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     _unit.corruption += floor(random_range(30, 50));
                 }
