@@ -36,7 +36,6 @@ Get a random marine with filter
 /// if no marine is available with give parameters returns "none"
 function scr_random_marine(role, exp_req, search_params="none")
 /// @example - finding a random chaplain candidate
-random_marine=scr_random_marine([obj_ini.role[100][8],obj_ini.role[100][18],obj_ini.role[100][10],obj_ini.role[100][9]],60,{"stat":[["piety", 35, "more"],["charisma", 30, "more"]]});
 ```
 
 ## Visual and draw functions

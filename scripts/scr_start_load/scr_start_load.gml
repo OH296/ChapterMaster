@@ -93,7 +93,7 @@ function scr_start_load(fleet, load_from_star, load_options) {
         var company_vehicle = []; //array of companies vehicles
         var ship_fit = true;
 
-        for (var _unit = 0; _unit < (array_length(obj_ini.role[_comp]) - 1); _unit++) {
+        for (var _unit = 0; _unit < (array_length(obj_ini.TTRPG[_comp]) - 1); _unit++) {
             var _marine = fetch_unit([_comp, _unit]);
             // check if marine exists
             if (is_struct(_marine) && _marine.name() != "") {

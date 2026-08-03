@@ -224,7 +224,7 @@ function problem_end_turn_checks() {
                 var me = 0;
                 for (var co = 0; co <= obj_ini.companies; co++) {
                     me = 0;
-                    for (me = 0; me < array_length(obj_ini.role[co]); me++) {
+                    for (me = 0; me < array_length(obj_ini.TTRPG[co]); me++) {
                         if (obj_ini.base_group == "astartes") {
                             _unit = fetch_unit([co, me]);
                             if (!is_struct(_unit)) {
@@ -387,7 +387,7 @@ function init_beast_hunt_mission(planet, star, mission_slot) {
 }
 
 function role_compare(unit, role) {
-    return unit.role() == obj_ini.role[100][role];
+    return unit.role() == obj_ini.player_role_data[role].role;
 }
 
 function init_protect_raider_mission(squad) {

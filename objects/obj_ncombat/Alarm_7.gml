@@ -54,31 +54,25 @@ try {
             if (name == obj_ncombat.battle_loc) {
                 instance_create(x, y, obj_temp_meeting);
                 var master_present = 0;
-
-                var master_index = array_get_index(obj_ini.role[0], obj_ini.player_role_data[eROLE.CHAPTERMASTER].role);
-                var _fetched_chaos = fetch_unit([0, master_index]);
+                var _fetched_chaos = obj_controlle.chapter_master.get_struct();
                 if (!is_struct(_fetched_chaos)) {
                     LOGGER.error($"fetch_unit guardrail triggered for chapter master [0, {master_index}] in cs_meeting post-battle");
                     exit;
                 }
                 var chaos_meeting = _fetched_chaos.planet_location;
 
-                for (var co = 0; co <= 10; co++) {
+                for (var co = 0; co <= obj_ini.companies; co++) {
                     for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                         var good = 0;
                         var _unit = fetch_unit([co, i]);
-                        if (!is_struct(_unit) || _unit.role() == "" || _unit.location_string != name) {
+                        if (_unit.location_string != name) {
                             continue;
                         }
                         if (_unit.planet_location == floor(chaos_meeting)) {
                             good += 1;
                         }
-                        if ((obj_ini.role[co][i] != obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (obj_ini.role[co][i] != "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role))) {
-                            good += 1;
-                        }
-                        if ((string_count("Dread", obj_ini.armour[co][i]) == 0) || (obj_ini.role[co][i] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role)) {
-                            good += 1;
-                        }
+
+                        good = !_unit.is_dreadnought();
 
                         if (good >= 3) {
                             obj_temp_meeting.dudes += 1;
@@ -86,9 +80,7 @@ try {
                             obj_temp_meeting.present[otm] = 1;
                             obj_temp_meeting.co[otm] = co;
                             obj_temp_meeting.ide[otm] = i;
-                            if (obj_ini.role[co][i] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
-                                master_present = 1;
-                            }
+                            master_present = role_compare(_unit, eROLE.CHAPTERMASTER)
                         }
                     }
                 }

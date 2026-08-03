@@ -177,8 +177,9 @@ function scr_event_gossip(argument0) {
     that_type = string(gossip[that]);
 
     var na, ra;
-    na = obj_ini.name[attend_co[argument0]][attend_id[argument0]];
-    ra = obj_ini.role[attend_co[argument0]][attend_id[argument0]];
+    var _unit = fetch_unit([attend_co[argument0], attend_id[argument0]])
+    na = _unit.name();
+    ra = _unit.role()();
 
     // Getting there
     words = string(ra) + " " + string(na) + " ";

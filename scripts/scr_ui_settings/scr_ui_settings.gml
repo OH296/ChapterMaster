@@ -75,16 +75,17 @@ function setup_ui_chapter_settings() {
         var _role_id = _role_order[i];
 
         var _active = obj_ini.player_role_data[_role_id].available_to_player;
+        var _r_data = obj_ini.player_role_data[_role_id];
         var _button = new UnitButtonObject({
             style: "pixel",
             x1: _but_x,
             y1: _but_y,
-            label: obj_ini.role[100][_role_id],
+            label: _r_data.role,
             set_width: true,
             w: 289,
             active: _active,
             role_id: _role_id,
-            tooltip: string(obj_ini.role[100][_role_id]) + " Settings\n" + _base_tool,
+            tooltip: $"{_r_data.role} Settings\n" + _base_tool,
         });
 
         _but_y += 30;
@@ -704,7 +705,7 @@ function scr_draw_mass_equip_gui() {
         draw_set_color(c_gray);
         draw_rectangle(114, 626, 560, 665, 0);
         draw_set_color(0);
-        draw_text(333, 636, $"Requip All {obj_ini.role[100][role]} With Default Items");
+        draw_text(333, 636, $"Requip All {obj_ini.player_role_data[_role_id].role} With Default Items");
         if (scr_hit(114, 626, 560, 665) == true) {
             draw_set_color(c_white);
             draw_set_alpha(0.2);

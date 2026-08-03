@@ -220,7 +220,7 @@ function chaplain_training() {
                     unit.add_exp(10);
                     chaplain_aspirant = 0;
                     var _warn = "";
-                    var _outcome = unit.alter_equipment(_tech_role, true, true);
+                    var _outcome = unit.alter_equipment(_chap_role, true, true);
 
                     if (!_outcome.success) {
                         scr_alert("red", "recruitment", $"{_outcome.description}!", 0, 0);

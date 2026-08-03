@@ -239,7 +239,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                             if (co == 10) {
                                 col = 22 - obj_controller.bat_scout_column;
                             }
-                            if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+                            if (_unit.mobility_item() == "Jump Pack") {
                                 col = 22 - obj_controller.bat_assault_column;
                             }
                         }
@@ -309,7 +309,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                         if (co == 10) {
                             col = 22 - obj_controller.bat_scout_column;
                         }
-                        if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+                        if (_unit.mobility_item() == "Jump Pack") {
                             col = 22 - obj_controller.bat_assault_column;
                         }
                     }
@@ -366,10 +366,10 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.dudes_hp[targ.men] = _unit.hp();
                     targ.dudes_exp[targ.men] = _unit.experience;
                     targ.dudes_powers[targ.men] = _unit.specials;
-                    targ.dudes_wep1[targ.men] = obj_ini.wep1[cooh][va];
-                    targ.dudes_wep2[targ.men] = obj_ini.wep2[cooh][va];
+                    targ.dudes_wep1[targ.men] = _unit.weapon_one();
+                    targ.dudes_wep2[targ.men] = _unit.weapon_two();
                     targ.dudes_gear[targ.men] = obj_ini.gear[cooh][va];
-                    targ.dudges_mobi[targ.men] = obj_ini.mobi[cooh][va];
+                    targ.dudges_mobi[targ.men] = _unit.mobility_item();
 
                     new_combat.enemy_forces += 1;
                     new_combat.enemy_max += 1;
@@ -396,96 +396,50 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                         var really;
                         really = false;
 
-                        if (string_count("Dreadnought", _unit.armour) > 0) {
-                            really = true;
-                        }
+                        really = _unit.is_dreadnought()
                         col = min(22 - obj_controller.bat_assault_column, 22 - obj_controller.bat_command_column, 22 - obj_controller.bat_honor_column, 22 - obj_controller.bat_dreadnought_column, 22 - obj_controller.bat_veteran_column);
                     }
 
                     // todo find out what more targ.dudes does, relevant to targ.men?
-                    if (_unit.armour == "Scout Armour") {
-                        targ.dudes_ac[targ.men] = 8;
-                    }
-                    if (_unit.armour == "MK3 Iron Armour") {
-                        targ.dudes_ac[targ.men] = 20;
-                        targ.dudes_ranged[targ.men] -= 0.1;
-                    }
-                    if (_unit.armour == "MK4 Maximus") {
-                        targ.dudes_ac[targ.men] = 19;
-                        targ.dudes_ranged[targ.men] += 0.05;
-                        targ.dudes_attack[targ.men] += 0.05;
-                    }
-                    if ( == "MK5 Heresy") {
-                        targ.dudes_ac[targ.men] = 17;
-                        targ.dudes_attack[targ.men] += 0.1;
-                        targ.dudes_ranged[targ.men] -= 0.05;
-                    }
-                    if (_unit.armour == "MK6 Corvus") {
-                        targ.dudes_ac[targ.men] = 18;
-                        targ.dudes_ranged[targ.men] += 0.1;
-                    }
-                    if (_unit.armour == "MK7 Aquila") {
-                        targ.dudes_ac[targ.men] = 18;
-                    }
-                    if (_unit.armour == "MK8 Errant") {
-                        targ.dudes_ac[targ.men] = 19;
-                    }
-                    if (_unit.armour == "Power Armour") {
-                        targ.dudes_ac[targ.men] = 19;
-                    }
-                    if (_unit.armour == "Artificer Armour") {
-                        targ.dudes_ac[targ.men] = 35;
-                        targ.dudes_attack[targ.men] += 0.1;
-                    }
-                    if (_unit.armour == "Terminator Armour") {
-                        targ.dudes_ac[targ.men] = 40;
-                        targ.dudes_ranged[targ.men] -= 0.1;
-                        targ.dudes_attack[targ.men] += 0.2;
-                    }
-                    if (_unit.armour == "Tartaros") {
-                        targ.dudes_ac[targ.men] = 44;
-                        targ.dudes_ranged[targ.men] -= 0.05;
-                        targ.dudes_attack[targ.men] += 0.2;
-                    }
-                    if (_unit.armour == "Dreadnought") {
-                        targ.dudes_ac[targ.men] = 40;
-                    }
-                    if (_unit.armour == "Ork Armour") {
-                        targ.dudes_ac[targ.men] = 15;
+                    var _armour_data = _unit.get_armour_dsata();
+                    if (is_struct(_armour_data)){
+                        targ.dudes_ac += _armour_data.armour_value;
+                        arg.dudes_ranged += _armour_data.ranged_mod/100;
+                        arg.dudes_attack += _armour_data.melee_mod/100;
                     }
 
-                    if (obj_ini.wep1[co][v] == "Boarding Shield") {
+                    if (_unit.weapon_one() == "Boarding Shield") {
                         targ.dudes_ac[targ.men] += 4;
                     }
-                    if (obj_ini.wep2[co][v] == "Boarding Shield") {
+                    if (_unit.weapon_two() == "Boarding Shield") {
                         targ.dudes_ac[targ.men] += 4;
                     }
-                    if (obj_ini.wep1[co][v] == "Storm Shield") {
+                    if (_unit.weapon_one() == "Storm Shield") {
                         targ.dudes_ac[targ.men] += 8;
                     }
-                    if (obj_ini.wep2[co][v] == "Storm Shield") {
+                    if (_unit.weapon_two() == "Storm Shield") {
                         targ.dudes_ac[targ.men] += 8;
                     }
 
-                    if (string_count("&", _unit.armour) > 0) {
+                    if (string_count("&", _unit.armour()) > 0) {
                         // Artifact armour
-                        if (string_count("Power", _unit.armour) > 0) {
+                        if (string_count("Power", _unit.armour()) > 0) {
                             targ.dudes_ac[targ.men] = 30;
                         }
-                        if (string_count("Artificer", _unit.armour) > 0) {
+                        if (string_count("Artificer", _unit.armour()) > 0) {
                             targ.dudes_ac[targ.men] = 37;
                             targ.dudes_attack[targ.men] += 0.1;
                         }
-                        if (string_count("Terminator", _unit.armour) > 0) {
+                        if (string_count("Terminator", _unit.armour()) > 0) {
                             targ.dudes_ac[targ.men] = 46;
                             targ.dudes_ranged[targ.men] -= 0.1;
                             targ.dudes_attack[targ.men] += 0.2;
                         }
-                        if (string_count("Dreadnought", _unit.armour) > 0) {
+                        if (string_count("Dreadnought", _unit.armour()) > 0) {
                             targ.dudes_ac[targ.men] = 44;
                         }
                     }
-                    if (_unit.armour != "") {
+                    if (_unit.armour() != "") {
                         // STC Bonuses
 
                         if (obj_controller.stc_bonus[1] == 5) {
@@ -510,22 +464,22 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                         targ.dudes_hp[targ.men] = targ.dudes_hp[targ.men] * 2;
                         targ.dreads += 1;
                     }
-                    if (obj_ini.mobi[cooh][va] == "Bike") {
+                    if (_unit.mobility_item() == "Bike") {
                         targ.dudes_hp[targ.men] += 25;
                     }
-                    if (obj_ini.wep1[cooh][va] == "Boarding Shield") {
+                    if (_unit.weapon_one() == "Boarding Shield") {
                         targ.dudes_hp[targ.men] += 20;
                     }
-                    if (obj_ini.wep2[cooh][va] == "Boarding Shield") {
+                    if (_unit.weapon_two() == "Boarding Shield") {
                         targ.dudes_hp[targ.men] += 20;
                     }
-                    if (obj_ini.wep1[cooh][va] == "Storm Shield") {
+                    if (_unit.weapon_one() == "Storm Shield") {
                         targ.dudes_hp[targ.men] += 30;
                     }
-                    if (obj_ini.wep2[cooh][va] == "Storm Shield") {
+                    if (_unit.weapon_two() == "Storm Shield") {
                         targ.dudes_hp[targ.men] += 30;
                     }
-                    if (obj_ini.wep2[cooh][va] == "Iron Halo") {
+                    if (_unit.weapon_two() == "Iron Halo") {
                         targ.dudes_hp[targ.men] += 20;
                     }
 
@@ -620,7 +574,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                             if (co == 10) {
                                 col = obj_controller.bat_scout_column;
                             }
-                            if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+                            if (_unit.mobility_item() == "Jump Pack") {
                                 col = obj_controller.bat_assault_column;
                             }
                         }
@@ -690,7 +644,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                         if (co == 10) {
                             col = obj_controller.bat_scout_column;
                         }
-                        if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+                        if (_unit.mobility_item() == "Jump Pack") {
                             col = obj_controller.bat_assault_column;
                         }
                     }

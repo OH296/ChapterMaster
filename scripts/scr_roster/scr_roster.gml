@@ -273,7 +273,7 @@ function Roster() constructor {
         var _company_present = false;
         for (var co = 0; co <= obj_ini.companies; co++) {
             _company_present = false;
-            for (var i = 0; i < array_length(obj_ini.role[co]); i++) {
+            for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                 var _allow = false;
                 var _unit = fetch_unit([co, i]);
                 if (!is_struct(_unit) || _unit.name() == "" || _unit.role() == "") {
@@ -520,7 +520,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
     var man_size = 1;
 
     //Same as co/company and v, but with extra comprovations in case of a meeting (meeting?)
-    var _role = obj_ini.role[100];
+    var _role = active_roles();
     var cooh = 0;
     var va = 0;
     var v = unit.marine_number;

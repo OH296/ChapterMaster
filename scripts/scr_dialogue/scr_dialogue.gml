@@ -112,7 +112,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             repeat (obj_temp_meeting.dudes) {
                 ii += 1;
                 if (mos == false) {
-                    if (obj_ini.role[obj_temp_meeting.co[ii]][obj_temp_meeting.ide[ii]] == "Master of Sanctity") {
+                    if (fetch_unit([obj_temp_meeting.co[ii], obj_temp_meeting.ide[ii]]).role() == "Master of Sanctity") {
                         mos = true;
                     }
                 }
@@ -346,12 +346,10 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             }
 
             var born = false;
-            for (var ii = 1; ii < 200; ii++) {
-                if (obj_ini.role[0][ii] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
-                    var _unit = fetch_unit([0, ii]);
-                    if (is_struct(_unit)) {
-                        _unit.corruption += floor(random_range(30, 50));
-                    }
+            for (var ii = 0; ii < array_length(obj_ini.TTRPG[0]); ii++) {
+                var _unit - fetch_unit([0,ii]);
+                if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+                    _unit.corruption += floor(random_range(30, 50));
                 }
             }
             obj_controller.chaos_rating += 1;

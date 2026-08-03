@@ -290,7 +290,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
 
         if (has_tag("daemonic") || has_tag("chaos")) {
             unit.corruption += irandom(DAEMON_CORRUPTION_MAX);
-            if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+            if (role_compare(unit, eROLE.CHAPTERMASTER) {
                 /// @type {Asset.GMObject.obj_popup}
                 var pip = instance_create(0, 0, obj_popup);
                 pip.title = "Daemon Artifacts";

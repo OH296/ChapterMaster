@@ -138,7 +138,7 @@ function scr_company_order(company) {
 }
 
 function role_hierarchy() {
-    var _roles = obj_ini.role[100];
+    var _roles = active_roles();
     var hierarchy = [
         _roles[eROLE.CHAPTERMASTER],
         "Forge Master",

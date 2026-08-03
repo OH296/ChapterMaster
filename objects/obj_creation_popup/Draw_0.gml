@@ -69,7 +69,8 @@ try {
 
             draw_set_font(fnt_40k_30b);
 
-            var _role_name = obj_creation.role[co][ide];
+            var _role_data = obj_creation.player_role_data[ide];
+            var _role_name = _role_data.role;
             var _text_selected = obj_creation.text_selected;
             var _sel_key = "unit_name" + string(ide);
 
@@ -96,7 +97,7 @@ try {
             }
 
             if (_text_selected == _sel_key) {
-                obj_creation.role[co][ide] = keyboard_string;
+                _role_data.role = keyboard_string;
             }
 
             draw_rectangle(444 - 1, 550 - 1, 822, 550 + _height, 1);

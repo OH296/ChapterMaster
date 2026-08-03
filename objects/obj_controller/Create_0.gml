@@ -1351,7 +1351,7 @@ temp[33] = string_upper(scr_thought()); // Thought of the day
 // Game start welcoming message
 LOGGER.info("Game start welcoming message");
 
-var _canon = obj_ini.role[100];
+var _canon = active_roles();
 
 var _build_clause = function(_prefix, _parts) {
     if (array_length(_parts) == 0) {

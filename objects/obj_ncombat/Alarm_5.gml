@@ -11,7 +11,7 @@ if (turn_count >= 50) {
 
 var p_data = battle_object.get_planet_data(battle_id);
 // check for wounded marines here to finish off, if defeated defending
-var roles = obj_ini.role[100];
+var roles = active_roles();
 var ground_mission = instance_exists(obj_ground_mission);
 
 with (obj_pnunit) {

@@ -41,7 +41,7 @@ function scr_destroy_planet(destruction_method) {
 
     // No survivors!
     for (var cah = 0; cah <= obj_ini.companies; cah++) {
-        for (var ed = 0; ed < array_length(obj_ini.role[cah]); ed++) {
+        for (var ed = 0; ed < array_length(obj_ini.TTRPG[cah]); ed++) {
             var unit = fetch_unit([cah, ed]);
             if (!is_struct(unit)) {
                 continue;

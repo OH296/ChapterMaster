@@ -423,7 +423,7 @@ function CompanyStruct(comp) constructor {
     if (company > 0 && company < 11) {
         var _unit;
         var company_units = obj_controller.display_unit;
-        var role_set = obj_ini.role[100];
+        var role_set = active_roles();
         for (var i = 0; i < array_length(company_units); i++) {
             if (is_struct(company_units[i])) {
                 _unit = company_units[i];

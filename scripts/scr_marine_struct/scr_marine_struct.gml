@@ -253,7 +253,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             if (instance_exists(obj_controller)) {
                 role_history = [
                     [
-                        obj_ini.role[company][marine_number],
+                        role1,
                         obj_controller.turn,
                     ],
                 ]; //marines_promotion and demotion history
@@ -453,6 +453,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return is_specialist(role(), search_type, include_trainee, include_heads);
     };
 
+    role1 = "";
     static update_role = function(new_role) {
         if (role() == new_role) {
             return "no change";
@@ -477,7 +478,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                 }
             }
         }
-        obj_ini.role[company][marine_number] = new_role;
+        role1 = new_role;
         if (instance_exists(obj_controller)) {
             array_push(role_history, [role(), obj_controller.turn]);
         }

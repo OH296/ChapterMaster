@@ -45,7 +45,7 @@ if (!is_string(type)) {
             if (i == 13) {
                 idd = 12;
             }
-            role_names_all += string(obj_creation.role[100][idd]) + "|";
+            role_names_all += string(obj_creation.player_role_data[idd].role) + "|";
         }
 
         role_names_all += "Chapter Master|";
@@ -53,13 +53,9 @@ if (!is_string(type)) {
         role_names_all += "Master of the Apothecarion|";
         role_names_all += "Forge Master|";
 
-        if (obj_creation.role[100][z] != "") {
-            if (string_count(obj_creation.role[100][z], role_names_all) > 1) {
-                badname = 1;
-            }
-            if (string_count(obj_creation.role[100][z], role_names_all) <= 1) {
-                badname = 0;
-            }
+        var _r_name = obj_creation.player_role_data[z].role;
+        if (_r_name != "") {
+            badname = (string_count(_r_name, role_names_all) > 1);
         }
     }
 }

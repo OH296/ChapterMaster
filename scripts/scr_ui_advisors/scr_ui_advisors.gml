@@ -75,11 +75,12 @@ function scr_ui_advisors() {
         draw_set_font(fnt_40k_14);
         draw_set_alpha(1);
         draw_set_color(c_gray);
+        var _active_roles = active_roles();
         if (temp[36] != "0") {
             blurp = $"Sir!  You requested a report?  Currently, we have deployed {temp[36]} {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s to watch over the health of our Battle-Brothers in the field.  We have an additional " + string(temp[37]) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s who await only your order to carry the word to the troops.";
         }
         if (temp[36] == "0") {
-            blurp = "Sir!  You requested a report?  Currently, we have {temp[37]} {obj_ini.role[100, 14]}s who await only your order to carry the word to the troops.";
+            blurp = $"Sir!  You requested a report?  Currently, we have {temp[37]} {_active_roles[14]}s who await only your order to carry the word to the troops.";
         }
         if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
             blurp += "##Currently, we are training additional " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + " at a ";
@@ -201,8 +202,9 @@ function scr_ui_advisors() {
                 }
                 if (fest_honoring == 3) {
                     blurp2 += " in honor of ";
-                    blurp2 += string(obj_ini.role[fest_honor_co][fest_honor_id]) + " ";
-                    blurp2 += string(obj_ini.name[fest_honor_co][fest_honor_id]) + " (" + romanNumerals[fest_honor_co] + " Company).  ";
+                    var _unit = fetch_unit([fest_honor_co, fest_honor_id])
+                    blurp2 += $"{_unit.role()} ";
+                    blurp2 += $"{_unit.name()} {romanNumerals[fest_honor_co]} Company).  ";
                 }
                 if (fest_honoring == 4) {
                     // faction

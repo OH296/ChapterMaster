@@ -1,11 +1,12 @@
 /// @self Asset.GMObject.obj_controller
 function scr_kill_unit(company, unit_slot) {
     try {
-        if (obj_ini.role[company][unit_slot] == "Forge Master") {
-            array_push(obj_ini.previous_forge_masters, obj_ini.name[company][unit_slot]);
+        var _unit = fetch_unit([company, unit_slot])
+        if (_unit.role() == "Forge Master") {
+            array_push(obj_ini.previous_forge_masters, _unit.name());
         }
 
-        if (obj_ini.role[company][unit_slot] == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+        if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
             tek = "c";
             alarm[7] = 5;
             global.defeat = 1;
@@ -62,7 +63,7 @@ function kill_and_recover(company, unit_slot, equipment = true, gene_seed_collec
         }
     }
     if (obj_ini.base_group == "astartes") {
-        if (is_specialist(obj_ini.role[company][unit_slot])) {
+        if (unit.IsSpecialist()) {
             obj_controller.command -= 1;
         } else {
             obj_controller.marines -= 1;
