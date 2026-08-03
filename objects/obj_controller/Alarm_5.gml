@@ -379,7 +379,7 @@ try {
         if (penitent_end < 30000) {
             penitent_end += 41000;
         }
-        if ((penitent_current >= penitent_max) || (((millenium * 1000) + year) >= penitent_end)) {
+        if ((penitent_current >= penitent_max) || (obj_ini.sector_handler.game_year() >= penitent_end)) {
             penitent = 0;
             if ((known[eFACTION.INQUISITION] == 2) || (known[eFACTION.INQUISITION] >= 4)) {
                 scr_audience(4, "penitent_end", 0, "", 0, 0);

@@ -279,7 +279,7 @@ function ReactiveString(text_param, x1_param = 0, y1_param = 0, data = {}) const
     };
 }
 
-function ValueShifter(value_text, data) constructor {
+function ValueShifter(value_text, data = {}) constructor {
     standard_loc_data();
     string_tag = value_text;
     max_clamp = 1000;
@@ -324,12 +324,12 @@ function ValueShifter(value_text, data) constructor {
     static draw = function() {
         update();
         reactive_string.draw();
-        var _allow = current_value > min_clamp;
+        var _allow = current_value - shift_value >= min_clamp;
         if (decrease_button.draw(_allow)) {
             current_value -= shift_value;
         }
 
-        _allow = current_value < max_clamp;
+        _allow = current_value + shift_value <= max_clamp;
         if (increase_button.draw(_allow)) {
             current_value += shift_value;
         }

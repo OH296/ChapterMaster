@@ -39,6 +39,7 @@
     {"$GMFolder":"","%Name":"Interface","folderPath":"folders/Scripts/Interface.yy","name":"Interface","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"marines_and_profiles","folderPath":"folders/Scripts/marines_and_profiles.yy","name":"marines_and_profiles","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"save_load","folderPath":"folders/Scripts/save_load.yy","name":"save_load","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Sector and World","folderPath":"folders/Scripts/Sector and World.yy","name":"Sector and World","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sys","folderPath":"folders/Scripts/Sys.yy","name":"Sys","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Turn","folderPath":"folders/Scripts/Turn.yy","name":"Turn","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"User Interface","folderPath":"folders/Scripts/User Interface.yy","name":"User Interface","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -594,7 +595,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2026.100.0.1110",
+    "IDEVersion":"2026.100.0.1083",
   },
   "name":"ChapterMaster",
   "resources":[
@@ -956,6 +957,7 @@
     {"id":{"name":"scr_vehicle_order","path":"scripts/scr_vehicle_order/scr_vehicle_order.yy",},},
     {"id":{"name":"scr_void_click","path":"scripts/scr_void_click/scr_void_click.yy",},},
     {"id":{"name":"scr_wait_and_execute","path":"scripts/scr_wait_and_execute/scr_wait_and_execute.yy",},},
+    {"id":{"name":"SectorHandler","path":"scripts/SectorHandler/SectorHandler.yy",},},
     {"id":{"name":"scr_zoom","path":"scripts/scr_zoom/scr_zoom.yy",},},
     {"id":{"name":"Set","path":"scripts/Set/Set.yy",},},
     {"id":{"name":"SettingsManager","path":"scripts/SettingsManager/SettingsManager.yy",},},

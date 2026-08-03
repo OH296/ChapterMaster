@@ -45,11 +45,11 @@ function scr_unit_detail_text() {
     // Age and ascension date
     unit_data_string += "\n";
     if (base_group == "astartes") {
-        var ascension_date = string(marine_ascension);
-        if (ascension_date == "0") {
-            ascension_date = "unknown";
+        var _ascension_date = string(marine_ascension);
+        if (_ascension_date == "0") {
+            _ascension_date = "unknown";
         }
-        unit_data_string += $"{round(age)} years old. Ascended to an Astartes in the {ascension_date} year.";
+        unit_data_string += $"{round(age())} years old. Ascended to an Astartes in the {_ascension_date} year.";
         if (struct_exists(spawn_data, "recruit_data")) {
             var recruit_data = spawn_data.recruit_data;
             unit_data_string += "\n";
@@ -181,7 +181,7 @@ function scr_unit_detail_text() {
                         mutation_string += "Suffers from a faulty Ossmodula, and takes longer to heal from injuries.";
                         break;
                     case "zygote":
-                        mutation_string += "One of his Zygotes is faulty or missing.";
+                        mutation_string += "One of his Zygotes is faulty or missing, and therefore will produce no extra gene seed other than the one implanted.";
                         break;
                     case "betchers":
                         mutation_string += "Missing his Betchers Gland and therefore cannot spit acid.";

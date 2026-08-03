@@ -103,6 +103,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     manage_tags = [];
     spawn_data = other_spawn_data;
 
+    
+    if (instance_exists(obj_controller)){
+        born = obj_ini.sector_handler.game_year();
+    } else { 
+        born = 4000;
+    }
+
     // Core RPG Stats
     constitution = 0;
     strength = 0;
@@ -256,7 +263,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                         obj_controller.turn,
                     ],
                 ]; //marines_promotion and demotion history
-                marine_ascension = obj_controller.turn; // on what day did this marine begin to exist
+                marine_ascension = obj_ini.sector_handler.game_year; // on what day did this marine begin to exist
             } else {
                 role_history = [];
                 marine_ascension = 0; // on what turn did this marine begin to exist
@@ -924,7 +931,18 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return true;
     };
 
-    age = 0;
+    static age = function(){
+        return obj_ini.sector_handler.get_time_from_current_year(born);
+    };
+
+    static recoverable_geneseed = function(){
+        if (obj_ini.doomed == 1) {
+            return 0;
+        }
+        var _time_as_marine = obj_ini.sector_handler.get_time_from_current_year(marine_ascension);
+
+        return  min(floor(_time_as_marine / 5), gene_seed_mutations.zygote == 0 ? 2 : 1);
+    }
 
     //TODO build epithets in to marine profile
     static add_epithet = function(epithet) {
@@ -2012,7 +2030,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     static roll_age = scr_marine_spawn_age;
 
     static roll_experience = function() {
-        var _age_bonus = age;
+        var _age_bonus = age();
         var _gauss_sd_mod = 14;
 
         var _exp = _age_bonus;
@@ -2021,7 +2039,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static assign_reactionary_traits = function() {
-        var _age = age;
+        var _age = age();
         var _exp = experience;
         var _total_score = _age + _exp;
 

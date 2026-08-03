@@ -543,20 +543,7 @@ stc_research = {
     ships: 0,
     research_focus: "wargear",
 };
-// ** Resets the years **
-check_number = 0;
-year_fraction = 0;
-year = 0;
-millenium = 0;
 
-if (instance_exists(obj_ini)) {
-    if (obj_ini.millenium != 0) {
-        check_number = obj_ini.check_number;
-        year_fraction = 0; // 84 per turn
-        year = obj_ini.year;
-        millenium = obj_ini.millenium;
-    }
-}
 // ** Penitent and blood debt reset **
 penitent = 0;
 penitent_current = 0;
@@ -575,10 +562,10 @@ if (instance_exists(obj_ini)) {
     penitent_max = obj_ini.penitent_max;
 
     if (scr_has_disadv("Blood Debt")) {
-        penitent_end = millenium + year + (obj_ini.penitent_end / 12);
+        penitent_end = obj_ini.sector_handler.game_year() + (obj_ini.penitent_end / 12);
         blood_debt = 1;
     } else {
-        penitent_end = millenium + year + obj_ini.penitent_end;
+        penitent_end = obj_ini.sector_handler.game_year() + obj_ini.penitent_end;
     }
 
     if (string_count(obj_ini.TTRPG[0][0].specials, "$") > 0) {
@@ -1383,7 +1370,7 @@ if (global.load == -1) {
 
 // **** INTRO SCREEN ****
 #region Intro Scroll
-temp[30] = string(check_number) + " " + string(year_fraction) + " " + string(year) + ".M" + string(millenium); // Date
+temp[30] = obj_ini.sector_handler.date(); // Date
 temp[31] = string_upper(adept_name); // Adept name
 temp[32] = string_upper(obj_ini.name[0][0]); // Master name
 temp[33] = string_upper(scr_thought()); // Thought of the day
