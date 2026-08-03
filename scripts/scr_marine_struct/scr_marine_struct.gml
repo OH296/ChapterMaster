@@ -936,7 +936,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static recoverable_geneseed = function(){
-        if (obj_ini.doomed == 0 ){
+        if (obj_ini.doomed == 1) {
             return 0;
         }
         var _time_as_marine = obj_ini.sector_handler.get_time_from_current_year(marine_ascension);
