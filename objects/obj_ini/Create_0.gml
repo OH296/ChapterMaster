@@ -244,6 +244,7 @@ deserialize = function(save_data) {
         "artifact_equipped",
         "artifact_struct",
         "artifact_list",
+        "sector_handler"
     ]; // skip automatic setting of certain vars, handle explicitly later
 
     // Automatic var setting
@@ -346,6 +347,12 @@ deserialize = function(save_data) {
 
     if (struct_exists(save_data, "chapter_data")) {
         chapter_data = new ChapterGameData(save_data.chapter_data);
+    }
+
+    if (struct_exists(save_data, "sector_handler")){
+        with (obj_ini.sector_handler){
+            move_data_to_current_scope(save_data.sector_handler);
+        }
     }
 };
 
