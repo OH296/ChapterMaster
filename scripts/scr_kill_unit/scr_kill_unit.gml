@@ -62,12 +62,7 @@ function kill_and_recover(company, unit_slot, equipment = true, gene_seed_collec
     }
     if (gene_seed_collect && unit.base_group == "astartes") {
 
-        if (unit.marine_ascension > 30 && !obj_ini.zygote && !obj_ini.doomed) {
-            obj_controller.gene_seed += 1;
-        }
-        if (unit.marine_ascension > 100 && !obj_ini.doomed) {
-            obj_controller.gene_seed += 1;
-        }
+        obj_controller.gene_seed += unit.recoverable_geneseed();
     }
     if (obj_ini.race[company][unit_slot] == 1) {
         if (is_specialist(obj_ini.role[company][unit_slot])) {

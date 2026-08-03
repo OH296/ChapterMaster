@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_world_time",
+  "%Name":"SectorHandler",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_world_time",
+  "name":"SectorHandler",
   "parent":{
     "name":"Sector and World",
     "path":"folders/Scripts/Sector and World.yy",
