@@ -1551,7 +1551,6 @@ function scr_initialize_custom() {
         /**
 		 * check whether the json structure exists to populate custom role names and 
 		 * attributes then set them using the map above 
-		 * role[100] is the 'default role name' storage spot, or something
 		 */
         for (var c = 0; c < array_length(possible_custom_roles); c++) {
             if (struct_exists(c_roles, possible_custom_roles[c][0])) {
@@ -1900,19 +1899,15 @@ function scr_initialize_custom() {
     */
     #endregion
 
-    for (var i = 0; i < array_length(role[defaults_slot]); i++) {
-        if (role[defaults_slot][i] != "") {
-            scr_start_allow(i, "wep1", wep1[defaults_slot][i]);
+    for (var i = 0; i < array_length(player_role_data); i++) {
+        if (player_role_data[i].role == "") {
+            continue;
         }
-        if (role[defaults_slot][i] != "") {
-            scr_start_allow(i, "wep2", wep2[defaults_slot][i]);
-        }
-        if (role[defaults_slot][i] != "") {
-            scr_start_allow(i, "mobi", mobi[defaults_slot][i]);
-        }
-        if (role[defaults_slot][i] != "") {
-            scr_start_allow(i, "gear", gear[defaults_slot][i]);
-        }
+        var _data = player_role_data[i];
+        scr_start_allow(i, "wep1", _data.wep1);
+        scr_start_allow(i, "wep2", _data.wep2);
+        scr_start_allow(i, "mobi", _data.mobi);
+        scr_start_allow(i, "gear", _data.gear);
         // check for allowable starting equipment here
     }
 
@@ -2781,17 +2776,6 @@ function scr_initialize_custom() {
 
     #endregion
 
-    //? Seems to be dead code; prove me wrong
-    // _marine_i = 0;
-    // company = 0;
-    // for (var c = 0; c <= 200; c++) {
-    //     if (_marine_i == 0) {
-    //         if ((role[0][c] != "") && (role[0][c + 1] == "")) {
-    //             _marine_i = c;
-    //         }
-    //     }
-    // }
-
     scr_add_item("Bolter", 20);
     scr_add_item("Chainsword", 20);
     scr_add_item("Bolt Pistol", 5);
@@ -2963,8 +2947,6 @@ function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1
     spawn_unit.update_role(role_name)
     spawn_unit.unit_race = 1;
     spawn_unit.location_string = obj_ini.home_name;
-    spawn_unit.update_role(role_name)
-
     if (spawn_unit.name() == "") {
         spawn_unit.set_name(global.name_generator.ChapterMemberNameGeneration())
     }

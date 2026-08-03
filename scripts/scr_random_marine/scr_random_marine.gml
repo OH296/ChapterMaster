@@ -30,7 +30,7 @@ function scr_random_marine(role, exp_req, search_params = {}) {
             }
         }
         if (company <= 10) {
-            var comp_size = array_length(obj_ini.name[company]);
+            var comp_size = array_length(obj_ini.TTRPG[company]);
 
             //This makes sure that cmopanies are searched randomly by creating an array of array positions to be randomly accessed
             var marine_list = [];

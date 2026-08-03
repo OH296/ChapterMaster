@@ -3,7 +3,7 @@ function scr_start_allow(role_id, equip_area, equipment) {
     var _veteran_level = 0;
 
     if (role_id == eROLE.DREADNOUGHT) {
-        equip_area[101][role_id] = equipment;
+        player_role_data[role_id][$ equip_area] = equipment;
         return;
     }
 
@@ -69,7 +69,9 @@ function scr_start_allow(role_id, equip_area, equipment) {
     }
 
     if (_allow) {
-        equip_area[101][role_id] = equipment;
+        player_role_data[role_id][$ equip_area] = equipment;
+    } else {
+        player_role_data[role_id][$ equip_area] = default_role_data[role_id][$ equip_area];
     }
     return;
 }

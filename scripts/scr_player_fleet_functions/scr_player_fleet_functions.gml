@@ -493,7 +493,7 @@ function set_fleet_location(location) {
         }
     }
     for (var co = 0; co <= obj_ini.companies; co++) {
-        for (var i = 0; i < array_length(obj_ini.name[co]); i++) {
+        for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
             var unit = fetch_unit([co, i]);
             if (!is_struct(unit)) {
                 continue;

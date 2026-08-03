@@ -1332,7 +1332,7 @@ if (global.load == -1) {
 #region Intro Scroll
 temp[30] = obj_ini.sector_handler.date(); // Date
 temp[31] = string_upper(adept_name); // Adept name
-temp[32] = string_upper(obj_ini.name[0][0]); // Master name
+temp[32] = chapter_master.get_struct.name(); // Master name
 temp[33] = string_upper(scr_thought()); // Thought of the day
 
 // Game start welcoming message
