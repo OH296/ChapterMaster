@@ -981,15 +981,7 @@ function scr_initialize_custom() {
     master_monolith = 0;
     master_special_killed = "";
 
-    check_number = 5;
-    year_fraction = 0; // 84 per turn
-    if (obj_creation.chapter_year == 0) {
-        year = 735;
-    }
-    if (obj_creation.chapter_year != 0) {
-        year = obj_creation.chapter_year;
-    }
-    millenium = 41;
+    sector_handler = obj_creation.sector_handler;
 
     #region Determine Total Number of Marines per Company and Role
     var intolerant = 0;
@@ -1467,8 +1459,6 @@ function scr_initialize_custom() {
     master_melee = obj_creation.chapter_master_melee;
     master_ranged = obj_creation.chapter_master_ranged;
 
-    var _current_age = ((millenium * 1000) + year) - 10;
-
     TTRPG[0] = array_create(501);
     for (var i = 0; i <= 500; i++) {
         TTRPG[0][i] = new TTRPG_stats("chapter", 0, i, "blank");
@@ -1912,7 +1902,7 @@ function scr_initialize_custom() {
     */
     #endregion
 
-    for (var i = 0; i <= 20; i++) {
+    for (var i = 0; i < array_length(role[defaults_slot]); i++) {
         if (role[defaults_slot][i] != "") {
             scr_start_allow(i, "wep1", wep1[defaults_slot][i]);
         }
@@ -1938,11 +1928,14 @@ function scr_initialize_custom() {
     //loads up marine traits potential modding potential;
     // initialize_marine_traits();
 
+    var _game_year = obj_ini.sector_handler.game_year();
     #region Chapter HQ
     for (var c = 0; c < 11; c++) {
         for (var i = 0; i < 501; i++) {
             TTRPG[c][i] = new TTRPG_stats("chapter", c, i, "blank");
-            TTRPG[c][i].age = ((millenium * 1000) + year) - 10;
+            var _unit = TTRPG[c][i];
+            _unit.born = _game_year - 50;
+            _unit.marine_ascension = _game_year - 10;
         }
     }
 

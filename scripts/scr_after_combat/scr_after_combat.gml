@@ -301,26 +301,13 @@ function after_combat_recover_marine_gene_seed(unit) {
     }
 
     if (unit.base_group == "astartes") {
-        var _birthday = unit.age;
-        var _current_year = (obj_controller.millenium * 1000) + obj_controller.year;
-        var _seed_harvestable = 0;
-        var _seed_lost = 0;
+        var _unit_seed = unit.recoverable_geneseed();
 
-        if (_birthday <= (_current_year - 10) && unit.gene_seed_mutations.zygote == 0) {
-            _seed_lost++;
-            if (irandom_range(1, 10) > 1) {
-                _seed_harvestable++;
-            }
-        }
-        if (_birthday <= (_current_year - 5)) {
-            _seed_lost++;
-            if (irandom_range(1, 10) > 1) {
-                _seed_harvestable++;
-            }
+        if (irandom_range(1, 10) < 9) {
+            obj_ncombat.seed_harvestable += _unit_seed;
         }
 
-        obj_ncombat.seed_harvestable += _seed_harvestable;
-        obj_ncombat.seed_lost += _seed_lost;
+        obj_ncombat.seed_lost += _unit_seed;
     }
 
     var last = 0;

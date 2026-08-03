@@ -111,7 +111,9 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
     _unit.add_exp(spawn_exp);
     _unit.allocate_unit_to_fresh_spawn(home_spot);
     _unit.update_role(man_role);
-    _unit.age = (obj_controller.millenium * 1000) + obj_controller.year;
+    if (array_contains(non_marine_roles, man_role)) {
+        _unit.born = obj_ini.sector_handler.get_creation_year(18);
+    }
 
     with (obj_ini) {
         scr_company_order(target_company);
