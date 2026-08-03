@@ -75,7 +75,6 @@
 var _name_gen = global.name_generator;
 LOGGER.info("Creating Controller");
 scr_colors_initialize();
-sector_handler = new SectorHandler(); 
 target_navy_number = 5;
 global.defeat = 0;
 tutorial = 0;
@@ -563,10 +562,10 @@ if (instance_exists(obj_ini)) {
     penitent_max = obj_ini.penitent_max;
 
     if (scr_has_disadv("Blood Debt")) {
-        penitent_end = sector_handler.game_year() + (obj_ini.penitent_end / 12);
+        penitent_end = obj_ini.sector_handler.game_year() + (obj_ini.penitent_end / 12);
         blood_debt = 1;
     } else {
-        penitent_end = sector_handler.game_year() + obj_ini.penitent_end;
+        penitent_end = obj_ini.sector_handler.game_year() + obj_ini.penitent_end;
     }
 
     if (string_count(obj_ini.TTRPG[0][0].specials, "$") > 0) {
@@ -1371,7 +1370,7 @@ if (global.load == -1) {
 
 // **** INTRO SCREEN ****
 #region Intro Scroll
-temp[30] = sector_handler.date(); // Date
+temp[30] = obj_ini.sector_handler.date(); // Date
 temp[31] = string_upper(adept_name); // Adept name
 temp[32] = string_upper(obj_ini.name[0][0]); // Master name
 temp[33] = string_upper(scr_thought()); // Thought of the day

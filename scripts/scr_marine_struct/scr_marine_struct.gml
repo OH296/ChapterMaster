@@ -105,7 +105,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     
     if (instance_exists(obj_controller)){
-        born = obj_controller.sector_handler.game_year();
+        born = obj_ini.sector_handler.game_year();
     } else { 
         born = 4000;
     }
@@ -263,7 +263,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                         obj_controller.turn,
                     ],
                 ]; //marines_promotion and demotion history
-                marine_ascension = obj_controller.sector_handler.game_year; // on what day did this marine begin to exist
+                marine_ascension = obj_ini.sector_handler.game_year; // on what day did this marine begin to exist
             } else {
                 role_history = [];
                 marine_ascension = 0; // on what turn did this marine begin to exist
@@ -932,11 +932,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static age = function(){
-        return obj_controller.sector_handler.get_time_from_current_year(born);
+        return obj_ini.sector_handler.get_time_from_current_year(born);
     };
 
     static recoverable_geneseed = function(){
-        var _time_as_marine = obj_controller.sector_handler.get_time_from_current_year(marine_ascension);
+        var _time_as_marine = obj_ini.sector_handler.get_time_from_current_year(marine_ascension);
 
         return  min(floor(_time_as_marine / 5), unit.gene_seed_mutations.zygote == 0 ? 2 : 1);
     }

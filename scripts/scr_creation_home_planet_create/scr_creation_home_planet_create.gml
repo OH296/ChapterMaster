@@ -12,9 +12,8 @@ function player_recruit_planet_selection() {
 
         _recruit_home.x1 = 1265;
         _recruit_home.y1 = 110;
-        if (custom == eCHAPTER_TYPE.PREMADE) {
-            _recruit_home.allow_changes = false;
-        }
+        _recruit_home.allow_changes = custom != eCHAPTER_TYPE.PREMADE;
+
         _recruit_home.draw();
         var _recruit_world_type = _recruit_home.current_selection;
         if (_recruit_world_type == 0) {
@@ -81,8 +80,27 @@ function player_recruit_planet_selection() {
                 }
             }
         }
+        scr_creation_game_play_date();
     }
     pop_draw_return_values();
+}
+
+function scr_creation_game_play_date(){
+
+    buttons.game_date.update({x1:1377, y1:440});
+    buttons.game_date.draw();
+
+    buttons.millenium_shifter.current_value = sector_handler.millenium;
+    buttons.year_shifter.current_value = sector_handler.year;
+
+    buttons.millenium_shifter.update({x1:1377, y1:buttons.game_date.y2+10});
+    buttons.year_shifter.update({x1:1377, y1:buttons.game_date.y2+50});
+
+    buttons.millenium_shifter.draw();
+    buttons.year_shifter.draw();
+
+    sector_handler.millenium = buttons.millenium_shifter.current_value;
+    sector_handler.year = buttons.year_shifter.current_value;
 }
 
 function scr_creation_home_planet_create() {

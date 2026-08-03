@@ -135,15 +135,12 @@ load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi,
     race[defaults_slot][_role_id] = 1;
 };
 
-check_number = 0;
-year_fraction = 0;
-year = 0;
-millenium = 41;
 company_spawn_buffs = [];
 role_spawn_buffs = {};
 previous_forge_masters = [];
 recruit_trial = 0;
 recruiting_type = "Death";
+sector_handler = new SectorHandler(); 
 
 gene_slaves = [];
 

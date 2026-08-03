@@ -32,7 +32,6 @@
     {"$GMFolder":"","%Name":"events_and_missions","folderPath":"folders/Scripts/events_and_missions.yy","name":"events_and_missions","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"fleet","folderPath":"folders/Scripts/fleet.yy","name":"fleet","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Global Functions","folderPath":"folders/Scripts/Global Functions.yy","name":"Global Functions","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Sector and World","folderPath":"folders/Scripts/Sector and World.yy","name":"Sector and World","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Helpers","folderPath":"folders/Scripts/Helpers.yy","name":"Helpers","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Draw Shapes","folderPath":"folders/Scripts/Helpers/Draw Shapes.yy","name":"Draw Shapes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Text","folderPath":"folders/Scripts/Helpers/Text.yy","name":"Text","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -40,6 +39,7 @@
     {"$GMFolder":"","%Name":"Interface","folderPath":"folders/Scripts/Interface.yy","name":"Interface","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"marines_and_profiles","folderPath":"folders/Scripts/marines_and_profiles.yy","name":"marines_and_profiles","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"save_load","folderPath":"folders/Scripts/save_load.yy","name":"save_load","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Sector and World","folderPath":"folders/Scripts/Sector and World.yy","name":"Sector and World","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sys","folderPath":"folders/Scripts/Sys.yy","name":"Sys","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Turn","folderPath":"folders/Scripts/Turn.yy","name":"Turn","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"User Interface","folderPath":"folders/Scripts/User Interface.yy","name":"User Interface","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -595,7 +595,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2026.100.0.1110",
+    "IDEVersion":"2026.100.0.1083",
   },
   "name":"ChapterMaster",
   "resources":[

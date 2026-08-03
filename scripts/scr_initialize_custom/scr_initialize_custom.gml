@@ -978,15 +978,7 @@ function scr_initialize_custom() {
     master_monolith = 0;
     master_special_killed = "";
 
-    check_number = 5;
-    year_fraction = 0; // 84 per turn
-    if (obj_creation.chapter_year == 0) {
-        year = 735;
-    }
-    if (obj_creation.chapter_year != 0) {
-        year = obj_creation.chapter_year;
-    }
-    millenium = obj_creation.millenium;
+    sector_handler = obj_creation.sector_handler;
 
     #region Determine Total Number of Marines per Company and Role
     var intolerant = 0;
@@ -1463,25 +1455,6 @@ function scr_initialize_custom() {
 
     master_melee = obj_creation.chapter_master_melee;
     master_ranged = obj_creation.chapter_master_ranged;
-
-    var _current_age = ((millenium * 1000) + year) - 10;
-
-    /// @self Asset.GMObject.obj_ini
-    var _init_marine_row = function(_idx, _count, _age_val) {
-        var _len = _count + 1;
-        race[_idx] = array_create(_len, 1);
-        name[_idx] = array_create(_len, "");
-        role[_idx] = array_create(_len, "");
-        wep1[_idx] = array_create(_len, "");
-        wep2[_idx] = array_create(_len, "");
-        armour[_idx] = array_create(_len, "");
-        gear[_idx] = array_create(_len, "");
-        mobi[_idx] = array_create(_len, "");
-    };
-
-    _init_marine_row(0, 500, _current_age);
-    _init_marine_row(100, 100, _current_age);
-    _init_marine_row(102, 100, _current_age);
 
     TTRPG[0] = array_create(501);
     for (var i = 0; i <= 500; i++) {
@@ -1971,7 +1944,7 @@ function scr_initialize_custom() {
     */
     #endregion
 
-    for (var i = 0; i <= 20; i++) {
+    for (var i = 0; i < array_length(role[defaults_slot]); i++) {
         if (role[defaults_slot][i] != "") {
             scr_start_allow(i, "wep1", wep1[defaults_slot][i]);
         }
@@ -1997,7 +1970,7 @@ function scr_initialize_custom() {
     //loads up marine traits potential modding potential;
     // initialize_marine_traits();
 
-    var _game_year = obj_controller.sector_handler.game_year;
+    var _game_year = obj_ini.sector_handler.game_year();
     #region Chapter HQ
     for (var c = 0; c < 11; c++) {
         for (var i = 0; i < 501; i++) {

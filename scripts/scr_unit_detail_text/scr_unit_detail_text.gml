@@ -49,7 +49,7 @@ function scr_unit_detail_text() {
         if (ascension_date == "0") {
             ascension_date = "unknown";
         }
-        unit_data_string += $"{round(age)} years old. Ascended to an Astartes in the {ascension_date} year.";
+        unit_data_string += $"{round(age())} years old. Ascended to an Astartes in the {ascension_date} year.";
         if (struct_exists(spawn_data, "recruit_data")) {
             var recruit_data = spawn_data.recruit_data;
             unit_data_string += "\n";

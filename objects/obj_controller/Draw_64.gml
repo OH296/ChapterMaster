@@ -166,7 +166,7 @@ if (!zoomed && !zui) {
     draw_text_transformed(1520 + new_banner_x, 208, string(global.chapter_name), chapter_master_name_width, 1, 0);
     draw_text_transformed(1520.5 + new_banner_x, 208.5, string(global.chapter_name), chapter_master_name_width, 1, 0);
     // Shows the date to be displayed
-    draw_text(1520 + new_banner_x, 228, sector_handler.date());
+    draw_text(1520 + new_banner_x, 228, obj_ini.sector_handler.date());
     // Shows the income on the menu
     var inc = "";
     if (income_last > 0) {

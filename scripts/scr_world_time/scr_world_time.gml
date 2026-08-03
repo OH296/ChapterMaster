@@ -1,13 +1,10 @@
 
 function SectorHandler() constructor{
-	if (instance_exists(obj_ini)) {
-	    if (obj_ini.millenium != 0) {
-	        check_number = obj_ini.check_number;
-	        year_fraction = 0; // 84 per turn
-	        year = obj_ini.year;
-	        millenium = obj_ini.millenium;
-	    }
-	}
+	
+	millenium = 41;
+	year_fraction = 0;
+	year = 735;
+	check_number = 5;
 
 	static date = function(){
         var yf = "";

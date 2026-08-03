@@ -126,16 +126,19 @@ function scr_marine_spawn_age() {
             break;
     }
 
+    var _age;
     if (_apply_gauss == true) {
         if (_maximum_age != 0) {
             _gauss_sd_mod = (_maximum_age - _minimum_age) / _gauss_sd_mod;
-            age = round(gauss_positive(_minimum_age, _gauss_sd_mod));
+            _age = round(gauss_positive(_minimum_age, _gauss_sd_mod));
         } else {
-            age = round(gauss_positive(_minimum_age, _minimum_age / _gauss_sd_mod));
+            _age = round(gauss_positive(_minimum_age, _minimum_age / _gauss_sd_mod));
         }
     } else {
-        age = irandom_range(_minimum_age, _maximum_age);
+        _age = irandom_range(_minimum_age, _maximum_age);
     }
+
+    born = obj_ini.sector_handler.get_creation_year(_age);
 
 }
 
@@ -154,7 +157,7 @@ function scr_marine_spawn_armour() {
 
     var _role = role();
     var _exp = experience;
-    var _total_score = age + _exp + (scr_has_adv("Crafters") ? 50 : 0);
+    var _total_score = age() + _exp + (scr_has_adv("Crafters") ? 50 : 0);
     var _company = company;
 
     var _armour_weighted_lists = {

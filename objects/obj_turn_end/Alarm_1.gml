@@ -98,5 +98,5 @@ if (popups_end == 1) {
     obj_controller.menu = 0;
     combating = 0;
 
-    obj_controller.sector_handler.increment_date();
+    obj_ini.sector_handler.increment_date();
 }
