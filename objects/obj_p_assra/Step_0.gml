@@ -199,7 +199,7 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
                         // Damaging
                         var to_bomb;
                         to_bomb = false;
-                        if ((plasma_bomb == true) && (obj_ini.gear[co][i] == "Plasma Bomb")) {
+                        if ((plasma_bomb == true) && (unit.gear() == "Plasma Bomb")) {
                             to_bomb = true;
                         }
                         if (choose(1, 2, 3, 4, 5) < 4) {
@@ -211,7 +211,7 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
                         } else if (to_bomb) {
                             target.hp -= 200;
                             damaged_ship = 2;
-                            obj_ini.gear[co][i] = "";
+                            unit.update_gear("",false,false);
                         }
                     }
 

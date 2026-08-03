@@ -368,7 +368,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.dudes_powers[targ.men] = _unit.specials;
                     targ.dudes_wep1[targ.men] = _unit.weapon_one();
                     targ.dudes_wep2[targ.men] = _unit.weapon_two();
-                    targ.dudes_gear[targ.men] = obj_ini.gear[cooh][va];
+                    targ.dudes_gear[targ.men] = _unit.gear();
                     targ.dudges_mobi[targ.men] = _unit.mobility_item();
 
                     new_combat.enemy_forces += 1;

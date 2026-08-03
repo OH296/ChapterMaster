@@ -42,7 +42,6 @@ function scr_event_gossip(argument0) {
         p += 1;
         gossip[p] = "artifact_wep";
     }
-    // if (string_count("&",obj_ini.gear[attend_co[argument0],attend_id[argument0]])>0){p+=1;gossip[p]="artifact_gear";}
     if (_unit.mobility_item() == "Bike") {
         p += 1;
         gossip[p] = "mah_bike";

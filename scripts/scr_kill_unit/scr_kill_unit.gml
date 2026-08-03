@@ -6,13 +6,11 @@ function scr_kill_unit(company, unit_slot) {
             array_push(obj_ini.previous_forge_masters, _unit.name());
         }
 
-        if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+        if (compare_role(_unit eROLE.CHAPTERMASTER)) {
             tek = "c";
             alarm[7] = 5;
             global.defeat = 1;
         }
-
-        var _unit = fetch_unit([company, unit_slot]);
 
         if (is_struct(_unit)) {
             if (_unit.weapon_one() == "Company Standard" || _unit.weapon_two() == "Company Standard") {
