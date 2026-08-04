@@ -1903,8 +1903,8 @@ function scr_initialize_custom() {
         if (player_role_data[i].role == "") {
             continue;
         }
-        var _data = new UnitEquipment(player_role_data[i]);
-        var _allowed_equip = _data.start_allowance();
+        var _data = new UnitEquipment(variable_clone(player_role_data[i]));
+        var _allowed_equip = _data.start_allowance(i);
         with (player_role_data[i]){
             move_data_to_current_scope(_allowed_equip);
         }

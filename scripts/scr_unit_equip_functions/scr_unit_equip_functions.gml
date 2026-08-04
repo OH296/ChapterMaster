@@ -921,6 +921,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
 
     static start_allowable_weapons(slot){
         var _allow = true;
+        var _item = equipment[$ slot].name;
         var _normal_equipment = [
             "Combat Knife",
             "Chainsword",
@@ -931,9 +932,9 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
             "Flamer",
             "Sniper Rifle",
         ];
-        _allow = array_contains(_normal_equipment, equipment[$ slot]);
+        _allow = array_contains(_normal_equipment, _item);
 
-        if (_veteran_level > 0 && !_allow) {
+        if (veteran_level > 0 && !_allow) {
             var _special_equipment = [
                 "Storm Bolter",
                 "Meltagun",
@@ -941,22 +942,22 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
                 "Power Sword",
                 "Power Axe",
             ];
-            _allow = array_contains(_special_equipment, equipment[$ slot]);
+            _allow = array_contains(_special_equipment, _item);
         }
 
-        if (!allow){
-            fiinal_gear[$ slot] = default_options[$slot];
+        if (!_allow){
+            final_gear[$ slot] = default_options[$slot];
         }
-        final_gear[$ slot] = allow ? equipment[$slot].name : default_options[$slot];
+        final_gear[$ slot] = _allow ? _item : default_options[$slot];
     }
 
     static start_allowable_mobi(){
         var _allow = true;
-        if (equipment == "Jump Pack" && (_veteran_level > 0 || role_id == eROLE.ASSAULT)) {
+        if (equipment == "Jump Pack" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
             if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
                 _allow = true;
             }
-        } else if (equipment == "Bike" && (_veteran_level > 0 || role_id == eROLE.ASSAULT)) {
+        } else if (equipment == "Bike" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
             if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
                 _allow = true;
             }
@@ -964,12 +965,12 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
             _allow = true;
         }
 
-        final_gear.mobi = allow ? equipment.mobi.name : default_options.mobi; 
+        final_gear.mobi = _allow ? equipment.mobi.name : default_options.mobi; 
     }
 
     static start_allowable_gear(){
         var _allow = true;
-        if (_veteran_level == 5) {
+        if (veteran_level == 5) {
             if (role_id == eROLE.CHAPLAIN && equipment == "Rosarius") {
                 _allow = true;
             } else if (role_id == eROLE.TECHMARINE) {
@@ -983,7 +984,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
             }
         }
 
-        final_gear.gear = allow ? equipment.gear.name : default_options.gear;  
+        final_gear.gear = _allow ? equipment.gear.name : default_options.gear;  
     }
 
     static start_allowance(role_id){
@@ -992,7 +993,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         default_options = setup_default_gears()[role_id];
         self.role_id = role_id;
         if (role_id == eROLE.DREADNOUGHT) {
-            return;
+            return {};
         }
         if (array_contains([eROLE.SERGEANT, eROLE.VETERAN, eROLE.TERMINATOR], role_id)) {
             veteran_level = 1;
