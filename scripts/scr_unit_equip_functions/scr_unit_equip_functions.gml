@@ -485,7 +485,7 @@ function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury 
     if (_missing_items != ""){
         _outcome_desc += no_equip + _missing_items;
     }
-    var _final_outcome = {success : _final_outcome,description :_outcome_desc};
+    var _final_outcome = {success : _success,description :_outcome_desc};
 
 }
 
@@ -954,41 +954,43 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
 
     static start_allowable_mobi = function(){
         var _allow = false;
-        if (equipment == "Jump Pack" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
+        var _item = equipment.mobi.name;
+        if (_item == "Jump Pack" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
             if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
                 _allow = true;
             }
-        } else if (equipment == "Bike" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
+        } else if (_item == "Bike" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
             if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
                 _allow = true;
             }
-        } else if (equipment == "Heavy Weapons Pack" && role_id == eROLE.DEVASTATOR) {
+        } else if (_item == "Heavy Weapons Pack" && role_id == eROLE.DEVASTATOR) {
             _allow = true;
         }
 
-        final_gear.mobi = _allow ? equipment.mobi.name : default_options.mobi; 
+        final_gear.mobi = _allow ? _item : default_options.mobi; 
     }
 
     static start_allowable_gear = function(){
         var _allow = false;
+        var _item = equipment.gear.name;
         if (veteran_level == 5) {
-            if (role_id == eROLE.CHAPLAIN && equipment == "Rosarius") {
+            if (role_id == eROLE.CHAPLAIN && _item == "Rosarius") {
                 _allow = true;
             } else if (role_id == eROLE.TECHMARINE) {
-                if (array_contains(["Servo-arm", "Servo-harness"], equipment)) {
+                if (array_contains(["Servo-arm", "Servo-harness"], _item)) {
                     _allow = true;
                 }
-            } else if (role_id == eROLE.LIBRARIAN && equipment == "Psychic Hood") {
+            } else if (role_id == eROLE.LIBRARIAN && _item == "Psychic Hood") {
                 _allow = true;
-            } else if (role_id == eROLE.APOTHECARY && equipment == "Narthecium") {
+            } else if (role_id == eROLE.APOTHECARY && _item == "Narthecium") {
                 _allow = true;
             }
         }
 
-        final_gear.gear = _allow ? equipment.gear.name : default_options.gear;  
+        final_gear.gear = _allow ? _item : default_options.gear;  
     }
 
-    static start_allowance = functione(role_id){
+    static start_allowance = function(role_id){
         final_gear = {};
         veteran_level = 0;
         default_options = setup_default_gears()[role_id];

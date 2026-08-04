@@ -388,7 +388,7 @@ function scr_ui_advisors() {
             if ((onceh == 0) && (fest_planet == 0)) {
                 onceh = 1;
                 fest_planet = 1;
-                fest_sid = 0;
+                fest_sid = -1;
                 fest_wid = 0;
                 fest_star = "";
                 with (obj_dropdown_sel) {
@@ -424,7 +424,7 @@ function scr_ui_advisors() {
             if ((onceh == 0) && (fest_planet == 1) && (fest_type != "Triumphal March")) {
                 onceh = 1;
                 fest_planet = 0;
-                fest_sid = 0;
+                fest_sid = -1;
                 fest_wid = 0;
                 fest_star = "";
                 with (obj_dropdown_sel) {
@@ -701,7 +701,7 @@ function scr_ui_advisors() {
             draw_rectangle(xx + 1132, yy + 780, xx + 1253, yy + 805, 0);
             if (mouse_button_clicked()) {
                 fest_type = "";
-                fest_sid = 0;
+                fest_sid = -1;
                 fest_wid = 0;
                 fest_planet = 0;
                 fest_star = "";

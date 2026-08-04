@@ -149,7 +149,7 @@ function scr_librarium() {
         draw_set_color(c_gray);
         draw_set_font(fnt_large);
         draw_text_transformed(xx + 352, yy + 66, "Librarium", 1, 1, 0);
-        draw_text_transformed(xx + 352, yy + 100, $"Adept {obj_controller.adept_name"}, 0.6, 0.6, 0);
+        draw_text_transformed(xx + 352, yy + 100, $"Adept {obj_controller.adept_name}", 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14);
     }
 

@@ -425,13 +425,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         obj_ini.TTRPG[new_company][_slot] = self;
         company = new_company;
         marine_number = _slot;
-        var _old_company_length = array_length(obj_ini.TTRP[_old_loc[0]]);
+        var _old_company_length = array_length(obj_ini.TTRPG[_old_loc[0]]);
         for (var i = _old_loc[1] + 1; i < _old_company_length ; i++){
-            var _unit = fetch_unit[_old_loc[0] , i];
+            var _unit = fetch_unit([_old_loc[0] , i]);
             _unit.movement_after_math(_old_loc[0] ,i -1, false);
             _unit.marine_number = i -1; 
         }
-        array_delete(obj_ini.TTRP[_old_loc[0]] , _old_loc[1] , 1);
+        array_delete(obj_ini.TTRPG[_old_loc[0]] , _old_loc[1] , 1);
     }
 
     static armour = function(raw = false) {
@@ -2077,7 +2077,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static get_role_data = function(){
-        for (var i = 0; i < 24; i++) {
+        for (var i = 0; i < array_legth(obj_ini.player_role_data); i++) {
             var _role_data = obj_ini.player_role_data[i];
             if (_role_data.role == role()) {
                 return _role_data;

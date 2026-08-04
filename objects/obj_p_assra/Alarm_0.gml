@@ -3,11 +3,11 @@ var co = 0, i = 0, o = 0, _unit;
 for (o = 0; o < array_length(origin.board_co); o++) {
     co = origin.board_co[o];
     i = origin.board_id[o];
-    _unit = fetch__unit([co, i]);
+    _unit = fetch_unit([co, i]);
     if (!is_struct(_unit)) {
         continue;
     }
-    if (_unit.hp() <= -15 && _unit.base_group != "astartes") {
+    if (_unit.hp() <= -15 && _unit.base_group == "astartes") {
         var seed_lost = 0;
         if (apothecary <= 0) {
             if (_unit.IsSpecialist(SPECIALISTS_STANDARD)) {

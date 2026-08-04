@@ -42,7 +42,7 @@ function get_department_head(head_type = eCHAPTER_DEPARTMENTS.HQ){
             }
     }
 
-    return _unnit
+    return _unit
 }
 
 function selected_chapter_trait(trait) {

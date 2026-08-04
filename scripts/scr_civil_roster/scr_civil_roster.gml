@@ -401,7 +401,7 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     }
 
                     // todo find out what more targ.dudes does, relevant to targ.men?
-                    var _armour_data = _unit.get_armour_dsata();
+                    var _armour_data = _unit.get_armour_data();
                     if (is_struct(_armour_data)){
                         targ.dudes_ac += _armour_data.armour_value;
                         arg.dudes_ranged += _armour_data.ranged_mod/100;

@@ -1475,7 +1475,7 @@ function scr_initialize_custom() {
         var c_roles = obj_creation.custom_roles;
         var possible_custom_roles = [
             [
-                "chapter_master",
+                "_chapter_master",
                 eROLE.CHAPTERMASTER,
             ],
             [
@@ -1568,7 +1568,7 @@ function scr_initialize_custom() {
     }
 
     var roles = {
-        chapter_master: player_role_data[eROLE.CHAPTERMASTER].role,
+        _chapter_master: player_role_data[eROLE.CHAPTERMASTER].role,
         honour_guard: player_role_data[eROLE.HONOURGUARD].role,
         veteran: player_role_data[eROLE.VETERAN].role,
         terminator: player_role_data[eROLE.TERMINATOR].role,
@@ -1936,38 +1936,38 @@ function scr_initialize_custom() {
     // This needs work
     var cm_equip = load_chapter_master_equipment();
 
-    var chapter_master = add_unit_to_company("chapter_master", _company_i, _marine_i, roles.chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
-    _forge_master.set_name(obj_creation.chapter_master_name);
+    var _chapter_master = add_unit_to_company("_chapter_master", _company_i, _marine_i, roles._chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
+    _chapter_master.set_name(obj_creation.chapter_master_name);
     repeat (cm_equip.bionics) {
-        chapter_master.add_bionics("none", "standard", false);
+        _chapter_master.add_bionics("none", "standard", false);
     }
 
-    chapter_master.specials = "";
-    chapter_master.add_trait("lead_example");
+    _chapter_master.specials = "";
+    _chapter_master.add_trait("lead_example");
 
     //builds in which of the three chapter master types your CM is
     // all of this can now be handled in teh struct and no longer neades complex methods
     switch (obj_creation.chapter_master_specialty) {
         case 1:
-            chapter_master.add_exp(550);
-            chapter_master.specials += "$";
-            chapter_master.add_trait("charismatic");
+            _chapter_master.add_exp(550);
+            _chapter_master.specials += "$";
+            _chapter_master.add_trait("charismatic");
             break;
         case 2:
-            chapter_master.add_exp(650);
-            chapter_master.specials += "@";
-            chapter_master.add_trait("paragon");
+            _chapter_master.add_exp(650);
+            _chapter_master.specials += "@";
+            _chapter_master.add_trait("paragon");
             break;
         case 3:
             //TODO phychic powers need a redo but after weapon refactor
-            chapter_master.add_exp(550);
+            _chapter_master.add_exp(550);
             cm_equip.gear = "Psychic Hood";
-            chapter_master.add_trait("favoured_by_the_warp");
-            chapter_master.psionic = choose(13, 14);
-            chapter_master.update_powers();
+            _chapter_master.add_trait("favoured_by_the_warp");
+            _chapter_master.psionic = choose(13, 14);
+            _chapter_master.update_powers();
     }
-    chapter_master.alter_equipment(cm_equip, false, false, "master_crafted");
-    chapter_master.marine_assembling();
+    _chapter_master.alter_equipment(cm_equip, false, false, "master_crafted");
+    _chapter_master.marine_assembling();
 
     var _hq_armour = "Artificer Armour";
     if (scr_has_disadv("Poor Equipment")) {
@@ -3114,18 +3114,18 @@ function load_chapter_master_equipment() {
         }
     }
 
-    if (variable_instance_exists(obj_creation, "chapter_master")) {
-        if (struct_exists(obj_creation.chapter_master, "gear") && obj_creation.chapter_master.gear != "") {
-            chapter_master_equip.gear = obj_creation.chapter_master.gear;
+    if (variable_instance_exists(obj_creation, "_chapter_master")) {
+        if (struct_exists(obj_creation._chapter_master, "gear") && obj_creation._chapter_master.gear != "") {
+            chapter_master_equip.gear = obj_creation._chapter_master.gear;
         }
-        if (struct_exists(obj_creation.chapter_master, "mobi") && obj_creation.chapter_master.mobi != "") {
-            chapter_master_equip.mobi = obj_creation.chapter_master.mobi;
+        if (struct_exists(obj_creation._chapter_master, "mobi") && obj_creation._chapter_master.mobi != "") {
+            chapter_master_equip.mobi = obj_creation._chapter_master.mobi;
         }
-        if (struct_exists(obj_creation.chapter_master, "armour") && obj_creation.chapter_master.armour != "") {
-            chapter_master_equip.armour = obj_creation.chapter_master.armour;
+        if (struct_exists(obj_creation._chapter_master, "armour") && obj_creation._chapter_master.armour != "") {
+            chapter_master_equip.armour = obj_creation._chapter_master.armour;
         }
-        if (struct_exists(obj_creation.chapter_master, "bionics") && obj_creation.chapter_master.bionics != "") {
-            for (var i = 0; i < real(obj_creation.chapter_master.bionics); i++) {
+        if (struct_exists(obj_creation._chapter_master, "bionics") && obj_creation._chapter_master.bionics != "") {
+            for (var i = 0; i < real(obj_creation._chapter_master.bionics); i++) {
                 chapter_master_equip.bionics += 1;
             }
         }

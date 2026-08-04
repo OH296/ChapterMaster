@@ -25,7 +25,7 @@ try {
     }
     // TODO change this into a constructor which is in a separated script
     if ((fest_scheduled == 0) && (fest_sid + fest_wid > 0) && (menu != eMENU.FESTIVAL)) {
-        fest_sid = 0;
+        fest_sid = -1;
         fest_wid = 0;
         fest_planet = 0;
         fest_type = "";

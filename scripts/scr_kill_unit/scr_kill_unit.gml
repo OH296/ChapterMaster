@@ -1,12 +1,16 @@
 /// @self Asset.GMObject.obj_controller
 function scr_kill_unit(company, unit_slot) {
     try {
-        var _unit = fetch_unit([company, unit_slot])
+        var _unit = fetch_unit([company, unit_slot]);
+        if (!is_struct(_unit)){
+            LOGGER.debug($"company: {company}, unit_slot: {unit_slot}");
+            return;
+        }
         if (_unit.role() == "Forge Master") {
             array_push(obj_ini.previous_forge_masters, _unit.name());
         }
 
-        if (compare_role(_unit, eROLE.CHAPTERMASTER)) {
+        if (role_compare(_unit, eROLE.CHAPTERMASTER)) {
             tek = "c";
             alarm[7] = 5;
             global.defeat = 1;
@@ -18,7 +22,7 @@ function scr_kill_unit(company, unit_slot) {
             }
             _unit.remove_from_squad();
 
-            // Drop equipped artifacts at the unit's location before the slots are wiped.
+            // Drop equipped artifacts at the _unit's location before the slots are wiped.
             var _equipped = _unit.equipped_artifacts();
             for (var _e = 0; _e < array_length(_equipped); _e++) {
                 var _art = fetch_artifact(_equipped[_e]);
@@ -40,7 +44,7 @@ function scr_wipe_unit(company, unit_slot) {
 }
 
 function kill_and_recover(company, unit_slot, equipment = true, gene_seed_collect = true) {
-    var unit = obj_ini.TTRPG[company][unit_slot];
+    var _unit = obj_ini.TTRPG[company][unit_slot];
     if (equipment) {
         var strip = {
             "wep1": "",
@@ -49,14 +53,16 @@ function kill_and_recover(company, unit_slot, equipment = true, gene_seed_collec
             "armour": "",
             "gear": "",
         };
-        unit.alter_equipment(strip, false, true);
+        _unit.alter_equipment(strip, false, true);
     }
-    if (gene_seed_collect && unit.base_group == "astartes") {
 
-        obj_controller.gene_seed += unit.recoverable_geneseed();
+    var _is_astartes = _unit.base_group == "astartes";
+    if (gene_seed_collect && _is_astartes) {
+
+        obj_controller.gene_seed += _unit.recoverable_geneseed();
     }
-    if (obj_ini.base_group == "astartes") {
-        if (unit.IsSpecialist()) {
+    if (_is_astartes) {
+        if (_unit.IsSpecialist()) {
             obj_controller.command -= 1;
         } else {
             obj_controller.marines -= 1;

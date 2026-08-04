@@ -119,7 +119,7 @@ if (opened == 1) {
 
                         if (obj_controller.fest_type == "Triumphal March") {
                             obj_controller.fest_planet = 1;
-                            obj_controller.fest_sid = 0;
+                            obj_controller.fest_sid = -1;
                             obj_controller.fest_wid = 0;
                             with (obj_dropdown_sel) {
                                 if (target == "event_loc") {
@@ -160,13 +160,13 @@ if (opened == 1) {
                                 obj_controller.fest_attend = scr_event_dudes(0, 0, "", option_id[i]);
                             }
                             if (option[i] == "None Selected") {
-                                obj_controller.fest_sid = 0;
+                                obj_controller.fest_sid = -1;
                                 obj_controller.fest_attend = "";
                             }
                         }
                         if (obj_controller.fest_planet == 1) {
                             obj_controller.fest_wid = option_id[i];
-                            obj_controller.fest_sid = 0;
+                            obj_controller.fest_sid = -1;
                             obj_controller.fest_star = option_star[i];
                             if (option[i] != "None Selected") {
                                 obj_controller.fest_attend = scr_event_dudes(0, 1, option_star[i], option_id[i]);

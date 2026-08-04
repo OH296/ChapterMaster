@@ -321,7 +321,7 @@ function calculate_equipment_needs() {
         req_wep2_num = units;
     } else {
         for (var i = 2; i < 20; i++) {
-            var _role = obj_ini.player_role_data;
+            var _role = obj_ini.player_role_data[i];
             if (_role.role == rall) {
                 req_armour = _role.armour;
                 req_armour_num = units;

@@ -42,7 +42,7 @@ function transfer_marines() {
             for (var mem = 0; mem < array_length(move_members); mem++) {
                 //check all members have been selected and are in the same company
                 if (array_index + mem < array_length(obj_controller.display_unit)) {
-                    if (!is_struct(obj_controller.display_unit[w + mem])) {
+                    if (!is_struct(obj_controller.display_unit[array_index + mem])) {
                         continue;
                     }
                     if (obj_controller.man_sel[array_index + mem] != 1 || obj_controller.display_unit[array_index + mem].squad != move_squad) {
@@ -62,8 +62,8 @@ function transfer_marines() {
                     if (!is_struct(member_unit)) {
                         continue;
                     }
-                    unit.move_to_company(target_comp, false);
-                    _unit.squad = move_squad;
+                    member_unit.move_to_company(target_comp, false);
+                    member_unit.squad = move_squad;
                     squad.members[mem][0] = _unit.company;
                     squad.members[mem][1] = _unit.marine_number;
                 }

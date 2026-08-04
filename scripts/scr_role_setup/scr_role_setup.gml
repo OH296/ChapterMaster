@@ -45,11 +45,13 @@ function setup_default_gears (){
     load_default_gear(eROLE.SERGEANT, "Sergeant", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.VETERANSERGEANT, "Veteran Sergeant", "Chainsword", "Plasma Pistol", STR_ANY_POWER_ARMOUR, "", "");
 
-    for (var i = 0; i < array_length(player_role_data); i++) {
+    for (var i = 0; i < array_length(default_role_data); i++) {
         if (default_role_data[i] == 0){
             default_role_data[i] = role_data_set();
         }
     }
+
+    return default_role_data;
 }
 
 function update_role_data_wth_defaults(){
@@ -60,16 +62,16 @@ function update_role_data_wth_defaults(){
         for (var k=0;k<array_length(_keys);k++){
             var _key = _keys[k];
             var _set_with_default = false;
-            if (!struct_exsts(_role_data, _key)){
+            if (!struct_exists(_role_data, _key)){
                 _set_with_default = true;
             } else {
-                var _val = _role_data[$ key];
+                var _val = _role_data[$ _key];
                 if (_val == "" || _val == "default"){
                     _set_with_default = true;
                 }
             }
             if (_set_with_default == true){
-                _role_data[i][$key] = variable_clone(_default_data[i][$key]);
+                _role_data[$ _key] = variable_clone(_default_data[$ _key]);
             }
         }
     }
@@ -365,7 +367,7 @@ function scr_role_setup() {
             }
         }
 
-        if (techs_allowed != 0) {
+        if (_techs_allowed) {
             draw_set_color(CM_GREEN_COLOR);
             if (fmaster == "") {
                 draw_set_color(c_red);

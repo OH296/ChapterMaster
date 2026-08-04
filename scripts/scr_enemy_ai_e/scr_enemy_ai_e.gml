@@ -742,7 +742,7 @@ function scr_enemy_ai_e() {
 
         var otm = 0;
         var master_present = false;
-        for (var co = 0; co <= 10 && _is_a_chaos_meeting; co++) {
+        for (var co = 0; co <= obj_ini.companies; co++) {
             for (var i = 0; i <= array_length(obj_ini.TTRPG[co]); i++) {
                 var _unit = fetch_unit([co, i]);
                 var _is_a_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
@@ -762,7 +762,7 @@ function scr_enemy_ai_e() {
                 _meeting.present[otm] = 1;
                 _meeting.co[otm] = co;
                 _meeting.ide[otm] = i;
-                if (co <= 0) {
+                if (co <= 0 && i == 0) {
                     master_present = role_compare(_unit, eROLE.CHAPTERMASTER);
                 }
             }

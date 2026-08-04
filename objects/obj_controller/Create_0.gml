@@ -409,7 +409,7 @@ sel_loading = -1;
 sel_uid = 0;
 
 // ** Sets Chapter events and celebrations **
-fest_sid = 0;
+fest_sid = -1;
 fest_wid = 0;
 fest_planet = 0;
 fest_star = "";

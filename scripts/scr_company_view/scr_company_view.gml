@@ -45,7 +45,7 @@ function find_company_open_slot(target_company) {
     var good = -1;
     var _company_length = array_length(obj_ini.TTRPG[target_company]);
     for (var i = 0; i < _company_length; i++) {
-        if (is_undefined(obj_ini.TTRPG[target_company])) {
+        if (is_undefined(obj_ini.TTRPG[target_company][i])) {
             good = i;
             break;
         }
