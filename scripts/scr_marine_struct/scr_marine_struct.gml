@@ -982,7 +982,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
         array_push(epithets, epithet);
     };
-    static name = function(update) {
+    static name = function() {
         return unit_name;
     }; // get marine name
 
