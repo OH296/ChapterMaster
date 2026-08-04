@@ -63,7 +63,6 @@ function transfer_marines() {
                         continue;
                     }
                     unit.move_to_company(target_comp, false);
-                    scr_move_unit_info(member_unit.company, target_comp, member_unit.marine_number, mahreens, false);
                     _unit.squad = move_squad;
                     squad.members[mem][0] = _unit.company;
                     squad.members[mem][1] = _unit.marine_number;

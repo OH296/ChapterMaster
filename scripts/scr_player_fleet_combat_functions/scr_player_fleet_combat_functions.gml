@@ -347,9 +347,6 @@ function setup_player_combat_ship() {
 
     for (var co = 0; co <= obj_ini.companies; co++) {
         for (i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
-            if (obj_ini.name[co][i] == "") {
-                continue;
-            }
             var unit = fetch_unit([co, i]);
             if (!is_struct(unit)) {
                 continue;

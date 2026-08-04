@@ -51,7 +51,10 @@ function scr_ui_advisors() {
         draw_set_color(c_gray);
         draw_rectangle(xx + 945, yy + 66, xx + 1580, yy + 818, 1);
 
-        if (menu_adept == 0) {
+        var _head = get_department_head(eCHAPTER_DEPARTMENTS.CHAP);
+
+        var _has_head = is_struct(_head);
+        if (_has_head) {
             if (struct_exists(obj_ini.custom_advisors, "chaplain")) {
                 scr_image("advisor/splash", obj_ini.custom_advisors.chaplain, xx + 16, yy + 43, 310, 828);
             } else {
@@ -61,9 +64,9 @@ function scr_ui_advisors() {
             draw_set_color(c_gray);
             draw_set_font(fnt_40k_30b);
             draw_text_transformed(xx + 336 + 16, yy + 66, "Reclusium", 1, 1, 0);
-            draw_text_transformed(xx + 336 + 16, yy + 100, string_hash_to_newline("Master of Sanctity " + string(obj_ini.name[0][2])), 0.6, 0.6, 0);
+            draw_text_transformed(xx + 336 + 16, yy + 100, _head.name_role(), 0.6, 0.6, 0);
         }
-        if (menu_adept == 1) {
+        else {
             scr_image("advisor/splash", 1, xx + 16, yy + 43, 310, 828);
             draw_set_halign(fa_left);
             draw_set_color(c_gray);

@@ -874,8 +874,9 @@ function scr_draw_recruit_advisor() {
         draw_set_font(fnt_40k_14);
     }
 
+    var _cm = obj_controller.chapter_master.get_struct();
     if (menu_adept == 0) {
-        blurp = $"Hail {obj_ini.name[0][0]}! You asked for a report?\n\n";
+        blurp = $"Hail {_cm.name()}! You asked for a report?\n\n";
     }
 
     if (obj_ini.doomed == 0) {

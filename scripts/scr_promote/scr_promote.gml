@@ -32,18 +32,8 @@ function setup_promotion_popup() {
                 label: "Promote",
             });
             promote_button.bind_method = function() {
-                var mahreens = 0;
-
-                if (target_comp > 10) {
-                    target_comp = 0;
-                }
-
-                for (var i = 0; i < 498; i++) {
-                    if (obj_ini.name[target_comp][i] == "" && obj_ini.name[target_comp][i + 1] == "") {
-                        mahreens = i;
-                        break;
-                    }
-                }
+                
+                var _company_length = company_length(obj_ini.TTRPG[target_comp]);
                 // Gets the number of marines in the target company
                 var unit, squad_mover, moveable;
                 var role_squad_equivilances = {}; //this is the only way to set variables as keys in gml
