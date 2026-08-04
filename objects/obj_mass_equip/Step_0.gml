@@ -11,11 +11,10 @@ try {
             if (role_number[co] > 0) {
                 for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                     var _unit = fetch_unit([co, i]);
-                    if (!role_compare(_unit, role)) {
+                    if (!is_struct(_unit)) {
                         continue;
                     }
-                    var _unit = fetch_unit([co, i]);
-                    if (!is_struct(_unit)) {
+                    if (!role_compare(_unit, role)) {
                         continue;
                     }
                     if (_unit.squad != "none") {
@@ -167,7 +166,7 @@ try {
                     _wep_two_found = true;
                 }
 
-                var _wep2 = _unit.weapon_two(true);
+
                 if (is_struct(_wep2) || _wep2 == req_wep1 && !_wep_two_found){
                     have_wep2_num++;
                 }

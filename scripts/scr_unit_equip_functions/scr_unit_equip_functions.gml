@@ -458,21 +458,22 @@ function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury 
     var equip_areas = struct_get_names(update_equipment);
     for (var i = 0; i < array_length(equip_areas); i++) {
         var _item = update_equipment[$ equip_areas[i]];
+		var _outcome = "";
         switch (equip_areas[i]) {
             case "wep1":
-                var _outcome = update_weapon_one(_item, from_armoury, to_armoury, quality);
+                _outcome = update_weapon_one(_item, from_armoury, to_armoury, quality);
                 break;
             case "wep2":
-                var _outcome = update_weapon_two(_item, from_armoury, to_armoury, quality);
+                _outcome = update_weapon_two(_item, from_armoury, to_armoury, quality);
                 break;
             case "mobi":
-                var _outcome = update_mobility_item(_item, from_armoury, to_armoury, quality);
+                _outcome = update_mobility_item(_item, from_armoury, to_armoury, quality);
                 break;
             case "armour":
-                var _outcome = update_armour(_item, from_armoury, to_armoury, quality);
+                _outcome = update_armour(_item, from_armoury, to_armoury, quality);
                 break;
             case "gear":
-                var _outcome = update_gear(_item, from_armoury, to_armoury, quality);
+                _outcome = update_gear(_item, from_armoury, to_armoury, quality);
                 break;
         }
         if (_outcome == "no_items"){
@@ -987,7 +988,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         final_gear.gear = _allow ? equipment.gear.name : default_options.gear;  
     }
 
-    static start_allowance(role_id){
+    static start_allowance = functione(role_id){
         final_gear = {};
         veteran_level = 0;
         default_options = setup_default_gears()[role_id];

@@ -583,7 +583,7 @@ try {
         fest_repeats--;
         var _cm = chapter_master.get_struct();
 
-        if (fest_sid _cm.ship_location)) {
+        if (fest_sid == _cm.ship_location) {
             cm_present = true;
         }
         if (fest_wid > 0 && _cm.is_at_location(fest_star, fest_wid)) {

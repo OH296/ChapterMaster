@@ -12,8 +12,9 @@ enum eCHAPTER_DEPARTMENTS {
 }
 
 function get_department_head(head_type = eCHAPTER_DEPARTMENTS.HQ){
+	 var _unit = undefined;
     if (head_type < array_length(obj_ini.TTRPG[0])){
-        var _unit = fetch_unit([0, head_type]);
+        _unit = fetch_unit([0, head_type]);
     } else {
         return undefined;
     }

@@ -1,4 +1,6 @@
 function mechanicus_missions_end_turn(planet) {
+
+    var _pdata = get_planet_data(planet);
     var raider_planet_slot = has_problem_planet_with_time(planet, "mech_raider");
     if (raider_planet_slot > -1) {
         var _techs = collect_role_group(SPECIALISTS_TECHS, [name, planet, -1]);
@@ -15,8 +17,6 @@ function mechanicus_missions_end_turn(planet) {
     }
     var bionics_planet_slot = has_problem_planet_with_time(planet, "mech_bionics");
     if (bionics_planet_slot > -1) {
-        var check1 = scr_bionics_count("star", name, planet, "number");
-        var _pdata = get_planet_data(planet);
         var _units = _pdata.collect_planet_group();
         var _bionics = _units.tally_attr("bionics");
         if (_bionics >= 10) {
