@@ -86,7 +86,7 @@ function scr_ui_advisors() {
             blurp = $"Sir!  You requested a report?  Currently, we have {temp[37]} {_active_roles[14]}s who await only your order to carry the word to the troops.";
         }
         if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-            blurp += "##Currently, we are training additional " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + " at a ";
+            blurp += $"##Currently, we are training additional {obj_ini.player_role_data[eROLE.CHAPLAIN].role} at a ";
             var _recruit_rates = global.recruitment_rates;
             blurp += _recruit_rates[training_chaplain];
             if (training_chaplain > 0 && training_chaplain <= 6) {
@@ -95,7 +95,7 @@ function scr_ui_advisors() {
             }
             blurp += " rate";
             if (training_chaplain > 0) {
-                blurp += " and expect to see a new one in " + string(eta) + " month's time.";
+                blurp += " and expect to see a new one in {eta} month's time.";
             }
             if (training_chaplain < 5) {
                 blurp += "We can increase this rate, but it will require us to requisition additional facilities, as well as upkeep, Sir.";
