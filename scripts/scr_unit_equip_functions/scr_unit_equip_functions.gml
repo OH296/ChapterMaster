@@ -825,8 +825,6 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
                     _marines_without_exp++;
                 }
             }
-
-                var _unit_armour_data = _unit.get_armour_data();
             if (slot == eEQUIPMENT_SLOT.ARMOUR && !get_item("armour").has_tag("dreadnought")) {
                 if (_unit.is_dreadnought()) {
                     equipment_found_and_valid[slot] = false;
