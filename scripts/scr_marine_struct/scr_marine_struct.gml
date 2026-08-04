@@ -983,17 +983,12 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         array_push(epithets, epithet);
     };
     static name = function(update) {
-        return obj_ini.name[company][marine_number];
+        return unit_name;
     }; // get marine name
 
     static set_name = function(val){
         unit_name = val;
     }
-
-    static set_name = function(new_name) {
-        obj_ini.name[company][marine_number] = new_name;
-        return new_name;
-    };
 
     static gear = function(raw = false) {
         var _wep = gear1;

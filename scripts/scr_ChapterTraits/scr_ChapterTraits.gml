@@ -3,6 +3,47 @@ enum eCHAPTER_TRAIT_TYPE {
     ADV,
 }
 
+enum eCHAPTER_DEPARTMENTS {
+    HQ = 0,
+    FORGE = 1,
+    CHAP = 2,
+    APOTH = 3, 
+    LIB = 4
+}
+
+function get_department_head(head_type = eCHAPTER_DEPARTMENTS.HQ){
+    if (head_type < array_length(obj_ini.TTRPG[0])){
+        var _unit = fetch_unit([0, head_type]);
+    } else {
+        return undefined;
+    }
+
+    switch(head_type){
+        case eCHAPTER_DEPARTMENTS.HQ: 
+            if (!role_compare(_unit, eROLE.CHAPTERMASTER)){
+                return undefined;
+            }
+        case eCHAPTER_DEPARTMENTS.FORGE:
+            if (_unit.role() != "Forge Master"){
+                return undefined;
+            }
+        case eCHAPTER_DEPARTMENTS.CHAP:
+            if (_unit.role() != "Master of Sanctity"){
+                return undefined;
+            }
+        case eCHAPTER_DEPARTMENTS.APOTH:
+            if (_unit.role() != "Master of the Apothecarion"){
+                return undefined;
+            }
+        case eCHAPTER_DEPARTMENTS.LIB:
+            if (_unit.role() != $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role}"){
+                return undefined;
+            }
+    }
+
+    return _unnit
+}
+
 function selected_chapter_trait(trait) {
     var _array = array_join(obj_creation.all_advantages, obj_creation.all_disadvantages);
     for (var i = 0; i < array_length(_array); i++) {

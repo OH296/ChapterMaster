@@ -581,12 +581,12 @@ try {
     if ((fest_scheduled > 0) && (fest_repeats > 0)) {
         var cm_present = false;
         fest_repeats--;
-        var lock = scr_master_loc();
+        var _cm = chapter_master.get_struct();
 
-        if ((fest_sid > 0) && (obj_ini.ship[fest_sid] == lock)) {
+        if (fest_sid _cm.ship_location)) {
             cm_present = true;
         }
-        if ((fest_wid > 0) && (string(fest_star) + "." + string(fest_wid) == lock)) {
+        if (fest_wid > 0 && _cm.is_at_location(fest_star, fest_wid)) {
             cm_present = true;
         }
 

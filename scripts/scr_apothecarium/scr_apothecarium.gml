@@ -63,8 +63,8 @@ function scr_apothecarium() {
     draw_set_alpha(1);
     draw_set_color(c_gray);
     draw_rectangle(xx + 945, yy + 66, xx + 1580, yy + 818, 1);
-
-    if (obj_controller.menu_adept == 0) {
+    var _head = get_department_head(eCHAPTER_DEPARTMENTS.APOTH);
+    if (is_struct(_head)) {
         if (struct_exists(obj_ini.custom_advisors, "apothecary")) {
             scr_image("advisor/splash", obj_ini.custom_advisors.apothecary, xx + 16, yy + 43, 310, 828);
         } else {
@@ -74,7 +74,7 @@ function scr_apothecarium() {
         draw_set_color(c_gray);
         draw_set_font(fnt_40k_30b);
         draw_text_transformed(xx + 352, yy + 66, "Apothecarium", 1, 1, 0);
-        draw_text_transformed(xx + 352, yy + 100, "Master of the Apothecarion " + string(obj_ini.name[0][3]), 0.6, 0.6, 0);
+        draw_text_transformed(xx + 352, yy + 100, _head.name_role(), 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14);
     } else if (obj_controller.menu_adept == 1) {
         scr_image("advisor/splash", 1, xx + 16, yy + 43, 310, 828);

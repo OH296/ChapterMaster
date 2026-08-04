@@ -159,8 +159,10 @@ function scr_enemy_ai_d() {
             var woop = scr_role_count("Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role), "");
             var yep = !scr_has_disadv("Psyker Intolerant");
 
-            if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (woop != 0) && yep) {
-                scr_popup("Shadow in the Warp", $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role} " + string(obj_ini.name[0][5]) + " reports a disturbance in the warp.  He claims it is like a shadow.", "shadow", "");
+            var _head = get_department_head(eCHAPTER_DEPARTMENTS.LIB);
+
+            if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (woop != 0) && yep && is_struct(_head)) {
+                scr_popup("Shadow in the Warp", $"Chief {_head.name_role()} reports a disturbance in the warp.  He claims it is like a shadow.", "shadow", "");
                 scr_event_log("red", $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role} reports a disturbance in the warp.  He claims it is like a shadow.");
             }
             if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (woop == 0) && yep) {

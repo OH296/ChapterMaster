@@ -23,9 +23,6 @@ function scr_add_corruption(is_fleet, modifier_type) {
         }
         for (var co = 0; co <= 10; co++) {
             for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
-                if (obj_ini.name[co][i] == "") {
-                    continue;
-                }
                 var unit = fetch_unit([co, i]);
                 if (!is_struct(unit)) {
                     continue;

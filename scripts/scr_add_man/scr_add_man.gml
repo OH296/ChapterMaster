@@ -65,40 +65,36 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
             // TODO: Implement Chaos Spawn (Race 12, Possessed Claws)
         }
     }
+    var _name = "";
     switch (spawn_name) {
         case "":
         case "imperial":
-            obj_ini.name[target_company][_company_slot] = global.name_generator.ChapterMemberNameGeneration();
+            _name = global.name_generator.ChapterMemberNameGeneration();
             break;
         default:
-            obj_ini.name[target_company][_company_slot] = spawn_name;
+            _name = spawn_name;
             break;
     }
     switch (man_role) {
         case "Ranger":
-            obj_ini.name[target_company][_company_slot] = global.name_generator.GenerateMultiSyllable("eldar", 2);
+            _name = global.name_generator.GenerateMultiSyllable("eldar", 2);
             break;
 
         case "Ork Sniper":
         case "Flash Git":
-            obj_ini.name[target_company][_company_slot] = global.name_generator.GenerateComposite("ork", false);
+            _name = global.name_generator.GenerateComposite("ork", false);
             break;
 
         case "Sister of Battle":
         case "Sister Hospitaler":
-            obj_ini.name[target_company][_company_slot] = global.name_generator.GenerateFromSet("imperial_female");
+            _name = global.name_generator.GenerateFromSet("imperial_female");
             break;
     }
 
+
     if (!array_contains(non_marine_roles, man_role)) {
         if (man_role == obj_ini.player_role_data[eROLE.SCOUT].role) {
-            _gear = {
-                wep2: obj_ini.player_role_data[eROLE.SCOUT].wep2,
-                wep1: obj_ini.player_role_data[eROLE.SCOUT].wep1,
-                armour: obj_ini.player_role_data[eROLE.SCOUT].armour,
-                gear: obj_ini.player_role_data[eROLE.SCOUT].gear,
-                mobi: obj_ini.player_role_data[eROLE.SCOUT].mobi,
-            };
+            _gear = obj_ini.player_role_data[eROLE.SCOUT];
         }
 
         _unit = new TTRPG_stats("chapter", target_company, _company_slot, "scout", other_data);
@@ -108,6 +104,7 @@ function scr_add_man(man_role, target_company, spawn_exp, spawn_name, corruption
         marines += 1;
     }
     obj_ini.TTRPG[target_company][_company_slot] = _unit;
+    _unit.set_name(_name)
     _unit.add_exp(spawn_exp);
     _unit.allocate_unit_to_fresh_spawn(home_spot);
     _unit.update_role(man_role);

@@ -1380,7 +1380,7 @@ var _parts = [];
 for (var i = 0, l = array_length(_command_staff); i < l; i++) {
     var _officer = _command_staff[i];
     if (_hq_index.has_role(_officer.role)) {
-        array_push(_parts, $"{_officer.prefix}{_officer.role} {obj_ini.name[0][_officer.name_slot]}");
+        array_push(_parts, $"{_officer.prefix}{_officer.role} {TTRPG[0][_officer.name_slot].name()}");
     }
 }
 temp[34] = _build_clause("Command staff made of", _parts);

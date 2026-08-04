@@ -128,7 +128,9 @@ function scr_librarium() {
     draw_set_color(c_gray);
     draw_rectangle(xx + 945, yy + 66, xx + 1580, yy + 818, 1); // Right librarium box
 
-    if (menu_adept == 0) {
+    var _head = get_department_head(eCHAPTER_DEPARTMENTS.LIB);
+    var _head_found = is_struct(_head);
+    if (_head_found) {
         if (struct_exists(obj_ini.custom_advisors, "librarian")) {
             scr_image("advisor/splash", obj_ini.custom_advisors.librarian, xx + 16, yy + 43, 310, 828);
         } else {
@@ -138,7 +140,7 @@ function scr_librarium() {
         draw_set_color(c_gray);
         draw_set_font(fnt_40k_30b);
         draw_text_transformed(xx + 352, yy + 66, "Librarium", 1, 1, 0);
-        draw_text_transformed(xx + 352, yy + 100, string_hash_to_newline("Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role) + " " + string(obj_ini.name[0][4])), 0.6, 0.6, 0);
+        draw_text_transformed(xx + 352, yy + 100, _head.name_role(), 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14);
     }
     if (menu_adept == 1) {
@@ -147,7 +149,7 @@ function scr_librarium() {
         draw_set_color(c_gray);
         draw_set_font(fnt_large);
         draw_text_transformed(xx + 352, yy + 66, "Librarium", 1, 1, 0);
-        draw_text_transformed(xx + 352, yy + 100, string_hash_to_newline("Adept " + string(obj_controller.adept_name)), 0.6, 0.6, 0);
+        draw_text_transformed(xx + 352, yy + 100, $"Adept {obj_controller.adept_name"}, 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14);
     }
 
@@ -168,10 +170,11 @@ function scr_librarium() {
     }
 
     // Greetings message
-    if (menu_adept == 0) {
-        draw_text_ext(xx + 352, yy + 130, string_hash_to_newline($"Chapter Master {obj_ini.name[0][0]}, greetings.#I assume you've come for the report?  The Chapter currently possesses {temp[36]} Epistolaries, {temp[37]} Codiceries, and {temp[38]} Lexicanum.  We are working to identify additional warp-sensitive brothers before they cause harm, and the training is {blurp}.##We could likely speed up the identification and application of appropriate training, but we would need more resources...I don't suppose we can spare some?##Our Chapter has {artif}"), -1, 536);
+    if (_head_found) {
+        var _cm = obj_controller.chapter_master.get_struct();
+        draw_text_ext(xx + 352, yy + 130, string_hash_to_newline($"{_cm.name_role()}, greetings.#I assume you've come for the report?  The Chapter currently possesses {temp[36]} Epistolaries, {temp[37]} Codiceries, and {temp[38]} Lexicanum.  We are working to identify additional warp-sensitive brothers before they cause harm, and the training is {blurp}.##We could likely speed up the identification and application of appropriate training, but we would need more resources...I don't suppose we can spare some?##Our Chapter has {artif}"), -1, 536);
     }
-    if (menu_adept == 1) {
+    else {
         draw_text_ext(xx + 352, yy + 130, string_hash_to_newline($"Your Chapter contains {temp[36]} {obj_ini.player_role_data[eROLE.LIBRARIAN].role}s, {temp[37]} Codiceries, and {temp[38]} Lexicanum.##Training of more {obj_ini.player_role_data[eROLE.LIBRARIAN].role}s is {blurp}.##Your chapter has {artif}"), -1, 536);
     }
 
