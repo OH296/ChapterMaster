@@ -920,6 +920,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
     };
 
     static start_allowable_weapons(slot){
+        var _allow = true;
         var _normal_equipment = [
             "Combat Knife",
             "Chainsword",
@@ -932,7 +933,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         ];
         _allow = array_contains(_normal_equipment, equipment[$ slot]);
 
-        if (_veteran_level > 0) {
+        if (_veteran_level > 0 && !_allow) {
             var _special_equipment = [
                 "Storm Bolter",
                 "Meltagun",
@@ -950,6 +951,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
     }
 
     static start_allowable_mobi(){
+        var _allow = true;
         if (equipment == "Jump Pack" && (_veteran_level > 0 || role_id == eROLE.ASSAULT)) {
             if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
                 _allow = true;
@@ -966,6 +968,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
     }
 
     static start_allowable_gear(){
+        var _allow = true;
         if (_veteran_level == 5) {
             if (role_id == eROLE.CHAPLAIN && equipment == "Rosarius") {
                 _allow = true;

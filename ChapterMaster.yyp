@@ -864,7 +864,6 @@
     {"id":{"name":"scr_mission_eta","path":"scripts/scr_mission_eta/scr_mission_eta.yy",},},
     {"id":{"name":"scr_mission_functions","path":"scripts/scr_mission_functions/scr_mission_functions.yy",},},
     {"id":{"name":"scr_mission_reward","path":"scripts/scr_mission_reward/scr_mission_reward.yy",},},
-    {"id":{"name":"scr_move_unit_info","path":"scripts/scr_move_unit_info/scr_move_unit_info.yy",},},
     {"id":{"name":"scr_necron_tombs","path":"scripts/scr_necron_tombs/scr_necron_tombs.yy",},},
     {"id":{"name":"scr_ork_fleet_functions","path":"scripts/scr_ork_fleet_functions/scr_ork_fleet_functions.yy",},},
     {"id":{"name":"scr_ork_planet_functions","path":"scripts/scr_ork_planet_functions/scr_ork_planet_functions.yy",},},
