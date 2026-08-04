@@ -33,7 +33,7 @@ for (o = 0; o < array_length(origin.board_co); o++) {
                 scr_loyalty("Lost Standard", "+");
             }
 
-            scr_kill__unit(co, i);
+            scr_kill_unit(co, i);
 
             if (obj_fleet.capital + obj_fleet.frigate + obj_fleet.escort > 0) {
                 obj_controller.gene_seed += seed_lost;
