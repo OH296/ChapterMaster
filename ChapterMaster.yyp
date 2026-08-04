@@ -920,7 +920,6 @@
     {"id":{"name":"scr_squads","path":"scripts/scr_squads/scr_squads.yy",},},
     {"id":{"name":"scr_star_ownership","path":"scripts/scr_star_ownership/scr_star_ownership.yy",},},
     {"id":{"name":"scr_star_travel_algorithm","path":"scripts/scr_star_travel_algorithm/scr_star_travel_algorithm.yy",},},
-    {"id":{"name":"scr_start_allow","path":"scripts/scr_start_allow/scr_start_allow.yy",},},
     {"id":{"name":"scr_start_load","path":"scripts/scr_start_load/scr_start_load.yy",},},
     {"id":{"name":"scr_string_functions","path":"scripts/scr_string_functions/scr_string_functions.yy",},},
     {"id":{"name":"scr_struct_functions","path":"scripts/scr_struct_functions/scr_struct_functions.yy",},},

@@ -1903,11 +1903,11 @@ function scr_initialize_custom() {
         if (player_role_data[i].role == "") {
             continue;
         }
-        var _data = player_role_data[i];
-        scr_start_allow(i, "wep1", _data.wep1);
-        scr_start_allow(i, "wep2", _data.wep2);
-        scr_start_allow(i, "mobi", _data.mobi);
-        scr_start_allow(i, "gear", _data.gear);
+        var _data = new UnitEquipment(player_role_data[i]);
+        var _allowed_equip = _data.start_allowance();
+        with (player_role_data[i]){
+            move_data_to_current_scope(_allowed_equip);
+        }
         // check for allowable starting equipment here
     }
 
