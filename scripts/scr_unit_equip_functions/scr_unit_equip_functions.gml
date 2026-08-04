@@ -919,7 +919,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         };
     };
 
-    static start_allowable_weapons(slot){
+    static start_allowable_weapons = function(slot){
         var _allow = true;
         var _item = equipment[$ slot].name;
         var _normal_equipment = [
@@ -951,7 +951,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         final_gear[$ slot] = _allow ? _item : default_options[$slot];
     }
 
-    static start_allowable_mobi(){
+    static start_allowable_mobi = function(){
         var _allow = true;
         if (equipment == "Jump Pack" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
             if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
@@ -968,7 +968,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         final_gear.mobi = _allow ? equipment.mobi.name : default_options.mobi; 
     }
 
-    static start_allowable_gear(){
+    static start_allowable_gear = function(){
         var _allow = true;
         if (veteran_level == 5) {
             if (role_id == eROLE.CHAPLAIN && equipment == "Rosarius") {
