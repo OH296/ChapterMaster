@@ -953,7 +953,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
     }
 
     static start_allowable_mobi = function(){
-        var _allow = true;
+        var _allow = false;
         if (equipment == "Jump Pack" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
             if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
                 _allow = true;
@@ -970,7 +970,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
     }
 
     static start_allowable_gear = function(){
-        var _allow = true;
+        var _allow = false;
         if (veteran_level == 5) {
             if (role_id == eROLE.CHAPLAIN && equipment == "Rosarius") {
                 _allow = true;
