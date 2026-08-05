@@ -1,4 +1,4 @@
-function UnitGroup(units) constructor {
+function UnitGroup(units = []) constructor {
     self.units = units;
 
     static number = function() {
@@ -11,6 +11,10 @@ function UnitGroup(units) constructor {
 
     static pop = function() {
         return array_pop(units);
+    };
+
+    static push = function(unit) {
+        array_push(units, unit)
     };
 
     static has_role = function(role) {
@@ -76,6 +80,45 @@ function UnitGroup(units) constructor {
             return _wanted;
         }
     };
+
+    static duplicate = function(){
+        var _new_array = [];
+        for (var i = 0; i < number(); i++) {
+            array_push(_new_array, units[i]);
+        }
+        return new UnitGroup(_new_array);
+    }
+
+    static move_to_company = function(company, keep_squads_if_possible = true,original_loop = true){
+        if (!keep_squads_if_possible){
+            for (var i = 0; i < number(); i++) {
+                units[i].move_to_company(company,false);
+            }
+        } else {
+
+            var _replica = duplicate();
+
+            var _squadless = _replica.get_from({squadless : true}, true, true);
+            _squadless.move_to_company(company, false, false);
+
+            var _squads = count_squads("all", true);
+
+            for (var s = 0;s<array_length(_squads);s++){
+                var _squad = fetch_squad(_squads[s]);
+                var _squad_units = _replica.get_from({squad : _squads[s]}, true, true);
+
+                if (_squad_units.number() < array_length(_squad.members)){
+                    _squad_units.move_to_company(company, false, false);
+                    continue;
+                }
+
+                for (var i = 0; i < number(); i++) {
+                    units[i].move_to_company(company);
+                }
+                _squad.base_company = company;
+            }
+        }
+    }
 
     static add_units = function(group_two, conditions = {}, remove_from = false, join_index = -1) {
         var _new_adds = group_two.get_from(conditions, false, remove_from);
@@ -278,7 +321,7 @@ function UnitGroup(units) constructor {
             if (squad_fulfilment[$ _unit.role()] < _max) {
                 //if sergeants not required
                 squad_fulfilment[$ _unit.role()]++;
-                squad.add_member(_unit.company, _unit.marine_number);
+                squad.add_member(_unit);
             }
         }
 

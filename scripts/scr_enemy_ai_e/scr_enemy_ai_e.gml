@@ -762,7 +762,7 @@ function scr_enemy_ai_e() {
                 _meeting.present[otm] = 1;
                 _meeting.co[otm] = co;
                 _meeting.ide[otm] = i;
-                if (co <= 0 && i == 0) {
+                if (co == 0 && i == 0) {
                     master_present = role_compare(_unit, eROLE.CHAPTERMASTER);
                 }
             }

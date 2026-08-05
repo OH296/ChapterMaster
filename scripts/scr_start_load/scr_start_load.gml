@@ -110,8 +110,7 @@ function scr_start_load(fleet, load_from_star, load_options) {
                 var _squad = company_squad_dist[squad];
                 var _members = _squad.members;
                 for (var squad_member = 0; squad_member < array_length(_members); squad_member++) {
-                    squaddy = _members[squad_member];
-                    var _marine = fetch_unit(squaddy);
+                    var _marine = _members[squad_member];
                     if (!is_struct(_marine)) {
                         continue;
                     }

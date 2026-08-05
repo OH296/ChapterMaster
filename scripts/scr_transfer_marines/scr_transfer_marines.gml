@@ -31,63 +31,21 @@ function transfer_marines() {
             break;
         }
     }
-    function transfer_unit(array_index){
-        var moveable = true;
-        var unit = obj_controller.display_unit[array_index];
-        if (unit.squad != "none") {
-            // this evaluates if you are tryin to move a whole squad and if so moves teh squad to a new company
-            var move_squad = unit.squad;
-            var squad = fetch_squad(move_squad);
-            var move_members = squad.members;
-            for (var mem = 0; mem < array_length(move_members); mem++) {
-                //check all members have been selected and are in the same company
-                if (array_index + mem < array_length(obj_controller.display_unit)) {
-                    if (!is_struct(obj_controller.display_unit[array_index + mem])) {
-                        continue;
-                    }
-                    if (obj_controller.man_sel[array_index + mem] != 1 || obj_controller.display_unit[array_index + mem].squad != move_squad) {
-                        moveable = false;
-                        break;
-                    }
-                } else {
-                    moveable = false;
-                    break;
-                }
-            }
-            //move squad
-            if (moveable) {
-                for (var mem = 0; mem < array_length(move_members); mem++) {
-                    obj_controller.man_sel[array_index + mem] = 0;
-                    var member_unit = fetch_unit(move_members[mem]);
-                    if (!is_struct(member_unit)) {
-                        continue;
-                    }
-                    member_unit.move_to_company(target_comp, false);
-                    member_unit.squad = move_squad;
-                    squad.members[mem][0] = _unit.company;
-                    squad.members[mem][1] = _unit.marine_number;
-                }
-                squad.base_company = target_comp;
-            }
-        } else {
-            moveable = false;
-        }
-        //move individual
-        if (!moveable) {
-            unit.move_to_company(target_comp)
-        }
-    }
+
+    units_to_move = new UnitGroup([]);
 
     // The MAHREENS and TARGET/FROM seems to check out
     for (var w = 0; w < array_length(obj_controller.display_unit); w++) {
         if (!obj_controller.man_sel[w]) {
             continue;
         }
-        if (obj_controller.man[w] == "man" && is_struct(obj_controller.display_unit[w])) {
-            transfer_unit(w);
-        } else if (obj_controller.man[w] == "vehicle" && is_array(obj_controller.display_unit[w])) {
+        var _unit = obj_controller.display_unit[w];
+        
+        if (obj_controller.man[w] == "man" && is_struct(_unit)) {
+            units_to_move.push(_unit);
+        } else if (obj_controller.man[w] == "vehicle" && is_array(_unit)) {
             // This seems to execute the correct number of times
-            var veh_data = obj_controller.display_unit[w];
+            var veh_data = _unit;
             // Check if the target company is within the allowed range
             if ((target_comp >= 1) && (target_comp <= 10)) {
                 obj_ini.veh_race[target_comp][vehi] = obj_ini.veh_race[veh_data[0]][veh_data[1]];
@@ -110,6 +68,17 @@ function transfer_marines() {
         }
     }
 
+    units_to_move.move_to_company(target_comp);
+
+    obj_ini.selected_company = company;
+    obj_ini.temp_target_company = target_comp;
+    with (obj_ini) {
+        for (var co = 0; co <= obj_ini.companies; co++) {
+            scr_company_order(co);
+            scr_vehicle_order(co);
+        }
+    }
+
     // Check this
 
     if (obj_controller.managing > 0) {
@@ -117,15 +86,7 @@ function transfer_marines() {
             scr_management(1);
         }
     }
-    obj_ini.selected_company = company;
-    obj_ini.temp_target_company = target_comp;
-    with (obj_ini) {
-        for (var co = 0; co < 11; co++) {
-            scr_company_order(co);
-            scr_vehicle_order(co);
-        }
-    }
-
+    
     with (obj_controller) {
         // man_current=0;
         var i = -1;

@@ -146,7 +146,7 @@ function scr_company_order(company) {
             _struc.marine_number = i;
             if (_struc.squad != "none") {
                 var _squad = _struc.get_squad();
-                array_push(_squad.members, [co, i]);
+                _squad.add_member(_struc)
             }
             _struc.movement_after_math(co, i, false);
         }

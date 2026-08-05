@@ -154,6 +154,20 @@ serialize = function() {
     
     }
 
+    var _squad_copies = variable_clone(squads);
+
+    var _squad_keys = struct_get_names(_squad_copies);
+    for (var i = 0; i < array_length(_squad_keys); i++)
+    {
+        var _squad = _squad_copies[$ _squad_keys[i]];
+
+        for (var s = 0; s < array_length(_squad.members); s++){
+            if (is_struct(_squad.members[i])){
+                _squad.members[i] = _squad.members[i].uid;
+            }
+        }
+    }
+
     var save_data = {
         obj: object_get_name(object_index),
         x,
@@ -304,6 +318,9 @@ deserialize = function(save_data) {
             var _squad = new UnitSquad();
             _squad.load_json_data(_squad_structs[$ _squad_uid]);
             squads[$ _squad_uid] = _squad;
+            for (var s = 0; s < array_length(_squad.members); s++){
+                _squad.members[i] = fetch_squad_uid(_squad.members[i]);
+            }
         }
     }
 

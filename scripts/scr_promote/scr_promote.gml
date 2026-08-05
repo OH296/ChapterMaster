@@ -33,7 +33,8 @@ function setup_promotion_popup() {
             });
             promote_button.bind_method = function() {
                 
-                var _company_length = company_length(obj_ini.TTRPG[target_comp]);
+                units_to_move = new UnitGroup([]);
+                var _company_length = company_length(target_comp);
                 // Gets the number of marines in the target company
                 var unit, squad_mover, moveable;
                 var role_squad_equivilances = {}; //this is the only way to set variables as keys in gml
@@ -44,74 +45,17 @@ function setup_promotion_popup() {
                 variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.VETERAN].role, "veteran_squad");
                 variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.TERMINATOR].role, "terminator_squad");
 
-                for (var i = 0; i < array_length(obj_controller.display_unit) && mahreens < 500; i++) {
+
+                for (var i = 0; i < array_length(obj_controller.display_unit); i++) {
                     if ((obj_controller.man[i] == "man") && (obj_controller.man_sel[i] == 1) && (obj_controller.ma_exp[i] >= min_exp)) {
-                        moveable = true;
-                        unit = obj_controller.display_unit[i];
-                        if (unit.squad != "none") {
-                            // this evaluates if you are trying promote a whole squad
-                            var move_squad = unit.squad;
-                            squad = fetch_squad(move_squad);
-                            squad.update_fulfilment();
-                            move_members = squad.members;
-                            if (array_length(move_members) == 1) {
-                                unit.squad = "none";
-                                moveable = false;
-                            }
-                            for (var mem = 0; mem < array_length(move_members); mem++) {
-                                //check all members have been selected and are in the same company
-                                if (i + mem < array_length(obj_controller.display_unit)) {
-                                    if (!is_struct(obj_controller.display_unit[i + mem])) {
-                                        continue;
-                                    }
-                                    if (obj_controller.man_sel[i + mem] != 1 || obj_controller.display_unit[i + mem].squad != move_squad) {
-                                        moveable = false;
-                                        break;
-                                    }
-                                } else {
-                                    moveable = false;
-                                    break;
-                                }
-                            }
-                            //move squad
-                            if (moveable) {
-                                var mem;
-                                squad.company = target_comp;
-                                for (mem = 0; mem < array_length(move_members); mem++) {
-                                    var mem_unit = fetch_unit(move_members[mem]);
-                                    if (!is_struct(mem_unit)) {
-                                        continue;
-                                    }
-                                    mem_unit.move_to_company(target_comp);
-                                    mem_unit.squad = move_squad;
-                                    if (!mem_unit.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
-                                        mem_unit.update_role(role_name[target_role]);
-                                        mem_unit.alter_equipment({"wep1": req_wep1, "wep2": req_wep2, "mobi": req_mobi, "armour": req_armour, "gear": req_gear});
-                                    }
-                                    mahreens++;
-                                }
-                                i += mem - 2;
-                                if (squad.base_company != target_comp) {
-                                    squad.base_company = target_comp;
-                                }
-                                if (struct_exists(role_squad_equivilances, role_name[target_role])) {
-                                    squad.change_type(role_squad_equivilances[$ role_name[target_role]]);
-                                }
-                            }
-                        } else {
-                            moveable = false;
-                        }
-                        //move individual
-                        if (!moveable) {
-                            if (unit.company != target_comp) {
-                                unit.move_to_company(target_comp);
-                            }
-                            unit.update_role(role_name[target_role]);
-                            unit.alter_equipment({"wep1": req_wep1, "wep2": req_wep2, "mobi": req_mobi, "armour": req_armour, "gear": req_gear});
-                            mahreens++;
-                        }
-                    } // End that [i]
-                } // End repeat
+                        var _unit = obj_controller.display_unit[i];
+                        units_to_move.push(_unit);
+                    }
+                } 
+
+                units_to_move.move_to_company(target_comp);
+
+                var _squads = units_to_move.count_squads("all", true);         
 
                 with (obj_controller) {
                     scr_management(1);

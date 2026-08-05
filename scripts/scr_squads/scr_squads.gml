@@ -300,7 +300,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var _struct_array = [];
         for (var i = array_length(members) - 1; i >= 0; i--) {
             _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 continue;
             } else {
@@ -401,7 +401,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
             if (fill_from != undefined) {
                 while (fill_from.has_role(_wanted_unit_role) && _squad_role_current < _max_role_count) {
                     var _new_member = fill_from.pop_role_member(_wanted_unit_role);
-                    add_member(_new_member.company, _new_member.marine_number);
+                    add_member(_new_member);
                     squad_fulfilment[$ _wanted_unit_role]++;
                     _squad_role_current = squad_fulfilment[$ _wanted_unit_role];
                     _new_member.squad = uid;
@@ -455,19 +455,18 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     };
 
     static fetch_member = function(index) {
-        return fetch_unit(members[index]);
+        return members[index];
     };
 
     static fetch_members = function() {
         return collect_role_group("all", "", false, {"company": base_company, "squad": uid, "max_wanted": array_length(members)});
     };
 
-    static add_member = function(comp, unit_number) {
-        if (is_struct(comp)) {
-            unit_number = comp.marine_number;
-            comp = comp.company;
+    static add_member = function(_unit) {
+        if (!is_struct(_unit)) {
+            return;
         }
-        array_push(members, [comp, unit_number]);
+        array_push(members, _unit);
         life_members++;
     };
 

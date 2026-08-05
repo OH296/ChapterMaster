@@ -72,21 +72,22 @@ function scr_ui_advisors() {
             draw_set_color(c_gray);
             draw_set_font(fnt_40k_30b);
             draw_text_transformed(xx + 336 + 16, yy + 66, "Reclusium", 1, 1, 0);
-            draw_text_transformed(xx + 336 + 16, yy + 100, string_hash_to_newline("Adept " + string(obj_controller.adept_name)), 0.6, 0.6, 0);
+            draw_text_transformed(xx + 336 + 16, yy + 100, $"Adept {obj_controller.adept_name}" , 0.6, 0.6, 0);
         }
 
         draw_set_font(fnt_40k_14);
         draw_set_alpha(1);
         draw_set_color(c_gray);
         var _active_roles = active_roles();
+        var _chap_role = _active_roles[eROLE.CHAPLAIN];
         if (temp[36] != "0") {
-            blurp = $"Sir!  You requested a report?  Currently, we have deployed {temp[36]} {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s to watch over the health of our Battle-Brothers in the field.  We have an additional " + string(temp[37]) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s who await only your order to carry the word to the troops.";
+            blurp = $"Sir!  You requested a report?  Currently, we have deployed {temp[36]} {_chap_role}s to watch over the health of our Battle-Brothers in the field.  We have an additional {temp[37]} {_chap_role}s who await only your order to carry the word to the troops.";
         }
         if (temp[36] == "0") {
-            blurp = $"Sir!  You requested a report?  Currently, we have {temp[37]} {_active_roles[14]}s who await only your order to carry the word to the troops.";
+            blurp = $"Sir!  You requested a report?  Currently, we have {temp[37]} {_chap_role}s who await only your order to carry the word to the troops.";
         }
         if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-            blurp += $"##Currently, we are training additional {obj_ini.player_role_data[eROLE.CHAPLAIN].role} at a ";
+            blurp += $"##Currently, we are training additional {_chap_role} at a ";
             var _recruit_rates = global.recruitment_rates;
             blurp += _recruit_rates[training_chaplain];
             if (training_chaplain > 0 && training_chaplain <= 6) {

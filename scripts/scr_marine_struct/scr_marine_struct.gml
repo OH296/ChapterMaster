@@ -418,13 +418,16 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     static handle_stat_growth = unit_stat_growth;
 
-    static move_to_company = function(new_company){
+    static move_to_company = function(new_company, keep_squad = true){
         var _slot = find_company_open_slot(new_company);
         var _old_loc = [company, marine_number];
         movement_after_math(new_company , _slot);
         obj_ini.TTRPG[new_company][_slot] = self;
         company = new_company;
         marine_number = _slot;
+        if (!keep_squad){
+            remove_from_squad();
+        }
         var _old_company_length = array_length(obj_ini.TTRPG[_old_loc[0]]);
         for (var i = _old_loc[1] + 1; i < _old_company_length ; i++){
             var _unit = fetch_unit([_old_loc[0] , i]);
@@ -1802,8 +1805,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
             for (var r = 0; r < array_length(_squad.members); r++) {
                 squad_member = _squad.members[r];
-                if ((squad_member[0] == company) && (squad_member[1] == marine_number)) {
+                if (squad_member.uid == uid) {
                     array_delete(_squad.members, r, 1);
+                    break;
                 }
             }
 
@@ -1830,7 +1834,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
         squad = new_squad;
         var _squad = get_squad();
-        _squad.add_member(company, marine_number);
+        _squad.add_member(self);
     };
 
     static marine_location = function() {
@@ -2255,27 +2259,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static movement_after_math = function(end_company = company, end_slot = marine_number, check_squads = true) {
-        if (squad != "none" && check_squads) {
-            var squad_data = get_squad();
-            var squad_member;
-
-            for (var r = 0; r < array_length(squad_data.members); r++) {
-                squad_member = squad_data.members[r];
-                if (squad_member[0] == company && squad_member[1] == marine_number) {
-                    if (squad_data.base_company != end_company) {
-                        array_delete(squad_data.members, r, 1);
-                        squad = "none";
-                        // if unit will no longer be same company as squad remove unit from squad
-                    } else {
-                        squad_data.members[r] = [
-                            end_company,
-                            end_slot,
-                        ];
-                    }
-                    break;
-                }
-            }
-        }
 
         var artifact_list = equipped_artifacts();
         for (var i = 0; i < array_length(artifact_list); i++) {
@@ -2398,6 +2381,12 @@ function fetch_unit(unit) {
     } catch (_exception) {
         ERROR_HANDLER.assert_popup(_exception);
     }
+}
+
+/// @param {Array<Real>} unit where unit[0] is company and unit[1] is the position returns undefined if member is out of array_bounds
+/// @returns {Struct.TTRPG_stats} unit
+function fetch_unit_careful(){
+
 }
 
 function fetch_unit_uid(uuid) {
