@@ -855,10 +855,8 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
                     _marines_without_exp++;
                 }
             }
-
             if (slot == eEQUIPMENT_SLOT.ARMOUR && !get_item("armour").has_tag("dreadnought")) {
-                var _unit_armour_data = _unit.get_armour_data();
-                if (_unit_armour_data.has_tag("dreadnought")) {
+                if (_unit.is_dreadnought()) {
                     equipment_found_and_valid[slot] = false;
                     warning += "Marines may not exit Dreadnoughts.";
                 }
