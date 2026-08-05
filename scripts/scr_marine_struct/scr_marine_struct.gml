@@ -2077,7 +2077,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static get_role_data = function(){
-        for (var i = 0; i < array_legth(obj_ini.player_role_data); i++) {
+        for (var i = 0; i < array_length(obj_ini.player_role_data); i++) {
             var _role_data = obj_ini.player_role_data[i];
             if (_role_data.role == role()) {
                 return _role_data;

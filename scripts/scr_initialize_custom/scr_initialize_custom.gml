@@ -2001,7 +2001,7 @@ function scr_initialize_custom() {
     // Master of Sanctity (Chaplain)
     if (chaplains > 0) {
         var _hchap = add_unit_to_company("marine", _company_i, _marine_i, "Master of Sanctity", eROLE.CHAPLAIN, "default", "Plasma Pistol", "default", "default", _hq_armour);
-        _hchap.set_name(obj_creation.high_chaplain_name);
+        _hchap.set_name(high_chaplain_name);
         _hchap.edit_corruption(-100);
         if (_hchap.piety < 45) {
             _hchap.piety = 45;
