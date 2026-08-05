@@ -289,7 +289,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                     for (var s = 0; s < array_length(garrison_squads); s++) {
                         //loop squads in the garrison
                         _squad = garrison_squads[s];
-                        _leader = fetch_unit(_squad.squad_leader);
+                        _leader = _squad.squad_leader;
                         if (!is_struct(_leader)) {
                             continue;
                         }

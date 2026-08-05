@@ -225,7 +225,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     nickname = "";
     assignment = "none";
     class = [];
-    squad_leader = "";
+    squad_leader = undefined;
     type_data = {};
     base = "tactical";
     formation_place = "";
@@ -300,7 +300,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     static new_sergeant = function(veteran = false) {
         var exp_unit = "";
         var _unit;
-        var highest_exp = 0;
+        var _highest_exp = 0;
         var member_length = array_length(members);
         for (var i = 0; i < member_length; i++) {
             _unit = members[i];
@@ -310,8 +310,8 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
                 i--;
                 continue;
             }
-            if (_unit.experience > highest_exp) {
-                highest_exp = _unit.experience;
+            if (_unit.experience > _highest_exp) {
+                _highest_exp = _unit.experience;
                 exp_unit = _unit;
             }
         }
@@ -568,19 +568,15 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var member_length = array_length(members);
         var hierarchy = role_hierarchy();
         var leader_hier_pos = array_length(hierarchy);
-        var leader = "none";
-        var highest_exp = 0;
-        for (var i = member_length - 1; i >= 0; i++) {
-            var _unit = fetch_unit(members[i]);
+        var _leader = undefined;
+        for (var i = member_length - 1; i >= 0; i--) {
+            var _unit = members[i]
             if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 continue;
             } else {
-                if (leader == "none") {
-                    leader = [
-                        _unit.company,
-                        _unit.marine_number,
-                    ];
+                if (!is_struct(_leader)) {
+                    _leader = _unit;
                     for (var r = 0; r < array_length(hierarchy); r++) {
                         if (hierarchy[r] == _unit.role()) {
                             leader_hier_pos = r;
@@ -588,23 +584,22 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
                         }
                     }
                 } else if (leader_hier_pos < array_length(hierarchy) && hierarchy[leader_hier_pos] == _unit.role()) {
-                    var _leader = fetch_unit(leader);
-                    if (is_struct(_leader) && _leader.experience < _unit.experience) {
-                        leader = _leader;
+                    if (_leader.experience < _unit.experience) {
+                        _leader = _unit;
                     }
                 } else {
                     for (var r = 0; r < leader_hier_pos; r++) {
                         if (hierarchy[r] == _unit.role()) {
                             leader_hier_pos = r;
-                            leader = _unit;
+                            _leader = _unit;
                             break;
                         }
                     }
                 }
             }
         }
-        squad_leader = leader;
-        return leader;
+        squad_leader = _leader;
+        return _leader;
     };
 
     static change_sgt = function(new_sgt) {

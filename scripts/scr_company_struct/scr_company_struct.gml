@@ -380,7 +380,7 @@ function CompanyStruct(comp) constructor {
             current_squad = (current_squad - 1 < 0) ? array_length(company_squads) - 1 : current_squad - 1;
         }
         var _member = grab_current_squad().members[0];
-        var _fetched = fetch_unit(_member);
+        var _fetched = _member;
         if (is_struct(_fetched)) {
             obj_controller.unit_focus = _fetched;
         }
@@ -549,9 +549,9 @@ function CompanyStruct(comp) constructor {
 
         draw_set_halign(fa_left);
         //should be moved elsewhere for efficiency
-        squad_leader = _cur_squad.determine_leader();
-        if (is_struct(squad_leader)) {
-            var leader_text = is_struct(squad_leader) ? $"Squad Leader : {squad_leader.name_role()}" : "Squad Leader : Unknown";
+        var _squad_leader = _cur_squad.determine_leader();
+        if (is_struct(_squad_leader)) {
+            var leader_text = $"Squad Leader : {_squad_leader.name_role()}";
             draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 50, leader_text, 1, 1, 0);
         }
         squad_loc = _cur_squad.squad_loci();
