@@ -292,7 +292,6 @@ deserialize = function(save_data) {
         TTRPG[company][marine].load_json_data(struct);
     }
 
-    for (var _coy = 0; _coy <= companies; _coy++) {
     var _company_lengths = struct_exists(save_data, "company_lengths") ? save_data.company_lengths : array_create(companies + 1, 501);
     for (var _coy = 0; _coy <= companies; _coy++) {
         for (var _mar = 0; _mar < _company_lengths[_coy]; _mar++) {
