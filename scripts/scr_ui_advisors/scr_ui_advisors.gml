@@ -645,7 +645,7 @@ function scr_ui_advisors() {
         if (requisition < fest_cost) {
             doable = false;
         }
-        if ((fest_wid == 0) && (fest_sid == 0)) {
+        if ((fest_wid == 0) && (fest_sid == -1)) {
             doable = false;
         }
 
