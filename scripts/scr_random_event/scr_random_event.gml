@@ -708,7 +708,7 @@ function scr_random_event(execute_now) {
         var _head = get_department_head(eCHAPTER_DEPARTMENTS.LIB); 
         var _has_chief_psyker = is_struct(_head);
 
-        var _cm = obj_controller.chapter_master.get_struct();
+        var _cm = cm_obj().get_struct();
         var _cm_is_psyker = string_count("0", _cm.specials) > 0;
 
         if ((!psyker_intolerant) && _has_chief_psyker) {

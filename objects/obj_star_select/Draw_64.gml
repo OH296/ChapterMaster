@@ -301,7 +301,8 @@ try {
                     building.gene_vault = 1;
                 }
                 //is cm at this location
-                obj_controller.temp[104] = obj_controller.chapter_master.get_struct().is_at_location(target.name, obj_controller.selecting_planet);
+                var _cm = cm_obj().get_struct();
+                obj_controller.temp[104] = _cm.is_at_location(target.name, obj_controller.selecting_planet);
                 obj_controller.menu = 60;
                 with (obj_star_select) {
                     instance_destroy();

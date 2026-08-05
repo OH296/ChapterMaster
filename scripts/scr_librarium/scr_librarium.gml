@@ -171,7 +171,7 @@ function scr_librarium() {
 
     // Greetings message
     if (_head_found) {
-        var _cm = obj_controller.chapter_master.get_struct();
+        var _cm = cm_obj().get_struct();
         draw_text_ext(xx + 352, yy + 130, string_hash_to_newline($"{_cm.name_role()}, greetings.#I assume you've come for the report?  The Chapter currently possesses {temp[36]} Epistolaries, {temp[37]} Codiceries, and {temp[38]} Lexicanum.  We are working to identify additional warp-sensitive brothers before they cause harm, and the training is {blurp}.##We could likely speed up the identification and application of appropriate training, but we would need more resources...I don't suppose we can spare some?##Our Chapter has {artif}"), -1, 536);
     }
     else {

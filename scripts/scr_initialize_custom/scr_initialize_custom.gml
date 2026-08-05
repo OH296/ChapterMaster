@@ -801,7 +801,6 @@ function scr_initialize_custom() {
     flagship_name = obj_creation.flagship_name;
     obj_creation.restart_flagship_name = flagship_name;
     sector_name = global.name_generator.GenerateFromSet("sector");
-    man_size = 0;
     psy_powers = obj_creation.discipline;
 
     progenitor_disposition = obj_creation.disposition[1];
@@ -1459,11 +1458,6 @@ function scr_initialize_custom() {
     master_melee = obj_creation.chapter_master_melee;
     master_ranged = obj_creation.chapter_master_ranged;
 
-    TTRPG[0] = array_create(501);
-    for (var i = 0; i <= 500; i++) {
-        TTRPG[0][i] = new TTRPG_stats("chapter", 0, i, "blank");
-    }
-
     initialized = 500;
 
     var _hi_qual_armour = "Artificer Armour";
@@ -1913,7 +1907,6 @@ function scr_initialize_custom() {
 
     initialized = 500; // How many array variables have been prepared
 
-    var _marine_i = 0;
     var _vehicle_i = 0;
     var _company_i = 0;
 
@@ -1923,20 +1916,15 @@ function scr_initialize_custom() {
 
     var _game_year = obj_ini.sector_handler.game_year();
     #region Chapter HQ
-    for (var c = 0; c < 11; c++) {
-        for (var i = 0; i < 501; i++) {
-            TTRPG[c][i] = new TTRPG_stats("chapter", c, i, "blank");
-            var _unit = TTRPG[c][i];
-            _unit.born = _game_year - 50;
-            _unit.marine_ascension = _game_year - 10;
-        }
+    for (var c = 0; c < obj_ini.companies; c++) {
+        TTRPG[c] = [];
     }
 
     // Chapter Master
     // This needs work
     var cm_equip = load_chapter_master_equipment();
 
-    var _chapter_master = add_unit_to_company("_chapter_master", _company_i, _marine_i, roles._chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
+    var _chapter_master = add_unit_to_company("_chapter_master", _company_i, roles._chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
     _chapter_master.set_name(obj_creation.chapter_master_name);
     repeat (cm_equip.bionics) {
         _chapter_master.add_bionics("none", "standard", false);
@@ -1973,12 +1961,10 @@ function scr_initialize_custom() {
     if (scr_has_disadv("Poor Equipment")) {
         _hq_armour = "MK6 Corvus";
     }
-    _marine_i += 1;
-    commands = 1;
 
     // Forge Master
 
-    var _forge_master = add_unit_to_company("marine", _company_i, _marine_i, "Forge Master", eROLE.TECHMARINE, "Infernus Pistol", "Omnissian Axe", "default", "Servo-harness", _hq_armour);
+    var _forge_master = add_unit_to_company("marine", _company_i, "Forge Master", eROLE.TECHMARINE, "Infernus Pistol", "Omnissian Axe", "default", "Servo-harness", _hq_armour);
     _forge_master.set_name(obj_creation.fmaster);
     if (_forge_master.technology < 40) {
         _forge_master.technology = 40;
@@ -1995,87 +1981,60 @@ function scr_initialize_custom() {
             _forge_master.add_bionics("none", "standard", false);
         }
     }
-    _marine_i += 1;
-    commands += 1;
 
     // Master of Sanctity (Chaplain)
     if (chaplains > 0) {
-        var _hchap = add_unit_to_company("marine", _company_i, _marine_i, "Master of Sanctity", eROLE.CHAPLAIN, "default", "Plasma Pistol", "default", "default", _hq_armour);
+        var _hchap = add_unit_to_company("marine", _company_i, "Master of Sanctity", eROLE.CHAPLAIN, "default", "Plasma Pistol", "default", "default", _hq_armour);
         _hchap.set_name(high_chaplain_name);
         _hchap.edit_corruption(-100);
         if (_hchap.piety < 45) {
             _hchap.piety = 45;
         }
         _hchap.add_trait("zealous_faith");
-        _marine_i += 1;
-        commands += 1;
     }
 
     // Maser of the Apothecarion (Apothecary)
-    var _hapoth = add_unit_to_company("marine", _company_i, _marine_i, "Master of the Apothecarion", eROLE.APOTHECARY, "default", "Plasma Pistol", "default", "default", _hq_armour);
+    var _hapoth = add_unit_to_company("marine", _company_i, "Master of the Apothecarion", eROLE.APOTHECARY, "default", "Plasma Pistol", "default", "default", _hq_armour);
     _hapoth.set_name(obj_creation.hapothecary);
     _hapoth.edit_corruption(0);
-    _marine_i += 1;
-    commands += 1;
 
     // Chief Librarian
     if (!scr_has_disadv("Psyker Intolerant")) {
-        var _clibrarian = add_unit_to_company("marine", _company_i, _marine_i, string("Chief {0}", roles.librarian), eROLE.LIBRARIAN, "default", "Plasma Pistol", "default", "default", _hq_armour);
+        var _clibrarian = add_unit_to_company("marine", _company_i, string("Chief {0}", roles.librarian), eROLE.LIBRARIAN, "default", "Plasma Pistol", "default", "default", _hq_armour);
         _clibrarian.set_name(obj_creation.clibrarian);
         _clibrarian.edit_corruption(0);
         _clibrarian.psionic = choose(11, 12);
         _clibrarian.update_powers();
         _clibrarian.add_trait("favoured_by_the_warp");
-        _marine_i += 1;
-        commands += 1;
     }
-    man_size = _marine_i;
 
     // Techmarines in the armoury
     repeat (techmarines) {
-        _marine_i += 1;
-        commands += 1;
-        man_size += 1;
-        add_unit_to_company("marine", _company_i, _marine_i, roles.techmarine, eROLE.TECHMARINE, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        add_unit_to_company("marine", _company_i, roles.techmarine, eROLE.TECHMARINE, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
 
     // Librarians in the librarium
     repeat (epistolary) {
-        _marine_i += 1;
-        commands += 1;
-        man_size += 1;
-        var _epi = add_unit_to_company("marine", _company_i, _marine_i, roles.librarian, eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        var _epi = add_unit_to_company("marine", _company_i, roles.librarian, eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
     // Codiciery
     repeat (codiciery) {
-        _marine_i += 1;
-        commands += 1;
-        man_size += 1;
-        var _codi = add_unit_to_company("marine", _company_i, _marine_i, "Codiciery", eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        var _codi = add_unit_to_company("marine", _company_i, "Codiciery", eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
 
     // Lexicanum
     repeat (lexicanum) {
-        _marine_i += 1;
-        commands += 1;
-        man_size += 1;
-        var _lexi = add_unit_to_company("marine", _company_i, _marine_i, "Lexicanum", eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        var _lexi = add_unit_to_company("marine", _company_i, "Lexicanum", eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
 
     // Apothecaries in Apothecarion
     repeat (apothecary) {
-        _marine_i += 1;
-        commands += 1;
-        man_size += 1;
-        add_unit_to_company("marine", _company_i, _marine_i, roles.apothecary, eROLE.APOTHECARY, "Chainsword", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        add_unit_to_company("marine", _company_i, roles.apothecary, eROLE.APOTHECARY, "Chainsword", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
 
     // Chaplains in Reclusium
     repeat (chaplains) {
-        _marine_i += 1;
-        commands += 1;
-        man_size += 1;
-        add_unit_to_company("marine", _company_i, _marine_i, roles.chaplain, eROLE.CHAPLAIN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        add_unit_to_company("marine", _company_i, roles.chaplain, eROLE.CHAPLAIN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
 
     // Honour Guard
@@ -2090,13 +2049,9 @@ function scr_initialize_custom() {
         _honour_guard_count = 3;
     }
     for (var i = 0; i < min(_honour_guard_count, 10); i++) {
-        _marine_i += 1;
-        commands += 1;
-        man_size += 1;
-        add_unit_to_company("marine", _company_i, _marine_i, roles.honour_guard, eROLE.HONOURGUARD);
+        add_unit_to_company("marine", _company_i, roles.honour_guard, eROLE.HONOURGUARD);
     }
 
-    specials = _marine_i;
     #endregion
 
     #region New Totals Per Company Adjusted
@@ -2262,7 +2217,6 @@ function scr_initialize_custom() {
     for (var _c = 0, _clen = array_length(_coys); _c < _clen; _c++) {
         var _name = _coys[_c];
         var _coy = companies[$ _name];
-        _marine_i = 0;
         _vehicle_i = 0;
         if (_coy.total <= 0) {
             continue;
@@ -2490,42 +2444,6 @@ function scr_initialize_custom() {
 
                 // SPECIALISTS
                 case "captains":
-                    var _cap_gen_name = global.name_generator.ChapterMemberNameGeneration()
-                    switch (_coy.coy) {
-                        case 1:
-                            var _new_name = honor_captain_name != "" ? honor_captain_name : _cap_gen_name;
-                            break;
-                        case 2:
-                            var _new_name = watch_master_name != "" ? watch_master_name : _cap_gen_name;
-                            break;
-                        case 3:
-                            var _new_name = arsenal_master_name != "" ? arsenal_master_name : _cap_gen_name;
-                            break;
-                        case 4:
-                            var _new_name = lord_admiral_name != "" ? lord_admiral_name : _cap_gen_name;
-                            break;
-                        case 5:
-                            var _new_name = march_master_name != "" ? march_master_name : _cap_gen_name;
-                            break;
-                        case 6:
-                            var _new_name = rites_master_name != "" ? rites_master_name : _cap_gen_name;
-                            break;
-                        case 7:
-                            var _new_name = chief_victualler_name != "" ? chief_victualler_name : _cap_gen_name;
-                            break;
-                        case 8:
-                            var _new_name = lord_executioner_name != "" ? lord_executioner_name : _cap_gen_name;
-                            break;
-                        case 9:
-                            var _new_name = relic_master_name != "" ? relic_master_name : _cap_gen_name;
-                            break;
-                        case 10:
-                            var _new_name = recruiter_name != "" ? recruiter_name : _cap_gen_name;
-                            break;
-                    }
-                    var _unit = fetch_unit([_coy.coy ,_marine_i]);
-                    _unit.set_name(_new_name);
-                    commands++;
                     _rolename = roles.captain;
                     _erole = eROLE.CAPTAIN;
                     _wep2 = choose_weighted(global.weapon_list_weighted_ranged_pistols);
@@ -2539,7 +2457,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "chaplains":
-                    commands++;
                     _rolename = roles.chaplain;
                     _erole = eROLE.CHAPLAIN;
                     _wep2 = choose_weighted(global.weapon_list_weighted_ranged_pistols);
@@ -2552,7 +2469,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "apothecaries":
-                    commands++;
                     _rolename = roles.apothecary;
                     _erole = eROLE.APOTHECARY;
                     if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
@@ -2565,7 +2481,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "techmarines":
-                    commands++;
                     _rolename = roles.techmarine;
                     _erole = eROLE.TECHMARINE;
                     if (_coy.coy == 1) {
@@ -2583,7 +2498,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "librarians":
-                    commands++;
                     _rolename = roles.librarian;
                     _erole = eROLE.LIBRARIAN;
                     if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
@@ -2725,52 +2639,49 @@ function scr_initialize_custom() {
                 if (_is_vehicle) {
                     if (_vehicle_i < 205) {
                         add_veh_to_company(_rolename, _coy.coy, _vehicle_i, _wep1, _wep2, _wep3, _upgrade, _accessory);
-                        man_size += 10;
                         _vehicle_i++;
                     }
                 } else {
-                    if (_marine_i < 500) {
-                        add_unit_to_company(_unit_type, _coy.coy, _marine_i, _rolename, _erole, _wep1, _wep2, _gear, _mobi, _armour);
-                        _marine_i++;
-                        man_size++;
-                        if (_is_terminator(_armour)) {
-                            man_size++;
-                        }
-                    }
+                    var _unit = add_unit_to_company(_unit_type, _coy.coy , _rolename, _erole, _wep1, _wep2, _gear, _mobi, _armour);
                 }
             }
-            switch (_coy.coy) {
-                case 1:
-                    firsts = _marine_i;
-                    break;
-                case 2:
-                    seconds = _marine_i;
-                    break;
-                case 3:
-                    thirds = _marine_i;
-                    break;
-                case 4:
-                    fourths = _marine_i;
-                    break;
-                case 5:
-                    fifths = _marine_i;
-                    break;
-                case 6:
-                    sixths = _marine_i;
-                    break;
-                case 7:
-                    sevenths = _marine_i;
-                    break;
-                case 8:
-                    eighths = _marine_i;
-                    break;
-                case 9:
-                    ninths = _marine_i;
-                    break;
-                case 10:
-                    tenths = _marine_i;
-                    break;
+            if (!_is_vehicle && _role == "captains"){
+                var _cap_gen_name = global.name_generator.ChapterMemberNameGeneration()
+                switch (_coy.coy) {
+                    case 1:
+                        var _new_name = honor_captain_name != "" ? honor_captain_name : _cap_gen_name;
+                        break;
+                    case 2:
+                        var _new_name = watch_master_name != "" ? watch_master_name : _cap_gen_name;
+                        break;
+                    case 3:
+                        var _new_name = arsenal_master_name != "" ? arsenal_master_name : _cap_gen_name;
+                        break;
+                    case 4:
+                        var _new_name = lord_admiral_name != "" ? lord_admiral_name : _cap_gen_name;
+                        break;
+                    case 5:
+                        var _new_name = march_master_name != "" ? march_master_name : _cap_gen_name;
+                        break;
+                    case 6:
+                        var _new_name = rites_master_name != "" ? rites_master_name : _cap_gen_name;
+                        break;
+                    case 7:
+                        var _new_name = chief_victualler_name != "" ? chief_victualler_name : _cap_gen_name;
+                        break;
+                    case 8:
+                        var _new_name = lord_executioner_name != "" ? lord_executioner_name : _cap_gen_name;
+                        break;
+                    case 9:
+                        var _new_name = relic_master_name != "" ? relic_master_name : _cap_gen_name;
+                        break;
+                    case 10:
+                        var _new_name = recruiter_name != "" ? recruiter_name : _cap_gen_name;
+                        break;
+                }
+                _unit.set_name(_new_name);
             }
+
         }
     }
 
@@ -2941,9 +2852,10 @@ function add_veh_to_company(name, company, slot, wep1, wep2, wep3, upgrade, acce
 /// each item slot can be "" or "default" or a named item. "" will assign items from the available item pool.
 /// Use "" if you want to set weapons and gear via squad layouts.
 /// "default" will set it to the value in the default slot for the given role, see `load_default_gear`
-function add_unit_to_company(ttrpg_name, company, slot, role_name, role_id, wep1 = "default", wep2 = "default", gear = "default", mobi = "default", armour = "default") {
-    obj_ini.TTRPG[company][slot] = new TTRPG_stats("chapter", company, slot, ttrpg_name);
-    var spawn_unit = fetch_unit([company, slot]);
+function add_unit_to_company(ttrpg_name, company , role_name, role_id, wep1 = "default", wep2 = "default", gear = "default", mobi = "default", armour = "default") {
+    var _slot = find_company_open_slot(company)
+    obj_ini.TTRPG[company][_slot] = new TTRPG_stats("chapter", company, _slot, ttrpg_name);
+    var spawn_unit = fetch_unit([company, _slot]);
     spawn_unit.update_role(role_name)
     spawn_unit.unit_race = 1;
     spawn_unit.location_string = obj_ini.home_name;

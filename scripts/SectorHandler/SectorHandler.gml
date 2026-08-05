@@ -43,4 +43,6 @@ function SectorHandler() constructor{
 	static get_creation_year = function(age){
 		return game_year() - age;
 	}
+
+	LOGGER.info("SectorHandler successfully initialised");
 }

@@ -874,7 +874,7 @@ function scr_draw_recruit_advisor() {
         draw_set_font(fnt_40k_14);
     }
 
-    var _cm = obj_controller.chapter_master.get_struct();
+    var _cm = cm_obj().get_struct();
     if (menu_adept == 0) {
         blurp = $"Hail {_cm.name()}! You asked for a report?\n\n";
     }

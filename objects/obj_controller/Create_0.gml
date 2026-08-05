@@ -1317,22 +1317,22 @@ LOGGER.info("set up the UnitQuickFindPanel");
 location_viewer = new UnitQuickFindPanel();
 
 // ** Sets up the number of marines per company **
-marines = 0;
-marines = obj_ini.specials + obj_ini.firsts + obj_ini.seconds + obj_ini.thirds + obj_ini.fourths + obj_ini.fifths;
-marines += obj_ini.sixths + obj_ini.sevenths + obj_ini.eighths + obj_ini.ninths + obj_ini.tenths;
-command = 0;
-command = obj_ini.commands;
+tally_marines();
 
 // Removes the command marines from marine count
 if (global.load == -1) {
     marines -= command;
 }
 
+
+LOGGER.info("intro screen data");
 // **** INTRO SCREEN ****
-#region Intro Scroll
+#region Intro Scrolls
+LOGGER.info("sector_handle");
 temp[30] = obj_ini.sector_handler.date(); // Date
 temp[31] = string_upper(adept_name); // Adept name
-temp[32] = chapter_master.get_struct.name(); // Master name
+LOGGER.info("chapter master fetcch");
+temp[32] = cm_obj().get_struct.name(); // Master name
 temp[33] = string_upper(scr_thought()); // Thought of the day
 
 // Game start welcoming message
