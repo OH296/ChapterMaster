@@ -570,12 +570,10 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var leader_hier_pos = array_length(hierarchy);
         var leader = "none";
         var highest_exp = 0;
-        for (var i = 0; i < member_length; i++) {
+        for (var i = member_length - 1; i >= 0; i++) {
             var _unit = fetch_unit(members[i]);
             if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
-                member_length--;
-                i--;
                 continue;
             } else {
                 if (leader == "none") {
@@ -592,19 +590,13 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
                 } else if (leader_hier_pos < array_length(hierarchy) && hierarchy[leader_hier_pos] == _unit.role()) {
                     var _leader = fetch_unit(leader);
                     if (is_struct(_leader) && _leader.experience < _unit.experience) {
-                        leader = [
-                            _unit.company,
-                            _unit.marine_number,
-                        ];
+                        leader = _leader;
                     }
                 } else {
                     for (var r = 0; r < leader_hier_pos; r++) {
                         if (hierarchy[r] == _unit.role()) {
                             leader_hier_pos = r;
-                            leader = [
-                                _unit.company,
-                                _unit.marine_number,
-                            ];
+                            leader = _unit;
                             break;
                         }
                     }
@@ -616,21 +608,17 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     };
 
     static change_sgt = function(new_sgt) {
-        sgt = determine_leader();
-        var remove_sgt;
-        if (sgt != "none") {
-            remove_sgt = fetch_unit(sgt);
-            if (is_struct(remove_sgt)) {
-                if (remove_sgt.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
-                    var replace_role = remove_sgt.role();
-                    remove_sgt.update_role(new_sgt.role());
-                    //TODO centralise loyalty changes for role changes in the update_role method
-                    remove_sgt.alter_loyalty(-10);
-                    new_sgt.update_role(replace_role);
-                    new_sgt.alter_loyalty(10);
-                }
+        var _remove_sgt  = determine_leader();
+        if (is_struct(_remove_sgt)) {
+            if (remove_sgt.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
+                var replace_role = remove_sgt.role();
+                remove_sgt.update_role(new_sgt.role());
+                //TODO centralise loyalty changes for role changes in the update_role method
+                remove_sgt.alter_loyalty(-10);
             }
         }
+        new_sgt.update_role(replace_role);
+        new_sgt.alter_loyalty(10);
     };
 
     static set_location = function(loc, lid, wid) {

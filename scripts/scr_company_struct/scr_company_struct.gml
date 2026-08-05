@@ -550,9 +550,8 @@ function CompanyStruct(comp) constructor {
         draw_set_halign(fa_left);
         //should be moved elsewhere for efficiency
         squad_leader = _cur_squad.determine_leader();
-        if (squad_leader != "none") {
-            var _fetched = fetch_unit(squad_leader);
-            var leader_text = is_struct(_fetched) ? $"Squad Leader : {_fetched.name_role()}" : "Squad Leader : Unknown";
+        if (is_struct(squad_leader)) {
+            var leader_text = is_struct(squad_leader) ? $"Squad Leader : {squad_leader.name_role()}" : "Squad Leader : Unknown";
             draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 50, leader_text, 1, 1, 0);
         }
         squad_loc = _cur_squad.squad_loci();

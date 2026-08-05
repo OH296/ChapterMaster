@@ -402,7 +402,7 @@ function init_protect_raider_mission(squad) {
         _mod += 10;
     }
 
-    var _leader = fetch_unit(squad.determine_leader());
+    var _leader = squad.determine_leader();
     if (!is_struct(_leader)) {
         return;
     }

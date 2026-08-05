@@ -141,8 +141,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
         var _unit;
         for (var _squad = 0; _squad < array_length(garrison_squads); _squad++) {
             var _leader = garrison_squads[_squad].determine_leader();
-            _unit = fetch_unit(_leader);
-            if (!is_struct(_unit)) {
+            if (!is_struct(_leader)) {
                 continue;
             }
             if (garrison_leader == false) {
