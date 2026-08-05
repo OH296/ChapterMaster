@@ -672,7 +672,7 @@ function draw_sprite_and_unit_equip_data() {
                 if (company_data.current_squad != -1) {
                     var cur_squad = company_data.grab_current_squad();
                     var sgt_possible = cur_squad.type != "command_squad" && !selected_unit.IsSpecialist(SPECIALISTS_SQUAD_LEADERS);
-                    if (selected_unit.uid != cur_squad.squad_leader.uid) {
+if (!is_struct(cur_squad.squad_leader) || selected_unit.uid != cur_squad.squad_leader.uid) {
                         if (point_and_click(draw_unit_buttons([xx + 200 + 50, yy + 329], "Make Sgt", [1, 1], #50a076,,, sgt_possible ? 1 : 0.5)) && sgt_possible) {
                             cur_squad.change_sgt(selected_unit);
                         }
