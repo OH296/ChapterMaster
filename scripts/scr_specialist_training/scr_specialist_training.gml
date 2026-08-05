@@ -126,7 +126,7 @@ function apothecary_training() {
     var training_points_values = global.apothecary_training_tiers;
     apothecary_recruit_points += training_points_values[training_apothecary];
 
-    var _apoth_role = player_role_data[eROLE.APOTHECARY];
+    var _apoth_role = obj_ini.player_role_data[eROLE.APOTHECARY];
 
     var novice_type = string("{0} Aspirant", obj_ini._apoth_role.role);
     if (training_apothecary > 0) {

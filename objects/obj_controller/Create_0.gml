@@ -736,7 +736,7 @@ if (instance_exists(obj_ini)) {
     }
 }
 
-chapter_master = new scr_chapter_master();
+chapter_master = new ChapterMaster();
 
 trade_attempt = false;
 // ** Sets income **
@@ -1324,15 +1324,12 @@ if (global.load == -1) {
     marines -= command;
 }
 
-
-LOGGER.info("intro screen data");
 // **** INTRO SCREEN ****
 #region Intro Scrolls
 LOGGER.info("sector_handle");
 temp[30] = obj_ini.sector_handler.date(); // Date
 temp[31] = string_upper(adept_name); // Adept name
-LOGGER.info("chapter master fetcch");
-temp[32] = cm_obj().get_struct.name(); // Master name
+temp[32] = cm_obj().get_struct().name(); // Master name
 temp[33] = string_upper(scr_thought()); // Thought of the day
 
 // Game start welcoming message
@@ -1347,31 +1344,33 @@ var _build_clause = function(_prefix, _parts) {
     return $"{_prefix} {string_join_ext(", ", _parts)}.";
 };
 
+LOGGER.info("Command staff");
+
 var _hq_index = collect_company(0).index_roles();
 var _command_staff = [
     {
         role: _canon[eROLE.CHAPTERMASTER],
-        name_slot: 0,
+        name_slot: eCHAPTER_DEPARTMENTS.HQ,
         prefix: "your majesty ",
     },
     {
         role: "Forge Master",
-        name_slot: 1,
+        name_slot: eCHAPTER_DEPARTMENTS.FORGE,
         prefix: "",
     },
     {
         role: "Master of Sanctity",
-        name_slot: 2,
+        name_slot: eCHAPTER_DEPARTMENTS.CHAP,
         prefix: "",
     },
     {
         role: "Master of the Apothecarion",
-        name_slot: 3,
+        name_slot: eCHAPTER_DEPARTMENTS.APOTH,
         prefix: "",
     },
     {
         role: $"Chief {_canon[eROLE.LIBRARIAN]}",
-        name_slot: 4,
+        name_slot: eCHAPTER_DEPARTMENTS.LIB,
         prefix: "and ",
     },
 ];
@@ -1379,8 +1378,13 @@ var _command_staff = [
 var _parts = [];
 for (var i = 0, l = array_length(_command_staff); i < l; i++) {
     var _officer = _command_staff[i];
-    if (_hq_index.has_role(_officer.role)) {
-        array_push(_parts, $"{_officer.prefix}{_officer.role} {TTRPG[0][_officer.name_slot].name()}");
+    var _unit = get_department_head(_officer.name_slot);
+    if (!is_undefined(_unit)){
+        if (_hq_index.has_role(_officer.role)) {
+            array_push(_parts, $"{_officer.prefix}{_unit.name_role()}");
+        }
+    } else {
+        array_push(_parts, $"you have no {_officer.role}");
     }
 }
 temp[34] = _build_clause("Command staff made of", _parts);

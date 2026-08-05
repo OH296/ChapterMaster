@@ -1916,10 +1916,6 @@ function scr_initialize_custom() {
 
     var _game_year = obj_ini.sector_handler.game_year();
     #region Chapter HQ
-    for (var c = 0; c < obj_ini.companies; c++) {
-        TTRPG[c] = [];
-    }
-
     // Chapter Master
     // This needs work
     var cm_equip = load_chapter_master_equipment();
@@ -1987,9 +1983,7 @@ function scr_initialize_custom() {
         var _hchap = add_unit_to_company("marine", _company_i, "Master of Sanctity", eROLE.CHAPLAIN, "default", "Plasma Pistol", "default", "default", _hq_armour);
         _hchap.set_name(high_chaplain_name);
         _hchap.edit_corruption(-100);
-        if (_hchap.piety < 45) {
-            _hchap.piety = 45;
-        }
+        _hchap.piety = max(_hchap.piety , 45);
         _hchap.add_trait("zealous_faith");
     }
 
@@ -2854,8 +2848,8 @@ function add_veh_to_company(name, company, slot, wep1, wep2, wep3, upgrade, acce
 /// "default" will set it to the value in the default slot for the given role, see `load_default_gear`
 function add_unit_to_company(ttrpg_name, company , role_name, role_id, wep1 = "default", wep2 = "default", gear = "default", mobi = "default", armour = "default") {
     var _slot = find_company_open_slot(company)
-    obj_ini.TTRPG[company][_slot] = new TTRPG_stats("chapter", company, _slot, ttrpg_name);
-    var spawn_unit = fetch_unit([company, _slot]);
+    var spawn_unit = new TTRPG_stats("chapter", company, _slot, ttrpg_name);
+    obj_ini.TTRPG[company][_slot] = spawn_unit;
     spawn_unit.update_role(role_name)
     spawn_unit.unit_race = 1;
     spawn_unit.location_string = obj_ini.home_name;

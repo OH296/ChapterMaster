@@ -106,24 +106,6 @@ veh_upgrade = array_create_2d(_max_companies, _max_vehicles, "");
 veh_acc = array_create_2d(_max_companies, _max_vehicles, "");
 
 // Unit Init
-defaults_slot = 100;
-
-/// @type {Array<Array<Real>>}
-race = array_create(11, []);
-/// @type {Array<Array<String>>}
-name = array_create(11, []);
-/// @type {Array<Array<String>>}
-role = array_create(11, []);
-/// @type {Array<Array<String>>}
-wep1 = array_create(11, []);
-/// @type {Array<Array<String>>}
-wep2 = array_create(11, []);
-/// @type {Array<Array<String>>}
-armour = array_create(11, []);
-/// @type {Array<Array<String>>}
-gear = array_create(11, []);
-/// @type {Array<Array<String>>}
-mobi = array_create(11, []);
 /// @type {Array<Array<Struct.TTRPG_stats>>}
 TTRPG = array_create(11, []);
 
@@ -290,8 +272,8 @@ deserialize = function(save_data) {
         TTRPG[company][marine].load_json_data(struct);
     }
 
-    for (var _coy = 0; _coy <= 10; _coy++) {
-        for (var _mar = 0; _mar <= 500; _mar++) {
+    for (var _coy = 0; _coy <= companies; _coy++) {
+        for (var _mar = 0; _mar <= TTRPG[_coy]; _mar++) {
             TTRPG[_coy][_mar] = new TTRPG_stats("chapter", _coy, _mar, "blank");
         }
     }

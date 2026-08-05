@@ -54,7 +54,7 @@ try {
             if (name == obj_ncombat.battle_loc) {
                 instance_create(x, y, obj_temp_meeting);
                 var master_present = 0;
-                var _fetched_chaos = obj_controller.chapter_master.get_struct();
+                var _fetched_chaos = cm_obj().get_struct();
                 if (!is_struct(_fetched_chaos)) {
                     LOGGER.error($"fetch_unit guardrail triggered for chapter master [0, 0] in cs_meeting post-battle");
                     exit;

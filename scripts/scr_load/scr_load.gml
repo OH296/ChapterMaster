@@ -91,7 +91,7 @@ function scr_load(save_part, save_id) {
                     variable_struct_set(specialist_point_handler, prop, variable_struct_get(save_data, prop));
                 }
             }
-            chapter_master = new scr_chapter_master();
+            chapter_master = new ChapterMaster();
             if (struct_exists(save_data, "chapter_master_data")) {
                 var _data = variable_struct_get(save_data, "chapter_master_data");
                 with (chapter_master) {

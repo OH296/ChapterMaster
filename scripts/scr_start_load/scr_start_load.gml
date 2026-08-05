@@ -27,7 +27,7 @@ function scr_start_load(fleet, load_from_star, load_options) {
     var comp_has_units = [];
     for (var _comp = 0; _comp < 10; _comp++) {
         comp_has_units[_comp] = false;
-        for (var _unit = 0; _unit < get_company_length(_comp); _unit++) {
+        for (var _unit = 0; _unit < company_length(_comp); _unit++) {
             if (is_struct(fetch_unit([_comp, _unit]))) {
                 comp_has_units[_comp] = true;
                 break;
