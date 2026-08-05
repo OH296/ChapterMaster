@@ -128,7 +128,7 @@ function apothecary_training() {
 
     var _apoth_role = obj_ini.player_role_data[eROLE.APOTHECARY];
 
-    var novice_type = string("{0} Aspirant", obj_ini._apoth_role.role);
+    var novice_type = string("{0} Aspirant", _apoth_role.role);
     if (training_apothecary > 0) {
         recruit_count = scr_role_count(novice_type, "");
 

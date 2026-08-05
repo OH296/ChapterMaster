@@ -273,7 +273,7 @@ deserialize = function(save_data) {
     }
 
     for (var _coy = 0; _coy <= companies; _coy++) {
-        for (var _mar = 0; _mar <= TTRPG[_coy]; _mar++) {
+        for (var _mar = 0; _mar < company_length(_coy); _mar++) {
             TTRPG[_coy][_mar] = new TTRPG_stats("chapter", _coy, _mar, "blank");
         }
     }
