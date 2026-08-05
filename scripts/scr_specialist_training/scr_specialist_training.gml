@@ -140,7 +140,7 @@ function apothecary_training() {
                 }
                 /// @type {Struct.TTRPG_stats}
                 var _unit = fetch_unit(random_marine);
-                if (!is_struct(_unit) || _unit.name() == "") {
+                if (!is_struct(_unit)) {
                     return;
                 }
 
@@ -351,7 +351,7 @@ function techmarine_training() {
                         return;
                 }
                 var _unit = fetch_unit(random_marine);
-                if (!is_struct(_unit) || _unit.name() == "") {
+                if (!is_struct(_unit)) {
                     return;
                 }
                 tech_points -= _threshold;

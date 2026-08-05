@@ -162,8 +162,8 @@ serialize = function() {
         var _squad = _squad_copies[$ _squad_keys[i]];
 
         for (var s = 0; s < array_length(_squad.members); s++){
-            if (is_struct(_squad.members[i])){
-                _squad.members[i] = _squad.members[i].uid;
+            if (is_struct(_squad.members[s])){
+                _squad.members[i] = _squad.members[s].uid;
             }
         }
     }

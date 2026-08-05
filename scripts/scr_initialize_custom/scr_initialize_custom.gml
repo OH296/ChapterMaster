@@ -2978,10 +2978,6 @@ function load_chapter_master_equipment() {
             arti = new ArtifactStruct(obj_creation.artifact.base_weapon_type, [], 0, "", -1);
             arti.set_custom_name(obj_creation.artifact.name);
             arti.set_custom_description(obj_creation.artifact.description);
-            arti.set_bearer([
-                0,
-                1,
-            ]);
             arti.set_identification_timer(0);
             obj_ini.artifact_map[$ string(arti.artifact_id)] = arti;
             chapter_master_equip.wep1 = arti.artifact_id;
@@ -2990,10 +2986,6 @@ function load_chapter_master_equipment() {
                 arti = new ArtifactStruct(obj_creation.artifact[a].base_weapon_type, [], 0, "", -1);
                 arti.set_custom_name(obj_creation.artifact[a].name);
                 arti.set_custom_description(obj_creation.artifact[a].description);
-                arti.set_bearer([
-                    0,
-                    1,
-                ]);
                 arti.set_identification_timer(0);
                 obj_ini.artifact_map[$ string(arti.artifact_id)] = arti;
                 switch (obj_creation.artifact[a].slot) {

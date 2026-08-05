@@ -917,10 +917,6 @@ function collect_by_religeon(religion, sub_cult = "", location = "") {
             if (!is_struct(_unit)) {
                 continue;
             }
-            if (_unit.name() == "") {
-                LOGGER.error($"Empty name! Unit:\n{_unit}");
-                continue;
-            }
             if (_unit.religion == religion) {
                 if (sub_cult != "") {
                     if (_unit.religion_sub_cult != "sub_cult") {

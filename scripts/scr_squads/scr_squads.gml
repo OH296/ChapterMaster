@@ -296,20 +296,6 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         return squad_unit_types;
     };
 
-    static get_squad_structs = function(as_UnitGroup) {
-        var _struct_array = [];
-        for (var i = array_length(members) - 1; i >= 0; i--) {
-            _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit)) {
-                array_delete(members, i, 1);
-                continue;
-            } else {
-                array_push(_struct_array, _unit);
-            }
-        }
-        return _struct_array;
-    };
-
     // for creating a new sergeant from existing squad members
     static new_sergeant = function(veteran = false) {
         var exp_unit = "";
@@ -317,8 +303,8 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var highest_exp = 0;
         var member_length = array_length(members);
         for (var i = 0; i < member_length; i++) {
-            _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            _unit = members[i];
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
                 i--;
@@ -347,7 +333,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
 
     static kill_members = function() {
         for (var i = 0; i < array_length(members); i++) {
-            scr_kill_unit(members[i][0], members[i][1]);
+            scr_kill_unit(members[i].company, members[i].marine_number);
         }
         members = [];
     };
@@ -377,10 +363,6 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         for (var i = member_length - 1; i >= 0; i--) {
             //checks squad member is still valid
             _unit = fetch_member(i);
-            if (_unit.name() == "") {
-                array_delete(members, i, 1);
-                continue;
-            }
             if (struct_exists(squad_fulfilment, _unit.role())) {
                 squad_fulfilment[$ _unit.role()]++;
             } else {
@@ -514,8 +496,8 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var planet_side = false;
         var exact_loc = false;
         for (var i = 0; i < member_length; i++) {
-            _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            _unit = members[i];
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
                 i--;
@@ -590,7 +572,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var highest_exp = 0;
         for (var i = 0; i < member_length; i++) {
             var _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
                 i--;
@@ -671,7 +653,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         member_length = array_length(members);
         for (var i = 0; i < member_length; i++) {
             var _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
                 i--;

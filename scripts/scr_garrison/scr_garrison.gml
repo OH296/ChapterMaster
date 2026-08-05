@@ -55,9 +55,6 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                 if (!is_struct(_unit)) {
                     continue;
                 }
-                if (_unit.name() == "") {
-                    continue;
-                }
                 array_push(members, _unit);
                 if (_unit.hp() > 0) {
                     viable_garrison++;

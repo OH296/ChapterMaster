@@ -186,7 +186,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
         __identification_timer = data.identification_timer ?? 0;
         __location_name = data.location_name ?? "";
         __ship_id = data.ship_id ?? -1;
-        __bearer = data.bearer ?? undefined;
+        __bearer = data.bearer.uid ?? undefined;
         __custom_name = data.custom_name ?? "";
         __custom_description = data.custom_description ?? "";
 

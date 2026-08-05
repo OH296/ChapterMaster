@@ -457,9 +457,8 @@ function CompanyStruct(comp) constructor {
     };
 
     static default_member = function() {
-        var _member = company_squads[0].members[0];
-        var _fetched = fetch_unit(_member);
-        if (is_struct(_fetched)) {
+        var _member = company_squads[0].fetch_member(0);
+        if (is_struct(_member)) {
             obj_controller.unit_focus = _fetched;
         }
         selected_unit = obj_controller.unit_focus;

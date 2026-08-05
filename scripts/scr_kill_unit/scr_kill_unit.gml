@@ -32,7 +32,7 @@ function scr_kill_unit(company, unit_slot) {
             }
         }
 
-        scr_wipe_unit(company, unit_slot);
+        array_delete(obj_ini.TTRPG[company], unit_slot, 1);
     } catch (ex) {
         LOGGER.error($"company: {company}, unit_slot: {unit_slot}");
         ERROR_HANDLER.handle_exception(ex);

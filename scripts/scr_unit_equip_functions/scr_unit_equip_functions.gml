@@ -101,10 +101,7 @@ function scr_update_unit_armour(new_armour, from_armoury = true, to_armoury = tr
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         armour_quality = "artifact";
     } else {
         armour_quality = quality;
@@ -208,10 +205,7 @@ function scr_update_unit_weapon_one(new_weapon, from_armoury = true, to_armoury 
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         weapon_one_quality = "artifact";
     } else {
         weapon_one_quality = quality;
@@ -266,10 +260,7 @@ function scr_update_unit_weapon_two(new_weapon, from_armoury = true, to_armoury 
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         weapon_two_quality = "artifact";
     } else {
         weapon_two_quality = quality;
@@ -332,10 +323,7 @@ function scr_update_unit_gear(new_gear, from_armoury = true, to_armoury = true, 
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         gear_quality = "artifact";
     } else {
         gear_quality = quality;
@@ -431,10 +419,7 @@ function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, t
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         mobility_item_quality = "artifact";
     } else {
         mobility_item_quality = quality;

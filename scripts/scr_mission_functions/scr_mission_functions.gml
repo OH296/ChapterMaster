@@ -225,14 +225,14 @@ function problem_end_turn_checks() {
                 for (var co = 0; co <= obj_ini.companies; co++) {
                     me = 0;
                     for (me = 0; me < array_length(obj_ini.TTRPG[co]); me++) {
-                        if (obj_ini.base_group == "astartes") {
-                            _unit = fetch_unit([co, me]);
-                            if (!is_struct(_unit)) {
-                                continue;
-                            }
-                            _unit.edit_corruption(irandom_range(3, 6));
-                            _unit.alter_loyalty(-10);
+                        var _unit = fetch_unit([co, me]);
+                        if (_unit.base_group != "astartes") {
+                            continue
                         }
+                        _unit = fetch_unit([co, me]);
+                        _unit.edit_corruption(irandom_range(3, 6));
+                        _unit.alter_loyalty(-10);
+
                     }
                 }
             }
@@ -391,7 +391,7 @@ function role_compare(unit, role) {
 }
 
 function init_protect_raider_mission(squad) {
-    var _squad_units = squad.get_squad_structs();
+    var _squad_units = squad.members;
     var _squad_wisdom = stat_average(_squad_units, "wisdom");
     var _squad_dex = stat_average(_squad_units, "dexterity");
     var _tester = global.character_tester;

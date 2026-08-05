@@ -148,7 +148,6 @@ function scr_company_order(company) {
                 var _squad = _struc.get_squad();
                 _squad.add_member(_struc)
             }
-            _struc.movement_after_math(co, i, false);
         }
     } catch (_exception) {
         ERROR_HANDLER.handle_exception(_exception);

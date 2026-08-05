@@ -69,9 +69,6 @@ function scr_powers(caster_id, _psy_log = undefined) {
     if (!is_struct(_unit)) {
         exit;
     }
-    if (_unit.name() == "") {
-        exit;
-    }
     if (!instance_exists(obj_enunit)) {
         exit;
     }
