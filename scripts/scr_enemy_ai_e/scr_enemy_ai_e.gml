@@ -743,7 +743,7 @@ function scr_enemy_ai_e() {
         var otm = 0;
         var master_present = false;
         for (var co = 0; co <= obj_ini.companies; co++) {
-            for (var i = 0; i <= array_length(obj_ini.TTRPG[co]); i++) {
+            for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                 var _unit = fetch_unit([co, i]);
                 var _is_a_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
                 if (!is_struct(_unit)) {

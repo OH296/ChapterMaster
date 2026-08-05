@@ -1051,7 +1051,7 @@ function scr_ui_manage() {
                     break;
                 }
 
-                while ((sel <= array_length(display_unit) - 1) && (man[sel] == "hide" || (man_sel[sel] != 1 && _only_display_selected))) {
+                while ((sel < array_length(display_unit)) && (man[sel] == "hide" || (man_sel[sel] != 1 && _only_display_selected))) {
                     sel += 1;
                 }
                 if (sel >= array_length(display_unit)) {
