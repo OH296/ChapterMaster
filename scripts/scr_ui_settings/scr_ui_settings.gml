@@ -705,7 +705,7 @@ function scr_draw_mass_equip_gui() {
         draw_set_color(c_gray);
         draw_rectangle(114, 626, 560, 665, 0);
         draw_set_color(0);
-        draw_text(333, 636, $"Requip All {obj_ini.player_role_data[settings].role} With Default Items");
+        draw_text(333, 636, $"Requip All {obj_ini.player_role_data[role].role} With Default Items");
         if (scr_hit(114, 626, 560, 665) == true) {
             draw_set_color(c_white);
             draw_set_alpha(0.2);
