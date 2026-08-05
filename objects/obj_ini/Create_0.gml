@@ -194,6 +194,11 @@ serialize = function() {
 
     copy_serializable_fields(id, save_data, excluded_from_save);
 
+    save_data.company_lengths = [];
+    for (var _coy = 0; _coy <= companies; _coy++) {
+        array_push(save_data.company_lengths, company_length(_coy))
+    }
+
     return save_data;
 };
 
@@ -216,7 +221,8 @@ deserialize = function(save_data) {
         "artifact_equipped",
         "artifact_struct",
         "artifact_list",
-        "sector_handler"
+        "sector_handler",
+        "company_lengths"
     ]; // skip automatic setting of certain vars, handle explicitly later
 
     // Automatic var setting
@@ -273,8 +279,8 @@ deserialize = function(save_data) {
     }
 
     for (var _coy = 0; _coy <= companies; _coy++) {
-        for (var _mar = 0; _mar < company_length(_coy); _mar++) {
-            TTRPG[_coy][_mar] = new TTRPG_stats("chapter", _coy, _mar, "blank");
+        for (var _mar = 0; _mar < save_data.company_lengths[_coy]; _mar++) {
+            TTRPG[_coy][_mar] = undefined;
         }
     }
 
@@ -285,9 +291,6 @@ deserialize = function(save_data) {
             var _coy = _marine_json.company;
             var _mar = _marine_json.marine_number;
             load_marine_struct(_coy, _mar, _marine_json);
-            if (!is_struct(fetch_unit([_coy, _mar]))) {
-                TTRPG[_coy][_mar] = new TTRPG_stats("chapter", _coy, _mar, "blank");
-            }
         }
     }
 
