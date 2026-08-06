@@ -30,6 +30,7 @@ function scr_kill_unit() {
         for (var i = marine_number; i < _len; i++){
             obj_ini.TTRPG[company][i].marine_number = i;
         }
+        var _is_astartes = base_group == "astartes";
         if (_is_astartes) {
             if (IsSpecialist()) {
                 obj_controller.command -= 1;
