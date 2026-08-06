@@ -19,7 +19,7 @@ try {
                     var nco = dude_co[q];
                     var nid = dude_id[q];
                     cleann[nco] = true;
-                    var _unit = obj_ini.TTRPG[nco][nid];
+                    var _unit = fetch_unit([nco,nid]);
 
                     commandy = _unit.IsSpecialist();
                     if (commandy == true) {
@@ -32,7 +32,7 @@ try {
                     obj_ncombat.world_size += scr_unit_size(_unit.armour(), _unit.role(), true, _unit.mobility_item());
 
                     var recover = !obj_ncombat.defeat;
-                    kill_and_recover(nco, nid, recover, recover);
+                    _unit.kill(recover, recover);
                 }
             }
         }

@@ -726,7 +726,7 @@ function complete_beast_hunt_mission(targ_planet, problem_index) {
                 if (!_tough_check[0]) {
                     if (_tough_check[1] < -10) {
                         _unit_report_string += $"{_unit.name_role()} Was mauled to death\n";
-                        scr_kill_unit(_unit.company, _unit.marine_number);
+                        _unit.kill(true, false);
                         _deaths++;
                     } else if (_tough_check[1] >= -10) {
                         if (irandom(100) < _unit.luck) {

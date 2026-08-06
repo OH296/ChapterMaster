@@ -65,7 +65,7 @@ function scr_destroy_planet(destruction_method) {
                     }
                 }
 
-                scr_kill_unit(cah, ed);
+                unit.kill(false, false);
             }
             if (ed < 200) {
                 if ((obj_ini.veh_loc[cah][ed] == you.name) && (obj_ini.veh_wid[cah][ed] == baid)) {

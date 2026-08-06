@@ -331,9 +331,9 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         }
     };
 
-    static kill_members = function() {
+    static kill_members = function(recover_equipment = true, recover_gene = true) {
         for (var i = 0; i < array_length(members); i++) {
-            scr_kill_unit(members[i].company, members[i].marine_number);
+            members[i].kill(recover_equipment, recover_gene);
         }
         members = [];
     };

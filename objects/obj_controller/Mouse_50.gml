@@ -21,7 +21,7 @@ if ((menu == eMENU.RECLUSIAM) && (cooldown <= 0) && (penitorium > 0)) {
                     global.defeat = 3;
                 }
                 // TODO Needs to be based on role
-                kill_and_recover(c, e);
+                _unit.kill();
                 diplo_char = c;
                 with (obj_ini) {
                     scr_company_order(obj_controller.diplo_char);

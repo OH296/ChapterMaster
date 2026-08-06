@@ -7,6 +7,7 @@ for (o = 0; o < array_length(origin.board_co); o++) {
     if (!is_struct(_unit)) {
         continue;
     }
+    var _recover_gene = obj_fleet.capital + obj_fleet.frigate + obj_fleet.escort > 0;
     if (_unit.hp() <= -15 && _unit.base_group == "astartes") {
         var seed_lost = 0;
         if (apothecary <= 0) {
@@ -33,11 +34,8 @@ for (o = 0; o < array_length(origin.board_co); o++) {
                 scr_loyalty("Lost Standard", "+");
             }
 
-            scr_kill_unit(co, i);
+            _unit.kill(false, _recover_gene);
 
-            if (obj_fleet.capital + obj_fleet.frigate + obj_fleet.escort > 0) {
-                obj_controller.gene_seed += seed_lost;
-            }
         } else if (apothecary > 0) {
             _unit.add_or_sub_health(irandom_range(9, 14));
             apothecary -= 0.5;

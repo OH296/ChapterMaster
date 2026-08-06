@@ -207,7 +207,7 @@ function event_end_turn_action() {
 
                     // This is causing the problem
 
-                    scr_kill_unit(comp, marine_num);
+                    _unit.kill(false, false);
                     with (obj_ini) {
                         scr_company_order(0);
                     }
@@ -217,7 +217,8 @@ function event_end_turn_action() {
                         {
                             str1: "Execute the heretic",
                             choice_func: function() {
-                                scr_kill_unit(pop_data.company, pop_data.marine_number);
+                                var _unit = fetch_unit([pop_data.company, pop_data.marine_number]);
+                                _unit.kill(false, false);
                                 var company_to_order = pop_data.company;
                                 with (obj_ini) {
                                     scr_company_order(company_to_order);

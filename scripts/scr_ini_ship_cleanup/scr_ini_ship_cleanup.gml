@@ -12,7 +12,7 @@ function scr_kill_ship(index) {
                     if (_unit.ship_location > -1) {
                         if (_unit.ship_location == index) {
                             if (!(irandom(_unit.luck) - 3)) {
-                                scr_kill_unit(_unit.company, _unit.marine_number);
+                                _unit.kill(false, false);
                             } else {
                                 array_push(_units_on_ship, _unit);
                             }
@@ -148,7 +148,7 @@ function scr_kill_ship(index) {
                 } else {
                     _unit.location_string = "";
                 }
-                scr_kill_unit(_unit.company, _unit.marine_number);
+                unit.kill(false, false);
             }
         }
     } catch (_exception) {

@@ -2333,6 +2333,8 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             }
         }
     };
+
+    static kill = kill_and_recover;
 }
 
 function jsonify_marine_struct(company, marine, stringify = true) {

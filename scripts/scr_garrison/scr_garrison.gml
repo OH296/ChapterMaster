@@ -114,7 +114,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                 }
                 if (_unit.hp() < 0) {
                     if (_unit.calculate_death()) {
-                        kill_and_recover(_unit.company, _unit.marine_number);
+                        _unit.kill();
                         members_lost++;
                         array_delete(members, i, 1);
                     }
@@ -123,7 +123,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                 _unit.add_or_sub_health(-50);
                 if (_unit.hp() < 0) {
                     if (_unit.calculate_death()) {
-                        kill_and_recover(_unit.company, _unit.marine_number);
+                        _unit.kill();
                         array_delete(members, i, 1);
                         members_lost++;
                     }

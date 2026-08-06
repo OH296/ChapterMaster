@@ -25,7 +25,7 @@ function scr_mission_reward(mission, star, planet) {
             var _tech_roll = global.character_tester.standard_test(_tech, "technology", -10)[1];
             var _wep_test = global.character_tester.standard_test(_tech, "weapon_skill", 10);
             if (!_wep_test[0]) {
-                kill_and_recover(_tech.company, _tech.marine_number, true, false);
+                _tech.kill(true, false);
                 techs_lost++;
                 cleanup[_tech.company] = true;
             } else {

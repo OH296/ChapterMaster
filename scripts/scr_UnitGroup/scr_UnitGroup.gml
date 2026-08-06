@@ -176,7 +176,7 @@ function UnitGroup(units = []) constructor {
                 i++;
                 continue;
             }
-            kill_and_recover(_unit.company, _unit.marine_number, equipment, gene_seed_collect);
+            _unit.kill(equipment, gene_seed_collect);
             _killed++;
             i++;
         }

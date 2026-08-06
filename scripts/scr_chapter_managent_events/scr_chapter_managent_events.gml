@@ -74,7 +74,7 @@ function tech_uprising_event_aftermath() {
             }
             if (purge_target != noone) {
                 for (var tal = 0; tal < array_length(purge_target); tal++) {
-                    kill_and_recover(purge_target[tal].company, purge_target[tal].marine_number);
+                    purge_target[tal].kill();
                 }
             }
         }
