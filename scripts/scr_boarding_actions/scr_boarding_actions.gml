@@ -31,7 +31,6 @@ function create_boarding_craft(target_ship) {
     _boarding_craft.direction = direction;
     _boarding_craft.origin = self.id;
     _boarding_craft.speed = 4;
-    _boarding_craft.firstest = first;
 
     if (boarders <= 0) {
         obj_cursor.board = 0;
@@ -46,11 +45,11 @@ function destroy_boarding_craft(){
         }
         var _recover_gene = obj_fleet.capital + obj_fleet.frigate + obj_fleet.escort > 0;
         if (_unit.hp() <= -15 && _unit.base_group == "astartes") {
-            _unit.kill(false, _recover_gene);
-
             if (apothecary > 0) {
                 _unit.add_or_sub_health(irandom_range(9, 14));
                 apothecary -= 0.5;
+            } else {
+                _unit.kill(false, _recover_gene);
             }
 		}
     }
