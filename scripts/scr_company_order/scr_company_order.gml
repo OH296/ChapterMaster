@@ -124,30 +124,10 @@ function scr_company_order(company) {
 
         _company_marines.order_by_rank();
 
-        var _squads = _company_marines.count_squads("all", true);
+        TTRPG[co] = _company_marines.units;
 
-        for (var i = 0; i < array_length(_squads); i++) {
-            var _squad = fetch_squad(_squads[i]);
-            _squad.members = [];
-        }
-
-        var _temps = [];
-        for (var i = 0; i < array_length(_company_marines.units); i++) {
-            var _unit = _company_marines.units[i];
-            array_push(_temps, {unit: _unit});
-        }
-
-        var _new_length = array_length(_temps);
-        TTRPG[co] = array_create(_new_length, 0);
-        for (var i = 0; i < array_length(_temps); i++) {
-            var _unit = _temps[i];
-            var _struc = _unit.unit;
-            TTRPG[co][i] = _struc;
-            _struc.marine_number = i;
-            if (_struc.squad != "none") {
-                var _squad = _struc.get_squad();
-                _squad.add_member(_struc)
-            }
+        for (var i = 0; i < array_length(TTRPG[co]); i++) {
+            TTRPG[co][i].marine_number = i;
         }
     } catch (_exception) {
         ERROR_HANDLER.handle_exception(_exception);
