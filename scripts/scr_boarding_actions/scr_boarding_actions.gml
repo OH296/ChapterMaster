@@ -18,7 +18,7 @@ function create_boarding_craft(target_ship) {
                 _boarding_craft.apothecary += 1;
             }
         }
-        array_push(_boarding_craft.board_marine unit);
+        array_push(_boarding_craft.occupants unit);
         if (_boarding_craft.boarders >= 20) {
             break;
         }
@@ -39,8 +39,8 @@ function create_boarding_craft(target_ship) {
 }
 
 function destroy_boarding_craft(){
-    for (var o = 0; o < array_length(board_marine); o++) {
-        var _unit = board_marine[o];
+    for (var o = 0; o < array_length(occupants); o++) {
+        var _unit = occupants[o];
         if (!is_struct(_unit)) {
             continue;
         }

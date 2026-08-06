@@ -110,17 +110,14 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
         ac = 0;
         dr = 1;
 
-        for (var o = 0; o < array_length(board_marine); o++) {
+        for (var o = 0; o < array_length(occupants); o++) {
             if (!instance_exists(target)) {
                 exit;
             }
 
             ac = 0;
             dr = 1;
-            unit = board_marine[o];
-            if (!is_struct(unit)) {
-                continue;
-            }
+            unit = occupants[o];
             gear_bonus = 0;
             marine_bonus = 0;
             boarding_odds = 50;
@@ -569,8 +566,8 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
 
         if (experience > 0) {
             var new_exp, unit_exp, exp_roll;
-            for (var o = 0; o < array_length(board_marine); o++) {
-                unit = board_marine[o];
+            for (var o = 0; o < array_length(occupants); o++) {
+                unit = occupants[o];
                 unit_exp = unit.experience;
                 exp_roll = irandom(150 + unit_exp) + 1;
                 if (exp_roll >= unit_exp) {
