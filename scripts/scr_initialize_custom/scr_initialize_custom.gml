@@ -1562,7 +1562,7 @@ function scr_initialize_custom() {
     }
 
     var roles = {
-        _chapter_master: player_role_data[eROLE.CHAPTERMASTER].role,
+        chapter_master: player_role_data[eROLE.CHAPTERMASTER].role,
         honour_guard: player_role_data[eROLE.HONOURGUARD].role,
         veteran: player_role_data[eROLE.VETERAN].role,
         terminator: player_role_data[eROLE.TERMINATOR].role,
