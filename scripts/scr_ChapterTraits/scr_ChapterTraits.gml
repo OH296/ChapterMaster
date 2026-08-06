@@ -24,27 +24,27 @@ function get_department_head(head_type = eCHAPTER_DEPARTMENTS.HQ){
             if (!role_compare(_unit, eROLE.CHAPTERMASTER)){
                 return undefined;
             }
-            break
+            break;
         case eCHAPTER_DEPARTMENTS.FORGE:
             if (_unit.role() != "Forge Master"){
                 return undefined;
             }
-            break
+            break;
         case eCHAPTER_DEPARTMENTS.CHAP:
             if (_unit.role() != "Master of Sanctity"){
                 return undefined;
             }
-            break
+            break;
         case eCHAPTER_DEPARTMENTS.APOTH:
             if (_unit.role() != "Master of the Apothecarion"){
                 return undefined;
             }
-            break
+            break;
         case eCHAPTER_DEPARTMENTS.LIB:
             if (_unit.role() != $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role}"){
                 return undefined;
             }
-            break
+            break;
     }
 
     return _unit

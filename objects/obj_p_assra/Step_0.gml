@@ -110,16 +110,14 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
         ac = 0;
         dr = 1;
 
-        for (var o = 0; o < array_length(origin.board_co); o++) {
+        for (var o = 0; o < array_length(origin.board_marine); o++) {
             if (!instance_exists(target)) {
                 exit;
             }
 
-            co = origin.board_co[o];
-            i = origin.board_id[o];
             ac = 0;
             dr = 1;
-            unit = fetch_unit([co, i]);
+            unit = board_marine[o];
             if (!is_struct(unit)) {
                 continue;
             }
@@ -571,13 +569,8 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
 
         if (experience > 0) {
             var new_exp, unit_exp, exp_roll;
-            for (var o = 0; o < array_length(origin.board_co); o++) {
-                co = origin.board_co[o];
-                i = origin.board_id[o];
-                unit = fetch_unit([co, i]);
-                if (!is_struct(unit)) {
-                    continue;
-                }
+            for (var o = 0; o < array_length(origin.board_marine); o++) {
+                unit = board_marine[o];
                 unit_exp = unit.experience;
                 exp_roll = irandom(150 + unit_exp) + 1;
                 if (exp_roll >= unit_exp) {

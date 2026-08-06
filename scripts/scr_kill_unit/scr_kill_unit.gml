@@ -30,7 +30,13 @@ function scr_kill_unit() {
         for (var i = marine_number; i < _len; i++){
             obj_ini.TTRPG[company][i].marine_number = i;
         }
-
+        if (_is_astartes) {
+            if (IsSpecialist()) {
+                obj_controller.command -= 1;
+            } else {
+                obj_controller.marines -= 1;
+            }
+        }
     } catch (ex) {
         LOGGER.error($"company: {company}, unit_slot: {marine_number}");
         ERROR_HANDLER.handle_exception(ex);
@@ -57,13 +63,6 @@ function kill_and_recover(recover_equipment = true, gene_seed_collect = true) {
     if (gene_seed_collect && _is_astartes) {
 
         obj_controller.gene_seed += recoverable_geneseed();
-    }
-    if (_is_astartes) {
-        if (IsSpecialist()) {
-            obj_controller.command -= 1;
-        } else {
-            obj_controller.marines -= 1;
-        }
     }
     scr_kill_unit();
 }

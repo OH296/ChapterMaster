@@ -192,8 +192,7 @@ for (var co = 0; co <= obj_ini.companies; co++) {
         }
         if (unit.ship_location == ship_id) {
             if (unit.is_boarder && unit.hp() > (unit.max_health() / 10)) {
-                array_push(board_co, co);
-                array_push(board_id, i);
+                array_push(board_marine,unit);
                 array_push(board_location, 0);
                 array_push(board_raft, 0);
                 boarders += 1;

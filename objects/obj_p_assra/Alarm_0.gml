@@ -1,9 +1,7 @@
 var co = 0, i = 0, o = 0, _unit;
 
-for (o = 0; o < array_length(origin.board_co); o++) {
-    co = origin.board_co[o];
-    i = origin.board_id[o];
-    _unit = fetch_unit([co, i]);
+for (o = 0; o < array_length(origin.board_marine); o++) {
+    _unit = board_marine[o]
     if (!is_struct(_unit)) {
         continue;
     }
