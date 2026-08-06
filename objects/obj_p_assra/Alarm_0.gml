@@ -17,8 +17,8 @@ for (o = 0; o < array_length(origin.board_co); o++) {
             }
 
             if (apothecary_had > 0) {
-                if (unit.base_group == "astartes") {
-                    seed_lost = unit.recoverable_geneseed();
+                if (_unit.base_group == "astartes") {
+                    seed_lost = _unit.recoverable_geneseed();
                 }
             }
 

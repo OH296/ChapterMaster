@@ -745,7 +745,7 @@ function scr_enemy_ai_e() {
         for (var co = 0; co <= obj_ini.companies; co++) {
             for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                 var _unit = fetch_unit([co, i]);
-                var _is_a_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
+                var _is_at_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
                 if (!is_struct(_unit)) {
                     continue;
                 }
@@ -757,13 +757,15 @@ function scr_enemy_ai_e() {
                 }
 
 
-                _meeting.dudes += 1;
-                otm = _meeting.dudes;
-                _meeting.present[otm] = 1;
-                _meeting.co[otm] = co;
-                _meeting.ide[otm] = i;
-                if (co == 0 && i == 0) {
-                    master_present = role_compare(_unit, eROLE.CHAPTERMASTER);
+                if (_is_at_chaos_meeting){
+                    _meeting.dudes += 1;
+                    otm = _meeting.dudes;
+                    _meeting.present[otm] = 1;
+                    _meeting.co[otm] = co;
+                    _meeting.ide[otm] = i;
+                    if (co == 0 && i == 0) {
+                        master_present = role_compare(_unit, eROLE.CHAPTERMASTER);
+                    }
                 }
             }
         }

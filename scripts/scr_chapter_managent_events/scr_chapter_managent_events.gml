@@ -274,5 +274,6 @@ function new_forge_master_chosen(pick) {
         if (pick.company > 0) {
             pick.move_to_company(0);
         }
+        scr_company_order(0);
     }
 }

@@ -320,7 +320,7 @@ deserialize = function(save_data) {
             _squad.load_json_data(_squad_structs[$ _squad_uid]);
             squads[$ _squad_uid] = _squad;
             for (var s = 0; s < array_length(_squad.members); s++){
-                _squad.members[i] = fetch_unit_uid(_squad.members[i]);
+                _squad.members[s] = fetch_unit_uid(_squad.members[s]);
             }
         }
     }

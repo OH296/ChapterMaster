@@ -604,14 +604,16 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
 
     static change_sgt = function(new_sgt) {
         var _remove_sgt  = determine_leader();
-        if (is_struct(_remove_sgt)) {
-            if (remove_sgt.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
-                var replace_role = remove_sgt.role();
-                remove_sgt.update_role(new_sgt.role());
-                //TODO centralise loyalty changes for role changes in the update_role method
-                remove_sgt.alter_loyalty(-10);
-            }
+        if (!is_struct(_remove_sgt)) {
+            return;
         }
+        var replace_role = _remove_sgt.role();
+        if (_remove_sgt.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
+            _remove_sgt.update_role(new_sgt.role());
+            //TODO centralise loyalty changes for role changes in the update_role method
+            _remove_sgt.alter_loyalty(-10);
+        }
+      
         new_sgt.update_role(replace_role);
         new_sgt.alter_loyalty(10);
     };

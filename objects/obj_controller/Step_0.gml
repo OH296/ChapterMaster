@@ -442,12 +442,9 @@ try {
                 if (unit.name() == "") {
                     continue;
                 }
-                var unit_id = unit.marine_number;
-                var company = unit.company;
                 unit.location_string = obj_ini.ship_location[b];
                 unit.ship_location = -1;
                 unit.planet_location = unload;
-                obj_ini.uid[company][unit_id] = 0;
 
                 ma_loc[q] = obj_ini.ship_location[b];
                 ma_lid[q] = -1;

@@ -221,15 +221,12 @@ function problem_end_turn_checks() {
             var _unit;
             if (irandom(100) > 33) {
                 // Give all marines +3d6 corruption and reduce loyalty by 20*/
-                var me = 0;
                 for (var co = 0; co <= obj_ini.companies; co++) {
-                    me = 0;
-                    for (me = 0; me < array_length(obj_ini.TTRPG[co]); me++) {
+                    for (var me = 0; me < array_length(obj_ini.TTRPG[co]); me++) {
                         var _unit = fetch_unit([co, me]);
                         if (_unit.base_group != "astartes") {
                             continue
                         }
-                        _unit = fetch_unit([co, me]);
                         _unit.edit_corruption(irandom_range(3, 6));
                         _unit.alter_loyalty(-10);
 

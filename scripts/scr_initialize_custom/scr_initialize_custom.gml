@@ -1920,7 +1920,7 @@ function scr_initialize_custom() {
     // This needs work
     var cm_equip = load_chapter_master_equipment();
 
-    var _chapter_master = add_unit_to_company("_chapter_master", _company_i, roles._chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
+    var _chapter_master = add_unit_to_company("_chapter_master", _company_i, roles.chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
     _chapter_master.set_name(obj_creation.chapter_master_name);
     repeat (cm_equip.bionics) {
         _chapter_master.add_bionics("none", "standard", false);
@@ -3012,18 +3012,18 @@ function load_chapter_master_equipment() {
         }
     }
 
-    if (variable_instance_exists(obj_creation, "_chapter_master")) {
-        if (struct_exists(obj_creation._chapter_master, "gear") && obj_creation._chapter_master.gear != "") {
-            chapter_master_equip.gear = obj_creation._chapter_master.gear;
+    if (variable_instance_exists(obj_creation, "chapter_master")) {
+        if (struct_exists(obj_creation.chapter_master, "gear") && obj_creation.chapter_master.gear != "") {
+            chapter_master_equip.gear = obj_creation.chapter_master.gear;
         }
-        if (struct_exists(obj_creation._chapter_master, "mobi") && obj_creation._chapter_master.mobi != "") {
-            chapter_master_equip.mobi = obj_creation._chapter_master.mobi;
+        if (struct_exists(obj_creation.chapter_master, "mobi") && obj_creation.chapter_master.mobi != "") {
+            chapter_master_equip.mobi = obj_creation.chapter_master.mobi;
         }
-        if (struct_exists(obj_creation._chapter_master, "armour") && obj_creation._chapter_master.armour != "") {
-            chapter_master_equip.armour = obj_creation._chapter_master.armour;
+        if (struct_exists(obj_creation.chapter_master, "armour") && obj_creation.chapter_master.armour != "") {
+            chapter_master_equip.armour = obj_creation.chapter_master.armour;
         }
-        if (struct_exists(obj_creation._chapter_master, "bionics") && obj_creation._chapter_master.bionics != "") {
-            for (var i = 0; i < real(obj_creation._chapter_master.bionics); i++) {
+        if (struct_exists(obj_creation.chapter_master, "bionics") && obj_creation.chapter_master.bionics != "") {
+            for (var i = 0; i < real(obj_creation.chapter_master.bionics); i++) {
                 chapter_master_equip.bionics += 1;
             }
         }

@@ -629,7 +629,6 @@ function toggle_selection_borders() {
         if ((man_sel[p] == 1) && (man[p] == "man")) {
             if (is_struct(display_unit[p])) {
                 var _unit = display_unit[p];
-                var mar_id = _unit.marine_number;
                 if ((_unit.ship_location > -1) && _unit.controllable()) {
                     _unit.is_boarder = !_unit.is_boarder;
                 }

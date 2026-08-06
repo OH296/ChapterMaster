@@ -181,7 +181,7 @@ function scr_event_gossip(argument0) {
     ra = _unit.role();
 
     // Getting there
-    words = "{ra} {na}";
+    words = $"{ra} {na}";
 
     if (that_type == "future_battles") {
         words += choose("recounts", "retells", "tells", "speaks of") + " future glorious battles that the Chapter will partake of, in glory of " + choose("our honor", "The Emperor", "The Imperium", "Primarch") + ".";

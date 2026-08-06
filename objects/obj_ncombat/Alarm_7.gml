@@ -59,7 +59,7 @@ try {
                     LOGGER.error($"fetch_unit guardrail triggered for chapter master [0, 0] in cs_meeting post-battle");
                     exit;
                 }
-                var chaos_meeting = _fetched_chaos.planet_location;
+                var _chaos_meeting = _fetched_chaos.planet_location;
 
                 for (var co = 0; co <= obj_ini.companies; co++) {
                     for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
@@ -67,11 +67,11 @@ try {
                         if (_unit.location_string != name) {
                             continue;
                         }
-                        if (_unit.planet_location != floor(chaos_meeting)) {
+                        if (_unit.planet_location != floor(_chaos_meeting)) {
                             continue;
                         }
 
-                        if (_unit.is_dreadnought()){
+                        if (_unit.is_dreadnought() && !(role_compare(_unit, eROLE.CHAPTERMASTER))){
                             continue
                         }
 
