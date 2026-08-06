@@ -13,6 +13,7 @@ firstest = 0;
 apothecary = 0;
 apothecary_had = 0;
 experience = 0;
+occupants = [];
 
 action = "goto";
 

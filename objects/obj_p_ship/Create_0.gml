@@ -58,6 +58,4 @@ weapon_range = array_create(SHIP_WEAPON_SLOTS, 0);
 weapon_minrange = array_create(SHIP_WEAPON_SLOTS, 0);
 
 board_marine = [];
-board_location = [];
-board_raft = [];
 //alarm_set(0, 1); 

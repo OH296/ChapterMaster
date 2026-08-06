@@ -354,8 +354,6 @@ function setup_player_combat_ship() {
             if (unit.ship_location == ship_id) {
                 if (unit.is_boarder && unit.hp() > (unit.max_health() / 10)) {
                     array_push(board_marine, unit);
-                    array_push(board_location, 0);
-                    array_push(board_raft, 0);
                     boarders += 1;
                 }
                 // Loc 0: on origin ship
