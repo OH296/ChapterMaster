@@ -9,7 +9,7 @@ function create_boarding_craft(target_ship) {
 
         boarders--;
         _boarding_craft.boarders++;
-        unit = board_marine[o];
+        var unit = board_marine[o];
         if (!is_struct(unit)) {
             continue;
         }
@@ -18,7 +18,7 @@ function create_boarding_craft(target_ship) {
                 _boarding_craft.apothecary += 1;
             }
         }
-        array_push(_boarding_craft.occupants unit);
+        array_push(_boarding_craft.occupants, unit);
         if (_boarding_craft.boarders >= 20) {
             break;
         }
@@ -46,12 +46,12 @@ function destroy_boarding_craft(){
         }
         var _recover_gene = obj_fleet.capital + obj_fleet.frigate + obj_fleet.escort > 0;
         if (_unit.hp() <= -15 && _unit.base_group == "astartes") {
-                _unit.kill(false, _recover_gene);
+            _unit.kill(false, _recover_gene);
 
-            } else if (apothecary > 0) {
+            if (apothecary > 0) {
                 _unit.add_or_sub_health(irandom_range(9, 14));
                 apothecary -= 0.5;
             }
-        }
+		}
     }
 }
