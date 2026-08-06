@@ -1469,7 +1469,7 @@ function scr_initialize_custom() {
         var c_roles = obj_creation.custom_roles;
         var possible_custom_roles = [
             [
-                "_chapter_master",
+                "chapter_master",
                 eROLE.CHAPTERMASTER,
             ],
             [
@@ -1920,7 +1920,7 @@ function scr_initialize_custom() {
     // This needs work
     var cm_equip = load_chapter_master_equipment();
 
-    var _chapter_master = add_unit_to_company("_chapter_master", _company_i, roles.chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
+    var _chapter_master = add_unit_to_company("chapter_master", _company_i, roles.chapter_master, eROLE.CHAPTERMASTER, cm_equip.wep1, cm_equip.wep2, cm_equip.gear, cm_equip.mobi, cm_equip.armour);
     _chapter_master.set_name(obj_creation.chapter_master_name);
     repeat (cm_equip.bionics) {
         _chapter_master.add_bionics("none", "standard", false);

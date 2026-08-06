@@ -472,6 +472,8 @@ function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury 
     }
     var _final_outcome = {success : _success,description :_outcome_desc};
 
+    return _final_outcome;
+
 }
 
 /// @self Struct.TTRPG_stats

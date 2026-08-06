@@ -268,6 +268,6 @@ function draw_popup_promotion() {
         instance_destroy();
     }
 
-    promote_button.draw(all_good);
+    promote_button.draw(all_good && target_role > 0);
     pop_draw_return_values();
 }

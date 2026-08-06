@@ -307,7 +307,7 @@ function librarian_training() {
                 _unit.update_powers();
                 psyker_aspirant = 1;
 
-                uit.alter_equipment({
+                _unit.alter_equipment({
                     gear : "",
                     mobi : ""
                 })

@@ -27,7 +27,7 @@ function scr_kill_unit() {
         }
         array_delete(obj_ini.TTRPG[company], marine_number, 1);
         var _len = company_length(company);
-        for (var i = marine_number; i < company_length; i++){
+        for (var i = marine_number; i < _len; i++){
             obj_ini.TTRPG[company][i].marine_number = i;
         }
 

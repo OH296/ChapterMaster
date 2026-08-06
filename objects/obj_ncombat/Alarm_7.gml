@@ -29,7 +29,7 @@ try {
                         obj_controller.marines -= 1;
                     }
 
-                    obj_ncombat.world_size += scr_unit_size(_unit.armour(), _unit.role(), true, _unit.mobility_item());
+                    obj_ncombat.world_size += _unit.get_unit_size();
 
                     var recover = !obj_ncombat.defeat;
                     _unit.kill(recover, recover);

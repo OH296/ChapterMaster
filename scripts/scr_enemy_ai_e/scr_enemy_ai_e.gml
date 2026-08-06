@@ -746,9 +746,6 @@ function scr_enemy_ai_e() {
             for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                 var _unit = fetch_unit([co, i]);
                 var _is_at_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
-                if (!is_struct(_unit)) {
-                    continue;
-                }
                 if (_unit.is_dreadnought() && !role_compare(_unit, eROLE.CHAPTERMASTER)){
                     continue;
                 }
