@@ -73,7 +73,7 @@ function UnitQuickFindPanel() constructor {
     };
 
     static evaluate_unit_for_garrison_log = function(unit) {
-        if (!is_struct(unit) || unit.name() == "" || !unit.controllable()) {
+        if (!unit.controllable()) {
             return;
         }
         var unit_location = unit.marine_location();
@@ -132,7 +132,7 @@ function UnitQuickFindPanel() constructor {
             obj_controller.specialist_point_handler.calculate_research_points(false);
             ship_count = array_length(obj_ini.ship_carrying);
             for (var co = 0; co <= obj_ini.companies; co++) {
-                for (var u = 0; u < array_length(obj_ini.TTRPG[co]); u++) {
+                for (var u = 0; u < company_length(co); u++) {
                     /// @type {Struct.TTRPG_stats}
                     var _unit = fetch_unit([co, u]);
                     if (!is_struct(_unit)) {
