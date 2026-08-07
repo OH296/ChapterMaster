@@ -15,7 +15,7 @@ function scr_count_forces(_unit_location, _target_location, _is_planet, _return_
 
         for (var i = 0; i < array_length(obj_ini.TTRPG[_company]); i++) {
             var _unit = fetch_unit([_company, i]);
-            var _marine_exists = is_struct(_unit) && _unit.name() != "";
+            var _marine_exists = is_struct(_unit);
             var _vehicle_exists = i < _veh_len;
 
             if (!_marine_exists && !_vehicle_exists) {

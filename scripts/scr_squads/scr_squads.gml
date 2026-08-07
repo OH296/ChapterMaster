@@ -316,17 +316,15 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
             }
         }
         if ((array_length(members) > 0) && is_struct(exp_unit)) {
-            if (exp_unit.name() != "") {
-                var new_role;
-                if (veteran == true) {
-                    new_role = obj_ini.player_role_data[eROLE.VETERANSERGEANT].role;
-                } else {
-                    new_role = obj_ini.player_role_data[eROLE.SERGEANT].role;
-                }
-                exp_unit.update_role(new_role);
-                if (irandom(1) == 0) {
-                    exp_unit.add_trait("lead_example");
-                }
+            var new_role;
+            if (veteran == true) {
+                new_role = obj_ini.player_role_data[eROLE.VETERANSERGEANT].role;
+            } else {
+                new_role = obj_ini.player_role_data[eROLE.SERGEANT].role;
+            }
+            exp_unit.update_role(new_role);
+            if (irandom(1) == 0) {
+                exp_unit.add_trait("lead_example");
             }
         }
     };

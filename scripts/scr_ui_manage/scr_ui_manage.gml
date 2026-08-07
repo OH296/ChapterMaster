@@ -1117,7 +1117,7 @@ function scr_ui_manage() {
         }
         if (instance_exists(obj_controller) && is_struct(obj_controller.unit_focus)) {
             var selected_unit = obj_controller.unit_focus;
-            if ((selected_unit.name() != "") && (selected_unit.race() != 0)) {
+            if (selected_unit.race() != 0) {
                 draw_set_alpha(1);
                 if (obj_controller.unit_profile && !instance_exists(obj_popup)) {
                     stats_displayed = true;

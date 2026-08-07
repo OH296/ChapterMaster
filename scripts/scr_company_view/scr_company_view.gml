@@ -158,7 +158,7 @@ function scr_company_view(company) {
     for (var v = 0; v < _company_length; v++) {
         unit = fetch_unit([company, v]);
 
-        if (is_struct(unit) && unit.name() != "") {
+        if (is_struct(unit)) {
             unit_loc = unit.marine_location();
 
             // Check if unit is on a lost ship

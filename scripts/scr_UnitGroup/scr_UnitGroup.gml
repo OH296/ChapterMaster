@@ -831,11 +831,8 @@ function SearchConditions(data) constructor {
 
     static evaluate = function(unit) {
         self.unit = unit;
-        if (!is_struct(unit) || unit.name() == "") {
-            if (is_struct(unit)) {
-                unit.base_group = "none";
-                // LOGGER.error($"Empty name! Unit:\n{unit}");
-            }
+        if (!is_struct(unit)) {
+            LOGGER.error($"Not Real Unit! Unit:\n{unit}");
             return false;
         }
 
