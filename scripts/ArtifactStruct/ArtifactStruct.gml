@@ -253,7 +253,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
                 break;
             case "armour":
                 if (_unit.armour(true) == artifact_id) {
-                    _unit.update_armour("", false5, true);
+                    _unit.update_armour("", false, true);
                 }
 
                 break;
