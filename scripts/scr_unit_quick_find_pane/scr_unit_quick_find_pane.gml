@@ -319,7 +319,7 @@ function UnitQuickFindPanel() constructor {
 
                                 _mission_data.click_right = method(_mission_data, function() {
                                     var _unit = fetch_unit_uid(important_person);
-                                    if (_unit != "none") {
+                                    if (is_struct(_unit)) {
                                         var _unit_l = [_unit];
                                         group_selection(_unit_l);
                                     }

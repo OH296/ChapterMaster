@@ -329,9 +329,6 @@ function load_artifact_list(artifact_list) {
         if (arti.artifact_id > max_id) {
             max_id = arti.artifact_id;
         }
-        if (!is_undefined(arti.bearer)){
-            arti.bearer = fetch_unit_uid(arti.bearer);
-        }
     }
 
     static_get(ArtifactStruct).__next_id = max_id + 1;

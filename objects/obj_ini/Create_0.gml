@@ -173,17 +173,18 @@ serialize = function() {
         x,
         y,
         custom_advisors,
-        full_liveries: full_liveries,
-        company_liveries: company_liveries,
-        complex_livery_data: complex_livery_data,
-        squad_types: squad_types,
+        full_liveries,
+        company_liveries,
+        complex_livery_data,
+        squad_types,
         artifact_list: _artifact_list,
         marine_structs: _marines,
         squad_structs: squads,
-        equipment: equipment,
-        gene_slaves: gene_slaves, // squads // marines,
-        chapter_data: chapter_data,
-        chapter_squad_arrangement: chapter_squad_arrangement,
+        equipment,
+        gene_slaves, // squads // marines,
+        chapter_data,
+        chapter_squad_arrangement,
+        player_role_data,
     };
 
     if (variable_instance_exists(self, "last_ship")) {
@@ -321,6 +322,12 @@ deserialize = function(save_data) {
             squads[$ _squad_uid] = _squad;
             for (var s = 0; s < array_length(_squad.members); s++){
                 _squad.members[s] = fetch_unit_uid(_squad.members[s]);
+            }
+
+            for (var s = array_length(_squad.members) -  1; s >= 0; s--){
+                if (!is_struct(_squad.members[s])){
+                    array_delete(_squad.members, s, 1);
+                }
             }
         }
     }

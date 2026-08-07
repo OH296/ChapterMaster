@@ -2387,5 +2387,5 @@ function fetch_unit_uid(uuid) {
         }
     }
 
-    return "none";
+    return undefined;
 }

@@ -169,7 +169,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
             identification_timer: __identification_timer,
             location_name: __location_name,
             ship_id: __ship_id,
-            bearer: __bearer,
+            bearer: is_struct(__bearer) ? __bearer.uid : "",
             custom_name: __custom_name,
             custom_description: __custom_description,
         };
@@ -186,7 +186,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
         __identification_timer = data.identification_timer ?? 0;
         __location_name = data.location_name ?? "";
         __ship_id = data.ship_id ?? -1;
-        __bearer = data.bearer.uid ?? undefined;
+        __bearer = data.bearer ==  "" ? undefined : fetch_unit_uid(data.bearer) ;
         __custom_name = data.custom_name ?? "";
         __custom_description = data.custom_description ?? "";
 
