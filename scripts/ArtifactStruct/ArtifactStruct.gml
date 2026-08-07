@@ -387,7 +387,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
     /// Derived from the bearer field (single source of truth).
     /// @returns {Bool} true if bearer is a valid unit reference array.
     static is_equipped = function() {
-        return is_Struct(__bearer);
+        return is_struct(__bearer);
     };
 
     // ###### Getters ######
