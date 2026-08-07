@@ -1,5 +1,6 @@
 function UnitGroup(units = []) constructor {
     self.units = units;
+    killed = [];
 
     static number = function() {
         return array_length(units);
@@ -166,19 +167,26 @@ function UnitGroup(units = []) constructor {
         return _exp_unit;
     };
 
+    static kill_unit = function(index, equipment = true, gene_seed_collect = true){
+        var _unit = units[index];
+        _unit.kill(equipment, gene_seed_collect);
+        array_push(killed, _unit);
+        array_delete(units, index ,1);
+    }
+
     static kill_percent = function(kill_percent, equipment = true, gene_seed_collect = true) {
         var _kill_numb = floor((kill_percent / 100) * number());
         var _killed = 0;
-        var i = 0;
-        while (_killed < _kill_numb && i < number()) {
+        var i = number() - 1;
+        while (_killed < _kill_numb && i >= 0) {
             var _unit = units[i];
             if (kill_percent < 100 && _unit.role() == active_roles()[eROLE.CHAPTERMASTER]) {
                 i++;
                 continue;
             }
-            _unit.kill(equipment, gene_seed_collect);
+            kill_unit(i, equipment, gene_seed_collect)
             _killed++;
-            i++;
+            i--;
         }
     };
 
