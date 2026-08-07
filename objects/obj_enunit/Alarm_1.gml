@@ -206,7 +206,7 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
         // marine_casting[g] = false;
 
         if (((dudes[g] != "") && (dudes_num[g] > 0)) && (dudes_hp[g] > 0)) {
-            if ((dudes[g] == obj_ini.role[100][6]) || (dudes[g] == "Venerable " + obj_ini.role[100][6]) && (dudes_hp[g] > 0)) {
+            if ((dudes[g] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) || (dudes[g] == "Venerable " + obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (dudes_hp[g] > 0)) {
                 dreads += 1;
             }
             if (dudes_mobi[g] == "Bike") {
@@ -232,10 +232,10 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
                 if ((dudes[j] == "") && (open == 0)) {
                     open = j; // Determine if vehicle here
 
-                    if (dudes[j] == "Venerable " + string(obj_ini.role[100][6])) {
+                    if (dudes[j] == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
                         dudes_vehicle[j] = 1;
                     }
-                    if (dudes[j] == obj_ini.role[100][6]) {
+                    if (dudes[j] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                         dudes_vehicle[j] = 1;
                     }
                 }
@@ -243,7 +243,7 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
 
             if ((dudes_wep1[g] != "") && (marine_casting[g] == false)) {
                 // Do not add weapons to the roster while casting
-                if (dudes[g] != obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (dudes[g] != obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     scr_en_weapon(string(dudes_wep1[g]), false, 1, dudes[g], g);
                 }
 
@@ -258,7 +258,7 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
                 }
             }
             if ((dudes_wep2[g] != "") && (marine_casting[g] == false)) {
-                if (dudes[g] != obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (dudes[g] != obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     scr_en_weapon(string(dudes_wep2[g]), false, 1, dudes[g], g);
                 }
 

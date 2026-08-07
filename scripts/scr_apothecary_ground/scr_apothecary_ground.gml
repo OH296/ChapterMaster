@@ -24,83 +24,83 @@ function calculate_full_chapter_spread() {
     var _apoth_spread = {};
     var _unit_spread = {};
     for (var company = 0; company < 11; company++) {
-        var _marine_len = array_length(obj_ini.name[company]) - 1;
-        var _veh_len = array_length(obj_ini.veh_hp[company]) - 1;
+        var _marine_len = array_length(obj_ini.TTRPG[company]);
+        var _veh_len = array_length(obj_ini.veh_hp[company]);
         var _company_length = max(_marine_len, _veh_len);
 
         for (var v = 0; v < _company_length; v++) {
             key_val = "";
             if (v < _marine_len) {
-                if (obj_ini.name[company][v] != "") {
-                    _unit = fetch_unit([company, v]);
-                    _mar_loc = _unit.marine_location();
-                    if (_unit.base_group == "astartes") {
-                        if (_unit.IsSpecialist()) {
-                            obj_controller.command++;
-                        } else {
-                            obj_controller.marines++;
-                        }
+
+                _unit = fetch_unit([company, v]);
+                _mar_loc = _unit.marine_location();
+                if (_unit.base_group == "astartes") {
+                    if (_unit.IsSpecialist()) {
+                        obj_controller.command++;
+                    } else {
+                        obj_controller.marines++;
                     }
-                    forge_equipment_maintenance += _unit.equipment_maintenance_burden();
-                    _is_tech = _unit.IsSpecialist(SPECIALISTS_TECHS);
-                    if (_is_tech) {
-                        add_forge_points_to_stack(_unit);
-                    }
-                    is_healer = ((_unit.IsSpecialist(SPECIALISTS_APOTHECARIES, true) && _unit.gear() == "Narthecium") || (_unit.role() == "Sister Hospitaler")) && _unit.hp() >= 10;
-                    if (is_healer) {
-                        add_apoth_points_to_stack(_unit);
-                    }
-                    if (_mar_loc[2] != "Warp" && _mar_loc[2] != "Lost") {
-                        if (_mar_loc[0] == eLOCATION_TYPES.PLANET) {
-                            array_slot = _mar_loc[1];
-                        } else if (_mar_loc[0] == eLOCATION_TYPES.SHIP) {
-                            array_slot = eSYSTEM_LOC.ORBIT;
-                        }
-                        key_val = _mar_loc[2];
+                }
+                forge_equipment_maintenance += _unit.equipment_maintenance_burden();
+                _is_tech = _unit.IsSpecialist(SPECIALISTS_TECHS);
+                if (_is_tech) {
+                    add_forge_points_to_stack(_unit);
+                }
+                is_healer = ((_unit.IsSpecialist(SPECIALISTS_APOTHECARIES, true) && _unit.gear() == "Narthecium") || (_unit.role() == "Sister Hospitaler")) && _unit.hp() >= 10;
+                if (is_healer) {
+                    add_apoth_points_to_stack(_unit);
+                }
+                if (_mar_loc[2] != "Warp" && _mar_loc[2] != "Lost") {
+                    if (_mar_loc[0] == eLOCATION_TYPES.PLANET) {
+                        array_slot = _mar_loc[1];
                     } else if (_mar_loc[0] == eLOCATION_TYPES.SHIP) {
-                        if (instance_exists(obj_p_fleet)) {
-                            with (obj_p_fleet) {
-                                if (array_contains(capital_num, _mar_loc[1]) || array_contains(frigate_num, _mar_loc[1]) || array_contains(escort_num, _mar_loc[1])) {
-                                    key_val = $"{id}";
-                                    array_slot = eSYSTEM_LOC.ORBIT;
-                                    break;
-                                }
+                        array_slot = eSYSTEM_LOC.ORBIT;
+                    }
+                    key_val = _mar_loc[2];
+                } else if (_mar_loc[0] == eLOCATION_TYPES.SHIP) {
+                    if (instance_exists(obj_p_fleet)) {
+                        with (obj_p_fleet) {
+                            if (array_contains(capital_num, _mar_loc[1]) || array_contains(frigate_num, _mar_loc[1]) || array_contains(escort_num, _mar_loc[1])) {
+                                key_val = $"{id}";
+                                array_slot = eSYSTEM_LOC.ORBIT;
+                                break;
                             }
                         }
                     }
-                    if (key_val != "") {
-                        if (!struct_exists(_unit_spread, key_val)) {
-                            _unit_spread[$ key_val] = [
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                            ];
-                            _tech_spread[$ key_val] = [
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                            ];
-                            _apoth_spread[$ key_val] = [
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                            ];
-                        }
-                        array_push(_unit_spread[$ key_val][array_slot], _unit);
-                        if (_is_tech) {
-                            array_push(_tech_spread[$ key_val][array_slot], _unit);
-                        }
-                        if (is_healer) {
-                            array_push(_apoth_spread[$ key_val][array_slot], _unit);
-                        }
+                }
+                if (key_val != "") {
+                    if (!struct_exists(_unit_spread, key_val)) {
+                        _unit_spread[$ key_val] = [
+                            [],
+                            [],
+                            [],
+                            [],
+                            [],
+                        ];
+                        _tech_spread[$ key_val] = [
+                            [],
+                            [],
+                            [],
+                            [],
+                            [],
+                        ];
+                        _apoth_spread[$ key_val] = [
+                            [],
+                            [],
+                            [],
+                            [],
+                            [],
+                        ];
+                    }
+                    array_push(_unit_spread[$ key_val][array_slot], _unit);
+                    if (_is_tech) {
+                        array_push(_tech_spread[$ key_val][array_slot], _unit);
+                    }
+                    if (is_healer) {
+                        array_push(_apoth_spread[$ key_val][array_slot], _unit);
                     }
                 }
+
             }
 
             key_val = "";

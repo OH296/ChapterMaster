@@ -82,11 +82,12 @@ try {
         if (recruit_name[i] == "") {
             continue;
         }
+        var _recruit_role = obj_ini.player_role_data[eROLE.SCOUT]
         if (recruit_distance[i] <= 0) {
             recruit_training[i] -= 1;
         }
         if (recruit_training[i] <= 0) {
-            scr_add_man(obj_ini.role[100][12], 10, recruit_exp[i], recruit_name[i], recruit_corruption[i], false, "default", recruit_data[i]);
+            scr_add_man(_recruit_role.role, 10, recruit_exp[i], recruit_name[i], recruit_corruption[i], false, "default", recruit_data[i]);
             if (recruit_first == "") {
                 recruit_first = recruit_name[i];
             }
@@ -106,9 +107,9 @@ try {
         scr_company_order(10);
     }
     if (recruits_finished == 1) {
-        scr_alert("green", "recruitment", $"{obj_ini.role[100][12]} {recruit_first} has joined X Company.", 0, 0);
+        scr_alert("green", "recruitment", $"{_recruit_role.role} {recruit_first} has joined X Company.", 0, 0);
     } else if (recruits_finished > 1) {
-        scr_alert("green", "recruitment", $"{recruits_finished}x {obj_ini.role[100][12]} have joined X Company.", 0, 0);
+        scr_alert("green", "recruitment", $"{recruits_finished}x {_recruit_role.role} have joined X Company.", 0, 0);
     }
 
     recruits = total_recruits;
@@ -476,12 +477,12 @@ try {
         scr_loyalty("Xeno Associate", "+");
     }
 
-    var loyalty_counter = scr_role_count(obj_ini.role[100][15], "");
+    var loyalty_counter = scr_role_count(obj_ini.player_role_data[eROLE.APOTHECARY].role, "");
     if (loyalty_counter == 0) {
         scr_loyalty("Lack of Apothecary", "+");
     }
 
-    loyalty_counter = scr_role_count(obj_ini.role[100][14], "");
+    loyalty_counter = scr_role_count(obj_ini.player_role_data[eROLE.CHAPLAIN].role, "");
     if (loyalty_counter == 0) {
         scr_loyalty("Undevout", "+");
     }
@@ -580,12 +581,12 @@ try {
     if ((fest_scheduled > 0) && (fest_repeats > 0)) {
         var cm_present = false;
         fest_repeats--;
-        var lock = scr_master_loc();
+        var _cm = chapter_master.get_struct();
 
-        if ((fest_sid > 0) && (obj_ini.ship[fest_sid] == lock)) {
+        if (fest_sid != -1 & fest_sid == _cm.ship_location) {
             cm_present = true;
         }
-        if ((fest_wid > 0) && (string(fest_star) + "." + string(fest_wid) == lock)) {
+        if (fest_wid > 0 && _cm.is_at_location(fest_star, fest_wid)) {
             cm_present = true;
         }
 

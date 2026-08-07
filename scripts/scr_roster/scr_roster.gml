@@ -273,10 +273,10 @@ function Roster() constructor {
         var _company_present = false;
         for (var co = 0; co <= obj_ini.companies; co++) {
             _company_present = false;
-            for (var i = 0; i < array_length(obj_ini.role[co]); i++) {
+            for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                 var _allow = false;
                 var _unit = fetch_unit([co, i]);
-                if (!is_struct(_unit) || _unit.name() == "" || _unit.role() == "") {
+                if (!is_struct(_unit) ) {
                     continue;
                 }
                 if (_unit.hp() <= 0 || _unit.in_jail()) {
@@ -520,7 +520,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
     var man_size = 1;
 
     //Same as co/company and v, but with extra comprovations in case of a meeting (meeting?)
-    var _role = obj_ini.role[100];
+    var _role = active_roles();
     var cooh = 0;
     var va = 0;
     var v = unit.marine_number;
@@ -544,7 +544,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         new_combat.player_starting_dudes++;
     }
 
-    if (_unit_role == obj_ini.role[100][18]) {
+    if (_unit_role == obj_ini.player_role_data[eROLE.SERGEANT].role) {
         col = obj_controller.bat_tactical_column; //sergeants
         new_combat.sgts++;
     } else if (_unit_role == _role[19]) {
@@ -555,7 +555,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         //scouts
         col = obj_controller.bat_scout_column;
         new_combat.scouts++;
-    } else if (array_contains([obj_ini.role[100][8], $"{_role[15]} Aspirant", $"{_role[14]} Aspirant"], _unit_role)) {
+    } else if (array_contains([obj_ini.player_role_data[eROLE.TACTICAL].role, $"{_role[15]} Aspirant", $"{_role[14]} Aspirant"], _unit_role)) {
         col = obj_controller.bat_tactical_column; //tactical_marines
         new_combat.tacticals++;
     } else if (_unit_role == _role[3]) {
@@ -588,7 +588,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
     } else if (unit.IsSpecialist(SPECIALISTS_DREADNOUGHTS)) {
         col = obj_controller.bat_dreadnought_column; //dreadnoughts
         new_combat.dreadnoughts++;
-    } else if (_unit_role == obj_ini.role[100][4]) {
+    } else if (_unit_role == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
         //terminators
         col = obj_controller.bat_terminator_column;
         new_combat.terminators++;
@@ -602,7 +602,9 @@ function add_unit_to_battle(unit, meeting, is_local) {
             if (company == 10) {
                 col = obj_controller.bat_scout_column;
             }
-            if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+
+            //TODO update to check item tag for jup
+            if (unit.mobility_item() == "Jump Pack") {
                 col = obj_controller.bat_assault_column;
             }
         }
@@ -654,12 +656,12 @@ function add_unit_to_battle(unit, meeting, is_local) {
         if (company == 10) {
             col = obj_controller.bat_scout_column;
         }
-        if (obj_ini.mobi[cooh][va] == "Jump Pack") {
+        if (unit.mobility_item() == "Jump Pack") {
             col = obj_controller.bat_assault_column;
         }
     }
 
-    if (_unit_role == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+    if (_unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
         col = obj_controller.bat_command_column;
         new_combat.important_dudes++;
         new_combat.big_mofo = 1;

@@ -74,17 +74,18 @@ function setup_ui_chapter_settings() {
     for (var i = 0; i < array_length(_role_order); i++) {
         var _role_id = _role_order[i];
 
-        var _active = obj_ini.race[100][_role_id] != 0;
+        var _active = obj_ini.player_role_data[_role_id].available_to_player;
+        var _r_data = obj_ini.player_role_data[_role_id];
         var _button = new UnitButtonObject({
             style: "pixel",
             x1: _but_x,
             y1: _but_y,
-            label: obj_ini.role[100][_role_id],
+            label: _r_data.role,
             set_width: true,
             w: 289,
             active: _active,
             role_id: _role_id,
-            tooltip: string(obj_ini.role[100][_role_id]) + " Settings\n" + _base_tool,
+            tooltip: $"{_r_data.role} Settings\n" + _base_tool,
         });
 
         _but_y += 30;
@@ -626,11 +627,12 @@ function setup_role_settings_buttons() {
     role_settings_ui = {};
     var _button_x = 830;
     var _settings = obj_controller.settings;
+    var _role_data = obj_ini.player_role_data[_settings];
     role_settings_ui.main_weapon_button = new UnitButtonObject({
         style: "pixel",
         x1: _button_x,
         y1: 185,
-        label: $"Main Weapon: {obj_ini.wep1[100][_settings]}",
+        label: $"Main Weapon: {_role_data.wep1}",
         set_width: true,
         w: 250,
         active: true,
@@ -641,7 +643,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.main_weapon_button.y2,
-        label: $"Secondary Weapon: {obj_ini.wep2[100][_settings]}",
+        label: $"Secondary Weapon: {_role_data.wep2}",
         set_width: true,
         w: 250,
         active: true,
@@ -652,7 +654,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.secondary_weapon_button.y2,
-        label: $"Armour: {obj_ini.armour[100][_settings]}",
+        label: $"Armour: {_role_data.armour_role_data}",
         set_width: true,
         w: 250,
         active: true,
@@ -663,7 +665,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.armour_button.y2,
-        label: $"Special Item: {obj_ini.gear[100][_settings]}",
+        label: $"Special Item: {_role_data.gear}",
         set_width: true,
         w: 250,
         active: true,
@@ -674,7 +676,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.gear_button.y2,
-        label: $"Mobility Item: {obj_ini.mobi[100][_settings]}",
+        label: $"Mobility Item: {_role_data.mobi}",
         set_width: true,
         w: 250,
         active: true,
@@ -703,7 +705,7 @@ function scr_draw_mass_equip_gui() {
         draw_set_color(c_gray);
         draw_rectangle(114, 626, 560, 665, 0);
         draw_set_color(0);
-        draw_text(333, 636, $"Requip All {obj_ini.role[100][role]} With Default Items");
+        draw_text(333, 636, $"Requip All {obj_ini.player_role_data[role].role} With Default Items");
         if (scr_hit(114, 626, 560, 665) == true) {
             draw_set_color(c_white);
             draw_set_alpha(0.2);
@@ -860,6 +862,8 @@ function scr_draw_mass_equip_gui() {
         var column_width = 146;
         var column_gap = 3;
 
+        var _role = player_role_data[role];
+
         for (var h = 0; h < array_length(item_name); h++) {
             if (h > 0 && h % items_per_column == 0) {
                 x3 += column_width;
@@ -882,29 +886,8 @@ function scr_draw_mass_equip_gui() {
 
                 if (mouse_button_clicked()) {
                     var buh = item_name[h] == ITEM_NAME_NONE ? "" : item_name[h];
+                    _role[$ global.unit_equip_slots[tab]] = buh;
 
-                    switch (tab) {
-                        // slots
-                        case 0:
-                            obj_ini.wep1[100][role] = buh;
-                            break;
-                        case 1:
-                            obj_ini.wep2[100][role] = buh;
-                            break;
-                        case 2:
-                            obj_ini.armour[100][role] = buh;
-                            // No bikes or jump packs for Terminators
-                            if (array_contains(global.list_terminator_armour, buh) || buh == STR_ANY_TERMINATOR_ARMOUR) {
-                                obj_ini.mobi[100][role] = "";
-                            }
-                            break;
-                        case 3:
-                            obj_ini.gear[100][role] = buh;
-                            break;
-                        case 4:
-                            obj_ini.mobi[100][role] = buh;
-                            break;
-                    }
                     tab = -1;
                     refresh = true;
                     with (obj_controller) {
@@ -951,7 +934,7 @@ function scr_draw_role_settings_ui() {
             var _but = _buttons[i];
             var _allow_click = true;
             if (i == eEQUIPMENT_SLOT.GEAR) {
-                var _armour = obj_ini.armour[100][_index];
+                var _armour = obj_ini.player_role_data[_index].armour;
                 var _armour_tags = gear_weapon_data("armour", _armour, "tags");
                 if (_armour_tags != 0) {
                     if (array_contains(_armour_tags, "terminator") || array_contains(_armour_tags, "dreadnought")) {

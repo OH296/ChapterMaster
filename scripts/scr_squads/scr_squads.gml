@@ -225,7 +225,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     nickname = "";
     assignment = "none";
     class = [];
-    squad_leader = "";
+    squad_leader = undefined;
     type_data = {};
     base = "tactical";
     formation_place = "";
@@ -296,58 +296,42 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         return squad_unit_types;
     };
 
-    static get_squad_structs = function(as_UnitGroup) {
-        var _struct_array = [];
-        for (var i = array_length(members) - 1; i >= 0; i--) {
-            _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
-                array_delete(members, i, 1);
-                continue;
-            } else {
-                array_push(_struct_array, _unit);
-            }
-        }
-        return _struct_array;
-    };
-
     // for creating a new sergeant from existing squad members
     static new_sergeant = function(veteran = false) {
         var exp_unit = "";
         var _unit;
-        var highest_exp = 0;
+        var _highest_exp = 0;
         var member_length = array_length(members);
         for (var i = 0; i < member_length; i++) {
-            _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            _unit = members[i];
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
                 i--;
                 continue;
             }
-            if (_unit.experience > highest_exp) {
-                highest_exp = _unit.experience;
+            if (_unit.experience > _highest_exp) {
+                _highest_exp = _unit.experience;
                 exp_unit = _unit;
             }
         }
         if ((array_length(members) > 0) && is_struct(exp_unit)) {
-            if (exp_unit.name() != "") {
-                var new_role;
-                if (veteran == true) {
-                    new_role = obj_ini.role[100][19];
-                } else {
-                    new_role = obj_ini.role[100][18];
-                }
-                exp_unit.update_role(new_role);
-                if (irandom(1) == 0) {
-                    exp_unit.add_trait("lead_example");
-                }
+            var new_role;
+            if (veteran == true) {
+                new_role = obj_ini.player_role_data[eROLE.VETERANSERGEANT].role;
+            } else {
+                new_role = obj_ini.player_role_data[eROLE.SERGEANT].role;
+            }
+            exp_unit.update_role(new_role);
+            if (irandom(1) == 0) {
+                exp_unit.add_trait("lead_example");
             }
         }
     };
 
-    static kill_members = function() {
+    static kill_members = function(recover_equipment = true, recover_gene = true) {
         for (var i = 0; i < array_length(members); i++) {
-            scr_kill_unit(members[i][0], members[i][1]);
+            members[i].kill(recover_equipment, recover_gene);
         }
         members = [];
     };
@@ -377,10 +361,6 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         for (var i = member_length - 1; i >= 0; i--) {
             //checks squad member is still valid
             _unit = fetch_member(i);
-            if (_unit.name() == "") {
-                array_delete(members, i, 1);
-                continue;
-            }
             if (struct_exists(squad_fulfilment, _unit.role())) {
                 squad_fulfilment[$ _unit.role()]++;
             } else {
@@ -401,7 +381,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
             if (fill_from != undefined) {
                 while (fill_from.has_role(_wanted_unit_role) && _squad_role_current < _max_role_count) {
                     var _new_member = fill_from.pop_role_member(_wanted_unit_role);
-                    add_member(_new_member.company, _new_member.marine_number);
+                    add_member(_new_member);
                     squad_fulfilment[$ _wanted_unit_role]++;
                     _squad_role_current = squad_fulfilment[$ _wanted_unit_role];
                     _new_member.squad = uid;
@@ -418,7 +398,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
                 required[$ _wanted_unit_role] = _min_role_allowed - _squad_role_current;
             }
         }
-        var _sarge = obj_ini.role[100][eROLE.SERGEANT];
+        var _sarge = obj_ini.player_role_data[eROLE.SERGEANT].role;
         if (struct_exists(required, _sarge)) {
             if (required[$ _sarge] > 0) {
                 new_sergeant();
@@ -426,7 +406,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
             }
         }
         //find a new veteran sergeant
-        var _vet_sarge = obj_ini.role[100][eROLE.VETERANSERGEANT];
+        var _vet_sarge = obj_ini.player_role_data[eROLE.VETERANSERGEANT].role;
         if (struct_exists(required, _vet_sarge)) {
             if (required[$ _vet_sarge] > 0) {
                 new_sergeant(true);
@@ -455,19 +435,18 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     };
 
     static fetch_member = function(index) {
-        return fetch_unit(members[index]);
+        return members[index];
     };
 
     static fetch_members = function() {
         return collect_role_group("all", "", false, {"company": base_company, "squad": uid, "max_wanted": array_length(members)});
     };
 
-    static add_member = function(comp, unit_number) {
-        if (is_struct(comp)) {
-            unit_number = comp.marine_number;
-            comp = comp.company;
+    static add_member = function(_unit) {
+        if (!is_struct(_unit)) {
+            return;
         }
-        array_push(members, [comp, unit_number]);
+        array_push(members, _unit);
         life_members++;
     };
 
@@ -515,8 +494,8 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var planet_side = false;
         var exact_loc = false;
         for (var i = 0; i < member_length; i++) {
-            _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            _unit = members[i];
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
                 i--;
@@ -587,21 +566,15 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         var member_length = array_length(members);
         var hierarchy = role_hierarchy();
         var leader_hier_pos = array_length(hierarchy);
-        var leader = "none";
-        var highest_exp = 0;
-        for (var i = 0; i < member_length; i++) {
-            var _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+        var _leader = undefined;
+        for (var i = member_length - 1; i >= 0; i--) {
+            var _unit = members[i]
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
-                member_length--;
-                i--;
                 continue;
             } else {
-                if (leader == "none") {
-                    leader = [
-                        _unit.company,
-                        _unit.marine_number,
-                    ];
+                if (!is_struct(_leader)) {
+                    _leader = _unit;
                     for (var r = 0; r < array_length(hierarchy); r++) {
                         if (hierarchy[r] == _unit.role()) {
                             leader_hier_pos = r;
@@ -609,47 +582,38 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
                         }
                     }
                 } else if (leader_hier_pos < array_length(hierarchy) && hierarchy[leader_hier_pos] == _unit.role()) {
-                    var _leader = fetch_unit(leader);
-                    if (is_struct(_leader) && _leader.experience < _unit.experience) {
-                        leader = [
-                            _unit.company,
-                            _unit.marine_number,
-                        ];
+                    if (_leader.experience < _unit.experience) {
+                        _leader = _unit;
                     }
                 } else {
                     for (var r = 0; r < leader_hier_pos; r++) {
                         if (hierarchy[r] == _unit.role()) {
                             leader_hier_pos = r;
-                            leader = [
-                                _unit.company,
-                                _unit.marine_number,
-                            ];
+                            _leader = _unit;
                             break;
                         }
                     }
                 }
             }
         }
-        squad_leader = leader;
-        return leader;
+        squad_leader = _leader;
+        return _leader;
     };
 
     static change_sgt = function(new_sgt) {
-        sgt = determine_leader();
-        var remove_sgt;
-        if (sgt != "none") {
-            remove_sgt = fetch_unit(sgt);
-            if (is_struct(remove_sgt)) {
-                if (remove_sgt.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
-                    var replace_role = remove_sgt.role();
-                    remove_sgt.update_role(new_sgt.role());
-                    //TODO centralise loyalty changes for role changes in the update_role method
-                    remove_sgt.alter_loyalty(-10);
-                    new_sgt.update_role(replace_role);
-                    new_sgt.alter_loyalty(10);
-                }
-            }
+        var _remove_sgt  = determine_leader();
+        if (!is_struct(_remove_sgt)) {
+            return;
         }
+        var replace_role = _remove_sgt.role();
+        if (_remove_sgt.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
+            _remove_sgt.update_role(new_sgt.role());
+            //TODO centralise loyalty changes for role changes in the update_role method
+            _remove_sgt.alter_loyalty(-10);
+        }
+      
+        new_sgt.update_role(replace_role);
+        new_sgt.alter_loyalty(10);
     };
 
     static set_location = function(loc, lid, wid) {
@@ -672,7 +636,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
         member_length = array_length(members);
         for (var i = 0; i < member_length; i++) {
             var _unit = fetch_unit(members[i]);
-            if (!is_struct(_unit) || _unit.name() == "") {
+            if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
                 i--;

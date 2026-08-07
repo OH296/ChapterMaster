@@ -1,5 +1,6 @@
-function UnitGroup(units) constructor {
+function UnitGroup(units = []) constructor {
     self.units = units;
+    killed = [];
 
     static number = function() {
         return array_length(units);
@@ -11,6 +12,10 @@ function UnitGroup(units) constructor {
 
     static pop = function() {
         return array_pop(units);
+    };
+
+    static push = function(unit) {
+        array_push(units, unit)
     };
 
     static has_role = function(role) {
@@ -41,6 +46,14 @@ function UnitGroup(units) constructor {
         return false;
     };
 
+    static tally_attr = function(attrib){
+        var _tally = 0;
+        for (var i = 0; i < array_length(units); i++) {
+            _tally += units[i][$ attrib];
+        }
+        return _tally
+    }
+
     static get_from = function(search_conditions = {}, as_UnitGroup = true, remove_from = false) {
         var _wanted = [];
         var conditions = new SearchConditions(search_conditions);
@@ -68,6 +81,45 @@ function UnitGroup(units) constructor {
             return _wanted;
         }
     };
+
+    static duplicate = function(){
+        var _new_array = [];
+        for (var i = 0; i < number(); i++) {
+            array_push(_new_array, units[i]);
+        }
+        return new UnitGroup(_new_array);
+    }
+
+    static move_to_company = function(company, keep_squads_if_possible = true,original_loop = true){
+        if (!keep_squads_if_possible){
+            for (var i = 0; i < number(); i++) {
+                units[i].move_to_company(company,false);
+            }
+        } else {
+
+            var _replica = duplicate();
+
+            var _squadless = _replica.get_from({squadless : true}, true, true);
+            _squadless.move_to_company(company, false, false);
+
+            var _squads = count_squads("all", true);
+
+            for (var s = 0;s<array_length(_squads);s++){
+                var _squad = fetch_squad(_squads[s]);
+                var _squad_units = _replica.get_from({squad : _squads[s]}, true, true);
+
+                if (_squad_units.number() < array_length(_squad.members)){
+                    _squad_units.move_to_company(company, false, false);
+                    continue;
+                }
+
+                for (var i = 0; i < number(); i++) {
+                    units[i].move_to_company(company);
+                }
+                _squad.base_company = company;
+            }
+        }
+    }
 
     static add_units = function(group_two, conditions = {}, remove_from = false, join_index = -1) {
         var _new_adds = group_two.get_from(conditions, false, remove_from);
@@ -115,19 +167,26 @@ function UnitGroup(units) constructor {
         return _exp_unit;
     };
 
+    static kill_unit = function(index, equipment = true, gene_seed_collect = true){
+        var _unit = units[index];
+        _unit.kill(equipment, gene_seed_collect);
+        array_push(killed, _unit);
+        array_delete(units, index ,1);
+    }
+
     static kill_percent = function(kill_percent, equipment = true, gene_seed_collect = true) {
         var _kill_numb = floor((kill_percent / 100) * number());
         var _killed = 0;
-        var i = 0;
-        while (_killed < _kill_numb && i < number()) {
+        var i = number() - 1;
+        while (_killed < _kill_numb && i >= 0) {
             var _unit = units[i];
             if (kill_percent < 100 && _unit.role() == active_roles()[eROLE.CHAPTERMASTER]) {
                 i++;
                 continue;
             }
-            kill_and_recover(_unit.company, _unit.marine_number, equipment, gene_seed_collect);
+            kill_unit(i, equipment, gene_seed_collect)
             _killed++;
-            i++;
+            i--;
         }
     };
 
@@ -270,13 +329,13 @@ function UnitGroup(units) constructor {
             if (squad_fulfilment[$ _unit.role()] < _max) {
                 //if sergeants not required
                 squad_fulfilment[$ _unit.role()]++;
-                squad.add_member(_unit.company, _unit.marine_number);
+                squad.add_member(_unit);
             }
         }
 
         //if a new sergeant is needed find the marine with the highest experience in the squad
         //(which if everything works right should be a marine with the old_guard, seasoned, or ancient trait)
-        /*and ((squad_fulfilment[$ obj_ini.role[100][8]] > 4)or (squad_fulfilment[$ obj_ini.role[100][10]] > 4) or (squad_fulfilment[$ obj_ini.role[100][9]] > 4)or (squad_fulfilment[$ obj_ini.role[100][3]] > 4) )*/
+        /*and ((squad_fulfilment[$ obj_ini.player_role_data[eROLE.TACTICAL].role] > 4)or (squad_fulfilment[$ obj_ini.player_role_data[eROLE.ASSAULT].role] > 4) or (squad_fulfilment[$ obj_ini.player_role_data[eROLE.DEVASTATOR].role] > 4)or (squad_fulfilment[$ obj_ini.player_role_data[eROLE.VETERAN].role] > 4) )*/
 
         var _members = squad.get_members(true);
         var _exp_unit = 0;
@@ -780,11 +839,8 @@ function SearchConditions(data) constructor {
 
     static evaluate = function(unit) {
         self.unit = unit;
-        if (!is_struct(unit) || unit.name() == "") {
-            if (is_struct(unit)) {
-                unit.base_group = "none";
-                // LOGGER.error($"Empty name! Unit:\n{unit}");
-            }
+        if (!is_struct(unit)) {
+            LOGGER.error($"Not Real Unit! Unit:\n{unit}");
             return false;
         }
 
@@ -864,10 +920,6 @@ function collect_by_religeon(religion, sub_cult = "", location = "") {
             _add = false;
             _unit = fetch_unit([com, i]);
             if (!is_struct(_unit)) {
-                continue;
-            }
-            if (_unit.name() == "") {
-                LOGGER.error($"Empty name! Unit:\n{_unit}");
                 continue;
             }
             if (_unit.religion == religion) {

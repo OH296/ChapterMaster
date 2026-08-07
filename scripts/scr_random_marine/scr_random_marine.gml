@@ -30,7 +30,7 @@ function scr_random_marine(role, exp_req, search_params = {}) {
             }
         }
         if (company <= 10) {
-            var comp_size = array_length(obj_ini.name[company]);
+            var comp_size = array_length(obj_ini.TTRPG[company]);
 
             //This makes sure that cmopanies are searched randomly by creating an array of array positions to be randomly accessed
             var marine_list = [];
@@ -57,7 +57,7 @@ function scr_random_marine(role, exp_req, search_params = {}) {
 
                 //check correct search param roles
                 var unit_role = unit.role();
-                if (unit_role == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     array_delete(marine_list, list_place, 1);
                     comp_size--;
                     continue;

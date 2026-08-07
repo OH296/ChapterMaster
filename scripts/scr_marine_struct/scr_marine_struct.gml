@@ -156,6 +156,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     unit_health = 0;
     bionics = 0;
     size = 0;
+    unit_race = 1;
 
     // Progression
     experience = 0;
@@ -167,6 +168,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     // Customization
     personal_livery = {};
 
+    //TODO ca finally merge these into a coherent struct
     // Equipment
     gear_quality = "standard";
     armour_quality = "standard";
@@ -176,6 +178,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     weapon_one_data = {
         quality: "standard",
     };
+    role1 = "";
+    wep1 = "";
+    gear1 = "";
+    armour1 = "";
+    wep2 = "";
+    unit_name = "";
+    mobi1 = "";
 
     // Combat States
     encumbered_ranged = false;
@@ -196,7 +205,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     //takes dict and plumbs dict values into unit struct
     if (array_contains(variable_struct_get_names(global.base_stats), class)) {
-        load_json_data(global.base_stats[$ class]);
+        move_data_to_current_scope(global.base_stats[$ class] , true);
     }
 
     var stats = [
@@ -234,7 +243,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     }
 
     if (struct_exists(self, "start_gear")) {
-        if (base_group != "marine") {
+        if (base_group != "astartes") {
             alter_equipment(start_gear, false, false);
         } else {
             alter_equipment(start_gear, true, true);
@@ -259,7 +268,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             if (instance_exists(obj_controller)) {
                 role_history = [
                     [
-                        obj_ini.role[company][marine_number],
+                        role1,
                         obj_controller.turn,
                     ],
                 ]; //marines_promotion and demotion history
@@ -361,7 +370,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             }
 
             var _cloak_chance = 5;
-            if (role() == obj_ini.role[100][eROLE.CHAPLAIN]) {
+            if (role_compare(self, eROLE.CHAPLAIN)) {
                 _cloak_chance += 25;
             } else if (IsSpecialist(SPECIALISTS_LIBRARIANS)) {
                 _cloak_chance += 75;
@@ -409,17 +418,30 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     static handle_stat_growth = unit_stat_growth;
 
-    static armour = function(raw = false) {
-        var wep = obj_ini.armour[company][marine_number];
-        if (is_string(wep) || raw) {
-            return wep;
+    static move_to_company = function(new_company, keep_squad = true){
+        var _slot = find_company_open_slot(new_company);
+        var _old_loc = [company, marine_number];
+        obj_ini.TTRPG[new_company][_slot] = self;
+        company = new_company;
+        marine_number = _slot;
+        if (!keep_squad){
+            remove_from_squad();
         }
-        var arti = fetch_artifact(wep);
+        var _old_company_length = array_length(obj_ini.TTRPG[_old_loc[0]]);
+        array_delete(obj_ini.TTRPG[_old_loc[0]] , _old_loc[1] , 1);
+    }
+
+    static armour = function(raw = false) {
+        var _wep = armour1;
+        if (is_string(_wep) || raw) {
+            return _wep;
+        }
+        var arti = fetch_artifact(_wep);
         return arti.get_type_name();
     };
 
     static role = function() {
-        return obj_ini.role[company][marine_number];
+        return role1;
     };
 
     static squad_role = function() {
@@ -444,31 +466,34 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         if (role() == new_role) {
             return "no change";
         }
-        if (base_group == "astartes") {
-            if (role() == obj_ini.role[100][12] && new_role != obj_ini.role[100][12]) {
+        var _astartes = base_group == "astartes";
+        if (_astartes) {
+            if (role() == obj_ini.player_role_data[eROLE.SCOUT].role && new_role != obj_ini.player_role_data[eROLE.SCOUT].role) {
                 if (!get_body_data("black_carapace", "torso")) {
                     alter_body("torso", "black_carapace", true);
                     stat_boosts({strength: 4, constitution: 4, dexterity: 4}); //will decide on if these are needed
                 }
             }
-            if (!is_specialist(role())) {
-                //logs changes too and from specialist status
-                if (is_specialist(new_role)) {
-                    obj_controller.marines -= 1;
-                    obj_controller.command += 1;
-                }
-            } else {
-                if (!is_specialist(new_role)) {
-                    obj_controller.marines += 1;
-                    obj_controller.command -= 1;
+        }
+        role1 = new_role;
+        if (instance_exists(obj_controller)) {
+            array_push(role_history, [role(), obj_controller.turn]);
+            if (_astartes) {
+                if (!is_specialist(role())) {
+                    //logs changes too and from specialist status
+                    if (is_specialist(new_role)) {
+                        obj_controller.marines -= 1;
+                        obj_controller.command += 1;
+                    }
+                } else {
+                    if (!is_specialist(new_role)) {
+                        obj_controller.marines += 1;
+                        obj_controller.command -= 1;
+                    }
                 }
             }
         }
-        obj_ini.role[company][marine_number] = new_role;
-        if (instance_exists(obj_controller)) {
-            array_push(role_history, [role(), obj_controller.turn]);
-        }
-        if (new_role == obj_ini.role[100][5]) {
+        if (new_role == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
             if (company == 2) {
                 obj_ini.watch_master_name = name();
             }
@@ -497,11 +522,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                 obj_ini.recruiter_name = name();
             }
             scr_recent("captain_promote", name(), company);
-        } else if (new_role == obj_ini.role[100][4]) {
+        } else if (new_role == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
             scr_recent("terminator_promote", name(), company);
-        } else if (new_role == obj_ini.role[100][2]) {
+        } else if (new_role == obj_ini.player_role_data[eROLE.HONOURGUARD].role) {
             scr_recent("honor_promote", name(), company);
-        } else if (new_role == obj_ini.role[100][6]) {
+        } else if (new_role == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
             var dread_weapons = [
                 "Close Combat Weapon",
                 "Force Staff",
@@ -523,11 +548,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static mobility_item = function(raw = false) {
-        var wep = obj_ini.mobi[company][marine_number];
-        if (is_string(wep) || raw) {
-            return wep;
+        var _wep = mobi1;
+        if (is_string(_wep) || raw) {
+            return _wep;
         }
-        var arti = fetch_artifact(wep);
+        var arti = fetch_artifact(_wep);
         return arti.get_type_name();
     };
 
@@ -589,7 +614,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         } else if (array_contains(global.list_terminator_armour, arm)) {
             sz += 1;
         }
-        if (unit_role == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+        if (unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
             sz++;
         }
         size = sz;
@@ -797,7 +822,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static race = function() {
-        return obj_ini.race[company][marine_number];
+        return unit_race;
     };
 
     static alter_loyalty = function(alt_val) {
@@ -955,29 +980,27 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         array_push(epithets, epithet);
     };
     static name = function() {
-        return obj_ini.name[company][marine_number];
+        return unit_name;
     }; // get marine name
 
-    static set_name = function(new_name) {
-        obj_ini.name[company][marine_number] = new_name;
-        return new_name;
-    };
+    static set_name = function(val){
+        unit_name = val;
+    }
 
     static gear = function(raw = false) {
-        var wep = obj_ini.gear[company][marine_number];
-        if (is_string(wep) || raw) {
-            return wep;
+        var _wep = gear1;
+        if (is_string(_wep) || raw) {
+            return _wep;
         }
-        var arti = fetch_artifact(wep);
+        var arti = fetch_artifact(_wep);
         return arti.get_type_name();
     };
-
     static weapon_one = function(raw = false) {
-        var wep = obj_ini.wep1[company][marine_number];
-        if (is_string(wep) || raw) {
-            return wep;
+        var _wep = wep1;
+        if (is_string(_wep) || raw) {
+            return _wep;
         }
-        var arti = fetch_artifact(wep);
+        var arti = fetch_artifact(_wep);
         return arti.get_type_name();
     };
 
@@ -1040,7 +1063,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             qual_string = "no_items";
         }
         if (new_weapon == "Company Standard") {
-            if (role() != obj_ini.role[100][11]) {
+            if (role() != obj_ini.player_role_data[eROLE.ANCIENT].role) {
                 viable = false;
                 qual_string = "wrong_role";
             }
@@ -1052,11 +1075,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static weapon_two = function(raw = false) {
-        var wep = obj_ini.wep2[company][marine_number];
-        if (is_string(wep) || raw) {
-            return wep;
+        var _wep = wep2;
+        if (is_string(_wep) || raw) {
+            return _wep;
         }
-        var arti = fetch_artifact(wep);
+        var arti = fetch_artifact(_wep);
         return arti.get_type_name();
     };
 
@@ -1167,7 +1190,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         if (role() == "Lexicanum" && psionic >= 5 && experience > 50) {
             update_role("Codiciery");
         } else if (role() == "Codiciery" && psionic >= 8 && experience > 100) {
-            update_role(obj_ini.role[100][eROLE.LIBRARIAN]);
+            update_role(obj_ini.player_role_data[eROLE.LIBRARIAN].role);
         }
     };
 
@@ -1776,8 +1799,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
             for (var r = 0; r < array_length(_squad.members); r++) {
                 squad_member = _squad.members[r];
-                if ((squad_member[0] == company) && (squad_member[1] == marine_number)) {
+                if (squad_member.uid == uid) {
                     array_delete(_squad.members, r, 1);
+                    break;
                 }
             }
 
@@ -1804,7 +1828,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
         squad = new_squad;
         var _squad = get_squad();
-        _squad.add_member(company, marine_number);
+        _squad.add_member(self);
     };
 
     static marine_location = function() {
@@ -2050,17 +2074,24 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
     };
 
-    static set_default_equipment = function(from_armoury = true, to_armoury = true, quality = "any") {
-        var role_match = -1;
-        for (var i = 0; i < 24; i++) {
-            if (obj_ini.role[100][i] == role()) {
-                role_match = i;
-                break;
+    static get_role_data = function(){
+        for (var i = 0; i < array_length(obj_ini.player_role_data); i++) {
+            var _role_data = obj_ini.player_role_data[i];
+            if (_role_data.role == role()) {
+                return _role_data;
             }
         }
-        if (role_match != -1) {
-            alter_equipment({"wep1": obj_ini.wep1[100][role_match], "wep2": obj_ini.wep2[100][role_match], "mobi": obj_ini.mobi[100][role_match], "armour": obj_ini.armour[100][role_match], "gear": obj_ini.gear[100][role_match]}, from_armoury, to_armoury, quality);
+        return undefined;        
+    }
+
+    static set_default_equipment = function(from_armoury = true, to_armoury = true, quality = "any") {
+        var role_match = -1;
+        var _data = get_role_data()
+        if (is_undefined(_data)){
+            return "no_role_found";
         }
+ 
+         alter_equipment(_data, from_armoury, to_armoury, quality);
     };
 
     static equipped_artifacts = function() {
@@ -2221,39 +2252,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
     };
 
-    static movement_after_math = function(end_company = company, end_slot = marine_number, check_squads = true) {
-        if (squad != "none" && check_squads) {
-            var squad_data = get_squad();
-            var squad_member;
-
-            for (var r = 0; r < array_length(squad_data.members); r++) {
-                squad_member = squad_data.members[r];
-                if (squad_member[0] == company && squad_member[1] == marine_number) {
-                    if (squad_data.base_company != end_company) {
-                        array_delete(squad_data.members, r, 1);
-                        squad = "none";
-                        // if unit will no longer be same company as squad remove unit from squad
-                    } else {
-                        squad_data.members[r] = [
-                            end_company,
-                            end_slot,
-                        ];
-                    }
-                    break;
-                }
-            }
-        }
-
-        var artifact_list = equipped_artifacts();
-        for (var i = 0; i < array_length(artifact_list); i++) {
-            var arti = fetch_artifact(artifact_list[i]);
-            arti.set_bearer([
-                end_company,
-                end_slot,
-            ]);
-        }
-    };
-
     static is_dreadnought = function() {
         var _arm_data = get_armour_data();
         if (is_struct(_arm_data)) {
@@ -2335,6 +2333,8 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             }
         }
     };
+
+    static kill = kill_and_recover;
 }
 
 function jsonify_marine_struct(company, marine, stringify = true) {
@@ -2367,8 +2367,14 @@ function fetch_unit(unit) {
     }
 }
 
+/// @param {Array<Real>} unit where unit[0] is company and unit[1] is the position returns undefined if member is out of array_bounds
+/// @returns {Struct.TTRPG_stats} unit
+function fetch_unit_careful(){
+
+}
+
 function fetch_unit_uid(uuid) {
-    for (var i = 0; i < obj_ini.companies; i++) {
+    for (var i = 0; i <= obj_ini.companies; i++) {
         var _comp_length = array_length(obj_ini.TTRPG[i]);
         for (var s = 0; s < _comp_length; s++) {
             var _unit = fetch_unit([i, s]);
@@ -2381,5 +2387,5 @@ function fetch_unit_uid(uuid) {
         }
     }
 
-    return "none";
+    return undefined;
 }

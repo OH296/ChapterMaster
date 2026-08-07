@@ -319,10 +319,6 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
         return item_desc_tooltip;
     };
 
-    static has_tag = function(tag) {
-        return array_contains(tags, tag);
-    };
-
     static special_value = function(special) {
         if (is_struct(specials)) {
             var _specials = struct_get_names(specials);
@@ -335,6 +331,10 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
             }
         }
         return 0;
+    };
+	
+    static has_tag = function(tag) {
+        return array_contains(tags, tag);
     };
 
     static has_tags = function(search_tags) {

@@ -20,6 +20,24 @@ function company_length(company){
     return array_length(obj_ini.TTRPG[company]);
 }
 
+function tally_marines(){
+    obj_controller.command = 0;
+    obj_controller.marines = 0;
+    for (var co = 0; co <= obj_ini.companies; co++) {
+        for (var i = 0; i < company_length(co); i++) {
+            var _unit = fetch_unit([co,i]);
+            if (_unit.base_group != "astartes"){
+                continue;
+            }
+            if (!_unit.IsSpecialist()){
+                obj_controller.marines++;
+            } else {
+                obj_controller.command++;
+            }
+        }
+    }
+}
+
 function scr_company_order(company) {
     try {
         // company : company number
@@ -106,48 +124,10 @@ function scr_company_order(company) {
 
         _company_marines.order_by_rank();
 
-        var _squads = _company_marines.count_squads("all", true);
+        TTRPG[co] = _company_marines.units;
 
-        for (var i = 0; i < array_length(_squads); i++) {
-            var _squad = fetch_squad(_squads[i]);
-            _squad.members = [];
-        }
-
-        var _temps = [];
-        for (var i = 0; i < array_length(_company_marines.units); i++) {
-            var _unit = _company_marines.units[i];
-            array_push(_temps, {unit: _unit, race: _unit.race(), name: _unit.name(), role: _unit.role(), wep1: _unit.weapon_one(true), wep2: _unit.weapon_two(true), armour: _unit.armour(true), gear: _unit.gear(true), mobi: _unit.mobility_item(true)});
-        }
-
-        var _new_length = array_length(_temps);
-        TTRPG[co] = array_create(_new_length, 0);
-        race[co] = array_create(_new_length, 0);
-        name[co] = array_create(_new_length, 0);
-        role[co] = array_create(_new_length, 0);
-        wep1[co] = array_create(_new_length, 0);
-        wep2[co] = array_create(_new_length, 0);
-        armour[co] = array_create(_new_length, 0);
-        gear[co] = array_create(_new_length, 0);
-        mobi[co] = array_create(_new_length, 0);
-        for (var i = 0; i < array_length(_temps); i++) {
-            var _unit = _temps[i];
-            var _struc = _unit.unit;
-            TTRPG[co][i] = _struc;
-            race[co][i] = _unit.race;
-            name[co][i] = _unit.name;
-            role[co][i] = _unit.role;
-            wep1[co][i] = _unit.wep1;
-            wep2[co][i] = _unit.wep2;
-            armour[co][i] = _unit.armour;
-            gear[co][i] = _unit.gear;
-            mobi[co][i] = _unit.mobi;
-            _struc.company = co;
-            _struc.marine_number = i;
-            if (_struc.squad != "none") {
-                var _squad = _struc.get_squad();
-                array_push(_squad.members, [co, i]);
-            }
-            _struc.movement_after_math(co, i, false);
+        for (var i = 0; i < array_length(TTRPG[co]); i++) {
+            TTRPG[co][i].marine_number = i;
         }
     } catch (_exception) {
         ERROR_HANDLER.handle_exception(_exception);
@@ -155,7 +135,7 @@ function scr_company_order(company) {
 }
 
 function role_hierarchy() {
-    var _roles = obj_ini.role[100];
+    var _roles = active_roles();
     var hierarchy = [
         _roles[eROLE.CHAPTERMASTER],
         "Forge Master",

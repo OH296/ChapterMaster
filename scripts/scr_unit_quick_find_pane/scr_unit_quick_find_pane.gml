@@ -73,7 +73,7 @@ function UnitQuickFindPanel() constructor {
     };
 
     static evaluate_unit_for_garrison_log = function(unit) {
-        if (!is_struct(unit) || unit.name() == "" || !unit.controllable()) {
+        if (!unit.controllable()) {
             return;
         }
         var unit_location = unit.marine_location();
@@ -132,7 +132,7 @@ function UnitQuickFindPanel() constructor {
             obj_controller.specialist_point_handler.calculate_research_points(false);
             ship_count = array_length(obj_ini.ship_carrying);
             for (var co = 0; co <= obj_ini.companies; co++) {
-                for (var u = 0; u < array_length(obj_ini.TTRPG[co]); u++) {
+                for (var u = 0; u < company_length(co); u++) {
                     /// @type {Struct.TTRPG_stats}
                     var _unit = fetch_unit([co, u]);
                     if (!is_struct(_unit)) {
@@ -319,7 +319,7 @@ function UnitQuickFindPanel() constructor {
 
                                 _mission_data.click_right = method(_mission_data, function() {
                                     var _unit = fetch_unit_uid(important_person);
-                                    if (_unit != "none") {
+                                    if (is_struct(_unit)) {
                                         var _unit_l = [_unit];
                                         group_selection(_unit_l);
                                     }
@@ -542,8 +542,10 @@ function UnitQuickFindPanel() constructor {
                 }
             }
             pop_draw_return_values();
-        } catch (_exception) {} //dangerous to handle wiljustmake game unplayable if crash does occur
+        } catch (_exception) {} //dangerous to handle will just make game unplayable if crash does occur
     };
+
+    LOGGER.info("UnitQuickFindPanel successfully initialised");
 }
 
 function HoverBox() constructor {
@@ -627,7 +629,6 @@ function toggle_selection_borders() {
         if ((man_sel[p] == 1) && (man[p] == "man")) {
             if (is_struct(display_unit[p])) {
                 var _unit = display_unit[p];
-                var mar_id = _unit.marine_number;
                 if ((_unit.ship_location > -1) && _unit.controllable()) {
                     _unit.is_boarder = !_unit.is_boarder;
                 }

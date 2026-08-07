@@ -110,19 +110,14 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
         ac = 0;
         dr = 1;
 
-        for (var o = 0; o < array_length(origin.board_co); o++) {
+        for (var o = 0; o < array_length(occupants); o++) {
             if (!instance_exists(target)) {
                 exit;
             }
 
-            co = origin.board_co[o];
-            i = origin.board_id[o];
             ac = 0;
             dr = 1;
-            unit = fetch_unit([co, i]);
-            if (!is_struct(unit)) {
-                continue;
-            }
+            unit = occupants[o];
             gear_bonus = 0;
             marine_bonus = 0;
             boarding_odds = 50;
@@ -199,7 +194,7 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
                         // Damaging
                         var to_bomb;
                         to_bomb = false;
-                        if ((plasma_bomb == true) && (obj_ini.gear[co][i] == "Plasma Bomb")) {
+                        if ((plasma_bomb == true) && (unit.gear() == "Plasma Bomb")) {
                             to_bomb = true;
                         }
                         if (choose(1, 2, 3, 4, 5) < 4) {
@@ -211,7 +206,7 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
                         } else if (to_bomb) {
                             target.hp -= 200;
                             damaged_ship = 2;
-                            obj_ini.gear[co][i] = "";
+                            unit.update_gear("",false,false);
                         }
                     }
 
@@ -571,13 +566,8 @@ if ((boarding == true) && (board_cooldown >= 0) && instance_exists(target) && in
 
         if (experience > 0) {
             var new_exp, unit_exp, exp_roll;
-            for (var o = 0; o < array_length(origin.board_co); o++) {
-                co = origin.board_co[o];
-                i = origin.board_id[o];
-                unit = fetch_unit([co, i]);
-                if (!is_struct(unit)) {
-                    continue;
-                }
+            for (var o = 0; o < array_length(occupants); o++) {
+                unit = occupants[o];
                 unit_exp = unit.experience;
                 exp_roll = irandom(150 + unit_exp) + 1;
                 if (exp_roll >= unit_exp) {

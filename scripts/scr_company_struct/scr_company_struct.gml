@@ -380,7 +380,7 @@ function CompanyStruct(comp) constructor {
             current_squad = (current_squad - 1 < 0) ? array_length(company_squads) - 1 : current_squad - 1;
         }
         var _member = grab_current_squad().members[0];
-        var _fetched = fetch_unit(_member);
+        var _fetched = _member;
         if (is_struct(_fetched)) {
             obj_controller.unit_focus = _fetched;
         }
@@ -424,7 +424,7 @@ function CompanyStruct(comp) constructor {
     if (company > 0 && company < 11) {
         var _unit;
         var company_units = obj_controller.display_unit;
-        var role_set = obj_ini.role[100];
+        var role_set = active_roles();
         for (var i = 0; i < array_length(company_units); i++) {
             if (is_struct(company_units[i])) {
                 _unit = company_units[i];
@@ -457,9 +457,8 @@ function CompanyStruct(comp) constructor {
     };
 
     static default_member = function() {
-        var _member = company_squads[0].members[0];
-        var _fetched = fetch_unit(_member);
-        if (is_struct(_fetched)) {
+        var _member = company_squads[0].fetch_member(0);
+        if (is_struct(_member)) {
             obj_controller.unit_focus = _fetched;
         }
         selected_unit = obj_controller.unit_focus;
@@ -550,10 +549,9 @@ function CompanyStruct(comp) constructor {
 
         draw_set_halign(fa_left);
         //should be moved elsewhere for efficiency
-        squad_leader = _cur_squad.determine_leader();
-        if (squad_leader != "none") {
-            var _fetched = fetch_unit(squad_leader);
-            var leader_text = is_struct(_fetched) ? $"Squad Leader : {_fetched.name_role()}" : "Squad Leader : Unknown";
+        var _squad_leader = _cur_squad.determine_leader();
+        if (is_struct(_squad_leader)) {
+            var leader_text = $"Squad Leader : {_squad_leader.name_role()}";
             draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 50, leader_text, 1, 1, 0);
         }
         squad_loc = _cur_squad.squad_loci();

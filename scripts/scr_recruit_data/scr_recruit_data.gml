@@ -369,7 +369,7 @@ function planet_training_sequence(local_apothecary_points) {
 }
 
 function scr_trial_data(wanted = -1) {
-    var role_data = instance_exists(obj_ini) ? obj_ini.role[100] : obj_creation.role[100];
+    var role_data = active_roles()
     var data = [
         {
             name: "Blood Duel",
@@ -874,8 +874,9 @@ function scr_draw_recruit_advisor() {
         draw_set_font(fnt_40k_14);
     }
 
+    var _cm = cm_obj().get_struct();
     if (menu_adept == 0) {
-        blurp = $"Hail {obj_ini.name[0][0]}! You asked for a report?\n\n";
+        blurp = $"Hail {_cm.name()}! You asked for a report?\n\n";
     }
 
     if (obj_ini.doomed == 0) {

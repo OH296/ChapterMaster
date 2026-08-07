@@ -672,7 +672,7 @@ function draw_sprite_and_unit_equip_data() {
                 if (company_data.current_squad != -1) {
                     var cur_squad = company_data.grab_current_squad();
                     var sgt_possible = cur_squad.type != "command_squad" && !selected_unit.IsSpecialist(SPECIALISTS_SQUAD_LEADERS);
-                    if (selected_unit != cur_squad.squad_leader) {
+                    if (!is_struct(cur_squad.squad_leader) || selected_unit.uid != cur_squad.squad_leader.uid) {
                         if (point_and_click(draw_unit_buttons([xx + 200 + 50, yy + 329], "Make Sgt", [1, 1], #50a076,,, sgt_possible ? 1 : 0.5)) && sgt_possible) {
                             cur_squad.change_sgt(selected_unit);
                         }
@@ -1051,7 +1051,7 @@ function scr_ui_manage() {
                     break;
                 }
 
-                while ((sel <= array_length(display_unit) - 1) && (man[sel] == "hide" || (man_sel[sel] != 1 && _only_display_selected))) {
+                while ((sel < array_length(display_unit)) && (man[sel] == "hide" || (man_sel[sel] != 1 && _only_display_selected))) {
                     sel += 1;
                 }
                 if (sel >= array_length(display_unit)) {
@@ -1117,7 +1117,7 @@ function scr_ui_manage() {
         }
         if (instance_exists(obj_controller) && is_struct(obj_controller.unit_focus)) {
             var selected_unit = obj_controller.unit_focus;
-            if ((selected_unit.name() != "") && (selected_unit.race() != 0)) {
+            if (selected_unit.race() != 0) {
                 draw_set_alpha(1);
                 if (obj_controller.unit_profile && !instance_exists(obj_popup)) {
                     stats_displayed = true;

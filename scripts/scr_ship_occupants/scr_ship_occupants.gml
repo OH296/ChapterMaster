@@ -5,9 +5,6 @@ function scr_ship_occupants(target_ship_id) {
     for (var co = 0; co < obj_ini.companies; co++) {
         var _co_length = company_length(co);
         for (var i = 0; i < _co_length; i++) {
-            if (obj_ini.role[co][i] == "") {
-                continue;
-            }
             var unit = fetch_unit([co, i]);
             if (!is_struct(unit)) {
                 continue;

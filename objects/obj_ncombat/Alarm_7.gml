@@ -19,7 +19,7 @@ try {
                     var nco = dude_co[q];
                     var nid = dude_id[q];
                     cleann[nco] = true;
-                    var _unit = obj_ini.TTRPG[nco][nid];
+                    var _unit = fetch_unit([nco,nid]);
 
                     commandy = _unit.IsSpecialist();
                     if (commandy == true) {
@@ -29,10 +29,10 @@ try {
                         obj_controller.marines -= 1;
                     }
 
-                    obj_ncombat.world_size += scr_unit_size(_unit.armour(), _unit.role(), true, _unit.mobility_item());
+                    obj_ncombat.world_size += _unit.get_unit_size();
 
                     var recover = !obj_ncombat.defeat;
-                    kill_and_recover(nco, nid, recover, recover);
+                    _unit.kill(recover, recover);
                 }
             }
         }
@@ -54,42 +54,33 @@ try {
             if (name == obj_ncombat.battle_loc) {
                 instance_create(x, y, obj_temp_meeting);
                 var master_present = 0;
-
-                var master_index = array_get_index(obj_ini.role[0], obj_ini.role[100][eROLE.CHAPTERMASTER]);
-                var _fetched_chaos = fetch_unit([0, master_index]);
+                var _fetched_chaos = cm_obj().get_struct();
                 if (!is_struct(_fetched_chaos)) {
-                    LOGGER.error($"fetch_unit guardrail triggered for chapter master [0, {master_index}] in cs_meeting post-battle");
+                    LOGGER.error($"fetch_unit guardrail triggered for chapter master [0, 0] in cs_meeting post-battle");
                     exit;
                 }
-                var chaos_meeting = _fetched_chaos.planet_location;
+                var _chaos_meeting = _fetched_chaos.planet_location;
 
-                for (var co = 0; co <= 10; co++) {
+                for (var co = 0; co <= obj_ini.companies; co++) {
                     for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
-                        var good = 0;
                         var _unit = fetch_unit([co, i]);
-                        if (!is_struct(_unit) || _unit.role() == "" || _unit.location_string != name) {
+                        if (_unit.location_string != name) {
                             continue;
                         }
-                        if (_unit.planet_location == floor(chaos_meeting)) {
-                            good += 1;
-                        }
-                        if ((obj_ini.role[co][i] != obj_ini.role[100][6]) && (obj_ini.role[co][i] != "Venerable " + string(obj_ini.role[100][6]))) {
-                            good += 1;
-                        }
-                        if ((string_count("Dread", _unit.armour()) == 0) || (obj_ini.role[co][i] == obj_ini.role[100][eROLE.CHAPTERMASTER])) {
-                            good += 1;
+                        if (_unit.planet_location != floor(_chaos_meeting)) {
+                            continue;
                         }
 
-                        if (good >= 3) {
-                            obj_temp_meeting.dudes += 1;
-                            var otm = obj_temp_meeting.dudes;
-                            obj_temp_meeting.present[otm] = 1;
-                            obj_temp_meeting.co[otm] = co;
-                            obj_temp_meeting.ide[otm] = i;
-                            if (obj_ini.role[co][i] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
-                                master_present = 1;
-                            }
+                        if (_unit.is_dreadnought() && !(role_compare(_unit, eROLE.CHAPTERMASTER))){
+                            continue
                         }
+
+                        obj_temp_meeting.dudes += 1;
+                        var otm = obj_temp_meeting.dudes;
+                        obj_temp_meeting.present[otm] = 1;
+                        obj_temp_meeting.co[otm] = co;
+                        obj_temp_meeting.ide[otm] = i;
+                        master_present = role_compare(_unit, eROLE.CHAPTERMASTER)
                     }
                 }
             }

@@ -265,7 +265,7 @@ function scr_random_event(execute_now) {
         }
     } else if (chosen_event == eEVENT.PROMOTION) {
         LOGGER.info("RE: Promotion");
-        var marine_and_company = scr_random_marine([obj_ini.role[100][8], obj_ini.role[100][12], obj_ini.role[100][9], obj_ini.role[100][10]], 0);
+        var marine_and_company = scr_random_marine([obj_ini.player_role_data[eROLE.TACTICAL].role, obj_ini.player_role_data[eROLE.SCOUT].role, obj_ini.player_role_data[eROLE.DEVASTATOR].role, obj_ini.player_role_data[eROLE.ASSAULT].role], 0);
         if (marine_and_company == "none") {
             LOGGER.error("RE: Promotion, couldn't pick a space marine");
             exit;
@@ -705,19 +705,15 @@ function scr_random_event(execute_now) {
         add_event({e_id: "chaos_invasion", duration: 1});
 
         var psyker_intolerant = scr_has_disadv("Psyker Intolerant");
-        var has_chief_psyker = scr_role_count("Chief " + string(obj_ini.role[100][17]), "") >= 1;
-        var cm_is_psyker = false;
-        for (var i = 0; i < array_length(TTRPG[0]); i++) {
-            var _unit = fetch_unit([0 ,i]);
-            if (_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER] && string_count("0", _unit.specials) > 0) {
-                cm_is_psyker = true;
-                break;
-            }
-        }
+        var _head = get_department_head(eCHAPTER_DEPARTMENTS.LIB); 
+        var _has_chief_psyker = is_struct(_head);
 
-        if ((!psyker_intolerant) && has_chief_psyker) {
-            scr_popup("The Maw of the Warp Yawns Wide", "Chief " + string(obj_ini.role[100][17]) + " " + string(obj_ini.name[0][5]) + " reports that the barrier between the realm of man and the Immaterium feels thin and tested.", "Warp", "");
-        } else if ((psyker_intolerant || !has_chief_psyker) && cm_is_psyker) {
+        var _cm = cm_obj().get_struct();
+        var _cm_is_psyker = string_count("0", _cm.specials) > 0;
+
+        if ((!psyker_intolerant) && _has_chief_psyker) {
+            scr_popup("The Maw of the Warp Yawns Wide", $"Chief {_head.name_role()} reports that the barrier between the realm of man and the Immaterium feels thin and tested.", "Warp", "");
+        } else if ((psyker_intolerant || !_has_chief_psyker) && _cm_is_psyker) {
             scr_popup("The Maw of the Warp Yawns Wide", "The barrier between the realm of man and the Immaterium feels thin and tested to you.  Dark forces are afoot.", "Warp", "");
         }
     } else if (chosen_event == eEVENT.NECRON_AWAKEN) {

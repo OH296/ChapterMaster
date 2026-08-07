@@ -56,11 +56,11 @@ if (instance_exists(obj_controller)) {
         }
         if (meeting_star == noone) {
             instance_activate_object(obj_star);
+            var _cm = obj_controller.chapter_master.get_struct();
             with (obj_star) {
-                if (string_count(name, scr_master_loc()) > 0) {
+                if (_cm.planet_location > 0 && _cm.location_string == name) {
                     meeting_star = self.id;
-                    var _fetched = fetch_unit([0, 1]);
-                    meeting_planet = is_struct(_fetched) ? _fetched.planet_location : 0;
+                    meeting_planet = _cm.planet_location;
                 }
             }
         }

@@ -129,7 +129,7 @@ function SpecialistPointHandler() constructor {
             new_tech_heretic_spawn();
 
             if (forge_master == -1) {
-                var _tech_units = scr_role_count(obj_ini.role[100][16], "", "units");
+                var _tech_units = scr_role_count(obj_ini.player_role_data[eROLE.TECHMARINE].role, "", "units");
                 var _count = array_length(_tech_units);
                 if (_count > 1) {
                     setup_new_forge_master_popup(techs);

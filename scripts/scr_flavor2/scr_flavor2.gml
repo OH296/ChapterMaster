@@ -415,7 +415,7 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
         units_lost = lost_num[role_index];
         if (unit_role != "" && units_lost > 0) {
             mes_color = eMSG_COLOR.RED;
-            special = is_specialist(unit_role, SPECIALISTS_HEADS) || unit_role == obj_ini.role[100][eROLE.CHAPTERMASTER] || unit_role == "Venerable " + string(obj_ini.role[100][eROLE.DREADNOUGHT]) || unit_role == obj_ini.role[100][eROLE.CAPTAIN] || obj_ncombat.player_max <= 6;
+            special = is_specialist(unit_role, SPECIALISTS_HEADS) || unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role || unit_role == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role) || unit_role == obj_ini.player_role_data[eROLE.CAPTAIN].role || obj_ncombat.player_max <= 6;
 
             if (!special) {
                 plural = units_lost > 1 ? "s" : "";
@@ -432,7 +432,7 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
                 if (him != -1) {
                     // found a valid unit
                     obj_ncombat.dead_jims += 1;
-                    if (marine_type[him] == obj_ini.role[100][5]) {
+                    if (marine_type[him] == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
                         obj_ncombat.dead_jim[obj_ncombat.dead_jims] = $"A {marine_type[him]} has been lost!";
                     } else {
                         obj_ncombat.dead_jim[obj_ncombat.dead_jims] = $"{unit_struct[him].name_role()} has been lost!";

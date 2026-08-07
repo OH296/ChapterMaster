@@ -106,28 +106,17 @@ function inquisitor_inspection_structure() constructor {
         var _units_to_check = _units_override == undefined ? units : _units_override;
 
         for (var i = 0; i < array_length(_units_to_check); i++) {
-            var unit = _units_to_check[i];
-            if (unit == undefined) {
-                continue;
-            }
-            if (unit.name() == "") {
+            var _unit = _units_to_check[i];
+            if (_unit == undefined) {
                 continue;
             }
 
             // Xenos merc checks: ork base_group or Rangers of non-Imperial race
-            if (unit.base_group == "ork") {
-                add_xenos_mercs(unit.role());
-            } else if (unit.role() == "Ranger") {
-                // example race check - adapt as needed
-                var ca = unit.company_index != undefined ? unit.company_index : 0;
-                var ia = unit.instance_index != undefined ? unit.instance_index : 0;
-                if (obj_ini.race[ca][ia] != 1) {
-                    add_xenos_mercs(unit.role());
-                }
-            }
-
+            if (_unit.base_group == "ork" || _unit.base_group == "eldar") {
+                add_xenos_mercs(_unit.role());
+            } 
             // Check equipped artifacts
-            var artis = unit.equipped_artifacts();
+            var artis = _unit.equipped_artifacts();
             for (var art = 0; art < array_length(artis); art++) {
                 var artifact_index = artis[art];
                 if (artifact_index == undefined) {
@@ -574,7 +563,7 @@ function inquisition_inspection_loyalty(inspection_type) {
                     _inspect_results.finds.heresy += player_inspection_fleet.hurssy;
                 }
 
-                var unit;
+                var _unit;
                 if (player_inspection_fleet.hurssy > 0) {
                     hurr += player_inspection_fleet.hurssy;
                 }

@@ -209,10 +209,7 @@ function loose_ship_to_warp_event() {
 
     var unit;
     for (var company = 0; company <= obj_ini.companies; company++) {
-        for (var marine = 0; marine < array_length(obj_ini.role[company]); marine++) {
-            if (obj_ini.name[company][marine] == "") {
-                continue;
-            }
+        for (var marine = 0; marine < array_length(obj_ini.TTRPG[company]); marine++) {
             unit = fetch_unit([company, marine]);
             if (!is_struct(unit)) {
                 continue;

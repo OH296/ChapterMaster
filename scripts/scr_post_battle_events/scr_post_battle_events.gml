@@ -88,7 +88,7 @@ function hunt_fallen_battle_aftermath() {
             var tixt = "The Fallen on " + battle_object[current_battle].name;
             tixt += scr_roman(battle_world[current_battle]);
             scr_event_log("", $"Mission Succesful: {tixt} have been captured or purged.");
-            tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.role[100][14]}s posthaste, in order to account for their sins.  ";
+            tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
             var _tex_options = [
                 "Suffering is the beginning to penance.",
                 "Their screams shall be the harbringer of their contrition.",

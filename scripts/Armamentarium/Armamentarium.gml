@@ -736,7 +736,7 @@ function Armamentarium(_controller) constructor {
 
     /// @desc Updates the counts of tech-capable personnel.
     static _refresh_personnel_counts = function() {
-        var _role_name = obj_ini.role[100][16];
+        var _role_name = obj_ini.player_role_data[eROLE.TECHMARINE].role;
         count_techmarines = scr_role_count(_role_name, "");
         count_aspirants = scr_role_count($"{_role_name} Aspirant", "");
         count_total = count_techmarines + count_aspirants;
@@ -825,7 +825,7 @@ function Armamentarium(_controller) constructor {
 
     /// @desc Save CPU time during Draw.
     static _update_advisor_report = function() {
-        var _role_tech = obj_ini.role[100][16];
+        var _role_tech = obj_ini.player_role_data[eROLE.TECHMARINE].role;
         var _dispo_mech = controller.disposition[3];
         var _max_techs = round(_dispo_mech / 2) + 5;
         var _diff = _max_techs - count_total;
@@ -951,7 +951,7 @@ function Armamentarium(_controller) constructor {
         draw_text(352, 66, is_in_forge ? "Forge" : "Armamentarium");
 
         draw_set_font(fnt_aldrich_12);
-        var _sub = _is_adept ? $"Adept {controller.adept_name}" : $"Forge Master {obj_ini.name[0][1]}";
+        var _sub = _is_adept ? $"Adept {controller.adept_name}" : $"Forge Master {fetch_unit([0,1]).name()}";
         draw_text(352, 100, _sub);
     };
 
@@ -1155,7 +1155,7 @@ function Armamentarium(_controller) constructor {
 
         controller.specialist_point_handler.draw_forge_queue(359, 132);
 
-        var _role_name = obj_ini.role[100][16];
+        var _role_name = obj_ini.player_role_data[eROLE.TECHMARINE].role;
         var _master_craft = controller.master_craft_chance;
         var _forge_count = controller.player_forge_data.player_forges;
 

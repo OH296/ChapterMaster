@@ -112,7 +112,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             repeat (obj_temp_meeting.dudes) {
                 ii += 1;
                 if (mos == false) {
-                    if (obj_ini.role[obj_temp_meeting.co[ii]][obj_temp_meeting.ide[ii]] == "Master of Sanctity") {
+                    if (fetch_unit([obj_temp_meeting.co[ii], obj_temp_meeting.ide[ii]]).role() == "Master of Sanctity") {
                         mos = true;
                     }
                 }
@@ -168,7 +168,9 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
         // MoS cuts in
         if (diplo_keyphrase == "cs_meeting_m1") {
             diplomacy = -5.2;
-            diplo_text = $"[[{obj_ini.name[0][3]} hisses your name over a private vox channel.]]\n";
+            var _head = get_department_head(eCHAPTER_DEPARTMENTS.CHAP);
+            var _who = is_struct(_head) ? $"{_head.name_role()} hisses your name" : "Your name is hissed"
+            diplo_text = $"[[{_who} over a private vox channel.]]\n";
             diplo_text += "My lord!  What are we doing here, treating with this monster of the Traitor Legions? The very existence of the Archenemy is a threat to everything the Chapter stands for, and we endanger our immortal souls just being here. You know this! I demand to know your intentions! And I warn you, I will not hesitate to do what I must, for the good of the Chapter and the Imperium.";
 
             var _goto = "cs_meeting_m2";
@@ -180,7 +182,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             var born = false;
             for (var i = 0; i < array_length(obj_ini.TTRPG[0]); i++) {
                 var _unit = fetch_unit([0, i]);
-                if ((_unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) && (string_count("$", _unit.specials) > 0)) {
+                if ((_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) && (string_count("$", _unit.specials) > 0)) {
                     born = true;
                 }
             }
@@ -191,13 +193,15 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             }
         }
         if (diplo_keyphrase == "cs_meeting_m2") {
+            var _head = get_department_head(eCHAPTER_DEPARTMENTS.CHAP);
             event_log = $"The {global.chapter_name} Master of Sanctity takes a stand against you.";
             scr_event_log("purple", event_log); // scr_alert("purple","lol",string(tix),0,0);
-            diplo_text = "You have besmirched the honor of our chapter this day, and I will not forget it /my lord Chapter Master/.\n[[" + string(obj_ini.name[0][3]) + " strides forward and his shout erupts from his external vox speakers with a boom that shatters the silence in the room.]]\nWe will not stand idly by and bandy words with heretic scum! To me my brothers! Slay these traitors in the name of our Emperor!";
+            diplo_text = $"You have besmirched the honor of our chapter this day, and I will not forget it /my lord Chapter Master/.\n[[{head.name_role()} strides forward and his shout erupts from his external vox speakers with a boom that shatters the silence in the room.]]\nWe will not stand idly by and bandy words with heretic scum! To me my brothers! Slay these traitors in the name of our Emperor!";
             add_diplomacy_option({option_text: "[Continue]", goto: "cs_meeting9"});
         }
         if (diplo_keyphrase == "cs_meeting_m3") {
-            diplo_text = "[[" + string(obj_ini.name[0][3]) + " is silent for a moment, before giving you an imperceptible nod.]]\nI stand with you, Lord " + string(obj_ini.master_name) + ". Let us face this together.";
+            var _head = get_department_head(eCHAPTER_DEPARTMENTS.CHAP);
+            diplo_text = $"[[{_head.name_role()} is silent for a moment, before giving you an imperceptible nod.]]\nI stand with you, Lord " + string(obj_ini.master_name) + ". Let us face this together.";
             add_diplomacy_option({option_text: "[Continue]", goto: "cs_meeting20"});
             obj_controller.useful_info += "CRMOS|";
         }
@@ -346,12 +350,10 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             }
 
             var born = false;
-            for (var ii = 1; ii < 200; ii++) {
-                if (obj_ini.role[0][ii] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
-                    var _unit = fetch_unit([0, ii]);
-                    if (is_struct(_unit)) {
-                        _unit.corruption += floor(random_range(30, 50));
-                    }
+            for (var ii = 0; ii < array_length(obj_ini.TTRPG[0]); ii++) {
+                var _unit = fetch_unit([0,ii]);
+                if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+                    _unit.corruption += floor(random_range(30, 50));
                 }
             }
             obj_controller.chaos_rating += 1;

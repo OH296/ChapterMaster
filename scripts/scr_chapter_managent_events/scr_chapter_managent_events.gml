@@ -74,7 +74,7 @@ function tech_uprising_event_aftermath() {
             }
             if (purge_target != noone) {
                 for (var tal = 0; tal < array_length(purge_target); tal++) {
-                    kill_and_recover(purge_target[tal].company, purge_target[tal].marine_number);
+                    purge_target[tal].kill();
                 }
             }
         }
@@ -133,7 +133,7 @@ function setup_new_forge_master_popup(techs) {
     };
 
     for (var i = array_length(techs) - 1; i >= 0; i--) {
-        if (techs[i].role() != obj_ini.role[100][16]) {
+        if (techs[i].role() != obj_ini.player_role_data[eROLE.TECHMARINE].role) {
             array_delete(techs, i, 1);
         }
     }
@@ -272,8 +272,8 @@ function new_forge_master_chosen(pick) {
         }
         reset_popup_options();
         if (pick.company > 0) {
-            var _company_slot = find_company_open_slot(0);
-            scr_move_unit_info(pick.company, 0, pick.marine_number, _company_slot);
+            pick.move_to_company(0);
         }
+        scr_company_order(0);
     }
 }

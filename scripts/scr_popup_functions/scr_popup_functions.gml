@@ -303,7 +303,7 @@ function calculate_equipment_needs() {
         req_wep2_num = 0;
         req_mobi = "";
         req_mobi_num = 0;
-        req_gear = obj_ini.gear[100][17];
+        req_gear = obj_ini.player_role_data[eROLE.LIBRARIAN].gear;
         req_gear_num = units;
     } else if (rall == "Lexicanum") {
         req_armour = "";
@@ -314,38 +314,40 @@ function calculate_equipment_needs() {
         req_wep2_num = 0;
         req_mobi = "";
         req_mobi_num = 0;
-    } else if (rall == obj_ini.role[100][11]) {
+    } else if (rall == obj_ini.player_role_data[eROLE.ANCIENT].role) {
         req_armour = STR_ANY_POWER_ARMOUR;
         req_armour_num = units;
         req_wep2 = "Company Standard";
         req_wep2_num = units;
     } else {
         for (var i = 2; i < 20; i++) {
-            if (obj_ini.role[100][i] == rall) {
-                req_armour = obj_ini.armour[100][i];
+            var _role = obj_ini.player_role_data[i];
+            if (_role.role == rall) {
+                req_armour = _role.armour;
                 req_armour_num = units;
-                req_wep1 = obj_ini.wep1[100][i];
+                req_wep1 = _role.wep1;
                 req_wep1_num = units;
-                req_wep2 = obj_ini.wep2[100][i];
+                req_wep2 = _role.wep2;
                 req_wep2_num = units;
-                req_mobi = obj_ini.mobi[100][i];
+                req_mobi = _role.mobi;
                 req_mobi_num = units;
-                req_gear = obj_ini.gear[100][i];
+                req_gear = _role.gear;
                 req_gear_num = units;
                 break;
             }
         }
     }
 
-    if (rall == obj_ini.role[100][6]) {
+    var _dread_role = obj_ini.player_role_data[eROLE.DREADNOUGHT];
+    if (rall == _dread_role.role) {
         req_armour = "Dreadnought";
         req_armour_num = units;
-        req_wep1 = obj_ini.wep1[100][6];
+        req_wep1 = _dread_role.wep1;
         req_wep1_num = units;
-        req_wep2 = obj_ini.wep2[100][6];
+        req_wep2 = _dread_role.wep2;
         req_wep2_num = units;
     }
-    if (rall == $"Venerable {obj_ini.role[100][6]}") {
+    if (rall == $"Venerable {_dread_role.role}") {
         req_armour = "";
         req_armour_num = 0;
         req_wep1 = "";

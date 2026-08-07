@@ -41,20 +41,20 @@ function scr_destroy_planet(destruction_method) {
 
     // No survivors!
     for (var cah = 0; cah <= obj_ini.companies; cah++) {
-        for (var ed = 0; ed < array_length(obj_ini.role[cah]); ed++) {
+        for (var ed = 0; ed < array_length(obj_ini.TTRPG[cah]); ed++) {
             var unit = fetch_unit([cah, ed]);
             if (!is_struct(unit)) {
                 continue;
             }
             if ((unit.location_string == you.name) && (unit.planet_location == baid)) {
-                if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     obj_controller.alarm[7] = 15;
                     if (global.defeat <= 1) {
                         global.defeat = 1;
                     }
                 }
 
-                if (obj_ini.race[cah][ed] == 1) {
+                if (unit.base_group == "astartes") {
                     var comm = unit.IsSpecialist(, true);
 
                     if (comm == false) {
@@ -65,7 +65,7 @@ function scr_destroy_planet(destruction_method) {
                     }
                 }
 
-                scr_kill_unit(cah, ed);
+                unit.kill(false, false);
             }
             if (ed < 200) {
                 if ((obj_ini.veh_loc[cah][ed] == you.name) && (obj_ini.veh_wid[cah][ed] == baid)) {

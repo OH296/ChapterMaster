@@ -134,7 +134,7 @@ function FeatureSelected(_feature, _system, _planet) constructor {
             case eP_FEATURES.STC_FRAGMENT:
                 generic = true;
                 title = "STC Fragment";
-                body = $"Unload a {obj_ini.role[100][16]} and whatever entourage you deem necessary to recover the STC Fragment";
+                body = $"Unload a {obj_ini.player_role_data[eROLE.TECHMARINE].role} and whatever entourage you deem necessary to recover the STC Fragment";
                 break;
             case eP_FEATURES.GENE_STEALER_CULT:
                 generic = true;

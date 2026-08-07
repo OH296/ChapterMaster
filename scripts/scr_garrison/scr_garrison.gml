@@ -55,9 +55,6 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                 if (!is_struct(_unit)) {
                     continue;
                 }
-                if (_unit.name() == "") {
-                    continue;
-                }
                 array_push(members, _unit);
                 if (_unit.hp() > 0) {
                     viable_garrison++;
@@ -117,7 +114,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                 }
                 if (_unit.hp() < 0) {
                     if (_unit.calculate_death()) {
-                        kill_and_recover(_unit.company, _unit.marine_number);
+                        _unit.kill();
                         members_lost++;
                         array_delete(members, i, 1);
                     }
@@ -126,7 +123,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                 _unit.add_or_sub_health(-50);
                 if (_unit.hp() < 0) {
                     if (_unit.calculate_death()) {
-                        kill_and_recover(_unit.company, _unit.marine_number);
+                        _unit.kill();
                         array_delete(members, i, 1);
                         members_lost++;
                     }
@@ -138,33 +135,31 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
 
     static find_leader = function() {
         //find leader of garrison by finding most senior squad leader
-        garrison_leader = false;
+        garrison_leader = undefined;
         var hierarchy = role_hierarchy();
         var leader_hier_pos = array_length(hierarchy);
-        var _unit;
         for (var _squad = 0; _squad < array_length(garrison_squads); _squad++) {
             var _leader = garrison_squads[_squad].determine_leader();
-            _unit = fetch_unit(_leader);
-            if (!is_struct(_unit)) {
+            if (!is_struct(_leader)) {
                 continue;
             }
-            if (garrison_leader == false) {
-                garrison_leader = _unit;
+            if (!is_Struct(garrison_leader)) {
+                garrison_leader = _leader;
                 for (var r = 0; r < array_length(hierarchy); r++) {
-                    if (hierarchy[r] == _unit.role()) {
+                    if (hierarchy[r] == _leader.role()) {
                         leader_hier_pos = r;
                         break;
                     }
                 }
-            } else if (hierarchy[leader_hier_pos] == _unit.role()) {
-                if (garrison_leader.experience < _unit.experience) {
-                    garrison_leader = _unit;
+            } else if (hierarchy[leader_hier_pos] == _leader.role()) {
+                if (garrison_leader.experience < _leader.experience) {
+                    garrison_leader = _leader;
                 }
             } else {
                 for (var r = 0; r < leader_hier_pos; r++) {
-                    if (hierarchy[r] == _unit.role()) {
+                    if (hierarchy[r] == _leader.role()) {
                         leader_hier_pos = r;
-                        garrison_leader = _unit;
+                        garrison_leader = _leader;
                         break;
                     }
                 }
@@ -178,7 +173,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
         for (var s = 0; s < array_length(garrison_squads); s++) {
             _squad = garrison_squads[s];
             for (m = 0; m < array_length(_squad.members); m++) {
-                _unit = fetch_unit(_squad.members[m]);
+                _unit = _squad.members[m];
             }
         }
     };
@@ -293,7 +288,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                     for (var s = 0; s < array_length(garrison_squads); s++) {
                         //loop squads in the garrison
                         _squad = garrison_squads[s];
-                        _leader = fetch_unit(_squad.squad_leader);
+                        _leader = _squad.squad_leader;
                         if (!is_struct(_leader)) {
                             continue;
                         }

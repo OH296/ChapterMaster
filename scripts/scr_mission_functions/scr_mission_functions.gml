@@ -218,21 +218,17 @@ function problem_end_turn_checks() {
                 return;
             }
             var alert_text = "";
-            var _unit;
             if (irandom(100) > 33) {
                 // Give all marines +3d6 corruption and reduce loyalty by 20*/
-                var me = 0;
                 for (var co = 0; co <= obj_ini.companies; co++) {
-                    me = 0;
-                    for (me = 0; me < array_length(obj_ini.role[co]); me++) {
-                        if ((obj_ini.race[co][me] == 1) && (obj_ini.role[co][me] != "")) {
-                            _unit = fetch_unit([co, me]);
-                            if (!is_struct(_unit)) {
-                                continue;
-                            }
-                            _unit.edit_corruption(irandom_range(3, 6));
-                            _unit.alter_loyalty(-10);
+                    for (var me = 0; me < company_length(co); me++) {
+                        var _unit = fetch_unit([co, me]);
+                        if (_unit.base_group != "astartes") {
+                            continue
                         }
+                        _unit.edit_corruption(irandom_range(3, 6));
+                        _unit.alter_loyalty(-10);
+
                     }
                 }
             }
@@ -387,11 +383,11 @@ function init_beast_hunt_mission(planet, star, mission_slot) {
 }
 
 function role_compare(unit, role) {
-    return unit.role() == obj_ini.role[100][role];
+    return unit.role() == obj_ini.player_role_data[role].role;
 }
 
 function init_protect_raider_mission(squad) {
-    var _squad_units = squad.get_squad_structs();
+    var _squad_units = squad.members;
     var _squad_wisdom = stat_average(_squad_units, "wisdom");
     var _squad_dex = stat_average(_squad_units, "dexterity");
     var _tester = global.character_tester;
@@ -402,7 +398,7 @@ function init_protect_raider_mission(squad) {
         _mod += 10;
     }
 
-    var _leader = fetch_unit(squad.determine_leader());
+    var _leader = squad.determine_leader();
     if (!is_struct(_leader)) {
         return;
     }
@@ -470,7 +466,7 @@ function protect_raiders_suppress_information() {
     title = "Captains Disgruntled";
     options1 = "continue";
     pathway = "";
-    var _caps = scr_role_count(obj_ini.roles[100][eROLE.CAPTAIN]);
+    var _caps = scr_role_count(obj_ini.player_role_data[eROLE.CAPTAIN].role);
     var _worst = -1;
     var _worst_hit = -1;
     for (var i = 0; i < array_length(_caps); i++) {
@@ -729,7 +725,7 @@ function complete_beast_hunt_mission(targ_planet, problem_index) {
                 if (!_tough_check[0]) {
                     if (_tough_check[1] < -10) {
                         _unit_report_string += $"{_unit.name_role()} Was mauled to death\n";
-                        scr_kill_unit(_unit.company, _unit.marine_number);
+                        _unit.kill(true, false);
                         _deaths++;
                     } else if (_tough_check[1] >= -10) {
                         if (irandom(100) < _unit.luck) {

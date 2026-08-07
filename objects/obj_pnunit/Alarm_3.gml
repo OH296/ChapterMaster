@@ -37,7 +37,7 @@ try {
                     _r_roll -= 350;
                 }
 
-                if ((marine_dead[raar] == 0) && (marine_type[raar] != "Death Company") && (marine_type[raar] != obj_ini.role[100][eROLE.CHAPTERMASTER]) && (_r_roll <= 4)) {
+                if ((marine_dead[raar] == 0) && (marine_type[raar] != "Death Company") && (marine_type[raar] != obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) && (_r_roll <= 4)) {
                     r_lost += 1;
                     marine_type[raar] = "Death Company";
                     obj_ncombat.red_thirst += 1;

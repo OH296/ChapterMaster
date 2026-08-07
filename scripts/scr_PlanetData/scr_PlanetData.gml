@@ -901,7 +901,7 @@ function PlanetData(_planet, _system) constructor {
                     var _slaughter = new_player_ship("Gloriana", system.name, "Slaughtersong");
                     var flit = create_player_fleet(system.x, system.y, [_slaughter]);
 
-                    scr_popup($"Ancient Ship Restored", $"The ancient ship within the ruins of {locy} has been fully repaired.  It is determined to be a Gloriana Class vessel and is bristling with golden age weaponry and armour.  Your {string(obj_ini.role[100][16])}s are excited; the Slaughtersong is ready for it's maiden voyage, at your command.", "", "");
+                    scr_popup($"Ancient Ship Restored", $"The ancient ship within the ruins of {locy} has been fully repaired.  It is determined to be a Gloriana Class vessel and is bristling with golden age weaponry and armour.  Your {string(obj_ini.player_role_data[eROLE.TECHMARINE].role)}s are excited; the Slaughtersong is ready for it's maiden voyage, at your command.", "", "");
                 }
             }
         } catch (_exception) {

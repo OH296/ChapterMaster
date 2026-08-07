@@ -97,14 +97,11 @@ function scr_update_unit_armour(new_armour, from_armoury = true, to_armoury = tr
     }
 
     var portion = hp_portion();
-    obj_ini.armour[company][marine_number] = is_artifact ? artifact_id : new_armour;
+    armour1 = is_artifact ? artifact_id : new_armour;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         armour_quality = "artifact";
     } else {
         armour_quality = quality;
@@ -121,7 +118,7 @@ function scr_update_unit_armour(new_armour, from_armoury = true, to_armoury = tr
         if (new_arm_data.has_tag("dreadnought")) {
             is_boarder = false;
             remove_from_squad();
-            update_role(obj_ini.role[100][eROLE.DREADNOUGHT]);
+            update_role(obj_ini.player_role_data[eROLE.DREADNOUGHT].role);
             update_gear("");
             update_mobility_item("");
         }
@@ -204,14 +201,11 @@ function scr_update_unit_weapon_one(new_weapon, from_armoury = true, to_armoury 
         }
     }
 
-    obj_ini.wep1[company][marine_number] = is_artifact ? artifact_id : new_weapon;
+    wep1 = is_artifact ? artifact_id : new_weapon;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         weapon_one_quality = "artifact";
     } else {
         weapon_one_quality = quality;
@@ -262,14 +256,11 @@ function scr_update_unit_weapon_two(new_weapon, from_armoury = true, to_armoury 
         }
     }
 
-    obj_ini.wep2[company][marine_number] = is_artifact ? artifact_id : new_weapon;
+    wep2 = is_artifact ? artifact_id : new_weapon;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         weapon_two_quality = "artifact";
     } else {
         weapon_two_quality = quality;
@@ -328,14 +319,11 @@ function scr_update_unit_gear(new_gear, from_armoury = true, to_armoury = true, 
     }
 
     var portion = hp_portion();
-    obj_ini.gear[company][marine_number] = is_artifact ? artifact_id : new_gear;
+    gear1 = is_artifact ? artifact_id : new_gear;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         gear_quality = "artifact";
     } else {
         gear_quality = quality;
@@ -427,14 +415,11 @@ function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, t
     }
 
     var portion = hp_portion();
-    obj_ini.mobi[company][marine_number] = is_artifact ? artifact_id : new_mobility_item;
+    mobi1 = is_artifact ? artifact_id : new_mobility_item;
 
     if (is_artifact) {
         var arti_struct = fetch_artifact(artifact_id);
-        arti_struct.set_bearer([
-            company,
-            marine_number,
-        ]);
+        arti_struct.set_bearer(self)
         mobility_item_quality = "artifact";
     } else {
         mobility_item_quality = quality;
@@ -448,29 +433,47 @@ function scr_update_unit_mobility_item(new_mobility_item, from_armoury = true, t
 
 /// @self Struct.TTRPG_stats
 function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury = true, quality = "any") {
+    var _outcome_desc = "";
+    static no_equip = "Not enough equipment:";
+    var _missing_items = "";
+    var _success = true;
     if (is_array(update_equipment)) {
         update_equipment = convert_equipment_array_into_struct(update_equipment);
     }
     var equip_areas = struct_get_names(update_equipment);
     for (var i = 0; i < array_length(equip_areas); i++) {
+        var _item = update_equipment[$ equip_areas[i]];
+		var _outcome = "";
         switch (equip_areas[i]) {
             case "wep1":
-                update_weapon_one(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                _outcome = update_weapon_one(_item, from_armoury, to_armoury, quality);
                 break;
             case "wep2":
-                update_weapon_two(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                _outcome = update_weapon_two(_item, from_armoury, to_armoury, quality);
                 break;
             case "mobi":
-                update_mobility_item(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                _outcome = update_mobility_item(_item, from_armoury, to_armoury, quality);
                 break;
             case "armour":
-                update_armour(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                _outcome = update_armour(_item, from_armoury, to_armoury, quality);
                 break;
             case "gear":
-                update_gear(update_equipment[$ equip_areas[i]], from_armoury, to_armoury, quality);
+                _outcome = update_gear(_item, from_armoury, to_armoury, quality);
                 break;
         }
+        if (_outcome == "no_items"){
+            _missing_items +=  $"{_missing_items == "" ? "" : ","} {_item}";
+            _success = false;
+        }
     }
+
+    if (_missing_items != ""){
+        _outcome_desc += no_equip + _missing_items;
+    }
+    var _final_outcome = {success : _success,description :_outcome_desc};
+
+    return _final_outcome;
+
 }
 
 /// @self Struct.TTRPG_stats
@@ -573,21 +576,25 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         }
     }
 
-    items = [
-        equipment.wep1,
-        equipment.wep2,
-        equipment.armour,
-        equipment.gear,
-        equipment.mobi,
-    ];
+    static update_arrays = function(){
+        items = [
+            equipment.wep1,
+            equipment.wep2,
+            equipment.armour,
+            equipment.gear,
+            equipment.mobi,
+        ];
 
-    item_names = [
-        equipment.wep1.name,
-        equipment.wep2.name,
-        equipment.armour.name,
-        equipment.gear.name,
-        equipment.mobi.name,
-    ];
+        item_names = [
+            equipment.wep1.name,
+            equipment.wep2.name,
+            equipment.armour.name,
+            equipment.gear.name,
+            equipment.mobi.name,
+        ];        
+    }
+
+    update_arrays();
 
     present_items = [];
 
@@ -602,6 +609,16 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         "mobi": eEQUIPMENT_SLOT.MOBILITY,
         "gear": eEQUIPMENT_SLOT.GEAR,
     };
+
+    static basic_map = function(){
+        return {
+            "wep1": item_names[eEQUIPMENT_SLOT.WEAPON_ONE],
+            "wep2":item_names[eEQUIPMENT_SLOT.WEAPON_TWO],
+            "armour": item_names[eEQUIPMENT_SLOT.ARMOUR],
+            "mobi": item_names[eEQUIPMENT_SLOT.MOBILITY],
+            "gear": item_names[eEQUIPMENT_SLOT.GEAR],            
+        }
+    }
 
     static map_string_to_enum = function(slot) {
         slot = slot_map[$ slot];
@@ -887,4 +904,98 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
             equipment_found_and_valid,
         };
     };
+
+    static start_allowable_weapons = function(slot){
+        var _allow = true;
+        var _item = equipment[$ slot].name;
+        var _normal_equipment = [
+            "Combat Knife",
+            "Chainsword",
+            "Chainaxe",
+            "Boarding Shield",
+            "Bolt Pistol",
+            "Bolter",
+            "Flamer",
+            "Sniper Rifle",
+        ];
+        _allow = array_contains(_normal_equipment, _item);
+
+        if (veteran_level > 0 && !_allow) {
+            var _special_equipment = [
+                "Storm Bolter",
+                "Meltagun",
+                "Power Fist",
+                "Power Sword",
+                "Power Axe",
+            ];
+            _allow = array_contains(_special_equipment, _item);
+        }
+
+        if (!_allow){
+            final_gear[$ slot] = default_options[$slot];
+        }
+        final_gear[$ slot] = _allow ? _item : default_options[$slot];
+    }
+
+    static start_allowable_mobi = function(){
+        var _allow = false;
+        var _item = equipment.mobi.name;
+        if (_item == "Jump Pack" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
+            if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
+                _allow = true;
+            }
+        } else if (_item == "Bike" && (veteran_level > 0 || role_id == eROLE.ASSAULT)) {
+            if (!array_contains([eROLE.TERMINATOR, eROLE.DREADNOUGHT], role_id)) {
+                _allow = true;
+            }
+        } else if (_item == "Heavy Weapons Pack" && role_id == eROLE.DEVASTATOR) {
+            _allow = true;
+        }
+
+        final_gear.mobi = _allow ? _item : default_options.mobi; 
+    }
+
+    static start_allowable_gear = function(){
+        var _allow = false;
+        var _item = equipment.gear.name;
+        if (veteran_level == 5) {
+            if (role_id == eROLE.CHAPLAIN && _item == "Rosarius") {
+                _allow = true;
+            } else if (role_id == eROLE.TECHMARINE) {
+                if (array_contains(["Servo-arm", "Servo-harness"], _item)) {
+                    _allow = true;
+                }
+            } else if (role_id == eROLE.LIBRARIAN && _item == "Psychic Hood") {
+                _allow = true;
+            } else if (role_id == eROLE.APOTHECARY && _item == "Narthecium") {
+                _allow = true;
+            }
+        }
+
+        final_gear.gear = _allow ? _item : default_options.gear;  
+    }
+
+    static start_allowance = function(role_id){
+        final_gear = {};
+        veteran_level = 0;
+        default_options = setup_default_gears()[role_id];
+        self.role_id = role_id;
+        if (role_id == eROLE.DREADNOUGHT) {
+            return {};
+        }
+        if (array_contains([eROLE.SERGEANT, eROLE.VETERAN, eROLE.TERMINATOR], role_id)) {
+            veteran_level = 1;
+        } else if (array_contains([eROLE.VETERANSERGEANT, eROLE.ANCIENT, eROLE.CAPTAIN, eROLE.HONOURGUARD], role_id)) {
+            veteran_level = 2;
+        } else if (array_contains([eROLE.CHAPLAIN, eROLE.APOTHECARY, eROLE.LIBRARIAN, eROLE.TECHMARINE], role_id)) {
+            veteran_level = 5;
+        }
+
+        start_allowable_weapons("wep1");
+        start_allowable_weapons("wep2");
+        start_allowable_mobi();
+        start_allowable_gear();
+
+        return final_gear;
+    }
 }

@@ -32,108 +32,36 @@ function setup_promotion_popup() {
                 label: "Promote",
             });
             promote_button.bind_method = function() {
-                var mahreens = 0;
-
-                if (target_comp > 10) {
-                    target_comp = 0;
-                }
-
-                for (var i = 0; i < 498; i++) {
-                    if (obj_ini.name[target_comp][i] == "" && obj_ini.name[target_comp][i + 1] == "") {
-                        mahreens = i;
-                        break;
-                    }
-                }
+                
+                units_to_move = new UnitGroup([]);
                 // Gets the number of marines in the target company
-                var unit, squad_mover, moveable;
                 var role_squad_equivilances = {}; //this is the only way to set variables as keys in gml
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][8], "tactical_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][9], "devastator_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][10], "assault_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][12], "scout_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][3], "veteran_squad");
-                variable_struct_set(role_squad_equivilances, obj_ini.role[100][4], "terminator_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.TACTICAL].role, "tactical_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.DEVASTATOR].role, "devastator_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.ASSAULT].role, "assault_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.SCOUT].role, "scout_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.VETERAN].role, "veteran_squad");
+                variable_struct_set(role_squad_equivilances, obj_ini.player_role_data[eROLE.TERMINATOR].role, "terminator_squad");
 
-                for (var i = 0; i < array_length(obj_controller.display_unit) && mahreens < 500; i++) {
+
+                for (var i = 0; i < array_length(obj_controller.display_unit); i++) {
                     if ((obj_controller.man[i] == "man") && (obj_controller.man_sel[i] == 1) && (obj_controller.ma_exp[i] >= min_exp)) {
-                        moveable = true;
-                        unit = obj_controller.display_unit[i];
-                        if (unit.squad != "none") {
-                            // this evaluates if you are trying promote a whole squad
-                            var move_squad = unit.squad;
-                            squad = fetch_squad(move_squad);
-                            squad.update_fulfilment();
-                            move_members = squad.members;
-                            if (array_length(move_members) == 1) {
-                                unit.squad = "none";
-                                moveable = false;
-                            }
-                            for (var mem = 0; mem < array_length(move_members); mem++) {
-                                //check all members have been selected and are in the same company
-                                if (i + mem < array_length(obj_controller.display_unit)) {
-                                    if (!is_struct(obj_controller.display_unit[i + mem])) {
-                                        continue;
-                                    }
-                                    if (obj_controller.man_sel[i + mem] != 1 || obj_controller.display_unit[i + mem].squad != move_squad) {
-                                        moveable = false;
-                                        break;
-                                    }
-                                } else {
-                                    moveable = false;
-                                    break;
-                                }
-                            }
-                            //move squad
-                            if (moveable) {
-                                var mem;
-                                for (mem = 0; mem < array_length(move_members); mem++) {
-                                    var mem_unit = fetch_unit(move_members[mem]);
-                                    if (!is_struct(mem_unit)) {
-                                        continue;
-                                    }
-                                    if (mem_unit.company != target_comp) {
-                                        scr_move_unit_info(mem_unit.company, target_comp, mem_unit.marine_number, mahreens, false);
-                                        squad.members[mem][0] = target_comp;
-                                        squad.members[mem][1] = mahreens;
-                                    }
-                                    mem_unit = fetch_unit([target_comp, mahreens]);
-                                    if (!is_struct(mem_unit)) {
-                                        continue;
-                                    }
-                                    mem_unit.squad = move_squad;
-                                    if (!mem_unit.IsSpecialist(SPECIALISTS_SQUAD_LEADERS)) {
-                                        mem_unit.update_role(role_name[target_role]);
-                                        mem_unit.alter_equipment({"wep1": req_wep1, "wep2": req_wep2, "mobi": req_mobi, "armour": req_armour, "gear": req_gear});
-                                    }
-                                    mahreens++;
-                                }
-                                i += mem - 2;
-                                if (squad.base_company != target_comp) {
-                                    squad.base_company = target_comp;
-                                }
-                                if (struct_exists(role_squad_equivilances, role_name[target_role])) {
-                                    squad.change_type(role_squad_equivilances[$ role_name[target_role]]);
-                                }
-                            }
-                        } else {
-                            moveable = false;
-                        }
-                        //move individual
-                        if (!moveable) {
-                            if (unit.company != target_comp) {
-                                scr_move_unit_info(unit.company, target_comp, unit.marine_number, mahreens);
-                                unit = fetch_unit([target_comp, mahreens]);
-                                if (!is_struct(unit)) {
-                                    continue;
-                                }
-                            }
-                            unit.update_role(role_name[target_role]);
-                            unit.alter_equipment({"wep1": req_wep1, "wep2": req_wep2, "mobi": req_mobi, "armour": req_armour, "gear": req_gear});
-                            mahreens++;
-                        }
-                    } // End that [i]
-                } // End repeat
+                        var _unit = obj_controller.display_unit[i];
+                        units_to_move.push(_unit);
+                    } 
+                } 
 
+                units_to_move.move_to_company(target_comp);
+
+                var _target_role = role_name[target_role]
+
+                var _squads = units_to_move.count_squads("all", true);
+                for (var i = 0; i < units_to_move.number(); i++){
+                    var _unit = units_to_move.units[i];
+                        _unit.update_role(_target_role);
+                        _unit.alter_equipment({"wep1": req_wep1, "wep2": req_wep2, "mobi": req_mobi, "armour": req_armour, "gear": req_gear});
+                   }       
+                            
                 with (obj_controller) {
                     scr_management(1);
                 }
@@ -340,6 +268,6 @@ function draw_popup_promotion() {
         instance_destroy();
     }
 
-    promote_button.draw(all_good);
+    promote_button.draw(all_good && target_role > 0);
     pop_draw_return_values();
 }

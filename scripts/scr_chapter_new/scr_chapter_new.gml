@@ -210,36 +210,8 @@ function scr_chapter_new(chapter_identifier) {
 
     points = 100;
     maxpoints = 100;
-
-    load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
-        for (var i = 100; i <= 102; i++) {
-            role[i][_role_id] = _role_name;
-            wep1[i][_role_id] = _wep1;
-            wep2[i][_role_id] = _wep2;
-            armour[i][_role_id] = _armour;
-            mobi[i][_role_id] = _mobi;
-            gear[i][_role_id] = _gear;
-            race[i][_role_id] = 1;
-        }
-    };
-
-    load_default_gear(eROLE.HONOURGUARD, "Honour Guard", "Power Sword", "Bolter", "Artificer Armour", "", "");
-    load_default_gear(eROLE.VETERAN, "Veteran", "Combiflamer", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
-    load_default_gear(eROLE.TERMINATOR, "Terminator", "Power Fist", "Storm Bolter", "Terminator Armour", "", "");
-    load_default_gear(eROLE.CAPTAIN, "Captain", "Power Sword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Iron Halo");
-    load_default_gear(eROLE.DREADNOUGHT, "Dreadnought", "Dreadnought Lightning Claw", "Twin Linked Lascannon", "Dreadnought", "", "");
-    load_default_gear(eROLE.CHAMPION, "Champion", "Power Sword", STR_ANY_POWER_ARMOUR, STR_ANY_POWER_ARMOUR, "", "Combat Shield");
-    load_default_gear(eROLE.TACTICAL, "Tactical", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
-    load_default_gear(eROLE.DEVASTATOR, "Devastator", "", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
-    load_default_gear(eROLE.ASSAULT, "Assault", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "Jump Pack", "");
-    load_default_gear(eROLE.ANCIENT, "Ancient", "Company Standard", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
-    load_default_gear(eROLE.SCOUT, "Scout", "Bolter", "Combat Knife", "Scout Armour", "", "");
-    load_default_gear(eROLE.CHAPLAIN, "Chaplain", "Crozius Arcanum", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Rosarius");
-    load_default_gear(eROLE.APOTHECARY, "Apothecary", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Narthecium");
-    load_default_gear(eROLE.TECHMARINE, "Techmarine", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
-    load_default_gear(eROLE.LIBRARIAN, "Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
-    load_default_gear(eROLE.SERGEANT, "Sergeant", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
-    load_default_gear(eROLE.VETERANSERGEANT, "Veteran Sergeant", "Chainsword", "Plasma Pistol", STR_ANY_POWER_ARMOUR, "", "");
+    setup_default_gears();
+    player_role_data = variable_clone(default_role_data);
 
     for (var c = 0; c < array_length(all_chapters); c++) {
         if (chapter_identifier == all_chapters[c].name && all_chapters[c].json == true) {

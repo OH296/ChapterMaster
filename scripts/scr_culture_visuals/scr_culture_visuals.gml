@@ -2206,20 +2206,22 @@ function DummyMarine() constructor {
         return "jeff";
     };
 
+    static role_index = function(){
+        return obj_creation.livery_picker.role_set > 0 ? obj_creation.livery_picker.role_set : eROLE.TACTICAL;
+    }
+
     static role = function() {
-        with (obj_creation) {
-            if (obj_creation.livery_selection_options.current_selection == 2) {
-                return role[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
-            } else {
-                return role[100][eROLE.TACTICAL];
-            }
+
+        if (obj_creation.livery_selection_options.current_selection == 2) {
+            return obj_creation.player_role_data[role_index()].role;
+        } else {
+            return obj_creation.player_role_data[eROLE.TACTICAL].role;
         }
+
     };
 
     static weapon_one = function() {
-        with (obj_creation) {
-            return wep1[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
-        }
+        return obj_creation.player_role_data[role_index()].wep1;
     };
 
     static race = function() {
@@ -2227,9 +2229,7 @@ function DummyMarine() constructor {
     };
 
     static weapon_two = function() {
-        with (obj_creation) {
-            return wep2[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
-        }
+        return obj_creation.player_role_data[role_index()].wep2;
     };
 
     last_armour = "MK7 Aquila";
@@ -2238,24 +2238,24 @@ function DummyMarine() constructor {
         var armours = global.list_basic_power_armour;
         var _last_armour = last_armour;
         var _armour = "";
-        with (obj_creation) {
-            if (!livery_picker.freeze_armour) {
-                _armour = armour[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
-                if (array_contains(armours, _armour) || _armour == STR_ANY_POWER_ARMOUR) {
-                    _armour = array_random_element(armours);
-                } else if (array_contains(global.list_terminator_armour, _armour) || _armour == STR_ANY_POWER_ARMOUR) {
-                    _armour = array_random_element(global.list_terminator_armour);
-                }
-                if (_armour == "Power Armour") {
-                    _armour = "MK7 Aquila";
-                }
-            } else {
-                _armour = _last_armour;
+        var _picker = obj_creation.livery_picker;
+        var _roles = obj_creation.player_role_data
+        if (!_picker.freeze_armour) {
+            _armour = _roles[role_index()].armour;
+            if (array_contains(armours, _armour) || _armour == STR_ANY_POWER_ARMOUR) {
+                _armour = array_random_element(armours);
+            } else if (array_contains(global.list_terminator_armour, _armour) || _armour == STR_ANY_POWER_ARMOUR) {
+                _armour = array_random_element(global.list_terminator_armour);
             }
-            if (obj_creation.livery_selection_options.current_selection == 2) {
-                if (!array_contains(armours, _armour)) {
-                    _armour = "MK7 Aquila";
-                }
+            if (_armour == "Power Armour") {
+                _armour = "MK7 Aquila";
+            }
+        } else {
+            _armour = _last_armour;
+        }
+        if (obj_creation.livery_selection_options.current_selection == 2) {
+            if (!array_contains(armours, _armour)) {
+                _armour = "MK7 Aquila";
             }
         }
         last_armour = _armour;
@@ -2263,19 +2263,15 @@ function DummyMarine() constructor {
     };
 
     static gear = function() {
-        with (obj_creation) {
-            return gear[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
-        }
+        return obj_creation.player_role_data[role_index()].gear;
     };
 
     static mobility_item = function() {
-        with (obj_creation) {
-            return mobi[100][livery_picker.role_set > 0 ? livery_picker.role_set : eROLE.TACTICAL];
-        }
+        return obj_creation.player_role_data[role_index()].mobi;
     };
 
     static IsSpecialist = function(search_type = SPECIALISTS_STANDARD, include_trainee = false, include_heads = true) {
-        return is_specialist(role(), search_type, include_trainee, include_heads);
+        return is_specialist(role_index(), search_type, include_trainee, include_heads);
     };
 
     static has_trait = function(_wanted_trait, _any = true) {

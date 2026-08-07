@@ -334,7 +334,7 @@ function scr_secret_lair_view() {
 
                 if (lair_struct.throne == 1) {
                     lair_window_description_text += "  The center chamber is dominated by ";
-                    if (obj_controller.temp[104] == string(obj_temp_build.target.name) + "." + string(obj_controller.selecting_planet)) {
+                    if (obj_controller.temp[104]) {
                         lair_window_description_text += "a massive throne, which you are currently seated upon.  ";
                     } else {
                         lair_window_description_text += "a massive throne, though it is currently vacant.  ";

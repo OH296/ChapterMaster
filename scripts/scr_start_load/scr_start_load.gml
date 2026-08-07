@@ -27,8 +27,8 @@ function scr_start_load(fleet, load_from_star, load_options) {
     var comp_has_units = [];
     for (var _comp = 0; _comp < 10; _comp++) {
         comp_has_units[_comp] = false;
-        for (var _unit = 0; _unit < 20; _unit++) {
-            if (obj_ini.name[_comp][_unit] != "") {
+        for (var _unit = 0; _unit < company_length(_comp); _unit++) {
+            if (is_struct(fetch_unit([_comp, _unit]))) {
                 comp_has_units[_comp] = true;
                 break;
             }
@@ -93,10 +93,10 @@ function scr_start_load(fleet, load_from_star, load_options) {
         var company_vehicle = []; //array of companies vehicles
         var ship_fit = true;
 
-        for (var _unit = 0; _unit < (array_length(obj_ini.role[_comp]) - 1); _unit++) {
+        for (var _unit = 0; _unit < company_length(_comp); _unit++) {
             var _marine = fetch_unit([_comp, _unit]);
             // check if marine exists
-            if (is_struct(_marine) && _marine.name() != "") {
+            if (is_struct(_marine)) {
                 //calculate marine space
                 var marine_size = _marine.get_unit_size();
                 _company_size += marine_size;
@@ -110,11 +110,7 @@ function scr_start_load(fleet, load_from_star, load_options) {
                 var _squad = company_squad_dist[squad];
                 var _members = _squad.members;
                 for (var squad_member = 0; squad_member < array_length(_members); squad_member++) {
-                    squaddy = _members[squad_member];
-                    var _marine = fetch_unit(squaddy);
-                    if (!is_struct(_marine)) {
-                        continue;
-                    }
+                    var _marine = _members[squad_member];
                     var marine_size = _marine.get_unit_size();
                     _company_size += marine_size;
                     array_push(company_loader, _marine);

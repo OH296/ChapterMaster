@@ -16,6 +16,8 @@ commands = 0;
 
 heh1 = 0;
 heh2 = 0;
+player_role_data = [];
+default_role_data = [];
 
 companies = 10;
 progenitor = ePROGENITOR.NONE;
@@ -104,36 +106,9 @@ veh_upgrade = array_create_2d(_max_companies, _max_vehicles, "");
 veh_acc = array_create_2d(_max_companies, _max_vehicles, "");
 
 // Unit Init
-defaults_slot = 100;
-
-/// @type {Array<Array<Real>>}
-race = array_create(11, []);
-/// @type {Array<Array<String>>}
-name = array_create(11, []);
-/// @type {Array<Array<String>>}
-role = array_create(11, []);
-/// @type {Array<Array<String>>}
-wep1 = array_create(11, []);
-/// @type {Array<Array<String>>}
-wep2 = array_create(11, []);
-/// @type {Array<Array<String>>}
-armour = array_create(11, []);
-/// @type {Array<Array<String>>}
-gear = array_create(11, []);
-/// @type {Array<Array<String>>}
-mobi = array_create(11, []);
 /// @type {Array<Array<Struct.TTRPG_stats>>}
 TTRPG = array_create(11, []);
 
-load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
-    role[defaults_slot][_role_id] = _role_name;
-    wep1[defaults_slot][_role_id] = _wep1;
-    wep2[defaults_slot][_role_id] = _wep2;
-    armour[defaults_slot][_role_id] = _armour;
-    mobi[defaults_slot][_role_id] = _mobi;
-    gear[defaults_slot][_role_id] = _gear;
-    race[defaults_slot][_role_id] = 1;
-};
 
 company_spawn_buffs = [];
 role_spawn_buffs = {};
@@ -164,10 +139,8 @@ serialize = function() {
     var _marines = array_create(0);
     for (var _coy = 0; _coy <= obj_ini.companies; _coy++) {
         for (var _mar = 0; _mar < array_length(obj_ini.TTRPG[_coy]); _mar++) {
-            if (name[_coy][_mar] != "") {
-                var _marine_json = jsonify_marine_struct(_coy, _mar, false);
-                array_push(_marines, _marine_json);
-            } 
+            var _marine_json = jsonify_marine_struct(_coy, _mar, false);
+            array_push(_marines, _marine_json);
         }
     }
 
@@ -181,22 +154,37 @@ serialize = function() {
     
     }
 
+    var _squad_copies = variable_clone(squads);
+
+    var _squad_keys = struct_get_names(_squad_copies);
+    for (var i = 0; i < array_length(_squad_keys); i++)
+    {
+        var _squad = _squad_copies[$ _squad_keys[i]];
+
+        for (var s = 0; s < array_length(_squad.members); s++){
+            if (is_struct(_squad.members[s])){
+                _squad.members[i] = _squad.members[s].uid;
+            }
+        }
+    }
+
     var save_data = {
         obj: object_get_name(object_index),
         x,
         y,
         custom_advisors,
-        full_liveries: full_liveries,
-        company_liveries: company_liveries,
-        complex_livery_data: complex_livery_data,
-        squad_types: squad_types,
+        full_liveries,
+        company_liveries,
+        complex_livery_data,
+        squad_types,
         artifact_list: _artifact_list,
         marine_structs: _marines,
         squad_structs: squads,
-        equipment: equipment,
-        gene_slaves: gene_slaves, // squads // marines,
-        chapter_data: chapter_data,
-        chapter_squad_arrangement: chapter_squad_arrangement,
+        equipment,
+        gene_slaves, // squads // marines,
+        chapter_data,
+        chapter_squad_arrangement,
+        player_role_data,
     };
 
     if (variable_instance_exists(self, "last_ship")) {
@@ -207,7 +195,6 @@ serialize = function() {
         "temp",
         "serialize",
         "deserialize",
-        "load_default_gear",
         "role_spawn_buffs",
         "TTRPG",
         "squads",
@@ -221,6 +208,11 @@ serialize = function() {
     ];
 
     copy_serializable_fields(id, save_data, excluded_from_save);
+
+    save_data.company_lengths = [];
+    for (var _coy = 0; _coy <= companies; _coy++) {
+        array_push(save_data.company_lengths, company_length(_coy))
+    }
 
     return save_data;
 };
@@ -244,7 +236,8 @@ deserialize = function(save_data) {
         "artifact_equipped",
         "artifact_struct",
         "artifact_list",
-        "sector_handler"
+        "sector_handler",
+        "company_lengths"
     ]; // skip automatic setting of certain vars, handle explicitly later
 
     // Automatic var setting
@@ -300,9 +293,10 @@ deserialize = function(save_data) {
         TTRPG[company][marine].load_json_data(struct);
     }
 
-    for (var _coy = 0; _coy <= 10; _coy++) {
-        for (var _mar = 0; _mar <= 500; _mar++) {
-            TTRPG[_coy][_mar] = new TTRPG_stats("chapter", _coy, _mar, "blank");
+    var _company_lengths = struct_exists(save_data, "company_lengths") ? save_data.company_lengths : array_create(companies + 1, 501);
+    for (var _coy = 0; _coy <= companies; _coy++) {
+        for (var _mar = 0; _mar < _company_lengths[_coy]; _mar++) {
+            TTRPG[_coy][_mar] = undefined;
         }
     }
 
@@ -313,9 +307,6 @@ deserialize = function(save_data) {
             var _coy = _marine_json.company;
             var _mar = _marine_json.marine_number;
             load_marine_struct(_coy, _mar, _marine_json);
-            if (!is_struct(fetch_unit([_coy, _mar]))) {
-                TTRPG[_coy][_mar] = new TTRPG_stats("chapter", _coy, _mar, "blank");
-            }
         }
     }
 
@@ -329,6 +320,15 @@ deserialize = function(save_data) {
             var _squad = new UnitSquad();
             _squad.load_json_data(_squad_structs[$ _squad_uid]);
             squads[$ _squad_uid] = _squad;
+            for (var s = 0; s < array_length(_squad.members); s++){
+                _squad.members[s] = fetch_unit_uid(_squad.members[s]);
+            }
+
+            for (var s = array_length(_squad.members) -  1; s >= 0; s--){
+                if (!is_struct(_squad.members[s])){
+                    array_delete(_squad.members, s, 1);
+                }
+            }
         }
     }
 

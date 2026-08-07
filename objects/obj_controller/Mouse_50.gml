@@ -15,12 +15,13 @@ if ((menu == eMENU.RECLUSIAM) && (cooldown <= 0) && (penitorium > 0)) {
                 cooldown = 20;
                 var c = penit_co[qp], e = penit_id[qp];
 
-                if (obj_ini.role[c][e] == obj_ini.role[100][eROLE.CHAPTERMASTER]) {
+                var _unit = fetch_unit([c,e]);
+                if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
                     alarm[7] = 5;
                     global.defeat = 3;
                 }
                 // TODO Needs to be based on role
-                kill_and_recover(c, e);
+                _unit.kill();
                 diplo_char = c;
                 with (obj_ini) {
                     scr_company_order(obj_controller.diplo_char);
@@ -31,7 +32,7 @@ if ((menu == eMENU.RECLUSIAM) && (cooldown <= 0) && (penitorium > 0)) {
             if ((mouse_x >= xx + 1508) && (mouse_x < xx + 1567)) {
                 cooldown = 20;
                 var c = penit_co[qp], e = penit_id[qp];
-                obj_ini.TTRPG[c][e].god_status -= 10;
+                _unit.god_status -= 10;
                 re = 1;
             }
         }

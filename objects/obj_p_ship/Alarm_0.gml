@@ -185,27 +185,21 @@ if (obj_controller.stc_bonus[6] == 2) {
 }
 
 for (var co = 0; co <= obj_ini.companies; co++) {
-    for (var i = 0; i < array_length(obj_ini.name[co]); i++) {
-        if (obj_ini.name[co][i] == "") {
-            continue;
-        }
+    for (var i = 0; i < company_length(co); i++) {
         var unit = fetch_unit([co, i]);
         if (!is_struct(unit)) {
             continue;
         }
         if (unit.ship_location == ship_id) {
             if (unit.is_boarder && unit.hp() > (unit.max_health() / 10)) {
-                array_push(board_co, co);
-                array_push(board_id, i);
-                array_push(board_location, 0);
-                array_push(board_raft, 0);
+                array_push(board_marine,unit);
                 boarders += 1;
             }
             // Loc 0: on origin ship
             // Loc 1: in transit
             // Loc >1: (instance_id), on enemy vessel
             if (co == 0 && master_present == 0 && i < 100) {
-                if (unit.role() == obj_ini.role[100][eROLE.CHAPTERMASTER] && unit.ship_location == ship_id) {
+                if (unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role && unit.ship_location == ship_id) {
                     master_present = 1;
                     obj_fleet.control = true;
                 }

@@ -170,13 +170,13 @@ try {
                                     continue;
                                 }
                                 if ((_unit.location_string == cur_star.name) && (_unit.planet_location > 0)) {
-                                    if ((_unit.role() == "Ork Sniper") && (obj_ini.race[ca][ia] != 1)) {
+                                    if (_unit.role() == "Ork Sniper") {
                                         tem1_base = 3;
                                     }
-                                    if ((_unit.role() == "Flash Git") && (obj_ini.race[ca][ia] != 1)) {
+                                    if (_unit.role() == "Flash Git") {
                                         tem1_base = 3;
                                     }
-                                    if ((_unit.role() == "Ranger") && (obj_ini.race[ca][ia] != 1)) {
+                                    if (_unit.role() == "Ranger") {
                                         tem1_base = 3;
                                     }
                                     if (_unit.equipped_artifact_tag("daemon")) {

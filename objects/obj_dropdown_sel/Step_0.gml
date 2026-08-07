@@ -129,7 +129,7 @@ if ((target == "event_loc") && (determined_planets == 0)) {
             if (!is_struct(_unit)) {
                 continue;
             }
-            if ((_unit.role() != obj_ini.role[100][6]) && (_unit.role() != "Venerable " + string(obj_ini.role[100][6])) && (_unit.planet_location > 0)) {
+            if ((_unit.role() != obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (_unit.role() != "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) && (_unit.planet_location > 0)) {
                 var stahp = 0;
                 var first_open = 0;
 

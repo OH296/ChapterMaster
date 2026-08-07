@@ -107,22 +107,6 @@ var _arrays_count = 103;
 var _empty_array = [];
 
 LOGGER.info("Set Game Arrays and Statics");
-r_race = array_create_advanced(_arrays_count, _empty_array);
-r_role = array_create_advanced(_arrays_count, _empty_array);
-r_wep1 = array_create_advanced(_arrays_count, _empty_array);
-r_wep2 = array_create_advanced(_arrays_count, _empty_array);
-r_armour = array_create_advanced(_arrays_count, _empty_array);
-r_gear = array_create_advanced(_arrays_count, _empty_array);
-r_mobi = array_create_advanced(_arrays_count, _empty_array);
-
-var _empty_size = 21;
-r_race[100] = array_create(_empty_size, 0);
-r_role[100] = array_create(_empty_size, "");
-r_wep1[100] = array_create(_empty_size, "");
-r_wep2[100] = array_create(_empty_size, "");
-r_armour[100] = array_create(_empty_size, "");
-r_gear[100] = array_create(_empty_size, "");
-r_mobi[100] = array_create(_empty_size, "");
 
 var _roles_data = {};
 
@@ -268,30 +252,6 @@ var _max_id = 0;
 
 for (var k = 0, _kl = array_length(_role_keys); k < _kl; k++) {
     _max_id = max(_max_id, real(_role_keys[k]));
-}
-
-for (var i = 101; i < 103; i++) {
-    var _target_size = _max_id + 1;
-
-    r_role[i] = array_create(_target_size, "");
-    r_wep1[i] = array_create(_target_size, "");
-    r_wep2[i] = array_create(_target_size, "");
-    r_armour[i] = array_create(_target_size, "");
-    r_mobi[i] = array_create(_target_size, "");
-    r_gear[i] = array_create(_target_size, "");
-
-    for (var j = 0, jl = array_length(_role_keys); j < jl; j++) {
-        var _key = _role_keys[j];
-        var _id = real(_key);
-        var _data = _roles_data[$ _key];
-
-        r_role[i][_id] = _data.name;
-        r_wep1[i][_id] = _data.w1;
-        r_wep2[i][_id] = _data.w2;
-        r_armour[i][_id] = _data.arm;
-        r_mobi[i][_id] = _data.mob;
-        r_gear[i][_id] = _data.gear;
-    }
 }
 
 // ** Sets cheatcode values **
@@ -449,7 +409,7 @@ sel_loading = -1;
 sel_uid = 0;
 
 // ** Sets Chapter events and celebrations **
-fest_sid = 0;
+fest_sid = -1;
 fest_wid = 0;
 fest_planet = 0;
 fest_star = "";
@@ -776,7 +736,7 @@ if (instance_exists(obj_ini)) {
     }
 }
 
-chapter_master = new scr_chapter_master();
+chapter_master = new ChapterMaster();
 
 trade_attempt = false;
 // ** Sets income **
@@ -1357,11 +1317,7 @@ LOGGER.info("set up the UnitQuickFindPanel");
 location_viewer = new UnitQuickFindPanel();
 
 // ** Sets up the number of marines per company **
-marines = 0;
-marines = obj_ini.specials + obj_ini.firsts + obj_ini.seconds + obj_ini.thirds + obj_ini.fourths + obj_ini.fifths;
-marines += obj_ini.sixths + obj_ini.sevenths + obj_ini.eighths + obj_ini.ninths + obj_ini.tenths;
-command = 0;
-command = obj_ini.commands;
+tally_marines();
 
 // Removes the command marines from marine count
 if (global.load == -1) {
@@ -1369,16 +1325,17 @@ if (global.load == -1) {
 }
 
 // **** INTRO SCREEN ****
-#region Intro Scroll
+#region Intro Scrolls
+LOGGER.info("sector_handle");
 temp[30] = obj_ini.sector_handler.date(); // Date
 temp[31] = string_upper(adept_name); // Adept name
-temp[32] = string_upper(obj_ini.name[0][0]); // Master name
+temp[32] = cm_obj().get_struct().name(); // Master name
 temp[33] = string_upper(scr_thought()); // Thought of the day
 
 // Game start welcoming message
 LOGGER.info("Game start welcoming message");
 
-var _canon = obj_ini.role[100];
+var _canon = active_roles();
 
 var _build_clause = function(_prefix, _parts) {
     if (array_length(_parts) == 0) {
@@ -1387,31 +1344,33 @@ var _build_clause = function(_prefix, _parts) {
     return $"{_prefix} {string_join_ext(", ", _parts)}.";
 };
 
+LOGGER.info("Command staff");
+
 var _hq_index = collect_company(0).index_roles();
 var _command_staff = [
     {
         role: _canon[eROLE.CHAPTERMASTER],
-        name_slot: 0,
+        name_slot: eCHAPTER_DEPARTMENTS.HQ,
         prefix: "your majesty ",
     },
     {
         role: "Forge Master",
-        name_slot: 1,
+        name_slot: eCHAPTER_DEPARTMENTS.FORGE,
         prefix: "",
     },
     {
         role: "Master of Sanctity",
-        name_slot: 2,
+        name_slot: eCHAPTER_DEPARTMENTS.CHAP,
         prefix: "",
     },
     {
         role: "Master of the Apothecarion",
-        name_slot: 3,
+        name_slot: eCHAPTER_DEPARTMENTS.APOTH,
         prefix: "",
     },
     {
         role: $"Chief {_canon[eROLE.LIBRARIAN]}",
-        name_slot: 4,
+        name_slot: eCHAPTER_DEPARTMENTS.LIB,
         prefix: "and ",
     },
 ];
@@ -1419,8 +1378,13 @@ var _command_staff = [
 var _parts = [];
 for (var i = 0, l = array_length(_command_staff); i < l; i++) {
     var _officer = _command_staff[i];
-    if (_hq_index.has_role(_officer.role)) {
-        array_push(_parts, $"{_officer.prefix}{_officer.role} {obj_ini.name[0][_officer.name_slot]}");
+    var _unit = get_department_head(_officer.name_slot);
+    if (!is_undefined(_unit)){
+        if (_hq_index.has_role(_officer.role)) {
+            array_push(_parts, $"{_officer.prefix}{_unit.name_role()}");
+        }
+    } else {
+        array_push(_parts, $"you have no {_officer.role}");
     }
 }
 temp[34] = _build_clause("Command staff made of", _parts);

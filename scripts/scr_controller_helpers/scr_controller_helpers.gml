@@ -211,7 +211,7 @@ function scr_toggle_apothecarion() {
             if (menu != eMENU.APOTHECARION) {
                 menu = eMENU.APOTHECARION;
 
-                temp[36] = scr_role_count(obj_ini.role[100][15], "");
+                temp[36] = scr_role_count(obj_ini.player_role_data[eROLE.APOTHECARY].role, "");
             }
         }
     });
@@ -229,8 +229,8 @@ function scr_toggle_reclu() {
             if (menu != eMENU.RECLUSIAM) {
                 menu = eMENU.RECLUSIAM;
 
-                temp[36] = string(scr_role_count(obj_ini.role[100][14], "field"));
-                temp[37] = string(scr_role_count(obj_ini.role[100][14], "home"));
+                temp[36] = string(scr_role_count(obj_ini.player_role_data[eROLE.CHAPLAIN].role, "field"));
+                temp[37] = string(scr_role_count(obj_ini.player_role_data[eROLE.CHAPLAIN].role, "home"));
                 penitorium = 0;
 
                 // Get list of jailed marines
@@ -258,12 +258,12 @@ function scr_toggle_lib() {
             var yy = camera_get_view_y(view_camera[0]);
             menu_adept = 0;
             hide_banner = 1;
-            if (scr_role_count("Chief " + string(obj_ini.role[100][17]), "0") == 0) {
+            if (scr_role_count("Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role), "0") == 0) {
                 menu_adept = 1;
             }
             if (menu != eMENU.LIBRARIUM) {
                 menu = eMENU.LIBRARIUM;
-                temp[36] = scr_role_count(obj_ini.role[100][17], "");
+                temp[36] = scr_role_count(obj_ini.player_role_data[eROLE.LIBRARIAN].role, "");
                 temp[37] = scr_role_count("Codiciery", "");
                 temp[38] = scr_role_count("Lexicanum", "");
                 artifact_equip = new ShutterButton();

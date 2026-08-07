@@ -64,7 +64,7 @@ function setup_complex_livery_shader(setup_role, unit = "none") {
         }
     } else {
         var _full_liveries = obj_ini.full_liveries;
-        var _roles = obj_ini.role[100];
+        var _roles = active_roles();
         data_set = obj_ini.full_liveries[0];
         if (is_specialist(setup_role, SPECIALISTS_LIBRARIANS)) {
             data_set = _full_liveries[eROLE.LIBRARIAN];
@@ -77,7 +77,7 @@ function setup_complex_livery_shader(setup_role, unit = "none") {
                 data_set = _full_liveries[eROLE.CHAPLAIN];
             }
         } else {
-            for (var i = 0; i <= 20; i++) {
+            for (var i = 0; i < array_length(_roles) && i < array_length(_full_liveries); i++) {
                 if (_roles[i] == setup_role) {
                     data_set = _full_liveries[i];
                     break;

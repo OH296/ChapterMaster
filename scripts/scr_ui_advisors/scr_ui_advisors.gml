@@ -51,7 +51,10 @@ function scr_ui_advisors() {
         draw_set_color(c_gray);
         draw_rectangle(xx + 945, yy + 66, xx + 1580, yy + 818, 1);
 
-        if (menu_adept == 0) {
+        var _head = get_department_head(eCHAPTER_DEPARTMENTS.CHAP);
+
+        var _has_head = is_struct(_head);
+        if (_has_head) {
             if (struct_exists(obj_ini.custom_advisors, "chaplain")) {
                 scr_image("advisor/splash", obj_ini.custom_advisors.chaplain, xx + 16, yy + 43, 310, 828);
             } else {
@@ -61,28 +64,30 @@ function scr_ui_advisors() {
             draw_set_color(c_gray);
             draw_set_font(fnt_40k_30b);
             draw_text_transformed(xx + 336 + 16, yy + 66, "Reclusium", 1, 1, 0);
-            draw_text_transformed(xx + 336 + 16, yy + 100, string_hash_to_newline("Master of Sanctity " + string(obj_ini.name[0][2])), 0.6, 0.6, 0);
+            draw_text_transformed(xx + 336 + 16, yy + 100, _head.name_role(), 0.6, 0.6, 0);
         }
-        if (menu_adept == 1) {
+        else {
             scr_image("advisor/splash", 1, xx + 16, yy + 43, 310, 828);
             draw_set_halign(fa_left);
             draw_set_color(c_gray);
             draw_set_font(fnt_40k_30b);
             draw_text_transformed(xx + 336 + 16, yy + 66, "Reclusium", 1, 1, 0);
-            draw_text_transformed(xx + 336 + 16, yy + 100, string_hash_to_newline("Adept " + string(obj_controller.adept_name)), 0.6, 0.6, 0);
+            draw_text_transformed(xx + 336 + 16, yy + 100, $"Adept {obj_controller.adept_name}" , 0.6, 0.6, 0);
         }
 
         draw_set_font(fnt_40k_14);
         draw_set_alpha(1);
         draw_set_color(c_gray);
+        var _active_roles = active_roles();
+        var _chap_role = _active_roles[eROLE.CHAPLAIN];
         if (temp[36] != "0") {
-            blurp = $"Sir!  You requested a report?  Currently, we have deployed {temp[36]} {obj_ini.role[100][14]}s to watch over the health of our Battle-Brothers in the field.  We have an additional " + string(temp[37]) + " " + string(obj_ini.role[100][14]) + "s who await only your order to carry the word to the troops.";
+            blurp = $"Sir!  You requested a report?  Currently, we have deployed {temp[36]} {_chap_role}s to watch over the health of our Battle-Brothers in the field.  We have an additional {temp[37]} {_chap_role}s who await only your order to carry the word to the troops.";
         }
         if (temp[36] == "0") {
-            blurp = "Sir!  You requested a report?  Currently, we have {temp[37]} {obj_ini.role[100, 14]}s who await only your order to carry the word to the troops.";
+            blurp = $"Sir!  You requested a report?  Currently, we have {temp[37]} {_chap_role}s who await only your order to carry the word to the troops.";
         }
         if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-            blurp += "##Currently, we are training additional " + string(obj_ini.role[100][14]) + " at a ";
+            blurp += $"##Currently, we are training additional {_chap_role} at a ";
             var _recruit_rates = global.recruitment_rates;
             blurp += _recruit_rates[training_chaplain];
             if (training_chaplain > 0 && training_chaplain <= 6) {
@@ -91,7 +96,7 @@ function scr_ui_advisors() {
             }
             blurp += " rate";
             if (training_chaplain > 0) {
-                blurp += " and expect to see a new one in " + string(eta) + " month's time.";
+                blurp += " and expect to see a new one in {eta} month's time.";
             }
             if (training_chaplain < 5) {
                 blurp += "We can increase this rate, but it will require us to requisition additional facilities, as well as upkeep, Sir.";
@@ -136,15 +141,15 @@ function scr_ui_advisors() {
         draw_set_color(c_gray);
 
         if (menu_adept == 1) {
-            blurp = "Your Chapter contains " + string(temp[36]) + " " + string(obj_ini.role[100][14]) + "s.##";
+            blurp = "Your Chapter contains " + string(temp[36]) + " " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s.##";
             if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-                blurp += "Training of further " + string(obj_ini.role[100][14]) + "s";
+                blurp += "Training of further " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s";
                 if (training_chaplain >= 0 && training_chaplain <= 6) {
                     var _recruit_pace = global.recruitment_pace_descriptions;
                     blurp += _recruit_pace[training_chaplain];
                 }
                 if (training_chaplain > 0) {
-                    blurp += "  The next " + string(obj_ini.role[100][14]) + " is expected in " + string(eta) + " months.";
+                    blurp += "  The next " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + " is expected in " + string(eta) + " months.";
                 }
             }
         }
@@ -165,7 +170,7 @@ function scr_ui_advisors() {
         if (menu_adept == 0) {
             if (fest_scheduled == 0) {
                 if ((global.chapter_name != "Space Wolves") && (global.chapter_name != "Iron Hands")) {
-                    blurp2 = "As our bolters are charged with death for the Emperor's enemies, our thoughts are charged with his wisdom.  As our bodies are armoured with Adamantium, our souls are protected with our loyalty- loyalty to Him, and loyalty to our brothers.  The bonds of this brotherhood are worth revering, even if a lull in duty invites doubt and heresy.  Should you wish to schedule a rousing event, or challenge, I will make it so.  Under the careful watch of our " + string(obj_ini.role[100][14]) + "s, our brothers' spirits may be lifted.";
+                    blurp2 = "As our bolters are charged with death for the Emperor's enemies, our thoughts are charged with his wisdom.  As our bodies are armoured with Adamantium, our souls are protected with our loyalty- loyalty to Him, and loyalty to our brothers.  The bonds of this brotherhood are worth revering, even if a lull in duty invites doubt and heresy.  Should you wish to schedule a rousing event, or challenge, I will make it so.  Under the careful watch of our " + string(obj_ini.player_role_data[eROLE.CHAPLAIN].role) + "s, our brothers' spirits may be lifted.";
                 }
                 if (global.chapter_name == "Space Wolves") {
                     blurp2 = "";
@@ -201,8 +206,9 @@ function scr_ui_advisors() {
                 }
                 if (fest_honoring == 3) {
                     blurp2 += " in honor of ";
-                    blurp2 += string(obj_ini.role[fest_honor_co][fest_honor_id]) + " ";
-                    blurp2 += string(obj_ini.name[fest_honor_co][fest_honor_id]) + " (" + romanNumerals[fest_honor_co] + " Company).  ";
+                    var _unit = fetch_unit([fest_honor_co, fest_honor_id])
+                    blurp2 += $"{_unit.role()} ";
+                    blurp2 += $"{_unit.name()} {romanNumerals[fest_honor_co]} Company).  ";
                 }
                 if (fest_honoring == 4) {
                     // faction
@@ -281,13 +287,13 @@ function scr_ui_advisors() {
                 }
                 if (fest_type == "Chapter Relic") {
                     if (fest_feature1 == 1) {
-                        blurp2 += "  Our " + string(obj_ini.role[100][16]) + "s aim to create a weapon.";
+                        blurp2 += "  Our " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + "s aim to create a weapon.";
                     }
                     if (fest_feature2 == 1) {
-                        blurp2 += "  Our " + string(obj_ini.role[100][16]) + "s aim to create a suit of armour.";
+                        blurp2 += "  Our " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + "s aim to create a suit of armour.";
                     }
                     if (fest_feature3 == 1) {
-                        blurp2 += "  Our " + string(obj_ini.role[100][16]) + "s aim to hone and strengthen an already existing relic.";
+                        blurp2 += "  Our " + string(obj_ini.player_role_data[eROLE.TECHMARINE].role) + "s aim to hone and strengthen an already existing relic.";
                     }
                 }
                 if (fest_type == "Imperial Mass") {
@@ -383,7 +389,7 @@ function scr_ui_advisors() {
             if ((onceh == 0) && (fest_planet == 0)) {
                 onceh = 1;
                 fest_planet = 1;
-                fest_sid = 0;
+                fest_sid = -1;
                 fest_wid = 0;
                 fest_star = "";
                 with (obj_dropdown_sel) {
@@ -419,7 +425,7 @@ function scr_ui_advisors() {
             if ((onceh == 0) && (fest_planet == 1) && (fest_type != "Triumphal March")) {
                 onceh = 1;
                 fest_planet = 0;
-                fest_sid = 0;
+                fest_sid = -1;
                 fest_wid = 0;
                 fest_star = "";
                 with (obj_dropdown_sel) {
@@ -640,7 +646,7 @@ function scr_ui_advisors() {
         if (requisition < fest_cost) {
             doable = false;
         }
-        if ((fest_wid == 0) && (fest_sid == 0)) {
+        if ((fest_wid == 0) && (fest_sid == -1)) {
             doable = false;
         }
 
@@ -696,7 +702,7 @@ function scr_ui_advisors() {
             draw_rectangle(xx + 1132, yy + 780, xx + 1253, yy + 805, 0);
             if (mouse_button_clicked()) {
                 fest_type = "";
-                fest_sid = 0;
+                fest_sid = -1;
                 fest_wid = 0;
                 fest_planet = 0;
                 fest_star = "";
@@ -743,7 +749,7 @@ function scr_ui_advisors() {
         draw_rectangle(xx + 217, yy + 380, xx + 617, yy + 411, 1);
 
         draw_set_font(fnt_large);
-        draw_text_transformed(xx + 410, yy + 29, obj_ini.role[100][eROLE.CHAPTERMASTER], 0.5, 0.5, 0);
+        draw_text_transformed(xx + 410, yy + 29, obj_ini.player_role_data[eROLE.CHAPTERMASTER].role, 0.5, 0.5, 0);
 
         draw_set_font(fnt_fancy);
         draw_text_transformed(xx + 410, yy + 40, string_hash_to_newline(string(obj_ini.master_name)), 1.5, 1.5, 0);

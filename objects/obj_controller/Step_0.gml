@@ -25,7 +25,7 @@ try {
     }
     // TODO change this into a constructor which is in a separated script
     if ((fest_scheduled == 0) && (fest_sid + fest_wid > 0) && (menu != eMENU.FESTIVAL)) {
-        fest_sid = 0;
+        fest_sid = -1;
         fest_wid = 0;
         fest_planet = 0;
         fest_type = "";
@@ -442,12 +442,9 @@ try {
                 if (unit.name() == "") {
                     continue;
                 }
-                var unit_id = unit.marine_number;
-                var company = unit.company;
                 unit.location_string = obj_ini.ship_location[b];
                 unit.ship_location = -1;
                 unit.planet_location = unload;
-                obj_ini.uid[company][unit_id] = 0;
 
                 ma_loc[q] = obj_ini.ship_location[b];
                 ma_lid[q] = -1;
@@ -490,7 +487,8 @@ try {
     }
 
     if (menu == eMENU.DEFAULT && !instances_exist_any([obj_ncombat, obj_fleet_controller])) {
-        if (!array_contains(obj_ini.role[0], obj_ini.role[100][eROLE.CHAPTERMASTER]) && (alarm[7] == -1)) {
+        var _cm = chapter_master.get_struct();
+        if (!role_compare(_cm, eROLE.CHAPTERMASTER) && (alarm[7] == -1)) {
             alarm[7] = 15;
         }
     }

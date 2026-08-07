@@ -277,7 +277,7 @@ function scr_emmisary_diplomacy_routes() {
                 pop_up.text = $"You summon {dead_lib.name_role()} to your personal chambers. Darting from the shadows you deftly strike his head from his shoulders. With the flesh removed from his skull you place the skull upon a hastily erected shrine.";
                 pop_up.type = 98;
                 pop_up.image = "chaos";
-                kill_and_recover(lib[0], lib[1]);
+                dead_lib.kill();
                 chapter_master.add_trait("blood_for_blood");
                 chapter_master.edit_corruption(20);
             } else {
@@ -289,7 +289,7 @@ function scr_emmisary_diplomacy_routes() {
         scr_diplomacy_hit(1,, function() {
             cooldown = 8000;
             diplomacy_pathway = "sacrifice_champ";
-            var champ = scr_random_marine(obj_ini.role[100][7], 0);
+            var champ = scr_random_marine(obj_ini.player_role_data[eROLE.CHAMPION].role, 0);
             if (champ != "none") {
                 var chapter_master = fetch_unit([0, 1]);
                 chapter_master.add_trait("blood_for_blood");
@@ -301,7 +301,7 @@ function scr_emmisary_diplomacy_routes() {
                 pop_up.text = $"You summon {dead_champ.name_role()} to your personal chambers. Darting from the shadows towards {dead_champ.name()} who is a cunning warrior and reacts with precision to your attack, however eventually you prevail and strike him down. With the flesh removed from his skull you place it upon a hastily erected shrine.";
                 pop_up.type = 98;
                 pop_up.image = "chaos";
-                kill_and_recover(champ[0], champ[1]);
+                dead_champ.kill();
             } else {
                 diplomacy_pathway = "daemon_scorn";
             }

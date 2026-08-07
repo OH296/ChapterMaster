@@ -535,16 +535,16 @@ function scr_flavor(id_of_attacking_weapons, target, target_type, number_of_shot
     } else if (weapon_name == "Close Combat Weapon") {
         flavoured = true;
         if ((number_of_shots == 1) && (casulties == 0)) {
-            attack_message = $"{target_name} is struck by " + string(obj_ini.role[100][6]) + " but survives.";
+            attack_message = $"{target_name} is struck by " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role) + " but survives.";
         }
         if ((number_of_shots == 1) && (casulties == 1)) {
-            attack_message = $"{target_name} is struck down by " + string(obj_ini.role[100][6]) + ".";
+            attack_message = $"{target_name} is struck down by " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role) + ".";
         }
         if ((number_of_shots > 1) && (casulties == 0)) {
-            attack_message = $"{number_of_shots} {string(obj_ini.role[100][6])}s wrench and smash at {target_name} but fail to destroy it.";
+            attack_message = $"{number_of_shots} {string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)}s wrench and smash at {target_name} but fail to destroy it.";
         }
         if ((number_of_shots > 1) && (casulties > 1)) {
-            attack_message = $"{number_of_shots} {string(obj_ini.role[100][6])}s stomp, wrench, and smash {casulties} {target_name} into paste.";
+            attack_message = $"{number_of_shots} {string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)}s stomp, wrench, and smash {casulties} {target_name} into paste.";
         }
     } else if (weapon_name == "Chainsword") {
         flavoured = true;
