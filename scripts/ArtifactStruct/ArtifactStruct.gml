@@ -230,37 +230,41 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
 
         var _type = get_type();
 
-        var _unit = fetch_unit(__bearer);
-        if (is_struct(_unit)) {
-            switch (_type) {
-                case "weapon":
-                    if (_unit.weapon_one(true) == artifact_id) {
-                        _unit.update_weapon_one("", false, true);
-                    } else if (_unit.weapon_two(true) == artifact_id) {
-                        _unit.update_weapon_two("", false, true);
-                    }
-
-                    break;
-                case "gear":
-                    if (_unit.gear(true) == artifact_id) {
-                        _unit.update_gear("", false, true);
-                    }
-
-                    break;
-                case "armour":
-                    if (_unit.armour(true) == artifact_id) {
-                        _unit.update_armour("", false, true);
-                    }
-
-                    break;
-                case "mobility":
-                    if (_unit.mobility_item(true) == artifact_id) {
-                        _unit.update_mobility_item("", false, true);
-                    }
-
-                    break;
-            }
+        var _unit = __bearer;
+        if (!is_struct(_unit)) {
+            __bearer = undefined;
+            return;
         }
+
+        switch (_type) {
+            case "weapon":
+                if (_unit.weapon_one(true) == artifact_id) {
+                    _unit.update_weapon_one("", false, true);
+                } else if (_unit.weapon_two(true) == artifact_id) {
+                    _unit.update_weapon_two("", false, true);
+                }
+
+                break;
+            case "gear":
+                if (_unit.gear(true) == artifact_id) {
+                    _unit.update_gear("", false, true);
+                }
+
+                break;
+            case "armour":
+                if (_unit.armour(true) == artifact_id) {
+                    _unit.update_armour("", false5, true);
+                }
+
+                break;
+            case "mobility":
+                if (_unit.mobility_item(true) == artifact_id) {
+                    _unit.update_mobility_item("", false, true);
+                }
+
+                break;
+        }
+
     };
 
     /// @desc Equips this artifact on a unit; daemonic/chaos artifacts also apply corruption.
@@ -383,7 +387,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
     /// Derived from the bearer field (single source of truth).
     /// @returns {Bool} true if bearer is a valid unit reference array.
     static is_equipped = function() {
-        return is_array(__bearer);
+        return is_Struct(__bearer);
     };
 
     // ###### Getters ######
@@ -443,9 +447,8 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
     /// @returns {String} The bearer possession text, or empty string if not equipped.
     static get_bearer_text = function() {
         if (is_equipped()) {
-            var _unit = fetch_unit(__bearer);
-            if (is_struct(_unit)) {
-                return $"It is currently in the possession of {_unit.name_role()}.";
+            if (is_struct(__bearer)) {
+                return $"It is currently in the possession of {__bearer.name_role()}.";
             }
         }
 
@@ -583,22 +586,22 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
         if (!is_equipped()) {
             return undefined;
         }
-
-        var _unit = fetch_unit(__bearer);
-        if (!is_struct(_unit)) {
+        if (!is_struct(__bearer)) {
             return undefined;
         }
 
-        if ((_unit.ship_location > -1) && (_unit.ship_location < array_length(obj_ini.ship))) {
+        //TODO unpgrade to use marine_location method of unit struct
+
+        if ((__bearer.ship_location > -1) && (__bearer.ship_location < array_length(obj_ini.ship))) {
             return {
-                ship_id: _unit.ship_location,
-                location_name: obj_ini.ship[_unit.ship_location],
+                ship_id: __bearer.ship_location,
+                location_name: obj_ini.ship[__bearer.ship_location],
             };
         }
 
         return {
             ship_id: -1,
-            location_name: _unit.location_string ?? "",
+            location_name: __bearer.location_string ?? "",
         };
     };
 
