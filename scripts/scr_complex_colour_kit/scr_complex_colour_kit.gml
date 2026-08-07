@@ -77,7 +77,7 @@ function setup_complex_livery_shader(setup_role, unit = "none") {
                 data_set = _full_liveries[eROLE.CHAPLAIN];
             }
         } else {
-            for (var i = 0; i < array_length(_roles); i++) {
+            for (var i = 0; i < array_length(_roles) && i < array_length(_full_liveries); i++) {
                 if (_roles[i] == setup_role) {
                     data_set = _full_liveries[i];
                     break;
