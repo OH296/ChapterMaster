@@ -2374,7 +2374,7 @@ function fetch_unit_careful(){
 }
 
 function fetch_unit_uid(uuid) {
-    for (var i = 0; i < obj_ini.companies; i++) {
+    for (var i = 0; i <= obj_ini.companies; i++) {
         var _comp_length = array_length(obj_ini.TTRPG[i]);
         for (var s = 0; s < _comp_length; s++) {
             var _unit = fetch_unit([i, s]);
