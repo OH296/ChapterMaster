@@ -654,7 +654,7 @@ function setup_role_settings_buttons() {
         style: "pixel",
         x1: _button_x,
         y1: role_settings_ui.secondary_weapon_button.y2,
-        label: $"Armour: {_role_data.armour_role_data}",
+        label: $"Armour: {_role_data.armour}",
         set_width: true,
         w: 250,
         active: true,
@@ -862,7 +862,7 @@ function scr_draw_mass_equip_gui() {
         var column_width = 146;
         var column_gap = 3;
 
-        var _role = player_role_data[role];
+        var _role = obj_ini.player_role_data[role];
 
         for (var h = 0; h < array_length(item_name); h++) {
             if (h > 0 && h % items_per_column == 0) {
