@@ -1317,6 +1317,7 @@ LOGGER.info("set up the UnitQuickFindPanel");
 location_viewer = new UnitQuickFindPanel();
 
 // ** Sets up the number of marines per company **
+sort_all_companies();
 tally_marines();
 
 // Removes the command marines from marine count
