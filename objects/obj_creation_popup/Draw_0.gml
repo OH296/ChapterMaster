@@ -1,175 +1,92 @@
 try {
-    var ide;
     tooltip = "";
     tooltip2 = "";
 
-    if (type == ePOPUP_TYPE.LIIVERYPICK && target_role > 0) {
-        var _colour_area_chosen = colour_area != "";
+    if (type == ePOPUP_TYPE.LIVERYPICK && target_role > 0) {
+        assign_picked_liveries();
+
+    } else if (type == ePOPUP_TYPE.EQUIP) {
+        LOGGER.info($"{target_role}")
         draw_set_font(fnt_40k_30b);
-        var _type_key = string(target_role);
-        var _colour_type = struct_exists(type_names, _type_key) ? type_names[$ _type_key] : "";
 
-        picker.title = _colour_type;
+        var _role_data = obj_creation.player_role_data[target_role];
+        var _role_name = _role_data.role;
 
-        var _action = picker.draw();
-        if (_action == "destroy") {
-            instance_destroy();
-            exit;
-        } else {
-            var _col = picker.chosen;
-            if (start_colour == -1) {
-                if (!_colour_area_chosen && target_role >= 1 && target_role <= 7) {
-                    start_colour = variable_instance_get(obj_creation, type_fields[target_role]);
-                } else if (_colour_area_chosen) {
-                    var role_data = obj_creation.complex_livery_data[$ target_role];
-                    if (is_struct(role_data) && struct_exists(role_data, colour_area)) {
-                        start_colour = role_data[$ colour_area];
+        role_name_input.tooltip = $"Astartes Role Name/nThe name of this Astartes Role.  The plural form will be ''{_role_name}s''.""
+        _role_data.role = role_name_input.draw(_role_name);
+
+        var _spacing = 22;
+        var x5 = 594;
+        var y5 = 597 - _spacing;
+
+        for (var _slot_count = 0; _slot_count <= 4; _slot_count++) {
+            y5 += _spacing;
+
+            draw_set_halign(fa_right);
+            draw_set_color(CM_GREEN_COLOR);
+
+            var _title = $"{get_slot_name(target_role , _slot_count)}: ";
+            _title = string_hash_to_newline(_title);
+            var _title_width = string_width(_title);
+            var _title_height = string_height(_title) - 2;
+
+            draw_rectangle(x5, y5, x5 - _title_width, y5 + _title_height, 1);
+            draw_text(x5, y5, _title);
+
+            if (scr_hit(x5 - _title_width, y5, x5, y5 + _title_height)) {
+                draw_set_color(c_white);
+                draw_set_alpha(0.2);
+                draw_rectangle(x5, y5, x5 - _title_width, y5 + _title_height, 0);
+
+                if (mouse_button_clicked()) {
+                    var _unit_type = target_role ;
+                    var _is_invalid = _unit_type == eROLE.DREADNOUGHT && _slot_count > eEQUIPMENT_SLOT.WEAPON_TWO;
+
+                    if (!_is_invalid) {
+                        tab = 1;
+                        target_gear = _slot_count;
+                        item_name = [];
+                        scr_get_item_names(item_name, _unit_type, _slot_count, eENGAGEMENT.RANGED, false, false);
                     }
                 }
             }
 
-            if (is_array(_col)) {
-                if (_colour_area_chosen) {
-                    obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
-                }
-            } else {
-                if (_col == -1) {
-                    _col = start_colour;
-                }
+            var _equipment = _role_data[$ global.unit_equip_slots[_slot_count]]
 
-                if (!_colour_area_chosen && target_role >= 1 && target_role <= 7) {
-                    variable_instance_set(obj_creation, type_fields[target_role], _col);
-                }
+            draw_set_alpha(1);
+            draw_set_color(CM_GREEN_COLOR);
+            draw_set_halign(fa_left);
+            draw_text(600, y5, _equipment);
+        }
 
-                with (obj_creation) {
-                    bulk_selection_buttons_setup();
-                }
+        var _confirm_gear_button = {
+            alpha: 1,
+            rects: [],
+        };
+        _confirm_gear_button.alpha = target_gear > -1 ? 0.5 : 1;
+        _confirm_gear_button.rects = draw_unit_buttons([614, 716], "CONFIRM", [1, 1], CM_GREEN_COLOR, undefined, fnt_40k_14b, _confirm_gear_button.alpha);
 
-                if (_colour_area_chosen) {
-                    obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
-                    with (obj_creation) {
-                        set_complex_livery_buttons();
-                    }
+        if (target_gear == -1 && point_and_click(_confirm_gear_button.rects)) {
+            var _role_id = target_role;
+            for (var i = 0; i < array_length(possible_custom_roles); i++) {
+                var _role_pair = possible_custom_roles[i];
+                if (_role_pair[1] == _role_id) {
+                    var _p_role_data = obj_creation.player_role_data[_role_id];
+                    variable_struct_set(obj_creation.custom_roles, _role_pair[0], _p_role_data);
+                    break;
                 }
+            }
+
+            instance_destroy();
+            with (obj_creation) {
+                update_creation_roles_radio(2);
             }
         }
 
-        if (type == ePOPUP_TYPE.EQUIP) {
-            LOGGER.info($"{pp.target_role}")
-            ide = target_role;
-
-            draw_set_font(fnt_40k_30b);
-
-            var _role_data = obj_creation.player_role_data[ide];
-            var _role_name = _role_data.role;
-            var _text_selected = obj_creation.text_selected;
-            var _sel_key = "unit_name" + string(ide);
-
-            if (_role_name == "" || badname == 1) {
-                draw_set_color(c_red);
-            }
-
-            var _display_text = string(_role_name);
-            if (_text_selected == _sel_key && obj_creation.text_bar <= 30) {
-                _display_text += "|";
-            }
-
-            draw_text_transformed(444, 550, string_hash_to_newline(_display_text), 0.6, 0.6, 0);
-
-            var _height = string_height_ext(string_hash_to_newline(string(_role_name) + "Q"), -1, 580) * 0.6;
-            if (scr_hit(444, 550, 820, 550 + _height)) {
-                obj_cursor.image_index = 2;
-                tooltip = "Astartes Role Name";
-                tooltip2 = $"The name of this Astartes Role.  The plural form will be ''{_role_name}s''.";
-                if (mouse_button_clicked()) {
-                    obj_creation.text_selected = _sel_key;
-                    keyboard_string = _role_name;
-                }
-            }
-
-            if (_text_selected == _sel_key) {
-                _role_data.role = keyboard_string;
-            }
-
-            draw_rectangle(444 - 1, 550 - 1, 822, 550 + _height, 1);
-            draw_set_color(CM_GREEN_COLOR);
-
-            draw_set_font(fnt_40k_14b);
-            draw_set_halign(fa_right);
-
-            var _spacing = 22;
-            var x5 = 594;
-            var y5 = 597 - _spacing;
-
-            for (var _slot_count = 0; _slot_count <= 4; _slot_count++) {
-                y5 += _spacing;
-
-                draw_set_halign(fa_right);
-                draw_set_color(CM_GREEN_COLOR);
-
-                var _title = $"{get_slot_name(target_role - 100, _slot_count)}: ";
-                _title = string_hash_to_newline(_title);
-                var _title_width = string_width(_title);
-                var _title_height = string_height(_title) - 2;
-
-                draw_rectangle(x5, y5, x5 - _title_width, y5 + _title_height, 1);
-                draw_text(x5, y5, _title);
-
-                if (scr_hit(x5 - _title_width, y5, x5, y5 + _title_height)) {
-                    draw_set_color(c_white);
-                    draw_set_alpha(0.2);
-                    draw_rectangle(x5, y5, x5 - _title_width, y5 + _title_height, 0);
-
-                    if (mouse_button_clicked()) {
-                        var _unit_type = target_role - 100;
-                        var _is_invalid = _unit_type == eROLE.DREADNOUGHT && _slot_count > eEQUIPMENT_SLOT.WEAPON_TWO;
-
-                        if (!_is_invalid) {
-                            tab = 1;
-                            target_gear = _slot_count;
-                            item_name = [];
-                            scr_get_item_names(item_name, _unit_type, _slot_count, eENGAGEMENT.RANGED, false, false);
-                        }
-                    }
-                }
-
-                var _equipment = _role_data[$ global.unit_equip_slots[_slot_count]]
-
-                draw_set_alpha(1);
-                draw_set_color(CM_GREEN_COLOR);
-                draw_set_halign(fa_left);
-                draw_text(600, y5, _equipment);
-            }
-
-            var _confirm_gear_button = {
-                alpha: 1,
-                rects: [],
-            };
-            _confirm_gear_button.alpha = target_gear > -1 ? 0.5 : 1;
-            _confirm_gear_button.rects = draw_unit_buttons([614, 716], "CONFIRM", [1, 1], CM_GREEN_COLOR, undefined, fnt_40k_14b, _confirm_gear_button.alpha);
-
-            if (target_gear == -1 && point_and_click(_confirm_gear_button.rects)) {
-                var _role_id = ide;
-                for (var i = 0; i < array_length(possible_custom_roles); i++) {
-                    var _role_pair = possible_custom_roles[i];
-                    if (_role_pair[1] == _role_id) {
-                        var _p_role_data = obj_creation.player_role_data[_role_id];
-                        variable_struct_set(obj_creation.custom_roles, _role_pair[0], _p_role_data);
-                        break;
-                    }
-                }
-
-                instance_destroy();
-                with (obj_creation) {
-                    update_creation_roles_radio(2);
-                }
-            }
-
-            draw_set_halign(fa_left);
-            if (scr_hit(434, 591, 594, 709)) {
-                tooltip = "Gear";
-                tooltip2 = "The equipment this Astartes Role defaults to.  Note that if defaults are set to expensive items the Astartes may instead be provided with more usual equipment.";
-            }
+        draw_set_halign(fa_left);
+        if (scr_hit(434, 591, 594, 709)) {
+            tooltip = "Gear";
+            tooltip2 = "The equipment this Astartes Role defaults to.  Note that if defaults are set to expensive items the Astartes may instead be provided with more usual equipment.";
         }
     }
 
@@ -179,7 +96,7 @@ try {
         item_name = [];
         scr_get_item_names(
             item_name,
-            target_role - 100, // eROLE
+            target_role , // eROLE
             target_gear, // slot
             tab, // eEngagement
             false, // no company standard
@@ -195,7 +112,7 @@ try {
         draw_rectangle(846, 202, 1164, 746, 1);
 
         draw_set_font(fnt_40k_30b);
-        var slot_name = get_slot_name(target_role - 100, target_gear);
+        var slot_name = get_slot_name(target_role , target_gear);
         draw_text_transformed(862, 215, $"Select {slot_name}", 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14b);
 
@@ -217,7 +134,7 @@ try {
 
                 if (mouse_button_clicked()) {
                     var buh = item_name[h] == ITEM_NAME_NONE ? "" : item_name[h];
-                    var _player_data = obj_creation.player_role_data[ide];
+                    var _player_data = obj_creation.player_role_data[target_role];
 
                     _player_data[$ global.unit_equip_slots[target_gear]] = buh;
                 }
@@ -229,7 +146,7 @@ try {
             item_name = [];
             scr_get_item_names(
                 item_name,
-                target_role - 100, // eROLE
+                target_role , // eROLE
                 target_gear, // slot
                 tab, // eEngagement
                 false, // no company standard
@@ -247,7 +164,7 @@ try {
 
                 if (point_and_click(_button)) {
                     var buh = item_name[h] == ITEM_NAME_NONE ? "" : item_name[h];
-                    var _player_data = obj_creation.player_role_data[ide];
+                    var _player_data = obj_creation.player_role_data[target_role];
                     _player_data[$ global.unit_equip_slots[target_gear]] = buh;
                 }
             }

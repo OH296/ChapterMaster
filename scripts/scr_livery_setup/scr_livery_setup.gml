@@ -180,3 +180,4 @@ function scr_livery_setup() {
     right_data_slate.draw(1210, 5, 0.45, 1);
     pop_draw_return_values();
 }
+

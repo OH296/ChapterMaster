@@ -748,6 +748,8 @@ function TextBarArea(_x, _y, _max_width = 400, _requires_input = false) construc
     yy = _y;
     max_width = _max_width;
     requires_input = _requires_input;
+    tooltip = "";
+    blocked_values = [];
 
     allow_input = false;
     cooloff = 0;
@@ -812,6 +814,12 @@ function TextBarArea(_x, _y, _max_width = 400, _requires_input = false) construc
             draw_set_color(requires_input ? CM_RED_COLOR : CM_GREEN_COLOR);
         }
 
+        if (array_length(blocked_values)){
+            if (array_contains(blocked_values, current_text)){
+                draw_set_color(CM_RED_COLOR);
+            }
+        }
+
         var _x1 = xx - (_bar_wid / 2);
         var _y1 = yy;
         var _x2 = xx + (_bar_wid / 2);
@@ -838,6 +846,10 @@ function TextBarArea(_x, _y, _max_width = 400, _requires_input = false) construc
             obj_cursor.image_index = 2;
         } else {
             obj_cursor.image_index = 0;
+        }
+
+        if (_mouse_hover && tooltip != ""){
+            tooltip_draw(tooltip);
         }
 
         background.XX = _x1;
