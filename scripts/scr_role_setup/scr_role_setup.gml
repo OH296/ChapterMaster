@@ -163,8 +163,12 @@ function scr_role_setup() {
         roles_radio.draw();
         if (roles_radio.changed && custom == eCHAPTER_TYPE.CUSTOM) {
             instance_destroy(obj_creation_popup);
-            var pp = instance_create(0, 0, obj_creation_popup);
-            pp.type = roles_radio.selection_val("role_id") + 100;
+            var _data = {
+                target_role : roles_radio.selection_val("role_id"),
+                type : ePOPUP_TYPE.EQUIP
+            }
+            instance_create_depth(0, 0, obj_creation_popup, -55, _data);
+            LOGGER.info($"{pp.target_role}")
         }
     }
     draw_set_color(CM_GREEN_COLOR);
@@ -175,7 +179,10 @@ function scr_role_setup() {
         draw_set_alpha(0.5);
     }
 
-    specialist_distribution_box.update();
+    specialist_distribution_box.update( 
+        {x1: 475,
+        y1: 230}
+    );
     specialist_distribution_box.draw(squad_distribution == 1 || squad_distribution == 3);
     scout_distribution_box.update();
     scout_distribution_box.draw(squad_distribution == 2 || squad_distribution == 3);

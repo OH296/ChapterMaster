@@ -1,4 +1,4 @@
-type = 0;
+type = ePOPUP_TYPE.LIIVERYPICK;
 target_gear = -1;
 tab = 1;
 badname = 0;
@@ -114,10 +114,3 @@ possible_custom_roles = [
     ],
 ];
 
-slot_arrays = [
-    "wep1", // eEQUIPMENT_SLOT.WEAPON_ONE
-    "wep2", // eEQUIPMENT_SLOT.WEAPON_TWO
-    "armour", // eEQUIPMENT_SLOT.ARMOUR
-    "gear", // eEQUIPMENT_SLOT.GEAR
-    "mobi", // eEQUIPMENT_SLOT.MOBILITY
-];

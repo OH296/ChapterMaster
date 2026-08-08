@@ -80,8 +80,12 @@ function scr_livery_setup() {
         for (var i = 0; i < array_length(bulk_buttons); i++) {
             if (bulk_buttons[i].draw(custom == eCHAPTER_TYPE.CUSTOM)) {
                 instance_destroy(obj_creation_popup);
-                var pp = instance_create(0, 0, obj_creation_popup);
-                pp.type = i + 1;
+                var _data = {
+                    target_role : i + 1,
+                    type : ePOPUP_TYPE.LIVERYPICK,
+                    colour_area : "",
+                }
+                instance_create_depth(0, 0, obj_creation_popup, -55, _data);
                 pp.picker.title = bulk_buttons[i].label;
             }
         }
@@ -94,6 +98,12 @@ function scr_livery_setup() {
 
             if (_button.draw()) {
                 instance_destroy(obj_creation_popup);
+                var _data = {
+                    target_role : _button.role_id,
+                    type : ePOPUP_TYPE.LIVERYPICK,
+                    colour_area : _button.area,
+                }
+                instance_create_depth(0, 0, obj_creation_popup, -55, _data);
                 var pp = instance_create(0, 0, obj_creation_popup);
                 pp.type = _button.area;
                 pp.role = _button.role_id;

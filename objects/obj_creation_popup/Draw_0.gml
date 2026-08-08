@@ -1,71 +1,62 @@
 try {
-    var equip = false;
-    var co;
     var ide;
     tooltip = "";
     tooltip2 = "";
-    col_shift = is_string(type);
 
-    if (!col_shift) {
-        col_shift = type > 0;
-        equip = type > 20;
-    }
+    if (type == ePOPUP_TYPE.LIIVERYPICK && target_role > 0) {
+        var _colour_area_chosen = colour_area != "";
+        draw_set_font(fnt_40k_30b);
+        var _type_key = string(target_role);
+        var _colour_type = struct_exists(type_names, _type_key) ? type_names[$ _type_key] : "";
 
-    if (col_shift) {
-        if (!equip) {
-            draw_set_font(fnt_40k_30b);
-            var _type_key = string(type);
-            var _colour_type = struct_exists(type_names, _type_key) ? type_names[$ _type_key] : "";
+        picker.title = _colour_type;
 
-            picker.title = _colour_type;
-
-            var _action = picker.draw();
-            if (_action == "destroy") {
-                instance_destroy();
-                exit;
-            } else {
-                var _col = picker.chosen;
-                if (start_colour == -1) {
-                    if (is_numeric(type) && type >= 1 && type <= 7) {
-                        start_colour = variable_instance_get(obj_creation, type_fields[type]);
-                    } else if (is_string(type)) {
-                        var role_data = obj_creation.complex_livery_data[$ role];
-                        if (is_struct(role_data) && struct_exists(role_data, type)) {
-                            start_colour = role_data[$ type];
-                        }
+        var _action = picker.draw();
+        if (_action == "destroy") {
+            instance_destroy();
+            exit;
+        } else {
+            var _col = picker.chosen;
+            if (start_colour == -1) {
+                if (!_colour_area_chosen && target_role >= 1 && target_role <= 7) {
+                    start_colour = variable_instance_get(obj_creation, type_fields[target_role]);
+                } else if (_colour_area_chosen) {
+                    var role_data = obj_creation.complex_livery_data[$ target_role];
+                    if (is_struct(role_data) && struct_exists(role_data, colour_area)) {
+                        start_colour = role_data[$ colour_area];
                     }
                 }
+            }
 
-                if (is_array(_col)) {
-                    if (is_string(type)) {
-                        obj_creation.complex_livery_data[$ role][$ type] = _col;
-                    }
-                } else {
-                    if (_col == -1) {
-                        _col = start_colour;
-                    }
+            if (is_array(_col)) {
+                if (_colour_area_chosen) {
+                    obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
+                }
+            } else {
+                if (_col == -1) {
+                    _col = start_colour;
+                }
 
-                    if (is_numeric(type) && type >= 1 && type <= 7) {
-                        variable_instance_set(obj_creation, type_fields[type], _col);
-                    }
+                if (!_colour_area_chosen && target_role >= 1 && target_role <= 7) {
+                    variable_instance_set(obj_creation, type_fields[target_role], _col);
+                }
 
+                with (obj_creation) {
+                    bulk_selection_buttons_setup();
+                }
+
+                if (_colour_area_chosen) {
+                    obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
                     with (obj_creation) {
-                        bulk_selection_buttons_setup();
-                    }
-
-                    if (is_string(type)) {
-                        obj_creation.complex_livery_data[$ role][$ type] = _col;
-                        with (obj_creation) {
-                            set_complex_livery_buttons();
-                        }
+                        set_complex_livery_buttons();
                     }
                 }
             }
         }
 
-        if (equip) {
-            co = 100;
-            ide = type - 100;
+        if (type == ePOPUP_TYPE.EQUIP) {
+            LOGGER.info($"{pp.target_role}")
+            ide = target_role;
 
             draw_set_font(fnt_40k_30b);
 
@@ -116,7 +107,7 @@ try {
                 draw_set_halign(fa_right);
                 draw_set_color(CM_GREEN_COLOR);
 
-                var _title = $"{get_slot_name(type - 100, _slot_count)}: ";
+                var _title = $"{get_slot_name(target_role - 100, _slot_count)}: ";
                 _title = string_hash_to_newline(_title);
                 var _title_width = string_width(_title);
                 var _title_height = string_height(_title) - 2;
@@ -130,7 +121,7 @@ try {
                     draw_rectangle(x5, y5, x5 - _title_width, y5 + _title_height, 0);
 
                     if (mouse_button_clicked()) {
-                        var _unit_type = type - 100;
+                        var _unit_type = target_role - 100;
                         var _is_invalid = _unit_type == eROLE.DREADNOUGHT && _slot_count > eEQUIPMENT_SLOT.WEAPON_TWO;
 
                         if (!_is_invalid) {
@@ -142,14 +133,12 @@ try {
                     }
                 }
 
-                var _array_name = slot_arrays[_slot_count];
-                var _slot_array2d = variable_instance_get(obj_creation, _array_name);
-                var _equipment_slot = _slot_array2d[co][ide];
+                var _equipment = _role_data[$ global.unit_equip_slots[_slot_count]]
 
                 draw_set_alpha(1);
                 draw_set_color(CM_GREEN_COLOR);
                 draw_set_halign(fa_left);
-                draw_text(600, y5, string_hash_to_newline(string(_equipment_slot)));
+                draw_text(600, y5, _equipment);
             }
 
             var _confirm_gear_button = {
@@ -190,7 +179,7 @@ try {
         item_name = [];
         scr_get_item_names(
             item_name,
-            type - 100, // eROLE
+            target_role - 100, // eROLE
             target_gear, // slot
             tab, // eEngagement
             false, // no company standard
@@ -206,7 +195,7 @@ try {
         draw_rectangle(846, 202, 1164, 746, 1);
 
         draw_set_font(fnt_40k_30b);
-        var slot_name = get_slot_name(type - 100, target_gear);
+        var slot_name = get_slot_name(target_role - 100, target_gear);
         draw_text_transformed(862, 215, $"Select {slot_name}", 0.6, 0.6, 0);
         draw_set_font(fnt_40k_14b);
 
@@ -240,7 +229,7 @@ try {
             item_name = [];
             scr_get_item_names(
                 item_name,
-                type - 100, // eROLE
+                target_role - 100, // eROLE
                 target_gear, // slot
                 tab, // eEngagement
                 false, // no company standard
