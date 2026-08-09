@@ -1,4 +1,3 @@
-type = ePOPUP_TYPE.LIVERYPICK;
 target_gear = -1;
 tab = 1;
 badname = 0;
@@ -15,6 +14,7 @@ tooltip = "";
 tooltip2 = "";
 item_name = [];
 role_names_all = "";
+warning = "";
 
 type_names = {
     "1": "Primary Color",
@@ -178,13 +178,40 @@ if (type == ePOPUP_TYPE.LIVERYPICK){
         "Forge Master",
     ];
 
+    editing_role_data = obj_creation.player_role_data[target_role];
+
     for (var i = 0; i < array_length(obj_creation.player_role_data); i++){
+        if (i == target_role){
+            continue;
+        }
         var _role_name = obj_creation.player_role_data[i].role;
         if (_role_name!=""){
             array_push(_blocked_names, _role_name);
         }
     }
 
+    var _dread_role = target_role == eROLE.DREADNOUGHT;
+
+    set_new_role_data = function(){
+        var _new_data = convert_equipment_array_into_struct(needed_equipment);
+        with (editing_role_data){
+            move_data_to_current_scope(_new_data);
+        }
+    }
     role_name_input.blocked_values = _blocked_names;
+    unchangeable_armour = _dread_role;
+    setup_UI_elements_equipment_selector(room_width - 571, 143);
+    unit_count = 0;
+    company =  -1;
+    equipment_found_and_valid = array_create(5, true);
+    current_equipment = variable_clone(convert_equipment_struct_into_array(editing_role_data));
+    needed_equipment = variable_clone(convert_equipment_struct_into_array(editing_role_data));
+    equipment_recipient_type = !_dread_role ? eEQUIP_TARGET_TYPE.MARINE : eEQUIP_TARGET_TYPE.DREADNOUGHT;
+    equip_button.bind_method = reequip_selection;
+    equip_button.bind_scope = self;
+    master_crafted = false;
+    allow_quality_change = false;
+    from_inventory = false;
+    before_after_styling = false;
 }
 

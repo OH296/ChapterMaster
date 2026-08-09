@@ -157,18 +157,17 @@ function scr_role_setup() {
     draw_set_color(CM_GREEN_COLOR);
 
     draw_text_color_simple(800, 80, "Roles", CM_GREEN_COLOR);
-    var c = 100;
     if (!instance_exists(obj_creation_popup)) {
         roles_radio.update({y1: 150});
         roles_radio.draw();
-        if (roles_radio.changed && custom == eCHAPTER_TYPE.CUSTOM) {
+        if (roles_radio.changed) {
             instance_destroy(obj_creation_popup);
             var _data = {
                 target_role : roles_radio.selection_val("role_id"),
                 type : ePOPUP_TYPE.EQUIP
             }
-            instance_create_depth(0, 0, obj_creation_popup, -55, _data);
-            LOGGER.info($"{pp.target_role}")
+            instance_create_depth(0, 0,-55, obj_creation_popup, _data);
+            LOGGER.info($"{obj_creation_popup.target_role}")
         }
     }
     draw_set_color(CM_GREEN_COLOR);
