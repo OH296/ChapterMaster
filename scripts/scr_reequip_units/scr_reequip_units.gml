@@ -11,30 +11,29 @@ enum eEQUIP_TARGET_TYPE {
 
 /// @self Asset.GMObject.obj_controller
 function set_up_equip_popup() {
-    static setup_UI_elements = function() {
+static setup_UI_elements = function(_x1, _y1) {
         equipment_area = -1;
+
         cancel_button = new UnitButtonObject({
-            x1: 1061,
-            y1: 591,
+            x1: _x1 + 55,
+            y1: _y1 + 448,
             style: "pixel",
             label: "Cancel",
         });
         equip_button = new UnitButtonObject({
-            x1: 1450,
-            y1: 591,
+            x1: _x1 + 444,
+            y1: _y1 + 448,
             style: "pixel",
             label: "Equip",
         });
-
         main_slate = new DataSlate({
             style: "decorated",
-            XX: 1006,
-            YY: 143,
+            XX: _x1,
+            YY: _y1,
             set_width: true,
             width: 571,
             height: 450,
         });
-
         var _quality_options = [
             {
                 str1: "Standard",
@@ -49,10 +48,9 @@ function set_up_equip_popup() {
         ];
         quality_radio = new RadioSet(_quality_options, "", {
             max_width: 500,
-            x1: 1040,
-            y1: 318,
+            x1: _x1 + 34,
+            y1: _y1 + 175,
         });
-
         range_melee_radio = new RadioSet([
             {
                 str1: "Ranged",
@@ -66,25 +64,24 @@ function set_up_equip_popup() {
             },
         ], "", {
             max_width: 500,
-            x1: 1040,
-            y1: 343,
+            x1: _x1 + 34,
+            y1: _y1 + 200,
         });
-
         weapon1_select = new UnitButtonObject({
-            x1: 1300,
-            y1: 215,
+            x1: _x1 + 294,
+            y1: _y1 + 72,
             label: "",
             font: fnt_40k_12,
         });
         weapon2_select = new UnitButtonObject({
-            x1: 1300,
-            y1: 235,
+            x1: _x1 + 294,
+            y1: _y1 + 92,
             label: "",
             font: fnt_40k_12,
         });
         armour_select = new UnitButtonObject({
-            x1: 1300,
-            y1: 255,
+            x1: _x1 + 294,
+            y1: _y1 + 112,
             label: "",
             font: fnt_40k_12,
         });
@@ -94,14 +91,14 @@ function set_up_equip_popup() {
             armour_select.active = false;
         }
         gear_select = new UnitButtonObject({
-            x1: 1300,
-            y1: 275,
+            x1: _x1 + 294,
+            y1: _y1 + 132,
             label: "",
             font: fnt_40k_12,
         });
         mobility_select = new UnitButtonObject({
-            x1: 1300,
-            y1: 295,
+            x1: _x1 + 294,
+            y1: _y1 + 152,
             label: "",
             font: fnt_40k_12,
         });
@@ -113,6 +110,7 @@ function set_up_equip_popup() {
             mobility_select,
         ];
     };
+
 
     if (instance_exists(obj_popup)) {
         return;
@@ -236,7 +234,7 @@ function set_up_equip_popup() {
         //Forwards equip_target_type selection to the equipment_recipient_type variable used in mouse_50 obj_popup and weapons_equip script
         pip.equipment_recipient_type = equip_target_type;
         with (pip) {
-            setup_UI_elements();
+            setup_UI_elements(1000, 143);
         }
     }
 }

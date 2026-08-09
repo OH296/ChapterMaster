@@ -171,67 +171,20 @@ if (type == ePOPUP_TYPE.LIVERYPICK){
 } else if (type == ePOPUP_TYPE.EQUIP) {
     role_name_input = new TextBarArea(444, 550, 380, true);
 
-    var _blocked_names = []
+    var _blocked_names = [
+        "Chapter Master",
+        "Master of Sanctity",
+        "Master of the Apothecarion",
+        "Forge Master",
+    ];
 
-if (!is_string(type)) {
-    var z = (type >= 100) ? type - 100 : type;
-
-    if (type >= 100) {
-        for (var i = 1; i <= 13; i++) {
-            var idd = 0;
-            if (i == 1) {
-                idd = 15;
-            }
-            if (i == 2) {
-                idd = 14;
-            }
-            if (i == 3) {
-                idd = 17;
-            }
-            if (i == 4) {
-                idd = 16;
-            }
-            if (i == 5) {
-                idd = 5;
-            }
-            if (i == 6) {
-                idd = 2;
-            }
-            if (i == 7) {
-                idd = 4;
-            }
-            if (i == 8) {
-                idd = 3;
-            }
-            if (i == 9) {
-                idd = 6;
-            }
-            if (i == 10) {
-                idd = 8;
-            }
-            if (i == 11) {
-                idd = 9;
-            }
-            if (i == 12) {
-                idd = 10;
-            }
-            if (i == 13) {
-                idd = 12;
-            }
-            role_names_all += string(obj_creation.player_role_data[idd].role) + "|";
-        }
-
-        role_names_all += "Chapter Master|";
-        role_names_all += "Master of Sanctity|";
-        role_names_all += "Master of the Apothecarion|";
-        role_names_all += "Forge Master|";
-
-        var _r_name = obj_creation.player_role_data[z].role;
-        if (_r_name != "") {
-            badname = string_count(_r_name, role_names_all) > 1;
+    for (var i = 0; i < array_length(obj_creation.player_role_data); i++){
+        var _role_name = obj_creation.player_role_data[i].role;
+        if (_role_name!=""){
+            array_push(_blocked_names, _role_name);
         }
     }
-}
 
+    role_name_input.blocked_values = _blocked_names;
 }
 
