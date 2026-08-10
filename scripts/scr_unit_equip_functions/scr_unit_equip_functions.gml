@@ -565,7 +565,7 @@ function convert_equipment_array_into_struct(array) {
 }
 
 function convert_equipment_struct_into_array(struct){
-    var _equipment = array_create(5, "");
+    var _equipment = array_create(STANDARD_EQUIP_SLOT_COUNT, "");
     for (var i = 0; i  < STANDARD_EQUIP_SLOT_COUNT; i++){
         var _slot = global.unit_equip_slots[i];
         if (struct_exists(struct, _slot)){
