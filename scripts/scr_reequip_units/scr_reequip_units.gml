@@ -10,6 +10,7 @@ enum eEQUIP_TARGET_TYPE {
 }
 
 
+/// @self Asset.GMObject.obj_popup Asset.GMObject.obj_creation_popup
 function setup_UI_elements_equipment_selector(_x1, _y1) {
     equipment_area = -1;
 
@@ -243,7 +244,7 @@ function set_up_equip_popup() {
     }
 }
 
-/// @self Asset.GMObject.obj_popup
+/// @self Asset.GMObject.obj_popup Asset.GMObject.obj_creation_popup
 function reload_items() {
     item_name = [];
     scr_get_item_names(
@@ -257,7 +258,7 @@ function reload_items() {
     );
 }
 
-/// @self Asset.GMObject.obj_popup
+/// @self Asset.GMObject.obj_popup Asset.GMObject.obj_creation_popup
 function draw_popup_equip(before_after_styling = true) {
     main_slate.draw_with_dimensions();
     add_draw_return_values();
