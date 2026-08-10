@@ -6,8 +6,7 @@ try {
         assign_picked_liveries();
 
     } else if (type == ePOPUP_TYPE.EQUIP) {
-        draw_popup_equip();
-        LOGGER.info($"{target_role}")
+        draw_popup_equip(before_after_styling);
         draw_set_font(fnt_40k_30b);
 
         var _role_data = obj_creation.player_role_data[target_role];
@@ -15,11 +14,6 @@ try {
 
         role_name_input.tooltip = $"Astartes Role Name/nThe name of this Astartes Role.  The plural form will be ''{_role_name}s''.";
         _role_data.role = role_name_input.draw(_role_name);
-
-
-        if (point_and_click(draw_unit_buttons([980, 716], "CLOSE", [1, 1], CM_GREEN_COLOR,, fnt_40k_14b, 1))) {
-            target_gear = -1;
-        }
     }
 
     if ((tooltip != "") && (obj_creation.change_slide <= 0)) {

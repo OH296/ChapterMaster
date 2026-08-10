@@ -460,6 +460,9 @@ function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury 
             case "gear":
                 _outcome = update_gear(_item, from_armoury, to_armoury, quality);
                 break;
+            default:
+                continue;
+                break;
         }
         if (_outcome == "no_items") {
             _missing_items += $"{_missing_items == "" ? "" : ","} {_item}";

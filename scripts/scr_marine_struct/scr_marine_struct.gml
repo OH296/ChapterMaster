@@ -2086,6 +2086,8 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             return "no_role_found";
         }
 
+        var _data = variable_clone(_data);
+
         alter_equipment(_data, from_armoury, to_armoury, quality);
     };
 

@@ -108,6 +108,8 @@ function setup_UI_elements_equipment_selector(_x1, _y1) {
         gear_select,
         mobility_select,
     ];
+    equip_button.bind_method = reequip_selection;
+    equip_button.bind_scope = self;
 };
 
 /// @self Asset.GMObject.obj_controller
@@ -258,13 +260,14 @@ function reload_items() {
 /// @self Asset.GMObject.obj_popup
 function draw_popup_equip(before_after_styling = true) {
     main_slate.draw_with_dimensions();
+    add_draw_return_values();
     var _x1 = main_slate.XX;
     var _y1 = main_slate.YY;
-
+    draw_set_valign(fa_top);
     draw_set_font(fnt_40k_14);
     draw_set_color(CM_GREEN_COLOR);
     draw_set_halign(fa_center);
-    draw_text(_x1 + main_slate.width /2, _y1 + 7, "Change Equipment");
+    draw_text(_x1 + main_slate.width /2, _y1 + 7, $"{before_after_styling ? "Change" : "Set"} Equipment");
 
     draw_set_font(fnt_40k_12);
     var comp = "";
@@ -281,7 +284,9 @@ function draw_popup_equip(before_after_styling = true) {
     } else if (equipment_recipient_type > eEQUIP_TARGET_TYPE.DREADNOUGHT) {
         _descriptor = "Vehicles";
     }
-    draw_text(_x1 + 286, _y1 + 32, $"{comp} Company, {unit_count} {_descriptor}");
+    if (company != -1){
+        draw_text(_x1 + 286, _y1 + 32, $"{comp} Company, {unit_count} {_descriptor}");
+    }
 
     draw_set_halign(fa_left);
     draw_set_color(CM_GREEN_COLOR);
@@ -303,7 +308,7 @@ function draw_popup_equip(before_after_styling = true) {
         draw_text_outline(_x1 + 290, _y1 + 52, "After");
     } else {
         for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++) {
-            var _title = $"{get_slot_name(target_role , _slot_count)}: ";
+            var _title = $"{get_slot_name(target_role , i)}: ";
             draw_text(_x1 + 18, _y1 + 72 + (i * 20), _title);
         }
     }
@@ -410,10 +415,8 @@ function draw_popup_equip(before_after_styling = true) {
             break;
         }
     }
-
-    equip_button.bind_method = reequip_selection;
-    equip_button.bind_scope = self;
     equip_button.draw(_valid);
+    pop_draw_return_values();
 }
 
 /// @self Asset.GMObject.obj_popup
