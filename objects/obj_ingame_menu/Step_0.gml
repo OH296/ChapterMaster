@@ -145,6 +145,22 @@ if (settings == 1 && mouse_button_clicked(mb_left, 0, true)) {
         _changed = true;
     }
 
+    // Language selector arrows
+    var _lang_prev_click = scr_hit(671, 542, 703, 574, true);
+    var _lang_next_click = scr_hit(981, 542, 1013, 574, true);
+
+    if (_lang_prev_click || _lang_next_click) {
+        var _languages = global.available_languages;
+        var _index = array_get_index(_languages, global.settings.language);
+        if (_index == -1) {
+            _index = 0;
+        }
+        var _dir = _lang_prev_click ? -1 : 1;
+        global.settings.language = _languages[(_index + _dir + array_length(_languages)) mod array_length(_languages)];
+        global.settings.apply_language();
+        _changed = true;
+    }
+
     if (_changed) {
         global.settings.save();
     }
