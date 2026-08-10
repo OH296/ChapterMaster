@@ -193,6 +193,11 @@ if (type == ePOPUP_TYPE.LIVERYPICK){
     var _dread_role = target_role == eROLE.DREADNOUGHT;
 
     set_new_role_data = function(){
+        for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++) {
+            if (needed_equipment[i] == ITEM_NAME_NONE) {
+                needed_equipment[i] = "";
+            }
+        }
         var _new_data = convert_equipment_array_into_struct(needed_equipment);
         with (editing_role_data){
             move_data_to_current_scope(_new_data);
