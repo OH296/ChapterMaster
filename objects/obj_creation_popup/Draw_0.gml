@@ -13,7 +13,10 @@ try {
         var _role_name = _role_data.role;
 
         role_name_input.tooltip = $"Astartes Role Name/nThe name of this Astartes Role.  The plural form will be ''{_role_name}s''.";
-        _role_data.role = role_name_input.draw(_role_name);
+        role_name_input.draw(_role_name);
+        if (role_name_input.value_allowed){
+            _role_data.role = role_name_input.draw(_role_name);
+        }
     }
 
     if ((tooltip != "") && (obj_creation.change_slide <= 0)) {

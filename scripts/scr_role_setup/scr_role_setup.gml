@@ -177,7 +177,7 @@ function scr_distribution_and_advisor_setup() {
         tooltip2 = "The names of your main Advisors.  They provide useful information and reports on the divisions of your Chapter.";
     }
 
-    draw_text_transformed(444, 550, string_hash_to_newline("Advisor Names"), 0.6, 0.6, 0);
+    draw_text_transformed(444, 550, "Advisor Names", 0.6, 0.6, 0);
     draw_set_font(fnt_40k_14b);
     draw_set_halign(fa_right);
     var _apoths_allowed = player_role_data[eROLE.APOTHECARY].available_to_player;

@@ -185,8 +185,8 @@ if (type == ePOPUP_TYPE.LIVERYPICK){
             continue;
         }
         var _role_name = obj_creation.player_role_data[i].role;
-        if (_role_name!=""){
-            array_push(_blocked_names, _role_name);
+        if (_role_name != ""){
+            array_push(_blocked_names, string_lower(_role_name));
         }
     }
 
