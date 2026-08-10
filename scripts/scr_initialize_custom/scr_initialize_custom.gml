@@ -2868,7 +2868,7 @@ function add_unit_to_company(ttrpg_name, company, role_name, role_id, wep1 = "de
             gear,
             mobi,
         ];
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++) {
             if (_r_data[i] == "default"){
                 _r_data[i] = "";
             }
