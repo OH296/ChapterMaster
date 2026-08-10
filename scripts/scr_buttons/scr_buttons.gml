@@ -794,10 +794,12 @@ function TextBarArea(_x, _y, _max_width = 400, _requires_input = false, data = {
 
     static draw = function(_string_area) {
         add_draw_return_values();
+        if (value_allowed){
+            current_text = _string_area;
+        }
+        value_allowed = true;
 
         draw_set_font(fnt_fancy);
-
-        current_text = _string_area;
 
         if (cooloff > 0) {
             cooloff--;
