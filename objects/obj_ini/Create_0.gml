@@ -320,7 +320,7 @@ deserialize = function(save_data) {
             for (var s = array_length(_squad.members) -1; s >= 0; s--) {
                 _squad.members[s] = fetch_unit_uid(_squad.members[s]);
                 if (is_undefined(_squad.members[s])){
-                    array_delete(_squad.members , s);
+                    array_delete(_squad.members, s, 1);
                 }
             }
         }
