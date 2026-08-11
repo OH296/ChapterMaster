@@ -24,8 +24,12 @@ function tally_marines() {
     obj_controller.command = 0;
     obj_controller.marines = 0;
     for (var co = 0; co <= obj_ini.companies; co++) {
-        for (var i = 0; i < company_length(co); i++) {
+        for (var i = company_length(co) - 1; i >= 0 ; i--) {
             var _unit = fetch_unit([co, i]);
+            if (!is_struct(_unit)){
+                array_delete(obj_ini.TTRPG[co],i,1);
+                continue;
+            }
             if (_unit.base_group != "astartes") {
                 continue;
             }
