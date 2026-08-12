@@ -284,7 +284,7 @@ function accept_mechanicus_tomb_mission() {
     }
     if (_planet > 0) {
         _planet = _star.get_planet_data(_planet);
-        _planet.add_problem("mech_tomb1", 17);
+        _planet.new_problem("mech_tomb1", 17);
         var _name = _planet.name();
         text = $"The Adeptus Mechanicus await your forces at {_name}.  They are expecting at least two squads of Astartes and have placed the testing on hold until their arrival.  {global.chapter_name} have 16 months to arrive.";
         scr_event_log("", "Mechanicus Mission Accepted: At least two squads of marines are expected at {_name} within 16 months.", _star.name);
@@ -309,7 +309,7 @@ function accept_mechanicus_land_raider_mission() {
         var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
         var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
 
-        _planet.add_problem("mech_raider", _mission_time, {completion: 0, required_months: 24});
+        _planet.new_problem("mech_raider", _mission_time, {completion: 0, required_months: 24});
         text = $"The Adeptus Mechanicus await your forces at {_mission_loc}.  They are expecting six {obj_ini.player_role_data[eROLE.TECHMARINE].role}s and a Land Raider.";
         scr_event_log("", $"Mechanicus Mission Accepted: Six of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s and a Land Raider are to be stationed at {_mission_loc} for {_mission_time} months.", _star.name);
         with (_star) {
@@ -333,7 +333,7 @@ function accept_mechanicus_bionics_mission() {
         var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
         var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
 
-        _planet.add_problem("mech_bionics", _mission_time, {completion: 0, required_months: 24});
+        _planet.new_problem("mech_bionics", _mission_time, {completion: 0, required_months: 24});
         text = $"The Adeptus Mechanicus await your forces at {_mission_loc}.  They are expecting ten Astartes with bionics. (Beneficial traits: Weakness of Flesh )";
         scr_event_log("", $"Mechanicus Mission Accepted: Ten Astartes with bionics are to be stationed at {_mission_loc} for 24 months for testing purposes.", _star.name);
         with (_star) {
@@ -357,8 +357,8 @@ function accept_mechanicus_mars_mission() {
         var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
         var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
 
-        _planet.add_problem("mech_bionics", _mission_time, {completion: 0, required_months: 24});
-        _planet.add_problem("mech_mars", _mission_time);
+        _planet.new_problem("mech_bionics", _mission_time, {completion: 0, required_months: 24});
+        _planet.new_problem("mech_mars", _mission_time);
         text = $"The Adeptus Mechanicus await your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s at {_mission_loc}.  They are willing to hold on the voyage for up to {_mission_time} months.";
         scr_event_log("", $"Mechanicus Mission Accepted: {obj_ini.player_role_data[eROLE.TECHMARINE].role}s are expected at {_mission_loc} within 30 months, for the voyage to Mars.", _star.name);
         with (_star) {

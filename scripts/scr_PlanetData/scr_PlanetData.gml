@@ -774,9 +774,18 @@ function PlanetData(_planet, _system) constructor {
         return find_problem_planet(planet, problem, system);
     };
 
-    static add_problem = function(problem, timer, other_data = {}) {
-        return add_new_problem(planet, problem, timer, system, other_data);
-    };
+    static new_problem = function(p_id, timer = -1, data = {}, register = true){
+        var _prob = new PlanetProblem(p_id, timer, data,system.name,  planet);
+        if (register){
+            register_problem(_prob)
+        }
+        return _prob;
+    }
+
+    static register_problem = function(problem){
+        array_push(p_problem, problem);
+        problems = system.p_problem[planet];        
+    }
 
     static name = function() {
         return planet_numeral_name(planet, system);
@@ -2057,7 +2066,7 @@ function PlanetData(_planet, _system) constructor {
 
     static init_war_of_succession = function() {
         add_feature(eP_FEATURES.SUCCESSION_WAR);
-        add_problem("succession", irandom(6) + 4);
+        new_problem("succession", irandom(6) + 4);
         set_player_disposition(-5000);
 
         scr_popup("War of Succession", $"The planetary governor of {name()} has died.  Several subordinates and other parties each claim to be the true heir and successor- war has erupted across the planet as a result.  Heresy thrives in chaos.", "succession", "");
@@ -2070,13 +2079,7 @@ function PlanetData(_planet, _system) constructor {
 
     static init_fallen_marines = function() {
         var _eta = scr_mission_eta(system.x, system.y, 1);
-
-        var assigned_problem = add_problem("fallen", _eta);
-
-        if (!assigned_problem) {
-            LOGGER.error("RE: Hunt the Fallen, coulnd't assign a problem to the planet");
-            return;
-        }
+        assigned_problem = new_problem("fallen", _eta);
 
         var _text = $"Sources indicate one of the Fallen may be upon {name()}.  We have {_eta} months to send out a strike team and scour the planet.  Any longer and any Fallen that might be there will have escaped.";
         scr_popup("Hunt the Fallen", _text, "fallen", "");
