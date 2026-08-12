@@ -249,10 +249,6 @@ function init_mission_inquisition_tomb_world() {
         demand = 0;
     }
     _p_data.new_problem("necron", estimate, {});
-    if (add_new_problem(pop_data.planet, pop_data.mission, pop_data.estimate, mission_star)) {
-        new_star_event_marker("green");
-        mission_is_go = true;
-    }
     exit;
 }
 

@@ -775,7 +775,7 @@ function PlanetData(_planet, _system) constructor {
     };
 
     static new_problem = function(p_id, timer = -1, data = {}, register = true){
-        var _prob = new PlanetProblem(p_id, timer, data,system.name,  planet);
+        var _prob = new PlanetProblem(p_id, timer, data,  self);
         if (register){
             register_problem(_prob)
         }
