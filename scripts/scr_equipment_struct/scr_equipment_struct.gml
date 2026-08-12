@@ -187,12 +187,12 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     break;
                 case "hp_mod":
                     if (hp_mod != 0) {
-                        item_desc_tooltip += $"Health Mod: {format_number_with_sign(hp_mod)}%#";
+                        item_desc_tooltip += $"Health Mod: {string_format_percentage(hp_mod)}#";
                     }
                     break;
                 case "damage_resistance_mod":
                     if (damage_resistance_mod != 0) {
-                        item_desc_tooltip += $"Damage Res: {format_number_with_sign(damage_resistance_mod)}%#";
+                        item_desc_tooltip += $"Damage Res: {string_format_percentage(damage_resistance_mod)}#";
                     }
                     break;
                 case "attack":
@@ -207,12 +207,12 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     break;
                 case "ranged_mod":
                     if (ranged_mod != 0) {
-                        item_desc_tooltip += $"Ranged Mod: {format_number_with_sign(ranged_mod)}%#";
+                        item_desc_tooltip += $"Ranged Mod: {string_format_percentage(ranged_mod)}#";
                     }
                     break;
                 case "melee_mod":
                     if (melee_mod != 0) {
-                        item_desc_tooltip += $"Melee Mod: {format_number_with_sign(melee_mod)}%#";
+                        item_desc_tooltip += $"Melee Mod: {string_format_percentage(melee_mod)}#";
                     }
                     break;
                 case "ammo":
@@ -318,6 +318,33 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
         }
         return item_desc_tooltip;
     };
+
+    static item_attribute_string(attribute){
+        var _str = $"{name}: "
+        switch(attribute){
+            case "damage_resistance_mod":
+                if (damage_resistance_mod == 0){
+                    return "";
+                }
+                _str += "{string_format_percentage(damage_resistance_mod)}";
+                return _str;
+                break;
+            case "hp_mod":
+                if (hp_mod == 0){
+                    return "";
+                }
+                _str += "{string_format_percentage(hp_mod)}";
+                return _str;
+                break;
+            case "armour_value":
+                if (armour_value == 0){
+                    return "";
+                }
+                _str += "{format_number_with_sign(armour_value)}";
+                return _str;
+                break;
+        }
+    }
 
     static special_value = function(special) {
         if (is_struct(specials)) {
