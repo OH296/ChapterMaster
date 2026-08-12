@@ -30,13 +30,11 @@ function scr_special_view(command_group) {
 
     b = 0;
 
-    var _already_used = [];
     if ((command_group == 12) || (command_group == 0)) {
         // Apothecarion
         var apothecaries = collect_role_group([SPECIALISTS_APOTHECARIES, true]);
         for (var i = 0; i < array_length(apothecaries); i++) {
             unit = apothecaries[i];
-            array_push(_already_used, unit.marine_number);
             add_man_to_manage_arrays(apothecaries[i]);
         }
     }
@@ -46,7 +44,6 @@ function scr_special_view(command_group) {
         var libs = collect_role_group([SPECIALISTS_LIBRARIANS, true]);
         for (var i = 0; i < array_length(libs); i++) {
             unit = libs[i];
-            array_push(_already_used, unit.marine_number);
             add_man_to_manage_arrays(libs[i]);
         }
     }
@@ -56,7 +53,6 @@ function scr_special_view(command_group) {
         var chaps = collect_role_group([SPECIALISTS_CHAPLAINS, true]);
         for (var i = 0; i < array_length(chaps); i++) {
             unit = chaps[i];
-            array_push(_already_used, unit.marine_number);
             add_man_to_manage_arrays(chaps[i]);
         }
     }
@@ -67,7 +63,6 @@ function scr_special_view(command_group) {
         var techs = collect_role_group([SPECIALISTS_TECHS, true]);
         for (var i = 0; i < array_length(techs); i++) {
             unit = techs[i];
-            array_push(_already_used, unit.marine_number);
             add_man_to_manage_arrays(techs[i]);
         }
     }

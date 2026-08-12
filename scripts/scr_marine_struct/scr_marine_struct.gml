@@ -422,6 +422,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         }
         var _old_company_length = array_length(obj_ini.TTRPG[_old_loc[0]]);
         array_delete(obj_ini.TTRPG[_old_loc[0]], _old_loc[1], 1);
+        normalise_marine_numbers(_old_loc[0], _old_loc[1])
     };
 
     static armour = function(raw = false) {

@@ -522,18 +522,8 @@ function add_unit_to_battle(unit, meeting, is_local) {
     //Same as co/company and v, but with extra comprovations in case of a meeting (meeting?)
     var _role = active_roles();
     var cooh = 0;
-    var va = 0;
-    var v = unit.marine_number;
     var company = unit.company;
-    if (!meeting) {
-        cooh = company;
-        va = v;
-    } else {
-        if (v <= obj_temp_meeting.dudes) {
-            cooh = obj_temp_meeting.company[v];
-            va = obj_temp_meeting.ide[v];
-        }
-    }
+
     var _armour_data = unit.get_armour_data();
     var _wearing_armour = is_struct(_armour_data);
 

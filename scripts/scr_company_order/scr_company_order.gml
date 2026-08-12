@@ -20,7 +20,10 @@ function company_length(company) {
     return array_length(obj_ini.TTRPG[company]);
 }
 
-function normalise_marine_numbers(company, start_index,length){
+function normalise_marine_numbers(company, start_index,length =-1){
+    if (length == -1){
+        length = company_length(company);
+    }
     for (var l = start_index; l < length; l++) {
         obj_ini.TTRPG[company][l].marine_number = l;
     }
@@ -139,9 +142,7 @@ function scr_company_order(company) {
 
         TTRPG[co] = _company_marines.units;
 
-        for (var i = 0; i < array_length(TTRPG[co]); i++) {
-            TTRPG[co][i].marine_number = i;
-        }
+        normalise_marine_numbers();
     } catch (_exception) {
         ERROR_HANDLER.handle_exception(_exception);
     }

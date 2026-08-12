@@ -33,7 +33,6 @@ y2 = 450 + (draw_size / 2);
 unit_struct = [];
 marine_type = [];
 marine_co = [];
-marine_id = [];
 marine_hp = [];
 marine_ac = [];
 marine_exp = [];

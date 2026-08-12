@@ -691,7 +691,6 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.men += 1;
                     targ.unit_struct[targ.men] = _unit;
                     targ.marine_co[targ.men] = _unit.company;
-                    targ.marine_id[targ.men] = v;
                     targ.marine_type[targ.men] = _unit.role();
                     targ.marine_wep1[targ.men] = _unit.weapon_one();
                     targ.marine_wep2[targ.men] = _unit.weapon_two();

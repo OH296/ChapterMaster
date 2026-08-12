@@ -513,7 +513,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
     };
 
     /// @desc Returns the bearer reference.
-    /// @returns {Array|undefined} [company, marine_number] of the bearer, or undefined if unequipped.
+    /// @returns {struct|undefined} unit Struct of the bearer, or undefined if unequipped.
     static get_bearer = function() {
         return __bearer;
     };
@@ -558,7 +558,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
     };
 
     /// @desc Sets the bearer reference.
-    /// @param {Array|undefined} value [company, marine_number] or undefined.
+    /// @param {Array|undefined} value TTRPG_stats instance or undefined.
     static set_bearer = function(value) {
         __bearer = value;
     };

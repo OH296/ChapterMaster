@@ -370,7 +370,6 @@ function reset_combat_message_arrays() {
 function scr_add_unit_to_roster(unit, is_local = false, is_ally = false) {
     array_push(unit_struct, unit);
     array_push(marine_co, unit.company);
-    array_push(marine_id, unit.marine_number);
     array_push(marine_type, unit.role());
     array_push(marine_wep1, unit.weapon_one());
     array_push(marine_wep2, unit.weapon_two());
