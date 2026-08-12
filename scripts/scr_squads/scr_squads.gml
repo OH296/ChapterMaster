@@ -471,10 +471,17 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     };
 
     //function for loading in squad save data
-    static load_json_data = function(data) {
-        var names = variable_struct_get_names(data);
-        for (var i = 0; i < array_length(names); i++) {
-            variable_struct_set(self, names[i], variable_struct_get(data, names[i]));
+    static load = function(data) {
+        move_data_to_current_scope(data);
+        obj_ini.squads[$ uid] = self;
+        for (var s = 0; s < array_length(members); s++) {
+            members[s] = fetch_unit_uid(members[s]);
+        }
+
+        for (var s = array_length(members) - 1; s >= 0; s--) {
+            if (!is_struct(members[s])) {
+                array_delete(members, s, 1);
+            }
         }
     };
 
