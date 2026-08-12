@@ -173,7 +173,7 @@ function reset_manage_unit_constants(unit) {
         // Damage Resistance
 
         var _res_tool = "Health damage taken by the marine is reduced by this percentage. This happens after the flat reduction from armor.\n\nContributing factors:\n";
-        _res_tool += _equip_data.set_attribute_string("damage_resistance_mod")
+        _res_tool += _equip_data.set_attribute_string("damage_resistance_mod");
         _res_tool += $"CON: {round(unit.constitution / 2)}%";
 
         unit_manage_constants.damage_res = new LabeledIcon(spr_icon_iron_halo, $"{_damage_res}%", 0, 0, {
@@ -199,7 +199,7 @@ function reset_manage_unit_constants(unit) {
         var _armour_val = $"{unit.armour_calc()}";
         var _armour_tool = "Reduces incoming damage at a flat rate. Certain enemies may attack in ways that may bypass your armor entirely, for example power weapons and some warp sorceries.\n\nContributing factors:\n";
 
-        var _armour_tool += _equip_data.set_attribute_string("armour_value");
+		_armour_tool += _equip_data.set_attribute_string("armour_value");
 
         if (obj_controller.stc_bonus[1] == 5 || obj_controller.stc_bonus[2] == 3) {
             _armour_tool += "STC Bonus: x1.05\n";

@@ -695,7 +695,7 @@ function UnitEquipment(equipment_set, _unit = noone) constructor {
         return _string;
     };
 
-    static set_attribute_string(attribute){
+    static set_attribute_string = function(attribute){
         var _str = "";
         for (var i = 0; i < array_length(present_items); i++){
             var _item = equipment[$ present_items[i]];

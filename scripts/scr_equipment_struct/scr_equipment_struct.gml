@@ -319,28 +319,28 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
         return item_desc_tooltip;
     };
 
-    static item_attribute_string(attribute){
+    static item_attribute_string = function(attribute){
         var _str = $"{name}: "
         switch(attribute){
             case "damage_resistance_mod":
                 if (damage_resistance_mod == 0){
                     return "";
                 }
-                _str += "{string_format_percentage(damage_resistance_mod)}";
+                _str += $"{string_format_percentage(damage_resistance_mod)}";
                 return _str;
                 break;
             case "hp_mod":
                 if (hp_mod == 0){
                     return "";
                 }
-                _str += "{string_format_percentage(hp_mod)}";
+                _str += $"{string_format_percentage(hp_mod)}";
                 return _str;
                 break;
             case "armour_value":
                 if (armour_value == 0){
                     return "";
                 }
-                _str += "{format_number_with_sign(armour_value)}";
+                _str += $"{format_number_with_sign(armour_value)}";
                 return _str;
                 break;
         }
