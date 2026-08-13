@@ -483,6 +483,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
                 array_delete(members, s, 1);
             }
         }
+        determine_leader();
     };
 
     //this dermine the relative coherency of a squad on the basis that a squad needs to more or less be all together in order ot undertake squad actions
