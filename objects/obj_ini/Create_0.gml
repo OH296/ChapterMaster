@@ -309,14 +309,13 @@ deserialize = function(save_data) {
 
     var _squad_structs = save_data[$ "squad_structs"];
     if (is_struct(_squad_structs)) {
-        squads = {};
-        var _squad_uids = struct_get_names(_squad_structs);
-        var _squad_count = array_length(_squad_uids);
-        for (var i = 0; i < _squad_count; i++) {
-            var _squad_uid = _squad_uids[i];
             var _data = _squad_structs[$ _squad_uid];
             var _squad = new UnitSquad();
-            _squad.load(_data);
+            try {
+                _squad.load(_data);
+            } catch (e) {
+                LOGGER.exception("Failed to load squad " + _squad_uid, e);
+            }
         }
     }
 
