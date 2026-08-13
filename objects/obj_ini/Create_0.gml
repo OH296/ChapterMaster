@@ -317,7 +317,6 @@ deserialize = function(save_data) {
             var _data = _squad_structs[$ _squad_uid];
             var _squad = new UnitSquad();
             _squad.load(_data);
-
         }
     }
 

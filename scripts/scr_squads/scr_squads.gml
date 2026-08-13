@@ -643,7 +643,7 @@ function UnitSquad(squad_type = undefined, company = 0) constructor {
     static member_loop = function(member_func, data_pack) {
         member_length = array_length(members);
         for (var i = 0; i < member_length; i++) {
-            var _unit = fetch_unit(members[i]);
+            var _unit = members[i];
             if (!is_struct(_unit)) {
                 array_delete(members, i, 1);
                 member_length--;
