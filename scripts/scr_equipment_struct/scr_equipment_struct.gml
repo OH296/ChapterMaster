@@ -319,6 +319,9 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
         return item_desc_tooltip;
     };
 
+    /// @desc Returns a formatted attribute string for the item
+    /// @param {string} attribute The attribute key to format (e.g. "hp_mod", "damage_resistance_mod", "armour_value")
+    /// @returns {string} The formatted attribute string, or empty string if the attribute value is 0
     static item_attribute_string = function(attribute){
         var _str = $"{name}: "
         switch(attribute){
@@ -334,6 +337,17 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     return "";
                 }
                 _str += $"{string_format_percentage(hp_mod)}";
+                return _str;
+                break;
+            case "armour_value":
+                if (armour_value == 0){
+                    return "";
+                }
+                _str += $"{format_number_with_sign(armour_value)}";
+                return _str;
+                break;
+        }
+    }
                 return _str;
                 break;
             case "armour_value":
