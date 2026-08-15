@@ -5,12 +5,17 @@ function LocalizationManager() constructor {
     needs_cjk = false;
     translations = {};
     cjk_fonts = {};
+    font_styles = {};
+    // Keys already warned about as missing this language load, so draw-time arrays do not
+    // flood LOGGER.error every frame for the same gap. Reset on each language load.
+    reported_missing = {};
 
     /// @param {string} _language Language code: LANG_EN, LANG_ZH, etc.
     static load_language = function(_language) {
         self.language = _language;
         self.needs_cjk = _language != LANG_EN && string_count(LANG_ZH, _language) > 0;
         self.translations = self._load_lang_file(_language);
+        self.reported_missing = {};
         self._warn_missing_translations();
     };
 
@@ -77,12 +82,97 @@ function LocalizationManager() constructor {
         }
 
         if (_args != undefined) {
-            for (var i = 0; i < array_length(_args); i++) {
-                _value = string_replace_all(_value, "{" + string(i) + "}", string(_args[i]));
+            var _count = array_length(_args);
+            var _tokens = [];
+            for (var i = 0; i < _count; i++) {
+                var _token = chr(2) + "LOC_ARG_" + string(i) + chr(2);
+                array_push(_tokens, _token);
+                _value = string_replace_all(_value, "{" + string(i) + "}", _token);
+            }
+            for (var i = 0; i < _count; i++) {
+                _value = string_replace_all(_value, _tokens[i], string(_args[i]));
             }
         }
 
         return _value;
+    };
+
+    /// @desc Localizes every entry of an array in one call, returning a new array. Each element
+    ///       is treated as an English translation key (or a { text, variables } struct for
+    ///       keys with {0}, {1} placeholders). Missing keys fall back to the English value and
+    ///       are reported with LOGGER.error so translation gaps surface loudly instead of
+    ///       silently showing the wrong language.
+    /// @param {Array} _keys Array of English keys and/or { text, variables } structs.
+    /// @returns {Array}
+    static localize_array = function(_keys) {
+        var _result = array_create(array_length(_keys), "");
+        for (var i = 0; i < array_length(_keys); i++) {
+            var _item = _keys[i];
+            _result[i] = self._localize_item(_item);
+        }
+        return _result;
+    };
+
+    /// @desc Reports a missing translation key once per language load. Calling this from
+    ///       _localize_item (which may run every draw frame for draw-time arrays) with an
+    ///       un-deduplicated LOGGER.error would flood the log, so each key fires at most once
+    ///       until the next load_language resets reported_missing.
+    /// @param {string} _key The untranslated English key.
+    static _report_missing = function(_key) {
+        if (struct_exists(self.reported_missing, _key)) {
+            return;
+        }
+        self.reported_missing[$ _key] = true;
+        LOGGER.error($"No translation for '{_key}' in language '{self.language}'.");
+    };
+
+    /// @desc Localizes a single array entry: an English key, or a { text, variables } struct.
+    ///       Empty values pass through untouched; missing keys fall back to English with a
+    ///       once-per-language-load LOGGER.error warning.
+    /// @param {string|Struct} _item English translation key or struct with placeholder data.
+    /// @returns {string}
+    static _localize_item = function(_item) {
+        if (is_struct(_item)) {
+            var _text = _item[$ LANG_ENTRY_TEXT];
+            var _variables = struct_exists(_item, LANG_ENTRY_VARIABLES) ? _item[$ LANG_ENTRY_VARIABLES] : undefined;
+            if (_text != "" && !struct_exists(self.translations, _text)) {
+                self._report_missing(_text);
+            }
+            return self.translate(_text, _variables);
+        }
+        if (!is_string(_item) || _item == "") {
+            return _item;
+        }
+        if (!struct_exists(self.translations, _item)) {
+            self._report_missing(_item);
+        }
+        return self.translate(_item);
+    };
+
+    /// @desc Rebuilds the localized global faction_names display array from the pristine English
+    ///       source (global.faction_names_en), translating once per language change instead of on
+    ///       every draw frame. Translating from the constant English source each time makes the
+    ///       call fully idempotent and round-trip safe: switching to another language and back to
+    ///       English always restores the original English names. Call from
+    ///       SettingsManager.apply_language().
+    static refresh_locale_globals = function() {
+        for (var i = 0; i < array_length(global.faction_names_en); i++) {
+            global.faction_names[i] = self.translate(global.faction_names_en[i]);
+        }
+
+        // Rebuild each live rating array from its pristine English source, exactly like
+        // faction_names above. Writes go directly through each global accessor so the live
+        // array CoW-copies away from the shared _en source; translating from English each time
+        // keeps the call idempotent and round-trip safe.
+        for (var i = 0; i < array_length(global.chapter_strength_ratings_en); i++) {
+            global.chapter_strength_ratings[i] = self.translate(global.chapter_strength_ratings_en[i]);
+        }
+        for (var i = 0; i < array_length(global.chapter_cooperation_ratings_en); i++) {
+            global.chapter_cooperation_ratings[i] = self.translate(global.chapter_cooperation_ratings_en[i]);
+        }
+        for (var i = 0; i < array_length(global.chapter_geneseed_ratings_en); i++) {
+            global.chapter_geneseed_ratings[i] = self.translate(global.chapter_geneseed_ratings_en[i]);
+        }
     };
 
     /// @param {real} _size Point size used for the runtime fallback font.
@@ -93,12 +183,13 @@ function LocalizationManager() constructor {
             return _base_font;
         }
 
-        var _key = string(_size);
+        var _style = self._get_font_style(_base_font);
+        var _key = string(_size) + ":" + string(_style.bold) + ":" + string(_style.italic);
         if (struct_exists(self.cjk_fonts, _key)) {
             return self.cjk_fonts[$ _key];
         }
 
-        var _fallback_font = font_add(STR_CJK_FALLBACK_FONT, _size, false, false, 32, 65535);
+        var _fallback_font = font_add(STR_CJK_FALLBACK_FONT, _size, _style.bold, _style.italic, 32, 65535);
         if (!font_exists(_fallback_font)) {
             LOGGER.error($"Failed to load CJK fallback font '{STR_CJK_FALLBACK_FONT}' at size {_size}. Chinese glyphs may render as blank boxes.");
             self.cjk_fonts[$ _key] = _base_font;
@@ -107,6 +198,71 @@ function LocalizationManager() constructor {
 
         self.cjk_fonts[$ _key] = _fallback_font;
         return _fallback_font;
+    };
+
+    /// @desc Returns a font's bold/italic style, cached per font asset so detection (and any
+    ///       warnings) run once per session rather than on every draw call.
+    /// @param {real} _base_font The font asset intended for this text.
+    /// @returns {Struct}
+    static _get_font_style = function(_base_font) {
+        var _font_id = string(_base_font);
+        if (struct_exists(self.font_styles, _font_id)) {
+            return self.font_styles[$ _font_id];
+        }
+
+        var _style = self._font_style(_base_font);
+        self.font_styles[$ _font_id] = _style;
+        return _style;
+    };
+
+    /// @desc Resolves a font's bold/italic style. Styled fonts are declared explicitly in
+    ///       font_style_overrides(); the name-suffix heuristic below is only a safety net and logs
+    ///       a warning when it detects a styled font that is not declared, so adding or renaming a
+    ///       font surfaces loudly instead of silently losing or gaining weight.
+    /// @param {real} _base_font The font asset intended for this text.
+    /// @returns {Struct}
+    static _font_style = function(_base_font) {
+        var _name = font_get_name(_base_font);
+        var _overrides = font_style_overrides();
+        if (struct_exists(_overrides, _name)) {
+            return _overrides[$ _name];
+        }
+
+        var _style = { bold: false, italic: false };
+        var _len = string_length(_name);
+        if (_len == 0) {
+            return _style;
+        }
+
+        var _is_digit = function(_char) {
+            return string_digits(_char) == _char;
+        };
+
+        var _last = string_char_at(_name, _len);
+        if (_is_digit(_last)) {
+            return _style;
+        }
+        if (_last != "b" && _last != "i") {
+            return _style;
+        }
+
+        LOGGER.warning($"Font '{_name}' suggests bold/italic via its name suffix but is not declared in font_style_overrides(); add it there so the CJK fallback weight is explicit.");
+
+        _style.bold = _last == "b";
+        _style.italic = _last == "i";
+
+        if (_len > 1) {
+            var _prev = string_char_at(_name, _len - 1);
+            if (_is_digit(_prev)) {
+                return _style;
+            }
+            if (_last == "i" && _prev == "b") {
+                _style.bold = true;
+            } else if (_last == "b" && _prev == "i") {
+                _style.italic = true;
+            }
+        }
+        return _style;
     };
 }
 
@@ -121,6 +277,18 @@ function localize(_key, _args = undefined) {
     return _key;
 }
 
+/// @desc Global shorthand for localizing every entry of an array in one call, mapping each
+///       English element to the current language. Missing keys fall back to English and are
+///       flagged with LOGGER.error.
+/// @param {Array} _keys Array of English keys and/or { text, variables } structs.
+/// @returns {Array}
+function localize_array(_keys) {
+    if (variable_global_exists("localization_manager")) {
+        return global.localization_manager.localize_array(_keys);
+    }
+    return _keys;
+}
+
 /// @desc Global shorthand for a font suitable for the current language, deriving
 ///       the point size from the base font asset so callers never hardcode sizes.
 /// @param {real} _base_font The font asset intended for this text.
@@ -131,4 +299,19 @@ function cjk_font(_base_font) {
         return global.localization_manager.get_font(_size, _base_font);
     }
     return _base_font;
+}
+
+/// @desc Explicit registry of styled font assets used by the CJK fallback. The CJK runtime font
+///       cannot preserve bold/italic, so styled fonts must be declared here; the name-suffix
+///       heuristic in LocalizationManager._font_style() is only a safety net and warns loudly if a
+///       styled-looking font is missing from this list. Add any future styled font here.
+/// @returns {Struct}
+function font_style_overrides() {
+    static _overrides = {
+        fnt_40k_14b: { bold: true, italic: false },
+        fnt_40k_30b: { bold: true, italic: false },
+        fnt_40k_12i: { bold: false, italic: true },
+        fnt_40k_14i: { bold: false, italic: true },
+    };
+    return _overrides;
 }
