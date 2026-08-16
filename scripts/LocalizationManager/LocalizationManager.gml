@@ -165,23 +165,14 @@ function LocalizationManager() constructor {
     ///       English always restores the original English names. Call from
     ///       SettingsManager.apply_language().
     static refresh_locale_globals = function() {
-        for (var i = 0; i < array_length(global.faction_names_en); i++) {
-            global.faction_names[i] = self.translate(global.faction_names_en[i]);
-        }
-
-        // Rebuild each live rating array from its pristine English source, exactly like
-        // faction_names above. Writes go directly through each global accessor so the live
-        // array CoW-copies away from the shared _en source; translating from English each time
-        // keeps the call idempotent and round-trip safe.
-        for (var i = 0; i < array_length(global.chapter_strength_ratings_en); i++) {
-            global.chapter_strength_ratings[i] = self.translate(global.chapter_strength_ratings_en[i]);
-        }
-        for (var i = 0; i < array_length(global.chapter_cooperation_ratings_en); i++) {
-            global.chapter_cooperation_ratings[i] = self.translate(global.chapter_cooperation_ratings_en[i]);
-        }
-        for (var i = 0; i < array_length(global.chapter_geneseed_ratings_en); i++) {
-            global.chapter_geneseed_ratings[i] = self.translate(global.chapter_geneseed_ratings_en[i]);
-        }
+        global.faction_names = self.localize_array(global.faction_names_en);
+        global.chapter_strength_ratings = self.localize_array(global.chapter_strength_ratings_en);
+        global.chapter_cooperation_ratings = self.localize_array(global.chapter_cooperation_ratings_en);
+        global.chapter_geneseed_ratings = self.localize_array(global.chapter_geneseed_ratings_en);
+        global.planet_forti = self.localize_array(global.planet_forti_en);
+        global.presence_factions = self.localize_array(global.presence_factions_en);
+        global.presence_blurbs = self.localize_array(global.presence_blurbs_en);
+        global.planet_size = self.localize_array(global.planet_size_en);
     };
 
     /// @param {Real} _base_font The font asset intended for this text.
@@ -314,6 +305,7 @@ function localize_array(_keys) {
 /// @returns {Real}
 function cjk_font(_base_font) {
     if (!variable_global_exists("localization_manager") || !global.localization_manager.needs_cjk) {
+
         return _base_font;
     }
 

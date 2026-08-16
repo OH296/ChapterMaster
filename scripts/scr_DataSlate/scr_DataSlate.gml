@@ -399,6 +399,9 @@ function ShutterButton() constructor {
     cover_text = "";
     tooltip = "";
     text_color = c_red;
+    loc_lang = "";
+    loc_key = "";
+    loc_cover_text = "";
 
     right_rack = new RackAndPinion();
     left_rack = new RackAndPinion("backward");
@@ -497,15 +500,22 @@ function ShutterButton() constructor {
         if (time_open < 2) {
             draw_sprite_ext(spr_shutter_button, main_sprite, xx, yy, scale, scale, 0, c_white, 1);
             if (cover_text != "") {
+                var _loc_lang = variable_global_exists("localization_manager") ? global.localization_manager.language : "";
+                if (_loc_lang != loc_lang || loc_key != cover_text) {
+                    loc_lang = _loc_lang;
+                    loc_key = cover_text;
+                    loc_cover_text = localize(cover_text);
+                }
                 draw_set_valign(fa_top);
                 draw_set_font(cjk_font(fnt_Embossed_metal));
+                var _cover_text = loc_cover_text;
                 var _cover_scale = 3 * scale;
-                while (string_width(cover_text) * _cover_scale > width - (5 * scale)) {
+                while (string_width(_cover_text) * _cover_scale > width - (5 * scale)) {
                     _cover_scale -= 0.1;
                 }
-                var text_draw = xx + (width / 2) - ((string_width(cover_text) * _cover_scale) / 2);
+                var text_draw = xx + (width / 2) - ((string_width(_cover_text) * _cover_scale) / 2);
                 draw_set_color(c_black);
-                draw_text_transformed(text_draw, yy + (_cover_scale * 1), cover_text, _cover_scale, _cover_scale, 0);
+                draw_text_transformed(text_draw, yy + (_cover_scale * 1), _cover_text, _cover_scale, _cover_scale, 0);
             }
         } else if (time_open >= 2) {
             main_sprite = floor(time_open / 6) + 1;
