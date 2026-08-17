@@ -241,7 +241,6 @@ function chaplain_training() {
                     _unit.update_mobility_item("");
                     scr_alert("green", "recruitment", $"{_unit.name_role()} begins training.", 0, 0);
                     with (obj_ini) {
-                        scr_company_order(marine_company);
                         scr_company_order(0);
                     }
                 } else {
