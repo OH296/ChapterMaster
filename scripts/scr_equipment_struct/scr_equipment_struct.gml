@@ -170,7 +170,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
     /// @param {string} stat The stat key (e.g. "hp_mod", "range", "armour_value")
     /// @param {string} type The item's type, used for labels that differ by type
     /// @returns {string} The localized display label, or empty string if the stat has no simple label
-    static stat_display_label_conversion = funtion(stat) {
+    static stat_display_label_conversion = function(stat) {
         var _label = "";
         switch (stat) {
             case "quality":
@@ -310,17 +310,17 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
         ];
 
         for (var i = 0; i < array_length(stat_order); i++) {
-            var stat = stat_order[i];
+            var _stat = stat_order[i];
 
-            if (array_contains(simple_stats, stat)) {
-                if (stat_display_has_value(stat)) {
-                    var _terminator = (stat == "quality") ? "##" : "#";
-                    item_desc_tooltip += $"{stat_display_label_conversion(stat)}: {stat_display_value_conversion(stat)}{_terminator}";
+            if (array_contains(simple_stats, _stat)) {
+                if (stat_display_has_value(_stat)) {
+                    var _terminator = (_stat == "quality") ? "##" : "#";
+                    item_desc_tooltip += $"{stat_display_label_conversion(_stat)}: {stat_display_value_conversion(_stat)}{_terminator}";
                 }
                 continue;
             }
 
-            switch (stat) {
+            switch (_stat) {
                 case "description":
                     if (description != "") {
                         item_desc_tooltip += $"{localize(description)}##";
@@ -367,7 +367,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     var _array_length = array_length(special_properties_array);
                     if (_array_length > 0) {
                         var special_properties_string = array_to_string_order(special_properties_array, false, false);
-                        item_desc_tooltip += $"#{stat_display_label_conversion(stat)}:#{special_properties_string}#";
+                        item_desc_tooltip += $"#{stat_display_label_conversion(_stat)}:#{special_properties_string}#";
                     }
                     break;
                 case "special_description":
@@ -389,7 +389,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                                 tagString += ", ";
                             }
                         }
-                        item_desc_tooltip += $"#{stat_display_label_conversion(stat)}:#{tagString}#";
+                        item_desc_tooltip += $"#{stat_display_label_conversion(_stat)}:#{tagString}#";
                     }
                     break;
             }
