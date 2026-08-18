@@ -119,7 +119,7 @@ function scr_crusade() {
 
                     clean[co] = 1;
                     marines_lost++;
-                    unit.kill(false, true);
+                    _unit.kill(false, true);
                 } else {
                     if (_unit.IsSpecialist(SPECIALISTS_APOTHECARIES) && (_unit.gear() == "Narthecium")) {
                         apoth++;
