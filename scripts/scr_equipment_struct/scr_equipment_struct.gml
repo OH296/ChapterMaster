@@ -226,7 +226,6 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
     static item_tooltip_desc_gen = function() {
         item_desc_tooltip = "";
         var stat_order;
-        var type = type;
         if (type == "") {
             if (name == "") {
                 return "";
