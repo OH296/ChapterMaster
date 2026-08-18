@@ -388,7 +388,7 @@ function after_combat_dead_marine_equipment_recovered(unit) {
             case "armour":
                 unit.update_armour("", false, _recover);
             case "wep1":
-                unit.weapon_one("", false, _recover);
+                unit.update_weapon_one("", false, _recover);
             case "wep2":
                 unit.update_weapon_two("", false, _recover);
             case "gear":

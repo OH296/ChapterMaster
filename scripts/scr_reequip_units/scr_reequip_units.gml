@@ -1,7 +1,7 @@
 enum eEQUIP_TARGET_TYPE {
     NONE = 0,
     MARINE = 1,
-    DREADNOUGHT,
+    DREADNOUGHT = eROLE.DREADNOUGHT,
     LAND_RAIDER = 50,
     RHINO = 51,
     PREDATOR = 52,
@@ -113,6 +113,8 @@ function setup_UI_elements_equipment_selector(_x1, _y1) {
 }
 
 /// @self Asset.GMObject.obj_controller
+/// @desc Opens the equipment popup for the selected units.
+/// @returns {Undefined}
 function set_up_equip_popup() {
     if (instance_exists(obj_popup)) {
         return;
@@ -231,11 +233,10 @@ function set_up_equip_popup() {
         pip.company = managing;
         pip.unit_count = _units_selected_for_change;
         pip.unchangeable_armour = _unchangeable_armour;
-        pip.sprite_index = noone;
         pip.allow_quality_change = true;
         pip.from_inventory = true;
 
-        //Forwards equip_target_type selection to the equipment_recipient_type variable used in mouse_50 obj_popup and weapons_equip script
+        // Forward the role-compatible target type used by scr_get_item_names().
         pip.equipment_recipient_type = equip_target_type;
         with (pip) {
             setup_UI_elements_equipment_selector(1000, 143);
@@ -248,7 +249,7 @@ function reload_items() {
     item_name = [];
     scr_get_item_names(
         item_name,
-        equipment_recipient_type, // eROLE
+        equipment_recipient_type, // eROLE-compatible target type
         equipment_area, // slot
         range_melee_radio.selection_val("val"),
         false, // include company standard
@@ -258,6 +259,9 @@ function reload_items() {
 }
 
 /// @self Asset.GMObject.obj_popup Asset.GMObject.obj_creation_popup
+/// @desc Draws and handles the equipment popup.
+/// @param {Bool} [before_after_styling] ... Defaults to true.
+/// @returns {Undefined}
 function draw_popup_equip(before_after_styling = true) {
     main_slate.draw_with_dimensions();
     add_draw_return_values();
@@ -267,7 +271,7 @@ function draw_popup_equip(before_after_styling = true) {
     draw_set_font(fnt_40k_14);
     draw_set_color(CM_GREEN_COLOR);
     draw_set_halign(fa_center);
-    draw_text(_x1 + main_slate.width / 2, _y1 + 7, $"{before_after_styling ? "Change" : "Set"} Equipment");
+    draw_text(_x1 + main_slate.width / 2, _y1 + 7, localize(before_after_styling ? "Change Equipment" : "Set Equipment"));
 
     draw_set_font(fnt_40k_12);
     var comp = "";
@@ -285,7 +289,7 @@ function draw_popup_equip(before_after_styling = true) {
         _descriptor = "Vehicles";
     }
     if (company != -1) {
-        draw_text(_x1 + 286, _y1 + 32, $"{comp} Company, {unit_count} {_descriptor}");
+        draw_text(_x1 + 286, _y1 + 32, $"{comp} {localize("Company")}, {unit_count} {localize(_descriptor)}");
     }
 
     draw_set_halign(fa_left);
@@ -295,20 +299,20 @@ function draw_popup_equip(before_after_styling = true) {
     // Need to not show the artifact tags here somehow
 
     if (before_after_styling) {
-        draw_text_outline(_x1 + 14, _y1 + 52, "Before");
+        draw_text_outline(_x1 + 14, _y1 + 52, localize("Before"));
 
         for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++) {
             var _current = current_equipment[i];
             if (_current == "") {
                 _current = ITEM_NAME_NONE;
             }
-            draw_text(_x1 + 18, _y1 + 72 + (i * 20), _current);
+            draw_text(_x1 + 18, _y1 + 72 + (i * 20), localize(_current));
         }
 
-        draw_text_outline(_x1 + 290, _y1 + 52, "After");
+        draw_text_outline(_x1 + 290, _y1 + 52, localize("After"));
     } else {
         for (var i = 0; i < STANDARD_EQUIP_SLOT_COUNT; i++) {
-            var _title = $"{get_slot_name(target_role, i)}: ";
+            var _title = $"{localize(get_slot_name(target_role, i))}: ";
             draw_text(_x1 + 18, _y1 + 72 + (i * 20), _title);
         }
     }
@@ -358,7 +362,7 @@ function draw_popup_equip(before_after_styling = true) {
                 box_y + 20,
             ];
             check = needed_equipment[equipment_area] == item_name[o] ? "x" : " ";
-            item_string = $"[{check}] {item_name[o]}";
+            item_string = $"[{check}] {localize(item_name[o])}";
             draw_text_transformed(box_x, box_y, item_string, mct, 1, 0);
             if (scr_hit(box)) {
                 tooltip_draw(gen_item_tooltip(item_name[o]));
@@ -385,7 +389,6 @@ function draw_popup_equip(before_after_styling = true) {
         warning = _results.warning;
     }
 
-    //draw_set_halign(fa_center);
     if ((equipment_area == eEQUIPMENT_SLOT.WEAPON_ONE) || (equipment_area == eEQUIPMENT_SLOT.WEAPON_TWO)) {
         range_melee_radio.draw();
     }
@@ -400,9 +403,18 @@ function draw_popup_equip(before_after_styling = true) {
         reload_items();
     }
 
-    draw_set_color(255);
-    draw_set_halign(fa_center);
-    draw_text(_x1 + 286, _y1 + 427, warning);
+    if (warning != "") {
+        add_draw_return_values();
+        draw_set_color(255);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_top);
+        draw_set_font(fnt_40k_12);
+        var _warning_width = main_slate.width - 40;
+        var _warning_height = string_height_ext(warning, -1, _warning_width);
+        var _warning_bottom_y = _y1 + 443; // 5px above the Cancel/Equip buttons at _y1 + 448
+        draw_text_ext(_x1 + main_slate.width / 2, _warning_bottom_y - _warning_height, warning, -1, _warning_width);
+        pop_draw_return_values();
+    }
 
     if (cancel_button.draw()) {
         instance_destroy();

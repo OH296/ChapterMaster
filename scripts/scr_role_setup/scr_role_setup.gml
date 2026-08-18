@@ -83,7 +83,10 @@ function role_setup_objects() {
         style: "box",
         x1: 500,
         y1: 250,
-        tooltip: $"Specialist Distribution\nCheck if you wish for your Companies to be uniform and each contain {player_role_data[eROLE.ASSAULT].role}s and {player_role_data[eROLE.DEVASTATOR].role}s.",
+        tooltip: {
+            text: "Specialist Distribution\nCheck if you wish for your Companies to be uniform and each contain {0}s and {1}s.",
+            variables: [localize(player_role_data[eROLE.ASSAULT].role), localize(player_role_data[eROLE.DEVASTATOR].role)],
+        },
         active: (squad_distribution == 1 || squad_distribution == 3),
         clicked_check_default: true,
     });
@@ -93,7 +96,7 @@ function role_setup_objects() {
         style: "box",
         x1: 710,
         y1: 250,
-        tooltip: $"Scout Distribution\nCheck if you wish for Scouts to be distributed equally across your Battle Companies rather than concentrated in the 10th.",
+        tooltip: "Scout Distribution\nCheck if you wish for Scouts to be distributed equally across your Battle Companies rather than concentrated in the 10th.",
         active: (squad_distribution == 2 || squad_distribution == 3),
         clicked_check_default: true,
     });
@@ -103,19 +106,19 @@ function role_setup_objects() {
             str1: "On Planet",
             font: fnt_40k_12,
             style: "box",
-            tooltip: $"On Planet/nCheck to have your Astartes Start on your home planet.",
+            tooltip: "On Planet\nCheck to have your Astartes Start on your home planet.",
         },
         {
             str1: "Load to Ships",
             font: fnt_40k_12,
             style: "box",
-            tooltip: $"Load to Ships\nCheck to have your Astartes automatically loaded into ships when the game starts.",
+            tooltip: "Load to Ships\nCheck to have your Astartes automatically loaded into ships when the game starts.",
         },
         {
             str1: "Load (Sans Escorts)",
             font: fnt_40k_12,
             style: "box",
-            tooltip: $"Load (Sans Escorts)\nCheck to have your Astartes automatically loaded into ships, except for Escorts, when the game starts.",
+            tooltip: "Load (Sans Escorts)\nCheck to have your Astartes automatically loaded into ships, except for Escorts, when the game starts.",
         },
     ], "", {
         x1: 445,
@@ -131,7 +134,7 @@ function role_setup_objects() {
         style: "box",
         x1: 540,
         y1: 370,
-        tooltip: $"Distribute Scouts\nCheck to have your Scouts split across ships in the fleet.",
+        tooltip: "Distribute Scouts\nCheck to have your Scouts split across ships in the fleet.",
         active: load_to_ships[1],
         clicked_check_default: true,
     });
@@ -141,7 +144,7 @@ function role_setup_objects() {
         style: "box",
         x1: 690,
         y1: 370,
-        tooltip: $"Distribute Veterans\nCheck to have your Veterans split across the fleet.",
+        tooltip: "Distribute Veterans\nCheck to have your Veterans split across the fleet.",
         active: load_to_ships[2],
         clicked_check_default: true,
     });
@@ -170,12 +173,12 @@ function scr_distribution_and_advisor_setup() {
     }
     draw_set_halign(fa_left);
     if (scr_hit(540, 547, 800, 725)) {
-        tooltip = "Advisor Names";
-        tooltip2 = "The names of your main Advisors.  They provide useful information and reports on the divisions of your Chapter.";
+        tooltip = localize("Advisor Names");
+        tooltip2 = localize("The names of your main Advisors.  They provide useful information and reports on the divisions of your Chapter.");
     }
 
-    draw_text_transformed(444, 550, "Advisor Names", 0.6, 0.6, 0);
-    draw_set_font(fnt_40k_14b);
+    draw_text_transformed(444, 550, string_hash_to_newline(localize("Advisor Names")), 0.6, 0.6, 0);
+    draw_set_font(cjk_font(fnt_40k_14b));
     draw_set_halign(fa_right);
     var _apoths_allowed = player_role_data[eROLE.APOTHECARY].available_to_player;
     var _chaps_allowed = player_role_data[eROLE.CHAPLAIN].available_to_player;
@@ -183,19 +186,19 @@ function scr_distribution_and_advisor_setup() {
     var _techs_allowed = player_role_data[eROLE.TECHMARINE].available_to_player;
 
     if (_apoths_allowed) {
-        draw_text(594, 575, "Chief Apothecary: ");
+        draw_text(594, 575, localize("Chief Apothecary: "));
     }
     if (player_role_data[eROLE.CHAPLAIN].available_to_player) {
-        draw_text(594, 597, "High Chaplain: ");
+        draw_text(594, 597, localize("High Chaplain: "));
     }
     if (player_role_data[eROLE.LIBRARIAN].available_to_player) {
-        draw_text(594, 619, "Chief Librarian: ");
+        draw_text(594, 619, localize("Chief Librarian: "));
     }
     if (player_role_data[eROLE.TECHMARINE].available_to_player) {
-        draw_text(594, 641, "Forge Master: ");
+        draw_text(594, 641, localize("Forge Master: "));
     }
-    draw_text(594, 663, "Master of Recruits: ");
-    draw_text(594, 685, "Master of the Fleet: ");
+    draw_text(594, 663, localize("Master of Recruits: "));
+    draw_text(594, 685, localize("Master of the Fleet: "));
     draw_set_halign(fa_left);
 
     if (_apoths_allowed) {
@@ -470,13 +473,13 @@ function scr_distribution_and_advisor_setup() {
 function scr_role_setup() {
     add_draw_return_values();
 
-    draw_set_font(fnt_40k_30b);
+    draw_set_font(cjk_font(fnt_40k_30b));
     draw_set_halign(fa_center);
     draw_set_alpha(1);
     draw_set_color(CM_GREEN_COLOR);
 
     roles_radio.current_selection = -1;
-    draw_text_color_simple(800, 80, "Roles", CM_GREEN_COLOR);
+    draw_text_color_simple(800, 80, localize("Roles"), CM_GREEN_COLOR);
     if (!instance_exists(obj_creation_popup)) {
         roles_radio.update({y1: 150});
         roles_radio.draw();
@@ -492,7 +495,7 @@ function scr_role_setup() {
     }
     draw_set_color(CM_GREEN_COLOR);
     draw_set_alpha(1);
-    draw_set_font(fnt_40k_30b);
+    draw_set_font(cjk_font(fnt_40k_30b));
 
     if (custom != eCHAPTER_TYPE.CUSTOM) {
         draw_set_alpha(0.5);

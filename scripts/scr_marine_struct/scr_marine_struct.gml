@@ -1855,12 +1855,15 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     //quick way of getting name and role combined in string
-    static name_role = function(include_epithet = true, include_role = true) {
+    static name_role = function(include_epithet = true, include_role = true, localize_role = false) {
         var _name = name();
         var _epithet = "";
 
         if (include_role) {
             var _temp_role = squad_role();
+            if (localize_role) {
+                _temp_role = localize(_temp_role);
+            }
             _name = string("{0} {1}", _temp_role, _name);
         }
 
@@ -2371,7 +2374,7 @@ function fetch_unit_careful() {}
 
 function fetch_unit_uid(uuid) {
     for (var i = 0; i <= obj_ini.companies; i++) {
-        var _comp_length = array_length(obj_ini.TTRPG[i]);
+        var _comp_length = company_length(i);
         for (var s = 0; s < _comp_length; s++) {
             var _unit = fetch_unit([i, s]);
             if (!is_struct(_unit)) {
@@ -2384,4 +2387,12 @@ function fetch_unit_uid(uuid) {
     }
 
     return undefined;
+}
+
+/// @desc Localizes a unit's role and appends its name and first epithet, mirroring
+///       name_role()'s display order while keeping the role translatable.
+/// @param {Struct} _unit A marine unit struct.
+/// @returns {string}
+function localized_name_role(_unit) {
+    return _unit.name_role(true, true, true);
 }
