@@ -92,7 +92,43 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
     }
 
     // All methods and functions are bllow;
-
+    static stat_display_value_conversion = function(stat, item_type = item_type) {
+        switch (stat) {
+            case "description":
+                return description;
+            case "quality":
+                return quality_string_conversion(quality);
+            case "armour_value":
+                return (item_type == "armour") ? string(armour_value) : format_number_with_sign(armour_value);
+            case "hp_mod":
+                return string_format_percentage(hp_mod);
+            case "damage_resistance_mod":
+                return string_format_percentage(damage_resistance_mod);
+            case "attack":
+                return string(attack);
+            case "spli":
+                return string(max(1, spli));
+            case "ranged_mod":
+                return string_format_percentage(ranged_mod);
+            case "melee_mod":
+                return string_format_percentage(melee_mod);
+            case "ammo":
+                return string(ammo);
+            case "range":
+                return string(range);
+            case "melee_hands":
+                return (item_type == "weapon") ? string(melee_hands) : format_number_with_sign(melee_hands);
+            case "ranged_hands":
+                return (item_type == "weapon") ? string(ranged_hands) : format_number_with_sign(ranged_hands);
+            case "special_description":
+                return special_description;
+            case "req_exp":
+                return string(req_exp);
+            case "maintenance":
+                return string(maintenance);
+        }
+        return "";
+    };
     static item_tooltip_desc_gen = function() {
         item_desc_tooltip = "";
         var stat_order;
@@ -173,73 +209,69 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     break;
                 case "quality":
                     if (quality != "") {
-                        item_desc_tooltip += $"Quality: {quality_string_conversion(quality)}##";
+                        item_desc_tooltip += $"Quality: {stat_display_value_conversion(stat, item_type)}##";
                     }
                     break;
                 case "armour_value":
                     if (armour_value != 0) {
-                        if (item_type == "armour") {
-                            item_desc_tooltip += $"Armour: {armour_value}#";
-                        } else {
-                            item_desc_tooltip += $"Armour: {format_number_with_sign(armour_value)}#";
-                        }
+                        item_desc_tooltip += $"Armour: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "hp_mod":
                     if (hp_mod != 0) {
-                        item_desc_tooltip += $"Health Mod: {string_format_percentage(hp_mod)}#";
+                        item_desc_tooltip += $"Health Mod: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "damage_resistance_mod":
                     if (damage_resistance_mod != 0) {
-                        item_desc_tooltip += $"Damage Res: {string_format_percentage(damage_resistance_mod)}#";
+                        item_desc_tooltip += $"Damage Res: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "attack":
                     if (attack != 0) {
-                        item_desc_tooltip += $"Damage: {attack}#";
+                        item_desc_tooltip += $"Damage: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "spli":
                     if (item_type == "weapon") {
-                        item_desc_tooltip += $"Max Kills: {max(1, spli)}#";
+                        item_desc_tooltip += $"Max Kills: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "ranged_mod":
                     if (ranged_mod != 0) {
-                        item_desc_tooltip += $"Ranged Mod: {string_format_percentage(ranged_mod)}#";
+                        item_desc_tooltip += $"Ranged Mod: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "melee_mod":
                     if (melee_mod != 0) {
-                        item_desc_tooltip += $"Melee Mod: {string_format_percentage(melee_mod)}#";
+                        item_desc_tooltip += $"Melee Mod: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "ammo":
                     if (ammo != 0) {
-                        item_desc_tooltip += $"Ammo: {ammo}#";
+                        item_desc_tooltip += $"Ammo: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "range":
                     if (range > 1.1) {
-                        item_desc_tooltip += $"Range: {range}#";
+                        item_desc_tooltip += $"Range: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
                 case "melee_hands":
                     if (melee_hands != 0) {
                         if (item_type == "weapon") {
-                            item_desc_tooltip += $"Melee Burden: {melee_hands}#";
+                            item_desc_tooltip += $"Melee Burden: {stat_display_value_conversion(stat, item_type)}#";
                         } else {
-                            item_desc_tooltip += $"Melee Burden Cap: {format_number_with_sign(melee_hands)}#";
+                            item_desc_tooltip += $"Melee Burden Cap: {stat_display_value_conversion(stat, item_type)}#";
                         }
                     }
                     break;
                 case "ranged_hands":
                     if (ranged_hands != 0) {
                         if (item_type == "weapon") {
-                            item_desc_tooltip += $"Ranged Burden: {ranged_hands}#";
+                            item_desc_tooltip += $"Ranged Burden: {stat_display_value_conversion(stat, item_type)}#";
                         } else {
-                            item_desc_tooltip += $"Ranged Burden Cap: {format_number_with_sign(ranged_hands)}#";
+                            item_desc_tooltip += $"Ranged Burden Cap: {stat_display_value_conversion(stat, item_type)}#";
                         }
                     }
                     break;
@@ -311,7 +343,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     break;
                 case "maintenance":
                     if (maintenance > 0) {
-                        item_desc_tooltip += $"Maintenance: {maintenance}#";
+                        item_desc_tooltip += $"Maintenance: {stat_display_value_conversion(stat, item_type)}#";
                     }
                     break;
             }
@@ -329,32 +361,21 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                 if (damage_resistance_mod == 0){
                     return "";
                 }
-                _str += $"{string_format_percentage(damage_resistance_mod)}";
+                _str += stat_display_value_conversion(attribute);
                 return _str;
                 break;
             case "hp_mod":
                 if (hp_mod == 0){
                     return "";
                 }
-                _str += $"{string_format_percentage(hp_mod)}";
+                _str += stat_display_value_conversion(attribute);
                 return _str;
                 break;
             case "armour_value":
                 if (armour_value == 0){
                     return "";
                 }
-                _str += $"{format_number_with_sign(armour_value)}";
-                return _str;
-                break;
-        }
-    }
-                return _str;
-                break;
-            case "armour_value":
-                if (armour_value == 0){
-                    return "";
-                }
-                _str += $"{format_number_with_sign(armour_value)}";
+                _str += stat_display_value_conversion(attribute);
                 return _str;
                 break;
         }
