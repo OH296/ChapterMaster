@@ -159,7 +159,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
             case "special_description":
                 return special_description;
             case "req_exp":
-                return string(req_exp);
+                return string(req_exp) " "+ localize("EXP");
             case "maintenance":
                 return string(maintenance);
         }
@@ -169,7 +169,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
     /// @desc Returns the display label for a given stat key
     /// @param {string} stat The stat key (e.g. "hp_mod", "range", "armour_value")
     /// @param {string} type The item's type, used for labels that differ by type
-    /// @returns {string} The localised display label, or empty string if the stat has no simple label
+    /// @returns {string} The localized display label, or empty string if the stat has no simple label
     static stat_display_label_conversion = funtion(stat) {
         var _label = "";
         switch (stat) {
@@ -219,7 +219,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                 _label = "Maintenance";
                 break;
         }
-        return localise(_label);
+        return localize(_label);
     };
 
 
