@@ -240,6 +240,10 @@ try {
 
                 if (!is_undefined(garrison.garrison_leader)){
                     garrison_data_slate.sub_title = localize("Garrison Leader {0}", [garrison.garrison_leader.name_role()]);
+                } else {
+                    garrison_data_slate.sub_title = "";
+                }
+                    garrison_data_slate.sub_title = localize("Garrison Leader {0}", [garrison.garrison_leader.name_role()]);
                 }
                 garrison_data_slate.body_text = garrison.garrison_report();
 
