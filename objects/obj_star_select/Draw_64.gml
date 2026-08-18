@@ -238,7 +238,13 @@ try {
             if (garrison.garrison_force) {
                 draw_set_font(cjk_font(fnt_40k_14));
 
-                garrison_data_slate.sub_title = localize("Garrison Leader {0}", [garrison.garrison_leader.name_role()]);
+                if (!is_undefined(garrison.garrison_leader)){
+                    garrison_data_slate.sub_title = localize("Garrison Leader {0}", [garrison.garrison_leader.name_role()]);
+                } else {
+                    garrison_data_slate.sub_title = "";
+                }
+                    garrison_data_slate.sub_title = localize("Garrison Leader {0}", [garrison.garrison_leader.name_role()]);
+                }
                 garrison_data_slate.body_text = garrison.garrison_report();
 
                 garrison_data_slate.inside_method = function() {
