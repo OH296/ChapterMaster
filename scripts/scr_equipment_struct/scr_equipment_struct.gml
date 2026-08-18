@@ -91,15 +91,51 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
         recovery_chance = clamp(recovery_chance, 0, 100);
     }
 
+    /// @desc Whether a given stat currently has a displayable value for this item
+    /// @param {string} stat The stat key
+    /// @param {string} type The item's type, used for type-specific conditions
+    /// @returns {bool} Whether the stat should be shown in the tooltip
+    static stat_display_has_value = function(stat) {
+        switch (stat) {
+            case "quality":
+                return quality != "";
+            case "armour_value":
+                return armour_value != 0;
+            case "hp_mod":
+                return hp_mod != 0;
+            case "damage_resistance_mod":
+                return damage_resistance_mod != 0;
+            case "attack":
+                return attack != 0;
+            case "spli":
+                return type == "weapon";
+            case "ranged_mod":
+                return ranged_mod != 0;
+            case "melee_mod":
+                return melee_mod != 0;
+            case "ammo":
+                return ammo != 0;
+            case "range":
+                return range > 1.1;
+            case "melee_hands":
+                return melee_hands != 0;
+            case "ranged_hands":
+                return ranged_hands != 0;
+            case "maintenance":
+                return maintenance > 0;
+        }
+        return false;
+    };
+
     // All methods and functions are bllow;
-    static stat_display_value_conversion = function(stat, item_type = item_type) {
+    static stat_display_value_conversion = function(stat) {
         switch (stat) {
             case "description":
                 return description;
             case "quality":
                 return quality_string_conversion(quality);
             case "armour_value":
-                return (item_type == "armour") ? string(armour_value) : format_number_with_sign(armour_value);
+                return (type == "armour") ? string(armour_value) : format_number_with_sign(armour_value);
             case "hp_mod":
                 return string_format_percentage(hp_mod);
             case "damage_resistance_mod":
@@ -117,9 +153,9 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
             case "range":
                 return string(range);
             case "melee_hands":
-                return (item_type == "weapon") ? string(melee_hands) : format_number_with_sign(melee_hands);
+                return (type == "weapon") ? string(melee_hands) : format_number_with_sign(melee_hands);
             case "ranged_hands":
-                return (item_type == "weapon") ? string(ranged_hands) : format_number_with_sign(ranged_hands);
+                return (type == "weapon") ? string(ranged_hands) : format_number_with_sign(ranged_hands);
             case "special_description":
                 return special_description;
             case "req_exp":
@@ -129,28 +165,86 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
         }
         return "";
     };
+
+    /// @desc Returns the display label for a given stat key
+    /// @param {string} stat The stat key (e.g. "hp_mod", "range", "armour_value")
+    /// @param {string} type The item's type, used for labels that differ by type
+    /// @returns {string} The localised display label, or empty string if the stat has no simple label
+    static stat_display_label_conversion = funtion(stat) {
+        var _label = "";
+        switch (stat) {
+            case "quality":
+                _label = "Quality";
+                break;
+            case "armour_value":
+                _label = "Armour";
+                break;
+            case "hp_mod":
+                _label = "Health Mod";
+                break;
+            case "damage_resistance_mod":
+                _label = "Damage Res";
+                break;
+            case "attack":
+                _label = "Damage";
+                break;
+            case "spli":
+                _label = "Max Kills";
+                break;
+            case "ranged_mod":
+                _label = "Ranged Mod";
+                break;
+            case "melee_mod":
+                _label = "Melee Mod";
+                break;
+            case "ammo":
+                _label = "Ammo";
+                break;
+            case "range":
+                _label = "Range";
+                break;
+            case "melee_hands":
+                _label = (type == "weapon") ? "Melee Burden" : "Melee Burden Cap";
+                break;
+            case "ranged_hands":
+                _label = (type == "weapon") ? "Ranged Burden" : "Ranged Burden Cap";
+                break;
+            case "special_properties":
+                _label = "Properties";
+                break;
+            case "tags":
+                _label = "Keywords";
+                break;
+            case "maintenance":
+                _label = "Maintenance";
+                break;
+        }
+        return localise(_label);
+    };
+
+
     static item_tooltip_desc_gen = function() {
         item_desc_tooltip = "";
         var stat_order;
-        var item_type = type;
+        var type = type;
         if (type == "") {
             if (name == "") {
                 return "";
             }
             if (struct_exists(global.gear[$ "armour"], name)) {
-                item_type = "armour";
+                type = "armour";
             } else if (struct_exists(global.gear[$ "mobility"], name)) {
-                item_type = "mobility";
+                type = "mobility";
             } else if (struct_exists(global.gear[$ "gear"], name)) {
-                item_type = "gear";
+                type = "gear";
             } else if (struct_exists(global.weapons, name)) {
-                item_type = "weapon";
+                type = "weapon";
             } else {
                 item_desc_tooltip = "Error: Item not found!";
                 return item_desc_tooltip;
             }
         }
-        switch (item_type) {
+        switch (type) {
             default:
                 stat_order = [
                     "description",
@@ -199,80 +293,38 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                 break;
         }
 
+        // Stats with no specialised output logic - just "Label: value" (or "Label: value##" for quality)
+        var simple_stats = [
+            "quality",
+            "armour_value",
+            "hp_mod",
+            "damage_resistance_mod",
+            "attack",
+            "spli",
+            "ranged_mod",
+            "melee_mod",
+            "ammo",
+            "range",
+            "melee_hands",
+            "ranged_hands",
+            "maintenance",
+        ];
+
         for (var i = 0; i < array_length(stat_order); i++) {
             var stat = stat_order[i];
+
+            if (array_contains(simple_stats, stat)) {
+                if (stat_display_has_value(stat)) {
+                    var _terminator = (stat == "quality") ? "##" : "#";
+                    item_desc_tooltip += $"{stat_display_label_conversion(stat)}: {stat_display_value_conversion(stat)}{_terminator}";
+                }
+                continue;
+            }
+
             switch (stat) {
                 case "description":
                     if (description != "") {
                         item_desc_tooltip += $"{description}##";
-                    }
-                    break;
-                case "quality":
-                    if (quality != "") {
-                        item_desc_tooltip += $"Quality: {stat_display_value_conversion(stat, item_type)}##";
-                    }
-                    break;
-                case "armour_value":
-                    if (armour_value != 0) {
-                        item_desc_tooltip += $"Armour: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "hp_mod":
-                    if (hp_mod != 0) {
-                        item_desc_tooltip += $"Health Mod: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "damage_resistance_mod":
-                    if (damage_resistance_mod != 0) {
-                        item_desc_tooltip += $"Damage Res: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "attack":
-                    if (attack != 0) {
-                        item_desc_tooltip += $"Damage: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "spli":
-                    if (item_type == "weapon") {
-                        item_desc_tooltip += $"Max Kills: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "ranged_mod":
-                    if (ranged_mod != 0) {
-                        item_desc_tooltip += $"Ranged Mod: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "melee_mod":
-                    if (melee_mod != 0) {
-                        item_desc_tooltip += $"Melee Mod: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "ammo":
-                    if (ammo != 0) {
-                        item_desc_tooltip += $"Ammo: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "range":
-                    if (range > 1.1) {
-                        item_desc_tooltip += $"Range: {stat_display_value_conversion(stat, item_type)}#";
-                    }
-                    break;
-                case "melee_hands":
-                    if (melee_hands != 0) {
-                        if (item_type == "weapon") {
-                            item_desc_tooltip += $"Melee Burden: {stat_display_value_conversion(stat, item_type)}#";
-                        } else {
-                            item_desc_tooltip += $"Melee Burden Cap: {stat_display_value_conversion(stat, item_type)}#";
-                        }
-                    }
-                    break;
-                case "ranged_hands":
-                    if (ranged_hands != 0) {
-                        if (item_type == "weapon") {
-                            item_desc_tooltip += $"Ranged Burden: {stat_display_value_conversion(stat, item_type)}#";
-                        } else {
-                            item_desc_tooltip += $"Ranged Burden Cap: {stat_display_value_conversion(stat, item_type)}#";
-                        }
                     }
                     break;
                 case "special_properties":
@@ -316,7 +368,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     var _array_length = array_length(special_properties_array);
                     if (_array_length > 0) {
                         var special_properties_string = array_to_string_order(special_properties_array, false, false);
-                        item_desc_tooltip += $"#Properties:#{special_properties_string}#";
+                        item_desc_tooltip += $"#{stat_display_label_conversion(stat)}:#{special_properties_string}#";
                     }
                     break;
                 case "special_description":
@@ -338,12 +390,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                                 tagString += ", ";
                             }
                         }
-                        item_desc_tooltip += $"#Keywords:#{tagString}#";
-                    }
-                    break;
-                case "maintenance":
-                    if (maintenance > 0) {
-                        item_desc_tooltip += $"Maintenance: {stat_display_value_conversion(stat, item_type)}#";
+                        item_desc_tooltip += $"#{stat_display_label_conversion(stat)}:#{tagString}#";
                     }
                     break;
             }
@@ -355,30 +402,10 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
     /// @param {string} attribute The attribute key to format (e.g. "hp_mod", "damage_resistance_mod", "armour_value")
     /// @returns {string} The formatted attribute string, or empty string if the attribute value is 0
     static item_attribute_string = function(attribute){
-        var _str = $"{name}: "
-        switch(attribute){
-            case "damage_resistance_mod":
-                if (damage_resistance_mod == 0){
-                    return "";
-                }
-                _str += stat_display_value_conversion(attribute);
-                return _str;
-                break;
-            case "hp_mod":
-                if (hp_mod == 0){
-                    return "";
-                }
-                _str += stat_display_value_conversion(attribute);
-                return _str;
-                break;
-            case "armour_value":
-                if (armour_value == 0){
-                    return "";
-                }
-                _str += stat_display_value_conversion(attribute);
-                return _str;
-                break;
+        if (!stat_display_has_value(attribute)){
+            return "";
         }
+        return $"{name}: {stat_display_value_conversion(attribute)}";
     }
 
     static special_value = function(special) {
