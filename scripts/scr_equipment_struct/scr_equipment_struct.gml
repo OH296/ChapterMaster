@@ -159,7 +159,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
             case "special_description":
                 return special_description;
             case "req_exp":
-                return string(req_exp) " "+ localize("EXP");
+                return string(req_exp) + " " + localize("EXP");
             case "maintenance":
                 return string(maintenance);
         }
