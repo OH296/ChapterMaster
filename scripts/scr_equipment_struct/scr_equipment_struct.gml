@@ -324,32 +324,32 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
             switch (stat) {
                 case "description":
                     if (description != "") {
-                        item_desc_tooltip += $"{description}##";
+                        item_desc_tooltip += $"{localize(description)}##";
                     }
                     break;
                 case "special_properties":
                     var special_properties_array = [];
                     if (array_length(special_properties) > 0) {
                         for (var k = 0; k < array_length(special_properties); k++) {
-                            array_push(special_properties_array, special_properties[k]);
+                            array_push(special_properties_array, localize(special_properties[k]));
                         }
                     }
                     if (arp == 4) {
-                        array_push(special_properties_array, "Anti Vehicle");
+                        array_push(special_properties_array, localize("Anti Vehicle"));
                     } else if (arp == 1) {
-                        array_push(special_properties_array, "Low Penetration");
+                        array_push(special_properties_array, localize("Low Penetration"));
                     } else if (arp == 2) {
-                        array_push(special_properties_array, "Medium Penetration");
+                        array_push(special_properties_array, localize("Medium Penetration"));
                     } else if (arp == 3) {
-                        array_push(special_properties_array, "High Penetration");
+                        array_push(special_properties_array, localize("High Penetration"));
                     }
                     if (array_length(second_profiles) > 0) {
                         for (var h = 0; h < array_length(second_profiles); h++) {
                             if (string_pos("Integrated", second_profiles[h]) == 0) {
-                                var integrated_member = "Integrated " + second_profiles[h];
+                                var integrated_member = localize("Integrated {0}", [localize(second_profiles[h])]);
                                 array_push(special_properties_array, integrated_member);
                             } else {
-                                array_push(special_properties_array, second_profiles[h]);
+                                array_push(special_properties_array, localize(second_profiles[h]));
                             }
                         }
                     }
@@ -360,7 +360,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                         for (var j = 0; j < array_length(_specials); j++) {
                             var _special = _specials[j];
                             var _special_value = specials[$ _special];
-                            _specials_string += $"{format_underscore_string(_special)} ({_special_value})";
+                            _specials_string += localize("{0} ({1})", [localize(format_underscore_string(_special)), _special_value]);
                             array_push(special_properties_array, _specials_string);
                         }
                     }
@@ -373,19 +373,19 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     break;
                 case "special_description":
                     if (special_description != "") {
-                        item_desc_tooltip += $"#{special_description}#";
+                        item_desc_tooltip += $"#{localize(special_description)}#";
                     }
                     break;
                 case "req_exp":
                     if (req_exp > 0) {
-                        item_desc_tooltip += $"#Requires {req_exp} EXP#";
+                        item_desc_tooltip += $"{localize("#Requires {0} EXP#", [req_exp])}";
                     }
                     break;
                 case "tags":
                     if (array_length(tags) > 0) {
                         var tagString = "";
                         for (var j = 0; j < array_length(tags); j++) {
-                            tagString += tags[j];
+                            tagString += localize(tags[j]);
                             if (j < array_length(tags) - 1) {
                                 tagString += ", ";
                             }
