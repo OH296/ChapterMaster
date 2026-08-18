@@ -14,7 +14,13 @@ global.list_terminator_armour = [
     "Cataphractii",
 ];
 
-global.faction_names = [
+// Faction display names, indexed by eFACTION. The English values double as the localization
+// keys. faction_names_en is the pristine English source and is NEVER mutated; faction_names is
+// the live display array rebuilt from it on each language change, so switching back to English
+// restores the original English names (an in-place mutation would lose them). Reads like
+// global.faction_names[eFACTION.X] pick up the current language without a localize() call
+// during draw.
+global.faction_names_en = [
     "",
     "Your Chapter",
     "Imperium of Man",
@@ -30,6 +36,97 @@ global.faction_names = [
     "Genestealer Cults",
     "Necron Dynasties",
 ];
+
+global.faction_names = global.faction_names_en;
+
+// Chapter-stat rating labels shown on the creation screen, indexed 0..10 by stat value.
+// Same pristine-English-source / live-localized-array pattern as faction_names so the draw
+// path never allocates or translates per frame; refresh via LocalizationManager.refresh_locale_globals().
+global.chapter_strength_ratings_en = [
+    "",
+    "Decimated",
+    "Reduced",
+    "Reduced",
+    "Reduced",
+    "Average",
+    "Above Average",
+    "Above Average",
+    "Considerable",
+    "Considerable",
+    "Overwhelming",
+];
+global.chapter_cooperation_ratings_en = [
+    "",
+    "Antagonistic",
+    "Uncooperative",
+    "Uncooperative",
+    "Uncooperative",
+    "Neutral",
+    "Trusted",
+    "Trusted",
+    "Trusted",
+    "Trusted",
+    "Exemplary",
+];
+global.chapter_geneseed_ratings_en = [
+    "",
+    "Abnormal",
+    "Horrible",
+    "Horrible",
+    "Bad",
+    "Bad",
+    "Mediocre",
+    "Mediocre",
+    "Good",
+    "Good",
+    "Perfect",
+];
+
+global.chapter_strength_ratings = global.chapter_strength_ratings_en;
+global.chapter_cooperation_ratings = global.chapter_cooperation_ratings_en;
+global.chapter_geneseed_ratings = global.chapter_geneseed_ratings_en;
+
+// Planet info screen labels, rebuilt on language change in refresh_locale_globals().
+// Same pristine-English-source / live-localized-array pattern as faction_names so the
+// draw path never allocates or translates per frame.
+global.planet_forti_en = [
+    "None",
+    "Sparse",
+    "Light",
+    "Moderate",
+    "Heavy",
+    "Major",
+    "Extreme",
+];
+global.presence_factions_en = [
+    "Adeptas",
+    "Orks",
+    "Tau",
+    "Tyranids",
+    "Chaos",
+    "Heretics",
+    "Daemons",
+    "Necrons",
+];
+global.presence_blurbs_en = [
+    "Minima",
+    "Parvus",
+    "Moderatus",
+    "Significus",
+    "Enormicus",
+    "Extremis",
+];
+global.planet_size_en = [
+    "",
+    "Small",
+    "Medium",
+    "Large",
+];
+
+global.planet_forti = global.planet_forti_en;
+global.presence_factions = global.presence_factions_en;
+global.presence_blurbs = global.presence_blurbs_en;
+global.planet_size = global.planet_size_en;
 
 global.xenos_factions = [
     eFACTION.ELDAR,
