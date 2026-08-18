@@ -163,11 +163,12 @@ function scr_purge_world(action_type, action_score) {
     var _no_chaos = (planet_forces[eFACTION.HERETICS] + planet_forces[eFACTION.CHAOS]) == 0;
     if ((action_type == eDROP_TYPE.PURGEFIRE || action_type == eDROP_TYPE.PURGESELECTIVE) && _no_chaos && obj_controller.turn >= obj_controller.chaos_turn) {
         if (has_feature(eP_FEATURES.WARLORD10) && obj_controller.known[10] == 0 && obj_controller.faction_gender[10] == 1) {
+            var _name = name();
             with (obj_drop_select) {
                 var pop = instance_create(0, 0, obj_popup);
                 pop.image = "chaos_symbol";
                 pop.title = "Concealed Heresy";
-                pop.text = $"Your astartes set out and begin to cleanse {name()} of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";
+                pop.text = $"Your astartes set out and begin to cleanse {_name} of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";
                 exit;
             }
         }
