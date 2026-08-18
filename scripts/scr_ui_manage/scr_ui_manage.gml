@@ -172,46 +172,9 @@ function reset_manage_unit_constants(unit) {
         });
         // Damage Resistance
 
-        var _res_tool = localize("Health damage taken by the marine is reduced by this percentage. This happens after the flat reduction from armor.\n\nContributing factors:\n");
-        var equipment_types = [
-            "armour",
-            "weapon_one",
-            "weapon_two",
-            "mobility",
-            "gear",
-        ];
-
-        for (var i = 0; i < array_length(equipment_types); i++) {
-            var equipment_type = equipment_types[i];
-            var dr = 0;
-            var name = "";
-            switch (equipment_type) {
-                case "armour":
-                    dr = unit.get_armour_data("damage_resistance_mod");
-                    name = unit.get_armour_data("name");
-                    break;
-                case "weapon_one":
-                    dr = unit.get_weapon_one_data("damage_resistance_mod");
-                    name = unit.get_weapon_one_data("name");
-                    break;
-                case "weapon_two":
-                    dr = unit.get_weapon_two_data("damage_resistance_mod");
-                    name = unit.get_weapon_two_data("name");
-                    break;
-                case "mobility":
-                    dr = unit.get_mobility_data("damage_resistance_mod");
-                    name = unit.get_mobility_data("name");
-                    break;
-                case "gear":
-                    dr = unit.get_gear_data("damage_resistance_mod");
-                    name = unit.get_gear_data("name");
-                    break;
-            }
-            if (dr != 0) {
-                _res_tool += localize("{0}: {1}%\n", [localize(name), dr]);
-            }
-        }
-        _res_tool += localize("CON: {0}%", [round(unit.constitution / 2)]);
+        var _res_tool = "Health damage taken by the marine is reduced by this percentage. This happens after the flat reduction from armor.\n\nContributing factors:\n";
+        _res_tool += _equip_data.set_attribute_string("damage_resistance_mod");
+        _res_tool += $"CON: {round(unit.constitution / 2)}%";
 
         unit_manage_constants.damage_res = new LabeledIcon(spr_icon_iron_halo, $"{_damage_res}%", 0, 0, {
             icon_width: 24,
@@ -222,36 +185,7 @@ function reset_manage_unit_constants(unit) {
         var _hp_tool = localize("A measure of how much punishment the creature can take. Marines can go into the negatives and still survive, but they'll require a bionic to become fighting fit once more.\n\nContributing factors:\n");
         _hp_tool += localize("CON: {0}\n", [unit.constitution * 3]);
 
-        for (var i = 0; i < array_length(equipment_types); i++) {
-            var equipment_type = equipment_types[i];
-            var hp_mod = 0;
-            var name = "";
-            switch (equipment_type) {
-                case "armour":
-                    hp_mod = unit.get_armour_data("hp_mod");
-                    name = unit.get_armour_data("name");
-                    break;
-                case "weapon_one":
-                    hp_mod = unit.get_weapon_one_data("hp_mod");
-                    name = unit.get_weapon_one_data("name");
-                    break;
-                case "weapon_two":
-                    hp_mod = unit.get_weapon_two_data("hp_mod");
-                    name = unit.get_weapon_two_data("name");
-                    break;
-                case "mobility":
-                    hp_mod = unit.get_mobility_data("hp_mod");
-                    name = unit.get_mobility_data("name");
-                    break;
-                case "gear":
-                    hp_mod = unit.get_gear_data("hp_mod");
-                    name = unit.get_gear_data("name");
-                    break;
-            }
-            if (hp_mod != 0) {
-                _hp_tool += localize("{0}: {1}%\n", [localize(name), format_number_with_sign(hp_mod)]);
-            }
-        }
+        _hp_tool += _equip_data.set_attribute_string("hp_mod");
 
         unit_manage_constants.hp = new LabeledIcon(spr_icon_health, _hp_val, 0, 0, {
             icon_width: 24,
@@ -265,36 +199,7 @@ function reset_manage_unit_constants(unit) {
         var _armour_val = $"{unit.armour_calc()}";
         var _armour_tool = localize("Reduces incoming damage at a flat rate. Certain enemies may attack in ways that may bypass your armor entirely, for example power weapons and some warp sorceries.\n\nContributing factors:\n");
 
-        for (var i = 0; i < array_length(equipment_types); i++) {
-            var equipment_type = equipment_types[i];
-            var ac = 0;
-            var name = "";
-            switch (equipment_type) {
-                case "armour":
-                    ac = unit.get_armour_data("armour_value");
-                    name = unit.get_armour_data("name");
-                    break;
-                case "weapon_one":
-                    ac = unit.get_weapon_one_data("armour_value");
-                    name = unit.get_weapon_one_data("name");
-                    break;
-                case "weapon_two":
-                    ac = unit.get_weapon_two_data("armour_value");
-                    name = unit.get_weapon_two_data("name");
-                    break;
-                case "mobility":
-                    ac = unit.get_mobility_data("armour_value");
-                    name = unit.get_mobility_data("name");
-                    break;
-                case "gear":
-                    ac = unit.get_gear_data("armour_value");
-                    name = unit.get_gear_data("name");
-                    break;
-            }
-            if (ac != 0) {
-                _armour_tool += localize("{0}: {1}\n", [localize(name), ac]);
-            }
-        }
+		_armour_tool += _equip_data.set_attribute_string("armour_value");
 
         if (obj_controller.stc_bonus[1] == 5 || obj_controller.stc_bonus[2] == 3) {
             _armour_tool += localize("STC Bonus: x1.05\n");
