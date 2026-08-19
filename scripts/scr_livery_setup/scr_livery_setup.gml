@@ -106,7 +106,7 @@ function scr_livery_setup() {
     var _prev_val = variable_clone(livery_selection_options.current_selection);
 
     var _non_advanced_painting = colour_selection_options.current_selection != eLIVERY_COLOURING_OPTIONS.ADVANCED;
-    if (_non_advanced_painting != 2) {
+    if (_non_advanced_painting) {
         livery_selection_options.draw();
     }
 
