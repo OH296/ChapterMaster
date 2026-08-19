@@ -118,7 +118,7 @@ if (_is_livery){
     livery_pick_type = obj_creation.colour_selection_options.current_selection;
 }
 if (_is_livery && livery_pick_type == eLIVERY_COLOURING_OPTIONS.BULK) {
-    if (target_role <= 0 && target_role >= 8) {
+    if (target_role <= 0 || target_role >= 8) {
         instance_destroy();
         exit;            
     }
