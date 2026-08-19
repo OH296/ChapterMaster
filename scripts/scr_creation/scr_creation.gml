@@ -24,7 +24,7 @@ function set_complex_livery_buttons() {
         complex_livery_buttons = [
             new UnitButtonObject({
                 x1: 500,
-                y1: 252,
+                y1: 272,
                 style: "pixel",
                 tooltip: localize("Primary Helm Colour\nPrimary helm colour of {0}", [localize(_name)]),
                 label: localize("Helm Primary : {0}", [localize(get_colour_name(_data.helm_primary))]),
@@ -34,7 +34,7 @@ function set_complex_livery_buttons() {
             }),
             new UnitButtonObject({
                 x1: 500,
-                y1: 287,
+                y1: 307,
                 style: "pixel",
                 tooltip: localize("Secondary Helm Colour\nSecondary helm colour of {0}", [localize(_name)]),
                 label: localize("Helm Secondary : {0}", [localize(get_colour_name(_data.helm_secondary))]),
@@ -44,7 +44,7 @@ function set_complex_livery_buttons() {
             }),
             new UnitButtonObject({
                 x1: 500,
-                y1: 322,
+                y1: 342,
                 style: "pixel",
                 tooltip: localize("Helm Lens Colour\nHelm lens colour of {0}", [localize(_name)]),
                 label: localize("Lens : {0}", [localize(get_colour_name(_data.helm_lens))]),
@@ -84,6 +84,9 @@ function update_creation_roles_radio(start_role = 1) {
 
 /// @self Asset.GMObject.obj_creation
 function bulk_selection_buttons_setup() {
+    //TODO add functionnality to alter draw positions of buttons
+    var _start_y = 320;
+    var _start_x = 500;
     var _button_data = [
         {
             text: localize("Primary : {0}", [localize(col[main_color])]),
@@ -154,8 +157,8 @@ function bulk_selection_buttons_setup() {
     for (var i = 0; i < array_length(_button_data); i++) {
         var _but = _button_data[i];
         array_push(bulk_buttons, new UnitButtonObject({
-            x1: _but.cords[0],
-            y1: _but.cords[1],
+            x1: _start_x,
+            y1: _start_y + (i * 35),
             style: "pixel",
             tooltip: $"{_but.tooltip}\n{_but.tooltip2}",
             label: _but.text,
@@ -297,17 +300,17 @@ function scr_creation(slide_num) {
                     {
                         str1: localize("Default"),
                         tooltip: localize("The default livery all marines will be coloured in"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Role"),
                         tooltip: localize("Role specific livery that will overide default livery"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Company"),
                         tooltip: localize("company specific livery that will overide role livery"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                 ],
             );
@@ -316,17 +319,17 @@ function scr_creation(slide_num) {
                     {
                         str1: localize("Standard"),
                         tooltip: localize("standard options to colour marine"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Bulk"),
                         tooltip: localize("bulk colouring for ease and speed"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Advanced"),
                         tooltip: localize("Advanced options for colouring"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                 ],
             );

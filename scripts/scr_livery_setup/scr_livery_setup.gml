@@ -18,7 +18,7 @@ function scr_livery_setup() {
     };
     preview_box.x2 = preview_box.x1 + preview_box.w;
     preview_box.y2 = preview_box.y1 + preview_box.h;
-    colour_selection_options.update({x1: preview_box.x1 + 20, y1: 200});
+    colour_selection_options.update({x1: preview_box.x1 + 20, y1: 220});
     colour_selection_options.draw();
 
     livery_picker.draw_base();
@@ -39,13 +39,13 @@ function scr_livery_setup() {
     if (_cur_colouring_options == eLIVERY_COLOURING_OPTIONS.STANDARD) {
         var _col_areas = livery_picker.colours_radio;
         _col_areas.current_selection = -1;
-        _col_areas.update({x1: colour_selection_options.x1, y1: colour_selection_options.y2, max_width: 200});
+        _col_areas.update({x1: colour_selection_options.x1, y1: colour_selection_options.y2 + 20, max_width: 200});
         _col_areas.draw();
         if (_col_areas.changed) {
             livery_picker.new_colour_pick(_col_areas.selection_val("area_id"));
         }
     } else if (_cur_colouring_options == eLIVERY_COLOURING_OPTIONS.BULK) {
-        var _updater = draw_unit_buttons([500, preview_box.y1 - 10], "Update Sprite");
+        var _updater = draw_unit_buttons([500, preview_box.y1 + 20], "Update Sprite");
         if (scr_hit(_updater)) {
             tooltip_draw("Click to Update Marine colour picker with Colour settings, warning this will overide Existing colour selections");
         }
@@ -76,6 +76,7 @@ function scr_livery_setup() {
             }
         }
 
+        bulk_armour_pattern.update({y1:bulk_buttons[6].y2 + 20});
         bulk_armour_pattern.draw();
         col_special = bulk_armour_pattern.current_selection;
     } else if (_cur_colouring_options == eLIVERY_COLOURING_OPTIONS.ADVANCED){
@@ -101,7 +102,7 @@ function scr_livery_setup() {
     draw_set_halign(fa_left);
     var spacing = 30;
 
-    livery_selection_options.update({x1: 862, y1: 200, max_width: 800});
+    livery_selection_options.update({x1: 862, y1: 220, max_width: 800});
 
     var _prev_val = variable_clone(livery_selection_options.current_selection);
 
