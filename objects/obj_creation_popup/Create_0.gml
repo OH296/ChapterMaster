@@ -10,8 +10,6 @@ start_colour = -1;
 col_shift = false;
 bulk_buttons = [];
 
-tooltip = "";
-tooltip2 = "";
 item_name = [];
 role_names_all = "";
 warning = "";
@@ -114,9 +112,17 @@ possible_custom_roles = [
     ],
 ];
 
-if (type == ePOPUP_TYPE.LIVERYPICK) {
+var _is_livery = type == ePOPUP_TYPE.LIVERYPICK;
+livery_pick_type = -1;
+if (_is_livery){
+    livery_pick_type = obj_creation.colour_selection_options.current_selection;
+}
+if (_is_livery && livery_pick_type == eLIVERY_COLOURING_OPTIONS.BULK) {
+    if (target_role <= 0 || target_role >= 8) {
+        instance_destroy();
+        exit;            
+    }
     assign_picked_liveries = function() {
-        var _colour_area_chosen = colour_area != "";
         draw_set_font(fnt_40k_30b);
         var _type_key = string(target_role);
         var _colour_type = struct_exists(type_names, _type_key) ? type_names[$ _type_key] : "";
@@ -127,45 +133,49 @@ if (type == ePOPUP_TYPE.LIVERYPICK) {
         if (_action == "destroy") {
             instance_destroy();
             exit;
-        } else {
-            var _col = picker.chosen;
-            if (start_colour == -1) {
-                if (!_colour_area_chosen && target_role >= 1 && target_role <= 7) {
-                    start_colour = variable_instance_get(obj_creation, type_fields[target_role]);
-                } else if (_colour_area_chosen) {
-                    var role_data = obj_creation.complex_livery_data[$ target_role];
-                    if (is_struct(role_data) && struct_exists(role_data, colour_area)) {
-                        start_colour = role_data[$ colour_area];
-                    }
-                }
-            }
+        }
 
-            if (is_array(_col)) {
-                if (_colour_area_chosen) {
-                    obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
-                }
-            } else {
-                if (_col == -1) {
-                    _col = start_colour;
-                }
+        var _col = picker.chosen;
+        if (start_colour == -1) {
+            start_colour = variable_instance_get(obj_creation, type_fields[target_role]);
+            
+        }
 
-                if (!_colour_area_chosen && target_role >= 1 && target_role <= 7) {
-                    variable_instance_set(obj_creation, type_fields[target_role], _col);
-                }
 
-                with (obj_creation) {
-                    bulk_selection_buttons_setup();
-                }
+        if (_col == -1) {
+            _col = start_colour;
+        }
 
-                if (_colour_area_chosen) {
-                    obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
-                    with (obj_creation) {
-                        set_complex_livery_buttons();
-                    }
-                }
-            }
+        variable_instance_set(obj_creation, type_fields[target_role], _col);
+        
+
+        with (obj_creation) {
+            bulk_selection_buttons_setup();
         }
     };
+} else if (_is_livery && livery_pick_type == eLIVERY_COLOURING_OPTIONS.ADVANCED){
+    start_colour = obj_creation.complex_livery_data[$ target_role][$ colour_area];
+    assign_complex_picked_liveries = function(){
+        var _action = picker.draw();
+        if (_action == "destroy") {
+            instance_destroy();
+            exit;
+        }
+        var _col = picker.chosen;
+        if (is_array(_col)) {
+            obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
+        } else {
+            if (_col == -1) {
+                _col = start_colour;
+            }
+
+            obj_creation.complex_livery_data[$ target_role][$ colour_area] = _col;
+            with (obj_creation) {
+                set_complex_livery_buttons();
+            }
+
+        }
+    }
 } else if (type == ePOPUP_TYPE.EQUIP) {
     role_name_input = new TextBarArea(800, 170, 380, true);
 

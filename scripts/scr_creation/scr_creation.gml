@@ -21,11 +21,10 @@ function set_complex_livery_buttons() {
         _data.helm_secondary = clamp(_data.helm_secondary, 0, array_length(col) - 1);
         _data.helm_lens = clamp(_data.helm_lens, 0, array_length(col) - 1);
 
-        // --- Build button objects ---
         complex_livery_buttons = [
             new UnitButtonObject({
                 x1: 500,
-                y1: 252,
+                y1: 272,
                 style: "pixel",
                 tooltip: localize("Primary Helm Colour\nPrimary helm colour of {0}", [localize(_name)]),
                 label: localize("Helm Primary : {0}", [localize(get_colour_name(_data.helm_primary))]),
@@ -35,7 +34,7 @@ function set_complex_livery_buttons() {
             }),
             new UnitButtonObject({
                 x1: 500,
-                y1: 287,
+                y1: 307,
                 style: "pixel",
                 tooltip: localize("Secondary Helm Colour\nSecondary helm colour of {0}", [localize(_name)]),
                 label: localize("Helm Secondary : {0}", [localize(get_colour_name(_data.helm_secondary))]),
@@ -45,7 +44,7 @@ function set_complex_livery_buttons() {
             }),
             new UnitButtonObject({
                 x1: 500,
-                y1: 322,
+                y1: 342,
                 style: "pixel",
                 tooltip: localize("Helm Lens Colour\nHelm lens colour of {0}", [localize(_name)]),
                 label: localize("Lens : {0}", [localize(get_colour_name(_data.helm_lens))]),
@@ -85,69 +84,44 @@ function update_creation_roles_radio(start_role = 1) {
 
 /// @self Asset.GMObject.obj_creation
 function bulk_selection_buttons_setup() {
+    //TODO add functionnality to alter draw positions of buttons
+    var _start_y = 320;
+    var _start_x = 500;
     var _button_data = [
         {
             text: localize("Primary : {0}", [localize(col[main_color])]),
             tooltip: localize("Primary"),
             tooltip2: localize("The main color of your Astartes and their vehicles. And the colour of your chapters Ships"),
-            cords: [
-                500,
-                287,
-            ],
         },
         {
             text: localize("Secondary: {0}", [localize(col[secondary_color])]),
             tooltip: localize("Secondary"),
             tooltip2: localize("The secondary color of your Astartes and their vehicles."),
-            cords: [
-                500,
-                322,
-            ],
         },
         {
             text: localize("Pauldron 1: {0}", [localize(col[left_pauldron])]),
             tooltip: localize("First Pauldron"),
             tooltip2: localize("The color of your Astartes' left Pauldron.  Normally this Pauldron displays their rank and designation."),
-            cords: [
-                500,
-                357,
-            ],
         },
         {
             text: localize("Pauldron 2: {0}", [localize(col[right_pauldron])]),
             tooltip: localize("Second Pauldron"),
             tooltip2: localize("The color of your Astartes' right Pauldron.  Normally this Pauldron contains the Chapter Insignia."),
-            cords: [
-                500,
-                392,
-            ],
         },
         {
             text: localize("Trim: {0}", [localize(col[main_trim])]),
             tooltip: localize("Trim"),
             tooltip2: localize("The trim color that appears on the Pauldrons, armour plating, and any decorations."),
-            cords: [
-                500,
-                427,
-            ],
         },
         {
             text: localize("Lens: {0}", [localize(col[lens_color])]),
             tooltip: localize("Lens"),
             tooltip2: localize("The color of your Astartes' lenses.  Most of the time this will be the visor color."),
-            cords: [
-                500,
-                462,
-            ],
         },
         {
             text: localize("Weapon: {0}", [localize(col[weapon_color])]),
             tooltip: localize("Weapon"),
             tooltip2: localize("The primary color of your Astartes' weapons."),
-            cords: [
-                500,
-                497,
-            ],
         },
     ];
     bulk_buttons = [];
@@ -155,8 +129,8 @@ function bulk_selection_buttons_setup() {
     for (var i = 0; i < array_length(_button_data); i++) {
         var _but = _button_data[i];
         array_push(bulk_buttons, new UnitButtonObject({
-            x1: _but.cords[0],
-            y1: _but.cords[1],
+            x1: _start_x,
+            y1: _start_y + (i * 35),
             style: "pixel",
             tooltip: $"{_but.tooltip}\n{_but.tooltip2}",
             label: _but.text,
@@ -298,17 +272,17 @@ function scr_creation(slide_num) {
                     {
                         str1: localize("Default"),
                         tooltip: localize("The default livery all marines will be coloured in"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Role"),
                         tooltip: localize("Role specific livery that will overide default livery"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Company"),
                         tooltip: localize("company specific livery that will overide role livery"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                 ],
             );
@@ -317,17 +291,17 @@ function scr_creation(slide_num) {
                     {
                         str1: localize("Standard"),
                         tooltip: localize("standard options to colour marine"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Bulk"),
                         tooltip: localize("bulk colouring for ease and speed"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                     {
                         str1: localize("Advanced"),
                         tooltip: localize("Advanced options for colouring"),
-                        font: fnt_menu,
+                        font: fnt_40k_14b,
                     },
                 ],
             );
