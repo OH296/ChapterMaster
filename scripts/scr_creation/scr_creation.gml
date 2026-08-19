@@ -92,64 +92,36 @@ function bulk_selection_buttons_setup() {
             text: localize("Primary : {0}", [localize(col[main_color])]),
             tooltip: localize("Primary"),
             tooltip2: localize("The main color of your Astartes and their vehicles. And the colour of your chapters Ships"),
-            cords: [
-                500,
-                287,
-            ],
         },
         {
             text: localize("Secondary: {0}", [localize(col[secondary_color])]),
             tooltip: localize("Secondary"),
             tooltip2: localize("The secondary color of your Astartes and their vehicles."),
-            cords: [
-                500,
-                322,
-            ],
         },
         {
             text: localize("Pauldron 1: {0}", [localize(col[left_pauldron])]),
             tooltip: localize("First Pauldron"),
             tooltip2: localize("The color of your Astartes' left Pauldron.  Normally this Pauldron displays their rank and designation."),
-            cords: [
-                500,
-                357,
-            ],
         },
         {
             text: localize("Pauldron 2: {0}", [localize(col[right_pauldron])]),
             tooltip: localize("Second Pauldron"),
             tooltip2: localize("The color of your Astartes' right Pauldron.  Normally this Pauldron contains the Chapter Insignia."),
-            cords: [
-                500,
-                392,
-            ],
         },
         {
             text: localize("Trim: {0}", [localize(col[main_trim])]),
             tooltip: localize("Trim"),
             tooltip2: localize("The trim color that appears on the Pauldrons, armour plating, and any decorations."),
-            cords: [
-                500,
-                427,
-            ],
         },
         {
             text: localize("Lens: {0}", [localize(col[lens_color])]),
             tooltip: localize("Lens"),
             tooltip2: localize("The color of your Astartes' lenses.  Most of the time this will be the visor color."),
-            cords: [
-                500,
-                462,
-            ],
         },
         {
             text: localize("Weapon: {0}", [localize(col[weapon_color])]),
             tooltip: localize("Weapon"),
             tooltip2: localize("The primary color of your Astartes' weapons."),
-            cords: [
-                500,
-                497,
-            ],
         },
     ];
     bulk_buttons = [];
