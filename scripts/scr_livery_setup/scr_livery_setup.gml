@@ -35,7 +35,8 @@ function scr_livery_setup() {
 
     draw_set_font(cjk_font(fnt_40k_30b));
 
-    if (colour_selection_options.current_selection == 0) {
+    var _cur_colouring_options = colour_selection_options.current_selection;
+    if (_cur_colouring_options == eLIVERY_COLOURING_OPTIONS.STANDARD) {
         var _col_areas = livery_picker.colours_radio;
         _col_areas.current_selection = -1;
         _col_areas.update({x1: colour_selection_options.x1, y1: colour_selection_options.y2, max_width: 200});
@@ -43,7 +44,7 @@ function scr_livery_setup() {
         if (_col_areas.changed) {
             livery_picker.new_colour_pick(_col_areas.selection_val("area_id"));
         }
-    } else if (colour_selection_options.current_selection == 1) {
+    } else if (_cur_colouring_options == eLIVERY_COLOURING_OPTIONS.BULK) {
         var _updater = draw_unit_buttons([500, preview_box.y1 - 10], "Update Sprite");
         if (scr_hit(_updater)) {
             tooltip_draw("Click to Update Marine colour picker with Colour settings, warning this will overide Existing colour selections");
@@ -51,13 +52,13 @@ function scr_livery_setup() {
 
         if (point_and_click(_updater)) {
             var struct_cols = {
-                main_color: main_color,
-                secondary_color: secondary_color,
-                main_trim: main_trim,
-                right_pauldron: right_pauldron,
-                left_pauldron: left_pauldron,
-                lens_color: lens_color,
-                weapon_color: weapon_color,
+                main_color,
+                secondary_color,
+                main_trim,
+                right_pauldron,
+                left_pauldron,
+                lens_color,
+                weapon_color,
             };
             livery_picker.set_default_armour(struct_cols, col_special);
         }
@@ -77,7 +78,7 @@ function scr_livery_setup() {
 
         bulk_armour_pattern.draw();
         col_special = bulk_armour_pattern.current_selection;
-    } else {
+    } else if (_cur_colouring_options == eLIVERY_COLOURING_OPTIONS.ADVANCED){
         for (var i = 0; i < array_length(complex_livery_buttons); i++) {
             var _button = complex_livery_buttons[i];
 
@@ -99,14 +100,13 @@ function scr_livery_setup() {
     draw_set_font(cjk_font(fnt_40k_14b));
     draw_set_halign(fa_left);
     var spacing = 30;
-    var xxx = 862;
-    var yyy = 255 - spacing;
 
     livery_selection_options.update({x1: 862, y1: 200, max_width: 800});
 
     var _prev_val = variable_clone(livery_selection_options.current_selection);
 
-    if (colour_selection_options.current_selection != 2) {
+    var _non_advanced_painting = colour_selection_options.current_selection != eLIVERY_COLOURING_OPTIONS.ADVANCED;
+    if (_non_advanced_painting != 2) {
         livery_selection_options.draw();
     }
 
@@ -119,14 +119,14 @@ function scr_livery_setup() {
 
     var _livery_type = livery_selection_options.current_selection;
 
-    if (colour_selection_options.current_selection != 2 && !_update_sprite) {
-        if (_livery_type == 1) {
+    if (_non_advanced_painting && !_update_sprite) {
+        if (_livery_type == eLIVERY_SELECTION_TYPES.BY_ROLE) {
             roles_radio.update({x1: 882, y1: livery_selection_options.y2 + 20, allow_changes: custom == eCHAPTER_TYPE.CUSTOM});
             roles_radio.draw();
             if (roles_radio.changed) {
                 livery_picker.swap_role_set(1, 1);
             }
-        } else if (_livery_type == 2) {
+        } else if (_livery_type == eLIVERY_SELECTION_TYPES.BY_COMPANY) {
             company_radio.update({max_width: 350, x1: 862, y1: livery_selection_options.y2 + 20, allow_changes: true});
             company_radio.draw();
             if (company_radio.changed) {

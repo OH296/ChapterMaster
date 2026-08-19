@@ -21,7 +21,6 @@ function set_complex_livery_buttons() {
         _data.helm_secondary = clamp(_data.helm_secondary, 0, array_length(col) - 1);
         _data.helm_lens = clamp(_data.helm_lens, 0, array_length(col) - 1);
 
-        // --- Build button objects ---
         complex_livery_buttons = [
             new UnitButtonObject({
                 x1: 500,

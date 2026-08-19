@@ -243,7 +243,6 @@ try {
                 } else {
                     garrison_data_slate.sub_title = "";
                 }
-
                 garrison_data_slate.body_text = garrison.garrison_report();
 
                 garrison_data_slate.inside_method = function() {
