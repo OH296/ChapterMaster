@@ -119,6 +119,8 @@ function spec_data_set(specialist) {
 }
 
 /// @self Asset.GMObject.obj_controller
+/// @desc Runs one turn of apothecary training: accrues recruitment points, then graduates a waiting aspirant or recruits a new one.
+/// @returns {Undefined}
 function apothecary_training() {
     // ** Training **
     // * Apothecary *
@@ -130,19 +132,14 @@ function apothecary_training() {
 
     var novice_type = string("{0} Aspirant", _apoth_role.role);
     if (training_apothecary > 0) {
-        recruit_count = scr_role_count(novice_type, "");
+        /// @type {Array<Struct.TTRPG_stats>}
+        var _aspirants = scr_role_count(novice_type, "", "units");
+        recruit_count = array_length(_aspirants);
 
         if (apothecary_recruit_points >= 48) {
             if (recruit_count > 0) {
-                var random_marine = scr_random_marine(novice_type, 0);
-                if (random_marine == "none") {
-                    return;
-                }
                 /// @type {Struct.TTRPG_stats}
-                var _unit = fetch_unit(random_marine);
-                if (!is_struct(_unit)) {
-                    return;
-                }
+                var _unit = _aspirants[irandom(recruit_count - 1)];
 
                 apothecary_recruit_points -= 48;
                 scr_alert("green", "recruitment", _unit.name_role() + " has finished training.", 0, 0);
@@ -167,6 +164,8 @@ function apothecary_training() {
         } else if ((apothecary_recruit_points >= 4) && (recruit_count == 0)) {
             var random_marine = spec_data_set(eROLE_TAG.Apothecary);
             if (random_marine == "none") {
+                training_apothecary = 0;
+                scr_alert("red", "recruitment", $"No marines available for {obj_ini.player_role_data[eROLE.APOTHECARY].role} training", 0, 0);
                 return;
             }
             var _unit = fetch_unit(random_marine);
@@ -177,9 +176,6 @@ function apothecary_training() {
             _unit.update_gear("");
             _unit.update_mobility_item("");
             scr_alert("green", "recruitment", _unit.name_role() + " begins training.", 0, 0);
-        } else {
-            training_apothecary = 0;
-            scr_alert("red", "recruitment", $"No marines available for {obj_ini.player_role_data[eROLE.APOTHECARY].role} training", 0, 0);
         }
     }
 }
