@@ -613,17 +613,6 @@ function add_unit_to_battle(unit, meeting, is_local) {
     if ((_unit_role == _role[15]) || (_unit_role == _role[14]) || unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
         if (_unit_role == string(_role[14]) + " Aspirant") {
             col = obj_controller.bat_tactical_column;
-            new_combat.tacticals++;
-        }
-
-        if (_unit_role == _role[15]) {
-            new_combat.apothecaries++;
-        }
-        if (_unit_role == _role[14]) {
-            new_combat.chaplains++;
-            if (new_combat.big_mofo > 5) {
-                new_combat.big_mofo = 5;
-            }
         }
 
         col = obj_controller.bat_tactical_column;
@@ -638,18 +627,6 @@ function add_unit_to_battle(unit, meeting, is_local) {
     }
 
     if ((_unit_role == _role[5]) || (_unit_role == _role[11]) || (_unit_role == _role[7])) {
-        if (_unit_role == _role[5]) {
-            new_combat.captains++;
-            if (new_combat.big_mofo > 5) {
-                new_combat.big_mofo = 5;
-            }
-        }
-        if (_unit_role == _role[11]) {
-            new_combat.standard_bearers++;
-        }
-        if (_unit_role == _role[7]) {
-            new_combat.champions++;
-        }
         if (company >= 2) {
             col = obj_controller.bat_tactical_column;
         }
@@ -664,7 +641,6 @@ function add_unit_to_battle(unit, meeting, is_local) {
     if (_unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
         col = obj_controller.bat_command_column;
         new_combat.important_dudes++;
-        new_combat.big_mofo = 1;
         if (string_count("0", unit.specials) > 0) {
             new_combat.chapter_master_psyker = 1;
         } else {
@@ -674,12 +650,6 @@ function add_unit_to_battle(unit, meeting, is_local) {
     if (unit.IsSpecialist(SPECIALISTS_HEADS)) {
         col = obj_controller.bat_command_column;
         new_combat.important_dudes++;
-    }
-    if (new_combat.big_mofo > 2) {
-        new_combat.big_mofo = 2;
-    }
-    if (new_combat.big_mofo > 3) {
-        new_combat.big_mofo = 3;
     }
     if (unit.squad != "none") {
         var squad = unit.get_squad();

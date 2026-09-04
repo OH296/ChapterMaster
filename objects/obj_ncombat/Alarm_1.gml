@@ -589,8 +589,25 @@ if ((fortified > 1) && !dropping && !(enemy == eFACTION.CHAOS && threat == 7)) {
     combat_log.push(_newline, _newline_color);
 }
 
+var _roles = active_roles();
+var _speech_giver_role_priority = [
+    _roles[eROLE.CHAPTER_MASTER],
+    "Master of Sanctity",
+    "Chief " + _roles[eROLE.LIBRARIAN],
+    _roles[eROLE.CAPTAIN],
+    _roles[eROLE.CHAPLAIN],
+]
+
+var _speech_giver_role = -1;
+var for ( var i = 0; i < array_length(_speech_giver_role_priority); i++){
+    if (player_unit_index.has_role(_speech_giver_role_priority[i])){
+        _speech_giver_role = i;
+        break;
+    }
+}
+
 // Check for battlecry here
-if ((temp >= 100) && (threat > 1) && (big_mofo > 0) && (big_mofo < 10) && !dropping) {
+if ((temp >= 100) && (threat > 1) && _speech_giver_role > -1 && !dropping) {
     p1 = "";
     p2 = "";
     p3 = "";
@@ -600,54 +617,49 @@ if ((temp >= 100) && (threat > 1) && (big_mofo > 0) && (big_mofo < 10) && !dropp
     temp4 = 0;
     temp5 = 0;
 
-    if (big_mofo == 1) {
+    var _r_name = _speech_giver_role_priority[_speech_giver_role];
+    var _index = player_unit_index.role_index;
+    var _speech_giver = _index[$ _r_name][0];
+
+    var _cm_giving_speech = _speech_giver_role == 0;
+    if (_cm_giving_speech) {
         p1 = "You ";
-    }
-    if (big_mofo == 2) {
-        p1 = "The Master of Sanctity ";
-    }
-    if (big_mofo == 3) {
-        p1 = "Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role) + " ";
-    }
-    if (big_mofo == 5) {
-        p1 = "A Captain ";
-    }
-    if (big_mofo == 8) {
-        p1 = "A Chaplain ";
+    } else {
+        p1 = _speech_giver.name_role();
     }
 
     var standard_cry = 0;
     if (global.chapter_name == "Salamanders") {
         standard_cry = 1;
         rand = choose(1, 2, 3, 4, 5);
-        if ((rand == 1) && (big_mofo != 1)) {
+        if ((rand == 1) && (_cm_giving_speech != 1)) {
             p2 = "breaks the silence, begining the Chapter Battlecry-";
         }
-        if ((rand == 1) && (big_mofo == 1)) {
+        if ((rand == 1) && (_cm_giving_speech == 1)) {
             p2 = "break the silence, begining the Chapter Battlecry-";
         }
-        if ((rand == 2) && (big_mofo != 1)) {
+        if ((rand == 2) && (_cm_giving_speech != 1)) {
             p2 = "roars the first half of the Chapter Battlecry-";
         }
-        if ((rand == 2) && (big_mofo == 1)) {
+        if ((rand == 2) && (_cm_giving_speech == 1)) {
             p2 = "roar the first half of the Chapter Battlecry-";
         }
-        if ((rand == 3) && (big_mofo != 1)) {
+        if ((rand == 3) && (_cm_giving_speech != 1)) {
             p2 = "shouts the start of the Chapter Battlecry-";
         }
-        if ((rand == 3) && (big_mofo == 1)) {
+        if ((rand == 3) && (_cm_giving_speech == 1)) {
             p2 = "shout the start of the Chapter Battlecry-";
         }
-        if ((rand == 4) && (big_mofo != 1)) {
+        if ((rand == 4) && (_cm_giving_speech != 1)) {
             p2 = "calls out to your marines-";
         }
-        if ((rand == 4) && (big_mofo == 1)) {
+        if ((rand == 4) && (_cm_giving_speech == 1)) {
             p2 = "call out to your marines-";
         }
-        if ((rand == 5) && (big_mofo != 1)) {
+        if ((rand == 5) && (_cm_giving_speech != 1)) {
             p2 = "roars to your marines-";
         }
-        if ((rand == 5) && (big_mofo == 1)) {
+        if ((rand == 5) && (_cm_giving_speech == 1)) {
             p2 = "roar to your marines-";
         }
         p3 = "''Into the fires of battle!''";
@@ -676,22 +688,22 @@ if ((temp >= 100) && (threat > 1) && (big_mofo > 0) && (big_mofo < 10) && !dropp
     if (obj_ini.battle_cry == "...") {
         standard_cry = 1;
         rand = choose(1, 2, 3);
-        if ((rand == 1) && (big_mofo != 1)) {
+        if ((rand == 1) && (_cm_giving_speech != 1)) {
             p2 = "remains silent as the Chapter forms for battle-";
         }
-        if ((rand == 1) && (big_mofo == 1)) {
+        if ((rand == 1) && (_cm_giving_speech == 1)) {
             p2 = "remain silent as the Chapter forms for battle-";
         }
-        if ((rand == 2) && (big_mofo != 1)) {
+        if ((rand == 2) && (_cm_giving_speech != 1)) {
             p2 = "remains silent and issues orders to the Chapter for battle-";
         }
-        if ((rand == 2) && (big_mofo == 1)) {
+        if ((rand == 2) && (_cm_giving_speech == 1)) {
             p2 = "remain silent and issues orders to the Chapter for battle-";
         }
-        if ((rand == 3) && (big_mofo != 1)) {
+        if ((rand == 3) && (_cm_giving_speech != 1)) {
             p2 = "issues orders to the Chapter over Vox-";
         }
-        if ((rand == 3) && (big_mofo == 1)) {
+        if ((rand == 3) && (_cm_giving_speech == 1)) {
             p2 = "whisper to your brothers the plans for initial deployment over vox-";
         }
         p3 = "''Sharp gestures and handsigns from officers direct the Marines''";
@@ -721,34 +733,34 @@ if ((temp >= 100) && (threat > 1) && (big_mofo > 0) && (big_mofo < 10) && !dropp
     if ((global.chapter_name == "Iron Warriors") && (global.custom == eCHAPTER_TYPE.PREMADE)) {
         standard_cry = 1;
         rand = choose(1, 2, 3, 4, 5);
-        if ((rand == 1) && (big_mofo != 1)) {
+        if ((rand == 1) && (_cm_giving_speech != 1)) {
             p2 = "breaks the silence, begining the Chapter Battlecry-";
         }
-        if ((rand == 1) && (big_mofo == 1)) {
+        if ((rand == 1) && (_cm_giving_speech == 1)) {
             p2 = "break the silence, begining the Chapter Battlecry-";
         }
-        if ((rand == 2) && (big_mofo != 1)) {
+        if ((rand == 2) && (_cm_giving_speech != 1)) {
             p2 = "roars the first half of the Chapter Battlecry-";
         }
-        if ((rand == 2) && (big_mofo == 1)) {
+        if ((rand == 2) && (_cm_giving_speech == 1)) {
             p2 = "roar the first half of the Chapter Battlecry-";
         }
-        if ((rand == 3) && (big_mofo != 1)) {
+        if ((rand == 3) && (_cm_giving_speech != 1)) {
             p2 = "shouts the start of the Chapter Battlecry-";
         }
-        if ((rand == 3) && (big_mofo == 1)) {
+        if ((rand == 3) && (_cm_giving_speech == 1)) {
             p2 = "shout the start of the Chapter Battlecry-";
         }
-        if ((rand == 4) && (big_mofo != 1)) {
+        if ((rand == 4) && (_cm_giving_speech != 1)) {
             p2 = "calls out to your marines-";
         }
-        if ((rand == 4) && (big_mofo == 1)) {
+        if ((rand == 4) && (_cm_giving_speech == 1)) {
             p2 = "call out to your marines-";
         }
-        if ((rand == 5) && (big_mofo != 1)) {
+        if ((rand == 5) && (_cm_giving_speech != 1)) {
             p2 = "roars to your marines-";
         }
-        if ((rand == 5) && (big_mofo == 1)) {
+        if ((rand == 5) && (_cm_giving_speech == 1)) {
             p2 = "roar to your marines-";
         }
         p3 = "''Iron within!''";
@@ -779,37 +791,37 @@ if ((temp >= 100) && (threat > 1) && (big_mofo > 0) && (big_mofo < 10) && !dropp
         standard_cry = 1;
         rand = choose(1, 2, 3, 4);
         if (rand == 1) {
-            if (big_mofo != 1) {
+            if (_cm_giving_speech != 1) {
                 p2 = "breaks ";
             }
-            if (big_mofo == 1) {
+            if (_cm_giving_speech == 1) {
                 p2 = "break ";
             }
             p2 += "the silence, calling out the Chapter Battlecry-";
         }
         if (rand == 2) {
-            if (big_mofo != 1) {
+            if (_cm_giving_speech != 1) {
                 p2 = "roars ";
             }
-            if (big_mofo == 1) {
+            if (_cm_giving_speech == 1) {
                 p2 = "roar ";
             }
             p2 += "the Chapter Battlecry-";
         }
         if (rand == 3) {
-            if (big_mofo != 1) {
+            if (_cm_giving_speech != 1) {
                 p2 = "shouts ";
             }
-            if (big_mofo == 1) {
+            if (_cm_giving_speech == 1) {
                 p2 = "shout ";
             }
             p2 += "the Chapter Battlecry-";
         }
         if (rand == 4) {
-            if (big_mofo != 1) {
+            if (_cm_giving_speech != 1) {
                 p2 = "roars ";
             }
-            if (big_mofo == 1) {
+            if (_cm_giving_speech == 1) {
                 p2 = "roar ";
             }
             p2 += "to your marines-";
