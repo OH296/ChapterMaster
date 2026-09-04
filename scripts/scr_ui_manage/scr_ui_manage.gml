@@ -86,7 +86,7 @@ function load_marines_into_ship(system, ship, units, reload = false) {
     }
     selecting_ship = -1;
     if (managing == -1 && obj_controller.selection_data.purpose != "Ship Management") {
-        update_garrison_manage();
+        update_adhoc_manage();
     }
 }
 
