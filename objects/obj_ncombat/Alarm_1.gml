@@ -38,7 +38,7 @@ array_push(_marine_roles, "Master of Sanctity");
 array_push(_marine_roles, "Master of the Apothecarion");
 array_push(_marine_roles, $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role}");
 
-_marine_count = player_unit_index.sum_roles(_marine_roles);
+var _marine_count = player_unit_index.sum_roles(_marine_roles);
 
 // Random variations; dark out, rain pooling down, dawn shining off of the armour, etc.
 var variation = choose("", "dawn", "rain");
