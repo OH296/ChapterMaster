@@ -490,7 +490,7 @@ if ((fortified > 1) && !dropping && !(enemy == eFACTION.CHAOS && threat == 7)) {
 
 var _roles = active_roles();
 var _speech_giver_role_priority = [
-    _roles[eROLE.CHAPTER_MASTER],
+    _roles[eROLE.CHAPTERMASTER],
     "Master of Sanctity",
     "Chief " + _roles[eROLE.LIBRARIAN],
     _roles[eROLE.CAPTAIN],
