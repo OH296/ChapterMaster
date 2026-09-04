@@ -498,7 +498,7 @@ var _speech_giver_role_priority = [
 ]
 
 var _speech_giver_role = -1;
-var for ( var i = 0; i < array_length(_speech_giver_role_priority); i++){
+for (var i = 0; i < array_length(_speech_giver_role_priority); i++){
     if (player_unit_index.has_role(_speech_giver_role_priority[i])){
         _speech_giver_role = i;
         break;
