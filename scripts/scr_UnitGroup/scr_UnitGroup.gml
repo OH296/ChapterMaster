@@ -549,7 +549,7 @@ function UnitIndex(units) constructor {
     }
 
     static sum_roles = function(roles){
-        var _sum = 0
+        var _sum = 0;
         for (var i = 0; i < array_length(roles); i++){
             _sum += role_count(roles[i]);
         }
