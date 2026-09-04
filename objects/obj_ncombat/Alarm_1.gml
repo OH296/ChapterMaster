@@ -76,7 +76,7 @@ if (battle_special == "space_hulk") {
     }
 }
 
-var _dread_count = player_unit_index.role_count(_marine_roles[eROLE.DREADNOUGHT]);
+var _dread_count = player_unit_index.sum_roles([_marine_roles[eROLE.DREADNOUGHT], "Venerable" + _marine_roles[eROLE.DREADNOUGHT]]);
 
 if (battle_special == "") {
     if (!dropping) {
