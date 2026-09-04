@@ -223,7 +223,9 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
 
                     instance_deactivate_object(obj_star);
                     setup_battle_formations();
-                    scr_ship_battle(_resolved.ship_id, 999);
+                    var _roster = new Roster();
+                    _roster.selected_units = collect_role_group("all", ["", 0, _resolved.ship_id], false, {}, false);
+                    _roster.add_to_battle();
                     main_map_defaults();
                 }
             }

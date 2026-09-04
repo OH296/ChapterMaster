@@ -694,6 +694,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
 
     targ = instance_nearest(col * 10, 240, obj_pnunit);
 
+    obj_ncombat.player_unit_index.add_to_index([unit]);
     with (targ) {
         scr_add_unit_to_roster(unit, is_local);
     }
