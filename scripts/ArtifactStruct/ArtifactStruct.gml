@@ -210,7 +210,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
         }
         var _resolved = __resolve_location();
 
-        if (_resolved.ship_id == -1) {
+        if (_resolved.ship_id < 0) {
             return;
         }
 
