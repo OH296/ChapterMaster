@@ -640,7 +640,6 @@ function add_unit_to_battle(unit, meeting, is_local) {
 
     if (_unit_role == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
         col = obj_controller.bat_command_column;
-        new_combat.important_dudes++;
         if (string_count("0", unit.specials) > 0) {
             new_combat.chapter_master_psyker = 1;
         } else {
@@ -649,7 +648,6 @@ function add_unit_to_battle(unit, meeting, is_local) {
     }
     if (unit.IsSpecialist(SPECIALISTS_HEADS)) {
         col = obj_controller.bat_command_column;
-        new_combat.important_dudes++;
     }
     if (unit.squad != "none") {
         var squad = unit.get_squad();
