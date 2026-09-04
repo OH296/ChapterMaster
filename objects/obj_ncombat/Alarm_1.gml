@@ -38,7 +38,7 @@ array_push(_marine_roles, "Master of Sanctity");
 array_push(_marine_roles, "Master of the Apothecarion");
 array_push(_marine_roles, $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role}");
 
-_marine_count = player_unit_index.sum_roles(_marine_roles);
+var _marine_count = player_unit_index.sum_roles(_marine_roles);
 
 // Random variations; dark out, rain pooling down, dawn shining off of the armour, etc.
 var variation = choose("", "dawn", "rain");
@@ -183,7 +183,7 @@ for (var i = 0; i < array_length(_auto_include); i++){
 }
 
 var _small_include = [
-    _marine_roles[eROLE.TERINATOR],
+    _marine_roles[eROLE.TERMINATOR],
     _marine_roles[eROLE.CHAPLAIN],
     _marine_roles[eROLE.APOTHECARY],
     _marine_roles[eROLE.LIBRARIAN],
@@ -490,7 +490,7 @@ if ((fortified > 1) && !dropping && !(enemy == eFACTION.CHAOS && threat == 7)) {
 
 var _roles = active_roles();
 var _speech_giver_role_priority = [
-    _roles[eROLE.CHAPTER_MASTER],
+    _roles[eROLE.CHAPTERMASTER],
     "Master of Sanctity",
     "Chief " + _roles[eROLE.LIBRARIAN],
     _roles[eROLE.CAPTAIN],
@@ -498,7 +498,7 @@ var _speech_giver_role_priority = [
 ]
 
 var _speech_giver_role = -1;
-var for ( var i = 0; i < array_length(_speech_giver_role_priority); i++){
+for (var i = 0; i < array_length(_speech_giver_role_priority); i++){
     if (player_unit_index.has_role(_speech_giver_role_priority[i])){
         _speech_giver_role = i;
         break;
