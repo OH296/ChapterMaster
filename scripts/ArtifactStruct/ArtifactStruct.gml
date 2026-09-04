@@ -216,7 +216,7 @@ function ArtifactStruct(_type_name = "", _tags = [], _identification_timer = 0, 
 
         var _demon_summon_chance = roll_dice_chapter(1, 100, "high");
 
-        if ((_demon_summon_chance <= DEMON_SUMMON_THRESHOLD) && (obj_ini.ship_carrying[_resolved.ship_id] > 0)) {
+        if (_demon_summon_chance <= DEMON_SUMMON_THRESHOLD && obj_ini.ship_carrying[_resolved.ship_id] > 0) {
             instance_deactivate_all_safe();
             instance_activate_object(obj_star);
 

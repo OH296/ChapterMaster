@@ -178,7 +178,7 @@ var _auto_include = [
 for (var i = 0; i < array_length(_auto_include); i++){
     var _role = _auto_include[i];
     if (player_unit_index.role_count(_role) > 0){
-        p2 += player_unit_index.plural_string_role(_role);
+        p2 += player_unit_index.plural_string_role(_role) + ", ";
     }
 }
 
@@ -197,7 +197,7 @@ if (_marine_count < 200) {
     for (var i = 0; i < array_length(_small_include); i++){
         var _role = _small_include[i];
         if (player_unit_index.role_count(_role) > 0){
-            p2 += player_unit_index.plural_string_role(_role);
+            p2 += player_unit_index.plural_string_role(_role) + ", ";
         }
     }
 } else {
