@@ -232,23 +232,23 @@ if (_dread_count + predators + land_raiders > 3) {
     }
 
     if (rhinos > 0) {
-        string_plural_count("Rhino", rhinos);
+        p6 += string_plural_count("Rhino", rhinos) + ", ";
     }
     
     if (predators > 0) {
-        string_plural_count("Predator", predators);
+        p6 += string_plural_count("Predator", predators) + ", ";
     }
 
     if (land_raiders > 0) {
-        string_plural_count("Land Raider", land_raiders);
+        p6 += string_plural_count("Land Raider", land_raiders) + ", ";
     }
 
     if (land_speeders > 0) {
-        string_plural_count("Land Speeder", land_speeders);
+        p6 += string_plural_count("Land Speeder", land_speeders) + ", ";
     }
 
     if (whirlwinds > 0) {
-        string_plural_count("Whirlwind", whirlwinds);
+        p6 += string_plural_count("Whirlwind", whirlwinds) + ", ";
     }
 
     // Other vehicles here?
@@ -525,7 +525,7 @@ if ((_marine_count >= 100) && (threat > 1) && _speech_giver_role > -1 && !droppi
     if (_cm_giving_speech) {
         p1 = "You ";
     } else {
-        p1 = _speech_giver.name_role();
+        p1 = _speech_giver.name_role() + " ";
     }
 
     var standard_cry = 0;
