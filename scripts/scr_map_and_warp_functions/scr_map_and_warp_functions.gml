@@ -305,6 +305,187 @@ function create_complex_star_routes(player_star) {
         }
     }
     instance_activate_object(obj_star);
+    var _cluster_builder = new SectorClusterBuilder();
+    obj_ini.sector_handler.sector_clusters = _cluster_builder.build();
+}
+
+
+function SectorClusterBuilder() constructor {
+    name_to_id = ds_map_create();
+    parent = ds_map_create();
+    all_stars = [];
+    components = [];
+    final_clusters = [];
+    MAXCLUSTERS = 8;
+    MINCLUSTERS = 5;
+
+    static find = function(_start_id) {
+        var _root = _start_id;
+        while (parent[? _root] != _root) {
+            _root = parent[? _root];
+        }
+        var _cur = _start_id;
+        while (_cur != _root) {
+            var _next = parent[? _cur];
+            parent[? _cur] = _root;
+            _cur = _next;
+        }
+        return _root;
+    };
+
+    static union = function(_a, _b) {
+        var _ra = find(_a);
+        var _rb = find(_b);
+        if (_ra != _rb) {
+            parent[? _ra] = _rb;
+        }
+    };
+
+    static get_centroid = function(_star_ids) {
+        var _sx = 0, _sy = 0;
+        var _n = array_length(_star_ids);
+        for (var i = 0; i < _n; i++) {
+            _sx += _star_ids[i].x;
+            _sy += _star_ids[i].y;
+        }
+        return { x: _sx / _n, y: _sy / _n };
+    };
+
+    static sort_by_x = function(_a, _b) { return _a.x - _b.x; };
+    static sort_by_y = function(_a, _b) { return _a.y - _b.y; };
+
+    static split_component = function(_star_ids) {
+        var _n = array_length(_star_ids);
+        var _min_x = infinity, _max_x = -infinity, _min_y = infinity, _max_y = -infinity;
+        for (var i = 0; i < _n; i++) {
+            var _s = _star_ids[i];
+            _min_x = min(_min_x, _s.x);
+            _max_x = max(_max_x, _s.x);
+            _min_y = min(_min_y, _s.y);
+            _max_y = max(_max_y, _s.y);
+        }
+        var _use_x = (_max_x - _min_x) >= (_max_y - _min_y);
+
+        var _sorted = array_create(_n);
+        for (var i = 0; i < _n; i++) {
+            _sorted[i] = _star_ids[i];
+        }
+        array_sort(_sorted, _use_x ? sort_by_x : sort_by_y);
+
+        var _mid = _n div 2;
+        var _group_a = [];
+        var _group_b = [];
+        for (var i = 0; i < _n; i++) {
+            if (i < _mid) {
+                array_push(_group_a, _sorted[i]);
+            } else {
+                array_push(_group_b, _sorted[i]);
+            }
+        }
+        return [_group_a, _group_b];
+    };
+
+    static build = function() {
+        // 1. name -> id lookup
+        with (obj_star) {
+            other.name_to_id[? name] = id;
+        }
+
+        // 2. union-find setup
+        with (obj_star) {
+            other.parent[? id] = id;
+            array_push(other.all_stars, id);
+        }
+
+        // 3. union stars connected by a warp lane
+        with (obj_star) {
+            for (var i = 0; i < array_length(warp_lanes); i++) {
+                if (warp_lanes[i][0] >= 4){
+                    continue;
+                }
+                var _target_id = other.name_to_id[? warp_lanes[i][0]];
+                if (!is_undefined(_target_id)) {
+                    other.union(id, _target_id);
+                }
+            }
+        }
+
+        // 4. collect connected components
+        var _groups_map = ds_map_create();
+        for (var i = 0; i < array_length(all_stars); i++) {
+            var _root_key = string(find(all_stars[i]));
+            if (!ds_map_exists(_groups_map, _root_key)) {
+                _groups_map[? _root_key] = [];
+            }
+            array_push(_groups_map[? _root_key], all_stars[i]);
+        }
+
+        components = [];
+        var _key = ds_map_find_first(_groups_map);
+        while (!is_undefined(_key)) {
+            array_push(components, _groups_map[? _key]);
+            _key = ds_map_find_next(_groups_map, _key);
+        }
+        ds_map_destroy(_groups_map);
+
+        // 5. merge closest components until <= 8
+        while (array_length(components) > MAXCLUSTERS) {
+            var _best_a = -1, _best_b = -1, _best_dist = infinity;
+            for (var a = 0; a < array_length(components); a++) {
+                var _ca = get_centroid(components[a]);
+                for (var b = a + 1; b < array_length(components); b++) {
+                    var _cb = get_centroid(components[b]);
+                    var _d = point_distance(_ca.x, _ca.y, _cb.x, _cb.y);
+                    if (_d < _best_dist) {
+                        _best_dist = _d;
+                        _best_a = a;
+                        _best_b = b;
+                    }
+                }
+            }
+            for (var k = 0; k < array_length(components[_best_b]); k++) {
+                array_push(components[_best_a], components[_best_b][k]);
+            }
+            array_delete(components, _best_b, 1);
+        }
+
+        // 6. split largest components until >= 5
+        while (array_length(components) < MINCLUSTERS) {
+            var _largest_i = 0, _largest_n = 0;
+            for (var i = 0; i < array_length(components); i++) {
+                var _len = array_length(components[i]);
+                if (_len > _largest_n) {
+                    _largest_n = _len;
+                    _largest_i = i;
+                }
+            }
+            if (_largest_n <= 1) {
+                break;
+            }
+            var _split_result = split_component(components[_largest_i]);
+            components[_largest_i] = _split_result[0];
+            array_push(components, _split_result[1]);
+        }
+
+        // 7. build final named cluster structs
+        final_clusters = [];
+        for (var i = 0; i < array_length(components); i++) {
+            var _members = components[i];
+            var _rep = _members[0];
+            var _cluster_name = (array_length(_members) == 1)
+                ? (_rep.name + " Isolate")
+                : (_rep.name + " Sector");
+            array_push(final_clusters, {
+                name: _cluster_name,
+                systems: _members
+            });
+        }
+
+        ds_map_destroy(parent);
+        ds_map_destroy(name_to_id);
+
+        return final_clusters;
+    };
 }
 
 function set_map_pan_to_loc(target) {
