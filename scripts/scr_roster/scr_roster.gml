@@ -546,52 +546,40 @@ function add_unit_to_battle(unit, meeting, is_local) {
 
     if (_unit_role == obj_ini.player_role_data[eROLE.SERGEANT].role) {
         col = obj_controller.bat_tactical_column; //sergeants
-        new_combat.sgts++;
     } else if (_unit_role == _role[19]) {
         col = obj_controller.bat_veteran_column;
-        new_combat.vet_sgts++;
     }
     if (_unit_role == _role[12]) {
         //scouts
         col = obj_controller.bat_scout_column;
-        new_combat.scouts++;
     } else if (array_contains([obj_ini.player_role_data[eROLE.TACTICAL].role, $"{_role[15]} Aspirant", $"{_role[14]} Aspirant"], _unit_role)) {
         col = obj_controller.bat_tactical_column; //tactical_marines
-        new_combat.tacticals++;
     } else if (_unit_role == _role[3]) {
         //veterans and veteran sergeants
         col = obj_controller.bat_veteran_column;
-        new_combat.veterans++;
     } else if (_unit_role == _role[9]) {
         //devastators
         col = obj_controller.bat_devastator_column;
-        new_combat.devastators++;
     } else if (_unit_role == _role[10]) {
         //assualt marines
         col = obj_controller.bat_assault_column;
-        new_combat.assaults++;
 
         //librarium roles
     } else if (unit.IsSpecialist(SPECIALISTS_LIBRARIANS, true)) {
         col = obj_controller.bat_librarian_column; //librarium
-        new_combat.librarians++;
         moov = 1;
     } else if (_unit_role == _role[16]) {
         //techmarines
         col = obj_controller.bat_techmarine_column;
-        new_combat.techmarines++;
         moov = 2;
     } else if (_unit_role == _role[2]) {
         //honour guard
         col = obj_controller.bat_honor_column;
-        new_combat.honors++;
     } else if (unit.IsSpecialist(SPECIALISTS_DREADNOUGHTS)) {
         col = obj_controller.bat_dreadnought_column; //dreadnoughts
-        new_combat.dreadnoughts++;
     } else if (_unit_role == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
         //terminators
         col = obj_controller.bat_terminator_column;
-        new_combat.terminators++;
     }
 
     if (moov > 0) {

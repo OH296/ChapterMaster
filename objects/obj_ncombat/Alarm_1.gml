@@ -76,9 +76,11 @@ if (battle_special == "space_hulk") {
     }
 }
 
+var _dread_count = player_unit_index.role_count(_marine_roles[eROLE.DREADNOUGHT]);
+
 if (battle_special == "") {
     if (!dropping) {
-        if (_marine_count - dreadnoughts > 0) {
+        if (_marine_count - _dread_count > 0) {
             if (variation == "") {
                 p1 = "Dirt crunches beneath the soles of " + string(_marine_count) + " " + string(global.chapter_name) + " as they form up.  Your ranks are made up of ";
             }
@@ -91,7 +93,7 @@ if (battle_special == "") {
         }
     }
     if (dropping) {
-        if (_marine_count - dreadnoughts > 0) {
+        if (_marine_count - _dread_count > 0) {
             // lyman
             p1 = "The air rumbles and quakes as " + string(_marine_count) + " " + string(global.chapter_name) + " descend in drop-pods.  ";
         }
@@ -192,7 +194,6 @@ var _small_include = [
     _marine_roles[eROLE.VETERANSERGEANT],
     _marine_roles[eROLE.SCOUT],
 ]
-var _dread_count = player_unit_index.role_count(_marine_roles[eROLE.DREADNOUGHT]);
 if (_marine_count < 200) {
     for (var i = 0; i < array_length(_small_include); i++){
         var _role = _small_include[i];
@@ -224,7 +225,7 @@ if ((player_unit_index.role_count(_marine_roles[eROLE.ANCIENT]) > 1) && (!droppi
     p5 = "  Chapter Ancients hold your Chapter heraldry high and proud.";
 }
 
-if (dreadnoughts + predators + land_raiders > 3) {
+if (_dread_count + predators + land_raiders > 3) {
     p6 = "  Forming up the armoured division is ";
     if (_dread_count > 0) {
         p6 += player_unit_index.plural_string_role(_marine_roles[eROLE.DREADNOUGHT]);
