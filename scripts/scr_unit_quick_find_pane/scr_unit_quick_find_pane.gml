@@ -574,15 +574,16 @@ function exit_adhoc_manage() {
 }
 
 /// @self Asset.GMObject.obj_controller
-function update_garrison_manage() {
+function update_adhoc_manage() {
     location_viewer.update_garrison_log();
     var _selection = [];
-    var sys_name = "";
+    var _sys_name = "";
     var _ships = -1;
     var _planets = 0;
     if (struct_exists(selection_data, "system") && instance_exists(selection_data.system)) {
-        if (struct_exists(location_viewer.garrison_log, selection_data.system.name)) {
-            sys_name = selection_data.system.name;
+        var _sys = selection_data.system;
+        if (_sys.object_index == obj_star && struct_exists(location_viewer.garrison_log, _sys.name)) {
+            _sys_name = selection_data.system.name;
         }
     }
 
@@ -594,7 +595,7 @@ function update_garrison_manage() {
         _planets = selection_data.planets;
     }
 
-    _selection = collect_role_group("all", [sys_name, _planets, _ships]);
+    _selection = collect_role_group("all", [_sys_name, _planets, _ships]);
 
     if (array_length(_selection)) {
         group_selection(_selection, selection_data);
@@ -618,7 +619,7 @@ function update_general_manage_view() {
             unload = 0;
             alarm[6] = 30;
         } else if (managing == -1) {
-            update_garrison_manage();
+            update_adhoc_manage();
         }
     }
 }
@@ -684,7 +685,7 @@ function jail_selection() {
         alll = 0;
         update_general_manage_view();
     } else if (managing == -1) {
-        update_garrison_manage();
+        update_adhoc_manage();
     }
     sel_loading = -1;
     unload = 0;
