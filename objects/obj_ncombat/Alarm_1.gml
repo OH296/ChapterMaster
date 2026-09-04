@@ -183,7 +183,7 @@ for (var i = 0; i < array_length(_auto_include); i++){
 }
 
 var _small_include = [
-    _marine_roles[eROLE.TERINATOR],
+    _marine_roles[eROLE.TERMINATOR],
     _marine_roles[eROLE.CHAPLAIN],
     _marine_roles[eROLE.APOTHECARY],
     _marine_roles[eROLE.LIBRARIAN],
