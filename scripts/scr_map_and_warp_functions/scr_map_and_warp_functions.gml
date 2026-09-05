@@ -94,6 +94,12 @@ function draw_warp_lanes() {
     if (warp_image == 58) {
         warp_image = 0;
     }
+
+    var _clusters = obj_ini.sector_handler.sector_clusters;
+    for (var i = 0; i <array_length(_clusters); i++){
+        _clusters[i].draw_cluster();
+    }
+
     for (var i = 0; i < array_length(routes); i++) {
         draw_set_color(c_gray);
         route = routes[i];
@@ -309,6 +315,178 @@ function create_complex_star_routes(player_star) {
     obj_ini.sector_handler.sector_clusters = _cluster_builder.build();
 }
 
+function SectorCluster(members = []) constructor {
+    static build_count = 0;
+    build_count++;
+    self.systems = members;
+    name = array_length(systems) > 0 ? systems[0].name : "";
+    name += " Cluster";
+
+    primitive_sprite = -1;
+    primitive_x = 0;
+    primitive_y = 0;
+    outline_points = [];
+
+    static get_clamped_radius = function(_star) {
+        var _min_dist = infinity;
+        var _all_clusters = obj_ini.sector_handler.sector_clusters;
+        for (var c = 0; c < array_length(_all_clusters); c++) {
+            var _other_cluster = _all_clusters[c];
+            if (_other_cluster == self) {
+                continue;
+            }
+            var _other_systems = _other_cluster.systems;
+            for (var s = 0; s < array_length(_other_systems); s++) {
+                var _foreign_star = _other_systems[s];
+                var _d = point_distance(_star.x, _star.y, _foreign_star.x, _foreign_star.y);
+                if (_d < _min_dist) {
+                    _min_dist = _d;
+                }
+            }
+        }
+        return min(100, _min_dist / 2);
+    };
+
+    static sample_circle_points = function(_cx, _cy, _r, _segments) {
+        var _pts = [];
+        for (var i = 0; i < _segments; i++) {
+            var _angle = (360 / _segments) * i;
+            array_push(_pts, {
+                x: _cx + lengthdir_x(_r, _angle),
+                y: _cy + lengthdir_y(_r, _angle)
+            });
+        }
+        return _pts;
+    };
+
+    static convex_hull = function(_points) {
+        var _sorted = array_create(array_length(_points));
+        for (var i = 0; i < array_length(_points); i++) {
+            _sorted[i] = _points[i];
+        }
+        array_sort(_sorted, function(_a, _b) {
+            if (_a.x != _b.x) {
+                return _a.x - _b.x;
+            }
+            return _a.y - _b.y;
+        });
+
+        var _cross = function(_o, _a, _b) {
+            return (_a.x - _o.x) * (_b.y - _o.y) - (_a.y - _o.y) * (_b.x - _o.x);
+        };
+
+        var _n = array_length(_sorted);
+        var _lower = [];
+        for (var i = 0; i < _n; i++) {
+            while (array_length(_lower) >= 2 &&
+                   _cross(_lower[array_length(_lower) - 2], _lower[array_length(_lower) - 1], _sorted[i]) <= 0) {
+                array_delete(_lower, array_length(_lower) - 1, 1);
+            }
+            array_push(_lower, _sorted[i]);
+        }
+
+        var _upper = [];
+        for (var i = _n - 1; i >= 0; i--) {
+            while (array_length(_upper) >= 2 &&
+                   _cross(_upper[array_length(_upper) - 2], _upper[array_length(_upper) - 1], _sorted[i]) <= 0) {
+                array_delete(_upper, array_length(_upper) - 1, 1);
+            }
+            array_push(_upper, _sorted[i]);
+        }
+
+        array_delete(_lower, array_length(_lower) - 1, 1);
+        array_delete(_upper, array_length(_upper) - 1, 1);
+
+        var _hull = _lower;
+        for (var i = 0; i < array_length(_upper); i++) {
+            array_push(_hull, _upper[i]);
+        }
+        return _hull;
+    };
+
+    static chaikin_smooth = function(_points, _iterations) {
+        var _current = _points;
+        for (var iter = 0; iter < _iterations; iter++) {
+            var _next = [];
+            var _n = array_length(_current);
+            for (var i = 0; i < _n; i++) {
+                var _p0 = _current[i];
+                var _p1 = _current[(i + 1) mod _n];
+                array_push(_next, { x: lerp(_p0.x, _p1.x, 0.25), y: lerp(_p0.y, _p1.y, 0.25) });
+                array_push(_next, { x: lerp(_p0.x, _p1.x, 0.75), y: lerp(_p0.y, _p1.y, 0.75) });
+            }
+            _current = _next;
+        }
+        return _current;
+    };
+
+    static create_primitive = function() {
+        // 1. sample points around each star's clamped-radius circle
+        var _all_points = [];
+        for (var i = 0; i < array_length(systems); i++) {
+            var _star = systems[i];
+            var _radius = get_clamped_radius(_star);
+            var _circle_points = sample_circle_points(_star.x, _star.y, _radius, 16);
+            for (var p = 0; p < array_length(_circle_points); p++) {
+                array_push(_all_points, _circle_points[p]);
+            }
+        }
+
+        // 2. hull + corner-smoothing gives the curvaceous outline
+        var _hull = convex_hull(_all_points);
+        outline_points = chaikin_smooth(_hull, 3);
+        var _n_pts = array_length(outline_points);
+
+        // 3. bounding box + centroid (fan pivot)
+        var _min_x = infinity, _min_y = infinity, _max_x = -infinity, _max_y = -infinity;
+        var _cx = 0, _cy = 0;
+        for (var i = 0; i < _n_pts; i++) {
+            var _pt = outline_points[i];
+            _min_x = min(_min_x, _pt.x);
+            _min_y = min(_min_y, _pt.y);
+            _max_x = max(_max_x, _pt.x);
+            _max_y = max(_max_y, _pt.y);
+            _cx += _pt.x;
+            _cy += _pt.y;
+        }
+        _cx /= _n_pts;
+        _cy /= _n_pts;
+
+        var _pad = 4;
+        primitive_x = _min_x - _pad;
+        primitive_y = _min_y - _pad;
+        var _surf_width = ceil(_max_x - _min_x) + (_pad * 2);
+        var _surf_height = ceil(_max_y - _min_y) + (_pad * 2);
+
+        // 4. draw the filled outline onto a temporary surface
+        var _surf = surface_create(_surf_width, _surf_height);
+
+        surface_set_target(_surf);
+        draw_set_color(c_green);
+        draw_clear_alpha(c_black, 0);
+        draw_primitive_begin(pr_trianglefan);
+        draw_vertex(_cx - primitive_x, _cy - primitive_y);
+        for (var i = 0; i < _n_pts; i++) {
+            draw_vertex(outline_points[i].x - primitive_x, outline_points[i].y - primitive_y);
+        }
+        draw_vertex(outline_points[0].x - primitive_x, outline_points[0].y - primitive_y);
+        draw_primitive_end();
+        surface_reset_target();
+
+        // 5. transfer to a sprite and free the surface
+        if (sprite_exists(primitive_sprite)) {
+            sprite_delete(primitive_sprite);
+        }
+        primitive_sprite = sprite_create_from_surface(_surf, 0, 0, _surf_width, _surf_height, false, false, 0, 0);
+        surface_free(_surf);
+    };
+
+    create_primitive();
+
+    static draw_cluster = function(){
+        draw_sprite_ext(primitive_sprite, 0, primitive_x, primitive_y, 1, 1, 1, c_green, 0.6);
+    }
+}
 
 function SectorClusterBuilder() constructor {
     name_to_id = ds_map_create();
@@ -316,8 +494,8 @@ function SectorClusterBuilder() constructor {
     all_stars = [];
     components = [];
     final_clusters = [];
-    MAXCLUSTERS = 8;
-    MINCLUSTERS = 5;
+    static MAXCLUSTERS = 8;
+    static MINCLUSTERS = 5;
 
     static find = function(_start_id) {
         var _root = _start_id;
@@ -400,7 +578,7 @@ function SectorClusterBuilder() constructor {
         // 3. union stars connected by a warp lane
         with (obj_star) {
             for (var i = 0; i < array_length(warp_lanes); i++) {
-                if (warp_lanes[i][0] >= 4){
+                if (warp_lanes[i][1] >= 4){
                     continue;
                 }
                 var _target_id = other.name_to_id[? warp_lanes[i][0]];
@@ -471,14 +649,7 @@ function SectorClusterBuilder() constructor {
         final_clusters = [];
         for (var i = 0; i < array_length(components); i++) {
             var _members = components[i];
-            var _rep = _members[0];
-            var _cluster_name = (array_length(_members) == 1)
-                ? (_rep.name + " Isolate")
-                : (_rep.name + " Sector");
-            array_push(final_clusters, {
-                name: _cluster_name,
-                systems: _members
-            });
+            array_push(final_clusters, new SectorCluster(_members));
         }
 
         ds_map_destroy(parent);
