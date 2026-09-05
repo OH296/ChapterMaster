@@ -227,8 +227,12 @@ if ((player_unit_index.role_count(_marine_roles[eROLE.ANCIENT]) > 1) && (!droppi
 
 if (_dread_count + predators + land_raiders > 3) {
     p6 = "  Forming up the armoured division is ";
-    if (_dread_count > 0) {
-        p6 += player_unit_index.plural_string_role(_marine_roles[eROLE.DREADNOUGHT]);
+if (_dread_count > 0) {
+    p6 += string_plural_count(
+        _marine_roles[eROLE.DREADNOUGHT],
+        _dread_count,
+        false
+    ) + ", ";
     }
 
     if (rhinos > 0) {
