@@ -132,35 +132,35 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             if (_chap_name == "Space Wolves") {
                 array_push(_role_list, _roles[eROLE.CHAPLAIN]);
                 if (include_trainee) {
-                    array_push(_role_list, $"{_roles[eROLE.CHAPLAIN]} Aspirant");
+                    _roles[eROLE.CHAPLAINASPIRANT],
                 }
                 if (include_heads) {
-                    array_push(_role_list, "Master of Sanctity");
+                    _roles[eROLE.MASTERCHAPLAIN],
                 }
             }
             if (include_trainee) {
-                array_push(_role_list, $"{_roles[eROLE.APOTHECARY]} Aspirant");
+                _roles[eROLE.APOTHECARYASPIRANT],
             }
             if (include_heads) {
-                array_push(_role_list, "Master of the Apothecarion");
+                _roles[eROLE.MASTERAPOTHECARY],
             }
             break;
 
         case SPECIALISTS_TRAINEES:
             _role_list = [
-                $"{_roles[eROLE.LIBRARIAN]} Aspirant",
-                $"{_roles[eROLE.APOTHECARY]} Aspirant",
-                $"{_roles[eROLE.CHAPLAIN]} Aspirant",
-                $"{_roles[eROLE.TECHMARINE]} Aspirant",
+                _roles[eROLE.LIBRARIANASPIRANT],
+                _roles[eROLE.APOTHECARYASPIRANT],
+                _roles[eROLE.CHAPLAINASPIRANT],
+                _roles[eROLE.TECHMARINEASPIRANT],
             ];
             break;
         case SPECIALISTS_HEADS:
             _role_list = [
-                "Master of Sanctity",
-                $"Chief {_roles[eROLE.LIBRARIAN]}",
-                "Forge Master",
-                string(obj_ini.player_role_data[eROLE.CHAPTERMASTER].role),
-                "Master of the Apothecarion",
+                _roles[eROLE.FORGEMASTER],
+                _roles[eROLE.HEADLIBRARIAN],
+                _roles[eROLE.MASTERAPOTHECARY],
+                _roles[eROLE.CHAPTERMASTER],
+                _roles[eROLE.MASTERCHAPLAIN],
             ];
             break;
         case SPECIALISTS_VETERANS:
@@ -192,8 +192,8 @@ function role_groups(group, include_trainee = false, include_heads = true) {
                 _roles[eROLE.CHAPLAIN],
                 _roles[eROLE.TECHMARINE],
                 _roles[eROLE.LIBRARIAN],
-                "Codiciery",
-                "Lexicanum",
+                _roles[eROLE.CODICIERY],
+                _roles[eROLE.LEXICANUM],
                 _roles[eROLE.ANCIENT],
                 _roles[eROLE.CHAMPION],
             ];
