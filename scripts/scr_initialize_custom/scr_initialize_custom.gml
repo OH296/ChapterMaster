@@ -1563,7 +1563,13 @@ function scr_initialize_custom() {
 
     update_role_data_wth_defaults();
 
-    _roles = active_roles();
+    var _roles = active_roles();
+    player_role_data[LIBRARIANASPIRANT].role = _roles[LIBRARIAN] + " Aspirant";
+    player_role_data[APOTHECARYASPIRANT].role = _roles[APOTHECARY] + " Aspirant";
+    player_role_data[CHAPLAINASPIRANT].role = _roles[CHAPLAIN] + " Aspirant";
+    player_role_data[TECHMARINEASPIRANT].role = _roles[TECHMARINE] + " Aspirant";
+
+    player_role_data[HEADLIBRARIAN].role = "Chief " + _roles[LIBRARIAN];
 
     #endregion
 
