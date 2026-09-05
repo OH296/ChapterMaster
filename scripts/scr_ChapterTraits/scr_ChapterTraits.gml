@@ -42,7 +42,7 @@ function get_department_head(head_type = eCHAPTER_DEPARTMENTS.HQ) {
             }
             break;
         case eCHAPTER_DEPARTMENTS.LIB:
-            if (!role_compare(_unit, eROLE.HEADLIBRARIAN)) {
+            if (!role_compare(_unit, eROLE.CHIEFLIBRARIAN)) {
                 return undefined;
             }
             break;

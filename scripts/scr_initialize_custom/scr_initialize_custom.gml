@@ -1569,7 +1569,7 @@ function scr_initialize_custom() {
     player_role_data[CHAPLAINASPIRANT].role = _roles[CHAPLAIN] + " Aspirant";
     player_role_data[TECHMARINEASPIRANT].role = _roles[TECHMARINE] + " Aspirant";
 
-    player_role_data[HEADLIBRARIAN].role = "Chief " + _roles[LIBRARIAN];
+    player_role_data[CHIEFLIBRARIAN].role = "Chief " + _roles[LIBRARIAN];
 
     #endregion
 

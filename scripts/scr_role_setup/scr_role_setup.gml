@@ -47,7 +47,7 @@ function setup_default_gears() {
     load_default_gear(eROLE.TECHMARINE, "Techmarine", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
     load_default_gear(eROLE.FORGEMASTER, "Forge Master", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
     load_default_gear(eROLE.LIBRARIAN, "Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
-    load_default_gear(eROLE.HEADLIBRARIAN, "Chief Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
+    load_default_gear(eROLE.CHIEFLIBRARIAN, "Chief Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
     load_default_gear(eROLE.CODICIERY, "Codiciery", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.LEXICANUM, "Lexicanum", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.SERGEANT, "Sergeant", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
