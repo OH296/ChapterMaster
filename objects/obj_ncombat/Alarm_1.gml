@@ -204,7 +204,50 @@ if (_marine_count < 200) {
 } else {
     var _others = _marine_count - player_unit_index.sum_roles(_auto_include);
     _others -= _dread_count;
-    p2 += string(_others) + " other various Astartes, ";
+p2 = "";
+
+var _auto_include = [
+    _marine_roles[eROLE.TACTICAL],
+    _marine_roles[eROLE.VETERAN],
+    _marine_roles[eROLE.ASSAULT],
+    _marine_roles[eROLE.DEVASTATOR],
+];
+
+for (var i = 0; i < array_length(_auto_include); i++) {
+    var _role = _auto_include[i];
+    if (player_unit_index.role_count(_role) > 0) {
+        p2 += player_unit_index.plural_string_role(_role) + ", ";
+    }
+}
+
+var _small_include = [
+    _marine_roles[eROLE.TERMINATOR],
+    _marine_roles[eROLE.CHAPLAIN],
+    _marine_roles[eROLE.APOTHECARY],
+    _marine_roles[eROLE.LIBRARIAN],
+    _marine_roles[eROLE.TECHMARINE],
+    _marine_roles[eROLE.SERGEANT],
+    _marine_roles[eROLE.VETERANSERGEANT],
+    _marine_roles[eROLE.SCOUT],
+];
+
+var _other_count = _marine_count
+    - player_unit_index.sum_roles(_auto_include)
+    - _dread_count;
+
+if (_marine_count < 200) {
+    for (var i = 0; i < array_length(_small_include); i++) {
+        var _role = _small_include[i];
+        if (player_unit_index.role_count(_role) > 0) {
+            p2 += player_unit_index.plural_string_role(_role) + ", ";
+        }
+    }
+
+    _other_count -= player_unit_index.sum_roles(_small_include);
+}
+
+if (_other_count > 0) {
+    p2 += $"{_other_count} other various Astartes, ";
 }
 
 var woo = string_length(p2);
