@@ -228,6 +228,7 @@ function role_groups(group, include_trainee = false, include_heads = true) {
 /// @returns {Bool}
 function is_specialist(unit_role, type = SPECIALISTS_STANDARD, include_trainee = false, include_heads = true) {
     var _specialists = role_groups(type, include_trainee, include_heads);
+    var _check_string = is_string(unit_role) ? unit_role : obj_ini.player_role_data[unit_role].role;
 
-    return array_contains(_specialists, unit_role);
+    return array_contains(_specialists, _check_string);
 }

@@ -2878,7 +2878,7 @@ function add_unit_to_company(ttrpg_name, company, role_id, wep1 = "default", wep
     if (role_id == eROLE.APOTHECARY) {
         spawn_unit.add_trait("soft_target");
     }
-    if (role_id == eROLE.LIBRARIAN) {
+    if (is_specialist(role_id, SPECIALISTS_LIBRARIANS)) {
         if (scr_has_adv("Favoured By The Warp") && (roll_dice_unit(spawn_unit, 1, 6, "high") >= 4)) {
             spawn_unit.add_trait("favoured_by_the_warp");
         } else if (roll_dice_unit(spawn_unit, 1, 10, "high") == 10) {
