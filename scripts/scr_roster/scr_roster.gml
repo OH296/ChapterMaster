@@ -555,7 +555,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         //scouts
         col = obj_controller.bat_scout_column;
         new_combat.scouts++;
-    } else if (array_contains([_role[eROLE.TACTICAL], _role[eROLE.CHAPLAINASPIRANT], _role[eROLE.APOTHECARYASPIRANT], _unit_role)) {
+    } else if (array_contains([_role[eROLE.TACTICAL], _role[eROLE.CHAPLAINASPIRANT], _role[eROLE.APOTHECARYASPIRANT], _unit_role])) {
         col = obj_controller.bat_tactical_column; //tactical_marines
         new_combat.tacticals++;
     } else if (_unit_role == _role[3]) {
@@ -610,7 +610,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         }
     }
 
-    if ((_unit_role == _role[eROLE.APOTHECARY]) || (_unit_role == _role[eROLE.CHAPLAIN) || unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
+    if ((_unit_role == _role[eROLE.APOTHECARY]) || (_unit_role == _role[eROLE.CHAPLAIN]) || unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
         if (_unit_role == _role[eROLE.CHAPLAINASPIRANT]) {
             col = obj_controller.bat_tactical_column;
             new_combat.tacticals++;

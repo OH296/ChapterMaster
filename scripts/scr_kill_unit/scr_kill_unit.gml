@@ -1,7 +1,7 @@
 /// @self Asset.GMObject.obj_controller
 function scr_kill_unit() {
     try {
-        if (has_role(eROLE.FORGEASTER)) {
+        if (has_role(eROLE.FORGEMASTER)) {
             array_push(obj_ini.previous_forge_masters, name());
         } else if (has_role(eROLE.CHAPTERMASTER)) {
             tek = "c";
