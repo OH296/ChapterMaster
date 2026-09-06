@@ -360,7 +360,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             }
 
             var _cloak_chance = 5;
-            if (role_compare(self, eROLE.CHAPLAIN)) {
+            if (has_role(eROLE.CHAPLAIN)) {
                 _cloak_chance += 25;
             } else if (IsSpecialist(SPECIALISTS_LIBRARIANS)) {
                 _cloak_chance += 75;

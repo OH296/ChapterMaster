@@ -488,7 +488,7 @@ try {
 
     if (menu == eMENU.DEFAULT && !instances_exist_any([obj_ncombat, obj_fleet_controller])) {
         var _cm = chapter_master.get_struct();
-        if (!role_compare(_cm, eROLE.CHAPTERMASTER) && (alarm[7] == -1)) {
+        if (!_cm.has_role(eROLE.CHAPTERMASTER) && (alarm[7] == -1)) {
             alarm[7] = 15;
         }
     }

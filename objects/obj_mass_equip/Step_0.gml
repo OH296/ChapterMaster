@@ -14,7 +14,7 @@ try {
                     if (!is_struct(_unit)) {
                         continue;
                     }
-                    if (!role_compare(_unit, role)) {
+                    if (!_unit.has_role(role)) {
                         continue;
                     }
                     if (_unit.squad != "none") {

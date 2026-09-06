@@ -71,7 +71,7 @@ try {
                             continue;
                         }
 
-                        if (_unit.is_dreadnought() && !role_compare(_unit, eROLE.CHAPTERMASTER)) {
+                        if (_unit.is_dreadnought() && !_unit.has_role(eROLE.CHAPTERMASTER)) {
                             continue;
                         }
 
@@ -80,7 +80,7 @@ try {
                         obj_temp_meeting.present[otm] = 1;
                         obj_temp_meeting.co[otm] = co;
                         obj_temp_meeting.ide[otm] = i;
-                        master_present = role_compare(_unit, eROLE.CHAPTERMASTER);
+                        master_present = _unit.has_role(eROLE.CHAPTERMASTER);
                     }
                 }
             }

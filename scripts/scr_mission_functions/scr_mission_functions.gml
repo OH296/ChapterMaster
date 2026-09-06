@@ -381,8 +381,21 @@ function init_beast_hunt_mission(planet, star, mission_slot) {
     }
 }
 
-function role_compare(unit, role) {
-    return unit.role() == obj_ini.player_role_data[role].role;
+function role_compare(role1, role2) {
+    var _r1_is_string = is_string(role1);
+    var _r2_is_string = is_string(role2);
+
+    if ((_r1_is_string && _r2_is_string) || (!_r2_is_string && !_r2_is_string)){
+        return role1 == role2;
+    }
+
+    if (!_r1_is_string){
+        role1 = obj_ini.player_role_data[role1].role;
+    } else if (!_r2_is_string){
+        role2 = obj_ini.player_role_data[role2].role;
+    }
+
+    return role1 == role2;
 }
 
 function init_protect_raider_mission(squad) {
@@ -507,7 +520,7 @@ function init_train_forces_mission(planet, star, mission_slot, marine) {
         //TODO some new universal methods for popups
         gar_pop.title = $"Training forces on {numeral_name} begins";
         gar_pop.text = $"{marine.name_role()} Has taken leave of his current post in order to aid the governor of {numeral_name} and his pdf commanders with training local forces and bolstering defences.";
-        var _is_cap = role_compare(marine, eROLE.CAPTAIN);
+        var _is_cap = marine.has_role(eROLE.CAPTAIN);
 
         if (_is_cap) {
             gar_pop.text += "the governor seems to be impressed that such a high ranking officer has been assigned to his request (disp +3)";
