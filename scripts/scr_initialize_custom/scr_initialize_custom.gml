@@ -1564,12 +1564,12 @@ function scr_initialize_custom() {
     update_role_data_wth_defaults();
 
     var _roles = active_roles();
-    player_role_data[eROLE.LIBRARIANASPIRANT].role = _roles[LIBRARIAN] + " Aspirant";
-    player_role_data[eROLE.APOTHECARYASPIRANT].role = _roles[APOTHECARY] + " Aspirant";
-    player_role_data[eROLE.CHAPLAINASPIRANT].role = _roles[CHAPLAIN] + " Aspirant";
-    player_role_data[eROLE.TECHMARINEASPIRANT].role = _roles[TECHMARINE] + " Aspirant";
+    player_role_data[eROLE.LIBRARIANASPIRANT].role = _roles[eROLE.LIBRARIAN] + " Aspirant";
+    player_role_data[eROLE.APOTHECARYASPIRANT].role = _roles[eROLE.APOTHECARY] + " Aspirant";
+    player_role_data[eROLE.CHAPLAINASPIRANT].role = _roles[eROLE.CHAPLAIN] + " Aspirant";
+    player_role_data[eROLE.TECHMARINEASPIRANT].role = _roles[eROLE.TECHMARINE] + " Aspirant";
 
-    player_role_data[eROLE.CHIEFLIBRARIAN].role = "Chief " + _roles[LIBRARIAN];
+    player_role_data[eROLE.CHIEFLIBRARIAN].role = "Chief " + _roles[eROLE.LIBRARIAN];
 
     #endregion
 
