@@ -132,17 +132,17 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             if (_chap_name == "Space Wolves") {
                 array_push(_role_list, _roles[eROLE.CHAPLAIN]);
                 if (include_trainee) {
-                    _roles[eROLE.CHAPLAINASPIRANT],
+                    array_push(_role_list,_roles[eROLE.CHAPLAINASPIRANT]),
                 }
                 if (include_heads) {
-                    _roles[eROLE.MASTERCHAPLAIN],
+                    array_push(_role_list,_roles[eROLE.MASTERCHAPLAIN]),
                 }
             }
             if (include_trainee) {
-                _roles[eROLE.APOTHECARYASPIRANT],
+                array_push(_role_list,_roles[eROLE.APOTHECARYASPIRANT]),
             }
             if (include_heads) {
-                _roles[eROLE.MASTERAPOTHECARY],
+                array_push(_role_list,_roles[eROLE.MASTERAPOTHECARY]),
             }
             break;
 
