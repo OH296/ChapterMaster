@@ -167,7 +167,7 @@ function scr_special_view(command_group) {
                 if ((squad_typ == obj_ini.player_role_data[eROLE.LIBRARIAN].role) && (ma_role[i] == _roles[eROLE.CODICIERY])) {
                     n = 1;
                 }
-                if ((squad_typ == _roles[eROLE.CODICIERY]) && (ma_role[i] == "Lexicanum")) {
+                if ((squad_typ == _roles[eROLE.CODICIERY]) && (ma_role[i] == _roles[eROLE.LEXICANUM])) {
                     n = 1;
                 }
 
