@@ -292,9 +292,9 @@ function calculate_equipment_needs() {
     req_wep2_num = 0;
     have_wep2_num = 0;
 
-    var rall = role_name[target_role];
+    var _targ_role = role_name[target_role];
 
-    if (rall == obj_ini.player_role_data[eROLE.CODICIERY]) {
+    if (role_compare(_targ_role,eROLE.CODICIERY)) {
         req_armour = "";
         req_armour_num = 0;
         req_wep1 = "";
@@ -305,7 +305,7 @@ function calculate_equipment_needs() {
         req_mobi_num = 0;
         req_gear = obj_ini.player_role_data[eROLE.LIBRARIAN].gear;
         req_gear_num = units;
-    } else if (rall == obj_ini.player_role_data[eROLE.LEXICANUM]) {
+    } else if (role_compare(_targ_role,eROLE.LEXICANUM)){
         req_armour = "";
         req_armour_num = 0;
         req_wep1 = "";
@@ -314,15 +314,15 @@ function calculate_equipment_needs() {
         req_wep2_num = 0;
         req_mobi = "";
         req_mobi_num = 0;
-    } else if (rall == obj_ini.player_role_data[eROLE.ANCIENT].role) {
+    } else if (role_compare(_targ_role,eROLE.ANCIENT)) {
         req_armour = STR_ANY_POWER_ARMOUR;
         req_armour_num = units;
         req_wep2 = "Company Standard";
         req_wep2_num = units;
     } else {
-        for (var i = 2; i < 20; i++) {
+        for (var i = 1; i < array_length(obj_ini.player_role_data); i++) {
             var _role = obj_ini.player_role_data[i];
-            if (_role.role == rall) {
+            if (_role.role == _targ_role) {
                 req_armour = _role.armour;
                 req_armour_num = units;
                 req_wep1 = _role.wep1;
@@ -339,7 +339,7 @@ function calculate_equipment_needs() {
     }
 
     var _dread_role = obj_ini.player_role_data[eROLE.DREADNOUGHT];
-    if (rall == _dread_role.role) {
+    if (role_compare(_targ_role,eROLE.DREADNOUGHT)) {
         req_armour = "Dreadnought";
         req_armour_num = units;
         req_wep1 = _dread_role.wep1;
@@ -347,7 +347,7 @@ function calculate_equipment_needs() {
         req_wep2 = _dread_role.wep2;
         req_wep2_num = units;
     }
-    if (rall == $"Venerable {_dread_role.role}") {
+    if (_targ_role == $"Venerable {_dread_role.role}") {
         req_armour = "";
         req_armour_num = 0;
         req_wep1 = "";
