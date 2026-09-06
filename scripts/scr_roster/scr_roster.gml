@@ -610,7 +610,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         }
     }
 
-    if ((_unit_role == _role[eROLE.APOTHECARY]) || (_unit_role == _role[eROLE.CHAPLAIN) || unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
+    if ((_unit_role == _role[eROLE.APOTHECARY]) || (_unit_role == _role[eROLE.CHAPLAIN]) || unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
         if (_unit_role == _role[eROLE.CHAPLAINASPIRANT]) {
             col = obj_controller.bat_tactical_column;
             new_combat.tacticals++;
