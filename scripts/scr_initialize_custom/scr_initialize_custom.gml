@@ -1993,12 +1993,12 @@ function scr_initialize_custom() {
 
     // Techmarines in the armoury
     repeat (techmarines) {
-        add_unit_to_company("marine", _company_i, _roles[eROLE.TECHMARINE], eROLE.TECHMARINE, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        add_unit_to_company("marine", _company_i,  eROLE.TECHMARINE, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
 
     // Librarians in the librarium
     repeat (epistolary) {
-        var _epi = add_unit_to_company("marine", _company_i, _roles[eROLE.LIBRARIAN], eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
+        var _epi = add_unit_to_company("marine", _company_i, eROLE.LIBRARIAN, "default", choose_weighted(global.weapon_list_weighted_ranged_pistols));
     }
     // Codiciery
     repeat (codiciery) {
