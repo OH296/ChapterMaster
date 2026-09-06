@@ -274,9 +274,9 @@ function after_combat_recover_marine_gene_seed(unit) {
     if (unit.IsSpecialist(SPECIALISTS_STANDARD, true)) {
         obj_ncombat.final_command_deaths += 1;
         var recent = true;
-        if (is_specialist(unit.role, SPECIALISTS_TRAINEES)) {
+        if (unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
             recent = false;
-        } else if (array_contains([string("Venerable {0}", obj_ini.player_role_data[eROLE.DREADNOUGHT].role), "Codiciery", "Lexicanum"], unit.role())) {
+        } else if (unit.IsSpecialist(SPECIALISTS_LIBRARIANS)){
             recent = false;
         }
         if (recent == true) {

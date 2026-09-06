@@ -40,7 +40,6 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             _role_list = [
                 _roles[eROLE.CAPTAIN],
                 _roles[eROLE.DREADNOUGHT],
-                $"Venerable {_roles[eROLE.DREADNOUGHT]}",
                 _roles[eROLE.CHAMPION],
                 _roles[eROLE.CHAPLAIN],
                 _roles[eROLE.APOTHECARY],
@@ -201,7 +200,6 @@ function role_groups(group, include_trainee = false, include_heads = true) {
         case SPECIALISTS_DREADNOUGHTS:
             _role_list = [
                 _roles[eROLE.DREADNOUGHT],
-                $"Venerable {_roles[eROLE.DREADNOUGHT]}",
             ];
             break;
         case SPECIALISTS_CAPTAIN_CANDIDATES:

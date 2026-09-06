@@ -347,14 +347,6 @@ function calculate_equipment_needs() {
         req_wep2 = _dread_role.wep2;
         req_wep2_num = units;
     }
-    if (_targ_role == $"Venerable {_dread_role.role}") {
-        req_armour = "";
-        req_armour_num = 0;
-        req_wep1 = "";
-        req_wep1_num = 0;
-        req_wep2 = "";
-        req_wep2_num = 0;
-    }
 
     var unit_armour;
     var unit_wep_one;

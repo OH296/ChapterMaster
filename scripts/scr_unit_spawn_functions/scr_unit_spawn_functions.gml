@@ -38,17 +38,16 @@ function scr_marine_spawn_age() {
     }
 
     var _roles = active_roles();
-    var _venerable_dred = string_concat("Venerable ", _roles[eROLE.DREADNOUGHT]);
     switch (role()) {
         case _roles[eROLE.DREADNOUGHT]:
             _minimum_age = 400;
             _maximum_age = 600;
             _apply_gauss = true;
-            break;
-        case _venerable_dred:
-            _minimum_age = 650;
-            _maximum_age = 0;
-            _apply_gauss = true;
+            if (has_trait("ancient")){
+                _minimum_age = 650;
+                _maximum_age = 0;
+                _apply_gauss = true;                
+            }
             break;
         // HQ only
         case _roles[eROLE.CHAPTERMASTER]:

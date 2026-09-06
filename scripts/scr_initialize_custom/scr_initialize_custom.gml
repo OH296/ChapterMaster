@@ -2365,20 +2365,16 @@ function scr_initialize_custom() {
                 // MAINLINE
                 case "tacticals":
                     if (scr_has_adv("Elite Guard")) {
-                        _rolename = _roles[eROLE.VETERAN];
                         _erole = eROLE.VETERAN;
                     } else {
-                        _rolename = _roles[eROLE.TACTICAL];
                         _erole = eROLE.TACTICAL;
                     }
                     break;
                 case "assaults":
-                    _rolename = _roles[eROLE.ASSAULT];
                     _erole = eROLE.ASSAULT;
                     _mobi = "Jump Pack";
                     break;
                 case "devastators":
-                    _rolename = _roles[eROLE.DEVASTATOR];
                     _erole = eROLE.DEVASTATOR;
                     if (player_role_data[eROLE.DEVASTATOR].wep1 == "Heavy Ranged") {
                         _wep1 = choose("Multi-Melta", "Lascannon", "Missile Launcher", "Heavy Bolter");
@@ -2386,40 +2382,32 @@ function scr_initialize_custom() {
                     break;
                 case "scouts":
                     _unit_type = "scout";
-                    _rolename = _roles[eROLE.SCOUT];
                     _erole = eROLE.SCOUT;
                     break;
                 case "dreadnoughts":
-                    _rolename = _roles[eROLE.DREADNOUGHT];
                     _unit_type = "dreadnought";
-                    if (scr_has_adv("Venerable Ancients")) {
-                        _rolename = "Venerable " + _roles[eROLE.DREADNOUGHT];
-                    }
+
                     _erole = eROLE.DREADNOUGHT;
 
                     if (_coy.coy == 9) {
                         _wep1 = "Missile Launcher";
                     }
                     if (_coy.coy == 1) {
-                        _rolename = "Venerable " + _roles[eROLE.DREADNOUGHT];
                         _wep2 = "Plasma Cannon";
                     }
                     break;
 
                 // VETERANS
                 case "veterans":
-                    _rolename = _roles[eROLE.VETERAN];
                     _erole = eROLE.VETERAN;
                     break;
 
                 case "terminators":
-                    _rolename = _roles[eROLE.TERMINATOR];
                     _erole = eROLE.TERMINATOR;
                     break;
 
                 // SPECIALISTS
                 case "captains":
-                    _rolename = _roles[eROLE.CAPTAIN];
                     _erole = eROLE.CAPTAIN;
                     _wep2 = choose_weighted(global.weapon_list_weighted_ranged_pistols);
                     if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
@@ -2432,7 +2420,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "chaplains":
-                    _rolename = _roles[eROLE.CHAPLAIN];
                     _erole = eROLE.CHAPLAIN;
                     _wep2 = choose_weighted(global.weapon_list_weighted_ranged_pistols);
                     if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
@@ -2444,7 +2431,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "apothecaries":
-                    _rolename = _roles[eROLE.APOTHECARY];
                     _erole = eROLE.APOTHECARY;
                     if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
                         _mobi = "Jump Pack";
@@ -2456,7 +2442,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "techmarines":
-                    _rolename = _roles[eROLE.TECHMARINE];
                     _erole = eROLE.TECHMARINE;
                     if (_coy.coy == 1) {
                         if (_coy.terminators > 0) {
@@ -2473,7 +2458,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "librarians":
-                    _rolename = _roles[eROLE.LIBRARIAN];
                     _erole = eROLE.LIBRARIAN;
                     if (squad_distribution != 1 && squad_distribution != 3 && _coy.coy == 8) {
                         _mobi = "Jump Pack";
@@ -2484,7 +2468,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "champions":
-                    _rolename = _roles[eROLE.CHAMPION];
                     _erole = eROLE.CHAMPION;
                     if (_coy.coy == 1 && _coy.terminators > 0) {
                         _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
@@ -2497,7 +2480,6 @@ function scr_initialize_custom() {
                     }
                     break;
                 case "ancients":
-                    _rolename = _roles[eROLE.ANCIENT];
                     _erole = eROLE.ANCIENT;
                     if (_coy.coy == 1 && _coy.terminators > 0) {
                         _armour = scr_has_adv("Crafters") ? "Tartaros" : "Terminator Armour";
@@ -2902,7 +2884,12 @@ function add_unit_to_company(ttrpg_name, company, role_id, wep1 = "default", wep
         }
         spawn_unit.update_powers();
     }
-
+    if (role_id == eROLE.DREADNOUGHT) {
+        if (scr_has_adv("Venerable Ancients") || company == 1) {
+            spawn_unit.add_trait("ancient");
+            role_style = "Venerable";
+        }  
+    }
     return spawn_unit;
 }
 

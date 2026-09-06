@@ -181,7 +181,6 @@ function role_hierarchy() {
         _roles[eROLE.ASSAULT],
         _roles[eROLE.DEVASTATOR],
         _roles[eROLE.SCOUT],
-        $"Venerable {_roles[eROLE.DREADNOUGHT]}",
         _roles[eROLE.DREADNOUGHT],
         "Skitarii",
         "Crusader",

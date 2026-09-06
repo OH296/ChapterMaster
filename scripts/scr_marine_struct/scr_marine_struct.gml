@@ -437,6 +437,8 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return role1;
     };
 
+    role_style = "";
+
     static has_role = function(search_role) {
         if (!is_string(search_role)){
             return role1 == obj_ini.player_role_data[search_role].role;
@@ -1873,6 +1875,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
         if (include_role) {
             var _temp_role = squad_role();
+            if (role_style != ""){
+                _temp_role = role_style + " " + _temp_role;
+            }
             if (localize_role) {
                 _temp_role = localize(_temp_role);
             }
