@@ -10,6 +10,25 @@ function role_data_set() {
     };
 }
 
+
+
+/// @param {String|Real} role1 role name or eROLE enum value to index into obj_ini.player_role_data
+/// @param {String|Real} role2 role name or eROLE enum value to index into obj_ini.player_role_data
+/// @returns {Bool} whether role1 and role2 refer to the same role
+function role_compare(role1, role2) {
+    var _r1_is_string = is_string(role1);
+    var _r2_is_string = is_string(role2);
+    if ((_r1_is_string && _r2_is_string) || (!_r1_is_string && !_r2_is_string)){
+        return role1 == role2;
+    }
+    if (!_r1_is_string){
+        role1 = obj_ini.player_role_data[role1].role;
+    } else if (!_r2_is_string){
+        role2 = obj_ini.player_role_data[role2].role;
+    }
+    return role1 == role2;
+}
+
 function setup_default_gears() {
     default_role_data = [];
     load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {

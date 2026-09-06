@@ -381,23 +381,6 @@ function init_beast_hunt_mission(planet, star, mission_slot) {
     }
 }
 
-function role_compare(role1, role2) {
-    var _r1_is_string = is_string(role1);
-    var _r2_is_string = is_string(role2);
-
-    if ((_r1_is_string && _r2_is_string) || (!_r2_is_string && !_r2_is_string)){
-        return role1 == role2;
-    }
-
-    if (!_r1_is_string){
-        role1 = obj_ini.player_role_data[role1].role;
-    } else if (!_r2_is_string){
-        role2 = obj_ini.player_role_data[role2].role;
-    }
-
-    return role1 == role2;
-}
-
 function init_protect_raider_mission(squad) {
     var _squad_units = squad.members;
     var _squad_wisdom = stat_average(_squad_units, "wisdom");
