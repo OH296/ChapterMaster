@@ -272,7 +272,7 @@ function librarian_training() {
                 psyker_aspirant = 0;
 
                 scr_alert("green", "recruitment", _unit.name_role() + " has finished training.", 0, 0);
-                _unit.update_role("Lexicanum");
+                _unit.update_role(eROLE.LEXICANUM);
                 _unit.role_tag = [
                     0,
                     0,

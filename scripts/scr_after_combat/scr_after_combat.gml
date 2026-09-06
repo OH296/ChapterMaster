@@ -32,8 +32,8 @@ function add_marines_to_recovery() {
                     case _roles[eROLE.APOTHECARY]:
                     case _roles[eROLE.TECHMARINE]:
                     case _roles[eROLE.LIBRARIAN]:
-                    case "Codiciery":
-                    case "Lexicanum":
+                    case _roles[eROLE.CODICIERY]:
+                    case _roles[eROLE.LEXICANUM]:
                         _role_priority_bonus = 40;
                         break;
                     case _roles[eROLE.TACTICAL]:
