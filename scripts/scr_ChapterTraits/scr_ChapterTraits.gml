@@ -19,7 +19,6 @@ function get_department_head(head_type = eCHAPTER_DEPARTMENTS.HQ) {
         return undefined;
     }
 
-    var _r_data = obj_ini.player_role_data;
     switch (head_type) {
         case eCHAPTER_DEPARTMENTS.HQ:
             if (!_unit.has_role(eROLE.CHAPTERMASTER)) {

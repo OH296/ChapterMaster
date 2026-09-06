@@ -46,8 +46,8 @@ function role_groups(group, include_trainee = false, include_heads = true) {
                 _roles[eROLE.APOTHECARY],
                 _roles[eROLE.TECHMARINE],
                 _roles[eROLE.LIBRARIAN],
-                "Codiciery",
-                "Lexicanum",
+                _roles[eROLE.CODICIERY],
+                _roles[eROLE.LEXICANUM],
                 _roles[eROLE.HONOURGUARD],
             ];
             if (include_trainee) {
