@@ -37,8 +37,8 @@ function scr_marine_spawn_age() {
             break;
     }
 
-    var _venerable_dred = string_concat("Venerable ", _roles[eROLE.DREADNOUGHT]);
     var _roles = active_roles();
+    var _venerable_dred = string_concat("Venerable ", _roles[eROLE.DREADNOUGHT]);
     switch (role()) {
         case _roles[eROLE.DREADNOUGHT]:
             _minimum_age = 400;
