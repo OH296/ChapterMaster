@@ -156,7 +156,7 @@ function scr_enemy_ai_d() {
         }
 
         if (has_problem_planet_and_time(i, "Hive Fleet", 3) > -1) {
-            var woop = scr_role_count("Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role), "");
+            var woop = scr_role_count(obj_ini.player_role_data[eROLE.CHIEFLIBRARIAN].role, "");
             var yep = !scr_has_disadv("Psyker Intolerant");
 
             var _head = get_department_head(eCHAPTER_DEPARTMENTS.LIB);

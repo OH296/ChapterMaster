@@ -6,15 +6,14 @@ function add_marines_to_recovery() {
         if (is_struct(_unit) && ally[i] == false) {
             if (marine_dead[i] == 1 && marine_type[i] != "") {
                 var _role_priority_bonus = 0;
-                var _chief_librarian = $"Chief {_roles[eROLE.LIBRARIAN]}";
                 switch (_unit.role()) {
                     case obj_ini.player_role_data[eROLE.CHAPTERMASTER].role:
                         _role_priority_bonus = 720;
                         break;
-                    case "Forge Master":
-                    case "Master of Sanctity":
-                    case "Master of the Apothecarion":
-                    case _chief_librarian:
+                    case _roles[eROLE.FORGEMASTER]:
+                    case _roles[eROLE.CHIEFLIBRARIAN]:
+                    case _roles[eROLE.MASTERAPOTHECARY]:
+                    case _roles[eROLE.MASTERCHAPLAIN]:
                         _role_priority_bonus = 360;
                         break;
                     case _roles[eROLE.CAPTAIN]:

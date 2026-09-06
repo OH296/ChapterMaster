@@ -37,7 +37,7 @@ function scr_marine_spawn_age() {
             break;
     }
 
-    var _venerable_dred = string_concat("Venerable ", obj_ini.player_role_data[eROLE.DREADNOUGHT].role);
+    var _venerable_dred = string_concat("Venerable ", _roles[eROLE.DREADNOUGHT]);
     var _roles = active_roles();
     switch (role()) {
         case _roles[eROLE.DREADNOUGHT]:
@@ -56,10 +56,10 @@ function scr_marine_spawn_age() {
             _maximum_age = 350;
             _apply_gauss = true;
             break;
-        case "Chief Librarian":
-        case "Forge Master":
-        case "Master of Sanctity":
-        case "Master of the Apothecarion":
+        case _roles[eROLE.FORGEMASTER]:
+        case _roles[eROLE.CHIEFLIBRARIAN]:
+        case _roles[eROLE.MASTERAPOTHECARY]:
+        case _roles[eROLE.MASTERCHAPLAIN]:
         case _roles[eROLE.HONOURGUARD]:
             _minimum_age = 200;
             _maximum_age = 300;
@@ -100,26 +100,26 @@ function scr_marine_spawn_age() {
             _minimum_age += 100;
             _maximum_age += 110;
             break;
-        case [_roleseROLE.CAPTAIN]:
+        case _roles[eROLE.CAPTAIN]:
             _minimum_age += 80;
             _maximum_age += 90;
             break;
-        case obj_ini.player_role_data[eROLE.CHAMPION].role:
+        case _roles[eROLE.CHAMPION]:
             _minimum_age += 50;
             _maximum_age += 60;
             break;
         // Company marines
-        case obj_ini.player_role_data[eROLE.SERGEANT].role:
+        case _roles[eROLE.SERGEANT]:
             _minimum_age += 30;
             _maximum_age += 40;
             break;
-        case obj_ini.player_role_data[eROLE.TACTICAL].role:
-        case obj_ini.player_role_data[eROLE.DEVASTATOR].role:
-        case obj_ini.player_role_data[eROLE.ASSAULT].role:
+        case _roles[eROLE.TACTICAL]:
+        case _roles[eROLE.DEVASTATOR]:
+        case _roles[eROLE.ASSAULT]:
             _minimum_age += 20;
             _maximum_age += 30;
             break;
-        case obj_ini.player_role_data[eROLE.SCOUT].role:
+        case _roles[eROLE.SCOUT]:
         default:
             _minimum_age = 18;
             _maximum_age = 25;

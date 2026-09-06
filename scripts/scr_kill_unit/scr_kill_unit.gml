@@ -1,15 +1,14 @@
 /// @self Asset.GMObject.obj_controller
 function scr_kill_unit() {
     try {
-        if (role() == "Forge Master") {
+        if (has_role(eROLE.FORGEASTER)) {
             array_push(obj_ini.previous_forge_masters, name());
-        }
-
-        if (role_compare(self, eROLE.CHAPTERMASTER)) {
+        } else if (has_role(eROLE.CHAPTERMASTER)) {
             tek = "c";
             alarm[7] = 5;
             global.defeat = 1;
         }
+
 
         if (weapon_one() == "Company Standard" || weapon_two() == "Company Standard") {
             scr_loyalty("Lost Standard", "+");

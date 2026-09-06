@@ -437,6 +437,14 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         return role1;
     };
 
+    static has_role = function(search_role) {
+        if (!is_string(search_role)){
+            return role1 == obj_ini.player_role_data[search_role].role;
+        } else {
+            return role1 == search_role;
+        }
+    };
+
     static squad_role = function() {
         var temp_role = role();
         if (squad != "none") {
@@ -456,12 +464,15 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static update_role = function(new_role) {
-        if (role() == new_role) {
+        if (!is_string(new_role)){
+            new_role = obj_ini.player_role_data[new_role].role;
+        }
+        if (has_role(new_role)) {
             return "no change";
         }
         var _astartes = base_group == "astartes";
         if (_astartes) {
-            if (role() == obj_ini.player_role_data[eROLE.SCOUT].role && new_role != obj_ini.player_role_data[eROLE.SCOUT].role) {
+            if (has_role(eROLE.SCOUT) && new_role != obj_ini.player_role_data[eROLE.SCOUT].role) {
                 if (!get_body_data("black_carapace", "torso")) {
                     alter_body("torso", "black_carapace", true);
                     stat_boosts({strength: 4, constitution: 4, dexterity: 4}); //will decide on if these are needed

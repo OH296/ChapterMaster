@@ -604,10 +604,10 @@ if ((temp >= 100) && (threat > 1) && (big_mofo > 0) && (big_mofo < 10) && !dropp
         p1 = "You ";
     }
     if (big_mofo == 2) {
-        p1 = "The Master of Sanctity ";
+        p1 = obj_ini.player_role_data[eROLE.MASTERCHAPLAIN].role + " ";
     }
     if (big_mofo == 3) {
-        p1 = "Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role) + " ";
+        p1 = obj_ini.player_role_data[eROLE.CHIEFLIBRARIAN].role + " ";
     }
     if (big_mofo == 5) {
         p1 = "A Captain ";

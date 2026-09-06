@@ -40,7 +40,7 @@ function unit_forge_point_generation(turn_end = false) {
         points += 6;
         reasons.crafter = 6;
     }
-    if (role() == "Forge Master") {
+    if (has_role(eROLE.FORGEMASTER)) {
         points += 10;
         reasons.master = 10;
     }

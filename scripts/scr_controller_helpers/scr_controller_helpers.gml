@@ -207,9 +207,7 @@ function scr_toggle_apothecarion() {
             set_zoom_to_default();
             menu_adept = 0;
             hide_banner = 1;
-            if (scr_role_count("Master of the Apothecarion", "0") == 0) {
-                menu_adept = 1;
-            }
+            menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.APOTH));
             if (menu != eMENU.APOTHECARION) {
                 menu = eMENU.APOTHECARION;
 
@@ -225,9 +223,7 @@ function scr_toggle_reclu() {
             set_zoom_to_default();
             menu_adept = 0;
             hide_banner = 1;
-            if (scr_role_count("Master of Sanctity", "0") == 0) {
-                menu_adept = 1;
-            }
+            menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.CHAP));
             if (menu != eMENU.RECLUSIAM) {
                 menu = eMENU.RECLUSIAM;
 
@@ -260,14 +256,13 @@ function scr_toggle_lib() {
             var yy = camera_get_view_y(view_camera[0]);
             menu_adept = 0;
             hide_banner = 1;
-            if (scr_role_count("Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role), "0") == 0) {
-                menu_adept = 1;
-            }
+            var _roles = active_roles();
+            menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.LIB));
             if (menu != eMENU.LIBRARIUM) {
                 menu = eMENU.LIBRARIUM;
-                temp[36] = scr_role_count(obj_ini.player_role_data[eROLE.LIBRARIAN].role, "");
-                temp[37] = scr_role_count("Codiciery", "");
-                temp[38] = scr_role_count("Lexicanum", "");
+                temp[36] = scr_role_count(_roles[eROLE.LIBRARIAN], "");
+                temp[37] = scr_role_count(_roles[eROLE.CODICIERY], "");
+                temp[38] = scr_role_count(_roles[eROLE.LEXICANUM], "");
                 artifact_equip = new ShutterButton();
                 artifact_gift = new ShutterButton();
                 artifact_destroy = new ShutterButton();
@@ -290,9 +285,7 @@ function scr_toggle_armamentarium() {
         with (obj_controller) {
             if (menu != eMENU.ARMAMENTARIUM) {
                 set_zoom_to_default();
-                if (scr_role_count("Forge Master", "0") == 0) {
-                    menu_adept = 1;
-                }
+                menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.FORGE));
                 menu = eMENU.ARMAMENTARIUM;
                 hide_banner = 1;
                 armamentarium.refresh_catalog();
