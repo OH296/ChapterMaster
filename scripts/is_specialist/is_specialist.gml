@@ -124,7 +124,7 @@ function role_groups(group, include_trainee = false, include_heads = true) {
                 array_push(_role_list, _roles[eROLE.CHAPLAINASPIRANT]);
             }
             if (include_heads) {
-                array_push(_role_list, _roles[MASTERCHAPLAIN]);
+                array_push(_role_list, _roles[eROLE.MASTERCHAPLAIN]);
             }
             break;
         case SPECIALISTS_APOTHECARIES:
