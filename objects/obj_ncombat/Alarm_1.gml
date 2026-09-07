@@ -198,52 +198,14 @@ if (_marine_count < 200) {
         }
     }
 } else {
-    var _others = _marine_count - player_unit_index.sum_roles(_auto_include);
-    _others -= _dread_count;
-p2 = "";
 
-var _auto_include = [
-    _marine_roles[eROLE.TACTICAL],
-    _marine_roles[eROLE.VETERAN],
-    _marine_roles[eROLE.ASSAULT],
-    _marine_roles[eROLE.DEVASTATOR],
-];
+    var _other_count = _marine_count
+        - player_unit_index.sum_roles(_auto_include)
+        - _dread_count;
 
-for (var i = 0; i < array_length(_auto_include); i++) {
-    var _role = _auto_include[i];
-    if (player_unit_index.role_count(_role) > 0) {
-        p2 += player_unit_index.plural_string_role(_role) + ", ";
+    if (_other_count > 0) {
+        p2 += $"{_other_count} other various Astartes, ";
     }
-}
-
-var _small_include = [
-    _marine_roles[eROLE.TERMINATOR],
-    _marine_roles[eROLE.CHAPLAIN],
-    _marine_roles[eROLE.APOTHECARY],
-    _marine_roles[eROLE.LIBRARIAN],
-    _marine_roles[eROLE.TECHMARINE],
-    _marine_roles[eROLE.SERGEANT],
-    _marine_roles[eROLE.VETERANSERGEANT],
-    _marine_roles[eROLE.SCOUT],
-];
-
-var _other_count = _marine_count
-    - player_unit_index.sum_roles(_auto_include)
-    - _dread_count;
-
-if (_marine_count < 200) {
-    for (var i = 0; i < array_length(_small_include); i++) {
-        var _role = _small_include[i];
-        if (player_unit_index.role_count(_role) > 0) {
-            p2 += player_unit_index.plural_string_role(_role) + ", ";
-        }
-    }
-
-    _other_count -= player_unit_index.sum_roles(_small_include);
-}
-
-if (_other_count > 0) {
-    p2 += $"{_other_count} other various Astartes, ";
 }
 
 var woo = string_length(p2);
@@ -265,12 +227,12 @@ if ((player_unit_index.role_count(_marine_roles[eROLE.ANCIENT]) > 1) && (!droppi
 }
 
 if (_dread_count > 0) {
-    p6 = "  Venerably inspiring the chapter stand "
+    p6 = "  Venerably inspiring the chapter stand ";
     p6 += string_plural_count(
         _marine_roles[eROLE.DREADNOUGHT],
         _dread_count,
         false
-    ) + ", ";
+    ) + ".";
 }
 
 if (predators + land_raiders > 3) {
@@ -537,8 +499,8 @@ if ((fortified > 1) && !dropping && !(enemy == eFACTION.CHAOS && threat == 7)) {
 var _roles = active_roles();
 var _speech_giver_role_priority = [
     _roles[eROLE.CHAPTERMASTER],
-    "Master of Sanctity",
-    "Chief " + _roles[eROLE.LIBRARIAN],
+    _roles[eROLE.MASTERCHAPLAIN],
+    _roles[eROLE.CHIEFLIBRARIAN],
     _roles[eROLE.CAPTAIN],
     _roles[eROLE.CHAPLAIN],
 ]
