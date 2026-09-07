@@ -33,10 +33,6 @@ var _newline = "";
 var _newline_color = eMSG_COLOR.DEFAULT;
 
 var _marine_roles = active_roles();
-array_push(_marine_roles, "Forge Master");
-array_push(_marine_roles, "Master of Sanctity");
-array_push(_marine_roles, "Master of the Apothecarion");
-array_push(_marine_roles, $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role}");
 
 var _marine_count = player_unit_index.sum_roles(_marine_roles);
 
@@ -76,7 +72,7 @@ if (battle_special == "space_hulk") {
     }
 }
 
-var _dread_count = player_unit_index.sum_roles([_marine_roles[eROLE.DREADNOUGHT], "Venerable " + _marine_roles[eROLE.DREADNOUGHT]]);
+var _dread_count = player_unit_index.sum_roles([_marine_roles[eROLE.DREADNOUGHT]]);
 
 if (battle_special == "") {
     if (!dropping) {
@@ -268,15 +264,17 @@ if ((player_unit_index.role_count(_marine_roles[eROLE.ANCIENT]) > 1) && (!droppi
     p5 = "  Chapter Ancients hold your Chapter heraldry high and proud.";
 }
 
-if (_dread_count + predators + land_raiders > 3) {
-    p6 = "  Forming up the armoured division is ";
 if (_dread_count > 0) {
+    p6 = "  Venerably inspiring the chapter stand "
     p6 += string_plural_count(
         _marine_roles[eROLE.DREADNOUGHT],
         _dread_count,
         false
     ) + ", ";
-    }
+}
+
+if (predators + land_raiders > 3) {
+    p6 += "  Forming up the armoured division is ";
 
     if (rhinos > 0) {
         p6 += string_plural_count("Rhino", rhinos) + ", ";
