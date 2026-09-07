@@ -62,6 +62,7 @@ if (menu == eMENU.DIPLOMACY) {
 // Main UI
 if (!zoomed && !zui) {
     add_draw_return_values();
+    scr_ui_tooltip();
     if (menu == eMENU.DEFAULT) {
         location_viewer.draw();
         helpful_places_button.update({x1: 1451, y1: 62 + sprite_get_height(spr_new_banner)});
@@ -251,6 +252,8 @@ try {
         }
     } else if (menu == eMENU.LIBRARIUM) {
         scr_librarium_gui();
+    } else if (menu == eMENU.SECRET_LAIR) {
+        scr_secret_lair_view();
     } else if (menu >= eMENU.SETTINGS && menu <= eMENU.FORMATIONS_SETTINGS) {
         scr_ui_settings();
     }

@@ -746,7 +746,7 @@ function scr_enemy_ai_e() {
             for (var i = 0; i < array_length(obj_ini.TTRPG[co]); i++) {
                 var _unit = fetch_unit([co, i]);
                 var _is_at_chaos_meeting = _unit.planet_location == floor(chaos_meeting);
-                if (_unit.is_dreadnought() && !role_compare(_unit, eROLE.CHAPTERMASTER)) {
+                if (_unit.is_dreadnought() && !_unit.has_role(eROLE.CHAPTERMASTER)) {
                     continue;
                 }
                 if (_unit.location_string != name) {
@@ -760,7 +760,7 @@ function scr_enemy_ai_e() {
                     _meeting.co[otm] = co;
                     _meeting.ide[otm] = i;
                     if (co == 0 && i == 0) {
-                        master_present = role_compare(_unit, eROLE.CHAPTERMASTER);
+                        master_present = _unit.has_role(eROLE.CHAPTERMASTER);
                     }
                 }
             }

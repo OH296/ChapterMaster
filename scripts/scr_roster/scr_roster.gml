@@ -544,7 +544,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         new_combat.player_starting_dudes++;
     }
 
-    if (_unit_role == obj_ini.player_role_data[eROLE.SERGEANT].role) {
+    if (_unit_role == _role[eROLE.SERGEANT]) {
         col = obj_controller.bat_tactical_column; //sergeants
     } else if (_unit_role == _role[19]) {
         col = obj_controller.bat_veteran_column;
@@ -552,7 +552,8 @@ function add_unit_to_battle(unit, meeting, is_local) {
     if (_unit_role == _role[12]) {
         //scouts
         col = obj_controller.bat_scout_column;
-    } else if (array_contains([obj_ini.player_role_data[eROLE.TACTICAL].role, $"{_role[15]} Aspirant", $"{_role[14]} Aspirant"], _unit_role)) {
+        new_combat.scouts++;
+    } else if (array_contains([_role[eROLE.TACTICAL], _role[eROLE.CHAPLAINASPIRANT], _role[eROLE.APOTHECARYASPIRANT],], _unit_role)) {
         col = obj_controller.bat_tactical_column; //tactical_marines
     } else if (_unit_role == _role[3]) {
         //veterans and veteran sergeants
@@ -598,8 +599,8 @@ function add_unit_to_battle(unit, meeting, is_local) {
         }
     }
 
-    if ((_unit_role == _role[15]) || (_unit_role == _role[14]) || unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
-        if (_unit_role == string(_role[14]) + " Aspirant") {
+    if ((_unit_role == _role[eROLE.APOTHECARY]) || (_unit_role == _role[eROLE.CHAPLAIN]) || unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
+        if (_unit_role == _role[eROLE.CHAPLAINASPIRANT]) {
             col = obj_controller.bat_tactical_column;
         }
 
@@ -614,7 +615,7 @@ function add_unit_to_battle(unit, meeting, is_local) {
         }
     }
 
-    if ((_unit_role == _role[5]) || (_unit_role == _role[11]) || (_unit_role == _role[7])) {
+    if ((_unit_role == _role[eROLE.CAPTAIN]) || (_unit_role == _role[11]) || (_unit_role == _role[7])) {
         if (company >= 2) {
             col = obj_controller.bat_tactical_column;
         }

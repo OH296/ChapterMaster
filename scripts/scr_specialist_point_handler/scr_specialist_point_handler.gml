@@ -134,7 +134,7 @@ function SpecialistPointHandler() constructor {
                 if (_count > 1) {
                     setup_new_forge_master_popup(techs);
                 } else if (_count == 1) {
-                    _tech_units[0].update_role("Forge Master");
+                    _tech_units[0].update_role(eROLE.FORGEMASTER);
                 }
             }
 
