@@ -438,12 +438,12 @@ function ComplexSet(_unit) constructor {
             var _status_level = _mod.assign_by_rank;
             var _roles = active_roles();
             var tiers = [
-                ["Chapter Master"],
+                [_roles[eROLE.CHAPTERMASTER],],
                 [
-                    "Forge Master",
-                    "Master of Sanctity",
-                    "Master of the Apothecarion",
-                    $"Chief {_roles[eROLE.LIBRARIAN]}",
+                    _roles[eROLE.FORGEMASTER],
+                    _roles[eROLE.CHIEFLIBRARIAN],
+                    _roles[eROLE.MASTERAPOTHECARY],
+                    _roles[eROLE.MASTERCHAPLAIN],
                 ],
                 [
                     _roles[eROLE.CAPTAIN],
@@ -464,11 +464,15 @@ function ComplexSet(_unit) constructor {
                     _roles[eROLE.LIBRARIAN],
                 ],
                 [
-                    "Codiciery",
-                    "Lexicanum",
                     _roles[eROLE.TACTICAL],
+                    _roles[eROLE.CODICIERY],
+                    _roles[eROLE.LEXICANUM],
                     _roles[eROLE.ASSAULT],
                     _roles[eROLE.DEVASTATOR],
+                    _roles[eROLE.LIBRARIANASPIRANT],
+                    _roles[eROLE.APOTHECARYASPIRANT],
+                    _roles[eROLE.CHAPLAINASPIRANT],
+                    _roles[eROLE.TECHMARINEASPIRANT],
                 ],
                 [_roles[eROLE.SCOUT]],
             ];

@@ -255,16 +255,16 @@ function other_manage_data() {
                 if (is_specialist(_squad_type, SPECIALISTS_HEADS)) {
                     n = 1;
                 }
-                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (_squad_type != ma_role[v]) && (_squad_type != "Venerable " + string(ma_role[v]))) {
+                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (_squad_type != ma_role[v])) {
                     n = 2;
                 }
                 if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
                     n = 0;
                 }
-                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_role[v] == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role))) {
+                if (_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                     n = 0;
                 }
-                if ((_squad_type == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) && (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
+                if (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                     n = 0;
                 }
                 if (_squad_loc[0] == eLOCATION_TYPES.SHIP) {

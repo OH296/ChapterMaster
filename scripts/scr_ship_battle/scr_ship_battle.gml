@@ -96,10 +96,6 @@ function scr_ship_battle(target_ship_id, cooridor_width) {
                         col = obj_controller.bat_dreadnought_column;
                         obj_ncombat.dreadnoughts += 1;
                     }
-                    if (_unit.role() == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
-                        col = obj_controller.bat_dreadnought_column;
-                        obj_ncombat.dreadnoughts += 1;
-                    }
                     if (_unit.role() == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
                         col = obj_controller.bat_terminator_column;
                         obj_ncombat.terminators += 1;

@@ -6,15 +6,14 @@ function add_marines_to_recovery() {
         if (is_struct(_unit) && ally[i] == false) {
             if (marine_dead[i] == 1 && marine_type[i] != "") {
                 var _role_priority_bonus = 0;
-                var _chief_librarian = $"Chief {_roles[eROLE.LIBRARIAN]}";
                 switch (_unit.role()) {
                     case obj_ini.player_role_data[eROLE.CHAPTERMASTER].role:
                         _role_priority_bonus = 720;
                         break;
-                    case "Forge Master":
-                    case "Master of Sanctity":
-                    case "Master of the Apothecarion":
-                    case _chief_librarian:
+                    case _roles[eROLE.FORGEMASTER]:
+                    case _roles[eROLE.CHIEFLIBRARIAN]:
+                    case _roles[eROLE.MASTERAPOTHECARY]:
+                    case _roles[eROLE.MASTERCHAPLAIN]:
                         _role_priority_bonus = 360;
                         break;
                     case _roles[eROLE.CAPTAIN]:
@@ -33,8 +32,8 @@ function add_marines_to_recovery() {
                     case _roles[eROLE.APOTHECARY]:
                     case _roles[eROLE.TECHMARINE]:
                     case _roles[eROLE.LIBRARIAN]:
-                    case "Codiciery":
-                    case "Lexicanum":
+                    case _roles[eROLE.CODICIERY]:
+                    case _roles[eROLE.LEXICANUM]:
                         _role_priority_bonus = 40;
                         break;
                     case _roles[eROLE.TACTICAL]:
@@ -275,9 +274,9 @@ function after_combat_recover_marine_gene_seed(unit) {
     if (unit.IsSpecialist(SPECIALISTS_STANDARD, true)) {
         obj_ncombat.final_command_deaths += 1;
         var recent = true;
-        if (is_specialist(unit.role, SPECIALISTS_TRAINEES)) {
+        if (unit.IsSpecialist(SPECIALISTS_TRAINEES)) {
             recent = false;
-        } else if (array_contains([string("Venerable {0}", obj_ini.player_role_data[eROLE.DREADNOUGHT].role), "Codiciery", "Lexicanum"], unit.role())) {
+        } else if (unit.IsSpecialist(SPECIALISTS_LIBRARIANS)){
             recent = false;
         }
         if (recent == true) {
