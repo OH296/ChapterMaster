@@ -535,7 +535,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         } else if (new_role == obj_ini.player_role_data[eROLE.HONOURGUARD].role) {
             _promotion_alert = "honor_promote";
         } else if (new_role == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
-            //TODO update to use weapo tags instead of hardcoded list
+            //TODO update to use weapon tags instead of hardcoded list
             var dread_weapons = [
                 "Close Combat Weapon",
                 "Force Staff",
