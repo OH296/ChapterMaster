@@ -472,6 +472,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         if (has_role(new_role)) {
             return "no change";
         }
+        var _promotion_alert = "";
         var _astartes = base_group == "astartes";
         if (_astartes) {
             if (has_role(eROLE.SCOUT) && new_role != obj_ini.player_role_data[eROLE.SCOUT].role) {
@@ -482,7 +483,8 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             }
         }
         role1 = new_role;
-        if (instance_exists(obj_controller)) {
+        var _game_started = instance_exists(obj_controller);
+        if (_game_started) {
             array_push(role_history, [role(), obj_controller.turn]);
             if (_astartes) {
                 if (!is_specialist(role())) {
@@ -527,12 +529,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             if (company == 10) {
                 obj_ini.recruiter_name = name();
             }
-            scr_recent("captain_promote", name(), company);
+            _promotion_alert = "captain_promote";
         } else if (new_role == obj_ini.player_role_data[eROLE.TERMINATOR].role) {
-            scr_recent("terminator_promote", name(), company);
+            _promotion_alert = "terminator_promote";
         } else if (new_role == obj_ini.player_role_data[eROLE.HONOURGUARD].role) {
-            scr_recent("honor_promote", name(), company);
+            _promotion_alert = "honor_promote";
         } else if (new_role == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
+            //TODO update to use weapo tags instead of hardcoded list
             var dread_weapons = [
                 "Close Combat Weapon",
                 "Force Staff",
@@ -550,6 +553,9 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
             if (!array_contains(dread_weapons, weapon_two())) {
                 update_weapon_two("");
             }
+        }
+        if (_game_started && _promotion_alert != ""){
+            scr_recent(_promotion_alert, name(), company);
         }
     };
 
