@@ -554,7 +554,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                 update_weapon_two("");
             }
         }
-        if (_game_started && _promotion_alert != ""){
+        if (_game_started && (_promotion_alert != "")) {
             scr_recent(_promotion_alert, name(), company);
         }
     };
