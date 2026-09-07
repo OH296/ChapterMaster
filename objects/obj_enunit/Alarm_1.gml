@@ -206,7 +206,7 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
         // marine_casting[g] = false;
 
         if (((dudes[g] != "") && (dudes_num[g] > 0)) && (dudes_hp[g] > 0)) {
-            if ((dudes[g] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) || (dudes[g] == "Venerable " + obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (dudes_hp[g] > 0)) {
+            if ((dudes[g] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (dudes_hp[g] > 0)) {
                 dreads += 1;
             }
             if (dudes_mobi[g] == "Bike") {
@@ -231,10 +231,6 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
             for (var j = 1; j <= 20; j++) {
                 if ((dudes[j] == "") && (open == 0)) {
                     open = j; // Determine if vehicle here
-
-                    if (dudes[j] == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
-                        dudes_vehicle[j] = 1;
-                    }
                     if (dudes[j] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                         dudes_vehicle[j] = 1;
                     }

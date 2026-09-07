@@ -7,6 +7,7 @@
 #macro GITHUB_ISSUES_MAX_DEDUP_RETRIES 1
 #macro GITHUB_ISSUES_DEDUP_RETRY_DELAY 30
 #macro GITHUB_ISSUES_BODY_MAX_CHARS 60000
+#macro GITHUB_BUG_REPORT_SENT_MESSAGE "Report sent to the Administratum."
 
 /// @desc Reports errors to GitHub Issues with in-game dedup against open issue titles.
 /// Creates a new issue, or comments the duplicate with full context.
@@ -23,6 +24,16 @@ function GitHubBugReporter() constructor {
             return;
         }
 
+        // Critical errors close the game next frame, so the async GET dedup would never finish.
+        // Skip the paginated open-issue lookup and create the issue directly via a one-way POST,
+        // matching Discord's fire-and-forget handling for critical errors.
+        if (_error.critical) {
+            var _body_critical = __build_body(_error, _user_text);
+            var _client_critical = new GitHub(_token);
+            __create_issue(_client_critical, _error.report_title, _body_critical);
+            return;
+        }
+
         // GML methods do not capture local variables
         var _context = {
             client: new GitHub(_token),
@@ -30,6 +41,7 @@ function GitHubBugReporter() constructor {
             body: __build_body(_error, _user_text),
             problem_line: __problem_line_from_title(_error.report_title),
             find_duplicate: __find_duplicate,
+            create_issue: __create_issue,
             lookup_page: 1,
             lookup_retries: 0,
             dedup_retries: 0,
@@ -135,21 +147,14 @@ function GitHubBugReporter() constructor {
                 var _comment = self.client.createIssueComment(GITHUB_ISSUES_OWNER, GITHUB_ISSUES_REPO, _duplicate.number, self.body);
                 _comment.setCallback(method(self, function(_result2, _request2) {
                     LOGGER.debug($"Duplicate reported as comment on issue #{self.duplicate.number}.");
-                    show_message_async("Report sent to the Administratum.");
+                    show_message_async(GITHUB_BUG_REPORT_SENT_MESSAGE);
                 }))
                     .setErrorback(method(self, function(_result2, _request2) {
                         LOGGER.error($"Failed to post issue comment: {_result2}");
                     }));
             } else if (_create_allowed) {
                 // No duplicate - create a new issue.
-                var _issue = self.client.createIssue(GITHUB_ISSUES_OWNER, GITHUB_ISSUES_REPO, new GitHubIssue(self.error.report_title, self.body));
-                _issue.setCallback(method(self, function(_result2, _request2) {
-                    LOGGER.debug($"New issue created: #{_result2.number}.");
-                    show_message_async("Report sent to the Administratum.");
-                }))
-                    .setErrorback(method(self, function(_result2, _request2) {
-                        LOGGER.error($"Failed to create issue: {_result2}");
-                    }));
+                self.create_issue(self.client, self.error.report_title, self.body);
             } else {
                 LOGGER.error("No duplicate found and dedup data is incomplete; issue not created.");
             }
@@ -204,6 +209,27 @@ function GitHubBugReporter() constructor {
 
         var _pos = string_pos("] ", _title);
         return (_pos > 0) ? string_delete(_title, 1, _pos + 1) : _title;
+    };
+
+    /// @desc Shared helper for creating an issue and wiring success/error handling.
+    /// @param {Struct.GitHub} _client GitHub client instance.
+    /// @param {String} _title Issue title.
+    /// @param {String} _body Issue body.
+    /// @returns {Struct.GitHubRequest|Undefined} The request, or undefined if validation failed.
+    static __create_issue = function(_client, _title, _body) {
+        var _issue = _client.createIssue(GITHUB_ISSUES_OWNER, GITHUB_ISSUES_REPO, new GitHubIssue(_title, _body));
+        if (_issue == undefined) {
+            return undefined;
+        }
+    
+        _issue.setCallback(function(_result, _request) {
+            LOGGER.debug($"New issue created: #{_result.number}.");
+            show_message_async(GITHUB_BUG_REPORT_SENT_MESSAGE);
+        }).setErrorback(function(_result, _request) {
+            LOGGER.error($"Failed to create issue: {_result}");
+        });
+
+        return _issue;
     };
 
     /// @desc Finds the first open issue whose title contains the problem line.
