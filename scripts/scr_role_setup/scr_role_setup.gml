@@ -21,12 +21,9 @@ function role_compare(role1, role2) {
     if ((_r1_is_string && _r2_is_string) || (!_r1_is_string && !_r2_is_string)){
         return role1 == role2;
     }
-    if (!_r1_is_string){
-        role1 = obj_ini.player_role_data[role1].role;
-    } else if (!_r2_is_string){
-        role2 = obj_ini.player_role_data[role2].role;
-    }
-    return role1 == role2;
+    var _role1_name = _r1_is_string ? role1 : obj_ini.player_role_data[role1].role;
+    var _role2_name = _r2_is_string ? role2 : obj_ini.player_role_data[role2].role;
+    return _role1_name == _role2_name;
 }
 
 function setup_default_gears() {
