@@ -356,7 +356,7 @@ deserialize = function(save_data) {
                 continue;
             }
             var _required_names = global.role_data_keys;
-            for (var k = 0 ;k < array_legth(_required_names); k++){
+            for (var k = 0 ;k < array_length(_required_names); k++){
                 var _name = _required_names[k];
                 if (struct_exists(_save[i], _name)){
                     _defaults[i] = _save[i][$ _name];
