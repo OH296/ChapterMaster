@@ -226,7 +226,12 @@ function role_groups(group, include_trainee = false, include_heads = true) {
 /// @returns {Bool}
 function is_specialist(unit_role, type = SPECIALISTS_STANDARD, include_trainee = false, include_heads = true) {
     var _specialists = role_groups(type, include_trainee, include_heads);
-    var _check_string = is_string(unit_role) ? unit_role : obj_ini.player_role_data[unit_role].role;
-
+    var _check_string = "";
+    if (is_string(unit_role)){
+        _check_string = unit_role;
+    } else {
+        var _obj = instance_exists(obj_ini) ? obj_ini : obj_creation;
+        _check_string =  _obj.player_role_data[unit_role].role;
+    }
     return array_contains(_specialists, _check_string);
 }
