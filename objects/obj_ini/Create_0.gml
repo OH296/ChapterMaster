@@ -359,7 +359,7 @@ deserialize = function(save_data) {
             for (var k = 0 ;k < array_length(_required_names); k++){
                 var _name = _required_names[k];
                 if (struct_exists(_save[i], _name)){
-                    _defaults[i] = _save[i][$ _name];
+                    _defaults[i][$ _name] = _save[i][$ _name];
                 }
             }
         }
