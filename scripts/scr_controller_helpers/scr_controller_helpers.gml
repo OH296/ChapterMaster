@@ -1,5 +1,5 @@
 /// @description Returns the active game controller either obj_controller or obj_creation
-/// @returns {Id.Instance}
+/// @returns {Id.Object}
 function active_game_controller(){
     return instance_exists(obj_controller) ? obj_controller : obj_creation;
 }
