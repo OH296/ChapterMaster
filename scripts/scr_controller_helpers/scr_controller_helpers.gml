@@ -11,7 +11,7 @@ function active_game_ini(){
 }
 
 /// @description Cleans up the current game menu area to allow changing menus 
-/// @returns {function}
+/// @returns {Any}
 function scr_menu_clear_up(specific_area_function) {
     var spec_func = specific_area_function;
     with (obj_controller) {
