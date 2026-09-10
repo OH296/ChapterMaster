@@ -518,7 +518,7 @@ function ColourItem(_xx, _yy) constructor {
             var _roles = _role_groups[i][0];
             var _setter = _role_groups[i][1];
             for (var j = 0; j < array_length(_roles); j++) {
-                _full_liveries[_roles[j]] = _setter(main_colours);
+                _full_liveries[_roles[j]] = variable_clone(_setter(main_colours));
             }
         }               
 
