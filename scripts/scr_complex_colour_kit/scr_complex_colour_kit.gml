@@ -379,7 +379,7 @@ function get_shader_colour_from_arrays(colour) {
 }
 
 function set_complex_shader_area(area, colour) {
-    var _colour_set;
+    var _colour_set = [];
     if (is_array(area)) {
         for (var i = 0; i < array_length(area); i++) {
             var small_area = area[i];
