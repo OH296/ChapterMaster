@@ -53,7 +53,7 @@ function ColourItem(_xx, _yy) constructor {
         return _structure;
     }
 
-    static populate_trucated_liveries_array = function(struct_cols = undefined, col_special = 0){
+    static populate_truncated_liveries_array = function(struct_cols = undefined, col_special = 0){
         var _struct_cols = is_undefined(struct_cols) ? spawn_struct_cols() : struct_cols;
         var _liveries = active_role_liveries();
         var _start_length = array_length(_liveries);
@@ -115,7 +115,8 @@ function ColourItem(_xx, _yy) constructor {
             if (_role == role_set || _full_livs[_role].is_changed){
                 continue;
             }
-            _full_livs[_role] = variable_clone(map_colour);
+            _full_livs[_role] = variable_clone(_full_livs[role_set]);
+            _full_livs[_role].is_changed = false;
         }
     }
 

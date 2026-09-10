@@ -327,7 +327,7 @@ function scr_chapter_new(chapter_identifier) {
                     color_to_weapon = "";
                 }
             }
-            var _struct_cols = spawn_struct_cols();
+            var _struct_cols = livery_picker.spawn_struct_cols();
             livery_picker = new ColourItem(100, 230);
             if (company_liveries == "") {
                 livery_picker.scr_unit_draw_data(-1);
@@ -349,7 +349,7 @@ function scr_chapter_new(chapter_identifier) {
             if (full_liveries == "") {
                 livery_picker.setup_full_liveries_array(_struct_cols, col_special);
             } else {
-                livery_picker.populate_trucated_liveries_array(_struct_cols, col_special);
+                livery_picker.populate_truncated_liveries_array(_struct_cols, col_special);
             }
             livery_picker.map_colour = full_liveries[0];
             livery_picker.role_set = 0;
