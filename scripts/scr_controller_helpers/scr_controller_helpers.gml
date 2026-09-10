@@ -1,12 +1,17 @@
+/// @description Returns the active game controller either obj_controller or obj_creation
+/// @returns {Id.Instance}
 function active_game_controller(){
     return instance_exists(obj_controller) ? obj_controller : obj_creation;
 }
 
+/// @description Returns the active game ini obj either obj_controller or obj_creation
+/// @returns {Id.Instance}
 function active_game_ini(){
     return instance_exists(obj_ini) ? obj_ini : obj_creation;
 }
 
-//TODO make enum to store menu area codes
+/// @description Cleans up the current game menu area to allow changing menus 
+/// @returns {function}
 function scr_menu_clear_up(specific_area_function) {
     var spec_func = specific_area_function;
     with (obj_controller) {
@@ -51,6 +56,8 @@ function scr_menu_clear_up(specific_area_function) {
     }
 }
 
+/// @description handles in game area and menu changes
+/// @returns {bool}
 function scr_change_menu(wanted_menu, specific_area_function = undefined) {
     var continue_sequence = false;
     if (obj_controller.menu_lock) {
