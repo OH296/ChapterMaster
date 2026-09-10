@@ -506,21 +506,20 @@ function ColourItem(_xx, _yy) constructor {
         set_default_armour(main_colours, armour_style);
         var _full_liveries = array_create(eROLE.MARINEEND, variable_clone(map_colour));
 
-        for (var i = 0; i < array_length(lib_roles);i++){
-            _full_liveries[lib_roles[i]] = set_default_librarian(main_colours);
-        }
+        var _role_groups = [
+            [lib_roles, set_default_librarian],
+            [chap_roles, set_default_chaplain],
+            [apoth_roles, set_default_apothecary],
+            [tech_roles, set_default_techmarines]
+        ];
 
-        for (var i = 0; i < array_length(chap_roles);i++){
-            _full_liveries[chap_roles[i]] = set_default_chaplain(main_colours);
-        };
-
-        for (var i = 0; i < array_length(apoth_roles);i++){
-            _full_liveries[apoth_roles[i]] = set_default_apothecary(main_colours);
-        };
-
-        for (var i = 0; i < array_length(tech_roles);i++){
-            _full_liveries[tech_roles[i]] = set_default_techmarines(main_colours);
-        }                
+        for (var i = 0; i < array_length(_role_groups); i++) {
+            var _roles = _role_groups[i][0];
+            var _setter = _role_groups[i][1];
+            for (var j = 0; j < array_length(_roles); j++) {
+                _full_liveries[_roles[j]] = _setter(main_colours);
+            }
+        }               
 
         scr_unit_draw_data();
         set_default_armour(main_colours, armour_style);
