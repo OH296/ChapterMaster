@@ -1,3 +1,11 @@
+function active_game_controller(){
+    return instance_exists(obj_controller) ? obj_controller : obj_creation;
+}
+
+function active_game_ini(){
+    return instance_exists(obj_ini) ? obj_ini : obj_creation;
+}
+
 //TODO make enum to store menu area codes
 function scr_menu_clear_up(specific_area_function) {
     var spec_func = specific_area_function;

@@ -33,8 +33,16 @@ function ColourItem(_xx, _yy) constructor {
     yy = _yy;
     data_slate = new DataSlate();
 
+    static active_role_liveries = function(){
+        return active_game_ini().full_liveries;
+    }
+
+    static active_company_liveries = function(){
+        return active_game_ini().company_liveries;
+    }
+
     static colour_specialists = function(){
-        var _full_livs = obj_creation.full_liveries;
+        var _full_livs = active_role_liveries();
         var _role_change_set = [];
         switch(role_set){
             case eROLE.LIBRARIAN:
@@ -56,18 +64,20 @@ function ColourItem(_xx, _yy) constructor {
         }
     }
 
-    static swap_role_set = function(type_start, type_end) {
-        var _full_livs = obj_creation.full_liveries;
-        var _comp_livs = obj_creation.company_liveries;
+    static base_specs = [
+        eROLE.LIBRARIAN,
+        eROLE.CHAPLAIN,
+        eROLE.APOTHECARY,
+        eROLE.TECHMARINE,    
+    ]
+
+    static swap_role_set = function(type_start, type_end, override_role_val = noone) {
+        var _full_livs = active_role_liveries();
+        var _comp_livs = active_company_liveries();
         switch (type_start) {
             case 1:
                 _full_livs[role_set] = variable_clone(map_colour);
-                var _specs = [
-                    eROLE.LIBRARIAN,
-                    eROLE.CHAPLAIN,
-                    eROLE.APOTHECARY,
-                    eROLE.TECHMARINE,
-                ]
+                var _specs = base_specs;
                 if (array_contains(_specs,role_set)){
                     colour_specialists();
                 }
@@ -82,7 +92,11 @@ function ColourItem(_xx, _yy) constructor {
 
         switch (type_end) {
             case 1:
-                role_set = obj_creation.roles_radio.selection_val("role_id");
+                if (instance_exists(obj_creation) && override_role_val = noone){
+                    role_set = obj_creation.roles_radio.selection_val("role_id");
+                } else if(override_role_val != noone){
+                    role_set = override_role_val;
+                }
                 role_set = role_set == noone ? 0 : role_set;
                 map_colour = variable_clone(_full_livs[role_set]);
                 break;
@@ -91,7 +105,9 @@ function ColourItem(_xx, _yy) constructor {
                 map_colour = variable_clone(_full_livs[0]);
                 break;
             case 2:
-                role_set = obj_creation.buttons.company_liveries_choice.current_selection;
+                if (instance_exists(obj_creation)){
+                    role_set = obj_creation.buttons.company_liveries_choice.current_selection;
+                }
                 if (role_set == -1) {
                     role_set = 1;
                 }
@@ -453,7 +469,11 @@ function ColourItem(_xx, _yy) constructor {
 
         scr_unit_draw_data();
         set_default_armour(main_colours, armour_style);
-        obj_creation.full_liveries = _full_liveries;
+        if (instance_exists(obj_creation)){
+            obj_creation.full_liveries = _full_liveries;
+        } else {
+            obj_ini.full_liveries = _full_liveries;
+        }
     }
 
     static set_default_armour = function(struct_cols, armour_style = 0) {

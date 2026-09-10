@@ -265,7 +265,17 @@ deserialize = function(save_data) {
     if (struct_exists(save_data, "full_liveries")) {
         variable_instance_set(id, "full_liveries", save_data.full_liveries);
     } else {
-        variable_instance_set(id, "full_liveries", array_create(21, variable_clone(livery_picker.map_colour)));
+        variable_instance_set(id, "full_liveries", array_create(eROLE.MARINEEND, variable_clone(livery_picker.map_colour)));
+    }
+    if (array_length(full_liveries) < eROLE.MARINEEND){
+        livery_picker.map_colour = variable_clone(full_liveries[0]);
+        for (var i=array_length(full_liveries);i<eROLE.MARINEEND;i++){
+            array_push(full_liveries , variable_clone(full_liveries[0]));
+        } 
+        for (var i=0;i<array_length(livery_picker.base_specs);i++){
+            livery_picker.role_set = livery_picker.base_specs[i];
+            livery_picker.colour_specialists();
+        }
     }
 
     livery_picker.scr_unit_draw_data(-1);
