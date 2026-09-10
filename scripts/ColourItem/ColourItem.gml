@@ -112,7 +112,7 @@ function ColourItem(_xx, _yy) constructor {
 
         for (var i = 0; i < array_length(_role_change_set);i++){
             var _role = _role_change_set[i];
-            if (_role == role_set || (_full_livs[_role].is_changed && _role < _start_length)){
+            if (_role == role_set || _full_livs[_role].is_changed){
                 continue;
             }
             _full_livs[_role] = variable_clone(_full_livs[role_set]);
