@@ -70,26 +70,14 @@ function setup_complex_livery_shader(setup_role, unit = "none") {
         var _full_liveries = obj_ini.full_liveries;
         var _roles = active_roles();
         _data_set = obj_ini.full_liveries[0];
-        if (is_specialist(setup_role, SPECIALISTS_LIBRARIANS)) {
-            _data_set = _full_liveries[eROLE.LIBRARIAN];
-        } else if (is_specialist(setup_role, SPECIALISTS_HEADS)) {
-            if (is_specialist(setup_role, SPECIALISTS_APOTHECARIES)) {
-                _data_set = _full_liveries[eROLE.APOTHECARY];
-            } else if (is_specialist(setup_role, SPECIALISTS_TECHS)) {
-                _data_set = _full_liveries[eROLE.TECHMARINE];
-            } else if (is_specialist(setup_role, SPECIALISTS_CHAPLAINS)) {
-                _data_set = _full_liveries[eROLE.CHAPLAIN];
-            } else if (setup_role == _roles[eROLE.CHAPTERMASTER]) {
-                _data_set = _full_liveries[eROLE.CHAPTERMASTER];
-            }
-        } else {
-            for (var i = 0; i < array_length(_roles) && i < array_length(_full_liveries); i++) {
-                if (_roles[i] == setup_role) {
-                    _data_set = _full_liveries[i];
-                    break;
-                }
+
+        for (var i = 0; i < array_length(_roles) && i < array_length(_full_liveries); i++) {
+            if (_roles[i] == setup_role) {
+                _data_set = _full_liveries[i];
+                break;
             }
         }
+        
         if (_is_unit) {
             _data_set = variable_clone(_data_set);
             var _company_livery = obj_ini.company_liveries[unit.company];
