@@ -115,9 +115,6 @@ function ColourItem(_xx, _yy) constructor {
             if (_role == role_set || (_full_livs[_role].is_changed && _role < _start_length)){
                 continue;
             }
-``` Note `_start_length` needs capturing here (e.g. via a parameter) since it is currently local to `populate_truncated_liveries_array`.
-                continue;
-            }
             _full_livs[_role] = variable_clone(_full_livs[role_set]);
             _full_livs[_role].is_changed = false;
         }
