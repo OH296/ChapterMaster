@@ -1002,15 +1002,7 @@ function scr_chapter_random(custom_or_random) {
     }
 
     //TODO add some funcky stuff for custom random complex livery
-    var struct_cols = {
-        main_color: main_color,
-        secondary_color: secondary_color,
-        main_trim: main_trim,
-        right_pauldron: right_pauldron,
-        left_pauldron: left_pauldron,
-        lens_color: lens_color,
-        weapon_color: weapon_color,
-    };
+    var struct_cols = obj_creation.livery_picker.spawn_struct_cols();
     obj_creation.livery_picker = new ColourItem(100, 230);
 
     obj_creation.livery_picker.scr_unit_draw_data(-1);

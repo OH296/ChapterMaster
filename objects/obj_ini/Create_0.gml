@@ -267,16 +267,7 @@ deserialize = function(save_data) {
     } else {
         variable_instance_set(id, "full_liveries", array_create(eROLE.MARINEEND, variable_clone(livery_picker.map_colour)));
     }
-    if (array_length(full_liveries) < eROLE.MARINEEND){
-        livery_picker.map_colour = variable_clone(full_liveries[0]);
-        for (var i=array_length(full_liveries);i<eROLE.MARINEEND;i++){
-            array_push(full_liveries , variable_clone(full_liveries[0]));
-        } 
-        for (var i=0;i<array_length(livery_picker.base_specs);i++){
-            livery_picker.role_set = livery_picker.base_specs[i];
-            livery_picker.colour_specialists();
-        }
-    }
+    livery_picker.populate_trucated_liveries_array();
 
     livery_picker.scr_unit_draw_data(-1);
     if (struct_exists(save_data, "company_liveries")) {

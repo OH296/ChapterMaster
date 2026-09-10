@@ -41,18 +41,73 @@ function ColourItem(_xx, _yy) constructor {
         return active_game_ini().company_liveries;
     }
 
+    static spawn_struct_cols = function(){
+        var _names = ["main_color", "secondary_color", "main_trim" ,"right_pauldron" ,"left_pauldron" , "lens_color" ,"weapon_color"]
+        var _structure = {};
+        var _obj = active_game_ini();
+
+        for (var i=0;i<array_length(_names);i++){
+            _structure[$ _names[i]] = variable_instance_exists(_obj, _names[i]) ? variable_instance_get(_obj, _names[i]) : 0;
+        }
+
+        return _structure;
+    }
+
+    static populate_trucated_liveries_array = function(struct_cols = undefined, col_special = 0){
+        var _struct_cols = is_undefined(struct_cols) ? spawn_struct_cols() : struct_cols;
+        var _liveries = active_role_liveries();
+        var _start_length = array_length(_liveries);
+        if (_start_length < eROLE.MARINEEND){
+            map_colour = variable_clone(_liveries[0]);
+            for (var i = array_length(_liveries);i<eROLE.MARINEEND;i++){
+                switch(i){
+                    case eROLE.LIBRARIAN:
+                        array_push(_liveries, set_default_librarian(_struct_cols))
+                        break;
+                    case eROLE.CHAPLAIN:
+                        array_push(_liveries, set_default_chaplain(_struct_cols))
+                        break;
+                    case eROLE.APOTHECARY:
+                        array_push(_liveries, set_default_apothecary(_struct_cols))
+                        break;
+                    case eROLE.TECHMARINE:
+                        array_push(_liveries, set_default_techmarines(_struct_cols))
+                        break;
+                    default:
+                        array_push(_liveries , variable_clone(map_colour));
+                        break;
+                }
+            } 
+            for (var i=0;i<array_length(base_specs);i++){
+                role_set = base_specs[i];
+                colour_specialists();
+            }
+        }
+        for (var i = array_length(_liveries);i<eROLE.MARINEEND;i++){
+            if (_liveries[i] == 0){
+                _liveries[i] = set_default_armour(_struct_cols, col_special);
+            }
+        }
+
+        active_game_ini().full_liveries = _liveries; 
+    }
+
     static colour_specialists = function(){
         var _full_livs = active_role_liveries();
         var _role_change_set = [];
         switch(role_set){
             case eROLE.LIBRARIAN:
                 _role_change_set = lib_roles;
+                break;
             case eROLE.CHAPLAIN:
                 _role_change_set = chap_roles;
+                break;
             case eROLE.APOTHECARY:
                 _role_change_set = apoth_roles;
+                break;
             case eROLE.TECHMARINE:
                 _role_change_set = tech_roles;
+                break;
         }
 
         for (var i = 0; i < array_length(_role_change_set);i++){
