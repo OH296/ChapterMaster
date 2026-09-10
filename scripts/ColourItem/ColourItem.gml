@@ -84,7 +84,7 @@ function ColourItem(_xx, _yy) constructor {
             }
         }
         for (var i = 0;i<eROLE.MARINEEND;i++){
-            if (_liveries[i] == 0){
+            if (!is_struct(_liveries[i])){
                 _liveries[i] = set_default_armour(_struct_cols, col_special);
             }
         }
