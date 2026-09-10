@@ -83,7 +83,7 @@ function ColourItem(_xx, _yy) constructor {
                 colour_specialists();
             }
         }
-        for (var i = array_length(_liveries);i<eROLE.MARINEEND;i++){
+        for (var i = 0;i<eROLE.MARINEEND;i++){
             if (_liveries[i] == 0){
                 _liveries[i] = set_default_armour(_struct_cols, col_special);
             }
