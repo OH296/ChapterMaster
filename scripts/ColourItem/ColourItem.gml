@@ -147,7 +147,7 @@ function ColourItem(_xx, _yy) constructor {
 
         switch (type_end) {
             case 1:
-                if (instance_exists(obj_creation) && override_role_val = noone){
+                if (instance_exists(obj_creation) && override_role_val == noone){
                     role_set = obj_creation.roles_radio.selection_val("role_id");
                 } else if(override_role_val != noone){
                     role_set = override_role_val;
