@@ -3,6 +3,7 @@ owner = 0;
 target = instance_nearest(x, y, obj_star);
 loading = 0;
 loading_name = "";
+mission = "";
 alarm[0] = 1;
 debug = 0;
 guard = 0;
