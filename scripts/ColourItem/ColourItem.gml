@@ -33,12 +33,44 @@ function ColourItem(_xx, _yy) constructor {
     yy = _yy;
     data_slate = new DataSlate();
 
+    static colour_specialists = function(){
+        var _full_livs = obj_creation.full_liveries;
+        var _role_change_set = [];
+        switch(role_set){
+            case eROLE.LIBRARIAN:
+                _role_change_set = lib_roles;
+            case eROLE.CHAPLAIN:
+                _role_change_set = chap_roles;
+            case eROLE.APOTHECARY:
+                _role_change_set = apoth_roles;
+            case eROLE.TECHMARINE:
+                _role_change_set = tech_roles;
+        }
+
+        for (var i = 0; i < array_length(_role_change_set);i++){
+            var _role = _role_change_set[i];
+            if (_role == role_set || _full_livs[_role].is_changed){
+                continue;
+            }
+            _full_livs[_role] = variable_clone(map_colour);
+        }
+    }
+
     static swap_role_set = function(type_start, type_end) {
         var _full_livs = obj_creation.full_liveries;
         var _comp_livs = obj_creation.company_liveries;
         switch (type_start) {
             case 1:
                 _full_livs[role_set] = variable_clone(map_colour);
+                var _specs = [
+                    eROLE.LIBRARIAN,
+                    eROLE.CHAPLAIN,
+                    eROLE.APOTHECARY,
+                    eROLE.TECHMARINE,
+                ]
+                if (array_contains(_specs,role_set)){
+                    colour_specialists();
+                }
                 break;
             case 0:
                 _full_livs[0] = variable_clone(map_colour);
@@ -371,6 +403,58 @@ function ColourItem(_xx, _yy) constructor {
             map_colour[$ pattern[i]] = col;
         }
     };
+
+    static lib_roles = [
+        eROLE.CODICIERY,
+        eROLE.LEXICANUM,
+        eROLE.LIBRARIAN,
+        eROLE.LIBRARIANASPIRANT,
+        eROLE.CHIEFLIBRARIAN,
+    ]
+
+    static chap_roles = [
+        eROLE.CHAPLAIN,
+        eROLE.MASTERCHAPLAIN,
+        eROLE.CHAPLAINASPIRANT,
+    ];
+
+    static apoth_roles = [
+        eROLE.MASTERAPOTHECARY,
+        eROLE.APOTHECARY,
+        eROLE.APOTHECARYASPIRANT,
+    ];
+
+    static tech_roles = [
+        eROLE.FORGEMASTER,
+        eROLE.TECHMARINE,
+        eROLE.TECHMARINEASPIRANT,
+    ];
+
+    static setup_full_liveries_array = function(main_colours, armour_style){
+        scr_unit_draw_data();
+        set_default_armour(main_colours, armour_style);
+        var _full_liveries = array_create(eROLE.MARINEEND, variable_clone(map_colour));
+
+        for (var i = 0; i < array_length(lib_roles);i++){
+            _full_liveries[lib_roles[i]] = set_default_librarian(main_colours);
+        }
+
+        for (var i = 0; i < array_length(chap_roles);i++){
+            _full_liveries[chap_roles[i]] = set_default_chaplain(main_colours);
+        };
+
+        for (var i = 0; i < array_length(apoth_roles);i++){
+            _full_liveries[apoth_roles[i]] = set_default_apothecary(main_colours);
+        };
+
+        for (var i = 0; i < array_length(tech_roles);i++){
+            _full_liveries[tech_roles[i]] = set_default_techmarines(main_colours);
+        }                
+
+        scr_unit_draw_data();
+        set_default_armour(main_colours, armour_style);
+        obj_creation.full_liveries = _full_liveries;
+    }
 
     static set_default_armour = function(struct_cols, armour_style = 0) {
         map_colour.right_pauldron = struct_cols.right_pauldron;
