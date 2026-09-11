@@ -216,7 +216,7 @@ function ChapterTrait(trait) constructor {
         }
 
         if (array_length(bans_roles)){
-            for (var i = 0; i < array_legth(bans_roles); i++){
+            for (var i = 0; i < array_length(bans_roles); i++){
                 if (!struct_exists(global.string_to_eum_roles_map , bans_roles[i])){
                     continue;
                 }
