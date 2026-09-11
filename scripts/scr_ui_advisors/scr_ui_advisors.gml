@@ -85,7 +85,7 @@ function scr_ui_advisors() {
         if (temp[36] == "0") {
             blurp = localize("Sir!  You requested a report?  Currently, we have {0} {1}s who await only your order to carry the word to the troops.", [temp[37], localize(_chap_role)]);
         }
-        if ((scr_has_adv("Spiritual Healers")) && (global.chapter_name != "Iron Hands")) {
+        if ((!(scr_has_adv("Spiritual Healers"))) && (global.chapter_name != "Iron Hands")) {
             blurp += localize("##Currently, we are training additional {0} at a ", [localize(_chap_role)]);
             var _recruit_rates = global.recruitment_rates;
             blurp += localize(_recruit_rates[training_chaplain]);
