@@ -1189,6 +1189,10 @@ function scr_initialize_custom() {
         apothecary += 5;
     }
 
+    if (!player_role_data[eROLE.CHAPLAIN].available_to_player){
+        chaplains = 0;
+    }
+
     if (global.chapter_name == "Lamenters") {
         predator = 0;
     }
@@ -1894,7 +1898,7 @@ function scr_initialize_custom() {
     }
 
     // Master of Sanctity (Chaplain)
-    if (chaplains > 0) {
+    if (chaplains > 0 && player_role_data[eROLE.MASTERCHAPLAIN].available_to_player) {
         var _hchap = add_unit_to_company("marine", _company_i, eROLE.MASTERCHAPLAIN, "default", "Plasma Pistol", "default", "default", _hq_armour);
         _hchap.set_name(high_chaplain_name);
         _hchap.edit_corruption(-100);
