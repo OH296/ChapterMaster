@@ -265,7 +265,7 @@ global.equipment_qualities = [
     "artifact",
 ];
 
-global.string_to_eum_roles_map = {
+global.string_to_enum_roles_map = {
     none: eROLE.NONE,
     chapter_master: eROLE.CHAPTERMASTER,
     honour_guard: eROLE.HONOURGUARD,

@@ -1470,13 +1470,12 @@ function scr_initialize_custom() {
         var possible_custom_attributes = global.unit_equip_slots;
         /**
 		 * check whether the json structure exists to populate custom role names and 
-		 * attributes then set them using the map above 
 		 */
-        var _role_names = struct_get_names(global.string_to_eum_roles_map);
+        var _role_names = struct_get_names(global.string_to_enum_roles_map);
         for (var c = 0; c < array_length(_role_names); c++) {
             var c_rolename = _role_names[c];
             if (struct_exists(c_roles, c_rolename)) {
-                var c_roleid = global.string_to_eum_roles_map[$ c_rolename];
+                var c_roleid = global.string_to_enum_roles_map[$ c_rolename];
                 for (var a = 0; a < array_length(possible_custom_attributes); a++) {
                     var attribute = possible_custom_attributes[a];
                     if (struct_exists(c_roles[$ c_rolename], attribute)) {

@@ -217,10 +217,10 @@ function ChapterTrait(trait) constructor {
 
         if (array_length(bans_roles)){
             for (var i = 0; i < array_length(bans_roles); i++){
-                if (!struct_exists(global.string_to_eum_roles_map , bans_roles[i])){
+                if (!struct_exists(global.string_to_enum_roles_map , bans_roles[i])){
                     continue;
                 }
-                var _role_id = global.string_to_eum_roles_map[$ bans_roles[i]];
+                var _role_id = global.string_to_enum_roles_map[$ bans_roles[i]];
                 var _role = obj_creation.default_role_data[_role_id].role;
                 _str += localize("Restricts chapter use of : {0}\n", [_role])
             }

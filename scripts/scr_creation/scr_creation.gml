@@ -80,14 +80,14 @@ function update_creation_roles_radio(start_role = 1) {
     }
 
     for (var i=array_length(_blocked_roles) - 1;i>=0;i--){
-        if (struct_exists(global.string_to_eum_roles_map , _blocked_roles[i])){
-            _blocked_roles[i] = global.string_to_eum_roles_map[$ _blocked_roles[i]];
+        if (struct_exists(global.string_to_enum_roles_map , _blocked_roles[i])){
+            _blocked_roles[i] = global.string_to_enum_roles_map[$ _blocked_roles[i]];
         } else {
             array_delete(_blocked_roles,i, 1);
         }
     }
     for (var i = start_role; i < array_length(player_role_data); i++) {
-        if (array_cotains(_blocked_roles, i)){
+        if (array_contains(_blocked_roles, i)){
             player_role_data[i].available_to_player = false;
             continue;
         }
