@@ -248,5 +248,14 @@
       },
     ],
     "suspicion" : -2,
+  },
+  {
+    "name": "Spiritual Healers",
+    "description": "Your Chapter Combines it's Chaplains and it's Apthecaries into a single role.",
+    "points": 20,
+    "meta": ["beliefs"],
+    "bans_roles" : [
+      
+    ]
   }
 ]

@@ -249,16 +249,6 @@ function scr_draw_unit_image(_background = false) {
             var body_part;
             static _body_parts = global.unit_body_parts;
 
-
-            if (is_specialist(unit_role, SPECIALISTS_APOTHECARIES, true)) {
-                // Apothecary
-                if (unit_chapter == "Space Wolves") {
-                    unit_specialization = eUNIT_SPECIALIZATION.WOLFPRIEST;
-                } else {
-                    unit_specialization = eUNIT_SPECIALIZATION.APOTHECARY;
-                }
-            }
-
             if (unit_back == "Servo-arm") {
                 servo_arm = 1;
             } else if (unit_back == "Servo-harness") {
@@ -431,7 +421,7 @@ function scr_draw_unit_image(_background = false) {
                 }
 
                 // Apothecary Details
-                if (unit_specialization == eUNIT_SPECIALIZATION.APOTHECARY) {
+                if (is_specialist(unit_role, SPECIALISTS_APOTHECARIES, true)) {
                     if (gear() == "Narthecium") {
                         if (armour_type == eARMOUR_TYPE.NORMAL) {
                             draw_sprite(spr_narthecium_2, 0, x_surface_offset + 66, y_surface_offset + 5);

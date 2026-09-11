@@ -175,13 +175,6 @@ if (_is_livery && livery_pick_type == eLIVERY_COLOURING_OPTIONS.BULK) {
 } else if (type == ePOPUP_TYPE.EQUIP) {
     role_name_input = new TextBarArea(800, 170, 380, true);
 
-    var _blocked_names = [
-        "Chapter Master",
-        "Master of Sanctity",
-        "Master of the Apothecarion",
-        "Forge Master",
-    ];
-
     editing_role_data = obj_creation.player_role_data[target_role];
 
     for (var i = 0; i < array_length(obj_creation.player_role_data); i++) {
