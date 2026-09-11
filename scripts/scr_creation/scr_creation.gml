@@ -90,6 +90,8 @@ function update_creation_roles_radio(start_role = 1) {
         if (array_contains(_blocked_roles, i)){
             player_role_data[i].available_to_player = false;
             continue;
+        } else {
+            player_role_data[i].available_to_player = true;
         }
         var _role_data = player_role_data[i];
         if (_role_data.available_to_player && _role_data.role != "") {
