@@ -265,8 +265,9 @@ deserialize = function(save_data) {
     if (struct_exists(save_data, "full_liveries")) {
         variable_instance_set(id, "full_liveries", save_data.full_liveries);
     } else {
-        variable_instance_set(id, "full_liveries", array_create(21, variable_clone(livery_picker.map_colour)));
+        variable_instance_set(id, "full_liveries", array_create(eROLE.MARINEEND, variable_clone(livery_picker.map_colour)));
     }
+    livery_picker.populate_truncated_liveries_array();
 
     livery_picker.scr_unit_draw_data(-1);
     if (struct_exists(save_data, "company_liveries")) {

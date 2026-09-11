@@ -17,7 +17,7 @@
 /// @description Retrieves the active roles from the game, either from the obj_creation or obj_ini object.
 /// @returns {Array<String>}
 function active_roles() {
-    var _obj = instance_exists(obj_creation) ? obj_creation.player_role_data : obj_ini.player_role_data;
+    var _obj = active_game_ini().player_role_data;
     var _roles = [];
     for (var i = 0; i < array_length(_obj); i++) {
         array_push(_roles, struct_exists(_obj[i], "role") ? _obj[i].role : "");

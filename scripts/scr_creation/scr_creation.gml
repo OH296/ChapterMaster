@@ -73,7 +73,7 @@ function update_creation_roles_radio(start_role = 1) {
     }
 
     var _radio_data = {
-        max_width: 50,
+        max_width: 200,
         x1: 862,
         y1: 220,
         y_gap: 1,
@@ -315,18 +315,7 @@ function scr_creation(slide_num) {
                     lens_color: lens_color,
                     weapon_color: weapon_color,
                 };
-                livery_picker.scr_unit_draw_data();
-                livery_picker.set_default_armour(struct_cols, col_special);
-                full_liveries = array_create(21, variable_clone(livery_picker.map_colour));
-                full_liveries[eROLE.LIBRARIAN] = livery_picker.set_default_librarian(struct_cols);
-
-                full_liveries[eROLE.CHAPLAIN] = livery_picker.set_default_chaplain(struct_cols);
-
-                full_liveries[eROLE.APOTHECARY] = livery_picker.set_default_apothecary(struct_cols);
-
-                full_liveries[eROLE.TECHMARINE] = livery_picker.set_default_techmarines(struct_cols);
-                livery_picker.scr_unit_draw_data();
-                livery_picker.set_default_armour(struct_cols, col_special);
+                livery_picker.setup_full_liveries_array(struct_cols, col_special);
             }
         }
     }

@@ -327,15 +327,7 @@ function scr_chapter_new(chapter_identifier) {
                     color_to_weapon = "";
                 }
             }
-            var struct_cols = {
-                main_color: main_color,
-                secondary_color: secondary_color,
-                main_trim: main_trim,
-                right_pauldron: right_pauldron,
-                left_pauldron: left_pauldron,
-                lens_color: lens_color,
-                weapon_color: weapon_color,
-            };
+            var _struct_cols = livery_picker.spawn_struct_cols();
             livery_picker = new ColourItem(100, 230);
             if (company_liveries == "") {
                 livery_picker.scr_unit_draw_data(-1);
@@ -355,30 +347,9 @@ function scr_chapter_new(chapter_identifier) {
             }
             livery_picker.scr_unit_draw_data();
             if (full_liveries == "") {
-                livery_picker.scr_unit_draw_data();
-                livery_picker.set_default_armour(struct_cols, col_special);
-                full_liveries = array_create(21, variable_clone(livery_picker.map_colour));
-                full_liveries[eROLE.LIBRARIAN] = livery_picker.set_default_librarian(struct_cols);
-
-                full_liveries[eROLE.CHAPLAIN] = livery_picker.set_default_chaplain(struct_cols);
-
-                full_liveries[eROLE.APOTHECARY] = livery_picker.set_default_apothecary(struct_cols);
-
-                full_liveries[eROLE.TECHMARINE] = livery_picker.set_default_techmarines(struct_cols);
-                livery_picker.scr_unit_draw_data();
-                livery_picker.set_default_armour(struct_cols, col_special);
+                livery_picker.setup_full_liveries_array(_struct_cols, col_special);
             } else {
-                if (array_length(full_liveries) != 21) {
-                    full_liveries = array_create(21, variable_clone(full_liveries[0]));
-                    struct_cols.left_pauldron = full_liveries[0].left_pauldron;
-                    full_liveries[eROLE.LIBRARIAN] = livery_picker.set_default_librarian(struct_cols);
-
-                    full_liveries[eROLE.CHAPLAIN] = livery_picker.set_default_chaplain(struct_cols);
-
-                    full_liveries[eROLE.APOTHECARY] = livery_picker.set_default_apothecary(struct_cols);
-
-                    full_liveries[eROLE.TECHMARINE] = livery_picker.set_default_techmarines(struct_cols);
-                }
+                livery_picker.populate_truncated_liveries_array(_struct_cols, col_special);
             }
             livery_picker.map_colour = full_liveries[0];
             livery_picker.role_set = 0;
