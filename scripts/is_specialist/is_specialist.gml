@@ -89,15 +89,9 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             break;
         case SPECIALISTS_TECHS:
             _role_list = [
-                _roles[eROLE.TECHMARINE],
                 "Techpriest",
             ];
-            if (include_trainee) {
-                array_push(_role_list, _roles[eROLE.TECHMARINEASPIRANT]);
-            }
-            if (include_heads) {
-                array_push(_role_list, _roles[eROLE.FORGEMASTER]);
-            }
+            _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TECHMARINES, include_trainee, include_heads));
             break;
         case SPECIALISTS_TECHMARINES:
             _role_list = [_roles[eROLE.TECHMARINE]];
@@ -107,32 +101,23 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             if (include_heads) {
                 array_push(_role_list, _roles[eROLE.FORGEMASTER]);
             }
+            if (_chap_name == "Iron Hands") {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_CHAPLAINS, include_trainee, include_heads));
+            }
             break;
         case SPECIALISTS_CHAPLAINS:
             _role_list = [_roles[eROLE.CHAPLAIN]];
-            if (_chap_name == "Iron Hands") {
-                array_push(_role_list, _roles[eROLE.TECHMARINE]);
-                if (include_trainee) {
-                    array_push(_role_list, _roles[eROLE.TECHMARINEASPIRANT]);
-                }
-                if (include_heads) {
-                    array_push(_role_list, _roles[eROLE.FORGEMASTER]);
-                }
-            }
-            if (scr_has_adv("Spiritual Healers")) {
-                array_push(_role_list, _roles[eROLE.APOTHECARY]);
-                if (include_trainee) {
-                    array_push(_role_list, _roles[eROLE.APOTHECARYASPIRANT]);
-                }
-                if (include_heads) {
-                    array_push(_role_list, _roles[eROLE.MASTERAPOTHECARY]);
-                }
-            }
             if (include_trainee) {
                 array_push(_role_list, _roles[eROLE.CHAPLAINASPIRANT]);
             }
             if (include_heads) {
                 array_push(_role_list, _roles[eROLE.MASTERCHAPLAIN]);
+            }
+            if (scr_has_adv("Spiritual Healers")) {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_APOTHECARIES, include_trainee, include_heads));
+            }
+            if (_chap_name == "Iron Hands") {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TECHS, include_trainee, include_heads));
             }
             break;
         case SPECIALISTS_APOTHECARIES:
@@ -142,6 +127,9 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             }
             if (include_heads) {
                 array_push(_role_list, _roles[eROLE.MASTERAPOTHECARY]);
+            }
+            if (scr_has_adv("Spiritual Healers")) {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_CHAPLAINS, include_trainee, include_heads));
             }
             break;
 

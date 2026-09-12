@@ -1102,10 +1102,13 @@ serialize = function() {
         "armamentarium",
         "helpful_places_button",
         "lair_styles",
+        "reclusiam_vars",
+        "management_buttons",
+        "settings_buttons_ui_components"
     ];
-    var excluded_from_save_start = ["restart_"];
+    var _excluded_from_save_start = ["restart_"];
 
-    copy_serializable_fields(object_controller, save_data, excluded_from_save, excluded_from_save_start);
+    copy_serializable_fields(object_controller, save_data, excluded_from_save, _excluded_from_save_start);
 
     return save_data;
 };
