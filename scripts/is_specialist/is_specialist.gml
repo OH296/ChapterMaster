@@ -30,7 +30,7 @@ function active_roles() {
 /// @param {Bool} include_trainee Whether to include trainee roles (default is false).
 /// @param {Bool} include_heads Whether to include head roles (default is true).
 /// @returns {Array<String>}
-function role_groups(group, include_trainee = false, include_heads = true) {
+function role_groups(group, include_trainee = false, include_heads = true, allow_subsearches = true) {
     var _role_list = [];
     var _roles = active_roles();
     var _chap_name = instance_exists(obj_creation) ? obj_creation.chapter_name : global.chapter_name;
@@ -91,7 +91,7 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             _role_list = [
                 "Techpriest",
             ];
-            _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TECHMARINES, include_trainee, include_heads));
+            _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TECHMARINES, include_trainee, include_heads, false));
             break;
         case SPECIALISTS_TECHMARINES:
             _role_list = [_roles[eROLE.TECHMARINE]];
@@ -101,8 +101,8 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             if (include_heads) {
                 array_push(_role_list, _roles[eROLE.FORGEMASTER]);
             }
-            if (_chap_name == "Iron Hands") {
-                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_CHAPLAINS, include_trainee, include_heads));
+            if (_chap_name == "Iron Hands" && allow_subsearches) {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_CHAPLAINS, include_trainee, include_heads, false));
             }
             break;
         case SPECIALISTS_CHAPLAINS:
@@ -113,11 +113,11 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             if (include_heads) {
                 array_push(_role_list, _roles[eROLE.MASTERCHAPLAIN]);
             }
-            if (scr_has_adv("Spiritual Healers")) {
-                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_APOTHECARIES, include_trainee, include_heads));
+            if (scr_has_adv("Spiritual Healers") && allow_subsearches) {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_APOTHECARIES, include_trainee, include_heads, false));
             }
-            if (_chap_name == "Iron Hands") {
-                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TECHS, include_trainee, include_heads));
+            if (_chap_name == "Iron Hands" && allow_subsearches) {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_TECHS, include_trainee, include_heads, false));
             }
             break;
         case SPECIALISTS_APOTHECARIES:
@@ -128,8 +128,8 @@ function role_groups(group, include_trainee = false, include_heads = true) {
             if (include_heads) {
                 array_push(_role_list, _roles[eROLE.MASTERAPOTHECARY]);
             }
-            if (scr_has_adv("Spiritual Healers")) {
-                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_CHAPLAINS, include_trainee, include_heads));
+            if (scr_has_adv("Spiritual Healers") && allow_subsearches) {
+                _role_list = array_concat(_role_list, role_groups(SPECIALISTS_CHAPLAINS, include_trainee, include_heads, false));
             }
             break;
 
