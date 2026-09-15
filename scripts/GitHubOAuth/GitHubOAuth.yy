@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_ship_battle",
+  "%Name":"GitHubOAuth",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_ship_battle",
+  "name":"GitHubOAuth",
   "parent":{
-    "name":"Combat",
-    "path":"folders/Scripts/Combat.yy",
+    "name":"GitHub.GML",
+    "path":"folders/Libraries/GitHub.GML.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

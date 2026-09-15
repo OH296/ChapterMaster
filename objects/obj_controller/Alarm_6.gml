@@ -29,6 +29,7 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
                 stahp = 1;
             }
 
+            //TODO replace with index
             // sets up count for the marines
             if (man[f] == "man") {
                 manz += 1;
@@ -43,9 +44,11 @@ if ((menu == eMENU.MANAGE) && (managing > 0)) {
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.TECHMARINE].role) {
                     tech += 1;
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
-                    drea += 1;
-                } else if (unit.role() == $"Venerable {obj_ini.player_role_data[eROLE.DREADNOUGHT].role}") {
-                    vdrea += 1;
+                    if (unit.has_trait("ancient")) {
+                        vdrea++;
+                    } else {
+                        drea++;
+                    }
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.ANCIENT].role) {
                     bear += 1;
                 } else if (unit.role() == obj_ini.player_role_data[eROLE.TACTICAL].role) {

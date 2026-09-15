@@ -124,12 +124,12 @@ if ((target == "event_loc") && (determined_planets == 0)) {
     // Fill out the options for planets
 
     for (var coo = 0; coo <= 10; coo++) {
-        for (var ide = 1; ide <= 300; ide++) {
+        for (var ide = 0; ide <= company_length(coo); ide++) {
             var _unit = fetch_unit([coo, ide]);
             if (!is_struct(_unit)) {
                 continue;
             }
-            if ((_unit.role() != obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (_unit.role() != "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) && (_unit.planet_location > 0)) {
+            if ((!_unit.is_dreadnought()) && (_unit.planet_location > 0)) {
                 var stahp = 0;
                 var first_open = 0;
 

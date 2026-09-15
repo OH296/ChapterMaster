@@ -402,8 +402,8 @@ try {
         repair_ships = 0;
 
         var pip = instance_create(0, 0, obj_popup);
-        pip.title = "Ships Repaired";
-        pip.text = "In accordance with the Imperial Repair License, all " + string(obj_ini.chapter_name) + " ships orbiting friendly planets have been repaired. Note that repaired ships, and their fleets, are unable to act further this turn.";
+        pip.title = localize("Ships Repaired");
+        pip.text = localize("In accordance with the Imperial Repair License, all {0} ships orbiting friendly planets have been repaired. Note that repaired ships, and their fleets, are unable to act further this turn.", [obj_ini.chapter_name]);
         pip.image = "shipyard";
         pip.cooldown = 15;
 
@@ -488,7 +488,7 @@ try {
 
     if (menu == eMENU.DEFAULT && !instances_exist_any([obj_ncombat, obj_fleet_controller])) {
         var _cm = chapter_master.get_struct();
-        if (!role_compare(_cm, eROLE.CHAPTERMASTER) && (alarm[7] == -1)) {
+        if (!_cm.has_role(eROLE.CHAPTERMASTER) && (alarm[7] == -1)) {
             alarm[7] = 15;
         }
     }

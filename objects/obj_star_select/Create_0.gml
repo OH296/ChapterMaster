@@ -1,7 +1,9 @@
 owner = 0;
+/// @type {Id.Instance.obj_star}
 target = instance_nearest(x, y, obj_star);
 loading = 0;
 loading_name = "";
+mission = "";
 alarm[0] = 1;
 debug = 0;
 guard = 0;
@@ -38,7 +40,7 @@ debug_options = new RadioSet([
     {
         str1: "Add Feature",
     },
-], "Debug options", {
+], localize("Debug options"), {
     x1: 36,
     y1: 129,
     max_width: 300,
@@ -57,17 +59,18 @@ torpedo = scr_item_count("Cyclonic Torpedo");
 
 /// @type {Struct.FeatureSelected}
 feature = "";
+/// @type {String|Struct.GarrisonForce}
 garrison = "";
 population = false;
 
 garrison_data_slate = new DataSlate();
-garrison_data_slate.title = "Garrison Report";
+garrison_data_slate.title = localize("Garrison Report");
 main_data_slate = new DataSlate();
 
 potential_donors = [];
 
 colonist_button = new PurchaseButton(1000);
-colonist_button.update({tooltip: "Planets with higher populations can provide more recruits both for your chapter and to keep a planets PDF bolstered, however colonists from other planets bring with them their home planets influences and evils /n REQ : 1000", label: "Request Colonists", target: target});
+colonist_button.update({tooltip: "Planets with higher populations can provide more recruits both for your chapter and to keep a planets PDF bolstered, however colonists from other planets bring with them their home planets influences and evils \nREQ : 1000", label: "Request Colonists", target: target});
 colonist_button.bind_method = function() {
     var doner = array_random_element(obj_star_select.potential_donors);
     new_colony_fleet(doner[0], doner[1], target.id, obj_controller.selecting_planet, "bolster_population");

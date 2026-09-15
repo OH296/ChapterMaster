@@ -1002,32 +1002,13 @@ function scr_chapter_random(custom_or_random) {
     }
 
     //TODO add some funcky stuff for custom random complex livery
-    var struct_cols = {
-        main_color: main_color,
-        secondary_color: secondary_color,
-        main_trim: main_trim,
-        right_pauldron: right_pauldron,
-        left_pauldron: left_pauldron,
-        lens_color: lens_color,
-        weapon_color: weapon_color,
-    };
+    var struct_cols = obj_creation.livery_picker.spawn_struct_cols();
     obj_creation.livery_picker = new ColourItem(100, 230);
 
     obj_creation.livery_picker.scr_unit_draw_data(-1);
     obj_creation.company_liveries = array_create(11, variable_clone(obj_creation.livery_picker.map_colour));
 
-    obj_creation.livery_picker.scr_unit_draw_data();
-    obj_creation.livery_picker.set_default_armour(struct_cols, col_special);
-    obj_creation.full_liveries = array_create(21, variable_clone(obj_creation.livery_picker.map_colour));
-    obj_creation.full_liveries[eROLE.LIBRARIAN] = obj_creation.livery_picker.set_default_librarian(struct_cols);
-
-    obj_creation.full_liveries[eROLE.CHAPLAIN] = obj_creation.livery_picker.set_default_chaplain(struct_cols);
-
-    obj_creation.full_liveries[eROLE.APOTHECARY] = obj_creation.livery_picker.set_default_apothecary(struct_cols);
-
-    obj_creation.full_liveries[eROLE.TECHMARINE] = obj_creation.livery_picker.set_default_techmarines(struct_cols);
-    obj_creation.livery_picker.scr_unit_draw_data();
-    obj_creation.livery_picker.set_default_armour(struct_cols, col_special);
+    obj_creation.livery_picker.setup_full_liveries_array(struct_cols, col_special);
 
     obj_creation.livery_picker.map_colour = obj_creation.full_liveries[0];
     obj_creation.livery_picker.role_set = 0;

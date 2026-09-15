@@ -32,6 +32,7 @@ if ((menu == eMENU.RECLUSIAM) && (cooldown <= 0) && (penitorium > 0)) {
             if ((mouse_x >= xx + 1508) && (mouse_x < xx + 1567)) {
                 cooldown = 20;
                 var c = penit_co[qp], e = penit_id[qp];
+                var _unit = fetch_unit([c, e]);
                 _unit.god_status -= 10;
                 re = 1;
             }
@@ -174,7 +175,7 @@ if ((menu == eMENU.DIPLOMACY) && (diplomacy > 0) || ((diplomacy < -5) && (diplom
     }
 }
 // Diplomacy
-if ((zoomed == 0) && (cooldown <= 0) && (menu == eMENU.DIPLOMACY) && (diplomacy == 0)) {
+if (CHAOS_EMISSARY_ENABLED && (zoomed == 0) && (cooldown <= 0) && (menu == eMENU.DIPLOMACY) && (diplomacy == 0)) {
     xx += 55;
     yy -= 20;
     // Daemon emmissary

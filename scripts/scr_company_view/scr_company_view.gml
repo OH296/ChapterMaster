@@ -255,16 +255,16 @@ function other_manage_data() {
                 if (is_specialist(_squad_type, SPECIALISTS_HEADS)) {
                     n = 1;
                 }
-                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (_squad_type != ma_role[v]) && (_squad_type != "Venerable " + string(ma_role[v]))) {
+                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (_squad_type != ma_role[v])) {
                     n = 2;
                 }
                 if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
                     n = 0;
                 }
-                if ((_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (ma_role[v] == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role))) {
+                if (_squad_type == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                     n = 0;
                 }
-                if ((_squad_type == "Venerable " + string(obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) && (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role)) {
+                if (ma_role[v] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) {
                     n = 0;
                 }
                 if (_squad_loc[0] == eLOCATION_TYPES.SHIP) {
@@ -498,16 +498,39 @@ function company_manage_actions() {
         view_squad = false;
         unit_profile = false;
     }
+    var _change = false;
+    var _change_value = 0;
+
+    //TODO attatch these to OOP constructs
     // Previous company
-    if (point_and_click([xx + 424, yy + 80, xx + 496, yy + 128]) || (keyboard_check_pressed(ord(string("N"))) && allow_shortcuts)) {
-        var new_view = managing == 1 ? 15 : managing - 1;
-        switch_view_company(new_view);
+
+    var _back_check = keyboard_check_pressed(ord(string("N"))) && allow_shortcuts;
+    var _forward_check =  keyboard_check_pressed(ord(string("M"))) && allow_shortcuts;
+    if (point_and_click([xx + 424, yy + 80, xx + 496, yy + 128]) || _back_check) {
+        _change = true;
+        _change_value = -1;
     }
 
     // Next company
-    if (point_and_click([xx + 1105, yy + 80, xx + 1178, yy + 128]) || (keyboard_check_pressed(ord(string("M"))) && allow_shortcuts)) {
-        var new_view = managing == 15 ? 1 : managing + 1;
-        switch_view_company(new_view);
+    if (point_and_click([xx + 1105, yy + 80, xx + 1178, yy + 128]) || _forward_check) {
+        _change = true;
+        _change_value = 1;
+    }
+
+    if (_change){
+        var _new_view = managing + _change_value;
+        if (scr_has_adv_any(["Spiritual Healers","Tech-Cult Religion"])){
+            if (_new_view == 14){
+                _new_view += _change_value;
+            }
+        }
+        if (_new_view > 15){
+            _new_view = 1;
+        }
+        if (_new_view == 0){
+            _new_view = 15;
+        }
+        switch_view_company(_new_view);
     }
 }
 

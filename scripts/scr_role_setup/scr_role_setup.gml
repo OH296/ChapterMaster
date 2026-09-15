@@ -10,6 +10,20 @@ function role_data_set() {
     };
 }
 
+/// @param {String|Real} role1 role name or eROLE enum value to index into obj_ini.player_role_data
+/// @param {String|Real} role2 role name or eROLE enum value to index into obj_ini.player_role_data
+/// @returns {Bool} whether role1 and role2 refer to the same role
+function role_compare(role1, role2) {
+    var _r1_is_string = is_string(role1);
+    var _r2_is_string = is_string(role2);
+    if ((_r1_is_string && _r2_is_string) || (!_r1_is_string && !_r2_is_string)) {
+        return role1 == role2;
+    }
+    var _role1_name = _r1_is_string ? role1 : obj_ini.player_role_data[role1].role;
+    var _role2_name = _r2_is_string ? role2 : obj_ini.player_role_data[role2].role;
+    return _role1_name == _role2_name;
+}
+
 function setup_default_gears() {
     default_role_data = [];
     load_default_gear = function(_role_id, _role_name, _wep1, _wep2, _armour, _mobi, _gear) {
@@ -32,14 +46,24 @@ function setup_default_gears() {
     load_default_gear(eROLE.DREADNOUGHT, "Dreadnought", "Dreadnought Lightning Claw", "Twin Linked Lascannon", "Dreadnought", "", "");
     load_default_gear(eROLE.CHAMPION, "Champion", "Power Sword", STR_ANY_POWER_ARMOUR, STR_ANY_POWER_ARMOUR, "", "Combat Shield");
     load_default_gear(eROLE.TACTICAL, "Tactical", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.LIBRARIANASPIRANT, "Librarian Aspirant", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.APOTHECARYASPIRANT, "Apothecary Aspirant", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.CHAPLAINASPIRANT, "Chaplain Aspirant", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.TECHMARINEASPIRANT, "Techmarine Aspirant", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.DEVASTATOR, "Devastator", "", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.ASSAULT, "Assault", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "Jump Pack", "");
     load_default_gear(eROLE.ANCIENT, "Ancient", "Company Standard", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.SCOUT, "Scout", "Bolter", "Combat Knife", "Scout Armour", "", "");
     load_default_gear(eROLE.CHAPLAIN, "Chaplain", "Crozius Arcanum", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Rosarius");
+    load_default_gear(eROLE.MASTERCHAPLAIN, "Master of Sanctity", "Crozius Arcanum", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Rosarius");
     load_default_gear(eROLE.APOTHECARY, "Apothecary", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Narthecium");
+    load_default_gear(eROLE.MASTERAPOTHECARY, "Master of the Apothecarion", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Narthecium");
     load_default_gear(eROLE.TECHMARINE, "Techmarine", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
+    load_default_gear(eROLE.FORGEMASTER, "Forge Master", "Power Axe", "Bolt Pistol", "Artificer Armour", "Servo-arm", "");
     load_default_gear(eROLE.LIBRARIAN, "Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
+    load_default_gear(eROLE.CHIEFLIBRARIAN, "Chief Librarian", "Force Staff", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "Psychic Hood");
+    load_default_gear(eROLE.CODICIERY, "Codiciery", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
+    load_default_gear(eROLE.LEXICANUM, "Lexicanum", "Bolter", "Combat Knife", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.SERGEANT, "Sergeant", "Chainsword", "Bolt Pistol", STR_ANY_POWER_ARMOUR, "", "");
     load_default_gear(eROLE.VETERANSERGEANT, "Veteran Sergeant", "Chainsword", "Plasma Pistol", STR_ANY_POWER_ARMOUR, "", "");
 
@@ -51,6 +75,7 @@ function setup_default_gears() {
 
     return default_role_data;
 }
+
 
 function update_role_data_wth_defaults() {
     for (var i = 0; i < array_length(player_role_data); i++) {
@@ -83,7 +108,10 @@ function role_setup_objects() {
         style: "box",
         x1: 500,
         y1: 250,
-        tooltip: $"Specialist Distribution\nCheck if you wish for your Companies to be uniform and each contain {player_role_data[eROLE.ASSAULT].role}s and {player_role_data[eROLE.DEVASTATOR].role}s.",
+        tooltip: {
+            text: "Specialist Distribution\nCheck if you wish for your Companies to be uniform and each contain {0}s and {1}s.",
+            variables: [localize(player_role_data[eROLE.ASSAULT].role), localize(player_role_data[eROLE.DEVASTATOR].role)],
+        },
         active: (squad_distribution == 1 || squad_distribution == 3),
         clicked_check_default: true,
     });
@@ -93,7 +121,7 @@ function role_setup_objects() {
         style: "box",
         x1: 710,
         y1: 250,
-        tooltip: $"Scout Distribution\nCheck if you wish for Scouts to be distributed equally across your Battle Companies rather than concentrated in the 10th.",
+        tooltip: "Scout Distribution\nCheck if you wish for Scouts to be distributed equally across your Battle Companies rather than concentrated in the 10th.",
         active: (squad_distribution == 2 || squad_distribution == 3),
         clicked_check_default: true,
     });
@@ -103,19 +131,19 @@ function role_setup_objects() {
             str1: "On Planet",
             font: fnt_40k_12,
             style: "box",
-            tooltip: $"On Planet/nCheck to have your Astartes Start on your home planet.",
+            tooltip: "On Planet\nCheck to have your Astartes Start on your home planet.",
         },
         {
             str1: "Load to Ships",
             font: fnt_40k_12,
             style: "box",
-            tooltip: $"Load to Ships\nCheck to have your Astartes automatically loaded into ships when the game starts.",
+            tooltip: "Load to Ships\nCheck to have your Astartes automatically loaded into ships when the game starts.",
         },
         {
             str1: "Load (Sans Escorts)",
             font: fnt_40k_12,
             style: "box",
-            tooltip: $"Load (Sans Escorts)\nCheck to have your Astartes automatically loaded into ships, except for Escorts, when the game starts.",
+            tooltip: "Load (Sans Escorts)\nCheck to have your Astartes automatically loaded into ships, except for Escorts, when the game starts.",
         },
     ], "", {
         x1: 445,
@@ -131,7 +159,7 @@ function role_setup_objects() {
         style: "box",
         x1: 540,
         y1: 370,
-        tooltip: $"Distribute Scouts\nCheck to have your Scouts split across ships in the fleet.",
+        tooltip: "Distribute Scouts\nCheck to have your Scouts split across ships in the fleet.",
         active: load_to_ships[1],
         clicked_check_default: true,
     });
@@ -141,7 +169,7 @@ function role_setup_objects() {
         style: "box",
         x1: 690,
         y1: 370,
-        tooltip: $"Distribute Veterans\nCheck to have your Veterans split across the fleet.",
+        tooltip: "Distribute Veterans\nCheck to have your Veterans split across the fleet.",
         active: load_to_ships[2],
         clicked_check_default: true,
     });
@@ -170,12 +198,12 @@ function scr_distribution_and_advisor_setup() {
     }
     draw_set_halign(fa_left);
     if (scr_hit(540, 547, 800, 725)) {
-        tooltip = "Advisor Names";
-        tooltip2 = "The names of your main Advisors.  They provide useful information and reports on the divisions of your Chapter.";
+        tooltip = localize("Advisor Names");
+        tooltip2 = localize("The names of your main Advisors.  They provide useful information and reports on the divisions of your Chapter.");
     }
 
-    draw_text_transformed(444, 550, "Advisor Names", 0.6, 0.6, 0);
-    draw_set_font(fnt_40k_14b);
+    draw_text_transformed(444, 550, localize("Advisor Names"), 0.6, 0.6, 0);
+    draw_set_font(cjk_font(fnt_40k_14b));
     draw_set_halign(fa_right);
     var _apoths_allowed = player_role_data[eROLE.APOTHECARY].available_to_player;
     var _chaps_allowed = player_role_data[eROLE.CHAPLAIN].available_to_player;
@@ -183,19 +211,19 @@ function scr_distribution_and_advisor_setup() {
     var _techs_allowed = player_role_data[eROLE.TECHMARINE].available_to_player;
 
     if (_apoths_allowed) {
-        draw_text(594, 575, "Chief Apothecary: ");
+        draw_text(594, 575, localize("Chief Apothecary: "));
     }
-    if (player_role_data[eROLE.CHAPLAIN].available_to_player) {
-        draw_text(594, 597, "High Chaplain: ");
+    if (_chaps_allowed) {
+        draw_text(594, 597, localize("High Chaplain: "));
     }
-    if (player_role_data[eROLE.LIBRARIAN].available_to_player) {
-        draw_text(594, 619, "Chief Librarian: ");
+    if (_libs_allowed) {
+        draw_text(594, 619, localize("Chief Librarian: "));
     }
-    if (player_role_data[eROLE.TECHMARINE].available_to_player) {
-        draw_text(594, 641, "Forge Master: ");
+    if (_techs_allowed) {
+        draw_text(594, 641, localize("Forge Master: "));
     }
-    draw_text(594, 663, "Master of Recruits: ");
-    draw_text(594, 685, "Master of the Fleet: ");
+    draw_text(594, 663, localize("Master of Recruits: "));
+    draw_text(594, 685, localize("Master of the Fleet: "));
     draw_set_halign(fa_left);
 
     if (_apoths_allowed) {
@@ -470,13 +498,13 @@ function scr_distribution_and_advisor_setup() {
 function scr_role_setup() {
     add_draw_return_values();
 
-    draw_set_font(fnt_40k_30b);
+    draw_set_font(cjk_font(fnt_40k_30b));
     draw_set_halign(fa_center);
     draw_set_alpha(1);
     draw_set_color(CM_GREEN_COLOR);
 
     roles_radio.current_selection = -1;
-    draw_text_color_simple(800, 80, "Roles", CM_GREEN_COLOR);
+    draw_text_color_simple(800, 80, localize("Roles"), CM_GREEN_COLOR);
     if (!instance_exists(obj_creation_popup)) {
         roles_radio.update({y1: 150});
         roles_radio.draw();
@@ -492,7 +520,7 @@ function scr_role_setup() {
     }
     draw_set_color(CM_GREEN_COLOR);
     draw_set_alpha(1);
-    draw_set_font(fnt_40k_30b);
+    draw_set_font(cjk_font(fnt_40k_30b));
 
     if (custom != eCHAPTER_TYPE.CUSTOM) {
         draw_set_alpha(0.5);

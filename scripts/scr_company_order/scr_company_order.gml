@@ -20,12 +20,25 @@ function company_length(company) {
     return array_length(obj_ini.TTRPG[company]);
 }
 
+function normalise_marine_numbers(company, start_index, length) {
+    for (var l = start_index; l < length; l++) {
+        obj_ini.TTRPG[company][l].marine_number = l;
+    }
+}
+
 function tally_marines() {
     obj_controller.command = 0;
     obj_controller.marines = 0;
     for (var co = 0; co <= obj_ini.companies; co++) {
-        for (var i = 0; i < company_length(co); i++) {
+        var _len = company_length(co);
+        for (var i = _len - 1; i >= 0; i--) {
             var _unit = fetch_unit([co, i]);
+            if (!is_struct(_unit)) {
+                array_delete(obj_ini.TTRPG[co], i, 1);
+                _len--;
+                normalise_marine_numbers(co, i, _len);
+                continue;
+            }
             if (_unit.base_group != "astartes") {
                 continue;
             }
@@ -138,25 +151,25 @@ function role_hierarchy() {
     var _roles = active_roles();
     var hierarchy = [
         _roles[eROLE.CHAPTERMASTER],
-        "Forge Master",
-        "Master of Sanctity",
-        "Master of the Apothecarion",
-        string("Chief {0}", _roles[eROLE.LIBRARIAN]),
+        _roles[eROLE.FORGEMASTER],
+        _roles[eROLE.MASTERCHAPLAIN],
+        _roles[eROLE.MASTERAPOTHECARY],
+        _roles[eROLE.CHIEFLIBRARIAN],
         _roles[eROLE.HONOURGUARD],
         _roles[eROLE.CAPTAIN],
         _roles[eROLE.CHAPLAIN],
-        string("{0} Aspirant", _roles[eROLE.CHAPLAIN]),
+        _roles[eROLE.CHAPLAINASPIRANT],
         "Death Company",
         _roles[eROLE.TECHMARINE],
-        string("{0} Aspirant", _roles[eROLE.TECHMARINE]),
+        _roles[eROLE.TECHMARINEASPIRANT],
         "Techpriest",
         _roles[eROLE.APOTHECARY],
-        string("{0} Aspirant", _roles[eROLE.APOTHECARY]),
+        _roles[eROLE.APOTHECARYASPIRANT],
         "Sister Hospitaler",
         _roles[eROLE.LIBRARIAN],
-        "Codiciery",
-        "Lexicanum",
-        string("{0} Aspirant", _roles[eROLE.LIBRARIAN]),
+        _roles[eROLE.CODICIERY],
+        _roles[eROLE.LEXICANUM],
+        _roles[eROLE.LIBRARIANASPIRANT],
         _roles[eROLE.ANCIENT],
         _roles[eROLE.CHAMPION],
         "Death Company",
@@ -168,7 +181,6 @@ function role_hierarchy() {
         _roles[eROLE.ASSAULT],
         _roles[eROLE.DEVASTATOR],
         _roles[eROLE.SCOUT],
-        $"Venerable {_roles[eROLE.DREADNOUGHT]}",
         _roles[eROLE.DREADNOUGHT],
         "Skitarii",
         "Crusader",

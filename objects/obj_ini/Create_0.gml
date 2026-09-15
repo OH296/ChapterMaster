@@ -160,7 +160,7 @@ serialize = function() {
 
         for (var s = 0; s < array_length(_squad.members); s++) {
             if (is_struct(_squad.members[s])) {
-                _squad.members[i] = _squad.members[s].uid;
+                _squad.members[s] = _squad.members[s].uid;
             }
         }
     }
@@ -176,7 +176,7 @@ serialize = function() {
         squad_types,
         artifact_list: _artifact_list,
         marine_structs: _marines,
-        squad_structs: squads,
+        squad_structs: _squad_copies,
         equipment,
         gene_slaves, // squads // marines,
         chapter_data,
@@ -235,6 +235,7 @@ deserialize = function(save_data) {
         "artifact_list",
         "sector_handler",
         "company_lengths",
+        "player_role_data",
     ]; // skip automatic setting of certain vars, handle explicitly later
 
     // Automatic var setting
@@ -264,8 +265,9 @@ deserialize = function(save_data) {
     if (struct_exists(save_data, "full_liveries")) {
         variable_instance_set(id, "full_liveries", save_data.full_liveries);
     } else {
-        variable_instance_set(id, "full_liveries", array_create(21, variable_clone(livery_picker.map_colour)));
+        variable_instance_set(id, "full_liveries", array_create(eROLE.MARINEEND, variable_clone(livery_picker.map_colour)));
     }
+    livery_picker.populate_truncated_liveries_array();
 
     livery_picker.scr_unit_draw_data(-1);
     if (struct_exists(save_data, "company_liveries")) {
@@ -314,17 +316,12 @@ deserialize = function(save_data) {
         var _squad_count = array_length(_squad_uids);
         for (var i = 0; i < _squad_count; i++) {
             var _squad_uid = _squad_uids[i];
+            var _data = _squad_structs[$ _squad_uid];
             var _squad = new UnitSquad();
-            _squad.load_json_data(_squad_structs[$ _squad_uid]);
-            squads[$ _squad_uid] = _squad;
-            for (var s = 0; s < array_length(_squad.members); s++) {
-                _squad.members[s] = fetch_unit_uid(_squad.members[s]);
-            }
-
-            for (var s = array_length(_squad.members) - 1; s >= 0; s--) {
-                if (!is_struct(_squad.members[s])) {
-                    array_delete(_squad.members, s, 1);
-                }
+            try {
+                _squad.load(_data);
+            } catch (e) {
+                LOGGER.exception("Failed to load squad " + _squad_uid, e);
             }
         }
     }
@@ -350,6 +347,24 @@ deserialize = function(save_data) {
         with (obj_ini.sector_handler) {
             move_data_to_current_scope(save_data.sector_handler);
         }
+    }
+
+    if (struct_exists(save_data, "player_role_data")) {
+        var _defaults = setup_default_gears();
+        var _save = save_data.player_role_data;
+        for (var i = 0; i < array_length(_save); i++) {
+            if (!is_struct(_save[i])) {
+                continue;
+            }
+            var _required_names = global.role_data_keys;
+            for (var k = 0; k < array_length(_required_names); k++) {
+                var _name = _required_names[k];
+                if (struct_exists(_save[i], _name)) {
+                    _defaults[i][$ _name] = _save[i][$ _name];
+                }
+            }
+        }
+        player_role_data = _defaults;
     }
 };
 

@@ -13,23 +13,30 @@ function scr_management(argument0) {
         var pane;
         var _command_company = collect_company(0);
 
-        pane = instance_create(475, 180 - 48, obj_managment_panel);
-        pane.company = 0;
-        pane.manage = 14;
-        pane.header = 2;
-        pane.title = "RECLUSIUM";
+        var _spirit_healers = scr_has_adv("Spiritual Healers");
+        var _tech_chaplains = scr_has_adv("Tech-Cult Religion");
+        if (!_spirit_healers && !_tech_chaplains){
+            pane = instance_create(475, 180 - 48, obj_managment_panel);
+            pane.company = 0;
+            pane.manage = 14;
+            pane.header = 2;
+            pane.title = "RECLUSIUM";
 
-        var _reclusium_units = _command_company.get_from({group: [SPECIALISTS_CHAPLAINS, true, true]}, true, true);
+            var _reclusium_units = _command_company.get_from({group: [SPECIALISTS_CHAPLAINS, true, true]}, true, true);
 
-        _reclusium_units = _reclusium_units.index_roles();
+            _reclusium_units = _reclusium_units.index_roles();
 
-        pane.line = array_join(pane.line, _reclusium_units.create_plural_strings_array());
+            pane.line = array_join(pane.line, _reclusium_units.create_plural_strings_array());
+        }
 
         pane = instance_create(275, 180 - 48, obj_managment_panel);
         pane.company = 0;
         pane.manage = 12;
         pane.header = 2;
         pane.title = "APOTHECARIUM";
+        if (_spirit_healers){
+            pane.title = "APOTHECARIUM/RECLUSIUM"
+        }
 
         var _apothecary_units = _command_company.get_from({group: [SPECIALISTS_APOTHECARIES, true, true]}, true, true);
 
@@ -42,6 +49,9 @@ function scr_management(argument0) {
         pane.manage = 15;
         pane.header = 2;
         pane.title = "ARMOURY";
+        if (_tech_chaplains){
+            pane.title = "ARMOURY/RECLUSIUM"
+        }
         var _armoury_units = _command_company.get_from({group: [SPECIALISTS_TECHS, true, true]}, true, true);
 
         _armoury_units = _armoury_units.index_roles();

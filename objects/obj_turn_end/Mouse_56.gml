@@ -83,11 +83,8 @@ if (!instance_exists(obj_saveload) && !instance_exists(obj_popup) && !instance_e
 
             add_fleet_ships_to_combat(battle_pobject[current_battle], _battle_instance);
 
-            instance_deactivate_all(true);
-            instance_activate_object(obj_controller);
-            instance_activate_object(obj_ini);
+            instance_deactivate_all_safe();
             instance_activate_object(_battle_instance);
-            instance_activate_object(obj_cursor);
         }
     }
 
@@ -111,9 +108,7 @@ if (!instance_exists(obj_saveload) && !instance_exists(obj_popup) && !instance_e
 
             combating = 1;
 
-            instance_deactivate_all(true);
-            instance_activate_object(obj_controller);
-            instance_activate_object(obj_ini);
+            instance_deactivate_all_safe();
             instance_activate_object(battle_object[current_battle]);
 
             var _battle_obj = battle_object[current_battle];

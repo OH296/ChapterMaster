@@ -145,7 +145,6 @@ function ChapterData() constructor {
     custom_squads = {};
 
     custom_advisors = {};
-    scout_company_behaviour = 0;
     artifact = [];
     squad_builder = [];
     companies = {};
@@ -224,14 +223,14 @@ function scr_chapter_new(chapter_identifier) {
         var chapter_obj = new ChapterData();
         var successfully_loaded = chapter_obj.load_from_json(chapter_id);
         if (!successfully_loaded) {
-            var issue = $"No json file exists for chapter id {chapter_id} and name {chapter_identifier}";
+            var issue = localize("No json file exists for chapter id {0} and name {1}", [string(chapter_id), chapter_identifier]);
             // LOGGER.error(issue);
-            scr_popup("Error Loading Chapter", issue, "debug");
+            scr_popup(localize("Error Loading Chapter"), issue, "debug");
             return false;
         }
 
         global.chapter_creation_object = chapter_obj;
-        maxpoints = 150;
+        maxpoints = (is_real(chapter_obj.points) && chapter_obj.points >= 1) ? floor(chapter_obj.points) : 250;
     }
 
     #region Custom Chapter
@@ -241,13 +240,13 @@ function scr_chapter_new(chapter_identifier) {
         var chapter_obj = new ChapterData();
         var successfully_loaded = chapter_obj.load_from_json(chapter_identifier, true);
         if (!successfully_loaded) {
-            var issue = $"No json file exists for chapter id {chapter_identifier} and name {chapter_identifier}";
+            var issue = localize("No json file exists for chapter id {0} and name {1}", [string(chapter_identifier), chapter_identifier]);
             LOGGER.error(issue);
-            scr_popup("Error Loading Chapter", issue, "debug");
+            scr_popup(localize("Error Loading Chapter"), issue, "debug");
             return false;
         }
         global.chapter_creation_object = chapter_obj;
-        maxpoints = 100;
+        maxpoints = (is_real(chapter_obj.points) && chapter_obj.points >= 1) ? floor(chapter_obj.points) : 100;
     }
     #endregion
 
@@ -328,15 +327,7 @@ function scr_chapter_new(chapter_identifier) {
                     color_to_weapon = "";
                 }
             }
-            var struct_cols = {
-                main_color: main_color,
-                secondary_color: secondary_color,
-                main_trim: main_trim,
-                right_pauldron: right_pauldron,
-                left_pauldron: left_pauldron,
-                lens_color: lens_color,
-                weapon_color: weapon_color,
-            };
+            var _struct_cols = livery_picker.spawn_struct_cols();
             livery_picker = new ColourItem(100, 230);
             if (company_liveries == "") {
                 livery_picker.scr_unit_draw_data(-1);
@@ -356,30 +347,9 @@ function scr_chapter_new(chapter_identifier) {
             }
             livery_picker.scr_unit_draw_data();
             if (full_liveries == "") {
-                livery_picker.scr_unit_draw_data();
-                livery_picker.set_default_armour(struct_cols, col_special);
-                full_liveries = array_create(21, variable_clone(livery_picker.map_colour));
-                full_liveries[eROLE.LIBRARIAN] = livery_picker.set_default_librarian(struct_cols);
-
-                full_liveries[eROLE.CHAPLAIN] = livery_picker.set_default_chaplain(struct_cols);
-
-                full_liveries[eROLE.APOTHECARY] = livery_picker.set_default_apothecary(struct_cols);
-
-                full_liveries[eROLE.TECHMARINE] = livery_picker.set_default_techmarines(struct_cols);
-                livery_picker.scr_unit_draw_data();
-                livery_picker.set_default_armour(struct_cols, col_special);
+                livery_picker.setup_full_liveries_array(_struct_cols, col_special);
             } else {
-                if (array_length(full_liveries) != 21) {
-                    full_liveries = array_create(21, variable_clone(full_liveries[0]));
-                    struct_cols.left_pauldron = full_liveries[0].left_pauldron;
-                    full_liveries[eROLE.LIBRARIAN] = livery_picker.set_default_librarian(struct_cols);
-
-                    full_liveries[eROLE.CHAPLAIN] = livery_picker.set_default_chaplain(struct_cols);
-
-                    full_liveries[eROLE.APOTHECARY] = livery_picker.set_default_apothecary(struct_cols);
-
-                    full_liveries[eROLE.TECHMARINE] = livery_picker.set_default_techmarines(struct_cols);
-                }
+                livery_picker.populate_truncated_liveries_array(_struct_cols, col_special);
             }
             livery_picker.map_colour = full_liveries[0];
             livery_picker.role_set = 0;
@@ -409,10 +379,6 @@ function scr_chapter_new(chapter_identifier) {
             var _legacy_specialists = struct_exists(chapter_object, "equal_specialists") ? chapter_object.equal_specialists : 0;
             var _legacy_scouts = struct_exists(chapter_object, "equal_scouts") ? chapter_object.equal_scouts : 0;
             squad_distribution = (_legacy_specialists ? 1 : 0) + (_legacy_scouts ? 2 : 0);
-        }
-
-        if (struct_exists(chapter_object, "scout_company_behaviour")) {
-            scout_company_behaviour = chapter_object.scout_company_behaviour;
         }
 
         mutations = 0;

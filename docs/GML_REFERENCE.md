@@ -17,7 +17,7 @@ GameMaker Language (GML) is syntactically similar to JavaScript ES3 but has sign
 - [Constructors](#constructors)
 - [Methods and Binding](#methods-and-binding)
 - [Data Structures and Accessors](#data-structures-and-accessors)
-- [Constants and Macros](#constants-and-macros)
+- [Garbage Collection and Object Lifetime](#garbage-collection-and-object-lifetime)
 - [Built-in Functions List](#built-in-functions-list)
 - [Keywords List](#keywords-list)
 
@@ -39,6 +39,7 @@ GameMaker Language (GML) is syntactically similar to JavaScript ES3 but has sign
 | `class` | `function ... constructor` + `new` |
 | `var`, `let`, `const` | `var` only |
 | Block scoping with `let`/`const` | Function-level only |
+| closures: inner functions capture enclosing locals | no closures - a method captures only `self`, never enclosing locals (see [Methods and Binding](#methods-and-binding)) |
 | No preprocessor | `#macro` for compile-time constants |
 | `a.length`, `s.length` | `array_length(a)`, `string_length(s)` |
 | `obj["key"]` | `struct[$ "key"]` |
@@ -70,8 +71,8 @@ Objects in GameMaker are **blueprints** (similar to JavaScript classes) from whi
   - `Step` - runs every frame (like an `update()` loop).
   - `Draw` - runs every frame when the instance is visible (like a `render()` method).
   - `Alarm` - timed callbacks, set with `alarm[0] = steps;`.
-  - Collision events, Input events, etc. - triggered by engine‑detected interactions.
-- **Built‑in Instance Variables** - every Object comes with a rich set of default fields (e.g., `x`, `y`, `speed`, `direction`, `image_index`, `visible`, `solid`). These are analogous to predefined properties on a class that the engine uses for movement, rendering, and collision.
+  - Collision events, Input events, etc. - triggered by engine-detected interactions.
+- **Built-in Instance Variables** - every Object comes with a rich set of default fields (e.g., `x`, `y`, `speed`, `direction`, `image_index`, `visible`, `solid`). These are analogous to predefined properties on a class that the engine uses for movement, rendering, and collision.
 - **Inheritance** - Objects can have a **Parent** Object. A child inherits all events and instance variables from its parent, and can override them by defining its own events. The child's events can call the parent's version with `event_inherited()`.
 
 ---
@@ -161,6 +162,7 @@ GML has three primary runtime scopes. At runtime, variable names are resolved in
 
 - Bound to the current function body or event.
 - Control-flow blocks (`if`, `for`, `switch`, `try`) do **not** create a new local scope.
+- Methods created inside a function do **not** inherit its locals - GML has no closures (see [Methods and Binding](#methods-and-binding)).
 
 ### Instance Scope
 
@@ -222,15 +224,29 @@ While scope defines *where* a variable can be accessed, GML features distinct ca
 
 ### Constant
 
-- **Enums:** Named integer constants.
+**Enums:** Named integer constants. Values start at 0 and auto-increment.
+```gml
+enum COLORS {
+    DARK_RED,
+    BLUE,
+    GREEN
+}
+```
 
 ### Compile-Time
 
 Not true variables in the runtime memory sense, but named values resolved at compile-time. They are globally available and not tied to any struct.
 
-- **Macros:** Compile-time textual replacement. Do not use for arrays; each reference creates a new array instance.
 - **Asset IDs:** References to objects, sprites, sounds, etc. (e.g., `obj_player`).
 - **Function identifiers:** The names of globally hoisted script functions.
+- **Macros:** Compile-time textual replacement.
+  - **Do not** use for arrays; each reference creates a new array instance.
+  - **Do not** add `=` during assignment, or `;` at the end.
+  - Can span lines with trailing `\`.
+```gml
+#macro SFX_CLICK "click_sound.wav"
+#macro MAX_HP 100
+```
 
 ---
 
@@ -340,6 +356,21 @@ var _bound = method(_context, _unbound_fn);
 // _bound() will return "Cassius"
 ```
 
+> [!WARNING]
+> **No local-scope closures.**
+> Unlike JavaScript, a method does NOT capture the local variables of the function it was created in. When the method runs later, name resolution starts at its own locals, then its bound context (`self`), then globals and built-ins. Reading an outer local from inside a callback fails (or worse, resolves to a same-named variable in the method's own scope chain) - typically a "variable not set" error.
+>
+> Carry the values on a context struct and bind with `method()`:
+> ```gml
+> function fetch_report(_error) {
+>     var _ctx = { error: _error };
+>     var _req = new Request();
+>     _req.setCallback(method(_ctx, function(_result, _request) {
+>         process(self.error, _result); // self.error works, _error does NOT
+>     }));
+> }
+> ```
+
 **Quirks of `method()` and Static Structs:**
 When using explicit binding via `method()`, there are specific rules regarding static structs:
 - Methods share the **static struct** of the original function they were created from. Chaining `method()` on a method still shares the original function's static struct.
@@ -351,6 +382,9 @@ When using explicit binding via `method()`, there are specific rules regarding s
 
 ## Data Structures and Accessors
 
+> [!NOTE]
+> No native properties (like `.length`), use built-in functions.
+
 ### Arrays
 
 ```gml
@@ -360,9 +394,8 @@ _arr[1] = 35;
 array_push(_arr, 40);   // Push to end
 ```
 
-No `.length` property - use `array_length(_arr)`.
-
-**Copy on Write:** This project has `option_copy_on_write_enabled: true`. When an array is passed into a function, modifying it inside the function creates a temporary copy unless the `@` accessor is used:
+> [!IMPORTANT]
+> **Copy on Write:** This project has `option_copy_on_write_enabled: true`. When an array is passed into a function, modifying it inside the function creates a temporary copy unless the `@` accessor is used:
 ```gml
 function modify(_arr) {
     _arr[@ 1] = 200;    // Bypasses CoW, modifies original
@@ -381,49 +414,61 @@ _s[$ "name"];         // Struct accessor (bracket with $)
 
 ### Legacy DS Structures
 
-| Type | Accessor | Creation |
-|---|---|---|
-| `ds_list` | `[\| index]` | `ds_list_create()` |
-| `ds_map` | `[? key]` | `ds_map_create()` |
-| `ds_grid` | `[# x, y]` | `ds_grid_create(w, h)` |
-| `ds_stack` | Built-in functions | `ds_stack_create()` |
-| `ds_queue` | Built-in functions | `ds_queue_create()` |
-| `ds_priority` | Built-in functions | `ds_priority_create()` |
+> [!WARNING]
+> DS structures don't have native garbage-collection, and must be manually destroyed with `ds_destroy()` or they leak memory. As such, GML documentation recommends arrays and structs instead of `ds_list`,  `ds_map` and `ds_grid`, where possible.
 
-DS structures must be manually destroyed with `ds_destroy()` or they leak memory. GML documentation recommends arrays and structs instead, where possible.
+| Type | Accessor | Description |
+|---|---|---|
+| `ds_list` | `[\| index]` | Ordered collection of values, accessed by numeric index (old-style array). |
+| `ds_map` | `[? key]` | Key-value pairs (dictionary / hash map). An important quirk: unlike structs, the key isn't limited to strings and can be of any type, including a struct. |
+| `ds_grid` | `[# x, y]` | 2D grid of values, accessed by column and row coordinates. |
+| `ds_stack` | Built-in functions | LIFO (last in, first out) collection; push and pop. |
+| `ds_queue` | Built-in functions | FIFO (first in, first out) collection; enqueue and dequeue. |
+| `ds_priority` | Built-in functions | Collection of prioritized values, popped in priority order. |
 
 ---
 
-## Constants and Macros
+## Garbage Collection and Object Lifetime
 
-### Enums
+GML features automatic garbage collection (GC) for structs and instances. An object becomes eligible for garbage collection when there are no **strong references** remaining to it. A strong reference is any variable that directly holds the object (e.g., `my_instance = instance_create(...)`).
 
+### Weak References: `weak_ref_create`
+
+To hold a reference to an object **without** preventing its garbage collection, use `weak_ref_create`. This returns a special **weak reference struct**.
+
+**Key Behavior:**
+- The weak reference struct contains a `ref` variable. Accessing it yields the **strong reference** to the original object if it still exists, or `undefined` if it has been garbage collected.
+- Use `instanceof()` to identify a weak reference (`"weakref"`) versus a strong reference (`"struct"` or a constructor name).
+- **`weak_ref_alive`** can be used to check if the tracked object is still alive.
+
+**Example:**
 ```gml
-enum COLORS {
-    DARK_RED,
-    BLUE,
-    GREEN
+// Create a weak reference to an inventory struct
+inventory_ref = weak_ref_create(inventory); // Returns a weak reference struct
+
+// ... later, in another script or frame ...
+if (weak_ref_alive(inventory_ref)) {
+    // Safe to use the strong reference stored in .ref
+    show_debug_message($"Items: {array_length(inventory_ref.ref.items)}");
+} else {
+    show_debug_message("Inventory has been destroyed.");
 }
 ```
 
-Values start at 0 and auto-increment.
+### Common Pitfalls & Best Practices
 
-### Macros
-
-```gml
-#macro SFX_CLICK "click_sound.wav"
-#macro MAX_HP 100
-```
-
-- Compile-time textual replacement.
-- **Do not** use `#macro` for arrays - each reference creates a new array instance.
-- **Do not** add `=` during assignment, or `;` at the end.
+1. **Accidental Strong References**: Storing a direct reference in a long-lived structure (like `global`, `static`, or an array in a persistent object) will **prevent garbage collection** of that instance.
+2. **Checking Existence**: Always check for existence before using an instance reference, especially if it might have been destroyed since you last saw it.
+   - **For strong references**: Use `instance_exists(instance_id)`.
+   - **For weak references**: Use `weak_ref_alive(weak_ref)` or check `is_struct(weak_ref.ref)`.
+3. **Use Case - Event Listeners**: When a system (e.g., a UI element) subscribes to events from another system (e.g., a game manager), it should use a weak reference. This allows the UI element to be destroyed without leaving a dangling reference in the game manager's listener list.
 
 ---
 
 ## Built-in Functions List
 
-Primitives have no internal methods; use library functions instead.
+> [!NOTE]
+> Primitives have no internal methods; use library functions instead.
 
 ### Strings
 
@@ -489,4 +534,3 @@ var             while           with            xor
 ```
 
 - `#region` / `#endregion` create code-folding blocks in the IDE.
-- `#macro NAME value` - compile-time textual replacement. Can span lines with trailing `\`.

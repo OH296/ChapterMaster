@@ -187,7 +187,7 @@ function CompanyStruct(comp) constructor {
         }
     };
 
-    static draw_squad_unit_sprites = function() {
+    static draw_squad_unit_sprites = function(_cur_squad = undefined) {
         add_draw_return_values();
         var member_width = 0, member_height = 0;
         var x_mod = 0, y_mod = 0;
@@ -218,22 +218,37 @@ function CompanyStruct(comp) constructor {
         }
         var sprite_draw_delay = "none";
         var unit_sprite_coords = {};
-        var _cur_squad = grab_current_squad();
+        _cur_squad ??= grab_current_squad();
+        if (!is_struct(_cur_squad)) {
+            return;
+        }
+        var _member_count = array_length(_cur_squad.members);
         var _reset_surface = false;
-        var _member = _cur_squad.fetch_member(0);
-        if (array_length(squad_draw_surfaces) == 0 || (squad_draw_surfaces[0][0] != _member.uid)) {
+        var _member = _member_count > 0 ? _cur_squad.fetch_member(0) : undefined;
+        var _first_uid = is_struct(_member) ? _member.uid : undefined;
+        var _cache_len = array_length(squad_draw_surfaces);
+        var _first_changed = _first_uid != undefined && (_cache_len == 0 || squad_draw_surfaces[0][0] != _first_uid);
+        if (_cache_len != _member_count || _first_changed) {
             reset_squad_surface();
             _reset_surface = true;
         }
-        for (var i = 0; i < array_length(_cur_squad.members); i++) {
+        for (var i = 0; i < _member_count; i++) {
             _member = _cur_squad.fetch_member(i);
-
-            if (_reset_surface) {
-                array_push(squad_draw_surfaces, [_member.uid, _member.draw_unit_image()]);
+            if (_reset_surface || i >= array_length(squad_draw_surfaces)) {
+                if (is_struct(_member)) {
+                    array_push(squad_draw_surfaces, [_member.uid, _member.draw_unit_image()]);
+                } else {
+                    array_push(squad_draw_surfaces, [undefined, undefined]);
+                }
             }
-
             var _mem_draw_data = squad_draw_surfaces[i];
+            if (!is_array(_mem_draw_data) || !is_struct(_member)) {
+                continue;
+            }
             var cur_member_surface = _mem_draw_data[1];
+            if (!is_struct(cur_member_surface)) {
+                continue;
+            }
             if (_member.name() == "") {
                 continue;
             }
@@ -302,7 +317,7 @@ function CompanyStruct(comp) constructor {
         var _squad_sys = squad_loc.system;
         var _cur_squad = grab_current_squad();
         if (_cur_squad.assignment == "none") {
-            draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 125, $"Squad has no current assignments", 1, 1, 0);
+            draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 125, localize("Squad has no current assignments"), 1, 1, 0);
 
             var send_on_mission = false, mission_type;
             if (squad_loc.same_system && (_squad_sys != "Warp" && _squad_sys != "Lost")) {
@@ -328,8 +343,8 @@ function CompanyStruct(comp) constructor {
                 return;
             }
             var cur_assignment = _cur_squad.assignment;
-            draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 125, $"Assignment : {cur_assignment.type}", 1, 1, 0);
-            var tooltip_text = "Cancel Assignment";
+            draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 125, localize("Assignment : {0}", [localize(cur_assignment.type)]), 1, 1, 0);
+            var tooltip_text = localize("Cancel Assignment");
             var cancel_but = draw_unit_buttons([xx + bound_width[0] + 5, yy + bound_height[0] + 150], tooltip_text, [1, 1], c_red,,,, true);
             if (point_and_click(cancel_but) || keyboard_check_pressed(ord("C"))) {
                 var cancel_system = noone;
@@ -353,7 +368,7 @@ function CompanyStruct(comp) constructor {
             }
             bound_height[0] += 180;
             if (cur_assignment.type == "garrison") {
-                var garrison_but = draw_unit_buttons([cancel_but[2] + 10, cancel_but[1]], "View Garrison", [1, 1], c_red,,,, true);
+                var garrison_but = draw_unit_buttons([cancel_but[2] + 10, cancel_but[1]], localize("View Garrison"), [1, 1], c_red,,,, true);
                 if (point_and_click(garrison_but)) {
                     var garrrison_star = find_star_by_name(cur_assignment.location);
                     obj_controller.view_squad = false;
@@ -551,12 +566,12 @@ function CompanyStruct(comp) constructor {
         //should be moved elsewhere for efficiency
         var _squad_leader = _cur_squad.determine_leader();
         if (is_struct(_squad_leader)) {
-            var leader_text = $"Squad Leader : {_squad_leader.name_role()}";
+            var leader_text = localize("Squad Leader : {0}", [localized_name_role(_squad_leader)]);
             draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 50, leader_text, 1, 1, 0);
         }
         squad_loc = _cur_squad.squad_loci();
-        draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 75, $"Squad Members : {_cur_squad.life_members}", 1, 1, 0);
-        draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 100, $"Squad Location : {squad_loc.text}", 1, 1, 0);
+        draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 75, localize("Squad Members : {0}", [_cur_squad.life_members]), 1, 1, 0);
+        draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0] + 100, localize("Squad Location : {0}", [squad_loc.text]), 1, 1, 0);
 
         if (!squad_selection_mode()) {
             draw_squad_assignment_options();
@@ -588,13 +603,13 @@ function CompanyStruct(comp) constructor {
         previous_squad_button.keystroke = press_exclusive(vk_left);
         next_squad_button.keystroke = press_exclusive(vk_tab);
         //TODO compartmentalise drop down option logic
-        var deploy_text = "Squad will deploy in the";
+        var deploy_text = localize("Squad will deploy in the");
         if (_cur_squad.formation_place != "") {
-            //draw_set_font(fnt_40k_14b)
+            //draw_set_font(cjk_font(fnt_40k_14b))
             draw_text_transformed(xx + bound_width[0] + 5, yy + bound_height[0], deploy_text, 1, 1, 0);
             button = draw_unit_buttons([xx + bound_width[0] + 5 + string_width(deploy_text), yy + bound_height[0] - 2], _cur_squad.formation_place, [1, 1], c_green,,,, true);
             draw_set_color(c_red);
-            draw_text_transformed(xx + bound_width[0] + 5 + string_width(deploy_text) + string_width(_cur_squad.formation_place) + 9, yy + bound_height[0], "column", 1, 1, 0);
+            draw_text_transformed(xx + bound_width[0] + 5 + string_width(deploy_text) + string_width(_cur_squad.formation_place) + 9, yy + bound_height[0], localize("column"), 1, 1, 0);
             draw_set_color(c_gray);
             if (array_length(_cur_squad.formation_options) > 1) {
                 if (scr_hit(button)) {
@@ -631,6 +646,6 @@ function CompanyStruct(comp) constructor {
         mass_equip_toggle.draw();
         _cur_squad.allow_bulk_swap = mass_equip_toggle.active;
 
-        draw_squad_unit_sprites();
+        draw_squad_unit_sprites(_cur_squad);
     };
 }

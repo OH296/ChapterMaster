@@ -21,10 +21,9 @@ if (battle_special == 3.1) {
     obj_ncombat.threat = 4;
     obj_ncombat.formation_set = 3;
 
-    instance_deactivate_all(true);
-    instance_activate_object(obj_ini);
-    instance_activate_object(obj_controller);
+    instance_deactivate_all_safe();
     instance_activate_object(obj_ncombat);
+    instance_activate_object(obj_pnunit);
 
     _roster = new Roster();
     with (_roster) {
@@ -38,6 +37,7 @@ if (battle_special == 3.1) {
             add_to_battle();
         } else {
             instance_destroy(obj_ncombat);
+            instance_destroy(obj_pnunit);
             instance_activate_all();
             delete _roster;
         }

@@ -1,4 +1,17 @@
-//TODO make enum to store menu area codes
+/// @description Returns the active game controller either obj_controller or obj_creation
+/// @returns {Id.Object}
+function active_game_controller(){
+    return instance_exists(obj_creation) ? obj_creation : obj_controller;
+}
+
+/// @description Returns the active game ini obj either obj_ini or obj_creation
+/// @returns {Id.Instance}
+function active_game_ini(){
+    return instance_exists(obj_creation) ? obj_creation : obj_ini;
+}
+
+/// @description Cleans up the current game menu area to allow changing menus 
+/// @returns {Any}
 function scr_menu_clear_up(specific_area_function) {
     var spec_func = specific_area_function;
     with (obj_controller) {
@@ -43,6 +56,8 @@ function scr_menu_clear_up(specific_area_function) {
     }
 }
 
+/// @description handles in game area and menu changes
+/// @returns {bool}
 function scr_change_menu(wanted_menu, specific_area_function = undefined) {
     var continue_sequence = false;
     if (obj_controller.menu_lock) {
@@ -74,13 +89,14 @@ function scr_change_menu(wanted_menu, specific_area_function = undefined) {
     }
 }
 
+/// @desc Returns the controller to the main map state.
+/// @returns {Undefined}
 function main_map_defaults() {
     with (obj_controller) {
         menu = eMENU.DEFAULT;
         menu_lock = false;
         hide_banner = 0;
         location_viewer.update_garrison_log();
-        managing = 0;
         managing = 0;
         menu_adept = 0;
         view_squad = false;
@@ -89,6 +105,7 @@ function main_map_defaults() {
         hide_banner = 0;
         diplomacy = 0;
         audience = 0;
+        clear_diplo_choices();
         zoomed = 0;
     }
 }
@@ -205,9 +222,7 @@ function scr_toggle_apothecarion() {
             set_zoom_to_default();
             menu_adept = 0;
             hide_banner = 1;
-            if (scr_role_count("Master of the Apothecarion", "0") == 0) {
-                menu_adept = 1;
-            }
+            menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.APOTH));
             if (menu != eMENU.APOTHECARION) {
                 menu = eMENU.APOTHECARION;
 
@@ -223,14 +238,23 @@ function scr_toggle_reclu() {
             set_zoom_to_default();
             menu_adept = 0;
             hide_banner = 1;
-            if (scr_role_count("Master of Sanctity", "0") == 0) {
-                menu_adept = 1;
-            }
+            menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.CHAP));
             if (menu != eMENU.RECLUSIAM) {
+                var _active_roles = active_roles();
                 menu = eMENU.RECLUSIAM;
+                reclusiam_vars = {
+                    chapter_chaplains : collect_role_group([SPECIALISTS_CHAPLAINS, true, true], "", false, {}, true),
+                    spiritual_healers : scr_has_adv("Spiritual Healers"),
+                    tech_chaplains : scr_has_adv("Tech-Cult Religion")
+                }
 
-                temp[36] = string(scr_role_count(obj_ini.player_role_data[eROLE.CHAPLAIN].role, "field"));
-                temp[37] = string(scr_role_count(obj_ini.player_role_data[eROLE.CHAPLAIN].role, "home"));
+                if (reclusiam_vars.spiritual_healers) {
+                    reclusiam_vars.chaplain_role = _active_roles[eROLE.APOTHECARY];
+                } else if (reclusiam_vars.tech_chaplains) {
+                    reclusiam_vars.chaplain_role = _active_roles[eROLE.TECHMARINE];
+                } else {
+                    reclusiam_vars.chaplain_role = _active_roles[eROLE.CHAPLAIN];
+                }
                 penitorium = 0;
 
                 // Get list of jailed marines
@@ -258,14 +282,13 @@ function scr_toggle_lib() {
             var yy = camera_get_view_y(view_camera[0]);
             menu_adept = 0;
             hide_banner = 1;
-            if (scr_role_count("Chief " + string(obj_ini.player_role_data[eROLE.LIBRARIAN].role), "0") == 0) {
-                menu_adept = 1;
-            }
+            var _roles = active_roles();
+            menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.LIB));
             if (menu != eMENU.LIBRARIUM) {
                 menu = eMENU.LIBRARIUM;
-                temp[36] = scr_role_count(obj_ini.player_role_data[eROLE.LIBRARIAN].role, "");
-                temp[37] = scr_role_count("Codiciery", "");
-                temp[38] = scr_role_count("Lexicanum", "");
+                temp[36] = scr_role_count(_roles[eROLE.LIBRARIAN], "");
+                temp[37] = scr_role_count(_roles[eROLE.CODICIERY], "");
+                temp[38] = scr_role_count(_roles[eROLE.LEXICANUM], "");
                 artifact_equip = new ShutterButton();
                 artifact_gift = new ShutterButton();
                 artifact_destroy = new ShutterButton();
@@ -288,9 +311,7 @@ function scr_toggle_armamentarium() {
         with (obj_controller) {
             if (menu != eMENU.ARMAMENTARIUM) {
                 set_zoom_to_default();
-                if (scr_role_count("Forge Master", "0") == 0) {
-                    menu_adept = 1;
-                }
+                menu_adept = is_undefined(get_department_head(eCHAPTER_DEPARTMENTS.FORGE));
                 menu = eMENU.ARMAMENTARIUM;
                 hide_banner = 1;
                 armamentarium.refresh_catalog();

@@ -33,11 +33,12 @@ jobs:
           persist-credentials: false
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@v1.18.7
+        uses: anomalyco/opencode/github@v1.18.30
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_PERMISSION: '{ "external_directory": { "/home/runner/work/**": "allow" } }'
         with:
-          model: opencode/deepseek-v4-flash-free
-          variant: max
+          model: ${{ vars.OPENCODE_MAIN_MODEL }}
+          variant: xhigh
           share: false
           prompt: ${{ inputs.prompt || '' }}

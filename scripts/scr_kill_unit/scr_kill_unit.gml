@@ -1,11 +1,9 @@
 /// @self Asset.GMObject.obj_controller
 function scr_kill_unit() {
     try {
-        if (role() == "Forge Master") {
+        if (has_role(eROLE.FORGEMASTER)) {
             array_push(obj_ini.previous_forge_masters, name());
-        }
-
-        if (role_compare(self, eROLE.CHAPTERMASTER)) {
+        } else if (has_role(eROLE.CHAPTERMASTER)) {
             tek = "c";
             alarm[7] = 5;
             global.defeat = 1;
@@ -26,9 +24,7 @@ function scr_kill_unit() {
         }
         array_delete(obj_ini.TTRPG[company], marine_number, 1);
         var _len = company_length(company);
-        for (var i = marine_number; i < _len; i++) {
-            obj_ini.TTRPG[company][i].marine_number = i;
-        }
+        normalise_marine_numbers(company, marine_number, _len);
         var _is_astartes = base_group == "astartes";
         if (_is_astartes) {
             if (IsSpecialist()) {

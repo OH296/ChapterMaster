@@ -237,8 +237,6 @@ function scr_draw_unit_image(_background = false) {
             var unit_armour = armour();
             var unit_gear = gear();
             var unit_back = mobility_item();
-            var unit_specialization = eUNIT_SPECIALIZATION.NONE;
-            var unit_special_colours = 0;
             var skin_color = obj_creation ? 0 : obj_ini.skin_color;
             var armour_type = eARMOUR_TYPE.NORMAL;
             var armour_sprite = spr_weapon_blank;
@@ -246,61 +244,8 @@ function scr_draw_unit_image(_background = false) {
             var servo_arm = 0;
             var servo_harness = 0;
             var halo = 0;
-            var reverent_guardians = false;
             var body_part;
             static _body_parts = global.unit_body_parts;
-
-            // Chaplain
-            if (is_specialist(unit_role, SPECIALISTS_CHAPLAINS, true)) {
-                if (unit_chapter == "Iron Hands") {
-                    unit_specialization = eUNIT_SPECIALIZATION.IRONFATHER;
-                } else if (unit_chapter == "Space Wolves") {
-                    unit_specialization = eUNIT_SPECIALIZATION.WOLFPRIEST;
-                } else {
-                    unit_specialization = eUNIT_SPECIALIZATION.CHAPLAIN;
-                }
-            } else if (is_specialist(unit_role, SPECIALISTS_TECHS, true)) {
-                // Techmarine
-                if (unit_chapter == "Iron Hands") {
-                    unit_specialization = eUNIT_SPECIALIZATION.IRONFATHER;
-                } else {
-                    unit_specialization = eUNIT_SPECIALIZATION.TECHMARINE;
-                }
-            } else if (is_specialist(unit_role, SPECIALISTS_APOTHECARIES, true)) {
-                // Apothecary
-                if (unit_chapter == "Space Wolves") {
-                    unit_specialization = eUNIT_SPECIALIZATION.WOLFPRIEST;
-                } else {
-                    unit_specialization = eUNIT_SPECIALIZATION.APOTHECARY;
-                }
-            } else if (is_specialist(unit_role, SPECIALISTS_LIBRARIANS, true)) {
-                // Librarian
-                unit_specialization = eUNIT_SPECIALIZATION.LIBRARIAN;
-            } else if (unit_role == "Death Company") {
-                // Death Company
-                unit_specialization = eUNIT_SPECIALIZATION.DEATHCOMPANY;
-            }
-            // Dark Angels
-            if (unit_chapter == "Dark Angels") {
-                // Deathwing
-                if (company == 1) {
-                    unit_special_colours = eUNIT_SPECIAL_COLOURS.DEATHWING;
-                } else if (company == 2) {
-                    // Ravenwing
-                    unit_special_colours = eUNIT_SPECIAL_COLOURS.RAVENWING;
-                }
-            }
-            // Blood Angels gold
-            if ((unit_role == _role[eROLE.HONOURGUARD] || unit_role == _role[eROLE.CHAPTERMASTER]) && (unit_chapter == "Blood Angels")) {
-                unit_special_colours = eUNIT_SPECIAL_COLOURS.GOLD;
-            }
-            // Sets up the description for the equipement of current marine
-
-            if (scr_has_adv("Reverent Guardians")) {
-                if (array_contains([eUNIT_SPECIALIZATION.CHAPLAIN, eUNIT_SPECIALIZATION.WOLFPRIEST, eUNIT_SPECIALIZATION.LIBRARIAN], unit_specialization) || unit_role == _role[eROLE.CHAPTERMASTER]) {
-                    reverent_guardians = true;
-                }
-            }
 
             if (unit_back == "Servo-arm") {
                 servo_arm = 1;
@@ -474,7 +419,7 @@ function scr_draw_unit_image(_background = false) {
                 }
 
                 // Apothecary Details
-                if (unit_specialization == eUNIT_SPECIALIZATION.APOTHECARY) {
+                if (is_specialist(unit_role, SPECIALISTS_APOTHECARIES, true)) {
                     if (gear() == "Narthecium") {
                         if (armour_type == eARMOUR_TYPE.NORMAL) {
                             draw_sprite(spr_narthecium_2, 0, x_surface_offset + 66, y_surface_offset + 5);

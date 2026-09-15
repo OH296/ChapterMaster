@@ -20,8 +20,8 @@ function hunt_player_serfs(planet, system) {
 function radical_inquisitor_mission_ship_arrival() {
     //TODO make a centralised player_fleet present method
     var _p_fleet = instance_nearest(x, y, obj_p_fleet);
-    var _intercept_fleet = -1;
-    if (point_distance(x, y, _p_fleet.x, _p_fleet.y) < 10 && instance_exists(_p_fleet.orbiting)) {
+    var _intercept_fleet = noone;
+    if (instance_exists(_p_fleet) && point_distance(x, y, _p_fleet.x, _p_fleet.y) < 10 && instance_exists(_p_fleet.orbiting)) {
         _intercept_fleet = _p_fleet;
     }
 
@@ -35,6 +35,7 @@ function radical_inquisitor_mission_ship_arrival() {
         alter_disposition(eFACTION.INQUISITION, -15);
         scr_popup("Inquisitor Mission Failed", "The radical Inquisitor has departed from the planned intercept coordinates.  They will now be nearly impossible to track- the mission is a failure.", "inquisition", "");
         scr_event_log("red", "Inquisition Mission Failed: The radical Inquisitor has departed from the planned intercept coordinates.");
+        resolve_radical_inquisitor_mission(_radical_inquisitor);
     } else {
         action = "";
         var _gender = string_gender_third_person(_radical_inquisitor.inquisitor_gender);
