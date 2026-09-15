@@ -265,9 +265,7 @@ function UnitQuickFindPanel() constructor {
             for (var i = 1; i <= planets; i++) {
                 var problems = p_problem[i];
                 for (var p = 0; p < array_length(problems); p++) {
-                    if (problems[p] == "") {
-                        continue;
-                    }
+                    var _problem = problems[p];
                     if (problem_has_key_and_value(i, p, "stage", "preliminary")) {
                         continue;
                     }
