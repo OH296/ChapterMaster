@@ -13,12 +13,12 @@ function ChapterMaster() constructor {
             exit;
         }
         var _alive = true;
-        if (array_length(obj_ini.TTRPG[0] == 0)){
+        if (array_length(obj_ini.TTRPG[0]) == 0){
             _alive = false;
         }
 
         if (_alive){
-            var _unit = get_struct();
+            var _cm = get_struct();
             if (!is_struct(_cm) || !_cm.has_role(eROLE.CHAPTERMASTER)){
                 _alive = false;
             }
