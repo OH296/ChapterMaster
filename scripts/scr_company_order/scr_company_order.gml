@@ -20,7 +20,10 @@ function company_length(company) {
     return array_length(obj_ini.TTRPG[company]);
 }
 
-function normalise_marine_numbers(company, start_index, length) {
+function normalise_marine_numbers(company, start_index, length = -1) {
+    if (length == -1){
+        length = company_length(company);
+    }
     for (var l = start_index; l < length; l++) {
         obj_ini.TTRPG[company][l].marine_number = l;
     }
