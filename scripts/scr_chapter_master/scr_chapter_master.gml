@@ -7,6 +7,27 @@ function ChapterMaster() constructor {
     static get_struct = function() {
         return fetch_unit([0, 0]);
     };
+
+    static check_alive = function(){
+        if (alarm[7] != -1){
+            exit;
+        }
+        var _alive = true;
+        if (array_length(obj_ini.TTRPG[0] == 0)){
+            _alive = false;
+        }
+
+        if (_alive){
+            var _unit = get_struct();
+            if (!is_struct(_cm) || !_cm.has_role(eROLE.CHAPTERMASTER)){
+                _alive = false;
+            }
+        }
+
+        if (_alive){
+            alarm[7] = 15;
+        }
+    }
 }
 
 function cm_obj() {
