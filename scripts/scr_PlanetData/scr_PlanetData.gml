@@ -1611,8 +1611,9 @@ function PlanetData(_planet, _system) constructor {
         "Minor",
         "Baseline",
         "Enhanced",
-        "Widespread"
-    ]
+        "Widespread",
+        "Rampant",
+    ];
     static draw_planet_population_controls = function() {
         if (is_hulk) {
             return;
@@ -1638,6 +1639,10 @@ function PlanetData(_planet, _system) constructor {
 
         if (scr_has_disadv("Psyker Intolerant")){
             _psionic_string.tooltip = $"Due to your chapters hatred of Psykers a higher Psionic Factor within the population will generally slow recruitment as your {string_plural(obj_ini.player_role_data[eROLE.APOTHECARY].role, 2)} screen out even latently gifted recruits";
+        }
+
+        if (population_psionic == 0){
+            _psionic_string.tooltip = $"This planet will yield No useful Pyskers for whatever unknown reason it's population are more or less all psionically inert";
         }
 
         _psionic_string.draw();
