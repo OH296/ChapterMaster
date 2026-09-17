@@ -9,7 +9,7 @@ function ChapterMaster() constructor {
     };
 
     static check_alive = function(){
-        if (alarm[7] != -1){
+        if (obj_controller.alarm[7] != -1){
             exit;
         }
         var _alive = true;
@@ -24,8 +24,8 @@ function ChapterMaster() constructor {
             }
         }
 
-        if (_alive){
-            alarm[7] = 15;
+        if (!_alive){
+            obj_controller.alarm[7] = 15;
         }
     }
 }
