@@ -1,7 +1,15 @@
+/// @description Checks whether a struct contains no keys
+/// @param {struct} _struct - The struct to check
+/// @returns {bool} True if the struct contains no keys, otherwise false
 function struct_empty(_struct) {
     return array_length(variable_struct_get_names(_struct)) == 0;
 }
 
+/// @description Checks whether a struct contains a key with the specified value
+/// @param {struct} struct - The struct to check
+/// @param {string} key - The key to check
+/// @param {*} value - The value the key must contain
+/// @returns {bool} True if the key exists and contains the specified value, otherwise false
 function struct_has_value(struct, key, value) {
     if (!struct_exists(struct, key)) {
         return false;
@@ -10,16 +18,23 @@ function struct_has_value(struct, key, value) {
     return struct[$ key] == value;
 }
 
-function struct_exists_all(struct, values){
+/// @description Checks whether a struct contains all specified keys
+/// @param {struct} struct - The struct to check
+/// @param {array} values - An array of keys that must exist in the struct
+/// @returns {bool} True if all specified keys exist, otherwise false
+function struct_exists_all(struct, values) {
     var _array_len = array_length(values);
-    for (var i = 0; i < _array_len; i++){
-        if (!struct_exists(struct, values[i])){
+    for (var i = 0; i < _array_len; i++) {
+        if (!struct_exists(struct, values[i])) {
             return false;
         }
     }
     return true;
 }
 
+/// @description Moves all data from a struct into the current scope
+/// @param {struct} move_struct - The struct containing the data to move
+/// @param {bool} [overide] - Whether existing variables in the current scope should be overwritten
 function move_data_to_current_scope(move_struct, overide = true) {
     if (!is_struct(move_struct)) {
         LOGGER.debug(move_struct);

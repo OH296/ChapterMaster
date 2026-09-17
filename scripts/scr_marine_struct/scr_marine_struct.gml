@@ -1147,20 +1147,21 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         var _intolerant = scr_has_disadv("Psyker Intolerant");
         var _recruit_mod = 0;
 
-        var _from_recruitment = struct_exists_all(spawn_data ,["system", "planet"]);
+        var _from_recruitment = struct_exists(spawn_data, "recruit_data") && struct_exists_all(spawn_data.recruit_data ,["system", "planet"]);
 
-        var _roll_top  = 194;
+        var _roll_top  = 100;
 
         //A planet must have a P_psionic value of 2 or higher in order to recruit the most powerful pskyers
         //ergo only three fifths of planets have top tier psykers
         if (_from_recruitment){
-            var _sys = find_star_by_name(spawn_data.system);
-            var _planet = spawn_data.planet;
+            _roll_top  = 194;
+            var _sys = find_star_by_name(spawn_data.recruit_data.system);
+            var _planet = spawn_data.recruit_data.planet;
             if (instance_exists(_sys) && _planet > 0 && _planet <= _sys.planets){
-                var _recruit_mod = _sys.p_psionic[_planet] * 2;
-                if (_sys.p_psionic[planet] == 0){
+                _recruit_mod = _sys.p_psionic[_planet] * 2;
+                if (_sys.p_psionic[_planet] == 0){
                     _roll_top = 0;
-                    var _recruit_mod = 170;
+                    _recruit_mod = 170;
                 }
             }
         }
