@@ -67,10 +67,13 @@ p_operatives = array_create_advanced(_planet_array_size, []);
 p_feature = array_create_advanced(_planet_array_size, []);
 p_upgrades = array_create_advanced(_planet_array_size, []);
 p_influence = array_create_advanced(_planet_array_size, array_create(15, 0));
-p_problem = array_create_advanced(_planet_array_size, array_create(8, ""));
-p_problem_other_data = array_create_advanced(_planet_array_size, array_create_advanced(8, {}));
-p_timer = array_create_advanced(_planet_array_size, array_create(8, -1));
-
+p_problem = array_create_advanced(_planet_array_size, array_create(_planet_array_size, ""));
+p_problem_other_data = array_create_advanced(_planet_array_size, array_create_advanced(_planet_array_size, {}));
+p_timer = array_create_advanced(_planet_array_size, array_create(_planet_array_size, -1));
+p_psionic = [];
+for (var i = 0; i < _planet_array_size; i++){
+    p_psionic[i] = irandom(5);
+}
 system_datas = array_create(8, undefined);
 system_garrison = array_create(8, undefined);
 system_sabatours = array_create(8, undefined);

@@ -198,7 +198,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         move_data_to_current_scope(global.base_stats[$ class], true);
     }
 
-    var stats = [
+    var _stats = [
         "constitution",
         "strength",
         "luck",
@@ -212,21 +212,21 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         "ballistic_skill",
     ];
 
-    for (var stat_iter = 0; stat_iter < array_length(stats); stat_iter++) {
-        if (struct_exists(self, stats[stat_iter])) {
-            if (is_array(variable_struct_get(self, stats[stat_iter]))) {
-                var edit_stat = variable_struct_get(self, stats[stat_iter]);
+    for (var stat_iter = 0; stat_iter < array_length(_stats); stat_iter++) {
+        if (struct_exists(self, _stats[stat_iter])) {
+            if (is_array(variable_struct_get(self, _stats[stat_iter]))) {
+                var edit_stat = variable_struct_get(self, _stats[stat_iter]);
                 var stat_mod = floor(gauss(edit_stat[0], edit_stat[1]));
                 if (array_length(edit_stat) > 2) {
                     if (edit_stat[2] == "max") {
-                        variable_struct_set(self, stats[stat_iter], max(stat_mod, edit_stat[0]));
+                        variable_struct_set(self, _stats[stat_iter], max(stat_mod, edit_stat[0]));
                     } else if (edit_stat[2] == "min") {
-                        variable_struct_set(self, stats[stat_iter], min(stat_mod, edit_stat[0]));
+                        variable_struct_set(self, _stats[stat_iter], min(stat_mod, edit_stat[0]));
                     } else {
-                        variable_struct_set(self, stats[stat_iter], stat_mod);
+                        variable_struct_set(self, _stats[stat_iter], stat_mod);
                     }
                 } else {
-                    variable_struct_set(self, stats[stat_iter], stat_mod);
+                    variable_struct_set(self, _stats[stat_iter], stat_mod);
                 }
             }
         }
@@ -241,11 +241,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     }
 
     /*ey so i got this concept where basically take away luck, ballistic_skill and weapon_skill
-    there are 8 other stats each of which will have more attached aspects and game play elements
-    they effect as time goes on, so that means between the 8 other stats if you had a choice of two
+    there are 8 other _stats each of which will have more attached aspects and game play elements
+    they effect as time goes on, so that means between the 8 other _stats if you had a choice of two
     there are 64 (or 56 if you exclude double counts) variations of a choice of two, this means each
     chapter could have two "values" maybe in terms of recruitment maybe in terms of just general chapter stuff.
-    that could be chosen to give boostes to the other stats
+    that could be chosen to give boostes to the other _stats
     so as an example salamanders could have the chapter values as  */
 
     switch (base_group) {
@@ -670,12 +670,12 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
     };
 
     static stat_boosts = function(stat_boosters) {
-        var stats = global.stat_list;
+        var _stats = global.stat_list;
         var edits = struct_get_names(stat_boosters);
         var edit_stat, random_stat, stat_mod;
-        for (var stat_iter = 0; stat_iter < array_length(stats); stat_iter++) {
-            if (array_contains(edits, stats[stat_iter])) {
-                edit_stat = variable_struct_get(stat_boosters, stats[stat_iter]);
+        for (var stat_iter = 0; stat_iter < array_length(_stats); stat_iter++) {
+            if (array_contains(edits, _stats[stat_iter])) {
+                edit_stat = variable_struct_get(stat_boosters, _stats[stat_iter]);
                 if (is_array(edit_stat)) {
                     stat_mod = floor(gauss(edit_stat[0], edit_stat[1]));
                     if (array_length(edit_stat) > 2) {
@@ -688,11 +688,11 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
                 } else {
                     stat_mod = edit_stat;
                 }
-                if (stats[stat_iter] == "constitution") {
+                if (_stats[stat_iter] == "constitution") {
                     balance_value = hp() / max_health();
                 }
-                variable_struct_set(self, stats[stat_iter], (variable_struct_get(self, stats[stat_iter]) + stat_mod));
-                if (stats[stat_iter] == "constitution") {
+                variable_struct_set(self, _stats[stat_iter], (variable_struct_get(self, _stats[stat_iter]) + stat_mod));
+                if (_stats[stat_iter] == "constitution") {
                     update_health(max_health() * balance_value);
                 }
             }
@@ -1144,21 +1144,48 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
     static roll_psionics = function() {
         var _dice_count = 1;
-        var _psionics_roll = roll_dice_chapter(_dice_count, 100);
+        var _intolerant = scr_has_disadv("Psyker Intolerant");
+        var _recruit_mod = 0;
+
+        var _from_recruitment = struct_exists_all(spawn_data ,["system", "planet"]);
+
+        var _roll_top  = 196;
+
+        //A planet must have a P_psionic value of 2 or higher in order to recruit the most powerful pskyers
+        //ergo only three fifths of planets have top tier psykers
+        if (_from_recruitment){
+            var _sys = find_star_by_name(spawn_data.system);
+            var _planet = spawn_data.planet;
+            if (instance_exists(_sys)&& _planet > 0 & _planet <= _sys.planets){
+                var _recruit_mod = _sys.p_psionic[planet] * 2
+                if (_sys.p_psionic[planet] == 0){
+                    var _recruit_mod = -2;
+                }
+            }
+        }
+
+        _roll_top += _recruit_mod;
+
+        var _psionics_roll = roll_dice_chapter(_dice_count, _roll_top);
 
         if (scr_has_adv("Warp Touched")) {
             if (_psionics_roll < 170) {
-                var _second_roll = roll_dice_chapter(_dice_count, 100, "high");
+                var _second_roll = roll_dice_chapter(_dice_count, _roll_top, "high");
                 _psionics_roll = _second_roll > _psionics_roll ? _second_roll : _psionics_roll;
             }
-        } else if (scr_has_disadv("Psyker Intolerant")) {
+        } else if (_intolerant) {
             if (_psionics_roll >= 170) {
-                var _second_roll = roll_dice_chapter(_dice_count, 100, "low");
+                var _second_roll = roll_dice_chapter(_dice_count, _roll_top, "low");
                 _psionics_roll = _second_roll < _psionics_roll ? _second_roll : _psionics_roll;
             }
         }
 
-        if (_psionics_roll == 200) {
+        if (_from_recruitment){
+            if (_intolerant){
+                _psionics_roll = min(_psionics_roll, 17);
+            } 
+        }
+        if (_psionics_roll >= 200) {
             psionic = 12;
         } else if (_psionics_roll >= 199) {
             psionic = 11;

@@ -10,6 +10,16 @@ function struct_has_value(struct, key, value) {
     return struct[$ key] == value;
 }
 
+function struct_exists_all(struct, values){
+    var _array_len = array_length(values);
+    for (var i = 0; i < _array_len; i++){
+        if (!struct_exists(struct, values[i])){
+            return false;
+        }
+    }
+    return true;
+}
+
 function move_data_to_current_scope(move_struct, overide = true) {
     if (!is_struct(move_struct)) {
         LOGGER.debug(move_struct);

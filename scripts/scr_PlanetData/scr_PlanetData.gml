@@ -27,6 +27,7 @@ function PlanetData(_planet, _system) constructor {
         fortification_level = system.p_fortified[planet];
         star_station = system.p_station[planet];
         pdf_loss_reduction = 0;
+        population_psionic = system.p_psionic[planet];
 
         // Whether or not player forces are on the planet
         player_forces = system.p_player[planet];
@@ -1605,65 +1606,88 @@ function PlanetData(_planet, _system) constructor {
             exit;
         }
     };
-
+    static psionic_chart = [
+        "Inert",
+        "Minor",
+        "Baseline",
+        "Enhanced",
+        "Widespread"
+    ]
     static draw_planet_population_controls = function() {
-        if (!is_hulk) {
-            draw_set_color(c_gray);
-            var _gar_slate = obj_star_select.garrison_data_slate;
-            _gar_slate.sub_title = "";
-            _gar_slate.body_text = "";
-            _gar_slate.title = "";
-            var xx = _gar_slate.XX;
-            var yy = _gar_slate.YY;
-            var _half_way = _gar_slate.height / 2;
-            var spacing_x = 100;
-            var spacing_y = 65;
-            draw_set_halign(fa_left);
+        if (is_hulk) {
+            return;
+        }
+        draw_set_color(c_gray);
+        var _gar_slate = obj_star_select.garrison_data_slate;
+        _gar_slate.sub_title = "";
+        _gar_slate.body_text = "";
+        var xx = _gar_slate.XX;
+        var yy = _gar_slate.YY;
+        var _half_way = _gar_slate.height / 2;
+        var _spacing_x = 100;
+        var _spacing_y = 65;
+        draw_set_halign(fa_left);
 
-            var _imperium_status = obj_controller.faction_status[eFACTION.IMPERIUM];
-            if ((_imperium_status != "War" && current_owner <= 5) || (_imperium_status == "War")) {
-                var _col_button = obj_star_select.colonist_button;
+        var _psionic_string = obj_star_select.planet_psionic_rating;
+        _psionic_string.update({
+            x1 : xx + 35,
+            y1 : yy + 70,
+            text : $"Psionic Factor : {psionic_chart[population_psionic]}({population_psionic})",
+            tooltip : $"the general susceptibility of the population to be psionically gifted;\na higher psionic factor will yield more marines eligible for training as {string_plural(obj_ini.player_role_data[eROLE.LIBRARIAN].role, 2)}\nHigher factors will also on average produce more potent psykers",
+        });
 
-                _col_button.update({x1: xx + 35, y1: _half_way});
+        if (scr_has_disadv("Psyker Intolerant")){
+            _psionic_string.tooltip = $"Due to your chapters hatred of Psykers a higher Psionic Factor within the population will generally slow recruitment as your {string_plural(obj_ini.player_role_data[eROLE.APOTHECARY].role, 2)} screen out even latently gifted recruits";
+        }
 
-                _col_button.draw(array_length(obj_star_select.potential_donors));
+        _psionic_string.draw();
 
-                var _recruit_button = obj_star_select.recruiting_button;
+        var _draw_y = yy + _half_way;
 
-                _recruit_button.update({x1: xx + (spacing_x * 2) + 15, y1: _half_way, allow_click: true});
+        var _imperium_status = obj_controller.faction_status[eFACTION.IMPERIUM];
+        if !((_imperium_status != "War" && current_owner <= 5) || (_imperium_status == "War")) {
+            return;
+        }
+        var _col_button = obj_star_select.colonist_button;
 
-                _recruit_button.draw();
+        _col_button.update({x1: xx + 35, y1: _draw_y});
 
-                if (!has_feature(eP_FEATURES.RECRUITING_WORLD)) {
-                    return;
-                }
+        _col_button.draw(array_length(obj_star_select.potential_donors));
 
-                var _recruit_world = get_features(eP_FEATURES.RECRUITING_WORLD)[0];
-                var _recruit_string = localize("Abduct");
-                if ((_recruit_world.recruit_type == 0) && (owner_status() != "War" && owner_status() != "Antagonism" || player_disposition >= 50)) {
-                    _recruit_string = localize("Open: Voluntery");
-                } else if (_recruit_world.recruit_type == 0 && player_disposition <= 50) {
-                    _recruit_string = localize("Covert: Voluntery");
-                }
+        var _recruit_button = obj_star_select.recruiting_button;
 
-                draw_text(xx + (spacing_x * 3) + 35, _half_way - 20, _recruit_string);
+        _recruit_button.update({x1: xx + (_spacing_x * 2) + 15, y1: _draw_y, allow_click: true});
 
-                var _type_button = obj_star_select.recruitment_type_button;
-                _type_button.update({x1: xx + (spacing_x * 3) + 35, y1: _half_way, allow_click: true});
+        _recruit_button.draw();
 
-                _type_button.draw(true);
+        if (!has_feature(eP_FEATURES.RECRUITING_WORLD)) {
+            return;
+        }
 
-                draw_text(xx + (spacing_x * 3) - 15, _half_way + spacing_y - 20, localize("Req:{0}", [_recruit_world.recruit_cost * 2]));
+        var _recruit_world = get_features(eP_FEATURES.RECRUITING_WORLD)[0];
+        var _recruit_string = localize("Abduct");
+        if ((_recruit_world.recruit_type == 0) && (owner_status() != "War" && owner_status() != "Antagonism" || player_disposition >= 50)) {
+            _recruit_string = localize("Open: Voluntary");
+        } else if (_recruit_world.recruit_type == 0 && player_disposition <= 50) {
+            _recruit_string = localize("Covert: Voluntary");
+        }
 
-                if (_recruit_world.recruit_cost > 0) {
-                    obj_star_select.recruitment_costdown_button.update({x1: xx + (spacing_x * 2) + 35, y1: _half_way + spacing_y, allow_click: true});
-                    obj_star_select.recruitment_costdown_button.draw(true);
-                }
-                if (_recruit_world.recruit_cost < 5) {
-                    obj_star_select.recruitment_costup_button.update({x1: xx + (spacing_x * 3) + 35, y1: _half_way + spacing_y, allow_click: true});
-                    obj_star_select.recruitment_costup_button.draw(true);
-                }
-            }
+        draw_text(xx + (_spacing_x * 3) + 35, _draw_y - 20, _recruit_string);
+
+        var _type_button = obj_star_select.recruitment_type_button;
+        _type_button.update({x1: xx + (_spacing_x * 3) + 35, y1: _draw_y, allow_click: true});
+
+        _type_button.draw(true);
+
+        draw_text(xx + (_spacing_x * 3) - 15, _draw_y + _spacing_y - 20, localize("Req:{0}", [_recruit_world.recruit_cost * 2]));
+
+        if (_recruit_world.recruit_cost > 0) {
+            obj_star_select.recruitment_costdown_button.update({x1: xx + (_spacing_x * 2) + 35, y1: _draw_y + _spacing_y, allow_click: true});
+            obj_star_select.recruitment_costdown_button.draw(true);
+        }
+        if (_recruit_world.recruit_cost < 5) {
+            obj_star_select.recruitment_costup_button.update({x1: xx + (_spacing_x * 3) + 35, y1: _draw_y + _spacing_y, allow_click: true});
+            obj_star_select.recruitment_costup_button.draw(true);
         }
     };
 
