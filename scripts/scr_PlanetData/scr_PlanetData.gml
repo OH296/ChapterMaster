@@ -1642,7 +1642,7 @@ function PlanetData(_planet, _system) constructor {
         }
 
         if (population_psionic == 0){
-            _psionic_string.tooltip += $" This planet will yield No useful Pyskers for whatever unknown reason it's population are more or less all psionically inert";
+            _psionic_string.tooltip += $" This planet will yield no useful Psykers for whatever unknown reason its population is more or less all psionically inert.";
         }
 
         _psionic_string.draw();
