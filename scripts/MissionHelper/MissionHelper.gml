@@ -476,7 +476,7 @@ static per_turn_check_mech_raider = function() {
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
             p_data.remove_problem(p_id);
-            scr_mission_reward("mech_raider", id, planet);
+            scr_mission_reward("mech_raider", system, planet);
             timer = -1
             per_turn_checks = false;
             zero_timer_checks = false;
