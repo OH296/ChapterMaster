@@ -1156,8 +1156,8 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         if (_from_recruitment){
             var _sys = find_star_by_name(spawn_data.system);
             var _planet = spawn_data.planet;
-            if (instance_exists(_sys)&& _planet > 0 & _planet <= _sys.planets){
-                var _recruit_mod = _sys.p_psionic[planet] * 2
+            if (instance_exists(_sys) && _planet > 0 && _planet <= _sys.planets){
+                var _recruit_mod = _sys.p_psionic[_planet] * 2;
                 if (_sys.p_psionic[planet] == 0){
                     _roll_top = 0;
                     var _recruit_mod = 170;
