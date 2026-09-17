@@ -1650,7 +1650,7 @@ function PlanetData(_planet, _system) constructor {
         var _draw_y = yy + _half_way;
 
         var _imperium_status = obj_controller.faction_status[eFACTION.IMPERIUM];
-        if !((_imperium_status != "War" && current_owner <= 5) || (_imperium_status == "War")) {
+        if (!((_imperium_status != "War" && current_owner <= 5) || (_imperium_status == "War"))) {
             return;
         }
         var _col_button = obj_star_select.colonist_button;
