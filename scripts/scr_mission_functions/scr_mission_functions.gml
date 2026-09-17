@@ -17,7 +17,7 @@ global.planet_problem_keys = [
     "mech_raider",
     "mech_bionics",
     "mech_mars",
-    "mech_tomb1",
+    "mech_tomb",
     "fallen",
     "great_crusade",
     "harlequins",
@@ -49,7 +49,7 @@ function mission_name_key(mission) {
         "mech_raider": "Provide Land Raider to Mechanicus",
         "mech_bionics": "Provide Bionic Augmented marines to study",
         "mech_mars": "Send Techmarines to mars",
-        "mech_tomb1": "Explore Mechanicus Tomb",
+        "mech_tomb": "Explore Mechanicus Tomb",
         "fallen": "Find Chapter Fallen",
         "great_crusade": "Answer Crusade Muster Call",
         "harlequins": "Harlequin presence Report",
@@ -482,8 +482,9 @@ function has_problem_planet_with_time(planet, problem, star = noone) {
     var _had_problem = -1;
     if (star == noone) {
         for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            if (p_problem[planet][i] == problem) {
-                if (p_timer[planet][i] > 0) {
+            var _problem = p_problem[planet][i];
+            if (_problem.p_id == problem) {
+                if (_problem.timer > 0) {
                     _had_problem = i;
                 }
             }
@@ -587,18 +588,6 @@ function add_new_problem(planet, problem, timer, star = noone, other_data = {}) 
     return problem_added;
 }
 
-/// @self Asset.GMObject.obj_star
-function increment_mission_completion(mission_data) {
-    if (!struct_exists(mission_data, "completion")) {
-        mission_data.completion = 0;
-    }
-    mission_data.completion++;
-    if (!struct_exists(mission_data, "required_months") || mission_data.required_months <= 0) {
-        LOGGER.error("Invalid required_months in mission_data");
-        return 0;
-    }
-    return (mission_data.completion / mission_data.required_months) * 100;
-}
 
 //search problem data for a given and key and iff applicable value on that key
 //TODO increase filtering and search options

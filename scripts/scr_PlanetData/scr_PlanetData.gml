@@ -760,8 +760,6 @@ function PlanetData(_planet, _system) constructor {
     governor = system.p_governor[planet];
 
     problems = system.p_problem[planet];
-    problems_data = system.p_problem_other_data[planet];
-    problem_timers = system.p_timer[planet];
 
     static has_problem = function(problem) {
         return has_problem_planet(planet, problem, system);

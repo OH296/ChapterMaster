@@ -16,21 +16,56 @@ static refresh_p_data = function(){
 	p_data = system.get_planet_data(planet);
 }
 stage_id = "";
+if (struct_exists(data, "stage")){
+	stage_id = data.stage;
+}
 extend_timer_for_warp_storm = true;
+remove = false;
+zero_timer_checks = true;
+per_turn_checks = true;
 
 static basic_turn_end = function(){
 	refresh_p_data();
 	if (p_data.system.storm - 1 > 0){
 		timer--;
 	}
-	if (timer == 0){
+	if ((timer > -1) && per_turn_checks) {
+		var _func = undefined;
+		switch(p_id){
+			case "mech_raider";
+				_func = per_turn_check_raider_failed;
+				break;
+			case "mech_bionics":
+				_func = per_turn_check_mech_bionics;
+				break;
+			case "mech_bionics":
+				switch(stage_id):
+						break;
+					case "exploring":
+						_func = per_turn_check_mech_tomb2;
+						break;
+					case "awaiting_player";
+					default:
+						_func = per_turn_check_mech_tomb1;
+					break;
+		}
+		if (!is_undefined(_func)){
+            try {
+                _func();
+            } catch (_exception) {
+                ERROR_HANDLER.handle_exception(_exception);
+            }
+		}
+
+	}
+	if ((timer == 0) && zero_timer_checks) {
 		var _func = undefined;
 		switch(p_id){
 			case "hunt_beast":
 				_func = resolve_hunt_beast;
 				break;
 			case "train_forces":
-				_func = resolve_train_forces;
+				_func = complete_train_forces_mission;
 				break;
 			case "succession":
 				_func = resolve_succession;
@@ -50,6 +85,17 @@ static basic_turn_end = function(){
 			case "fallen":
 				_func = resolve_fallen;
 				break;
+			case "mech_raider";
+				_func = resolve_mech_raider_failed;
+				break;
+			case "mech_bionics":
+				_func = resolve_mech_bionics;
+				break;
+			case "mech_tomb";
+				_func = resolve_mech_tomb1_failed;
+				break;
+			case "mech_mars":
+				_func = resolve_mech_mars;
 		}
 		if (!is_undefined(_func)){
             try {
@@ -70,6 +116,18 @@ static mark = function(colour){
 
 static description = function(){
 	return mission_name_key(p_id);
+}
+
+static increment_mission_completion =  function() {
+    if (!struct_exists(data, "completion")) {
+        data.completion = 0;
+    }
+    data.completion++;
+    if (!struct_exists(data, "required_months") || data.required_months <= 0) {
+        LOGGER.error("Invalid required_months in mission_data");
+        return 0;
+    }
+    return (data.completion / data.required_months) * 100;
 }
 
 static __init(){
@@ -407,5 +465,153 @@ static resolve_fallen = function() {
     obj_controller.loyalty -= 10;
     obj_controller.loyalty_hidden -= 10;
     scr_event_log("red", $"Mission Failed: Any Fallen within the {system.name} system have been given time to escape.");
+}
+
+static per_turn_check_mech_raider = function() {
+    refresh_p_data();
+    var _techs = collect_role_group(SPECIALISTS_TECHS, [system.name, planet, -1]);
+    var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
+    if ((array_length(_techs) >= 6) && (_lr_count >= 1)) {
+        var _percent_complete = increment_mission_completion(data);
+        scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
+        if (_percent_complete >= 100) {
+            p_data.remove_problem(p_id);
+            scr_mission_reward("mech_raider", id, planet);
+            timer = -1
+            per_turn_checks = false;
+            zero_timer_checks = false;
+        }
+    }
+}
+
+static resolve_mech_raider_failed = function() {
+    refresh_p_data();
+    var _alert_text = $"Mechanicus Mission Failed: Land Raider testing at {p_data.name()}.";
+    scr_alert("red", "mission_failed", _alert_text, 0, 0);
+    scr_event_log("red", _alert_text);
+    p_data.alter_disposition(eFACTION.MECHANICUS, -6);
+    p_data.remove_problem(p_id);
+}
+
+static per_turn_check_mech_bionics = function() {
+    refresh_p_data();
+    var _units = p_data.collect_planet_group();
+    var _bionics = _units.tally_attr("bionics");
+    if (_bionics >= 10) {
+        var _percent_complete = increment_mission_completion(data);
+        scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
+        if (_percent_complete >= 100) {
+            p_data.remove_problem(p_id);
+            scr_mission_reward("mech_bionics", id, planet);
+            timer = -1
+            per_turn_checks = false;
+            zero_timer_checks = false;
+        }
+    }
+}
+
+static resolve_mech_bionics_failed = function() {
+    refresh_p_data();
+    var _alert_text = $"Mechanicus Mission Failed: bionics testing at {p_data.name()}.";
+    scr_alert("red", "mission_failed", _alert_text, 0, 0);
+    scr_event_log("red", _alert_text);
+    p_data.alter_disposition(eFACTION.MECHANICUS, -6);
+    p_data.remove_problem(p_id);
+}
+
+static per_turn_check_mech_tomb2 = function() {
+    refresh_p_data();
+    data.turns++;
+    var _battli = 0;
+    var _roll1 = roll_dice_chapter(1, 100 + data.turns, "low");
+
+    if (_roll1 > 98) {
+        if ((_roll1 >= 90) && (_roll1 < 98)) {
+            _battli = 1;
+        } // oops
+        if (_roll1 >= 98) {
+            _battli = 2;
+        } // very oops, much necron, wow
+
+        if ((_battli > 0) && (p_player[planet] > 0)) {
+            // Queue the battle
+            obj_turn_end.battles += 1;
+            obj_turn_end.battle[obj_turn_end.battles] = 1;
+            obj_turn_end.battle_world[obj_turn_end.battles] = planet;
+            obj_turn_end.battle_opponent[obj_turn_end.battles] = 13;
+            obj_turn_end.battle_location[obj_turn_end.battles] = p_data.name();
+            obj_turn_end.battle_object[obj_turn_end.battles] = id;
+            if (_battli == 1) {
+                obj_turn_end.battle_special[obj_turn_end.battles] = "study2a";
+            }
+            if (_battli == 2) {
+                obj_turn_end.battle_special[obj_turn_end.battles] = "study2b";
+            }
+
+            if (obj_turn_end.battle_opponent[obj_turn_end.battles] == 11) {
+                if (planet_feature_bool(p_feature[planet], eP_FEATURES.CHAOSWARBAND) == 1) {
+                    obj_turn_end.battle_special[obj_turn_end.battles] = "ChaosWarband";
+                }
+            }
+        }
+        if ((_battli > 0) && (p_player[planet] <= 0)) {
+            // XDDDDD
+            scr_popup("Mechanicus Mission Failed", $"The Mechanicus Research team on planet {p_data.name()} have been killed by Necrons in the absence of your astartes.  The Mechanicus are absolutely livid, doubly so because of the promised security they did not recieve.", "", "");
+            obj_controller.turns_ignored[3] += choose(8, 10, 12, 14, 16, 18, 20, 22, 24);
+            alter_disposition(eFACTION.MECHANICUS, -25);
+            p_data.remove_problem(p_id);
+        }
+    } else {
+        if (_roll1 > 20) {
+            scr_alert("", "mission", $"Adeptus Mechanicus research within the Necron Tomb of {p_data.name()} continues.", 0, 0);
+        } else if (_roll1 <= 20) {
+            var _text, _reward = choose(1, 1, 2);
+            if (scr_has_adv("Tech-Brothers")) {
+                _reward = choose(1, 2);
+            }
+
+            if (_reward == 1) {
+                obj_controller.requisition += 400;
+                _text = $"The Mechanicus Research team on planet {p_data.name()} have completed their work without any major setbacks.  Pleased with your astartes' work, they have granted you 400 Requisition to be used as you see fit.";
+                scr_event_log("", $"Mechanicus Mission Completed: The Mechanicus research team on {p_data.name()} have completed their work.");
+            } else if (_reward == 2) {
+                var _last_artifact = scr_add_artifact("random", "", 0);
+                _text = $"The Mechanicus Research team on planet {p_data.name()} have completed their work without any major setbacks.  Pleased with your astartes' work, they have granted your Chapter an artifact, to be used as you see fit.";
+                scr_event_log("", $"Mechanicus Mission Completed: The Mechanicus research team on {p_data.name()} have completed their work.");
+                scr_event_log("", "Artifact gifted from Mechanicus.");
+            }
+            _text += "\n" + add_disposition(eFACTION.MECHANICUS, 1);
+            scr_popup("Mechanicus Mission Completed", _text, "mechanicus", "");
+            p_data.remove_problem(p_id);
+            timer = -1
+            per_turn_checks = false;
+            zero_timer_checks = false;
+        }
+    }
+}
+
+static per_turn_check_mech_tomb1 = function() {
+    refresh_p_data();
+    var _marines = collect_role_group("all", [system.name, planet, -1]);
+    if (array_length(_marines) >= 20) {
+        stage_id = "exploring";
+        timer = 999;
+        data.turns : 0;
+        scr_popup("Mechanicus Research", $"The Mechanicus Research team on planet {p_data.name()} has taken note of your Astartes and are now prepared to begin their research.  Your marines are to stay on the planet until further notice.", "necron_cave", "");
+    }
+}
+
+static resolve_mech_tomb1_failed = function() {
+    refresh_p_data();
+    var _alert_text = $"Mechanicus Mission Failed: Necron Tomb Study at {p_data.name()}.";
+    scr_alert("red", "mission_failed", _alert_text, 0, 0);
+    scr_event_log("red", _alert_text, system.name);
+    p_data.alter_disposition(eFACTION.MECHANICUS, -15);
+    p_data.remove_problem(p_id);
+}
+
+static resolve_mech_mars = function() {
+    refresh_p_data();
+    mechanicus_mars_mission_target_time_elapsed(planet);
 }
 }

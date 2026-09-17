@@ -88,8 +88,6 @@ function scr_enemy_ai_d() {
 
         var _pdata = get_planet_data(i);
 
-        mechanicus_missions_end_turn(i);
-
         if (((p_tyranids[i] == 3) || (p_tyranids[i] == 4)) && (p_population[i] > 0)) {
             if (!has_problem_planet(i, "Hive Fleet")) {
                 var roll = irandom_range(100, 300);
