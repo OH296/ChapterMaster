@@ -113,7 +113,7 @@ recruitment_costup_button.bind_method = function() {
     _recruit_world.recruit_cost++;
 };
 
-planet_psionic_rating = new ReactiveString();
+planet_psionic_rating = new ReactiveString("");
 
 buttons_selected = false;
 buttons = [];
