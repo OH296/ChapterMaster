@@ -782,7 +782,7 @@ function PlanetData(_planet, _system) constructor {
     }
 
     static register_problem = function(problem){
-        array_push(p_problem, problem);
+        array_push(p_problem[planet], problem);
         problems = system.p_problem[planet];        
     }
 
