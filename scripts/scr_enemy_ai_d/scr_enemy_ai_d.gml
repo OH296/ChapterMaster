@@ -81,7 +81,7 @@ function scr_enemy_ai_d() {
         }
     }
     for (var i = 1; i <= planets; i++) {
-        if (array_length(p_problems[i]) == 0){
+if (array_length(p_problem[i]) == 0){
             continue;
         }
         problem_count_down(i);
