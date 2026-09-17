@@ -1638,7 +1638,7 @@ function PlanetData(_planet, _system) constructor {
         });
 
         if (scr_has_disadv("Psyker Intolerant")){
-            _psionic_string.tooltip = $"Due to your chapters hatred of Psykers a higher Psionic Factor within the population will generally slow recruitment as your {string_plural(obj_ini.player_role_data[eROLE.APOTHECARY].role, 2)} screen out even latently gifted recruits.";
+            _psionic_string.tooltip = $"Due to your chapter's hatred of Psykers a higher Psionic Factor within the population will generally slow recruitment as your {string_plural(obj_ini.player_role_data[eROLE.APOTHECARY].role, 2)} screen out even latently gifted recruits.";
         }
 
         if (population_psionic == 0){
