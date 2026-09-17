@@ -110,10 +110,10 @@ function UnitGroup(units = []) constructor {
                 if (_squad_units.number() < array_length(_squad.members)) {
                     _squad_units.move_to_company(company, false, false);
                     continue;
-                }
-
-                for (var i = 0; i < number(); i++) {
-                    units[i].move_to_company(company);
+                } else {
+                    for (var i = 0; i < _squad_units.number(); i++) {
+                        _squad_units.units[i].move_to_company(company);
+                    }
                 }
                 _squad.base_company = company;
             }

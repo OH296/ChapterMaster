@@ -68,6 +68,10 @@ p_feature = array_create_advanced(_planet_array_size, []);
 p_upgrades = array_create_advanced(_planet_array_size, []);
 p_influence = array_create_advanced(_planet_array_size, array_create(15, 0));
 p_problem = [];
+p_psionic = [];
+for (var i = 0; i < _planet_array_size; i++) {
+    p_psionic[i] = irandom(5);
+}
 
 system_datas = array_create(8, undefined);
 system_garrison = array_create(8, undefined);
