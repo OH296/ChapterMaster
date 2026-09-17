@@ -1151,7 +1151,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
 
         var _roll_top  = 100;
 
-        //A planet must have a P_psionic value of 2 or higher in order to recruit the most powerful pskyers
+        //A planet must have a P_psionic value of 3 or higher in order to recruit the most powerful pskyers
         //ergo only three fifths of planets have top tier psykers
         if (_from_recruitment){
             _roll_top  = 194;
