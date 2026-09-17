@@ -142,7 +142,7 @@
   },
   {
     "name": "Psyker Intolerant",
-    "description": "Witches are hated by your Chapter, pleasing the Inquisition and Ecclesiarchy. You cannot create Librarians, but gain a small amount of bonus attack against psykers.",
+    "description": "Witches are hated by your Chapter, pleasing the Inquisition and Ecclesiarchy. You cannot create Librarians, but gain a small amount of bonus attack against psykers. Recruitment of new marines will be slower on planets with a highly psionic population",
     "points": 30,
     "meta": ["Psyker Views"],
     "faction_disp_mods": [
