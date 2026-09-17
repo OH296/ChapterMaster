@@ -355,7 +355,7 @@ function planet_training_sequence(local_apothecary_points) {
                 // Psyker Intolerant chapters have recruitment slow down on pysker heavy planets
                 if (scr_has_disadv("Psyker Intolerant")){
                     if (population_psionic > irandom(7)){
-                        scr_alert("red", "owner", localize("The saturation of Psionicly gifted individuals on {0} is slowing recruitment due to your chapters Psyker Intolerence.", [name()]), 0, 0);
+                        scr_alert("red", "owner", localize("The saturation of Psionically gifted individuals on {0} is slowing recruitment due to your chapters Psyker Intolerence.", [name()]), 0, 0);
                         return
                     }
                 }
