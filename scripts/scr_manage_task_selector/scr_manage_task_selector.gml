@@ -139,7 +139,8 @@ function task_selector_man_manage() {
                         location: selection_data.system.name,
                     };
                     _unit.unload(selection_data.planet, selection_data.system);
-                    init_train_forces_mission(selection_data.planet, selection_data.system, selection_data.array_slot, _unit);
+                    var _problem = selection_data.feature;
+                    _problem.init_train_forces_mission(_unit);
                     obj_controller.close_popups = false;
                     exit_adhoc_manage();
                     exit;
@@ -172,8 +173,8 @@ function task_selector_man_manage() {
             specialist_point_handler.calculate_research_points();
             break;
         case "hunt_beast":
-            var problem_slot = selection_data.array_slot;
-            init_beast_hunt_mission(selection_data.planet, selection_data.system, problem_slot);
+            var _problem = selection_data.feature;
+            _problem.init_beast_hunt_mission();
             obj_controller.close_popups = false;
             break;
     }

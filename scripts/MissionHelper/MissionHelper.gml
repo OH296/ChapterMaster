@@ -12,6 +12,7 @@ data = data;
 p_data = planet;
 planet = p_data.planet;
 system = p_data.system;
+f_type = eP_FEATURES.MISSION;
 static refresh_p_data = function(){
 	p_data = system.get_planet_data(planet);
 }
@@ -96,6 +97,9 @@ static basic_turn_end = function(){
 				break;
 			case "mech_mars":
 				_func = resolve_mech_mars;
+                break;
+            case "provide_garrison":
+                _func =  complete_garrison_mission;
 		}
 		if (!is_undefined(_func)){
             try {
@@ -152,6 +156,26 @@ static __init(){
 	}
 }
 __init();
+
+
+static init_beast_hunt_mission = function() {
+    refresh_p_data();
+    if (stage_id == "preliminary") {
+        var _numeral_name = p_data.name()
+        stage_id = "active";
+        var _mission_length = irandom_range(2, 5);
+        timer[planet][mission_slot] = _mission_length;
+        var _gar_pop = instance_create(0, 0, obj_popup);
+        //TODO some new MissonHelper methods for popups
+        _gar_pop.title = $"Marines assigned to hunt beasts around {_numeral_name}";
+        _gar_pop.text = $"The govornor of {_numeral_name} Thanks you for the participation of your elite warriors in your execution of such a menial task.";
+        _gar_pop.add_option("Happy Hunting");
+        _gar_pop.image = "";
+        _gar_pop.cooldown = 8;
+        obj_controller.cooldown = 20;
+        scr_event_log("", $"Beast hunters deployed to {_numeral_name} for {_mission_length} months.", p_data.system.name);
+    }
+}
 
 static complete_beast_hunt_mission = function() {
     refresh_p_data();
@@ -222,20 +246,47 @@ static complete_beast_hunt_mission = function() {
     }
 }
 
+
+stati init_train_forces_mission = fuction(marine) {
+    refresh_p_data();
+    if (stage_id != "preliminary") {
+        exit;
+    }
+    var _numeral_name = p_data.name();
+    stage_id = "active";
+    var _mission_length = irandom_range(3, 12);
+    timer = _mission_length;
+    //pop.image="ancient_ruins";
+    var _gar_pop = instance_create(0, 0, obj_popup);
+    //TODO some new universal methods for popups
+    _gar_pop.title = $"Training forces on {_numeral_name} begins";
+    _gar_pop.text = $"{marine.name_role()} Has taken leave of his current post in order to aid the governor of {_numeral_name} and his pdf commanders with training local forces and bolstering defences.";
+    var _is_cap = marine.has_role(eROLE.CAPTAIN);
+
+    if (_is_cap) {
+        _gar_pop.text += "the governor seems to be impressed that such a high ranking officer has been assigned to his request (disp +3)";
+        p_data.add_disposition(3);
+    }
+
+    data.assigned_unit = marine.uid;
+
+    //pip.image="event_march"
+    _gar_pop.add_option($"Good luck {marine.name()}");
+    _gar_pop.image = "";
+    _gar_pop.cooldown = 500;
+    obj_controller.cooldown = 500;
+    scr_event_log("", $"{marine.name_role()} deployed to {_numeral_name} for {_mission_length} months.", p_data.system.name);
+}
+
 static complete_train_forces_mission = function() {
     refresh_p_data();
     if (stage_id == "active") {
-        var man_conditions = {
-            "job": "train_forces",
-            "max": 1,
-        };
         var _mission_string = "";
-        var _trainer = collect_role_group("all", [system.name, planet, 0], false, man_conditions);
-        if (array_length(_trainer)) {
+        var _trainer = fetch_unit_uid(data.assigned_unit);
+        if (is_struct(_trainer)) {
             var _unit_report_string = "";
             var _tester = global.character_tester;
             var _wis_test_difficulty = -20;
-            _trainer = _trainer[0];
             var _tyannic_vet = _trainer.has_trait("tyrannic_vet");
             if (_tyannic_vet) {
                 _wis_test_difficulty += 10;
@@ -243,7 +294,7 @@ static complete_train_forces_mission = function() {
                     var _cult = p_data.get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
                     if (_cult.hiding) {
                         p_data.delete_feature(eP_FEATURES.GENE_STEALER_CULT);
-                        _mission_string += $"Fortune has smiled on this mission, {_trainer.name_role()}'s abilities as a Veteran of dealing with the Tyranids came in handy and in a short period was able to discern the existencee of a cult. He was able to organise those  he considered to be still loyal to rally an extermiation of the cult, reeports suggest he was so successful as to have completely wiped the genestealer presence from the planet";
+                        _mission_string += $"Fortune has smiled on this mission, {_trainer.name_role()}'s abilities as a Veteran of dealing with the Tyranids came in handy and in a short period was able to discern the existencee of a _cult. He was able to organise those  he considered to be still loyal to rally an extermiation of the _cult, reeports suggest he was so successful as to have completely wiped the genestealer presence from the planet";
                     }
                 }
             }
@@ -613,5 +664,79 @@ static resolve_mech_tomb1_failed = function() {
 static resolve_mech_mars = function() {
     refresh_p_data();
     mechanicus_mars_mission_target_time_elapsed(planet);
+}
+
+
+static init_garrison_mission = function() {
+    refresh_p_data();
+    var mission_data = problems_data[mission_slot];
+    if (stage_id != "preliminary") {
+        exit;
+    }
+    var _numeral_name = p_data.name();
+    stage_id = "active";
+    var _garrison_length = 10 + irandom(6);
+    timer = _garrison_length;
+    var _gar_pop = instance_create(0, 0, obj_popup);
+    //TODO some new universal methods for popups
+    _gar_pop.title = $"Requested Garrison Provided to {_numeral_name}";
+    _gar_pop.text = $"The governor of {_numeral_name} Thanks you for considering his request for a garrison, you agree that the garrison will remain for at least {_garrison_length} months.";
+    _gar_pop.add_option("Commence Garrison");
+    _gar_pop.image = "";
+    _gar_pop.cooldown = 8;
+    obj_controller.cooldown = 8;
+    scr_event_log("", $"Garrison committed to {_numeral_name} for {_garrison_length} months.", p_data.system.name);
+}
+
+static complete_garrison_mission= function() {
+    refresh_p_data();
+    if (stage_id != "active"){
+        exit;
+    }
+
+    p_data.garrisons.update();
+    if (p_data.current_owner != eFACTION.IMPERIUM || !p_data.garrisons.garrison_force) {
+        p_data.add_disposition(-20);
+        scr_popup($"Agreed Garrison of {name()}", $"your agreed garrison of  {name()} was cut short by your chapter the planetary governor has expressed his displeasure (disposition -20)", "", "");
+        return;
+    }
+
+    var _mission_string = $"The garrison on {name()} has finished the period of garrison support agreed with the planetary governor.";
+    var _result = p_data.garrisons.garrison_disposition_change();
+    if (!p_data.garrisons.garrison_leader) {
+        p_data.garrisons.find_leader();
+    }
+
+    var _effect = 0;
+    if (_result == "none") {
+        //TODO make a dedicated plus minus string function if there isn't one already
+    } else if (_result < 0) {
+        _effect = _result * irandom_range(1, 5);
+        _mission_string += $"A number of diplomatic incidents occured over the period which had considerable negative effects on our disposition with the planetary governor (disposition -{_effect})";
+    } else {
+        _effect = _result * irandom_range(1, 5);
+        _mission_string += $"As a diplomatic mission the duration of the stay was a success with our political position with the planet being enhanced greatly (disposition +{_effect})";
+    }
+
+    p_data.add_disposition(_effect);
+    var _tester = global.character_tester;
+    var _widom_test = _tester.standard_test(garrisons.garrison_leader, "wisdom", 0, ["siege"]);
+
+    if (_widom_test[0]) {
+        p_data.alter_fortification(1);
+        _mission_string += $"while stationed {garrisons.garrison_leader.name_role()} makes several notable observations and is able to instruct the planets defense core leaving the world better defended (fortifications+1).";
+    }
+    //TODO just generall apply this each turn with a garrison to see if a cult is found
+    if (has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
+        var _cult = get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
+        if (_cult.hiding) {
+            _widom_test = _tester.standard_test(garrisons.garrison_leader, "wisdom", 0, ["tyranids"]);
+            if (_widom_test[0]) {
+                _cult.hiding = false;
+                _mission_string += "Most alarmingly signs of a genestealer _cult are noted by the garrison. how far the rot has gone will now need to be investigated and the xenos taint purged.";
+            }
+        }
+    }
+    scr_popup($"Agreed Garrison of {name()} complete", _mission_string, "", "");
 }
 }

@@ -319,13 +319,6 @@ function mission_inquistion_hunt_inquisitor(star_id = noone) {
 }
 
 /// @self Asset.GMObject.obj_popup
-function add_new_inquis_mission() {
-    if (add_new_problem(pop_data.planet, pop_data.mission, pop_data.estimate, mission_star)) {
-        new_star_event_marker("green");
-    }
-}
-
-/// @self Asset.GMObject.obj_popup
 function init_mission_hunt_inquisitor() {
     mission_star = find_star_by_name(pop_data.system);
     if (mission_star == noone) {

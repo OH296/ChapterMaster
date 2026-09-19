@@ -167,46 +167,6 @@ function init_marine_acting_strange() {
     scr_event_log("color", text);
 }
 
-function init_garrison_mission(planet, star, mission_slot) {
-    var problems_data = star.p_problem_other_data[planet];
-    var mission_data = problems_data[mission_slot];
-    if (mission_data.stage == "preliminary") {
-        var numeral_name = planet_numeral_name(planet, star);
-        mission_data.stage = "active";
-        var garrison_length = 10 + irandom(6);
-        star.p_timer[planet][mission_slot] = garrison_length;
-        var gar_pop = instance_create(0, 0, obj_popup);
-        //TODO some new universal methods for popups
-        gar_pop.title = $"Requested Garrison Provided to {numeral_name}";
-        gar_pop.text = $"The governor of {numeral_name} Thanks you for considering his request for a garrison, you agree that the garrison will remain for at least {garrison_length} months.";
-        gar_pop.add_option("Commence Garrison");
-        gar_pop.image = "";
-        gar_pop.cooldown = 8;
-        obj_controller.cooldown = 8;
-        scr_event_log("", $"Garrison committed to {numeral_name} for {garrison_length} months.", star.name);
-    }
-}
-
-function init_beast_hunt_mission(planet, star, mission_slot) {
-    var problems_data = star.p_problem_other_data[planet];
-    var mission_data = problems_data[mission_slot];
-    if (mission_data.stage == "preliminary") {
-        var numeral_name = planet_numeral_name(planet, star);
-        mission_data.stage = "active";
-        var _mission_length = irandom_range(2, 5);
-        star.p_timer[planet][mission_slot] = _mission_length;
-        var gar_pop = instance_create(0, 0, obj_popup);
-        //TODO some new universal methods for popups
-        gar_pop.title = $"Marines assigned to hunt beasts around {numeral_name}";
-        gar_pop.text = $"The govornor of {numeral_name} Thanks you for the participation of your elite warriors in your execution of such a menial task.";
-        gar_pop.add_option("Happy Hunting");
-        gar_pop.image = "";
-        gar_pop.cooldown = 8;
-        obj_controller.cooldown = 20;
-        scr_event_log("", $"Beast hunters deployed to {numeral_name} for {_mission_length} months.", star.name);
-    }
-}
-
 function init_protect_raider_mission(squad) {
     var _squad_units = squad.members;
     var _squad_wisdom = stat_average(_squad_units, "wisdom");
@@ -316,95 +276,6 @@ function protect_raiders_hold_memorial() {
     text = $"You prepare to have a large public memorial for your fallen marines on the planet surface as a show of defiance. The chapter are pleased by such an act and the population of the planet are mesmerized by the spectacle. The governor is furious not only has his incompetence to deal with the planets xenos issue been made public in such a way that the sector commander has now heard about it but he perceives his failures are being paraded in font of him\n nGovernor Disposition : -30";
 }
 
-function init_train_forces_mission(planet, star, mission_slot, marine) {
-    var _pdata = star.get_planet_data(planet);
-    var mission_data = _pdata.problems_data[mission_slot];
-    if (mission_data.stage == "preliminary") {
-        var numeral_name = _pdata.name();
-        mission_data.stage = "active";
-        var _mission_length = irandom_range(3, 12);
-        star.p_timer[planet][mission_slot] = _mission_length;
-        //pop.image="ancient_ruins";
-        var gar_pop = instance_create(0, 0, obj_popup);
-        //TODO some new universal methods for popups
-        gar_pop.title = $"Training forces on {numeral_name} begins";
-        gar_pop.text = $"{marine.name_role()} Has taken leave of his current post in order to aid the governor of {numeral_name} and his pdf commanders with training local forces and bolstering defences.";
-        var _is_cap = marine.has_role(eROLE.CAPTAIN);
-
-        if (_is_cap) {
-            gar_pop.text += "the governor seems to be impressed that such a high ranking officer has been assigned to his request (disp +3)";
-            _pdata.add_disposition(3);
-        }
-
-        //pip.image="event_march"
-        gar_pop.add_option($"Good luck {marine.name()}");
-        gar_pop.image = "";
-        gar_pop.cooldown = 500;
-        obj_controller.cooldown = 500;
-        scr_event_log("", $"{marine.name_role()} deployed to {numeral_name} for {_mission_length} months.", star.name);
-    }
-}
-
-/// @self Asset.GMObject.obj_star
-function complete_garrison_mission(problem_index) {
-    if (problem_timers[problem_index] > 0) {
-        return;
-    }
-    var _problem_data = problems_data[problem_index];
-    if (!struct_has_value(_problem_data, "stage", "active")) {
-        remove_problem("provide_garrison");
-        return;
-    }
-
-    garrisons.update();
-    if (current_owner != eFACTION.IMPERIUM || !garrisons.garrison_force) {
-        remove_problem("provide_garrison");
-        add_disposition(-20);
-        scr_popup($"Agreed Garrison of {name()}", $"your agreed garrison of  {name()} was cut short by your chapter the planetary governor has expressed his displeasure (disposition -20)", "", "");
-        return;
-    }
-
-    var _mission_string = $"The garrison on {name()} has finished the period of garrison support agreed with the planetary governor.";
-    var _result = garrisons.garrison_disposition_change();
-    if (!garrisons.garrison_leader) {
-        garrisons.find_leader();
-    }
-
-    var _effect = 0;
-    if (_result == "none") {
-        //TODO make a dedicated plus minus string function if there isn't one already
-    } else if (_result < 0) {
-        _effect = _result * irandom_range(1, 5);
-        _mission_string += $"A number of diplomatic incidents occured over the period which had considerable negative effects on our disposition with the planetary governor (disposition -{_effect})";
-    } else {
-        _effect = _result * irandom_range(1, 5);
-        _mission_string += $"As a diplomatic mission the duration of the stay was a success with our political position with the planet being enhanced greatly (disposition +{_effect})";
-    }
-
-    add_disposition(_effect);
-    var tester = global.character_tester;
-    var widom_test = tester.standard_test(garrisons.garrison_leader, "wisdom", 0, ["siege"]);
-
-    if (widom_test[0]) {
-        alter_fortification(1);
-        _mission_string += $"while stationed {garrisons.garrison_leader.name_role()} makes several notable observations and is able to instruct the planets defense core leaving the world better defended (fortifications+1).";
-    }
-    //TODO just generall apply this each turn with a garrison to see if a cult is found
-    if (has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
-        var cult = get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
-        if (cult.hiding) {
-            widom_test = tester.standard_test(garrisons.garrison_leader, "wisdom", 0, ["tyranids"]);
-            if (widom_test[0]) {
-                cult.hiding = false;
-                _mission_string += "Most alarmingly signs of a genestealer cult are noted by the garrison. how far the rot has gone will now need to be investigated and the xenos taint purged.";
-            }
-        }
-    }
-    scr_popup($"Agreed Garrison of {name()} complete", _mission_string, "", "");
-
-    remove_problem("provide_garrison");
-}
-
 
 //TODO allow most of these functions to be condensed and allow arrays of problems or planets and maybe increase filtering options
 //filtering options could be done via universal methods that all the filters to be passed to many other game systems
@@ -502,7 +373,7 @@ function has_problem_planet_with_time(planet, problem, star = noone) {
 function find_problem_planet(planet, problem, star = noone) {
     if (star == noone) {
         for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            if (p_problem[planet][i] == problem) {
+            if (p_problem[planet][i].p_id == problem) {
                 return i;
             }
         }
@@ -572,6 +443,7 @@ function add_new_problem(planet, problem, timer, star = noone, other_data = {}) 
     var problem_added = false;
     if (star == noone) {
         for (var i = 0; i < array_length(p_problem[planet]); i++) {
+            array_push
             if (p_problem[planet][i] == "") {
                 p_problem[planet][i] = problem;
                 p_problem_other_data[planet][i] = other_data;
@@ -588,28 +460,6 @@ function add_new_problem(planet, problem, timer, star = noone, other_data = {}) 
     return problem_added;
 }
 
-
-//search problem data for a given and key and iff applicable value on that key
-//TODO increase filtering and search options
-/// @self Asset.GMObject.obj_star
-function problem_has_key_and_value(planet, problem, key, value = "", star = noone) {
-    var has_data = false;
-    if (star == noone) {
-        var problem_data = p_problem_other_data[planet][problem];
-        if (struct_exists(problem_data, key)) {
-            if (value == "") {
-                has_data = true;
-            } else if (problem_data[$ key] == value) {
-                has_data = true;
-            }
-        }
-    } else {
-        with (star) {
-            has_data = problem_has_key_and_value(planet, problem, key, value);
-        }
-    }
-    return has_data;
-}
 
 /// @desc Compares two location arrays to determine if they represent the same place.
 /// @param {array} _first_loc

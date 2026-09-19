@@ -72,8 +72,6 @@ function PlanetData(_planet, _system) constructor {
         governor = system.p_governor[planet];
 
         problems = system.p_problem[planet];
-        problems_data = system.p_problem_other_data[planet];
-        problem_timers = system.p_timer[planet];
 
         deamons = system.p_demons[planet];
         chaos_forces = system.p_chaos[planet];
@@ -1418,19 +1416,13 @@ function PlanetData(_planet, _system) constructor {
         }
 
         for (var i = 0; i < array_length(problems); i++) {
-            if (problems[i] == "") {
-                continue;
-            }
-            var problem_data = problems_data[i];
-            if (struct_exists(problem_data, "stage")) {
-                if (problem_data.stage == "preliminary") {
-                    var mission_string = localize("{0} Audience", [problem_data.applicant]);
-                    problem_data.f_type = eP_FEATURES.MISSION;
-                    problem_data.time = problem_timers[i];
-                    problem_data.problem = problems[i];
-                    problem_data.array_position = i;
-                    array_push(planet_displays, [mission_string, problem_data]);
-                }
+            var _problem = problems[i];
+            if (problem_data.stage_id == "preliminary") {
+                var mission_string = localize("{0} Audience", [_problem.data.applicant]);
+                problem_data.time = problem_timers[i];
+                problem_data.problem = problems[i];
+                problem_data.array_position = i;
+                array_push(planet_displays, [mission_string, _problem]);
             }
         }
 
@@ -1544,9 +1536,10 @@ function PlanetData(_planet, _system) constructor {
         system.garrison = true;
 
         //if there was an outstanding mission to provide the given garrison
-        var garrison_request = find_problem("provide_garrison");
-        if (garrison_request > -1) {
-            init_garrison_mission(planet, system, garrison_request);
+        var _garrison_request = find_problem("provide_garrison");
+        if (_garrison_request > -1) {
+            _garrison_request = problems[_garrison_request];
+            _garrison_request.init_garrison_mission();
         }
         instance_destroy(obj_star_select);
     };
