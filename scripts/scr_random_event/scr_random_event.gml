@@ -433,26 +433,22 @@ function scr_random_event(execute_now) {
         }
     } else if (chosen_event == eEVENT.HARLEQUINS) {
         LOGGER.info("RE: Harlequins");
-        var owner = choose(1, 2, 2, 2, 3);
-        var star = scr_random_find(owner, true, "", "");
-        if (!instance_exists(star) && owner != 2) {
-            owner = 2;
-            star = scr_random_find(owner, true, "", "");
+        var _owner = choose(1, 2, 2, 2, 3);
+        var _star = scr_random_find(_owner, true, "", "");
+        if (!instance_exists(_star) && _owner != 2) {
+            _owner = 2;
+            _star = scr_random_find(_owner, true, "", "");
         }
-        if (!instance_exists(star)) {
+        if (!instance_exists(_star)) {
             LOGGER.error("RE: Harlequins, couldn't find star");
             exit;
         }
 
-        var planet = irandom_range(1, star.planets);
-        if (add_new_problem(planet, "harlequins", irandom_range(2, 5), star)) {
-            var text = "Eldar Harlequins have been seen on planet " + string(star.name) + " " + scr_roman(planet) + ". Their purposes are unknown.";
-            scr_popup("Harlequin Troupe", text, "harlequin", "");
-            var star_alert = instance_create(star.x + 16, star.y - 24, obj_star_event);
-            star_alert.image_alpha = 1;
-            star_alert.image_speed = 1;
-            star_alert.col = "green";
-        }
+        var _planet = irandom_range(1, _star.planets);
+        var _pdata = _star.get_planet_data(_planet);
+        _pdata.new_problem("harlequins", irandom_range(2, 5));
+
+
     } else if (chosen_event == eEVENT.SUCCESSION_WAR) {
         LOGGER.info("RE: Succession War");
         var eligible_stars = [];

@@ -341,10 +341,8 @@ function init_mission_hunt_inquisitor() {
     with (_radical_inquisitor_fleet) {
         set_fleet_movement(false, "move", _est, _est);
     }
-
-    if (add_new_problem(pop_data.planet, pop_data.mission, pop_data.estimate, mission_star, pop_data.mission_data)) {
-        new_star_event_marker("green");
-    }
+    var _p_data = mission_star.get_planet_data(pop_data.planet);
+    _p_data.add_problem(pop_data.mission, pop_data.estimate,pop_data.mission_data)
 
     title = "Inquisition Mission Accepted";
     text = $"{global.chapter_name} will intercept the radical Inquisitor {pop_data.mission_data.inquisitor_name} at {mission_star.name}, expected within {pop_data.estimate} months.";

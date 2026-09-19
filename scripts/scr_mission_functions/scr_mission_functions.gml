@@ -140,7 +140,8 @@ function scr_new_governor_mission(planet, problem = "") {
                 exit;
             }
         }
-        add_new_problem(planet, problem, 20 + irandom(20),, mission_data);
+        var _p_data = get_planet_data(planet);
+        _p_data.add_problem(problem, 20 + irandom(20),mission_data);
     }
 }
 
@@ -436,30 +437,6 @@ function remove_star_problem(problem, star = noone) {
         }
     }
 }
-
-//add a new problem
-/// @self Asset.GMObject.obj_star
-function add_new_problem(planet, problem, timer, star = noone, other_data = {}) {
-    var problem_added = false;
-    if (star == noone) {
-        for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            array_push
-            if (p_problem[planet][i] == "") {
-                p_problem[planet][i] = problem;
-                p_problem_other_data[planet][i] = other_data;
-                p_timer[planet][i] = timer;
-                problem_added = true;
-                break;
-            }
-        }
-    } else {
-        with (star) {
-            problem_added = add_new_problem(planet, problem, timer, noone, other_data);
-        }
-    }
-    return problem_added;
-}
-
 
 /// @desc Compares two location arrays to determine if they represent the same place.
 /// @param {array} _first_loc

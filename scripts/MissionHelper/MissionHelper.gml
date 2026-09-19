@@ -152,6 +152,11 @@ static __init(){
             break;
         case "fallen":
             break;
+        case "harlequins":
+            var _text = $"Eldar Harlequins have been seen on planet {p_data.name()}. Their purposes are unknown.";
+            scr_popup("Harlequin Troupe", _text, "harlequin", "");
+            mark("green");
+            break;
 
 	}
 }
