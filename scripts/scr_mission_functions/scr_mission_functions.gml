@@ -348,43 +348,6 @@ function has_problem_planet_and_time(planet, problem, time, star = noone) {
     return _had_problem;
 }
 
-//returns the array position of a given problem on a given planet if the specfied time is above 0
-/// @self Asset.GMObject.obj_star
-function has_problem_planet_with_time(planet, problem, star = noone) {
-    var _had_problem = -1;
-    if (star == noone) {
-        for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            var _problem = p_problem[planet][i];
-            if (_problem.p_id == problem) {
-                if (_problem.timer > 0) {
-                    _had_problem = i;
-                }
-            }
-        }
-    } else {
-        with (star) {
-            _had_problem = has_problem_planet_with_time(planet, problem);
-        }
-    }
-    return _had_problem;
-}
-
-//returns the array position of a gien problem on a given planet
-/// @self Asset.GMObject.obj_star
-function find_problem_planet(planet, problem, star = noone) {
-    if (star == noone) {
-        for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            if (p_problem[planet][i].p_id == problem) {
-                return i;
-            }
-        }
-    } else {
-        with (star) {
-            return find_problem_planet(planet, problem);
-        }
-    }
-    return -1;
-}
 
 ///removie all of a given problem from a planet
 /// @self Asset.GMObject.obj_star
@@ -392,10 +355,8 @@ function remove_planet_problem(planet, problem, star = noone) {
     var _had_problem = false;
     if (star == noone) {
         for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            if (p_problem[planet][i] == problem) {
-                p_problem[planet][i] = "";
-                p_timer[planet][i] = -1;
-                p_problem_other_data[planet][i] = {};
+            if (p_problem[planet][i].p_id == problem) {
+                array_delete(p_problem[planet],i, 1);
                 _had_problem = true;
             }
         }
@@ -405,23 +366,6 @@ function remove_planet_problem(planet, problem, star = noone) {
         }
     }
     return _had_problem;
-}
-
-//find an open problem slot on a given planet
-/// @self Asset.GMObject.obj_star
-function open_problem_slot(planet, star = noone) {
-    if (star == noone) {
-        for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            if (p_problem[planet][i] == "") {
-                return i;
-            }
-        }
-    } else {
-        with (star) {
-            return open_problem_slot(planet);
-        }
-    }
-    return -1;
 }
 
 //remove all of a given problem types from a star

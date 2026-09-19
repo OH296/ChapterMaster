@@ -576,9 +576,8 @@ if ((defeat == 0) && (enemy == eFACTION.TYRANIDS) && (battle_special == "tyranid
     if (captured_gaunt > 0) {
         var why = 0, thatta = 0;
         instance_activate_object(obj_star);
-        with (obj_star) {
-            remove_star_problem("tyranid_org");
-        }
+        var _p_data = battle_object.get_planet_data(battle_id);
+        _p_data.remove_problem("tyranid_org");
     }
 
     scr_event_log("", "Inquisition Mission Completed: A Gaunt organism has been captured for the Inquisition.");

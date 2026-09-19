@@ -43,7 +43,8 @@ function task_selector_squad_manage() {
         var _squad = fetch_squad(company_data.selected_squads[i]);
         switch (selection_data.purpose_code) {
             case "protect_raiders":
-                init_protect_raider_mission(_squad);
+                var _problem = selection_data.feature;
+                _problem.init_protect_raider_mission(_squad);
                 break;
         }
     }

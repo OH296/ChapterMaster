@@ -100,11 +100,8 @@ if (array_length(p_problem[i]) == 0){
                     cont = 1;
                 }
 
-                var firstest = open_problem_slot(i);
-                if (cont == 1 && firstest > -1) {
-                    p_problem[i][firstest] = "Hive Fleet";
-                    p_timer[i][firstest] = irandom_range(60, 120) + 1;
-                    p_timer[i][firstest] += irandom_range(80, 120) + 1;
+                if (cont == 1) {
+                    _pdata.add_problem("Hive Fleet", irandom_range(60, 120) + irandom_range(80, 120));
 
                     var xx = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
                     var yy = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;

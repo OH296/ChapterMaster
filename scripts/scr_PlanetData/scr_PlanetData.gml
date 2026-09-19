@@ -760,7 +760,12 @@ function PlanetData(_planet, _system) constructor {
     problems = system.p_problem[planet];
 
     static has_problem = function(problem) {
-        return has_problem_planet(planet, problem, system);
+        for (var i = 0; i < array_length(problems); i++){
+            if (problems[i].p_id == problem){
+                return true;
+            }
+        }
+        return false;
     };
 
     static remove_problem = function(problem) {
@@ -768,7 +773,12 @@ function PlanetData(_planet, _system) constructor {
     };
 
     static find_problem = function(problem) {
-        return find_problem_planet(planet, problem, system);
+        for (var i = 0; i < array_length(problems); i++){
+            if (problems[i].p_id == problem){
+                return problems[i];
+            }
+        }
+        return noone;
     };
 
     static new_problem = function(p_id, timer = -1, data = {}, register = true){
@@ -1537,8 +1547,7 @@ function PlanetData(_planet, _system) constructor {
 
         //if there was an outstanding mission to provide the given garrison
         var _garrison_request = find_problem("provide_garrison");
-        if (_garrison_request > -1) {
-            _garrison_request = problems[_garrison_request];
+        if (is_struct(_garrison_request)) {
             _garrison_request.init_garrison_mission();
         }
         instance_destroy(obj_star_select);

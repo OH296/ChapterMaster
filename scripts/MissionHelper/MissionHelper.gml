@@ -157,6 +157,8 @@ static __init(){
             scr_popup("Harlequin Troupe", _text, "harlequin", "");
             mark("green");
             break;
+        default:
+            mark("green");
 
 	}
 }
