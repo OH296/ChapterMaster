@@ -887,7 +887,7 @@ function necron_tomb_mission_sequence() {
         obj_ncombat.enemy = eFACTION.NECRONS;
         obj_ncombat.threat = 1;
         obj_ncombat.formation_set = 1;
-        obj_ncombat.battle_mission = "necron_tomb_excursion";
+        obj_ncombat.battle_special = "necron_tomb_excursion";
         obj_ncombat.battle_data = pop_data;
         if (battle == 1) {
             obj_ncombat.battle_special = "wraith_attack";

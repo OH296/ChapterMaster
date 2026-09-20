@@ -292,7 +292,7 @@ try {
         }
     }
 
-    if (battle_mission == "necron_tomb_excursion") {
+    if (battle_special == "necron_tomb_excursion") {
         necron_tomb_raid_post_battle_sequence();
     }
 

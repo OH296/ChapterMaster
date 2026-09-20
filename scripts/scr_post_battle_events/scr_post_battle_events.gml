@@ -65,45 +65,45 @@ function protect_raiders_battle_aftermath() {
     // show_message(obj_turn_end.current_battle);
     // show_message(obj_turn_end.battle_world[obj_turn_end.current_battle]);
     // title / text / image / speshul
-    var cur_star = battle_object;
-    var planet = battle_id;
-    var _planet = cur_star.get_planet_data(planet);
+    var _cur_star = battle_object;
+    var _planet = battle_id;
+    var _p_data = _cur_star.get_planet_data(_planet);
     var _planet_string = _planet.name();
-    _planet.remove_problem("protect_raiders");
+    _p_data.remove_problem("protect_raiders");
     if (!defeat) {
-        _planet.add_disposition(15);
-        var tixt = $"The Raiding forces on {_planet_string} have been removed.  The citizens and craftsman may sleep more soundly. (planet disp +15)";
+        _p_data.add_disposition(15);
+        var _tixt = $"The Raiding forces on {_planet_string} have been removed.  The citizens and craftsman may sleep more soundly. (_planet disp +15)";
 
-        scr_popup("Planet Protected", tixt, "protect_raiders", "");
-        scr_event_log("", $"Governor Request completed: Raiding forces on {_planet_string} have been eliminated.", cur_star.name);
+        scr_popup("Planet Protected", _tixt, "protect_raiders", "");
+        scr_event_log("", $"Governor Request completed: Raiding forces on {_planet_string} have been eliminated.", _cur_star.name);
     } else {
-        _planet.add_disposition(-15);
-        var tixt = $"The Raiding forces on {_planet_string} dispatched with your forces and will continue with their bloody practices.  The citizens remain unsafe and the governor is unimpressed. (planet disp -15)";
-        scr_popup("Planet Protected", tixt, "protect_raiders", "");
+        _p_data.add_disposition(-15);
+        var _tixt = $"The Raiding forces on {_planet_string} dispatched with your forces and will continue with their bloody practices.  The citizens remain unsafe and the governor is unimpressed. (planet disp -15)";
+        scr_popup("Planet Protected", _tixt, "protect_raiders", "");
 
-        scr_event_log("", $"Governor Request failed: Raiding forces on {_planet_string} continue to harrass population.", cur_star.name);
+        scr_event_log("", $"Governor Request failed: Raiding forces on {_planet_string} continue to harrass population.", _cur_star.name);
     }
     instance_deactivate_object(obj_star);
 }
 
 /// @self Asset.GMObject.obj_ncombat
 function hunt_fallen_battle_aftermath() {
-    if (!defeat) {
-        with (obj_turn_end) {
-            remove_planet_problem(battle_world[current_battle], "fallen", battle_object[current_battle]);
-            var tixt = "The Fallen on " + battle_object[current_battle].name;
-            tixt += scr_roman(battle_world[current_battle]);
-            scr_event_log("", $"Mission Succesful: {tixt} have been captured or purged.");
-            tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
-            var _tex_options = [
-                "Suffering is the beginning to penance.",
-                "Their screams shall be the harbringer of their contrition.",
-                "The shame they inflicted upon us shall be written in their flesh.",
-            ];
-            tixt += _tex_options[choose(0, 0, 1, 2)];
-            scr_popup("Hunt the Fallen Completed", tixt, "fallen", "");
-        }
+    if (defeat) {
+        exit;
     }
+
+    var _p_data = battle_object.get_planet_data("fallen");
+    _p_data.remove_problem("fallen");
+    var _tixt = "The Fallen on " + _p_data.name();
+    scr_event_log("", $"Mission Succesful: {_tixt} have been captured or purged.");
+    _tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
+    var _tex_options = [
+        "Suffering is the beginning to penance.",
+        "Their screams shall be the harbringer of their contrition.",
+        "The shame they inflicted upon us shall be written in their flesh.",
+    ];
+    _tixt += _tex_options[choose(0, 0, 1, 2)];
+    scr_popup("Hunt the Fallen Completed", _tixt, "fallen", "");
 }
 
 function space_hulk_explore_battle_aftermath() {

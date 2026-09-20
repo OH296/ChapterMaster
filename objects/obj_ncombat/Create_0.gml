@@ -29,6 +29,7 @@ vehicles_to_recover = 0;
 end_alive_units = [];
 average_battle_exp_gain = 0;
 upgraded_librarians = [];
+special_feature = undefined;
 
 view_x = obj_controller.x;
 view_y = obj_controller.y;
@@ -63,7 +64,6 @@ if (instance_exists(obj_star)) {
     LOGGER.error("No obj_star instance found for combat; battle_object defaulted to noone");
 }
 battle_id = 0;
-battle_mission = "";
 battle_special = "";
 battle_data = {};
 defeat = 0;

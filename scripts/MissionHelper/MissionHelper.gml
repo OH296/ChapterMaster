@@ -49,6 +49,8 @@ static basic_turn_end = function(){
 					default:
 						_func = per_turn_check_mech_tomb1;
 					break;
+            case "spyrer":
+                _func = per_turn_check_spyrer;
 		}
 		if (!is_undefined(_func)){
             try {
@@ -132,6 +134,19 @@ static increment_mission_completion =  function() {
         return 0;
     }
     return (data.completion / data.required_months) * 100;
+}
+
+static new_end_turn_battle = function(battle_opponent_id, special_id = p_id){
+    var _battle_index = obj_turn_end.battles++;
+    obj_turn_end.battle[_battle_index] = 1;
+    obj_turn_end.battle_world[_battle_index] = planet;
+    obj_turn_end.battle_opponent[_battle_index] = battle_opponent_id;
+    obj_turn_end.battle_location[_battle_index] = system.name;
+    obj_turn_end.battle_object[_battle_index] = system;
+    obj_turn_end.battle_special[_battle_index] = {
+        special_id : special_id,
+        special_feature : self
+    };
 }
 
 static __init(){
@@ -500,6 +515,31 @@ static resolve_spyrer = function() {
     scr_event_log("red", _text);
 }
 
+static per_turn_check_spyrer = function() {
+    refresh_p_data();
+    if (p_data.player_forces > 20) {
+        var tixt = "The Spyrer on " + planet_numeral_name(run, id) + " seems to have vanished, presumably gone into hiding.";
+        scr_popup("Spyrer Rampage", tixt, "spyrer", "");
+    } else if (p_data.player_forces <= 20) {
+        new_end_turn_battle(30, "spyrer");
+    }
+}
+
+static per_turn_check_fallen = function() {
+    refresh_p_data();
+    if (p_data.player_forces > 0){
+        if (choose(true, false)) {
+            new_end_turn_battle(10, choose(true, false) ?  "fallen1" : "fallen2");
+        } else {
+            if (remove_planet_problem(run, "fallen")) {
+                var tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
+                scr_popup("Hunt the Fallen", tixt, "fallen", "");
+                scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run, id)}");
+            }
+        }
+    }
+}
+
 static resolve_fallen = function() {
     //TODO marker point for cohesion mechanics
     refresh_p_data();
@@ -593,30 +633,20 @@ static per_turn_check_mech_tomb2 = function() {
 
         if ((_battli > 0) && (p_player[planet] > 0)) {
             // Queue the battle
-            obj_turn_end.battles += 1;
-            obj_turn_end.battle[obj_turn_end.battles] = 1;
-            obj_turn_end.battle_world[obj_turn_end.battles] = planet;
-            obj_turn_end.battle_opponent[obj_turn_end.battles] = 13;
-            obj_turn_end.battle_location[obj_turn_end.battles] = p_data.name();
-            obj_turn_end.battle_object[obj_turn_end.battles] = id;
-            if (_battli == 1) {
-                obj_turn_end.battle_special[obj_turn_end.battles] = "study2a";
-            }
-            if (_battli == 2) {
-                obj_turn_end.battle_special[obj_turn_end.battles] = "study2b";
-            }
-
+            var _special = _battli == 1 ? "study2a" : "study2b";
+            //currently inaccessible 
             if (obj_turn_end.battle_opponent[obj_turn_end.battles] == 11) {
-                if (planet_feature_bool(p_feature[planet], eP_FEATURES.CHAOSWARBAND) == 1) {
-                    obj_turn_end.battle_special[obj_turn_end.battles] = "ChaosWarband";
+                if (p_data.has_feature(eP_FEATURES.CHAOSWARBAND)) {
+                    _special = "ChaosWarband";
                 }
             }
+            new_end_turn_battle(13, _special);
         }
         if ((_battli > 0) && (p_player[planet] <= 0)) {
             // XDDDDD
             scr_popup("Mechanicus Mission Failed", $"The Mechanicus Research team on planet {p_data.name()} have been killed by Necrons in the absence of your astartes.  The Mechanicus are absolutely livid, doubly so because of the promised security they did not recieve.", "", "");
             obj_controller.turns_ignored[3] += choose(8, 10, 12, 14, 16, 18, 20, 22, 24);
-            alter_disposition(eFACTION.MECHANICUS, -25);
+            p_data.alter_disposition(eFACTION.MECHANICUS, -25);
             p_data.remove_problem(p_id);
         }
     } else {

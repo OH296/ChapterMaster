@@ -149,7 +149,12 @@ if (!instance_exists(obj_saveload) && !instance_exists(obj_popup) && !instance_e
                 obj_ncombat.fortified = 0;
             }
 
-            obj_ncombat.battle_special = battle_special[current_battle];
+            if (is_struct(battle_special[current_battle])){
+                obj_ncombat.battle_special = battle_special[current_battle].special_id;
+                obj_ncombat.special_feature = battle_special[current_battle].special_feature;
+            } else {
+                obj_ncombat.battle_special = battle_special[current_battle];
+            }
             obj_ncombat.battle_climate = _planet_data.planet_type;
 
             if (_enemy == eFACTION.IMPERIUM) {

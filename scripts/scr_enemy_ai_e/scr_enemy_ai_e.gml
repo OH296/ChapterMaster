@@ -528,42 +528,6 @@ function scr_enemy_ai_e() {
                     chaos_meeting = run + 0.1;
                 }
             }
-            if (has_problem_planet(run, "spyrer")) {
-                if (p_player[run] > 20) {
-                    var tixt = "The Spyrer on " + planet_numeral_name(run, id) + " seems to have vanished, presumably gone into hiding.";
-                    scr_popup("Spyrer Rampage", tixt, "spyrer", "");
-                } else if (p_player[run] <= 20) {
-                    obj_turn_end.battles += 1;
-                    obj_turn_end.battle[obj_turn_end.battles] = 1;
-                    obj_turn_end.battle_world[obj_turn_end.battles] = run;
-                    obj_turn_end.battle_opponent[obj_turn_end.battles] = 30;
-                    obj_turn_end.battle_location[obj_turn_end.battles] = name;
-                    obj_turn_end.battle_object[obj_turn_end.battles] = id;
-                    obj_turn_end.battle_special[obj_turn_end.battles] = "spyrer";
-                }
-            }
-
-            if ((p_player[run] > 0) && has_problem_planet(run, "fallen")) {
-                if (choose(true, false)) {
-                    obj_turn_end.battles += 1;
-                    obj_turn_end.battle[obj_turn_end.battles] = 1;
-                    obj_turn_end.battle_world[obj_turn_end.battles] = run;
-                    obj_turn_end.battle_opponent[obj_turn_end.battles] = 10;
-                    obj_turn_end.battle_location[obj_turn_end.battles] = name;
-                    obj_turn_end.battle_object[obj_turn_end.battles] = id;
-                    if (choose(true, false)) {
-                        obj_turn_end.battle_special[obj_turn_end.battles] = "fallen1";
-                    } else {
-                        obj_turn_end.battle_special[obj_turn_end.battles] = "fallen2";
-                    }
-                } else {
-                    if (remove_planet_problem(run, "fallen")) {
-                        var tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
-                        scr_popup("Hunt the Fallen", tixt, "fallen", "");
-                        scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run, id)}");
-                    }
-                }
-            }
         }
         if (p_player[run] > 0 && has_problem_planet(run, "necron")) {
             setup_necron_tomb_raid(run);
