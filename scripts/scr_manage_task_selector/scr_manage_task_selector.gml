@@ -39,13 +39,19 @@ function scr_manage_task_selector() {
 
 /// @self Asset.GMObject.obj_controller
 function task_selector_squad_manage() {
+    var _squads = [];
     for (var i = 0; i < array_length(company_data.selected_squads); i++) {
         var _squad = fetch_squad(company_data.selected_squads[i]);
-        switch (selection_data.purpose_code) {
-            case "protect_raiders":
-                var _problem = selection_data.feature;
-                _problem.init_protect_raider_mission(_squad);
-                break;
+        /*switch (selection_data.purpose_code) {
+
+        }*/
+        array_push(_squads, _squad);
+    }
+    if (struct_exists(selection_data , "feature") && array_length(_squads)){
+        var _feat = selection_data.feature;
+        if (is_struct(_feat) && is_instanceof(_feat, PlanetProblem){
+            _feat.data.squads = _squads;
+            _feat.on_squad_selection();
         }
     }
 }

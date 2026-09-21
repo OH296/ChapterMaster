@@ -39,7 +39,7 @@ static basic_turn_end = function(){
 			case "mech_bionics":
 				_func = per_turn_check_mech_bionics;
 				break;
-			case "mech_bionics":
+			case "mech_tomb":
 				switch(stage_id):
 						break;
 					case "exploring":
@@ -53,6 +53,7 @@ static basic_turn_end = function(){
                 _func = per_turn_check_spyrer;
 		}
 		if (!is_undefined(_func)){
+            refresh_p_data();
             try {
                 _func();
             } catch (_exception) {
@@ -104,6 +105,7 @@ static basic_turn_end = function(){
                 _func =  complete_garrison_mission;
 		}
 		if (!is_undefined(_func)){
+            refresh_p_data();
             try {
                 _func();
             } catch (_exception) {
@@ -149,6 +151,60 @@ static new_end_turn_battle = function(battle_opponent_id, special_id = p_id){
     };
 }
 
+static new_battle = function(battle_opponent_id,special_id = p_id){
+    var _battle = instance_create(0, 0, obj_ncombat);
+    _battle.enemy = battle_opponent_id;
+    _battle.battle_object = system;
+    _battle.battle_loc = system.name;
+    _battle.battle_id = planet;
+    _battle.battle_special = special_id;
+    _battle.special_feature = self;
+    return _battle;
+}
+
+static after_battle_effects = function(){
+    instance_activate_object(obj_star);
+    var _func = undefined;
+    switch(p_id){
+        case "spyrer":
+            _func = spyrer_battle_aftermath;
+            break;
+        case "protect_raiders":
+            _func = protect_raiders_battle_aftermath;
+            break;
+        case "fallen":
+            _func = hunt_fallen_battle_aftermath;
+            break;
+    }
+    if (!is_undefined(_func)){
+        refresh_p_data();
+        try {
+            _func();
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
+        }
+    }    
+    instance_deactivate_object(obj_star);
+}
+
+static on_squad_selection = function(){
+    var _func = undefined;
+    switch(p_id){
+        case "protect_raiders":
+            _func = protect_raider_squad_selected;
+            break;
+    }
+    if (!is_undefined(_func)){
+        refresh_p_data();
+        try {
+            _func();
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
+        }
+    }    
+    instance_deactivate_object(obj_star);
+}
+
 static __init(){
 	switch(p_id){
 		case "necron":
@@ -181,7 +237,6 @@ __init();
 
 
 static init_beast_hunt_mission = function() {
-    refresh_p_data();
     if (stage_id == "preliminary") {
         var _numeral_name = p_data.name()
         stage_id = "active";
@@ -200,7 +255,6 @@ static init_beast_hunt_mission = function() {
 }
 
 static complete_beast_hunt_mission = function() {
-    refresh_p_data();
     var _hunters = collect_role_group("all", [system.name, planet, 0], false, man_conditions);
     if (stage_id == "active") {
         var _mission_string = "";
@@ -270,7 +324,6 @@ static complete_beast_hunt_mission = function() {
 
 
 stati init_train_forces_mission = fuction(marine) {
-    refresh_p_data();
     if (stage_id != "preliminary") {
         exit;
     }
@@ -301,7 +354,6 @@ stati init_train_forces_mission = fuction(marine) {
 }
 
 static complete_train_forces_mission = function() {
-    refresh_p_data();
     if (stage_id == "active") {
         var _mission_string = "";
         var _trainer = fetch_unit_uid(data.assigned_unit);
@@ -400,7 +452,6 @@ static complete_train_forces_mission = function() {
 }
 
 static resolve_succession = function() {
-    refresh_p_data();
     var _result, _alert_text;
     var _dice1 = roll_dice(1, 100);
     var _dice2 = roll_dice(1, 100);
@@ -456,7 +507,6 @@ static resolve_recon = function() {
 }
 
 static resolve_great_crusade = function() {
-    refresh_p_data();
     var _crusade_direction;
     var _join_crusade = false;
     var _player_fleet = instance_nearest(p_data.system.x, p_data.system.y, obj_p_fleet);
@@ -493,7 +543,6 @@ static resolve_great_crusade = function() {
 }
 
 static resolve_necron = function() {
-    refresh_p_data();
     alter_disposition(eFACTION.INQUISITION, -8);
     var _alert_text = $"The Necron Tomb of planet {p_data.name()} has not been deactivated in time.  It has awakened, rank upon rank of Necrons pouring out to the planet's surface.  The Inquisition is not pleased with your failure.";
     scr_popup("Inquisition Mission Failed", _alert_text, "necron_army", "");
@@ -506,7 +555,6 @@ static resolve_necron = function() {
 }
 
 static resolve_spyrer = function() {
-    refresh_p_data();
     var _planet_name = p_data.name();
     alter_disposition(eFACTION.INQUISITION, -3);
     var _alert_text = $"The Spyrer on {_planet_name} has been left unchecked.  In the ensuing carnage some high-ranking officials have been killed, along with several Nobles.  Panic is running amock in several parts of the hives and the Inquisition is less than pleased.";
@@ -516,7 +564,6 @@ static resolve_spyrer = function() {
 }
 
 static per_turn_check_spyrer = function() {
-    refresh_p_data();
     if (p_data.player_forces > 20) {
         var tixt = "The Spyrer on " + planet_numeral_name(run, id) + " seems to have vanished, presumably gone into hiding.";
         scr_popup("Spyrer Rampage", tixt, "spyrer", "");
@@ -525,8 +572,26 @@ static per_turn_check_spyrer = function() {
     }
 }
 
+static spyrer_battle_aftermath = function(){
+    // title / text / image / speshul
+    if (!obj_ncombat.defeat){
+        exit;
+    }
+
+    remove_planet_problem(planet, "spyrer", system);
+
+    var tixt = $"The Spyrer on {p_data.name()} has been removed.  The citizens and craftsman may sleep more soundly, the Inquisition likely pleased.";
+
+    scr_popup("Inquisition Mission Completed", tixt, "spyrer", "");
+
+    var _disp_gain = obj_controller.demanding ? choose(0, 0, 1) : 2;
+    var _disp_gain_string = alter_disposition(eFACTION.INQUISITION, _disp_gain);
+
+    scr_event_log("", $"Inquisition Mission Completed: The Spyrer on {system.name} {planet} has been removed. {_disp_gain_string}", system.name);
+    scr_gov_disp(system.name, planet, choose(1, 2, 3, 4));
+}
+
 static per_turn_check_fallen = function() {
-    refresh_p_data();
     if (p_data.player_forces > 0){
         if (choose(true, false)) {
             new_end_turn_battle(10, choose(true, false) ?  "fallen1" : "fallen2");
@@ -542,7 +607,6 @@ static per_turn_check_fallen = function() {
 
 static resolve_fallen = function() {
     //TODO marker point for cohesion mechanics
-    refresh_p_data();
     var _alert_text = "";
     if (irandom(100) > 33) {
         // Give all marines +3d6 corruption and reduce loyalty by 20*/
@@ -565,8 +629,26 @@ static resolve_fallen = function() {
     scr_event_log("red", $"Mission Failed: Any Fallen within the {system.name} system have been given time to escape.");
 }
 
+function hunt_fallen_battle_aftermath() {
+    if (obj_ncombat.defeat) {
+        exit;
+    }
+
+    var _p_data = battle_object.get_planet_data("fallen");
+    _p_data.remove_problem("fallen");
+    var _tixt = "The Fallen on " + _p_data.name();
+    scr_event_log("", $"Mission Succesful: {_tixt} have been captured or purged.");
+    _tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
+    var _tex_options = [
+        "Suffering is the beginning to penance.",
+        "Their screams shall be the harbringer of their contrition.",
+        "The shame they inflicted upon us shall be written in their flesh.",
+    ];
+    _tixt += _tex_options[choose(0, 0, 1, 2)];
+    scr_popup("Hunt the Fallen Completed", _tixt, "fallen", "");
+}
+
 static per_turn_check_mech_raider = function() {
-    refresh_p_data();
     var _techs = collect_role_group(SPECIALISTS_TECHS, [system.name, planet, -1]);
     var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
     if ((array_length(_techs) >= 6) && (_lr_count >= 1)) {
@@ -583,7 +665,6 @@ static per_turn_check_mech_raider = function() {
 }
 
 static resolve_mech_raider_failed = function() {
-    refresh_p_data();
     var _alert_text = $"Mechanicus Mission Failed: Land Raider testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
@@ -592,7 +673,6 @@ static resolve_mech_raider_failed = function() {
 }
 
 static per_turn_check_mech_bionics = function() {
-    refresh_p_data();
     var _units = p_data.collect_planet_group();
     var _bionics = _units.tally_attr("bionics");
     if (_bionics >= 10) {
@@ -609,7 +689,6 @@ static per_turn_check_mech_bionics = function() {
 }
 
 static resolve_mech_bionics_failed = function() {
-    refresh_p_data();
     var _alert_text = $"Mechanicus Mission Failed: bionics testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
@@ -618,7 +697,6 @@ static resolve_mech_bionics_failed = function() {
 }
 
 static per_turn_check_mech_tomb2 = function() {
-    refresh_p_data();
     data.turns++;
     var _battli = 0;
     var _roll1 = roll_dice_chapter(1, 100 + data.turns, "low");
@@ -631,18 +709,19 @@ static per_turn_check_mech_tomb2 = function() {
             _battli = 2;
         } // very oops, much necron, wow
 
-        if ((_battli > 0) && (p_player[planet] > 0)) {
+        if ((_battli > 0) && (p_data.player_forces > 0)) {
             // Queue the battle
             var _special = _battli == 1 ? "study2a" : "study2b";
+            data.battle_key = _special;
             //currently inaccessible 
             if (obj_turn_end.battle_opponent[obj_turn_end.battles] == 11) {
                 if (p_data.has_feature(eP_FEATURES.CHAOSWARBAND)) {
                     _special = "ChaosWarband";
                 }
             }
-            new_end_turn_battle(13, _special);
+            new_end_turn_battle(13, "mars_tomb");
         }
-        if ((_battli > 0) && (p_player[planet] <= 0)) {
+        if ((_battli > 0) && (p_data.player_forces <= 0)) {
             // XDDDDD
             scr_popup("Mechanicus Mission Failed", $"The Mechanicus Research team on planet {p_data.name()} have been killed by Necrons in the absence of your astartes.  The Mechanicus are absolutely livid, doubly so because of the promised security they did not recieve.", "", "");
             obj_controller.turns_ignored[3] += choose(8, 10, 12, 14, 16, 18, 20, 22, 24);
@@ -679,7 +758,6 @@ static per_turn_check_mech_tomb2 = function() {
 }
 
 static per_turn_check_mech_tomb1 = function() {
-    refresh_p_data();
     var _marines = collect_role_group("all", [system.name, planet, -1]);
     if (array_length(_marines) >= 20) {
         stage_id = "exploring";
@@ -690,7 +768,6 @@ static per_turn_check_mech_tomb1 = function() {
 }
 
 static resolve_mech_tomb1_failed = function() {
-    refresh_p_data();
     var _alert_text = $"Mechanicus Mission Failed: Necron Tomb Study at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text, system.name);
@@ -698,14 +775,34 @@ static resolve_mech_tomb1_failed = function() {
     p_data.remove_problem(p_id);
 }
 
+static mech_tomb_battle_aftermath = function() {
+    if (obj_ncombat.defeat) {
+        if (remove_planet_problem(battle_id, "mech_tomb", battle_object)) {
+            var _disp_change = alter_disposition(eFACTION.MECHANICUS, -10);
+
+            if (data.battle_key == "study2a") {
+                scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust, and the Adeptus Mechanicus is furious with your chapter for not providing enough security.  Relations with them are worse than before. {_disp_change}", "", "");
+            }
+            if (data.battle_key == "study2b") {
+                battle_object.p_necrons[battle_id] = 5;
+                awaken_tomb_world(battle_object.p_feature[battle_id]);
+                _disp_change = alter_dispositions([[eFACTION.MECHANICUS, -15], [eFACTION.INQUISITION, -5]]);
+                scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust.  To make matters worse the Necron Tomb has fully awakened- countless numbers of the souless machines are now pouring out of the tomb.  The Adeptus Mechanicus are furious with your chapter. {_disp_change}", "necron_army", "");
+                scr_alert("", "inqi", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb", 0, 0);
+                scr_event_log("", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb");
+            }
+
+            scr_event_log("", "Mechanicus Mission Failed: Necron Tomb Research Party and present astartes have been killed.");
+        }
+    }   
+}
+
 static resolve_mech_mars = function() {
-    refresh_p_data();
     mechanicus_mars_mission_target_time_elapsed(planet);
 }
 
 
 static init_garrison_mission = function() {
-    refresh_p_data();
     var mission_data = problems_data[mission_slot];
     if (stage_id != "preliminary") {
         exit;
@@ -726,7 +823,6 @@ static init_garrison_mission = function() {
 }
 
 static complete_garrison_mission= function() {
-    refresh_p_data();
     if (stage_id != "active"){
         exit;
     }
@@ -776,4 +872,114 @@ static complete_garrison_mission= function() {
     }
     scr_popup($"Agreed Garrison of {name()} complete", _mission_string, "", "");
 }
+
+static protect_raiders_battle_aftermath = function() {
+    // show_message(obj_turn_end.current_battle);
+    // show_message(obj_turn_end.battle_world[obj_turn_end.current_battle]);
+    // title / text / image / speshul
+    var _planet_string = p_data.name();
+    p_data.remove_problem("protect_raiders");
+    if (!obj_ncombat.defeat) {
+        p_data.add_disposition(15);
+        var _tixt = $"The Raiding forces on {_planet_string} have been removed.  The citizens and craftsman may sleep more soundly. ({_planet_string} disp +15)";
+
+        scr_popup("Planet Protected", _tixt, "protect_raiders", "");
+        scr_event_log("", $"Governor Request completed: Raiding forces on {_planet_string} have been eliminated.", system.name);
+    } else {
+        p_data.add_disposition(-15);
+        var _tixt = $"The Raiding forces on {_planet_string} dispatched with your forces and will continue with their bloody practices.  The citizens remain unsafe and the governor is unimpressed. (planet disp -15)";
+        scr_popup("Planet Protected", _tixt, "protect_raiders", "");
+        scr_event_log("", $"Governor Request failed: Raiding forces on {_planet_string} continue to harrass population.", system.name);
+    }
+}
+
+static  protect_raider_squad_selected = function() {
+    data.squad = data.squads[0];
+    var _squad = data.squad;
+    var _squad_units = _squad.members;
+    var _squad_wisdom = stat_average(_squad_units, "wisdom");
+    var _squad_dex = stat_average(_squad_units, "dexterity");
+    var _tester = global.character_tester;
+
+    var _mod = _squad_wisdom + _squad_dex / 20;
+    if (scr_has_adv("Ambushers")) {
+        _mod += 10;
+    }
+
+    var _leader = _squad.determine_leader();
+    if (!is_struct(_leader)) {
+        return;
+    }
+    var _wis_test = _tester.standard_test(_leader, "wisdom", _mod, ["ambush"]);
+
+    if (!_wis_test[0]) {
+        scr_toggle_manage();
+        if (_wis_test[1] < -25) {
+            var gar_pop = instance_create(0, 0, obj_popup);
+            gar_pop.title = $"Strange Disappearance";
+            gar_pop.pdata = pdata;
+            gar_pop.text = $"Your Marines make planet fall and are directed to report to the governor for the duration of the operation after a period of reconnaissance dig in for their ambush. After a two weeks have passed A message from the governor reaches your astropaths that your marines have not been heard of for some time, The raiders also were not noted to have arrived onor left the planet";
+            var _dead_marine = array_random_index(_squad_units);
+            for (var i = 0; i < array_length(_dead_marine); i++) {
+                if (i == _dead_marine) {
+                    continue;
+                }
+
+                var _marine = _dead_marine[i];
+
+                _marine.location_string = "Lost";
+                _marine.ship_location = -1;
+                _marine.planet_location = 0;
+            }
+            gar_pop.text += $"After eventual investigation it appears the eldar anticipated the would be ambushers and turned the tides. {_squad_units[_dead_marine].name_role()}s body is eventually discovered some way off from the main battle his rent armour and body showing the extent of combat that must have occured";
+
+            gar_pop.text += "\nThe total loss of a squad in what was meant to be a routine operation is bad for moral and your chapters reputation you must now decide how to proceed";
+
+            gar_pop.add_option({str1: "Suppress the Information", choice_func: protect_raiders_suppress_information});
+
+            gar_pop.add_option({str1: "Hold a Memorial", choice_func: protect_raiders_hold_memorial});
+        } else {
+            var gar_pop = instance_create(0, 0, obj_popup);
+            gar_pop.title = $"Ineffective Ambush";
+            gar_pop.text = $"Your Marines Are ineffective at setting up an ambush the assailants clearly got wind of the operation or the plan was otherwise so ill thought out that by the time your forces arrived there was little that could be done to intercept them";
+            gar_pop.text += $"";
+            gar_pop.pathway = "protect_raiders_ineffective";
+            gar_pop.pdata = pdata;
+            pdata.add_disposition(-10);
+            gar_pop.text += "\nThe governor is unhappy and it has done little to improve your reputation with the planets populace but otherwise very little harm has been done. It is likely the raiders will choose better targets without the possible threat of space marine presence for the foreseeable future\nGovernor Disposition : -10";
+
+            gar_pop.add_option("continue");
+        }
+    } else {
+        var _battle = new_battle(eFACTION.ELDAR)
+        _roster = new Roster();
+        with (_roster) {
+            selected_units = _squad_units;
+            setup_battle_formations();
+            add_to_battle();
+        }
+        exit_adhoc_manage();
+        delete _roster;
+    }
+}    
+}
+
+static capture_tyranid_org_battle_aftermath = function(){
+    if (obj_ncombat.defeat){
+        exit;
+    }
+    if (obj_ncombat.captured_gaunt > 1) {
+        var _pop = instance_create(0, 0, obj_popup);
+        _pop.image = "inquisition";
+        _pop.title = "Inquisition Mission Completed";
+        _pop.text = "You have captured several Gaunt organisms.  The Inquisitor is pleased with your work, though she notes that only one is needed- the rest are to be purged.  It will be stored until it may be retrieved.  The mission is a success.";
+    }
+    else if (obj_ncombat.captured_gaunt == 1) {
+        var _pop = instance_create(0, 0, obj_popup);
+        _pop.image = "inquisition";
+        _pop.title = "Inquisition Mission Completed";
+        _pop.text = "You have captured a Gaunt organism- the Inquisitor is pleased with your work.  The Tyranid will be stored until it may be retrieved.  The mission is a success.";
+    }
+}
+
 }

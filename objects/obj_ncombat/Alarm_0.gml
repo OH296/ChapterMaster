@@ -82,14 +82,14 @@ try {
         alpha_strike = 1;
     }
 
-    if ((battle_special == "study2a") || (battle_special == "study2b")) {
+    if (battle_special == "mars_tomb") {
         ally = 3;
         ally_forces = 1;
     }
 
     xxx = instance_nearest(1000, 240, obj_pnunit).x + 80;
 
-    if ((string_count("spyrer", battle_special) > 0) || (string_count("fallen", battle_special) > 0) || (string_count("mech", battle_special) > 0) || (battle_special == "space_hulk") || (battle_special == "study2a") || (battle_special == "study2b")) {
+    if (("spyrer" == battle_special) || (string_count("fallen", battle_special) > 0) || (string_count("mech", battle_special) > 0) || (battle_special == "space_hulk") || (battle_special == "mars_tomb")) {
         fortified = 0;
     }
 

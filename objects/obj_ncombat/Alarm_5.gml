@@ -307,10 +307,7 @@ if (battle_special == "fallen1") {
 if (battle_special == "fallen2") {
     reduce_fortification = false;
 }
-if (battle_special == "study2a") {
-    reduce_fortification = false;
-}
-if (battle_special == "study2b") {
+if (battle_special == "mars_tomb") {
     reduce_fortification = false;
 }
 
@@ -370,9 +367,8 @@ var _non_power_reduce_events = [
     "space_hulk",
     "fallen1",
     "fallen2",
-    "study2a",
-    "study2b",
     "protect_raiders",
+    "mars_tomb"
 ];
 
 // Disable power reduction for matching events
