@@ -960,6 +960,41 @@ static  protect_raider_squad_selected = function() {
         }
         exit_adhoc_manage();
         delete _roster;
+
+        _battle.battle_enemy_data = {
+            threat : 3,
+            fortified : false,
+            cols : [
+                {
+                    distance : 20,
+                    enemies : [
+                        {
+                            name : "Dire Avenger",
+                            number : 40,
+                            special : "shimmershield"
+                        },
+                        {
+                            name : "Dire Avenger Exarch",
+                            number : 4,
+                            special : "shimmershield"
+                        },
+                        {
+                            name : "Autarch",
+                            number : 1
+                        },
+                        {
+                            name : "Farseer",
+                            number : 1,
+                            special : "farseer_powers"
+                        },
+                        {
+                            name : "Night Spinner",
+                            number : 1
+                        }
+                    ]
+                }
+            ]
+        };
     }
 }    
 }

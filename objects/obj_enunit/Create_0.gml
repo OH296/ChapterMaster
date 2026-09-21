@@ -75,6 +75,25 @@ dudes_wep2 = array_create(_array_size, "");
 dudes_gear = array_create(_array_size, "");
 dudges_mobi = array_create(_array_size, "");
 
+add_enemies = function(enemy_data){
+    var _start_index =  1;
+    for (var i = 1; i < _array_size; i++)
+        if (dudes[i] == ""){
+            _start_index = i;
+        }
+    {
+        
+    }
+    for (var i = 0; i < array_length(enemy_data); i++){
+        var _data = enemy_data[i];
+        dudes[_start_index] = _data.name;
+        dudes_num[_start_index] = _data.number;
+        if (struct_exists(_data, "special")){
+            dudes_special[_start_index] = _data.special;
+        }
+        _start_index++;
+    }
+}
 alarm[1] = 5;
 
 hit = function() {

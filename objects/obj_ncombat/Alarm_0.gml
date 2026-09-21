@@ -131,6 +131,21 @@ try {
         u.column = (_num - j) - ((xxx / 10) - 10);
     }
 
+    var _enemies_assiged = false;
+    if (!is_undefined(battle_enemy_data)){
+        move_data_to_curret_scope(battle_enemy_data);
+        if (struct_exists(battle_enemy_data , "cols")){
+            var _cols = battle_enemy_data.cols;
+            for (var i = 0; i < array_length(_cols); i++){
+                var _col = _cols[i];
+                u = instance_create(_col.distance, 240, obj_enunit);
+                u.add_enemies(_col.enemies);
+            }
+            enemies_assiged = true;
+        }
+    }
+
+    if (!enemies_assiged){
     // *** Enemy Forces Special Event ***
     // * Malcadon Spyrer *
     if (string_count("spyrer", battle_special) > 0) {
@@ -145,26 +160,6 @@ try {
         u.dudes_num[1] = 1;
         enemies[1] = 1;
         u.flank = 1;
-    }
-
-    if (battle_special == "protect_raiders") {
-        fortified = 0;
-        threat = 3;
-        u = instance_create(20, 240, obj_enunit);
-        u.dudes[1] = "Dire Avenger";
-        u.dudes_num[1] = 40;
-        u.dudes_special[1] = "shimmershield";
-        u.dudes[2] = "Dire Avenger Exarch";
-        u.dudes_num[2] = 4;
-        u.dudes_special[2] = "shimmershield";
-        u.dudes[3] = "Autarch";
-        u.dudes_num[3] = 1;
-        u.dudes[4] = "Farseer";
-        u.dudes_num[4] = 1;
-        u.dudes_special[4] = "farseer_powers";
-        u.dudes[5] = "Night Spinner";
-        u.dudes_num[5] = 1;
-        u.enemy = eFACTION.ELDAR;
     }
     // * Small Fallen Group *
     if (battle_special == "fallen1") {
@@ -3177,6 +3172,7 @@ try {
             u.dudes_num[1] = 24;
             u.flank = 1;
         }
+    }
     }
 
     // ** Set up player defenses **
