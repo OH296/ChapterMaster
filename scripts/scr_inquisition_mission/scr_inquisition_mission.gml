@@ -108,23 +108,19 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
                 mission_inquisition_ethereal();
                 break;
             case eINQUISITION_MISSION.DEMON_WORLD:
-                mission_inquisition_demon_world(demon_worlds);
+                var _star = array_random_element(demon_worlds);
+                var _planet = -1;
+                for (var i = 1; i <= _star.planets; i++) {
+                    if (_star.p_demons[i] > 1) {
+                        _planet = i;
+                        break;
+                    }
+                }
+                var _eta = scr_mission_eta(_star.x, _star.y, 25);
+                _star.get_planet_data(_planet).new_problem("inquisition_demon_world", _eta)
                 break;
         }
     }
-}
-
-function mission_inquisition_demon_world(demon_worlds) {
-    var _star = choose_array(demon_worlds);
-    var _planet = -1;
-    for (var i = 1; i <= _star.planets; i++) {
-        if (_star.p_demons[i] > 1) {
-            _planet = i;
-            break;
-        }
-    }
-    var _eta = scr_mission_eta(_star.x, _star.y, 25);
-    _star.get_planet_data(_planet).new_problem("inquisition_demon_world", _eta)
 }
 
 function mission_inquisition_ethereal() {

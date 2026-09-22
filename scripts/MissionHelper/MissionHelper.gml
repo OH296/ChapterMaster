@@ -1357,7 +1357,7 @@ static inquisition_mission_options = fuction(mission_accept_function){
         {
             str1: "Accept",
             choice_func: function(){
-                pop_data.mission[$ mission_accept_function],
+                pop_data.mission[$ mission_accept_function]();
             }
         },
     ];
@@ -1370,24 +1370,17 @@ static inquisition_mission_options = fuction(mission_accept_function){
     return _options
 }
 static inquisition_demon_world_init = fuction(){
-    var text = $"The Inquisitor is trusting you with a special mission.  The planet {string(_star.name)} {scr_roman(planet)}";
-    text += $" has been uncovered as a Demon World. The taint of chaos must be eradicated from this system.  Can your chapter handle this mission?";
-    var _options = [
-        {
-            str1: "Accept",
-            choice_func: self.inquisition_demon_world_accept,
-        },
-        {
-            str1: "Refuse",
-            choice_func: popup_default_close,
-        },
-    ];
+    var _text = $"The Inquisitor is trusting you with a special mission.  The planet {p_data.name()} has been uncovered as a Demon World";
+    if (obj_controller.demanding) {
+        _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Demon World {p_data.name()} must be cleansed within {timer} months.";
+    }
+    _text += $"The taint of chaos must be eradicated from this system.  Can your chapter handle this mission?";
     var _pop_data = {
         mission: self,
-        options: inquisition_mission_options(inquisition_demon_world_accept),
+        options: inquisition_mission_options("inquisition_demon_world_accept"),
     };
     scr_popup(
-        "Inquisition Mission", 
+        "Inquisition Mission Demon World", 
         text, 
         "inquisition", 
         _pop_data
@@ -1396,10 +1389,10 @@ static inquisition_demon_world_init = fuction(){
 
 static inquisition_demon_world_accept = fuction(){
     scr_event_log("", $"Inquisition Mission Accepted: The demon world of {system.name} {scr_roman(planet)} will be purged by your hand.", system.name);
-    if (demand) {
-        text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Demon World {p_data.name()} must be cleansed within {timer} months.";
-    }
     new_star_event_marker("green");
+    with(obj_popup){
+        popup_default_close();
+    }
 }
 
 }
