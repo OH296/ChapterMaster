@@ -869,7 +869,47 @@ static mech_tomb_battle_aftermath = function() {
 }
 
 static resolve_mech_mars = function() {
-    mechanicus_mars_mission_target_time_elapsed(planet);
+    var _techs_taken = 0;
+    var _techs = collect_role_group([SPECIALISTS_TECHMARINES,false,true],system.name);
+    for (i = 0; i < array_length(_techs); i++) {
+        var _unit = _techs[i];
+        system.p_player[planet] -= _unit.get_unit_size();
+        _unit.location_string = "Mechanicus Vessel";
+        _unit.planet_location = 0;
+        _unit.ship_location = -1;
+        _unit.job = {
+            type: "mechanicus mission",
+        };
+        _techs_taken += 1;
+    }
+
+    if (_techs_taken == 0) {
+        var alert_text = $"Mechanicus Mission Failed: Journey to Mars Catacombs at {p_data.name()}.";
+        scr_alert("red", "mission_failed", alert_text, 0, 0);
+        scr_event_log("red", alert_text);
+        alter_disposition(eFACTION.MECHANICUS,-10)
+    } else if (_techs_taken > 0) {
+        if (_techs_taken >= 5) {
+            alter_disposition(eFACTION.MECHANICUS,max(_techs_taken, 4))
+        }
+        var _text = $"Mechanicus Ship departs for the Mars catacombs.  Onboard are {_techs_taken} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s.";
+        scr_alert("", "mission", _text, 0, 0);
+        scr_event_log("green", _text);
+        var flit = create_enemy_fleet(system.x, system.y, eFACTION.MECHANICUS);
+
+        with (flit) {
+            sprite_index = spr_fleet_mechanicus;
+            capital_number = 1;
+            image_index = 0;
+            image_speed = 0;
+            trade_goods = "mars_spelunk1";
+            home_x = x;
+            home_y = y;
+            action_x = x + lengthdir_x(3000, obj_controller.terra_direction);
+            action_y = y + lengthdir_y(3000, obj_controller.terra_direction);
+            set_fleet_movement(false, "move", 48, 48);
+        }
+    }
 }
 
 
