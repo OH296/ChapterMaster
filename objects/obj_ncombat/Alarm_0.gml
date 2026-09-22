@@ -89,7 +89,7 @@ try {
 
     xxx = instance_nearest(1000, 240, obj_pnunit).x + 80;
 
-    if (("spyrer" == battle_special) || (string_count("fallen", battle_special) > 0) || (string_count("mech", battle_special) > 0) || (battle_special == "space_hulk") || (battle_special == "mars_tomb")) {
+    if ((string_count("mech", battle_special) > 0) || (battle_special == "space_hulk") || (battle_special == "mars_tomb")) {
         fortified = 0;
     }
 
@@ -138,7 +138,15 @@ try {
             var _cols = battle_enemy_data.cols;
             for (var i = 0; i < array_length(_cols); i++){
                 var _col = _cols[i];
-                u = instance_create(_col.distance, 240, obj_enunit);
+                if (struct_exists(_col , "engaged") && (_col.engaged)){
+                    u = instance_create(instance_nearest(x + 1000, 240, obj_pnunit).x + 10, 240, obj_enunit);
+                    u.engaged = true;
+                    with (instance_nearest(x + 1000, 240, obj_pnunit)) {
+                        engaged = 1;
+                    }
+                } else {
+                    u = instance_create(_col.distance, 240, obj_enunit);
+                }
                 u.add_enemies(_col.enemies);
             }
             enemies_assiged = true;
@@ -146,45 +154,6 @@ try {
     }
 
     if (!enemies_assiged){
-    // *** Enemy Forces Special Event ***
-    // * Malcadon Spyrer *
-    if (string_count("spyrer", battle_special) > 0) {
-        fortified = 0;
-        with (obj_enunit) {
-            instance_destroy();
-        }
-        u = instance_create(10, 240, obj_enunit);
-        enemy_dudes = "1";
-        u.dudes[1] = "Malcadon Spyrer";
-        u.dudes_num[1] = 1;
-        u.dudes_num[1] = 1;
-        enemies[1] = 1;
-        u.flank = 1;
-    }
-    // * Small Fallen Group *
-    if (battle_special == "fallen1") {
-        fortified = 0;
-        with (obj_enunit) {
-            instance_destroy();
-        }
-        u = instance_create(80, 240, obj_enunit);
-        enemy_dudes = "1";
-        u.dudes[1] = "Fallen";
-        u.dudes_num[1] = 1;
-        enemies[1] = 1;
-    }
-    // * Large Fallen Group *
-    if (battle_special == "fallen2") {
-        fortified = 0;
-        with (obj_enunit) {
-            instance_destroy();
-        }
-        u = instance_create(80, 240, obj_enunit);
-        enemy_dudes = "1";
-        u.dudes[1] = "Fallen";
-        u.dudes_num[1] = choose(1, 1, 2, 2, 3);
-        enemies[1] = u.dudes_num[1];
-    }
     // * Praetorian Servitor Group *
     if (string_count("mech", battle_special) > 0) {
         fortified = 0;
@@ -218,60 +187,7 @@ try {
             engaged = 1;
         }
     }
-    // * Necron Wraith Group *
-    if (battle_special == "wraith_attack") {
-        fortified = 0;
-        with (obj_enunit) {
-            instance_destroy();
-        }
-        u = instance_create(instance_nearest(x + 1000, 240, obj_pnunit).x + 10, 240, obj_enunit);
-        enemy_dudes = "2";
-        u.dudes[1] = "Necron Wraith";
-        u.dudes_num[1] = 1;
-        enemies[1] = 1;
-        u.dudes[2] = "Necron Wraith";
-        u.dudes_num[2] = 1;
-        enemies[2] = 1;
-        u.engaged = 1;
-        with (instance_nearest(x + 1000, 240, obj_pnunit)) {
-            engaged = 1;
-        }
-    }
-    // * Canoptek Spyder Group *
-    if (battle_special == "spyder_attack") {
-        fortified = 0;
-        with (obj_enunit) {
-            instance_destroy();
-        }
-        u = instance_create(instance_nearest(x + 1000, 240, obj_pnunit).x + 10, 240, obj_enunit);
-        enemy_dudes = "21";
-        u.dudes[1] = "Canoptek Spyder";
-        u.dudes_num[1] = 1;
-        enemies[1] = u.dudes[1];
-        u.dudes[2] = "Canoptek Scarab";
-        u.dudes_num[2] = 20;
-        enemies[2] = u.dudes[2];
-        u.engaged = 1;
-        with (instance_nearest(x + 1000, 240, obj_pnunit)) {
-            engaged = 1;
-        }
-    }
-    // * Tomb Stalker Group *
-    if (battle_special == "stalker_attack") {
-        fortified = 0;
-        with (obj_enunit) {
-            instance_destroy();
-        }
-        u = instance_create(instance_nearest(x + 1000, 240, obj_pnunit).x + 10, 240, obj_enunit);
-        enemy_dudes = "1";
-        u.dudes[1] = "Tomb Stalker";
-        u.dudes_num[1] = 1;
-        enemies[1] = 1;
-        u.engaged = 1;
-        with (instance_nearest(x + 1000, 240, obj_pnunit)) {
-            engaged = 1;
-        }
-    }
+
     // * Chaos Space Marine Elite Group *
     if ((battle_special == "cs_meeting_battle5") || (battle_special == "cs_meeting_battle6")) {
         fortified = 0;
@@ -321,28 +237,7 @@ try {
         u.dudes_num[2] = 3;
         enemies[2] = 3;
     }
-    // * Tomb world attack enemy setup *
-    if (battle_special == "wake1_attack") {
-        enemy = eFACTION.NECRONS;
-        threat = 2;
-    }
-    if (battle_special == "wake2_attack") {
-        enemy = eFACTION.NECRONS;
-        threat = 3;
-    }
-    if (battle_special == "wake3_attack") {
-        enemy = eFACTION.NECRONS;
-        threat = 5;
-    }
-    // * Tomb world study attack enemy setup *
-    if (battle_special == "study2a") {
-        enemy = eFACTION.NECRONS;
-        threat = 2;
-    }
-    if (battle_special == "study2b") {
-        enemy = eFACTION.NECRONS;
-        threat = 3;
-    }
+
     // ** Space Hulk Forces **
     if (battle_special == "space_hulk") {
         var make;
@@ -2081,7 +1976,7 @@ try {
     }
 
     // ** Chaos Forces **
-    if ((enemy == eFACTION.CHAOS) && (battle_special != "ship_demon") && (battle_special != "fallen1") && (battle_special != "fallen2") && (battle_special != "WL10_reveal") && (battle_special != "WL10_later") && (string_count("cs_meeting_battle", battle_special) == 0)) {
+    if ((enemy == eFACTION.CHAOS) && (battle_special != "ship_demon") && (battle_special != "fallen") && (battle_special != "WL10_reveal") && (battle_special != "WL10_later") && (string_count("cs_meeting_battle", battle_special) == 0)) {
         // Small Chaos Cult Group
         if (threat == 1) {
             u = instance_nearest(xxx, 240, obj_enunit);
@@ -2988,7 +2883,7 @@ try {
     }
 
     // ** Necron Forces **
-    if ((enemy == eFACTION.NECRONS) && ((string_count("_attack", battle_special) == 0) || (string_count("wake", battle_special) > 0))) {
+    if ((enemy == eFACTION.NECRONS) && ((string_count("_attack", battle_special) == 0))) {
         // Small Necron Group
         if (threat == 1) {
             u = instance_nearest(xxx, 240, obj_enunit);

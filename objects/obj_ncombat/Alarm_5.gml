@@ -301,10 +301,7 @@ if (battle_special == "ruins") {
 if (battle_special == "ruins_eldar") {
     reduce_fortification = false;
 }
-if (battle_special == "fallen1") {
-    reduce_fortification = false;
-}
-if (battle_special == "fallen2") {
+if (battle_special == "fallen") {
     reduce_fortification = false;
 }
 if (battle_special == "mars_tomb") {
@@ -365,8 +362,7 @@ var _non_power_reduce_events = [
     "tyranid_org",
     "ship_demon",
     "space_hulk",
-    "fallen1",
-    "fallen2",
+    "fallen",
     "protect_raiders",
     "mars_tomb"
 ];

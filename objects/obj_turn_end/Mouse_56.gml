@@ -152,6 +152,9 @@ if (!instance_exists(obj_saveload) && !instance_exists(obj_popup) && !instance_e
             if (is_struct(battle_special[current_battle])){
                 obj_ncombat.battle_special = battle_special[current_battle].special_id;
                 obj_ncombat.special_feature = battle_special[current_battle].special_feature;
+                if (struct_exists(battle_special[current_battle], "battle_enemy_data")){
+                    obj_ncombat.battle_enemy_data = battle_enemy_data;
+                }
             } else {
                 obj_ncombat.battle_special = battle_special[current_battle];
             }

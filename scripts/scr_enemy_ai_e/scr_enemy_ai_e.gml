@@ -529,9 +529,6 @@ function scr_enemy_ai_e() {
                 }
             }
         }
-        if (p_player[run] > 0 && has_problem_planet(run, "necron")) {
-            setup_necron_tomb_raid(run);
-        }
         if ((p_player[run] > 0) && (force_count > 0)) {
             for (var force = 2; force < 14; force++) {
                 battle_opponent = 0;

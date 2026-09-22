@@ -270,14 +270,10 @@ try {
         }
     }
 
-    if (battle_special == "necron_tomb_excursion") {
-        necron_tomb_raid_post_battle_sequence();
-    }
-
     if (is_struct(special_feature), && is_instanceof(special_feature, PlanetProblem)){
         special_feature.after_battle_effects();
     }
-     if ((enemy == eFACTION.PLAYER && on_ship == true) && (!defeat)) {
+    if ((enemy == eFACTION.PLAYER && on_ship == true) && (!defeat)) {
         var diceh = roll_dice_chapter(1, 100, "high");
 
         if (diceh <= 15) {

@@ -51,6 +51,10 @@ static basic_turn_end = function(){
 					break;
             case "spyrer":
                 _func = per_turn_check_spyrer;
+                break;
+            case "inquisition_tomb":
+                per_turn_check_inqisition_tomb;
+                break;
 		}
 		if (!is_undefined(_func)){
             refresh_p_data();
@@ -138,7 +142,7 @@ static increment_mission_completion =  function() {
     return (data.completion / data.required_months) * 100;
 }
 
-static new_end_turn_battle = function(battle_opponent_id, special_id = p_id){
+static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
     var _battle_index = obj_turn_end.battles++;
     obj_turn_end.battle[_battle_index] = 1;
     obj_turn_end.battle_world[_battle_index] = planet;
@@ -149,6 +153,9 @@ static new_end_turn_battle = function(battle_opponent_id, special_id = p_id){
         special_id : special_id,
         special_feature : self
     };
+    if (!is_undefined(enemy_data)){
+        obj_turn_end.battle_special[_battle_index].battle_enemy_data = enemy_data;
+    }
 }
 
 static new_battle = function(battle_opponent_id,special_id = p_id){
@@ -174,6 +181,9 @@ static after_battle_effects = function(){
             break;
         case "fallen":
             _func = hunt_fallen_battle_aftermath;
+            break;
+        case "inquisition_tomb":
+            inquisition_tomb_battle_aftermath;
             break;
     }
     if (!is_undefined(_func)){
@@ -228,6 +238,8 @@ static __init(){
             scr_popup("Harlequin Troupe", _text, "harlequin", "");
             mark("green");
             break;
+        case "inquisition_demon_world":
+            inquisition_demon_world_init();
         default:
             mark("green");
 
@@ -565,10 +577,29 @@ static resolve_spyrer = function() {
 
 static per_turn_check_spyrer = function() {
     if (p_data.player_forces > 20) {
-        var tixt = "The Spyrer on " + planet_numeral_name(run, id) + " seems to have vanished, presumably gone into hiding.";
-        scr_popup("Spyrer Rampage", tixt, "spyrer", "");
+        var _tixt = "The Spyrer on " + planet_numeral_name(run, id) + " seems to have vanished, presumably gone into hiding.";
+        scr_popup("Spyrer Rampage", _tixt, "spyrer", "");
     } else if (p_data.player_forces <= 20) {
-        new_end_turn_battle(30, "spyrer");
+        new_end_turn_battle(
+            30,
+            "spyrer",
+            {
+                threat : 1,
+                fortified : false,
+                cols : [
+                    {
+                        distance : 10,
+                        flank : true,
+                        enemies : [
+                            {
+                                name : "Malcadon Spyrer",
+                                number : 1
+                            }
+                        ]
+                    }
+                ]
+            };
+        );
     }
 }
 
@@ -580,9 +611,9 @@ static spyrer_battle_aftermath = function(){
 
     remove_planet_problem(planet, "spyrer", system);
 
-    var tixt = $"The Spyrer on {p_data.name()} has been removed.  The citizens and craftsman may sleep more soundly, the Inquisition likely pleased.";
+    var _tixt = $"The Spyrer on {p_data.name()} has been removed.  The citizens and craftsman may sleep more soundly, the Inquisition likely pleased.";
 
-    scr_popup("Inquisition Mission Completed", tixt, "spyrer", "");
+    scr_popup("Inquisition Mission Completed", _tixt, "spyrer", "");
 
     var _disp_gain = obj_controller.demanding ? choose(0, 0, 1) : 2;
     var _disp_gain_string = alter_disposition(eFACTION.INQUISITION, _disp_gain);
@@ -594,11 +625,51 @@ static spyrer_battle_aftermath = function(){
 static per_turn_check_fallen = function() {
     if (p_data.player_forces > 0){
         if (choose(true, false)) {
-            new_end_turn_battle(10, choose(true, false) ?  "fallen1" : "fallen2");
+            var _group_big = choose(true, false);
+            var _battle_enemy_data = {};
+            if (_group_big){
+                _battle_enemy_data = {
+                    threat : 1,
+                    fortified : false,
+                    cols : [
+                        {
+                            distance : 80,
+                            enemies : [
+                                {
+                                    name : "Fallen",
+                                    number : 1
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                // * Large Fallen Group *
+                _battle_enemy_data = {
+                    threat : 1,
+                    fortified : false,
+                    cols : [
+                        {
+                            distance : 80,
+                            enemies : [
+                                {
+                                    name : "Fallen",
+                                    number : choose(1, 1, 2, 2, 3)
+                                }
+                            ]
+                        }
+                    ]
+                };
+            }
+            new_end_turn_battle(
+                10, 
+                "fallen",
+                _battle_enemy_data
+            );
         } else {
             if (remove_planet_problem(run, "fallen")) {
-                var tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
-                scr_popup("Hunt the Fallen", tixt, "fallen", "");
+                var _tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
+                scr_popup("Hunt the Fallen", _tixt, "fallen", "");
                 scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run, id)}");
             }
         }
@@ -719,7 +790,7 @@ static per_turn_check_mech_tomb2 = function() {
                     _special = "ChaosWarband";
                 }
             }
-            new_end_turn_battle(13, "mars_tomb");
+            new_end_turn_battle(13, "mars_tomb",{threat : choose(2,3)});
         }
         if ((_battli > 0) && (p_data.player_forces <= 0)) {
             // XDDDDD
@@ -1015,6 +1086,320 @@ static capture_tyranid_org_battle_aftermath = function(){
         _pop.title = "Inquisition Mission Completed";
         _pop.text = "You have captured a Gaunt organism- the Inquisitor is pleased with your work.  The Tyranid will be stored until it may be retrieved.  The mission is a success.";
     }
+}
+
+static per_turn_check_inqisition_tomb = function() {
+    if (p_player[run] <= 0){
+        exit;
+    }
+    LOGGER.info($"player on planet with necron mission {name} planet: {planet}");
+    var _have_bomb = 0;
+    _have_bomb = scr_check_equip("Plasma Bomb", system.name, planet, 0);
+    LOGGER.info($"have bomb? {_have_bomb} ");
+    if (_have_bomb == 0) {
+        exit;
+    }
+    var _tixt;
+    _tixt = $"Your marines on {planet_numeral_name(planet, id)}";
+    _tixt += " are prepared and ready to enter the Necron Tombs.  A Plasma Bomb is in tow.";
+    var _number = instance_exists(obj_turn_end) ? 1 : 0;
+    var _pop_data = {
+        mission: self,
+        loc: system.name,
+        planet: planet,
+        estimate: 999,
+        number: _number,
+        data.mission_stage: 1,
+        options: [
+            {
+                str1: "Begin the Mission",
+                choice_func: self.necron_tomb_mission_start,
+            },
+            {
+                str1: "Not Yet",
+                choice_func: popup_default_close,
+            },
+        ],
+    };
+    scr_popup("Necron Tomb Excursion", _tixt, $"necron_cave", _pop_data);
+}
+
+static necron_tomb_mission_start = function() {
+    obj_popup.title = $"Necron Tunnels : {mission_stage}";
+    obj_popup.replace_options([{str1: "Continue", choice_func: self.necron_tomb_mission_sequence}, {str1: "Return to the surface", choice_func: popup_default_close}]);
+    obj_popup.image = "necron_tunnels_1";
+    obj_popup.text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";
+}
+
+/// @self Asset.GMObject.obj_popup
+/// @desc Advances the Necron Tomb mission or starts a combat encounter.
+/// @returns {Undefined}
+static necron_tomb_mission_sequence = function() {
+    var battle;
+    var player_forces = system.player_forces;
+    var penalty = 0;
+    var _roll = roll_dice_chapter(1, 100, "low");
+    battle = 0;
+    instance_activate_all();
+
+    // SMALL TEAM OF MARINES
+    if (player_forces > 6) {
+        penalty = 10;
+    }
+    if (player_forces > 10) {
+        penalty = 20;
+    }
+    if (player_forces >= 20) {
+        penalty = 30;
+    }
+    if (player_forces >= 40) {
+        penalty = 50;
+    }
+    if (player_forces >= 60) {
+        penalty = 100;
+    }
+    _roll += penalty;
+
+    // _roll=30;if (string_count("3",title)>0) then _roll=70;
+
+    // Result
+    data.tomb_awakens = false;
+    if (_roll <= 60) {
+        advance_necron_tomb_mission();
+        exit;
+    }
+    if ((_roll > 60) && (_roll <= 82)) {
+        // Necron Wraith attack
+        battle = 1;
+    }
+    if ((_roll > 82) && (_roll <= 92)) {
+        // Tomb Spyder attack
+        battle = 2;
+    }
+    if ((_roll > 92) && (_roll <= 97)) {
+        // Tomb Stalker
+        battle = 3;
+    }
+    if (_roll > 97) {
+        // Tomb World wakes up
+        data.tomb_awakens = true;
+        if (player_forces <= 30) {
+            battle = 4;
+        }
+        if (player_forces > 30) {
+            battle = 5;
+        }
+        if (player_forces > 100) {
+            battle = 6;
+        }
+    }
+
+    if (battle > 0) {
+        instance_deactivate_all_safe();
+        instance_activate_object(obj_star);
+        obj_ncombat.battle_special = "necron_tomb_excursion";
+        var _col = [];
+        var _battle_data = {
+            threat :  1,
+            formation_set : 1,
+            fortified : 0,
+        }
+        switch (battle){
+            case 1:
+            _battle_data.cols = [
+                {
+                    distance : 10,
+                    engaged : true,
+                    enemies : [
+                        {
+                            name : "Necron Wraith",
+                            number : 1
+                        }
+                        {
+                            name : "Necron Wraith",
+                            number : 1
+                        }
+                    ]
+
+                }
+            ]
+            special_feature.data.enemy = "wraith";
+            case 2:
+            _battle_data.cols = [
+                {
+                    distance : 10,
+                    engaged : true,
+                    enemies : [
+                        {
+                            name : "Canoptek Spyder",
+                            number : 1
+                        }
+                        {
+                            name : "Canoptek Scarab",
+                            number : 20
+                        }
+                    ]
+
+                }
+            ]
+            special_feature.data.enemy = "spyder"
+            case 3:
+            _battle_data.cols = [
+                {
+                    distance : 10,
+                    engaged : true,
+                    enemies : [
+                        {
+                            name : "Tomb Stalker",
+                            number : 1
+                        }
+                    ]
+
+                }
+            ]
+            special_feature.data.enemy = "stalker"
+            break;
+            case 4:
+            _battle_data.threat = 2
+            break
+            case 5:
+            case 6:
+            _battle_data.threat = 3
+            break
+        }
+
+        var _battle = new_battle(
+            eFACTION.NECRONS,
+            p_id,
+            _battle_data
+        )
+        _roster = new Roster();
+        with (_roster) {
+            roster_location = system.name;
+            roster_planet = planet;
+            determine_full_roster();
+            only_locals();
+            update_roster();
+            if (array_length(selected_units)) {
+                setup_battle_formations();
+                add_to_battle();
+            }
+        }
+        delete _roster;
+        instance_deactivate_object(obj_star);
+
+        instance_destroy(obj_popup);
+    }
+
+    exit;
+}
+
+static inquisition_tomb_battle_aftermath = function(){
+    if (!data.tomb_awakens) {
+        if (defeat == 1) {
+            obj_controller.combat = 0;
+            obj_controller.cooldown = 10;
+            obj_turn_end.alarm[1] = 4;
+        } else if (defeat == 0) {
+            obj_controller.combat = 0;
+            var pip = instance_create(0, 0, obj_popup);
+            pip.pop_data = battle_data;
+
+            with (pip) {
+                necron_tomb_mission_start();
+                var _completed = advance_necron_tomb_mission();
+                if (_completed) {
+                    keyboard_clear(vk_enter);
+                } else {
+                    text = "The last of the attackers is cut down.  Your marines regroup in the tunnel and ready themselves to press deeper into the complex.\n\n" + text;
+                }
+                number = pop_data.number;
+            }
+        }
+    } else {
+        var pip = instance_create(0, 0, obj_popup);
+        with (pip) {
+            title = "Necron Tomb Awakens";
+            image = "necron_army";
+            if (obj_ncombat.defeat == 0) {
+                text = "Your marines make a tactical retreat back to the surface, hounded by Necrons all the way.  The Inquisition mission is a failure- you were to blow up the Necron Tomb World stealthily, not wake it up.  The Inquisition is not pleased with your conduct.";
+            } else {
+                text = "Your marines are killed down to the last man.  The Inquisition mission is a failure- you were to blow up the Necron Tomb World stealthily, not wake it up.  The Inquisition is not pleased with your conduct.";
+            }
+        }
+
+        var _star_obj = find_star_by_name(battle_loc);
+        if (_star_obj != noone) {
+            with (_star_obj) {
+                var planet = obj_ncombat.battle_id;
+                if (remove_planet_problem(planet, "necron")) {
+                    p_necrons[planet] = 4;
+                }
+                if (awake_tomb_world(p_feature[planet]) == 0) {
+                    awaken_tomb_world(p_feature[planet]);
+                }
+            }
+        }
+
+        pip.pop_data = battle_data;
+
+        alter_disposition(eFACTION.INQUISITION, -5);
+        obj_controller.combat = 0;
+
+        with (pip) {
+            number = pop_data.number;
+        }
+    }
+}
+
+static inquisition_mission_options = fuction(mission_accept_function){
+    var _options = [
+        {
+            str1: "Accept",
+            choice_func: function(){
+                pop_data.mission[$ mission_accept_function],
+            }
+        },
+    ];
+    if (!obj_controller.demanding){
+        array_push(_options, {
+            str1: "Refuse",
+            choice_func: popup_default_close,
+        })
+    }
+    return _options
+}
+static inquisition_demon_world_init = fuction(){
+    var text = $"The Inquisitor is trusting you with a special mission.  The planet {string(_star.name)} {scr_roman(planet)}";
+    text += $" has been uncovered as a Demon World. The taint of chaos must be eradicated from this system.  Can your chapter handle this mission?";
+    var _options = [
+        {
+            str1: "Accept",
+            choice_func: self.inquisition_demon_world_accept,
+        },
+        {
+            str1: "Refuse",
+            choice_func: popup_default_close,
+        },
+    ];
+    var _pop_data = {
+        mission: self,
+        options: inquisition_mission_options(inquisition_demon_world_accept),
+    };
+    scr_popup(
+        "Inquisition Mission", 
+        text, 
+        "inquisition", 
+        _pop_data
+    );
+}
+
+static inquisition_demon_world_accept = fuction(){
+    scr_event_log("", $"Inquisition Mission Accepted: The demon world of {system.name} {scr_roman(planet)} will be purged by your hand.", system.name);
+    if (demand) {
+        text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Demon World {p_data.name()} must be cleansed within {timer} months.";
+    }
+    new_star_event_marker("green");
 }
 
 }

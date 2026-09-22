@@ -127,7 +127,7 @@ if (string_count("fallen", battle_special) > 0) {
     p1 += "  Your ranks are made up of ";
 }
 
-if (string_count("_attack", battle_special) > 0) {
+if ("inquisition_tomb" == battle_special) {
     var wh = choose(1, 2);
     if (wh == 1) {
         p1 = "Cave dirt crunches beneath the soles of your marines as they continue their descent.  There is little warning before ";
@@ -136,26 +136,28 @@ if (string_count("_attack", battle_special) > 0) {
         p1 = "The shadows stretch and morph as the lights cast by your marines move along.  One large shadow begins to move on its own- ";
     }
 
-    if (string_count("wake", battle_special) > 0) {
+    if (special_feature.data.tomb_awakens) {
         p1 = "Cave dirt crunches beneath the soles of your marines as they continue their descent.  There is little warning when the ground begins to shake.  An old, dusty breeze seems to flow through the tunnel, followed by rumbling sensations and distant mechanical sounds.  ";
-        if (string_count("1", battle_special) > 0) {
+        if (threat = 2) {
             p1 += "Within minutes Necrons begin to appear from every direction.  There appears to be nearly fourty, cramped in the dark tunnels.";
         }
-        if (string_count("2", battle_special) > 0) {
+        else if (threat = 3) {
             p1 += "Within minutes Necrons begin to appear from every direction.  There appears to be nearly a hundred, cramped in the dark tunnels.";
         }
-        if (string_count("3", battle_special) > 0) {
+        else if (threat = 4) {
             p1 += "Within minutes Necrons begin to appear from every direction.  Their numbers are wihout number.";
         }
+    } else {
+
     }
 
-    if (string_count("wraith", battle_special) > 0) {
+    if (special_feature.data.enemy = "wraith") {
         p1 += "two Necron Wraiths appear out of nowhere and begin to attack.";
     }
-    if (string_count("spyder", battle_special) > 0) {
+    if (special_feature.data.enemy = "spyder") {
         p1 += "a large Canoptek Spyder launches towards your marines, a small group of scuttling Scarabs quickly following.";
     }
-    if (string_count("stalker", battle_special) > 0) {
+    if (special_feature.data.enemy = "stalker") {
         p1 += "the tunnel begins to shake and a massive Tomb Stalker scuttles into your midst.";
     }
     _newline = p1;

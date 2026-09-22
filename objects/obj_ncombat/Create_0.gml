@@ -65,7 +65,6 @@ if (instance_exists(obj_star)) {
 }
 battle_id = 0;
 battle_special = "";
-battle_data = {};
 defeat = 0;
 defeat_message = 0;
 fugg = 0;
@@ -118,6 +117,7 @@ charged = 0;
 
 fadein = 40;
 enemy = undefined;
+battle_enemy_data = undefined;
 enem = "Orks";
 enem_sing = "Ork";
 threat = 0;

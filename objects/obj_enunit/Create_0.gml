@@ -9,7 +9,7 @@ hostile_splash = 0;
 flank = 0;
 flyer = 0; // Works same as flank, but does not get denoted as such
 neww = 0;
-
+enemy_dudes = 0;
 column_size = 0;
 
 unit_count = 0;
@@ -92,6 +92,7 @@ add_enemies = function(enemy_data){
             dudes_special[_start_index] = _data.special;
         }
         _start_index++;
+        enemy_dudes += _data.number;
     }
 }
 alarm[1] = 5;

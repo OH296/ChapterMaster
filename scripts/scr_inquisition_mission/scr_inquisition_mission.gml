@@ -116,17 +116,15 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
 
 function mission_inquisition_demon_world(demon_worlds) {
     var _star = choose_array(demon_worlds);
-    var planet = -1;
+    var _planet = -1;
     for (var i = 1; i <= _star.planets; i++) {
         if (_star.p_demons[i] > 1) {
-            planet = i;
+            _planet = i;
             break;
         }
     }
-    var eta = scr_mission_eta(_star.x, _star.y, 25);
-    var text = $"The Inquisitor is trusting you with a special mission.  The planet {string(_star.name)} {scr_roman(planet)}";
-    text += $" has been uncovered as a Demon World. The taint of chaos must be eradicated from this system.  Can your chapter handle this mission?";
-    scr_popup("Inquisition Mission", text, "inquisition", $"demon_world|{string(_star.name)}|{string(planet)}|{string(eta + 1)}|");
+    var _eta = scr_mission_eta(_star.x, _star.y, 25);
+    _star.get_planet_data(_planet).new_problem("inquisition_demon_world", _eta)
 }
 
 function mission_inquisition_ethereal() {
@@ -708,55 +706,6 @@ function mission_investigate_planet() {
     scr_popup("Inquisition Recon", text, "inquisition", $"recon|{string(_star.name)}|{string(planet)}|{string(eta)}|");
 }
 
-/// @self Asset.GMObject.obj_star
-/// @desc Queues the Necron Tomb mission prompt when a Plasma Bomb is present.
-/// @param {Real} planet Planet index containing the Necron Tomb.
-/// @returns {Undefined}
-function setup_necron_tomb_raid(planet) {
-    LOGGER.info($"player on planet with necron mission {name} planet: {planet}");
-    var have_bomb;
-    have_bomb = scr_check_equip("Plasma Bomb", name, planet, 0);
-    LOGGER.info($"have bomb? {have_bomb} ");
-    if (have_bomb > 0) {
-        var tixt;
-        tixt = $"Your marines on {planet_numeral_name(planet, id)}";
-        tixt += " are prepared and ready to enter the Necron Tombs.  A Plasma Bomb is in tow.";
-        var _number = instance_exists(obj_turn_end) ? 1 : 0;
-        var _pop_data = {
-            mission: "necron_tomb_excursion",
-            loc: name,
-            planet: planet,
-            estimate: 999,
-            number: _number,
-            mission_stage: 1,
-            options: [
-                {
-                    str1: "Begin the Mission",
-                    choice_func: necron_tomb_mission_start,
-                },
-                {
-                    str1: "Not Yet",
-                    choice_func: popup_default_close,
-                },
-            ],
-        };
-        scr_popup("Necron Tomb Excursion", tixt, $"necron_cave", _pop_data);
-    }
-}
-
-/// @self Asset.GMObject.obj_popup
-/// @desc Initializes the popup and choices for a Necron Tomb mission.
-/// @returns {Undefined}
-function necron_tomb_mission_start() {
-    mission_star = find_star_by_name(pop_data.loc);
-    planet = pop_data.planet;
-
-    title = $"Necron Tunnels : {pop_data.mission_stage}";
-    replace_options([{str1: "Continue", choice_func: necron_tomb_mission_sequence}, {str1: "Return to the surface", choice_func: popup_default_close}]);
-    image = "necron_tunnels_1";
-    text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";
-}
-
 /// @self Asset.GMObject.obj_popup
 /// @desc Advances the Necron Tomb mission and renders the resulting popup state.
 /// @returns {Bool} Whether the mission reached completion.
@@ -792,121 +741,6 @@ function advance_necron_tomb_mission() {
         return true;
     }
     return false;
-}
-
-/// @self Asset.GMObject.obj_popup
-/// @desc Advances the Necron Tomb mission or starts a combat encounter.
-/// @returns {Undefined}
-function necron_tomb_mission_sequence() {
-    var battle;
-    var player_forces = 0;
-    var penalty = 0;
-    var roll = roll_dice_chapter(1, 100, "low");
-    battle = 0;
-    instance_activate_all();
-    player_forces = mission_star.p_player[planet];
-
-    // SMALL TEAM OF MARINES
-    if (player_forces > 6) {
-        penalty = 10;
-    }
-    if (player_forces > 10) {
-        penalty = 20;
-    }
-    if (player_forces >= 20) {
-        penalty = 30;
-    }
-    if (player_forces >= 40) {
-        penalty = 50;
-    }
-    if (player_forces >= 60) {
-        penalty = 100;
-    }
-    roll += penalty;
-
-    // roll=30;if (string_count("3",title)>0) then roll=70;
-
-    // Result
-    if (roll <= 60) {
-        advance_necron_tomb_mission();
-        exit;
-    }
-    if ((roll > 60) && (roll <= 82)) {
-        // Necron Wraith attack
-        battle = 1;
-    }
-    if ((roll > 82) && (roll <= 92)) {
-        // Tomb Spyder attack
-        battle = 2;
-    }
-    if ((roll > 92) && (roll <= 97)) {
-        // Tomb Stalker
-        battle = 3;
-    }
-    if (roll > 97) {
-        // Tomb World wakes up
-        if (player_forces <= 30) {
-            battle = 4;
-        }
-        if (player_forces > 30) {
-            battle = 5;
-        }
-        if (player_forces > 100) {
-            battle = 6;
-        }
-    }
-
-    if (battle > 0) {
-        instance_deactivate_all_safe();
-        instance_activate_object(obj_star);
-
-        instance_create(0, 0, obj_ncombat);
-        _roster = new Roster();
-        var _pop_data = pop_data;
-        with (_roster) {
-            roster_location = _pop_data.loc;
-            roster_planet = _pop_data.planet;
-            determine_full_roster();
-            only_locals();
-            update_roster();
-            if (array_length(selected_units)) {
-                setup_battle_formations();
-                add_to_battle();
-            }
-        }
-        delete _roster;
-
-        mission_star = find_star_by_name(pop_data.loc);
-
-        obj_ncombat.battle_object = mission_star;
-        instance_deactivate_object(obj_star);
-        obj_ncombat.battle_loc = pop_data.loc;
-        obj_ncombat.battle_id = pop_data.planet;
-        obj_ncombat.dropping = 0;
-        obj_ncombat.attacking = 0;
-        obj_ncombat.enemy = eFACTION.NECRONS;
-        obj_ncombat.threat = 1;
-        obj_ncombat.formation_set = 1;
-        obj_ncombat.battle_special = "necron_tomb_excursion";
-        obj_ncombat.battle_data = pop_data;
-        if (battle == 1) {
-            obj_ncombat.battle_special = "wraith_attack";
-        } else if (battle == 2) {
-            obj_ncombat.battle_special = "spyder_attack";
-        } else if (battle == 3) {
-            obj_ncombat.battle_special = "stalker_attack";
-        } else if (battle == 4) {
-            obj_ncombat.battle_special = "wake1_attack";
-        } else if (battle == 5) {
-            obj_ncombat.battle_special = "wake2_attack";
-        } else if (battle == 6) {
-            obj_ncombat.battle_special = "wake2_attack";
-        }
-
-        instance_destroy();
-    }
-
-    exit;
 }
 
 function set_gender() {
