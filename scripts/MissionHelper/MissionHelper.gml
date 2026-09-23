@@ -84,7 +84,7 @@ static basic_turn_end = function(){
 			case "great_crusade":
 				_func = resolve_great_crusade;
 				break;
-			case "necron":
+			case "inquisition_necron":
 				_func = resolve_necron;
 				break;
 			case "spyrer":
@@ -217,7 +217,7 @@ static on_squad_selection = function(){
 
 static __init(){
 	switch(p_id){
-		case "necron":
+		case "inquisition_necron":
 	        mark("green");
 	        break;
 	    case "meeting":
@@ -1004,7 +1004,7 @@ static protect_raiders_battle_aftermath = function() {
     }
 }
 
-static  protect_raider_squad_selected = function() {
+static protect_raider_squad_selected = function() {
     data.squad = data.squads[0];
     var _squad = data.squad;
     var _squad_units = _squad.members;
@@ -1149,11 +1149,12 @@ static per_turn_check_inqisition_tomb = function() {
         planet: planet,
         estimate: 999,
         number: _number,
-        data.mission_stage: 1,
         options: [
             {
                 str1: "Begin the Mission",
-                choice_func: self.necron_tomb_mission_start,
+                choice_func: function(){
+                    mission.necron_tomb_mission_start();
+                },
             },
             {
                 str1: "Not Yet",
@@ -1165,7 +1166,7 @@ static per_turn_check_inqisition_tomb = function() {
 }
 
 static necron_tomb_mission_start = function() {
-    obj_popup.title = $"Necron Tunnels : {mission_stage}";
+    obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([{str1: "Continue", choice_func: self.necron_tomb_mission_sequence}, {str1: "Return to the surface", choice_func: popup_default_close}]);
     obj_popup.image = "necron_tunnels_1";
     obj_popup.text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";
@@ -1175,30 +1176,30 @@ static necron_tomb_mission_start = function() {
 /// @desc Advances the Necron Tomb mission or starts a combat encounter.
 /// @returns {Undefined}
 static necron_tomb_mission_sequence = function() {
-    var battle;
+    var _battle;
     var player_forces = system.player_forces;
-    var penalty = 0;
+    var _penalty = 0;
     var _roll = roll_dice_chapter(1, 100, "low");
-    battle = 0;
+    _battle = 0;
     instance_activate_all();
 
     // SMALL TEAM OF MARINES
     if (player_forces > 6) {
-        penalty = 10;
+        _penalty = 10;
     }
     if (player_forces > 10) {
-        penalty = 20;
+        _penalty = 20;
     }
     if (player_forces >= 20) {
-        penalty = 30;
+        _penalty = 30;
     }
     if (player_forces >= 40) {
-        penalty = 50;
+        _penalty = 50;
     }
     if (player_forces >= 60) {
-        penalty = 100;
+        _penalty = 100;
     }
-    _roll += penalty;
+    _roll += _penalty;
 
     // _roll=30;if (string_count("3",title)>0) then _roll=70;
 
@@ -1210,31 +1211,31 @@ static necron_tomb_mission_sequence = function() {
     }
     if ((_roll > 60) && (_roll <= 82)) {
         // Necron Wraith attack
-        battle = 1;
+        _battle = 1;
     }
     if ((_roll > 82) && (_roll <= 92)) {
         // Tomb Spyder attack
-        battle = 2;
+        _battle = 2;
     }
     if ((_roll > 92) && (_roll <= 97)) {
         // Tomb Stalker
-        battle = 3;
+        _battle = 3;
     }
     if (_roll > 97) {
         // Tomb World wakes up
         data.tomb_awakens = true;
         if (player_forces <= 30) {
-            battle = 4;
+            _battle = 4;
         }
         if (player_forces > 30) {
-            battle = 5;
+            _battle = 5;
         }
         if (player_forces > 100) {
-            battle = 6;
+            _battle = 6;
         }
     }
 
-    if (battle > 0) {
+    if (_battle > 0) {
         instance_deactivate_all_safe();
         instance_activate_object(obj_star);
         obj_ncombat.battle_special = "necron_tomb_excursion";
@@ -1244,7 +1245,7 @@ static necron_tomb_mission_sequence = function() {
             formation_set : 1,
             fortified : 0,
         }
-        switch (battle){
+        switch (_battle){
             case 1:
             _battle_data.cols = [
                 {
@@ -1343,17 +1344,15 @@ static inquisition_tomb_battle_aftermath = function(){
         } else if (defeat == 0) {
             obj_controller.combat = 0;
             var pip = instance_create(0, 0, obj_popup);
-            pip.pop_data = battle_data;
-
+            necron_tomb_mission_start();
+            var _completed = advance_necron_tomb_mission();
             with (pip) {
-                necron_tomb_mission_start();
-                var _completed = advance_necron_tomb_mission();
                 if (_completed) {
                     keyboard_clear(vk_enter);
                 } else {
                     text = "The last of the attackers is cut down.  Your marines regroup in the tunnel and ready themselves to press deeper into the complex.\n\n" + text;
                 }
-                number = pop_data.number;
+                number = instance_exists(obj_turn_end);
             }
         }
     } else {
@@ -1372,7 +1371,7 @@ static inquisition_tomb_battle_aftermath = function(){
         if (_star_obj != noone) {
             with (_star_obj) {
                 var planet = obj_ncombat.battle_id;
-                if (remove_planet_problem(planet, "necron")) {
+                if (remove_planet_problem(planet, "inquisition_necron")) {
                     p_necrons[planet] = 4;
                 }
                 if (awake_tomb_world(p_feature[planet]) == 0) {
@@ -1381,15 +1380,47 @@ static inquisition_tomb_battle_aftermath = function(){
             }
         }
 
-        pip.pop_data = battle_data;
-
         alter_disposition(eFACTION.INQUISITION, -5);
         obj_controller.combat = 0;
 
         with (pip) {
-            number = pop_data.number;
+            number = instance_exists(obj_turn_end);
         }
     }
+}
+
+static advance_necron_tomb_mission = function() {
+    data.mission_stage++;
+    obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
+
+    if (data.mission_stage == 2) {
+        obj_popup.image = "necron_tunnels_2";
+        obj_popup.text = "The energy readings are much stronger, now that your marines are deep inside the tunnels.  What was once cramped is now luxuriously large, the tunnel ceiling far overhead decorated by stalactites.";
+        return false;
+    }
+    if (data.mission_stage == 3) {
+        obj_popup.image = "necron_tunnels_3";
+        obj_popup.text = "After several hours of descent the entrance to the Necron Tomb finally looms ahead- dancing, sickly green light shining free.  Your marine confirms that the Plasma Bomb is ready.";
+        return false;
+    }
+    if (data.mission_stage >= 4) {
+        obj_popup.image = "";
+        obj_popup.title = "Inquisition Mission Completed";
+        obj_popup.text = "Your marines finally enter the deepest catacombs of the Necron Tomb.  There they place the Plasma Bomb and arm it.  All around are signs of increasing Necron activity.  With half an hour set, your men escape back to the surface.  There is a brief rumble as the charge goes off, your mission a success.";
+        reset_popup_options();
+        refresh_p_data();
+
+        alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
+
+        remove_planet_problem(planet, "inquisition_necron", system);
+        seal_tomb_world(p_data.features);
+
+        scr_event_log("", $"Inquisition Mission Completed: Your Astartes have sealed the Necron Tomb on {p_data.name()}.", system.name);
+        p_data.add_disposition(irandom_range(3, 7));
+        scr_check_equip("Plasma Bomb", system.name, planet, 1);
+        return true;
+    }
+    return false;
 }
 
 static inquisition_mission_options = fuction(mission_accept_function){

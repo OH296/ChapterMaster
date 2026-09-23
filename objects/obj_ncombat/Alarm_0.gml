@@ -2883,7 +2883,7 @@ try {
     }
 
     // ** Necron Forces **
-    if ((enemy == eFACTION.NECRONS) && ((string_count("_attack", battle_special) == 0))) {
+    if (enemy == eFACTION.NECRONS) {
         // Small Necron Group
         if (threat == 1) {
             u = instance_nearest(xxx, 240, obj_enunit);

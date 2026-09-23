@@ -206,7 +206,7 @@ function mission_inquisition_tomb_world(tomb_worlds) {
         system: _star.name,
         planet: planet,
         estimate: eta,
-        mission: "necron",
+        mission: "inquisition_necron",
         options: _options,
     };
 
@@ -219,13 +219,13 @@ function mission_inquisition_tomb_world(tomb_worlds) {
 
 /// @self Asset.GMObject.obj_popup
 function init_mission_inquisition_tomb_world() {
-    mission_star = find_star_by_name(pop_data.system);
-    var _p_data = mission_star.get_planet_data(pop_data.planet);
-    if (mission_star == noone) {
+    var _mission_star = find_star_by_name(pop_data.system);
+    var _p_data = _mission_star.get_planet_data(pop_data.planet);
+    if (_mission_star == noone) {
         popup_default_close();
         exit;
     }
-    scr_event_log("", $"Inquisition Mission Accepted: {global.chapter_name} have been given a Bomb to seal the Necron Tomb on {_p_data.name()}.", mission_star.name);
+    scr_event_log("", $"Inquisition Mission Accepted: {global.chapter_name} have been given a Bomb to seal the Necron Tomb on {_p_data.name()}.", _mission_star.name);
 
     image = "necron_cave";
     title = "New Equipment";
@@ -242,7 +242,7 @@ function init_mission_inquisition_tomb_world() {
     if (demand) {
         demand = 0;
     }
-    _p_data.new_problem("necron", estimate, {});
+    _p_data.new_problem("inquisition_necron", estimate, {});
     exit;
 }
 
@@ -314,32 +314,32 @@ function mission_inquistion_hunt_inquisitor(star_id = noone) {
 
 /// @self Asset.GMObject.obj_popup
 function init_mission_hunt_inquisitor() {
-    mission_star = find_star_by_name(pop_data.system);
-    if (mission_star == noone) {
+    var _mission_star = find_star_by_name(pop_data.system);
+    if (_mission_star == noone) {
         popup_default_close();
         exit;
     }
-    scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {pop_data.mission_data.inquisitor_name} enroute to {mission_star.name} must be removed.  Estimated arrival in {pop_data.estimate} months.", mission_star.name);
+    scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {pop_data.mission_data.inquisitor_name} enroute to {_mission_star.name} must be removed.  Estimated arrival in {pop_data.estimate} months.", _mission_star.name);
 
-    var _radical_inquisitor_fleet = create_enemy_fleet(mission_star.x - irandom_range(-400, 400), mission_star.y - irandom_range(-400, 400), eFACTION.INQUISITION);
+    var _radical_inquisitor_fleet = create_enemy_fleet(_mission_star.x - irandom_range(-400, 400), _mission_star.y - irandom_range(-400, 400), eFACTION.INQUISITION);
     with (_radical_inquisitor_fleet) {
         base_inquis_fleet();
     }
 
     fleet_add_cargo("radical_inquisitor", pop_data.mission_data, true, _radical_inquisitor_fleet);
 
-    _radical_inquisitor_fleet.action_x = mission_star.x;
-    _radical_inquisitor_fleet.action_y = mission_star.y;
+    _radical_inquisitor_fleet.action_x = _mission_star.x;
+    _radical_inquisitor_fleet.action_y = _mission_star.y;
 
     var _est = pop_data.estimate;
     with (_radical_inquisitor_fleet) {
         set_fleet_movement(false, "move", _est, _est);
     }
-    var _p_data = mission_star.get_planet_data(pop_data.planet);
+    var _p_data = _mission_star.get_planet_data(pop_data.planet);
     _p_data.add_problem(pop_data.mission, pop_data.estimate,pop_data.mission_data)
 
     title = "Inquisition Mission Accepted";
-    text = $"{global.chapter_name} will intercept the radical Inquisitor {pop_data.mission_data.inquisitor_name} at {mission_star.name}, expected within {pop_data.estimate} months.";
+    text = $"{global.chapter_name} will intercept the radical Inquisitor {pop_data.mission_data.inquisitor_name} at {_mission_star.name}, expected within {pop_data.estimate} months.";
     reset_popup_options();
 }
 
@@ -702,42 +702,6 @@ function mission_investigate_planet() {
     scr_popup("Inquisition Recon", text, "inquisition", $"recon|{string(_star.name)}|{string(planet)}|{string(eta)}|");
 }
 
-/// @self Asset.GMObject.obj_popup
-/// @desc Advances the Necron Tomb mission and renders the resulting popup state.
-/// @returns {Bool} Whether the mission reached completion.
-function advance_necron_tomb_mission() {
-    pop_data.mission_stage++;
-    title = $"Necron Tunnels : {pop_data.mission_stage}";
-
-    if (pop_data.mission_stage == 2) {
-        image = "necron_tunnels_2";
-        text = "The energy readings are much stronger, now that your marines are deep inside the tunnels.  What was once cramped is now luxuriously large, the tunnel ceiling far overhead decorated by stalactites.";
-        return false;
-    }
-    if (pop_data.mission_stage == 3) {
-        image = "necron_tunnels_3";
-        text = "After several hours of descent the entrance to the Necron Tomb finally looms ahead- dancing, sickly green light shining free.  Your marine confirms that the Plasma Bomb is ready.";
-        return false;
-    }
-    if (pop_data.mission_stage >= 4) {
-        image = "";
-        title = "Inquisition Mission Completed";
-        text = "Your marines finally enter the deepest catacombs of the Necron Tomb.  There they place the Plasma Bomb and arm it.  All around are signs of increasing Necron activity.  With half an hour set, your men escape back to the surface.  There is a brief rumble as the charge goes off, your mission a success.";
-        reset_popup_options();
-
-        alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
-
-        mission_star = find_star_by_name(pop_data.loc);
-        remove_planet_problem(planet, "necron", mission_star);
-        seal_tomb_world(mission_star.p_feature[planet]);
-
-        scr_event_log("", $"Inquisition Mission Completed: Your Astartes have sealed the Necron Tomb on {mission_star.name} {scr_roman(planet)}.", mission_star.name);
-        scr_gov_disp(mission_star.name, planet, irandom_range(3, 7));
-        scr_check_equip("Plasma Bomb", pop_data.loc, pop_data.planet, 1);
-        return true;
-    }
-    return false;
-}
 
 function set_gender() {
     return choose(eGENDER.FEMALE, eGENDER.MALE);

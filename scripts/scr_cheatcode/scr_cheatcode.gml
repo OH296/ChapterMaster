@@ -501,7 +501,7 @@ function draw_planet_debug_problems() {
                     case "inquisitor":
                         mission_inquistion_hunt_inquisitor(target.id);
                         break;
-                    case "necron":
+                    case "inquisition_necron":
                         mission_inquisition_tomb_world(target.id);
                         break;
                     case "mech_raider":
