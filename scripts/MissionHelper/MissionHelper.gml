@@ -84,7 +84,7 @@ static basic_turn_end = function(){
 		}
         handle_triggered_mission_func(_func)
 	}
-	if ((timer == 0) && zero_timer_checks) {
+	if ((timer == 0) && zero_timer_checks && !delete) {
 		var _func = undefined;
 		switch(p_id){
 			case "hunt_beast":
@@ -158,7 +158,7 @@ static before_battle_effects = function(){
     var _func = undefined;
     switch(p_id){
         case "iquisition_tyranid_org":
-            _func = iquisition_tyranid_org_setup_battle;
+            _func = inquisition_tyranid_org_setup_battle;
             break;
     }
     handle_triggered_mission_func(_func);   
@@ -179,8 +179,10 @@ static after_battle_effects = function(){
             _func = hunt_fallen_battle_aftermath;
             break;
         case "inquisition_tomb":
-            inquisition_tomb_battle_aftermath;
+            _func = inquisition_tomb_battle_aftermath;
             break;
+        case "tyranid_org":
+            _func = inquisition_tyranid_org_battle_aftermath
     }
     handle_triggered_mission_func(_func);   
     instance_deactivate_object(obj_star);
@@ -656,7 +658,7 @@ static spyrer_battle_aftermath = function(){
         exit;
     }
 
-    remove_planet_problem(planet, "spyrer", system);
+    delete = true;
 
     var _tixt = $"The Spyrer on {p_data.name()} has been removed.  The citizens and craftsman may sleep more soundly, the Inquisition likely pleased.";
 
@@ -714,11 +716,10 @@ static per_turn_check_fallen = function() {
                 _battle_enemy_data
             );
         } else {
-            if (remove_planet_problem(run, "fallen")) {
-                var _tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
-                scr_popup("Hunt the Fallen", _tixt, "fallen", "");
-                scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run, id)}");
-            }
+            delete = true;
+            var _tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
+            scr_popup("Hunt the Fallen", _tixt, "fallen", "");
+            scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run, id)}");
         }
     }
 }
@@ -751,9 +752,7 @@ function hunt_fallen_battle_aftermath() {
     if (obj_ncombat.defeat) {
         exit;
     }
-
-    var _p_data = battle_object.get_planet_data("fallen");
-    _p_data.remove_problem("fallen");
+    delete = true;
     var _tixt = "The Fallen on " + _p_data.name();
     scr_event_log("", $"Mission Succesful: {_tixt} have been captured or purged.");
     _tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
@@ -773,7 +772,7 @@ static per_turn_check_mech_raider = function() {
         var _percent_complete = increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
-            p_data.remove_problem(p_id);
+            delete = true;
             scr_mission_reward("mech_raider", system, planet);
             timer = -1
             per_turn_checks = false;
@@ -787,7 +786,7 @@ static resolve_mech_raider_failed = function() {
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
     p_data.alter_disposition(eFACTION.MECHANICUS, -6);
-    p_data.remove_problem(p_id);
+    delete = true;
 }
 
 static per_turn_check_mech_bionics = function() {
@@ -797,7 +796,7 @@ static per_turn_check_mech_bionics = function() {
         var _percent_complete = increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
-            p_data.remove_problem(p_id);
+            delete = true;
             scr_mission_reward("mech_bionics", id, planet);
             timer = -1
             per_turn_checks = false;
@@ -811,7 +810,7 @@ static resolve_mech_bionics_failed = function() {
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
     p_data.alter_disposition(eFACTION.MECHANICUS, -6);
-    p_data.remove_problem(p_id);
+    delete = true;
 }
 
 static per_turn_check_mech_tomb2 = function() {
@@ -844,7 +843,7 @@ static per_turn_check_mech_tomb2 = function() {
             scr_popup("Mechanicus Mission Failed", $"The Mechanicus Research team on planet {p_data.name()} have been killed by Necrons in the absence of your astartes.  The Mechanicus are absolutely livid, doubly so because of the promised security they did not recieve.", "", "");
             obj_controller.turns_ignored[3] += choose(8, 10, 12, 14, 16, 18, 20, 22, 24);
             p_data.alter_disposition(eFACTION.MECHANICUS, -25);
-            p_data.remove_problem(p_id);
+            delete = true;
         }
     } else {
         if (_roll1 > 20) {
@@ -867,7 +866,7 @@ static per_turn_check_mech_tomb2 = function() {
             }
             _text += "\n" + add_disposition(eFACTION.MECHANICUS, 1);
             scr_popup("Mechanicus Mission Completed", _text, "mechanicus", "");
-            p_data.remove_problem(p_id);
+            delete = true;
             timer = -1
             per_turn_checks = false;
             zero_timer_checks = false;
@@ -890,28 +889,29 @@ static resolve_mech_tomb1_failed = function() {
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text, system.name);
     p_data.alter_disposition(eFACTION.MECHANICUS, -15);
-    p_data.remove_problem(p_id);
+    delete = true;
 }
 
 static mech_tomb_battle_aftermath = function() {
     if (obj_ncombat.defeat) {
-        if (remove_planet_problem(battle_id, "mech_tomb", battle_object)) {
-            var _disp_change = alter_disposition(eFACTION.MECHANICUS, -10);
+        delete = true;
 
-            if (data.battle_key == "study2a") {
-                scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust, and the Adeptus Mechanicus is furious with your chapter for not providing enough security.  Relations with them are worse than before. {_disp_change}", "", "");
-            }
-            if (data.battle_key == "study2b") {
-                battle_object.p_necrons[battle_id] = 5;
-                awaken_tomb_world(battle_object.p_feature[battle_id]);
-                _disp_change = alter_dispositions([[eFACTION.MECHANICUS, -15], [eFACTION.INQUISITION, -5]]);
-                scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust.  To make matters worse the Necron Tomb has fully awakened- countless numbers of the souless machines are now pouring out of the tomb.  The Adeptus Mechanicus are furious with your chapter. {_disp_change}", "necron_army", "");
-                scr_alert("", "inqi", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb", 0, 0);
-                scr_event_log("", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb");
-            }
+        var _disp_change = alter_disposition(eFACTION.MECHANICUS, -10);
 
-            scr_event_log("", "Mechanicus Mission Failed: Necron Tomb Research Party and present astartes have been killed.");
+        if (data.battle_key == "study2a") {
+            scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust, and the Adeptus Mechanicus is furious with your chapter for not providing enough security.  Relations with them are worse than before. {_disp_change}", "", "");
         }
+        if (data.battle_key == "study2b") {
+            battle_object.p_necrons[battle_id] = 5;
+            awaken_tomb_world(battle_object.p_feature[battle_id]);
+            _disp_change = alter_dispositions([[eFACTION.MECHANICUS, -15], [eFACTION.INQUISITION, -5]]);
+            scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust.  To make matters worse the Necron Tomb has fully awakened- countless numbers of the souless machines are now pouring out of the tomb.  The Adeptus Mechanicus are furious with your chapter. {_disp_change}", "necron_army", "");
+            scr_alert("", "inqi", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb", 0, 0);
+            scr_event_log("", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb");
+        }
+
+        scr_event_log("", "Mechanicus Mission Failed: Necron Tomb Research Party and present astartes have been killed.");
+
     }   
 }
 
@@ -1036,7 +1036,7 @@ static protect_raiders_battle_aftermath = function() {
     // show_message(obj_turn_end.battle_world[obj_turn_end.current_battle]);
     // title / text / image / speshul
     var _planet_string = p_data.name();
-    p_data.remove_problem("protect_raiders");
+    delete = true;
     if (!obj_ncombat.defeat) {
         p_data.add_disposition(15);
         var _tixt = $"The Raiding forces on {_planet_string} have been removed.  The citizens and craftsman may sleep more soundly. ({_planet_string} disp +15)";
@@ -1413,18 +1413,16 @@ static inquisition_tomb_battle_aftermath = function(){
             }
         }
 
-        var _star_obj = find_star_by_name(battle_loc);
-        if (_star_obj != noone) {
-            with (_star_obj) {
-                var planet = obj_ncombat.battle_id;
-                if (remove_planet_problem(planet, "inquisition_necron")) {
-                    p_necrons[planet] = 4;
-                }
-                if (awake_tomb_world(p_feature[planet]) == 0) {
-                    awaken_tomb_world(p_feature[planet]);
-                }
+        delete = true;
+
+        with (system) {
+            var _planet = obj_ncombat.battle_id;
+            p_necrons[planet] = 4;
+            if (awake_tomb_world(p_feature[_planet]) == 0) {
+                awaken_tomb_world(p_feature[_planet]);
             }
         }
+
 
         alter_disposition(eFACTION.INQUISITION, -5);
         obj_controller.combat = 0;
@@ -1458,7 +1456,7 @@ static advance_necron_tomb_mission = function() {
 
         alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
-        remove_planet_problem(planet, "inquisition_necron", system);
+        delete = true;
         seal_tomb_world(p_data.features);
 
         scr_event_log("", $"Inquisition Mission Completed: Your Astartes have sealed the Necron Tomb on {p_data.name()}.", system.name);
@@ -1475,6 +1473,7 @@ static inquisition_mission_options = fuction(mission_accept_function){
             str1: "Accept",
             choice_func: function(){
                 pop_data.mission[$ mission_accept_function]();
+                obj_controller.demanding = 0;
             }
         },
     ];
@@ -1482,8 +1481,8 @@ static inquisition_mission_options = fuction(mission_accept_function){
         array_push(_options, {
             str1: "Refuse",
             choice_func: function(){
-                pop_data.mission.destroy = true;
-                popup_default_close;
+                pop_data.mission.delete = true;
+                popup_default_close();
             }
         })
     }
@@ -1529,7 +1528,6 @@ static inquisition_tyranid_org_init = fuction(){
 }
 
 static inquisition_tyranid_org_accept = fuction(){
-
     obj_popup.image = "webber";
     obj_popup.title = "New Equipment";
     obj_popup.fancy_title = 0;
@@ -1540,17 +1538,19 @@ static inquisition_tyranid_org_accept = fuction(){
     obj_controller.cooldown = 10;
     scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wishes for the capture of a particular strain Gaunt noticed on {p_data.name()} is advisable.", system.name);
     obj_controller.useful_info += "Tyr|";
-    if (demand) {
-        demand = 0;
-
 }
 
 
-static iquisition_tyranid_org_setup_battle = function(){
+static inquisition_tyranid_org_setup_battle = function(){
     if ((obj_ncombat.enemy != eFACTION.TYRANIDS) || (obj_ncombat.battle_object.space_hulk)) {
         exit;
     }
     obj_ncombat.battle_special = p_id;
+}
+
+static inquisition_tyranid_org_battle_aftermath = function(){
+
+}
 }
 
 
