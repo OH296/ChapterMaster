@@ -89,7 +89,7 @@ if (array_length(p_problem[i]) == 0){
         var _pdata = get_planet_data(i);
 
         if (((p_tyranids[i] == 3) || (p_tyranids[i] == 4)) && (p_population[i] > 0)) {
-            if (!has_problem_planet(i, "Hive Fleet")) {
+            if (!_pdata.has_problem("Hive Fleet")) {
                 var roll = irandom_range(100, 300);
                 var cont = 0;
 
@@ -101,7 +101,7 @@ if (array_length(p_problem[i]) == 0){
                 }
 
                 if (cont == 1) {
-                    _pdata.add_problem("Hive Fleet", irandom_range(60, 120) + irandom_range(80, 120));
+                    _pdata.new_problem("Hive Fleet", irandom_range(60, 120) + irandom_range(80, 120));
 
                     var xx = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
                     var yy = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;

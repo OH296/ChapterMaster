@@ -933,7 +933,7 @@ static init_garrison_mission = function() {
     scr_event_log("", $"Garrison committed to {_numeral_name} for {_garrison_length} months.", p_data.system.name);
 }
 
-static complete_garrison_mission= function() {
+static complete_garrison_mission = function() {
     if (stage_id != "active"){
         exit;
     }
@@ -1026,10 +1026,10 @@ static protect_raider_squad_selected = function() {
     if (!_wis_test[0]) {
         scr_toggle_manage();
         if (_wis_test[1] < -25) {
-            var gar_pop = instance_create(0, 0, obj_popup);
-            gar_pop.title = $"Strange Disappearance";
-            gar_pop.pdata = pdata;
-            gar_pop.text = $"Your Marines make planet fall and are directed to report to the governor for the duration of the operation after a period of reconnaissance dig in for their ambush. After a two weeks have passed A message from the governor reaches your astropaths that your marines have not been heard of for some time, The raiders also were not noted to have arrived onor left the planet";
+            var _gar_pop = instance_create(0, 0, obj_popup);
+            _gar_pop.title = $"Strange Disappearance";
+            _gar_pop.pdata = p_data;
+            _gar_pop.text = $"Your Marines make planet fall and are directed to report to the governor for the duration of the operation after a period of reconnaissance dig in for their ambush. After a two weeks have passed A message from the governor reaches your astropaths that your marines have not been heard of for some time, The raiders also were not noted to have arrived onor left the planet";
             var _dead_marine = array_random_index(_squad_units);
             for (var i = 0; i < array_length(_dead_marine); i++) {
                 if (i == _dead_marine) {
@@ -1042,24 +1042,24 @@ static protect_raider_squad_selected = function() {
                 _marine.ship_location = -1;
                 _marine.planet_location = 0;
             }
-            gar_pop.text += $"After eventual investigation it appears the eldar anticipated the would be ambushers and turned the tides. {_squad_units[_dead_marine].name_role()}s body is eventually discovered some way off from the main battle his rent armour and body showing the extent of combat that must have occured";
+            _gar_pop.text += $"After eventual investigation it appears the eldar anticipated the would be ambushers and turned the tides. {_squad_units[_dead_marine].name_role()}s body is eventually discovered some way off from the main battle his rent armour and body showing the extent of combat that must have occured";
 
-            gar_pop.text += "\nThe total loss of a squad in what was meant to be a routine operation is bad for moral and your chapters reputation you must now decide how to proceed";
+            _gar_pop.text += "\nThe total loss of a squad in what was meant to be a routine operation is bad for moral and your chapters reputation you must now decide how to proceed";
 
-            gar_pop.add_option({str1: "Suppress the Information", choice_func: protect_raiders_suppress_information});
+            _gar_pop.add_option({str1: "Suppress the Information", choice_func: protect_raiders_suppress_information});
 
-            gar_pop.add_option({str1: "Hold a Memorial", choice_func: protect_raiders_hold_memorial});
+            _gar_pop.add_option({str1: "Hold a Memorial", choice_func: protect_raiders_hold_memorial});
         } else {
-            var gar_pop = instance_create(0, 0, obj_popup);
-            gar_pop.title = $"Ineffective Ambush";
-            gar_pop.text = $"Your Marines Are ineffective at setting up an ambush the assailants clearly got wind of the operation or the plan was otherwise so ill thought out that by the time your forces arrived there was little that could be done to intercept them";
-            gar_pop.text += $"";
-            gar_pop.pathway = "protect_raiders_ineffective";
-            gar_pop.pdata = pdata;
-            pdata.add_disposition(-10);
-            gar_pop.text += "\nThe governor is unhappy and it has done little to improve your reputation with the planets populace but otherwise very little harm has been done. It is likely the raiders will choose better targets without the possible threat of space marine presence for the foreseeable future\nGovernor Disposition : -10";
+            var _gar_pop = instance_create(0, 0, obj_popup);
+            _gar_pop.title = $"Ineffective Ambush";
+            _gar_pop.text = $"Your Marines Are ineffective at setting up an ambush the assailants clearly got wind of the operation or the plan was otherwise so ill thought out that by the time your forces arrived there was little that could be done to intercept them";
+            _gar_pop.text += $"";
+            _gar_pop.pathway = "protect_raiders_ineffective";
+            _gar_pop.pdata = p_data;
+            p_data.add_disposition(-10);
+            _gar_pop.text += "\nThe governor is unhappy and it has done little to improve your reputation with the planets populace but otherwise very little harm has been done. It is likely the raiders will choose better targets without the possible threat of space marine presence for the foreseeable future\nGovernor Disposition : -10";
 
-            gar_pop.add_option("continue");
+            _gar_pop.add_option("continue");
         }
     } else {
         var _battle = new_battle(eFACTION.ELDAR)

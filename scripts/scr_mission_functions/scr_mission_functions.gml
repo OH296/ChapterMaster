@@ -141,7 +141,7 @@ function scr_new_governor_mission(planet, problem = "") {
             }
         }
         var _p_data = get_planet_data(planet);
-        _p_data.add_problem(problem, 20 + irandom(20),mission_data);
+        _p_data.new_problem(problem, 20 + irandom(20),mission_data);
     }
 }
 
@@ -227,7 +227,7 @@ function has_problem_star(problem, star = noone) {
     var has_problem = false;
     if (star == noone) {
         for (var i = 1; i <= planets; i++) {
-            has_problem = has_problem_planet(i, problem);
+            has_problem = get_planet_data(i).has_problem(problem);
             if (has_problem) {
                 has_problem = true;
                 break;
@@ -239,18 +239,6 @@ function has_problem_star(problem, star = noone) {
         }
     }
     return has_problem;
-}
-
-//returns a bool for if a planet has a given problem
-/// @self Asset.GMObject.obj_star
-function has_problem_planet(planet, problem, star = noone) {
-    if (star == noone) {
-        return array_contains(p_problem[planet], problem);
-    } else {
-        with (star) {
-            return has_problem_planet(planet, problem);
-        }
-    }
 }
 
 //returns the array position of a given problem on a given planet if the specfied time is given

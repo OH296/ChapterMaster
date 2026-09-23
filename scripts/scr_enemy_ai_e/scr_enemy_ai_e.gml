@@ -513,6 +513,7 @@ function scr_enemy_ai_e() {
     var chaos_meeting = 0;
 
     for (var run = 1; run <= planets; run++) {
+        var _p_data = get_planet_data(run);
         var forces_list = [];
         var force_count = 0;
         if (p_player[run] > 0 && struct_exists(obj_controller.location_viewer.garrison_log, name)) {
@@ -522,9 +523,9 @@ function scr_enemy_ai_e() {
 
         if (p_player[run] > 0 && force_count > 0) {
             if (p_player[run] > 0) {
-                if (has_problem_planet(run, "meeting")) {
+                if (_p_data.has_problem( "meeting")) {
                     chaos_meeting = run;
-                } else if (has_problem_planet(run, "meeting_trap")) {
+                } else if (_p_data.has_problem( "meeting_trap")) {
                     chaos_meeting = run + 0.1;
                 }
             }
@@ -573,13 +574,13 @@ function scr_enemy_ai_e() {
                         }
                         break;
                     case 10:
-                        pause = has_problem_planet(run, "meeting") || has_problem_planet(run, "meeting_trap");
+                        pause = _p_data.has_problem( "meeting") || _p_data.has_problem( "meeting_trap");
                         if (p_guardsmen[run] + p_pdf[run] == 0 && p_player[run] > 0 && p_chaos[run] > 0 && !pause && obj_controller.faction_status[10] == "War") {
                             battle_opponent = 10;
                         }
                         break;
                     case 11:
-                        pause = has_problem_planet(run, "meeting") || has_problem_planet(run, "meeting_trap");
+                        pause = _p_data.has_problem( "meeting") || _p_data.has_problem( "meeting_trap");
                         if (p_guardsmen[run] + p_pdf[run] == 0 && p_player[run] > 0 && p_traitors[run] > 0 && !pause && obj_controller.faction_status[10] == "War") {
                             battle_opponent = 11;
                         }
