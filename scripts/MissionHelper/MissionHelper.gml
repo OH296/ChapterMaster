@@ -1,7 +1,3 @@
-function MissionHelper() constructor{
-
-}
-
 function SystemProblem(name, timer, data){}
 
 function PlanetProblem(name, timer, data, planet) constructor{
@@ -14,6 +10,7 @@ planet = p_data.planet;
 system = p_data.system;
 f_type = eP_FEATURES.MISSION;
 members = [];
+delete = false;
 static refresh_p_data = function(){
 	p_data = system.get_planet_data(planet);
 }
@@ -31,6 +28,29 @@ remove = false;
 zero_timer_checks = true;
 per_turn_checks = true;
 
+
+static handle_triggered_mission_func = function(func){
+    if (!is_undefined(func)){
+        refresh_p_data();
+        try {
+            func();
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
+        }
+    }
+    if (timer == -1 || (delete)){
+        var _prob = -1;
+        for (var i = 0; i < array_length(system.p_problem); i++){
+            if (system.p_problem[i] == self){
+                _prob = i;
+            }
+        }
+        if (_prob > -1){
+            array_delete(system.p_problem, _prob,0);
+            array_delete(p_data.problems, _prob,0);
+        }
+    }
+}
 static basic_turn_end = function(){
 	refresh_p_data();
 	if (p_data.system.storm - 1 > 0){
@@ -62,15 +82,7 @@ static basic_turn_end = function(){
                 per_turn_check_inqisition_tomb;
                 break;
 		}
-		if (!is_undefined(_func)){
-            refresh_p_data();
-            try {
-                _func();
-            } catch (_exception) {
-                ERROR_HANDLER.handle_exception(_exception);
-            }
-		}
-
+        handle_triggered_mission_func(_func)
 	}
 	if ((timer == 0) && zero_timer_checks) {
 		var _func = undefined;
@@ -114,14 +126,7 @@ static basic_turn_end = function(){
             case "provide_garrison":
                 _func =  complete_garrison_mission;
 		}
-		if (!is_undefined(_func)){
-            refresh_p_data();
-            try {
-                _func();
-            } catch (_exception) {
-                ERROR_HANDLER.handle_exception(_exception);
-            }
-		}
+		handle_triggered_mission_func(_func)
 	}
 }
 
@@ -148,6 +153,18 @@ static increment_mission_completion =  function() {
     return (data.completion / data.required_months) * 100;
 }
 
+static before_battle_effects = function(){
+     instance_activate_object(obj_star);
+    var _func = undefined;
+    switch(p_id){
+        case "iquisition_tyranid_org":
+            _func = iquisition_tyranid_org_setup_battle;
+            break;
+    }
+    handle_triggered_mission_func(_func);   
+    instance_deactivate_object(obj_star);   
+}
+
 static after_battle_effects = function(){
     instance_activate_object(obj_star);
     var _func = undefined;
@@ -165,14 +182,7 @@ static after_battle_effects = function(){
             inquisition_tomb_battle_aftermath;
             break;
     }
-    if (!is_undefined(_func)){
-        refresh_p_data();
-        try {
-            _func();
-        } catch (_exception) {
-            ERROR_HANDLER.handle_exception(_exception);
-        }
-    }    
+    handle_triggered_mission_func(_func);   
     instance_deactivate_object(obj_star);
 }
 
@@ -183,14 +193,7 @@ static on_squad_selection = function(){
             _func = protect_raider_squad_selected;
             break;
     }
-    if (!is_undefined(_func)){
-        refresh_p_data();
-        try {
-            _func();
-        } catch (_exception) {
-            ERROR_HANDLER.handle_exception(_exception);
-        }
-    }    
+    handle_triggered_mission_func(_func);       
     instance_deactivate_object(obj_star);
 }
 
@@ -208,12 +211,7 @@ static on_unit_selection = function(){
         if (struct_exists(obj_controller.selection_data, "selections")){
             members = obj_controller.selection_data.selections;
         }
-        refresh_p_data();
-        try {
-            _func();
-        } catch (_exception) {
-            ERROR_HANDLER.handle_exception(_exception);
-        }
+        handle_triggered_mission_func(_func);   
     }    
     instance_deactivate_object(obj_star);
 }
@@ -413,101 +411,103 @@ stati init_train_forces_mission = fuction() {
 }
 
 static complete_train_forces_mission = function() {
-    if (stage_id == "active") {
-        var _mission_string = "";
-        var _trainer = fetch_unit_uid(data.assigned_unit);
-        if (is_struct(_trainer)) {
-            var _unit_report_string = "";
-            var _tester = global.character_tester;
-            var _wis_test_difficulty = -20;
-            var _tyannic_vet = _trainer.has_trait("tyrannic_vet");
-            if (_tyannic_vet) {
-                _wis_test_difficulty += 10;
-                if (p_data.has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
-                    var _cult = p_data.get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
-                    if (_cult.hiding) {
-                        p_data.delete_feature(eP_FEATURES.GENE_STEALER_CULT);
-                        _mission_string += $"Fortune has smiled on this mission, {_trainer.name_role()}'s abilities as a Veteran of dealing with the Tyranids came in handy and in a short period was able to discern the existencee of a _cult. He was able to organise those  he considered to be still loyal to rally an extermiation of the _cult, reeports suggest he was so successful as to have completely wiped the genestealer presence from the planet";
-                    }
-                }
-            }
-            var _siege_master = _trainer.has_trait("siege_master");
-            if (_siege_master) {
-                _wis_test_difficulty += 10;
-            }
-            var _brute = _trainer.has_trait("brute");
-            if (_brute) {
-                _wis_test_difficulty -= 10;
-            }
-
-            var _leader = _trainer.has_trait("natural_leader");
-            if (_leader) {
-                _wis_test_difficulty += 10;
-            }
-
-            var _unit_pass = _tester.standard_test(_trainer, "wisdom", _wis_test_difficulty);
-            if (_unit_pass[0]) {
-                var _new_pdf = p_data.recruit_pdf((_unit_pass[1] / 10)); //this will approximate podf improvement for the time being
-                _mission_string += $"Training of the Pdf went well and improved the quality of the pdf as well as providing sizeable big recruitment improvement for the planet {_new_pdf} new pdf were recruited";
-                if (_leader) {
-                    var _disp_gain = 10;
-                    p_data.add_disposition(_disp_gain);
-                    _mission_string += $"\n{_trainer.name_role()}s reputation a natural and confident leader proved well earned as he also made excellent diplomatic headway with the governor and his generals (disposition +{_disp_gain})";
-                }
-                if (_siege_master) {
-                    _mission_string += $"{_trainer.name()}s trained eye as a Siege Master also allowed him to make several improvements to the planets fortifications (fortification +1)";
-                    p_data.alter_fortification(1);
-                } else {
-                    if (roll_dice(1, 100) > 75 && _trainer.intelligence > 45) {
-                        _mission_string += $"{_trainer.name()} has proven themselves a great strategist when it comes to defensive structures beyond previousy known ";
-                        var _start_stats = variable_clone(_trainer.get_stat_line());
-                        _trainer.add_trait("siege_master");
-                        var end_stat = _trainer.get_stat_line();
-                        var _stat_diff = compare_stats(end_stat, _start_stats);
-                        _unit_report_string += $"{_trainer.name_role()} Has gained the trait {global.trait_list.siege_master.display_name}, {print_stat_diffs(_stat_diff)}\n";
-                        _mission_string += "The new insights have allowed for minor improvements to planetary fortifications (fortification +1)";
-                        p_data.alter_fortification(1);
-                    }
-                }
-            } else {
-                var disp_loss = -5;
-                _mission_string += "The orgional training mission was a failiure";
-                if (_brute) {
-                    _mission_string += "in no short part due to his brutish nature";
-                }
-                _mission_string += ".";
-
-                _mission_string += "He failed to work effectively with the existing chain of command";
-
-                if (_unit_pass[1] < -20) {
-                    var _hard_loss_traits = [
-                        "harshborn",
-                        "feral",
-                        "zealous_faith",
-                        "blood_for_blood",
-                        "blunt",
-                        "brute",
-                        "brawler",
-                    ];
-                    var _hard_loss = false;
-                    for (var i = 0; i < array_length(_hard_loss_traits); i++) {
-                        if (array_contains(_trainer.traits, _hard_loss_traits[i])) {
-                            _hard_loss = true;
-                        }
-                    }
-                    if (_hard_loss) {
-                        _mission_string += $"His particularly grueling regimes and standards imposed upon the senior officers of the pdf caused friction with physical injury being caused to one officer";
-                        disp_loss = -25;
-                        _mission_string += "(disposition -25)";
-                    }
-                }
-                p_data.add_disposition(disp_loss);
-            }
-            _mission_string += $"\n{_unit_report_string}";
-            scr_popup($"Training Forces on {p_data.name()}", _mission_string, "", "");
-        }
-        _trainer.job = "none";
+    if (stage_id != "active") {
+        exit;
     }
+    var _mission_string = "";
+    var _trainer = fetch_unit_uid(data.assigned_unit);
+    if (is_struct(_trainer)) {
+        exit;
+    }
+    var _unit_report_string = "";
+    var _tester = global.character_tester;
+    var _wis_test_difficulty = -20;
+    var _tyannic_vet = _trainer.has_trait("tyrannic_vet");
+    if (_tyannic_vet) {
+        _wis_test_difficulty += 10;
+        if (p_data.has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
+            var _cult = p_data.get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
+            if (_cult.hiding) {
+                p_data.delete_feature(eP_FEATURES.GENE_STEALER_CULT);
+                _mission_string += $"Fortune has smiled on this mission, {_trainer.name_role()}'s abilities as a Veteran of dealing with the Tyranids came in handy and in a short period was able to discern the existencee of a _cult. He was able to organise those  he considered to be still loyal to rally an extermiation of the _cult, reeports suggest he was so successful as to have completely wiped the genestealer presence from the planet";
+            }
+        }
+    }
+    var _siege_master = _trainer.has_trait("siege_master");
+    if (_siege_master) {
+        _wis_test_difficulty += 10;
+    }
+    var _brute = _trainer.has_trait("brute");
+    if (_brute) {
+        _wis_test_difficulty -= 10;
+    }
+
+    var _leader = _trainer.has_trait("natural_leader");
+    if (_leader) {
+        _wis_test_difficulty += 10;
+    }
+
+    var _unit_pass = _tester.standard_test(_trainer, "wisdom", _wis_test_difficulty);
+    if (_unit_pass[0]) {
+        var _new_pdf = p_data.recruit_pdf((_unit_pass[1] / 10)); //this will approximate podf improvement for the time being
+        _mission_string += $"Training of the Pdf went well and improved the quality of the pdf as well as providing sizeable big recruitment improvement for the planet {_new_pdf} new pdf were recruited";
+        if (_leader) {
+            var _disp_gain = 10;
+            p_data.add_disposition(_disp_gain);
+            _mission_string += $"\n{_trainer.name_role()}s reputation a natural and confident leader proved well earned as he also made excellent diplomatic headway with the governor and his generals (disposition +{_disp_gain})";
+        }
+        if (_siege_master) {
+            _mission_string += $"{_trainer.name()}s trained eye as a Siege Master also allowed him to make several improvements to the planets fortifications (fortification +1)";
+            p_data.alter_fortification(1);
+        } else {
+            if (roll_dice(1, 100) > 75 && _trainer.intelligence > 45) {
+                _mission_string += $"{_trainer.name()} has proven themselves a great strategist when it comes to defensive structures beyond previousy known ";
+                var _start_stats = variable_clone(_trainer.get_stat_line());
+                _trainer.add_trait("siege_master");
+                var end_stat = _trainer.get_stat_line();
+                var _stat_diff = compare_stats(end_stat, _start_stats);
+                _unit_report_string += $"{_trainer.name_role()} Has gained the trait {global.trait_list.siege_master.display_name}, {print_stat_diffs(_stat_diff)}\n";
+                _mission_string += "The new insights have allowed for minor improvements to planetary fortifications (fortification +1)";
+                p_data.alter_fortification(1);
+            }
+        }
+    } else {
+        var disp_loss = -5;
+        _mission_string += "The orgional training mission was a failiure";
+        if (_brute) {
+            _mission_string += "in no short part due to his brutish nature";
+        }
+        _mission_string += ".";
+
+        _mission_string += "He failed to work effectively with the existing chain of command";
+
+        if (_unit_pass[1] < -20) {
+            var _hard_loss_traits = [
+                "harshborn",
+                "feral",
+                "zealous_faith",
+                "blood_for_blood",
+                "blunt",
+                "brute",
+                "brawler",
+            ];
+            var _hard_loss = false;
+            for (var i = 0; i < array_length(_hard_loss_traits); i++) {
+                if (array_contains(_trainer.traits, _hard_loss_traits[i])) {
+                    _hard_loss = true;
+                }
+            }
+            if (_hard_loss) {
+                _mission_string += $"His particularly grueling regimes and standards imposed upon the senior officers of the pdf caused friction with physical injury being caused to one officer";
+                disp_loss = -25;
+                _mission_string += "(disposition -25)";
+            }
+        }
+        p_data.add_disposition(disp_loss);
+    }
+    _mission_string += $"\n{_unit_report_string}";
+    scr_popup($"Training Forces on {p_data.name()}", _mission_string, "", "");
+    _trainer.job = "none";
 }
 
 static resolve_succession = function() {
@@ -770,7 +770,7 @@ static per_turn_check_mech_raider = function() {
     var _techs = collect_role_group(SPECIALISTS_TECHS, [system.name, planet, -1]);
     var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
     if ((array_length(_techs) >= 6) && (_lr_count >= 1)) {
-        var _percent_complete = increment_mission_completion(data);
+        var _percent_complete = increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
             p_data.remove_problem(p_id);
@@ -794,7 +794,7 @@ static per_turn_check_mech_bionics = function() {
     var _units = p_data.collect_planet_group();
     var _bionics = _units.tally_attr("bionics");
     if (_bionics >= 10) {
-        var _percent_complete = increment_mission_completion(data);
+        var _percent_complete = increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
             p_data.remove_problem(p_id);
@@ -1285,7 +1285,6 @@ static necron_tomb_mission_sequence = function() {
     if (_battle > 0) {
         instance_deactivate_all_safe();
         instance_activate_object(obj_star);
-        obj_ncombat.battle_special = "necron_tomb_excursion";
         var _col = [];
         var _battle_data = {
             threat :  1,
@@ -1482,7 +1481,10 @@ static inquisition_mission_options = fuction(mission_accept_function){
     if (!obj_controller.demanding){
         array_push(_options, {
             str1: "Refuse",
-            choice_func: popup_default_close,
+            choice_func: function(){
+                pop_data.mission.destroy = true;
+                popup_default_close;
+            }
         })
     }
     return _options
@@ -1513,4 +1515,43 @@ static inquisition_demon_world_accept = fuction(){
     }
 }
 
+static inquisition_tyranid_org_init = fuction(){
+    var _pop_data = {
+        mission: self,
+        options: inquisition_mission_options("inquisition_tyranid_org_accept"),
+    };
+    var _text = $"An Inquisitor is trusting you with a special mission.  The planet {string(_star.name)} {scr_roman(planet)}";
+    _text += " is ripe with Tyranid organisms.  They require that you capture one of the Gaunt species for research purposes.  Can your chapter handle this mission?";
+    if (obj_controller.demanding) {
+        _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to capture a Gaunt organism and return it, unharmed- 4x Webbers have been provided for this purpose.";
+    }
+    scr_popup("Inquisition Mission", _text, "inquisition",_pop_data);
 }
+
+static inquisition_tyranid_org_accept = fuction(){
+
+    obj_popup.image = "webber";
+    obj_popup.title = "New Equipment";
+    obj_popup.fancy_title = 0;
+    obj_popup.text_center = 0;
+    obj_popup.text = $"{global.chapter_name} have been provided with 4x Astartes Webbers in order to complete the mission.";
+    reset_popup_options();
+    scr_add_item("Webber", 4);
+    obj_controller.cooldown = 10;
+    scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wishes for the capture of a particular strain Gaunt noticed on {p_data.name()} is advisable.", system.name);
+    obj_controller.useful_info += "Tyr|";
+    if (demand) {
+        demand = 0;
+
+}
+
+
+static iquisition_tyranid_org_setup_battle = function(){
+    if ((obj_ncombat.enemy != eFACTION.TYRANIDS) || (obj_ncombat.battle_object.space_hulk)) {
+        exit;
+    }
+    obj_ncombat.battle_special = p_id;
+}
+
+
+

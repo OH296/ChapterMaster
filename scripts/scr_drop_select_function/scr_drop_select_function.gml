@@ -280,10 +280,8 @@ function drop_select_unit_selection() {
                 obj_ncombat.ork_warboss = _planet[search_planet_features(_planet, eP_FEATURES.ORKWARBOSS)[0]];
             }
 
-            if ((obj_ncombat.enemy == eFACTION.TYRANIDS) && (obj_ncombat.battle_object.space_hulk == 0)) {
-                if (_p_data.has_problem("tyranid_org")) {
-                    obj_ncombat.battle_special = "tyranid_org";
-                }
+            for (var i=0; i<array_length(_p_data.problems);i++){
+                _p_data.problems[i].before_battle_effects();
             }
 
             if (obj_ncombat.enemy == eFACTION.HERETICS) {

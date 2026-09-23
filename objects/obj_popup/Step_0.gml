@@ -260,26 +260,6 @@ try {
                         if (demand) {
                             text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Spyrer on Hive {_mission_star.name} {scr_roman(onceh)} must be removed within {estimate} months.";
                         }
-                    } else if (mission == "tyranid_org") {
-                        image = "webber";
-                        title = "New Equipment";
-                        fancy_title = 0;
-                        text_center = 0;
-                        text = $"{global.chapter_name} have been provided with 4x Astartes Webbers in order to complete the mission.";
-
-                        if (demand) {
-                            text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to capture a Gaunt organism and return it, unharmed- 4x Webbers have been provided for this purpose.";
-                        }
-
-                        reset_popup_options();
-                        scr_add_item("Webber", 4);
-                        obj_controller.cooldown = 10;
-                        scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wishes for the capture of a particular strain Gaunt noticed on {_mission_star.name} {scr_roman(planet)} is advisable.", _mission_star.name);
-                        obj_controller.useful_info += "Tyr|";
-                        if (demand) {
-                            demand = 0;
-                        }
-                        exit;
                     } else if (mission == "ethereal") {
                         with (obj_star) {
                             if ((p_tau[1] >= 4) || (p_tau[2] >= 4) || (p_tau[3] >= 4) || (p_tau[4] >= 4)) {

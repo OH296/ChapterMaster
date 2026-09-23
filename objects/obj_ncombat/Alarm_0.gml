@@ -1701,7 +1701,7 @@ try {
 
     // ** Tyranid Forces **
     // Tyranid story event
-    if ((enemy == eFACTION.TYRANIDS) || (battle_special == "tyranid_org")) {
+    if (enemy == eFACTION.TYRANIDS) {
         u = instance_nearest(xxx, 240, obj_enunit);
         enemy_dudes = "81";
         u.dudes[1] = "Termagaunt";

@@ -159,7 +159,7 @@ function task_selector_man_manage() {
     selection_data.selections = _selections;
     if (struct_exists(selection_data, "feature")){
         var _feat = selection_data.feature;
-        if (is_struct(_feat) && is_instanceof(_feat, PlanetProblem){
+        if (is_struct(_feat) && is_instanceof(_feat, PlanetProblem)){
             _feat.on_unit_selection();
         }
     }

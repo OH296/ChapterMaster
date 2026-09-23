@@ -799,10 +799,6 @@ function PlanetData(_planet, _system) constructor {
         for (var i = array_length(problems) -1; i >= 0; i--) {
             var _problem = problems[i];
             _problem.basic_turn_end();
-            if (problem.timer == -1){
-                array_delete(system.p_problem[i], i,0);
-                array_delete(problems, i,0);
-            }
         }
     }
 
