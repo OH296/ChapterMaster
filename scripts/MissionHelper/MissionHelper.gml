@@ -13,13 +13,19 @@ p_data = planet;
 planet = p_data.planet;
 system = p_data.system;
 f_type = eP_FEATURES.MISSION;
+members = [];
 static refresh_p_data = function(){
 	p_data = system.get_planet_data(planet);
 }
+
 stage_id = "";
 if (struct_exists(data, "stage")){
 	stage_id = data.stage;
 }
+if (struct_exists(data, "members")){
+    members = data.members;
+}
+
 extend_timer_for_warp_storm = true;
 remove = false;
 zero_timer_checks = true;
@@ -142,33 +148,6 @@ static increment_mission_completion =  function() {
     return (data.completion / data.required_months) * 100;
 }
 
-static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
-    var _battle_index = obj_turn_end.battles++;
-    obj_turn_end.battle[_battle_index] = 1;
-    obj_turn_end.battle_world[_battle_index] = planet;
-    obj_turn_end.battle_opponent[_battle_index] = battle_opponent_id;
-    obj_turn_end.battle_location[_battle_index] = system.name;
-    obj_turn_end.battle_object[_battle_index] = system;
-    obj_turn_end.battle_special[_battle_index] = {
-        special_id : special_id,
-        special_feature : self
-    };
-    if (!is_undefined(enemy_data)){
-        obj_turn_end.battle_special[_battle_index].battle_enemy_data = enemy_data;
-    }
-}
-
-static new_battle = function(battle_opponent_id,special_id = p_id){
-    var _battle = instance_create(0, 0, obj_ncombat);
-    _battle.enemy = battle_opponent_id;
-    _battle.battle_object = system;
-    _battle.battle_loc = system.name;
-    _battle.battle_id = planet;
-    _battle.battle_special = special_id;
-    _battle.special_feature = self;
-    return _battle;
-}
-
 static after_battle_effects = function(){
     instance_activate_object(obj_star);
     var _func = undefined;
@@ -215,6 +194,30 @@ static on_squad_selection = function(){
     instance_deactivate_object(obj_star);
 }
 
+
+static on_unit_selection = function(){
+    var _func = undefined;
+    switch(p_id){
+        case "hunt_beast":
+            _func = init_beast_hunt_mission;
+            break;
+        case "train_forces":
+            _func = init_train_forces_mission;
+    }
+    if (!is_undefined(_func)){
+        if (struct_exists(obj_controller.selection_data, "selections")){
+            members = obj_controller.selection_data.selections;
+        }
+        refresh_p_data();
+        try {
+            _func();
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
+        }
+    }    
+    instance_deactivate_object(obj_star);
+}
+
 static __init(){
 	switch(p_id){
 		case "inquisition_necron":
@@ -247,13 +250,54 @@ static __init(){
 }
 __init();
 
+static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
+    var _battle_index = obj_turn_end.battles++;
+    obj_turn_end.battle[_battle_index] = 1;
+    obj_turn_end.battle_world[_battle_index] = planet;
+    obj_turn_end.battle_opponent[_battle_index] = battle_opponent_id;
+    obj_turn_end.battle_location[_battle_index] = system.name;
+    obj_turn_end.battle_object[_battle_index] = system;
+    obj_turn_end.battle_special[_battle_index] = {
+        special_id : special_id,
+        special_feature : self
+    };
+    if (!is_undefined(enemy_data)){
+        obj_turn_end.battle_special[_battle_index].battle_enemy_data = enemy_data;
+    }
+}
+
+static new_battle = function(battle_opponent_id,special_id = p_id){
+    var _battle = instance_create(0, 0, obj_ncombat);
+    _battle.enemy = battle_opponent_id;
+    _battle.battle_object = system;
+    _battle.battle_loc = system.name;
+    _battle.battle_id = planet;
+    _battle.battle_special = special_id;
+    _battle.special_feature = self;
+    return _battle;
+}
+
+static set_members_job_to_mission = function(){
+    for (var i = 0; i < array_length(members); i++){
+        var _unit = members[i];
+        _unit.job = {
+            type: p_id,
+            planet: planet,
+            location: system.name,
+        };
+        _unit.unload(planet, system);            
+    }    
+}
+
+
 
 static init_beast_hunt_mission = function() {
     if (stage_id == "preliminary") {
+        set_members_job_to_mission();
         var _numeral_name = p_data.name()
         stage_id = "active";
         var _mission_length = irandom_range(2, 5);
-        timer[planet][mission_slot] = _mission_length;
+        timer = _mission_length;
         var _gar_pop = instance_create(0, 0, obj_popup);
         //TODO some new MissonHelper methods for popups
         _gar_pop.title = $"Marines assigned to hunt beasts around {_numeral_name}";
@@ -263,6 +307,7 @@ static init_beast_hunt_mission = function() {
         _gar_pop.cooldown = 8;
         obj_controller.cooldown = 20;
         scr_event_log("", $"Beast hunters deployed to {_numeral_name} for {_mission_length} months.", p_data.system.name);
+        obj_controller.close_popups = false;
     }
 }
 
@@ -335,10 +380,11 @@ static complete_beast_hunt_mission = function() {
 }
 
 
-stati init_train_forces_mission = fuction(marine) {
-    if (stage_id != "preliminary") {
+stati init_train_forces_mission = fuction() {
+    if (stage_id != "preliminary" || array_length(members) = 0) {
         exit;
     }
+    var _trainer = members[0];
     var _numeral_name = p_data.name();
     stage_id = "active";
     var _mission_length = irandom_range(3, 12);
@@ -347,8 +393,8 @@ stati init_train_forces_mission = fuction(marine) {
     var _gar_pop = instance_create(0, 0, obj_popup);
     //TODO some new universal methods for popups
     _gar_pop.title = $"Training forces on {_numeral_name} begins";
-    _gar_pop.text = $"{marine.name_role()} Has taken leave of his current post in order to aid the governor of {_numeral_name} and his pdf commanders with training local forces and bolstering defences.";
-    var _is_cap = marine.has_role(eROLE.CAPTAIN);
+    _gar_pop.text = $"{_trainer.name_role()} Has taken leave of his current post in order to aid the governor of {_numeral_name} and his pdf commanders with training local forces and bolstering defences.";
+    var _is_cap = _trainer.has_role(eROLE.CAPTAIN);
 
     if (_is_cap) {
         _gar_pop.text += "the governor seems to be impressed that such a high ranking officer has been assigned to his request (disp +3)";
@@ -363,6 +409,7 @@ stati init_train_forces_mission = fuction(marine) {
     _gar_pop.cooldown = 500;
     obj_controller.cooldown = 500;
     scr_event_log("", $"{marine.name_role()} deployed to {_numeral_name} for {_mission_length} months.", p_data.system.name);
+    obj_controller.close_popups = false;
 }
 
 static complete_train_forces_mission = function() {
