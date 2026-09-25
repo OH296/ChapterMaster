@@ -112,6 +112,9 @@ static basic_turn_end = function(){
             case "hive_fleet_to_cult":
                 _func = per_turn_hive_fleet_to_cult;
                 break;
+            case "inquisition_recon":
+                _func = per_turn_inquisition_recon;
+                break;
 		}
         handle_triggered_mission_func(_func)
 	}
@@ -127,8 +130,8 @@ static basic_turn_end = function(){
 			case "succession":
 				_func = resolve_succession;
 				break;
-			case "recon":
-				_func = resolve_recon;
+			case "inquisition_recon":
+				_func = resolve_inquisition_recon;
 				break;
 			case "great_crusade":
 				_func = resolve_great_crusade;
@@ -615,8 +618,26 @@ static resolve_succession = function() {
 
     p_data.delete_feature(eP_FEATURES.SUCCESSION_WAR);
 }
+static per_turn_inquisition_recon = function() {
+    if (p_data.player_forces <= 0){
+        exit;
+    }
 
-static resolve_recon = function() {
+    var _pop_data = {
+        mission: self,
+    };
+    scr_popup(
+        "Investigation Completed", 
+        "Your marines have scouted out {_p_data.name()} and satisfied the mission requirements.", 
+        "inquisition", 
+        _pop_data
+    );
+    scr_event_log("", $"Inquisition Mission Completed: Your Astartes have succesfully scouted  {_p_data.name()}.");
+
+    delete_mission = true;
+
+}
+static resolve_inquisition_recon = function() {
     refresh_p_data();
     var _alert_text = "Inquisition Mission Failed: Investigate ";
     alter_disposition(eFACTION.INQUISITION, -5);

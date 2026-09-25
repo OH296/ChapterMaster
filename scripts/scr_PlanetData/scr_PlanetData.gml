@@ -1572,20 +1572,6 @@ function PlanetData(_planet, _system) constructor {
             // 135 ; SPECIAL PLANET CRAP HERE
 
             // Recon Stuff
-
-            if (has_problem("recon")) {
-                var arti = instance_create(system.x, system.y, obj_temp7); // Unloading / artifact crap
-
-                arti.num = planet;
-                arti.alarm[0] = 1;
-                arti.loc = obj_controller.selecting_location;
-                arti.managing = obj_controller.managing;
-                arti.type = "recon";
-
-                with (arti) {
-                    setup_planet_mission_group();
-                }
-            }
             if (!instance_exists(obj_ground_mission)) {
                 check_for_artifact_grab_mission();
             }

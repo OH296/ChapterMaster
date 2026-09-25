@@ -329,11 +329,6 @@ try {
             } // Remove multi-choices
         }
 
-        if ((image == "inquisition") && (title == "Investigation Completed")) {
-            obj_temp7.alarm[1] = 1;
-            instance_destroy();
-        }
-
         if (image == "artifact2") {
             ground_forces_collect_artifact();
             obj_controller.cooldown = 10;
@@ -355,12 +350,6 @@ try {
         }
         if (title == "Inquisition Recon") {
             obj_controller.disposition[4] -= 2;
-        }
-        if ((image == "inquisition") && (title == "Investigation Completed")) {
-            with (obj_temp7) {
-                instance_destroy();
-            }
-            instance_destroy();
         }
 
         if (title == "Mercy Plea") {
