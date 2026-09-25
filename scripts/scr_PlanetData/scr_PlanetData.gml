@@ -774,7 +774,7 @@ function PlanetData(_planet, _system) constructor {
     }
 
 
-    function problem_count_down(planet, count_change = 1) {
+    static problem_count_down = function (count_change = 1) {
         for (var i = array_length(problems) -1; i >= 0; i--) {
             var _problem = problems[i];
             _problem.basic_turn_end();

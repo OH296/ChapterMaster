@@ -1,5 +1,11 @@
-function SystemProblem(name, timer, data){}
+function SystemProblem(name, timer, data){
 
+}
+
+/// @self Asset.GMObject.obj_star
+/// @param {sring} name
+/// @param {Real} timer
+/// @param {constructor PlanetData} _system
 function PlanetProblem(name, timer, data, planet) constructor{
 timer = timer;
 uid = scr_uuid_generate();
@@ -10,7 +16,7 @@ planet = p_data.planet;
 system = p_data.system;
 f_type = eP_FEATURES.MISSION;
 members = [];
-delete = false;
+delete_mission = false;
 static refresh_p_data = function(){
 	p_data = system.get_planet_data(planet);
 }
@@ -60,7 +66,7 @@ static handle_triggered_mission_func = function(func){
             ERROR_HANDLER.handle_exception(_exception);
         }
     }
-    if (timer == -1 || (delete)){
+    if (timer == -1 || (delete_mission)){
         var _prob = -1;
         for (var i = 0; i < array_length(system.p_problem); i++){
             if (system.p_problem[i] == self){
@@ -101,12 +107,15 @@ static basic_turn_end = function(){
                 _func = per_turn_check_spyrer;
                 break;
             case "inquisition_necron":
-                per_turn_check_inqisition_tomb;
+                _func =per_turn_check_inqisition_tomb;
+                break;
+            case "hive_fleet_to_cult":
+                _func = per_turn_hive_fleet_to_cult;
                 break;
 		}
         handle_triggered_mission_func(_func)
 	}
-	if ((timer == 0) && zero_timer_checks && !delete) {
+	if ((timer == 0) && zero_timer_checks && !delete_mission) {
 		var _func = undefined;
 		switch(p_id){
 			case "hunt_beast":
@@ -279,6 +288,10 @@ static __init(){
             break;
         case "tyranid_org":
             inquisition_tyranid_org_init();
+            break;
+        case "hive_fleet_to_cult":
+            hive_fleet_to_cult_init();
+            break;
         default:
             mark("green");
 
@@ -703,7 +716,7 @@ static spyrer_battle_aftermath = function(){
         exit;
     }
 
-    delete = true;
+    delete_mission = true;
 
     var _tixt = $"The Spyrer on {p_data.name()} has been removed.  The citizens and craftsman may sleep more soundly, the Inquisition likely pleased.";
 
@@ -761,7 +774,7 @@ static per_turn_check_fallen = function() {
                 _battle_enemy_data
             );
         } else {
-            delete = true;
+            delete_mission = true;
             var _tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
             scr_popup("Hunt the Fallen", _tixt, "fallen", "");
             scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run, id)}");
@@ -797,7 +810,7 @@ function hunt_fallen_battle_aftermath() {
     if (obj_ncombat.defeat) {
         exit;
     }
-    delete = true;
+    delete_mission = true;
     var _tixt = "The Fallen on " + _p_data.name();
     scr_event_log("", $"Mission Succesful: {_tixt} have been captured or purged.");
     _tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
@@ -817,7 +830,7 @@ static per_turn_check_mech_raider = function() {
         var _percent_complete = increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
-            delete = true;
+            delete_mission = true;
             scr_mission_reward("mech_raider", system, planet);
             timer = -1
             per_turn_checks = false;
@@ -831,7 +844,7 @@ static resolve_mech_raider_failed = function() {
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
     p_data.alter_disposition(eFACTION.MECHANICUS, -6);
-    delete = true;
+    delete_mission = true;
 }
 
 static per_turn_check_mech_bionics = function() {
@@ -841,7 +854,7 @@ static per_turn_check_mech_bionics = function() {
         var _percent_complete = increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
-            delete = true;
+            delete_mission = true;
             scr_mission_reward("mech_bionics", id, planet);
             timer = -1
             per_turn_checks = false;
@@ -855,7 +868,7 @@ static resolve_mech_bionics_failed = function() {
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
     p_data.alter_disposition(eFACTION.MECHANICUS, -6);
-    delete = true;
+    delete_mission = true;
 }
 
 static per_turn_check_mech_tomb2 = function() {
@@ -888,7 +901,7 @@ static per_turn_check_mech_tomb2 = function() {
             scr_popup("Mechanicus Mission Failed", $"The Mechanicus Research team on planet {p_data.name()} have been killed by Necrons in the absence of your astartes.  The Mechanicus are absolutely livid, doubly so because of the promised security they did not recieve.", "", "");
             obj_controller.turns_ignored[3] += choose(8, 10, 12, 14, 16, 18, 20, 22, 24);
             p_data.alter_disposition(eFACTION.MECHANICUS, -25);
-            delete = true;
+            delete_mission = true;
         }
     } else {
         if (_roll1 > 20) {
@@ -911,7 +924,7 @@ static per_turn_check_mech_tomb2 = function() {
             }
             _text += "\n" + add_disposition(eFACTION.MECHANICUS, 1);
             scr_popup("Mechanicus Mission Completed", _text, "mechanicus", "");
-            delete = true;
+            delete_mission = true;
             timer = -1
             per_turn_checks = false;
             zero_timer_checks = false;
@@ -934,12 +947,12 @@ static resolve_mech_tomb1_failed = function() {
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text, system.name);
     p_data.alter_disposition(eFACTION.MECHANICUS, -15);
-    delete = true;
+    delete_mission = true;
 }
 
 static mech_tomb_battle_aftermath = function() {
     if (obj_ncombat.defeat) {
-        delete = true;
+        delete_mission = true;
 
         var _disp_change = alter_disposition(eFACTION.MECHANICUS, -10);
 
@@ -1081,7 +1094,7 @@ static protect_raiders_battle_aftermath = function() {
     // show_message(obj_turn_end.battle_world[obj_turn_end.current_battle]);
     // title / text / image / speshul
     var _planet_string = p_data.name();
-    delete = true;
+    delete_mission = true;
     if (!obj_ncombat.defeat) {
         p_data.add_disposition(15);
         var _tixt = $"The Raiding forces on {_planet_string} have been removed.  The citizens and craftsman may sleep more soundly. ({_planet_string} disp +15)";
@@ -1162,7 +1175,7 @@ static protect_raider_squad_selected = function() {
             add_to_battle();
         }
         exit_adhoc_manage();
-        delete _roster;
+        delete_mission _roster;
 
         _battle.battle_enemy_data = {
             threat : 3,
@@ -1403,7 +1416,7 @@ static necron_tomb_mission_sequence = function() {
                 add_to_battle();
             }
         }
-        delete _roster;
+        delete_mission _roster;
         instance_deactivate_object(obj_star);
 
         instance_destroy(obj_popup);
@@ -1444,7 +1457,7 @@ static inquisition_necron_battle_aftermath = function(){
             }
         }
 
-        delete = true;
+        delete_mission = true;
 
         with (system) {
             var _planet = obj_ncombat.battle_id;
@@ -1487,7 +1500,7 @@ static advance_necron_tomb_mission = function() {
 
         alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
-        delete = true;
+        delete_mission = true;
         seal_tomb_world(p_data.features);
 
         scr_event_log("", $"Inquisition Mission Completed: Your Astartes have sealed the Necron Tomb on {p_data.name()}.", system.name);
@@ -1512,7 +1525,7 @@ static inquisition_mission_options = fuction(mission_accept_function){
         array_push(_options, {
             str1: "Refuse",
             choice_func: function(){
-                pop_data.mission.delete = true;
+                pop_data.mission.delete_mission = true;
                 popup_default_close();
             }
         })
@@ -1609,8 +1622,57 @@ static inquisition_tyranid_org_battle_aftermath = function(){
     }
     scr_popup("Inquisition Mission Completed",, "inquisition", "");
     if (data.captured_gaunt > 0) {
-        delete = true;
+        delete_mission = true;
     }
+}
+
+static hive_fleet_to_cult_init = function(){
+    var xx = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
+    var yy = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;
+    var fleet = create_enemy_fleet(xx, yy, eFACTION.TYRANIDS);
+    fleet.sprite_index = spr_fleet_tyranid;
+    fleet.image_speed = 0;
+
+    fleet.capital_number = choose(7, 8, 9);
+    fleet.frigate_number = round(random_range(6, 12));
+    fleet.escort_number = round(random_range(12, 27));
+
+    fleet.image_index = floor(fleet.capital_number + (fleet.frigate_number / 2) + (fleet.escort_number / 4));
+    fleet.image_alpha = 0;
+
+    fleet.action_x = x;
+    fleet.action_y = y;
+
+    fleet.action_eta = timer;
+    fleet.action = "move";
+}
+
+static per_turn_hive_fleet_to_cult = function(){
+    if (timer != 3 || scr_has_disadv("Psyker Intolerant")){
+        continue;
+    }
+    var _has_head_lib = scr_role_count(obj_ini.player_role_data[eROLE.CHIEFLIBRARIAN].role, "");
+
+    var _head = get_department_head(eCHAPTER_DEPARTMENTS.LIB);
+
+    if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (_has_head_lib != 0) && is_struct(_head)) {
+        scr_popup("Shadow in the Warp", $"Chief {_head.name_role()} reports a disturbance in the warp.  He claims it is like a shadow.", "shadow", "");
+        scr_event_log("red", $"Chief {obj_ini.player_role_data[eROLE.LIBRARIAN].role} reports a disturbance in the warp.  He claims it is like a shadow.");
+    }
+    if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (_has_head_lib == 0)) {
+        for (var q = 0; q < array_length(obj_ini.TTRPG[0]); q++) {
+            var _unit = fetch_unit([0, q]);
+            if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+                if (string_count("0", _unit.specials) > 0) {
+                    scr_popup("Shadow in the Warp", "You are distracted and bothered by a nagging sensation in the warp.  It feels as though a shadow descends upon your sector.", "shadow", "");
+                    scr_event_log("red", "You sense a disturbance in the warp.  It feels something like a massive shadow.");
+                }
+                break;
+            }
+        }
+    }
+
+    obj_controller.known[eFACTION.TYRANIDS] = 1;
 }
 
 }

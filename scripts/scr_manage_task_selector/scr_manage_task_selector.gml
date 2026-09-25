@@ -50,7 +50,7 @@ function task_selector_squad_manage() {
     }
     if (struct_exists(selection_data , "feature") && array_length(_squads)){
         var _feat = selection_data.feature;
-        if (is_struct(_feat) && is_instanceof(_feat, PlanetProblem){
+        if (is_struct(_feat) && is_instanceof(_feat, PlanetProblem)){
             _feat.data.squads = _squads;
             _feat.on_squad_selection();
         }

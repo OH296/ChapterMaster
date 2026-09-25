@@ -216,7 +216,6 @@ function accept_mechanicus_mars_mission() {
         var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
         var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
 
-        _planet.new_problem("mech_bionics", _mission_time, {completion: 0, required_months: 24});
         _planet.new_problem("mech_mars", _mission_time);
         text = $"The Adeptus Mechanicus await your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s at {_mission_loc}.  They are willing to hold on the voyage for up to {_mission_time} months.";
         scr_event_log("", $"Mechanicus Mission Accepted: {obj_ini.player_role_data[eROLE.TECHMARINE].role}s are expected at {_mission_loc} within 30 months, for the voyage to Mars.", _star.name);
