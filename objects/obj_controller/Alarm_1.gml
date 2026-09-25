@@ -335,13 +335,18 @@ with (obj_en_fleet) {
             _chosen = self;
             _distance = point_distance(_w, _h, x, y);
         } else {
-            _chosen = point_distance(_w, _h, x, y) < _distance ? self : _chosen;
+            var _current_distance = point_distance(_w, _h, x, y);
+            if (_current_distance < _distance) {
+                _chosen = self;
+                _distance = _current_distance;
+            }
         }
     }
 }
 // If any temp objects exist, find the one nearest to the center of the room and set your direction to the angle to the room center
-if (is_undefined(_chosen)) {
-    other.terra_direction = point_direction(_chosen.x, _chosen.y, _w, _h);
+if (!is_undefined(_chosen)) {
+    terra_direction = point_direction(_chosen.x, _chosen.y, _w, _h);
+}
 }
 
 // Save immediately after world gen
