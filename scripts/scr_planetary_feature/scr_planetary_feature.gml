@@ -590,7 +590,10 @@ function discover_stc_fragment_popup(techies, mechanicus_reps) {
             pop.text = $"{_text}; what it might contain is unknown. The ground team has no {obj_ini.player_role_data[eROLE.TECHMARINE].role}s or Tech Priests, so you have no choice but to leave it be or notify the Mechanicus about its location.";
         }
 
-        array_push(options, {str1: "Send it to the Adeptus Mechanicuss.", choice_func: send_stc_to_adeptus_mech});
+        var _trade = new TradeAttempt(eFACTION.MECHANICUS);
+        if (_trade.find_trade_locations()){
+            array_push(options, {str1: "Send it to the Adeptus Mechanicuss.", choice_func: send_stc_to_adeptus_mech});
+        }
     }
     array_push(options, {str1: "Leave it.", choice_func: ground_mission_leave_it_function});
 
@@ -964,6 +967,14 @@ function receive_artifact_in_discussion() {
 
 function send_stc_to_adeptus_mech() {
     with (obj_ground_mission) {
+        var _trade = new TradeAttempt(eFACTION.MECHANICUS);
+        _trade.find_trade_locations()
+        _trade.demand_options = [];
+        _trade.offer_options = [];
+        _trade.new_demand_buttons(0, "Requisition", "req");
+        _trade.demand_options[0].number = 500;
+        _trade.successful_trade_attempt();
+
         var _target_planet = instance_nearest(x, y, obj_star);
         pdata.delete_feature(eP_FEATURES.STC_FRAGMENT);
 
@@ -980,117 +991,24 @@ function send_stc_to_adeptus_mech() {
         obj_controller.diplomacy = 3;
         obj_controller.force_goodbye = 5;
 
-        if (obj_controller.disposition[3] <= 10) {
-            obj_controller.disposition[3] += 5;
-        }
-        if ((obj_controller.disposition[3] > 10) && (obj_controller.disposition[3] <= 30)) {
-            obj_controller.disposition[3] += 7;
-        }
-        if ((obj_controller.disposition[3] > 30) && (obj_controller.disposition[3] <= 50)) {
-            obj_controller.disposition[3] += 9;
-        }
-        if (obj_controller.disposition[3] > 50) {
-            obj_controller.disposition[3] += 11;
+        var _current = obj_controller.disposition[eFACTION.MECHANICUS];
+        var _increment = 0;
+
+        if (_current <= 10) {
+            _increment = 5;
+        } else if (_current <= 30) {
+            _increment = 7;
+        } else if (_current <= 50) {
+            _increment = 9;
+        } else {
+            _increment = 11;
         }
 
+        if (_increment > 0){
+            alter_disposition(eFACTION.MECHANICUS, _increment);
+        }
         with (obj_controller) {
             scr_dialogue("stc_thanks");
-        }
-
-        with (obj_temp2) {
-            instance_destroy();
-        }
-        with (obj_temp7) {
-            instance_destroy();
-        }
-
-        if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
-            with (obj_star) {
-                if ((owner == eFACTION.PLAYER) && ((p_owner[1] == eFACTION.PLAYER) || (p_owner[2] == eFACTION.PLAYER))) {
-                    instance_create(x, y, obj_temp2);
-                }
-            }
-        }
-        if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
-            with (obj_p_fleet) {
-                // Get fleet star system
-                if ((capital_number > 0) && (action == "")) {
-                    instance_create(instance_nearest(x, y, obj_star).x, instance_nearest(x, y, obj_star).y, obj_temp2);
-                }
-                if ((frigate_number > 0) && (action == "")) {
-                    instance_create(instance_nearest(x, y, obj_star).x, instance_nearest(x, y, obj_star).y, obj_temp7);
-                }
-            }
-        }
-
-        if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
-            with (obj_p_fleet) {
-                if (action == "") {
-                    instance_deactivate_object(instance_nearest(x, y, obj_star));
-                }
-            }
-        }
-
-        var _target = noone;
-
-        if (instance_exists(obj_temp2)) {
-            _target = nearest_star_with_ownership(obj_temp2.x, obj_temp2.y, obj_controller.diplomacy);
-        } else if (instance_exists(obj_temp7)) {
-            _target = nearest_star_with_ownership(obj_temp7.x, obj_temp7.y, obj_controller.diplomacy);
-        } else if ((!instance_exists(obj_temp2)) && (!instance_exists(obj_temp7)) && instance_exists(obj_p_fleet) && (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD)) {
-            // If player fleet is flying about then get their target for new target
-            with (obj_p_fleet) {
-                var pop = noone;
-                if ((capital_number > 0) && (action != "")) {
-                    pop = instance_create(action_x, action_y, obj_temp2);
-                    pop.action_eta = action_eta;
-                }
-                if ((frigate_number > 0) && (action != "")) {
-                    pop = instance_create(action_x, action_y, obj_temp7);
-                    pop.action_eta = action_eta;
-                }
-            }
-        }
-
-        if (is_struct(_target)) {
-            var _enemy_fleet = create_enemy_fleet(_target.x, _target.y, obj_controller.diplomacy);
-            _enemy_fleet.home_x = _target.x;
-            _enemy_fleet.home_y = _target.y;
-            _enemy_fleet.sprite_index = spr_fleet_mechanicus;
-
-            _enemy_fleet.image_index = 0;
-            _enemy_fleet.capital_number = 1;
-            _enemy_fleet.trade_goods = "Requisition!500!|";
-
-            if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
-                if (instance_exists(obj_temp2)) {
-                    _enemy_fleet.action_x = obj_temp2.x;
-                    _enemy_fleet.action_y = obj_temp2.y;
-                    _enemy_fleet.target = instance_nearest(_enemy_fleet.action_x, _enemy_fleet.action_y, obj_p_fleet);
-                }
-                if ((!instance_exists(obj_temp2)) && instance_exists(obj_temp7)) {
-                    _enemy_fleet.action_x = obj_temp7.x;
-                    _enemy_fleet.action_y = obj_temp7.y;
-                    _enemy_fleet.target = instance_nearest(_enemy_fleet.action_x, _enemy_fleet.action_y, obj_p_fleet);
-                }
-            }
-            if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
-                _target = instance_nearest(_enemy_fleet.x, _enemy_fleet.y, obj_temp2);
-                _enemy_fleet.action_x = _target.x;
-                _enemy_fleet.action_y = _target.y;
-            }
-
-            with (_enemy_fleet) {
-                set_fleet_movement();
-            }
-        }
-
-        instance_activate_all();
-        with (obj_temp2) {
-            instance_destroy();
-        }
-        with (obj_temp7) {
-            instance_destroy();
         }
         instance_destroy();
     }
