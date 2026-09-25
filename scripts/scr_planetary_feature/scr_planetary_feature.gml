@@ -1004,7 +1004,7 @@ function send_stc_to_adeptus_mech() {
             _increment = 11;
         }
 
-        if (_increment > 0)
+        if (_increment > 0){
             alter_disposition(eFACTION.MECHANICUS, _increment);
         }
         with (obj_controller) {

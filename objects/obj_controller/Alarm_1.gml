@@ -347,7 +347,6 @@ with (obj_en_fleet) {
 if (!is_undefined(_chosen)) {
     terra_direction = point_direction(_chosen.x, _chosen.y, _w, _h);
 }
-}
 
 // Save immediately after world gen
 if (global.load == -1 && global.settings.autosave == true) {
