@@ -317,97 +317,76 @@ function navy_hunt_player_assets() {
         // Go after home planet or fleet?
 
         if (trade_goods == "" && action == "") {
-            var homeworld_distance, homeworld_nearby, fleet_nearby, fleet_distance, planet_nearby;
-            homeworld_distance = 9999;
-            fleet_distance = 9999;
-            fleet_nearby = 0;
-            homeworld_nearby = 0;
-            planet_nearby = 0;
+            var _fleet_distance = 9999;
+            var _fleet_nearby = noone;
+            var _homeworld_distance = 9999;
+            var _homeworld_nearby = noone;
 
+            // Find nearest idle player fleet (replaces obj_temp7 marker + instance_nearest)
             with (obj_p_fleet) {
                 if (action == "") {
-                    instance_create(x, y, obj_temp7);
+                    var _dist = point_distance(x, y, other.x, other.y);
+                    if (_dist < _fleet_distance) {
+                        _fleet_distance = _dist;
+                        _fleet_nearby = id;
+                    }
                 }
             }
+
+            // Find nearest player-owned star (replaces obj_temp8 marker + instance_nearest)
             with (obj_star) {
                 if (array_contains(p_owner, eFACTION.PLAYER)) {
-                    instance_create(x, y, obj_temp8);
+                    var _dist = point_distance(x, y, other.x, other.y);
+                    if (_dist < _homeworld_distance) {
+                        _homeworld_distance = _dist;
+                        _homeworld_nearby = id;
+                    }
                 }
             }
 
-            if (instance_exists(obj_temp7)) {
-                fleet_nearby = instance_nearest(x, y, obj_temp7);
-                fleet_distance = point_distance(x, y, fleet_nearby.x, fleet_nearby.y);
-            }
-            if (instance_exists(obj_temp8)) {
-                homeworld_nearby = instance_nearest(x, y, obj_temp8);
-                homeworld_distance = point_distance(x, y, homeworld_nearby.x, homeworld_nearby.y) - 30;
+            if (_homeworld_nearby != noone) {
+                _homeworld_distance -= 30;
             }
 
-            if (homeworld_distance < fleet_distance && homeworld_distance < 5000 && homeworld_distance > 40) {
+            if (_homeworld_distance < _fleet_distance && _homeworld_distance < 5000 && _homeworld_distance > 40) {
                 // Go towards planet
-                action_x = homeworld_nearby.x;
-                action_y = homeworld_nearby.y;
-                with (obj_temp7) {
-                    instance_destroy();
-                }
-                with (obj_temp8) {
-                    instance_destroy();
-                }
+                action_x = _homeworld_nearby.x;
+                action_y = _homeworld_nearby.y;
                 exit;
             }
 
-            if (fleet_distance < homeworld_distance && fleet_distance < 7000 && fleet_distance > 40 && instance_exists(obj_temp7)) {
+            if (_fleet_distance < _homeworld_distance && _fleet_distance < 7000 && _fleet_distance > 40 && _fleet_nearby != noone) {
                 // Go towards that fleet
-                planet_nearby = instance_nearest(fleet_nearby.x, fleet_nearby.y, obj_star);
+                var _planet_nearby = instance_nearest(_fleet_nearby.x, _fleet_nearby.y, obj_star);
 
-                if (instance_exists(planet_nearby)) {
-                    if (fleet_distance <= 500 && planet_nearby != orbiting) {
+                if (instance_exists(_planet_nearby)) {
+                    if (_fleet_distance <= 500 && _planet_nearby != orbiting) {
                         // Case 1; really close, wait for them to make the move
-                        with (obj_temp7) {
-                            instance_destroy();
-                        }
-                        with (obj_temp8) {
-                            instance_destroy();
-                        }
                         exit;
                     }
-                    if (fleet_distance > 500) {
+                    if (_fleet_distance > 500) {
                         // Case 2; kind of far away, move closer
-                        var diss = fleet_distance / 2;
-                        var goto = 0;
-                        var dirr = point_direction(x, y, fleet_nearby.x, fleet_nearby.y);
+                        var _diss = _fleet_distance / 2;
+                        var _dirr = point_direction(x, y, _fleet_nearby.x, _fleet_nearby.y);
+                        var _goto = noone;
 
                         with (orbiting) {
                             y -= 20000;
                         }
-                        goto = instance_nearest(x + lengthdir_x(diss, dirr), y + lengthdir_y(diss, dirr), obj_star);
+                        _goto = instance_nearest(x + lengthdir_x(_diss, _dirr), y + lengthdir_y(_diss, _dirr), obj_star);
                         with (orbiting) {
                             y += 20000;
                         }
-                        if (goto.present_fleet[eFACTION.PLAYER] == 0) {
-                            action_x = goto.x;
-                            action_y = goto.y;
-                            set_fleet_movement();
-                        }
 
-                        with (obj_temp7) {
-                            instance_destroy();
-                        }
-                        with (obj_temp8) {
-                            instance_destroy();
+                        if (_goto.present_fleet[eFACTION.PLAYER] == 0) {
+                            action_x = _goto.x;
+                            action_y = _goto.y;
+                            set_fleet_movement();
                         }
                         exit;
                     }
                 }
             }
-        }
-
-        with (obj_temp7) {
-            instance_destroy();
-        }
-        with (obj_temp8) {
-            instance_destroy();
         }
     }
 }
