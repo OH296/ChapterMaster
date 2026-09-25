@@ -324,21 +324,28 @@ with (obj_creation) {
 
 create_complex_star_routes(_player_star);
 
-with (obj_temp7) {
-    instance_destroy();
-}
-// For tau fleets, if it is stationed on a system it owns, make a temp7 obj
+// For tau fleets, if it is stationed on a system it owns, 
+var _chosen = undefined;
+var _distance = 0;
+var _w = room_width / 2;
+var _h = room_height / 2;
 with (obj_en_fleet) {
     if ((owner == eFACTION.TAU) && (instance_nearest(x, y, obj_star).owner == eFACTION.TAU)) {
-        instance_create(x, y, obj_temp7);
+        if (is_undefined(_chosen)){
+            _chosen = self;
+            _distance = point_distance(_w, _h, x, y);
+        } else {
+            var _current_distance = point_distance(_w, _h, x, y);
+            if (_current_distance < _distance) {
+                _chosen = self;
+                _distance = _current_distance;
+            }
+        }
     }
 }
 // If any temp objects exist, find the one nearest to the center of the room and set your direction to the angle to the room center
-if (instance_exists(obj_temp7)) {
-    var t1 = instance_nearest(room_width / 2, room_height / 2, obj_temp7);
-    with (t1) {
-        other.terra_direction = point_direction(x, y, room_width / 2, room_height / 2);
-    }
+if (!is_undefined(_chosen)) {
+    terra_direction = point_direction(_chosen.x, _chosen.y, _w, _h);
 }
 
 // Save immediately after world gen
