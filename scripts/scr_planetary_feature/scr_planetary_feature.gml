@@ -590,7 +590,10 @@ function discover_stc_fragment_popup(techies, mechanicus_reps) {
             pop.text = $"{_text}; what it might contain is unknown. The ground team has no {obj_ini.player_role_data[eROLE.TECHMARINE].role}s or Tech Priests, so you have no choice but to leave it be or notify the Mechanicus about its location.";
         }
 
-        array_push(options, {str1: "Send it to the Adeptus Mechanicuss.", choice_func: send_stc_to_adeptus_mech});
+        var _trade = new TradeAttempt(eFACTION.MECHANICUS);
+        if (_trade.find_trade_locations()){
+            array_push(options, {str1: "Send it to the Adeptus Mechanicuss.", choice_func: send_stc_to_adeptus_mech});
+        }
     }
     array_push(options, {str1: "Leave it.", choice_func: ground_mission_leave_it_function});
 
@@ -964,6 +967,14 @@ function receive_artifact_in_discussion() {
 
 function send_stc_to_adeptus_mech() {
     with (obj_ground_mission) {
+        var _trade = new TradeAttempt(eFACTION.MECHANICUS);
+        _trade.find_trade_locations()
+        _trade.demand_options = [];
+        _trade.offer_options = [];
+        _trade.new_demand_buttons(0, "Requisition", "req");
+        _trade.demand_options[0].number = 500;
+        _trade.successful_trade_attempt();
+
         var _target_planet = instance_nearest(x, y, obj_star);
         pdata.delete_feature(eP_FEATURES.STC_FRAGMENT);
 
@@ -981,7 +992,7 @@ function send_stc_to_adeptus_mech() {
         obj_controller.force_goodbye = 5;
 
         var _current = obj_controller.disposition[eFACTION.MECHANICUS];
-        var _increment;
+        var _increment = 0;
 
         if (_current <= 10) {
             _increment = 5;
@@ -993,18 +1004,12 @@ function send_stc_to_adeptus_mech() {
             _increment = 11;
         }
 
-        alter_disposition(eFACTION.MECHANICUS, _increment);
-
-        var _trade = new TradeAttempt(eFACTION.MECHANICUS);
-        _trade.find_trade_locations();
-        _trade.demand_options = [];
-        _trade.offer_options = [];
-        _trade.new_demand_buttons(0, "Requisition", "req");
-        _trade.demand_options[0].number = 500;
-        _trade.successful_trade_attempt();
-
+        if (_increment > 0)
+            alter_disposition(eFACTION.MECHANICUS, _increment);
+        }
         with (obj_controller) {
             scr_dialogue("stc_thanks");
         }
+        instance_destroy();
     }
 }

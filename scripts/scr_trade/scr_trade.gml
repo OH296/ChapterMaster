@@ -86,7 +86,7 @@ function TradeAttempt(diplomacy) constructor {
                         break;
                 }
             } else if (_opt.trade_type == "req") {
-                obj_controller.requisition += _opt.number;
+                trading_object.requisition += _opt.number;
             } else if (_opt.trade_type == "merc") {
                 if (!struct_exists(trading_object, "mercenaries")) {
                     trading_object.mercenaries = {};
