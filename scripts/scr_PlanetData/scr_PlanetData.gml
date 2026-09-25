@@ -728,13 +728,6 @@ function PlanetData(_planet, _system) constructor {
         }
     };
 
-    deamons = system.p_demons[planet];
-    chaos_forces = system.p_chaos[planet];
-
-    requests_help = system.p_halp[planet];
-
-    corruption = system.p_heresy[planet];
-
     static alter_corruption = function(value) {
         alter_planet_corruption(value, planet, system);
         corruption = system.p_heresy[planet];
@@ -744,20 +737,6 @@ function PlanetData(_planet, _system) constructor {
         system.p_heresy[planet] = value;
         corruption = system.p_heresy[planet];
     };
-
-    is_heretic = system.p_hurssy[planet];
-
-    heretic_timer = system.p_hurssy_time[planet];
-
-    secret_corruption = system.p_heresy_secret[planet];
-
-    population_influences = system.p_influence[planet];
-
-    raided_this_turn = system.p_raided[planet];
-
-    governor = system.p_governor[planet];
-
-    problems = system.p_problem[planet];
 
     static has_problem = function(problem) {
         for (var i = 0; i < array_length(problems); i++){

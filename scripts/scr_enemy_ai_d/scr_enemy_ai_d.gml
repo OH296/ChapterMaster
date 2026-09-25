@@ -119,7 +119,7 @@ if (array_length(p_problem[i]) == 0){
                     fleet.action_x = x;
                     fleet.action_y = y;
 
-                    fleet.action_eta = p_timer[i][firstest];
+                    fleet.action_eta = p_problem[i][firstest].timer;
                     fleet.action = "move";
                 }
             }

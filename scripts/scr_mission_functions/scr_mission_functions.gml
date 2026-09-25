@@ -247,8 +247,9 @@ function has_problem_planet_and_time(planet, problem, time, star = noone) {
     var _had_problem = -1;
     if (star == noone) {
         for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            if (p_problem[planet][i] == problem) {
-                if (p_timer[planet][i] == time) {
+            var _prob = p_problem[planet][i];
+            if (_prob.p_id == problem) {
+                if (_prob.timer == time) {
                     _had_problem = i;
                 }
             }

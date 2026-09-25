@@ -369,7 +369,7 @@ function resolve_radical_inquisitor_mission(_mission_data) {
                 continue;
             }
 
-            var _stored_data = p_problem_other_data[_planet][i];
+            var _stored_data = p_problem[_planet][i].data;
             if (!is_struct(_stored_data) || !struct_exists(_stored_data, "mission_id")) {
                 continue;
             }
@@ -378,9 +378,7 @@ function resolve_radical_inquisitor_mission(_mission_data) {
                 continue;
             }
 
-            p_problem[_planet][i] = "";
-            p_timer[_planet][i] = -1;
-            p_problem_other_data[_planet][i] = {};
+            p_problem[_planet][i].delete = true;
             _mission_removed = true;
             break;
         }

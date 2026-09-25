@@ -28,6 +28,28 @@ remove = false;
 zero_timer_checks = true;
 per_turn_checks = true;
 
+static mark = function(colour){
+    refresh_p_data();
+    with (p_data.system){
+        new_star_event_marker(colour)
+    }
+}
+
+static description = function(){
+    return mission_name_key(p_id);
+}
+
+static increment_mission_completion =  function() {
+    if (!struct_exists(data, "completion")) {
+        data.completion = 0;
+    }
+    data.completion++;
+    if (!struct_exists(data, "required_months") || data.required_months <= 0) {
+        LOGGER.error("Invalid required_months in mission_data");
+        return 0;
+    }
+    return (data.completion / data.required_months) * 100;
+}
 
 static handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
@@ -128,29 +150,6 @@ static basic_turn_end = function(){
 		}
 		handle_triggered_mission_func(_func)
 	}
-}
-
-static mark = function(colour){
-	refresh_p_data();
-	with (p_data.system){
-		new_star_event_marker(colour)
-	}
-}
-
-static description = function(){
-	return mission_name_key(p_id);
-}
-
-static increment_mission_completion =  function() {
-    if (!struct_exists(data, "completion")) {
-        data.completion = 0;
-    }
-    data.completion++;
-    if (!struct_exists(data, "required_months") || data.required_months <= 0) {
-        LOGGER.error("Invalid required_months in mission_data");
-        return 0;
-    }
-    return (data.completion / data.required_months) * 100;
 }
 
 static before_battle_effects = function(){
