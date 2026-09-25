@@ -368,7 +368,7 @@ function navy_hunt_player_assets() {
                         // Case 2; kind of far away, move closer
                         var _diss = _fleet_distance / 2;
                         var _dirr = point_direction(x, y, _fleet_nearby.x, _fleet_nearby.y);
-                        var _goto = 0;
+                        var _goto = noone;
 
                         with (orbiting) {
                             y -= 20000;
