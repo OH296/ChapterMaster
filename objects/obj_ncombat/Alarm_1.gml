@@ -101,7 +101,7 @@ if (battle_special == "spyrer") {
 if (battle_special == "protect_raiders", battle_special) {
     p1 = "Following responses from scans, Your marine squad deploys and lies in wait on the planets surface. Either the eldar were expecting you or the scope of the raids on the planet had been underplayed by the governor perhaps to hide his incompetence in allowing such foul xenos actions to persist unchecked for so long.";
 }
-if (string_count("fallen", battle_special) > 0) {
+if (battle_special == "hunt_fallen") {
     p1 = "Your marines search through the alleyways and dens likely to contain the Fallen.  Several days pass before the search is succesful; the prey is located by Auspex and closed in upon.  ";
     if (battle_climate == "Lava") {
         p1 = "Your marines search through the broken craggs and spires of the molten planet.  Among the bubbling lava, and cracking earth, they search for the Fallen.  After several days of searching Auspex detect the prey.  ";
@@ -127,7 +127,7 @@ if (string_count("fallen", battle_special) > 0) {
     p1 += "  Your ranks are made up of ";
 }
 
-if ("inquisition_tomb" == battle_special) {
+if ("inquisition_necron" == battle_special) {
     var wh = choose(1, 2);
     if (wh == 1) {
         p1 = "Cave dirt crunches beneath the soles of your marines as they continue their descent.  There is little warning before ";

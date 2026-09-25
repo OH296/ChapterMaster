@@ -30,6 +30,8 @@ end_alive_units = [];
 average_battle_exp_gain = 0;
 upgraded_librarians = [];
 special_feature = undefined;
+reduce_fortification = true;
+reduce_power = true;
 
 view_x = obj_controller.x;
 view_y = obj_controller.y;
@@ -76,7 +78,6 @@ stage_elapsed2 = 0;
 battle_over = 0;
 done = 0;
 
-captured_gaunt = 0;
 ethereal = 0;
 hulk_treasure = 0;
 four_show = 0;

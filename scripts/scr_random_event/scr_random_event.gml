@@ -748,7 +748,7 @@ function event_fallen() {
     }
     LOGGER.info($"Fallen: valid_stars {valid_stars}");
 
-    var star = choose_array(stars);
+    var star = array_random_element(stars);
     var planet = scr_get_planet_with_owner(star, eFACTION.IMPERIUM);
 
     if (planet > 0 && instance_exists(star)) {

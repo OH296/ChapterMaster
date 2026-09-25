@@ -1976,7 +1976,7 @@ try {
     }
 
     // ** Chaos Forces **
-    if ((enemy == eFACTION.CHAOS) && (battle_special != "ship_demon") && (battle_special != "fallen") && (battle_special != "WL10_reveal") && (battle_special != "WL10_later") && (string_count("cs_meeting_battle", battle_special) == 0)) {
+    if ((enemy == eFACTION.CHAOS) && (battle_special != "ship_demon") && (battle_special != "WL10_reveal") && (battle_special != "WL10_later") && (string_count("cs_meeting_battle", battle_special) == 0)) {
         // Small Chaos Cult Group
         if (threat == 1) {
             u = instance_nearest(xxx, 240, obj_enunit);

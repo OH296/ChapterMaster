@@ -100,7 +100,7 @@ static basic_turn_end = function(){
             case "spyrer":
                 _func = per_turn_check_spyrer;
                 break;
-            case "inquisition_tomb":
+            case "inquisition_necron":
                 per_turn_check_inqisition_tomb;
                 break;
 		}
@@ -125,12 +125,12 @@ static basic_turn_end = function(){
 				_func = resolve_great_crusade;
 				break;
 			case "inquisition_necron":
-				_func = resolve_necron;
+				_func = resolve_inquisitor_necron;
 				break;
 			case "spyrer":
 				_func = resolve_spyrer;
 				break;
-			case "fallen":
+			case "hunt_fallen":
 				_func = resolve_fallen;
 				break;
 			case "mech_raider";
@@ -152,8 +152,9 @@ static basic_turn_end = function(){
 	}
 }
 
+//triggered within drop select
 static before_battle_effects = function(){
-     instance_activate_object(obj_star);
+    instance_activate_object(obj_star);
     var _func = undefined;
     switch(p_id){
         case "iquisition_tyranid_org":
@@ -162,6 +163,39 @@ static before_battle_effects = function(){
     }
     handle_triggered_mission_func(_func);   
     instance_deactivate_object(obj_star);   
+}
+
+
+//triggered at the end of scr_shoot
+static battle_on_enemy_casulties = function(){
+    if (!struct_exists(self, casualty_packet)){
+        exit;
+    }
+    instance_activate_object(obj_star);
+    var _func = undefined;
+    switch(p_id){
+        case "iquisition_tyranid_org":
+            _func = inquisition_tyranid_on_enemy_casulties;
+            break;
+    }
+    handle_triggered_mission_func(_func);
+
+    struct_remove(self, "casualty_packet");
+
+    instance_deactivate_object(obj_star);  
+}
+
+//triggers in obj_ncombat alarm 5
+static battle_final_message = function(){
+      instance_activate_object(obj_star);
+    var _func = undefined;
+    switch(p_id){
+        case "iquisition_tyranid_org":
+            _func = inquisition_tyranid_org_battle_final_message;
+            break;
+    }
+    handle_triggered_mission_func(_func);   
+    instance_deactivate_object(obj_star);      
 }
 
 static after_battle_effects = function(){
@@ -174,11 +208,11 @@ static after_battle_effects = function(){
         case "protect_raiders":
             _func = protect_raiders_battle_aftermath;
             break;
-        case "fallen":
+        case "hunt_fallen":
             _func = hunt_fallen_battle_aftermath;
             break;
-        case "inquisition_tomb":
-            _func = inquisition_tomb_battle_aftermath;
+        case "inquisition_necron":
+            _func = inquisition_necron_battle_aftermath;
             break;
         case "tyranid_org":
             _func = inquisition_tyranid_org_battle_aftermath
@@ -233,7 +267,7 @@ static __init(){
             scr_event_log("", $"Chaos Lord {obj_controller.faction_leader[eFACTION.CHAOS]} agrees to meet with you on {p_data.name()} to discuss an alliance.");
             mark("purple");
             break;
-        case "fallen":
+        case "hunt_fallen":
             break;
         case "harlequins":
             var _text = $"Eldar Harlequins have been seen on planet {p_data.name()}. Their purposes are unknown.";
@@ -242,6 +276,9 @@ static __init(){
             break;
         case "inquisition_demon_world":
             inquisition_demon_world_init();
+            break;
+        case "tyranid_org":
+            inquisition_tyranid_org_init();
         default:
             mark("green");
 
@@ -249,6 +286,7 @@ static __init(){
 }
 __init();
 
+// by default mission battles do not reduce the fortification level or enemy power on a planet
 static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
     var _battle_index = obj_turn_end.battles++;
     obj_turn_end.battle[_battle_index] = 1;
@@ -260,9 +298,17 @@ static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, ene
         special_id : special_id,
         special_feature : self
     };
-    if (!is_undefined(enemy_data)){
-        obj_turn_end.battle_special[_battle_index].battle_enemy_data = enemy_data;
+    if (is_undefined(enemy_data)){
+        enemy_data = {
+        }
     }
+    if (!struct_exists(enemy_data, "reduce_power")){
+        enemy_data.reduce_power = false,
+    }
+    if (!struct_exists(enemy_data, "reduce_fortification")){
+        enemy_data.reduce_fortification = false,
+    }
+    obj_turn_end.battle_special[_battle_index].battle_enemy_data = enemy_data;
 }
 
 static new_battle = function(battle_opponent_id,special_id = p_id){
@@ -602,7 +648,7 @@ static resolve_great_crusade = function() {
     }
 }
 
-static resolve_necron = function() {
+static resolve_inquisitor_necron = function() {
     alter_disposition(eFACTION.INQUISITION, -8);
     var _alert_text = $"The Necron Tomb of planet {p_data.name()} has not been deactivated in time.  It has awakened, rank upon rank of Necrons pouring out to the planet's surface.  The Inquisition is not pleased with your failure.";
     scr_popup("Inquisition Mission Failed", _alert_text, "necron_army", "");
@@ -711,7 +757,7 @@ static per_turn_check_fallen = function() {
             }
             new_end_turn_battle(
                 10, 
-                "fallen",
+                p_id,
                 _battle_enemy_data
             );
         } else {
@@ -1121,6 +1167,8 @@ static protect_raider_squad_selected = function() {
         _battle.battle_enemy_data = {
             threat : 3,
             fortified : false,
+            reduce_fortification : true,
+            reduce_power : true,
             cols : [
                 {
                     distance : 20,
@@ -1154,24 +1202,6 @@ static protect_raider_squad_selected = function() {
         };
     }
 }    
-}
-
-static capture_tyranid_org_battle_aftermath = function(){
-    if (obj_ncombat.defeat){
-        exit;
-    }
-    if (obj_ncombat.captured_gaunt > 1) {
-        var _pop = instance_create(0, 0, obj_popup);
-        _pop.image = "inquisition";
-        _pop.title = "Inquisition Mission Completed";
-        _pop.text = "You have captured several Gaunt organisms.  The Inquisitor is pleased with your work, though she notes that only one is needed- the rest are to be purged.  It will be stored until it may be retrieved.  The mission is a success.";
-    }
-    else if (obj_ncombat.captured_gaunt == 1) {
-        var _pop = instance_create(0, 0, obj_popup);
-        _pop.image = "inquisition";
-        _pop.title = "Inquisition Mission Completed";
-        _pop.text = "You have captured a Gaunt organism- the Inquisitor is pleased with your work.  The Tyranid will be stored until it may be retrieved.  The mission is a success.";
-    }
 }
 
 static per_turn_check_inqisition_tomb = function() {
@@ -1289,6 +1319,8 @@ static necron_tomb_mission_sequence = function() {
             threat :  1,
             formation_set : 1,
             fortified : 0,
+            reduce_fortification : true,
+            reduce_power : true,
         }
         switch (_battle){
             case 1:
@@ -1380,7 +1412,7 @@ static necron_tomb_mission_sequence = function() {
     exit;
 }
 
-static inquisition_tomb_battle_aftermath = function(){
+static inquisition_necron_battle_aftermath = function(){
     if (!data.tomb_awakens) {
         if (defeat == 1) {
             obj_controller.combat = 0;
@@ -1518,7 +1550,7 @@ static inquisition_tyranid_org_init = fuction(){
         mission: self,
         options: inquisition_mission_options("inquisition_tyranid_org_accept"),
     };
-    var _text = $"An Inquisitor is trusting you with a special mission.  The planet {string(_star.name)} {scr_roman(planet)}";
+    var _text = $"An Inquisitor is trusting you with a special mission.  The planet {p_data.name()}";
     _text += " is ripe with Tyranid organisms.  They require that you capture one of the Gaunt species for research purposes.  Can your chapter handle this mission?";
     if (obj_controller.demanding) {
         _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to capture a Gaunt organism and return it, unharmed- 4x Webbers have been provided for this purpose.";
@@ -1537,19 +1569,50 @@ static inquisition_tyranid_org_accept = fuction(){
     obj_controller.cooldown = 10;
     scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wishes for the capture of a particular strain Gaunt noticed on {p_data.name()} is advisable.", system.name);
     obj_controller.useful_info += "Tyr|";
+    data.captured_gaunt = 0;
 }
-
 
 static inquisition_tyranid_org_setup_battle = function(){
     if ((obj_ncombat.enemy != eFACTION.TYRANIDS) || (obj_ncombat.battle_object.space_hulk)) {
         exit;
     }
     obj_ncombat.battle_special = p_id;
+    obj_ncombat.reduce_fortification = false;
+    obj_ncombat.reduce_power = false;
+}
+
+static inquisition_tyranid_on_enemy_casulties = function(){
+    var _c_data = casualty_packet;
+    if (array_contains(["Termagaunt", "Hormagaunt"], _c_data.weapon) && (_c_data.casulties > 0)) {
+        data.captured_gaunt += casulties;
+    }
+}
+
+static inquisition_tyranid_org_battle_final_message = fuction(){
+    if (obj_ncombat.defeat || data.captured_gaunt == 0) {
+        exit;
+    }
+    var _gaunts = string_plural_count("Gaunt organism", captured_gaunt);
+    _newline = $"{_gaunts} have been captured.";
+    obj_ncombat.combat_log.push(_newline, eMSG_COLOR.YELLOW);
+
 }
 
 static inquisition_tyranid_org_battle_aftermath = function(){
-
+    if (obj_ncombat.defeat|| data.captured_gaunt == 0){
+        exit;
+    }
+    if (data.captured_gaunt > 1) {
+        var _text =  "You have captured several Gaunt organisms.  The Inquisitor is pleased with your work, though she notes that only one is needed- the rest are to be purged.  It will be stored until it may be retrieved.  The mission is a success.";
+    } else {
+        var _text = "You have captured a Gaunt organism- the Inquisitor is pleased with your work.  The Tyranid will be stored until it may be retrieved.  The mission is a success.";
+    }
+    scr_popup("Inquisition Mission Completed",, "inquisition", "");
+    if (data.captured_gaunt > 0) {
+        delete = true;
+    }
 }
+
 }
 
 

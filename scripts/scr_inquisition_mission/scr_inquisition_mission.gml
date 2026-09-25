@@ -83,7 +83,7 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
 
         var chosen_mission = forced_mission;
         if (chosen_mission == eINQUISITION_MISSION.RANDOM) {
-            chosen_mission = choose_array(inquisition_missions);
+            chosen_mission = array_random_element(inquisition_missions);
         }
         switch (chosen_mission) {
             case eINQUISITION_MISSION.PURGE:
@@ -99,10 +99,23 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
                 mission_inquisition_artifact();
                 break;
             case eINQUISITION_MISSION.TOMB_WORLD:
-                mission_inquisition_tomb_world(necron_tomb_worlds);
+                mission_inquisition_necron_world(necron_tomb_worlds);
                 break;
             case eINQUISITION_MISSION.TYRANID_ORGANISM:
-                mission_inquisition_tyranid_organism(tyranid_org_worlds);
+                LOGGER.info("RE: Gaunt Capture");
+                var _star = array_random_element(worlds);
+                var planet = -1;
+                for (var i = 1; i <= _star.planets; i++) {
+                    if (_star.p_tyranids[i] > 4) {
+                        planet = i;
+                        break;
+                    }
+                }
+
+                var eta = scr_mission_eta(_star.x, _star.y, 1);
+                eta = min(max(eta, 6), 50);
+
+                _star.get_planet_data(planet).new_problem("tyranid_org", eta);
                 break;
             case eINQUISITION_MISSION.ETHEREAL:
                 mission_inquisition_ethereal();
@@ -154,25 +167,9 @@ function mission_inquisition_ethereal() {
 }
 
 function mission_inquisition_tyranid_organism(worlds) {
-    LOGGER.info("RE: Gaunt Capture");
-    var _star = choose_array(worlds);
-    var planet = -1;
-    for (var i = 1; i <= _star.planets; i++) {
-        if (_star.p_tyranids[i] > 4) {
-            planet = i;
-            break;
-        }
-    }
-
-    var eta = scr_mission_eta(_star.x, _star.y, 1);
-    eta = min(max(eta, 6), 50);
-
-    var text = $"An Inquisitor is trusting you with a special mission.  The planet {string(_star.name)} {scr_roman(planet)}";
-    text += " is ripe with Tyranid organisms.  They require that you capture one of the Gaunt species for research purposes.  Can your chapter handle this mission?";
-    scr_popup("Inquisition Mission", text, "inquisition", $"tyranid_org|{string(_star.name)}|{string(planet)}|{string(eta + 1)}|");
 }
 
-function mission_inquisition_tomb_world(tomb_worlds) {
+function mission_inquisition_necron_world(tomb_worlds) {
     LOGGER.info("RE: Necron Tomb Bombing");
     var _star = noone;
     if (is_array(tomb_worlds)) {
@@ -195,7 +192,7 @@ function mission_inquisition_tomb_world(tomb_worlds) {
     var _options = [
         {
             str1: "Accept",
-            choice_func: init_mission_inquisition_tomb_world,
+            choice_func: init_mission_inquisition_necron_world,
         },
         {
             str1: "Refuse",
@@ -218,7 +215,7 @@ function mission_inquisition_tomb_world(tomb_worlds) {
 }
 
 /// @self Asset.GMObject.obj_popup
-function init_mission_inquisition_tomb_world() {
+function init_mission_inquisition_necron_world() {
     var _mission_star = find_star_by_name(pop_data.system);
     var _p_data = _mission_star.get_planet_data(pop_data.planet);
     if (_mission_star == noone) {
