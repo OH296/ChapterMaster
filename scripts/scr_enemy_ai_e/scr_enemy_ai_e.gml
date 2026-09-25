@@ -748,7 +748,7 @@ function scr_enemy_ai_e() {
     }
 
     for (var i = 1; i <= planets; i++) {
-        var existing_problem = has_any_problem_planet(i);
+        var existing_problem = bool(array_length(p_problem[i]));
         if (!existing_problem) {
             if (!irandom(50) && p_owner[i] == eFACTION.IMPERIUM) {
                 if (p_owner[i] == eFACTION.IMPERIUM) {

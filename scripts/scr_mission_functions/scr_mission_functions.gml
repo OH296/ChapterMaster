@@ -203,24 +203,6 @@ function protect_raiders_hold_memorial() {
 }
 
 
-//TODO allow most of these functions to be condensed and allow arrays of problems or planets and maybe increase filtering options
-//filtering options could be done via universal methods that all the filters to be passed to many other game systems
-/// @self Asset.GMObject.obj_star
-function has_any_problem_planet(planet, star = noone) {
-    if (star == noone) {
-        for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            if (p_problem[planet][i] != "") {
-                return true;
-            }
-        }
-    } else {
-        with (star) {
-            return has_any_problem_planet(planet);
-        }
-    }
-    return false;
-}
-
 // returns a bool for if any planet on a given star has the given problem
 /// @self Asset.GMObject.obj_star
 function has_problem_star(problem, star = noone) {
@@ -239,27 +221,6 @@ function has_problem_star(problem, star = noone) {
         }
     }
     return has_problem;
-}
-
-//returns the array position of a given problem on a given planet if the specfied time is given
-/// @self Asset.GMObject.obj_star
-function has_problem_planet_and_time(planet, problem, time, star = noone) {
-    var _had_problem = -1;
-    if (star == noone) {
-        for (var i = 0; i < array_length(p_problem[planet]); i++) {
-            var _prob = p_problem[planet][i];
-            if (_prob.p_id == problem) {
-                if (_prob.timer == time) {
-                    _had_problem = i;
-                }
-            }
-        }
-    } else {
-        with (star) {
-            _had_problem = has_problem_planet_and_time(planet, problem, time);
-        }
-    }
-    return _had_problem;
 }
 
 

@@ -128,7 +128,7 @@ function scr_cheatcode(argument0) {
                     }
                     with (obj_star) {
                         for (var i = 1; i <= planets; i++) {
-                            var existing_problem = false; //has_any_problem_planet(i);
+                            var existing_problem = false;
                             if (!existing_problem) {
                                 if (p_owner[i] == eFACTION.IMPERIUM) {
                                     LOGGER.debug("mission");
