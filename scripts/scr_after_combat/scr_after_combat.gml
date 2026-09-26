@@ -214,57 +214,59 @@ function after_battle_part2() {
 
 /// @self Asset.GMObject.obj_pnunit
 function after_battle_part1() {
-    var unit;
+    var _unit;
     var skill_level;
     for (var i = 0; i < array_length(unit_struct); i++) {
-        unit = unit_struct[i];
-        if (!is_struct(unit)) {
+        _unit = unit_struct[i];
+        if (!is_struct(_unit)) {
             continue;
         }
-        if ((marine_type[i] != "") && (unit.hp() < -3000) && (obj_ncombat.defeat == 0)) {
+        if ((_unit.hp() < -3000) && (!obj_ncombat.defeat)) {
             marine_dead[i] = 0;
+            continue;
             //unit.add_or_sub_health(5000);
         } // For incapitated
 
-        if (ally[i] == false) {
-            if ((obj_ncombat.dropping == 1) && (obj_ncombat.defeat == 1) && (marine_dead[i] < 2)) {
+        if (ally[i]) {
+            continue;
+        }
+        //ensures death if battle lost
+        if ((obj_ncombat.defeat) && (marine_dead[i] < 2)){
+            if (obj_ncombat.dropping){
                 marine_dead[i] = 1;
-            }
-            if ((obj_ncombat.dropping == 0) && (obj_ncombat.defeat == 1) && (marine_dead[i] < 2)) {
+            } else {
                 marine_dead[i] = 2;
-                marine_hp[i] = -50;
             }
+            _unit.update_health(-50);
+        }
 
-            if ((marine_type[i] != "") && (obj_ncombat.defeat == 1) && (marine_dead[i] < 2)) {
-                marine_dead[i] = 1;
-                marine_hp[i] = -50;
-            }
-            if ((veh_type[i] != "") && (obj_ncombat.defeat == 1)) {
-                veh_dead[i] = 1;
-                veh_hp[i] = -200;
-            }
-
-            if (!marine_dead[i]) {
-                // Apothecaries for saving marines;
-                if (unit.IsSpecialist(SPECIALISTS_APOTHECARIES, true)) {
-                    skill_level = unit.intelligence * 0.0125;
-                    if (marine_gear[i] == "Narthecium") {
-                        skill_level *= 2;
-                        obj_ncombat.apothecaries_alive++;
-                    }
-                    skill_level += random(unit.luck * 0.05);
-                    obj_ncombat.unit_recovery_score += skill_level;
+        //TODO these should both link directly to specialist point gens
+        if (!marine_dead[i]) {
+            // Apothecaries for saving marines;
+            if (_unit.IsSpecialist(SPECIALISTS_APOTHECARIES, true)) {
+                skill_level = _unit.intelligence * 0.0125;
+                if (marine_gear[i] == "Narthecium") {
+                    skill_level *= 2;
+                    obj_ncombat.apothecaries_alive++;
                 }
-
-                // Techmarines for saving vehicles;
-                if (unit.IsSpecialist(SPECIALISTS_TECHS, true)) {
-                    skill_level = unit.technology / 10;
-                    skill_level += random(unit.luck / 2);
-                    skill_level += unit.gear_special_value("combi_tool");
-                    obj_ncombat.vehicle_recovery_score += round(skill_level);
-                    obj_ncombat.techmarines_alive++;
-                }
+                skill_level += random(_unit.luck * 0.05);
+                obj_ncombat.unit_recovery_score += skill_level;
             }
+
+            // Techmarines for saving vehicles;
+            if (_unit.IsSpecialist(SPECIALISTS_TECHS, true)) {
+                skill_level = _unit.technology / 10;
+                skill_level += random(_unit.luck / 2);
+                skill_level += _unit.gear_special_value("combi_tool");
+                obj_ncombat.vehicle_recovery_score += round(skill_level);
+                obj_ncombat.techmarines_alive++;
+            }
+        }
+    }
+    for (var i = 0; i < array_length(veh_type); i++) {
+        if ((veh_type[i] != "") && (obj_ncombat.defeat)) {
+            veh_dead[i] = 1;
+            veh_hp[i] = -200;
         }
     }
 }

@@ -34,7 +34,6 @@ unit_struct = [];
 marine_type = [];
 marine_co = [];
 marine_id = [];
-marine_hp = [];
 marine_ac = [];
 marine_exp = [];
 marine_wep1 = [];

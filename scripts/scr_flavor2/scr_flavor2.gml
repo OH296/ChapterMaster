@@ -423,7 +423,8 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
             } else {
                 him = -1; // Find which unit this is
                 for (var marine = 0; marine < marine_length; marine++) {
-                    if (marine_type[marine] == unit_role && marine_hp[marine] <= 0) {
+                    var _unit = unit_struct[marine];
+                    if (_unit.role() == unit_role && _unit.hp() <= 0) {
                         him = marine;
                         break; // found the unit
                     }
