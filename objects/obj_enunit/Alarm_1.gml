@@ -206,14 +206,14 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
         // marine_casting[g] = false;
 
         if (((dudes[g] != "") && (dudes_num[g] > 0)) && (dudes_hp[g] > 0)) {
-            if ((dudes[g] == obj_ini.player_role_data[eROLE.DREADNOUGHT].role) && (dudes_hp[g] > 0)) {
+            if (role_compare(dudes[g], eROLE.DREADNOUGHT) && dudes_hp[g] > 0) {
                 dreads += 1;
             }
             if (dudes_mobi[g] == "Bike") {
                 scr_en_weapon("Twin Linked Bolters", false, 1, dudes[g], g);
             }
             if ((dudes_mobi[g] != "Bike") && (dudes_mobi[g] != "")) {
-                if (string_count("Jump Pack", marine_mobi[g]) > 0) {
+                if (string_count("Jump Pack", dudes_mobi[g]) > 0) {
                     scr_en_weapon("Hammer of Wrath", false, 1, dudes[g], g);
                 }
             }

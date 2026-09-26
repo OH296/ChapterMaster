@@ -407,37 +407,30 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
         exit;
     }
 
-    var marine_length = array_length(marine_type);
-    var s, him, special, unit, unit_role, units_lost, plural;
-    var lost_roles_count = array_length(lost);
-    for (var role_index = 0; role_index < lost_roles_count; role_index++) {
-        unit_role = lost[role_index];
-        units_lost = lost_num[role_index];
-        if (unit_role != "" && units_lost > 0) {
-            mes_color = eMSG_COLOR.RED;
-            special = is_specialist(unit_role, SPECIALISTS_HEADS) || unit_role == obj_ini.player_role_data[eROLE.CAPTAIN].role || obj_ncombat.player_max <= 6;
+    var _marine_length = array_length(unit_struct);
+    var _lost_roles_count = array_length(lost);
+    for (var _role_index = 0; _role_index < _lost_roles_count; _role_index++) {
+        var _unit_role = lost[_role_index];
+        var _units_lost = lost_num[_role_index];
+        if (_unit_role == "" || _units_lost <= 0) {
+            continue;
+        }
+        mes_color = eMSG_COLOR.RED;
+        var _special = is_specialist(_unit_role, SPECIALISTS_HEADS) || role_compare(_unit_role, eROLE.CAPTAIN) || obj_ncombat.player_max <= 6;
 
-            if (!special) {
-                plural = units_lost > 1 ? "s" : "";
-                m2 += $"{units_lost} {unit_role}{plural}, ";
-            } else {
-                him = -1; // Find which unit this is
-                for (var marine = 0; marine < marine_length; marine++) {
-                    if (marine_type[marine] == unit_role && marine_hp[marine] <= 0) {
-                        him = marine;
-                        break; // found the unit
-                    }
+        if (!_special) {
+            var _plural = _units_lost > 1 ? "s" : "";
+            m2 += $"{_units_lost} {_unit_role}{_plural}, ";
+        } else {
+            for (var marine = 0; marine < _marine_length; marine++) {
+                var _unit = unit_struct[marine];
+                if (_unit.role() != _unit_role || _unit.hp() > 0) {
+                    continue;
                 }
-
-                if (him != -1) {
-                    // found a valid unit
-                    obj_ncombat.dead_jims += 1;
-                    if (marine_type[him] == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
-                        obj_ncombat.dead_jim[obj_ncombat.dead_jims] = $"A {marine_type[him]} has been lost!";
-                    } else {
-                        obj_ncombat.dead_jim[obj_ncombat.dead_jims] = $"{unit_struct[him].name_role()} has been lost!";
-                    }
-                }
+                var _dead_guy = ++obj_ncombat.dead_jims;
+                var _str = _units_lost > 1 ? $"A {_unit.role()} has been lost!" : $"{_unit.name_role()} has been lost!";
+                obj_ncombat.dead_jim[_dead_guy] = _str;
+                break;
             }
         }
     }
