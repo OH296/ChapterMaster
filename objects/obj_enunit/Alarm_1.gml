@@ -206,7 +206,7 @@ if (obj_ncombat.enemy == eFACTION.PLAYER) {
         // marine_casting[g] = false;
 
         if (((dudes[g] != "") && (dudes_num[g] > 0)) && (dudes_hp[g] > 0)) {
-            if ((role_compare(dudes[g], eROLE.DREADNOUGHT)) && (dudes_hp[g] > 0)) {
+            if (role_compare(dudes[g], eROLE.DREADNOUGHT) && dudes_hp[g] > 0) {
                 dreads += 1;
             }
             if (dudes_mobi[g] == "Bike") {
