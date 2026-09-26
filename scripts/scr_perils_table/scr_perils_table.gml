@@ -132,9 +132,8 @@ function scr_perils_table(perils_strength, unit, psy_discipline, power_name, uni
                 if (men > 0) {
                     repeat (6) {
                         var t = irandom(men - 1); // Random value from 0 to men-1
-                        if (marine_type[t] != "") {
-                            marine_hp[t] -= roll_dice_chapter(1, 50, "low");
-                        }
+                        var _unit = unit_struct[t];
+                        _unit.add_or_sub_health(roll_dice_chapter(1, 50, "low") * -1);
                     }
                 }
                 return "There is a massive explosion of warp energy which injures him and several other marines!";
@@ -154,9 +153,8 @@ function scr_perils_table(perils_strength, unit, psy_discipline, power_name, uni
                 if (men > 0) {
                     repeat (6) {
                         var t = irandom(men - 1); // Random value from 0 to men-1
-                        if (marine_type[t] != "") {
-                            marine_hp[t] -= roll_dice_chapter(1, 50, "low");
-                        }
+                        var _unit = unit_struct[t];
+                        _unit.add_or_sub_health(roll_dice_chapter(1, 50, "low") * -1);
                     }
                 }
                 unit.add_equipment_repairs(eEQUIPMENT_SLOT.ALL);
