@@ -1,11 +1,49 @@
-function SystemProblem(name, timer, data){
+function SystemProblem(name, data = {}, system){
+timer = 0;
+f_type = eP_FEATURES.MISSION;
+p_id = name;
+data = data;
+self.system = system;
+if (struct_exists(data, "stage")){
+    stage_id = data.stage;
+}
+if (struct_exists(data, "members")){
+    members = data.members;
+}
+
+static mark = function(colour){
+    with (system){
+        new_star_event_marker(colour)
+    }
+}
+
+static init = function(){
+    switch(p_id){
+        case "great_crusade":
+        great_crusade_init();
+        break;
+    }   
 
 }
 
-/// @self Asset.GMObject.obj_star
+static great_crusade_init(){
+    //TODO decide the target/purpose of the crusade to create more variety and to help with post crusade rewards
+    _nearest_player_fleet = data.nearest_player_fleet;
+    var _travel_leeway = 10;
+    if (_nearest_player_fleet.action == "move") {
+        _travel_leeway += _nearest_player_fleet.action_eta;
+    }
+    timer = get_viable_travel_time(_travel_leeway, _nearest_player_fleet.x, _nearest_player_fleet.y, star_id.x, star_id.y, _nearest_player_fleet, false);
+    scr_popup("Crusade", $"Fellow Astartes legions are preparing to embark on a Crusade to a nearby sector.  Your forces are expected at {star_id.name}; {_eta} months from now your ships there shall begin their journey.", "crusade", "");
+    mark("green")
+    scr_event_log("", $"A Crusade is called; our forces are expected at {system.name} in {timer} months.", star_id.name);
+}
+}
+
 /// @param {sring} name
 /// @param {Real} timer
-/// @param {constructor PlanetData} _system
+/// @param {struct} data
+/// @param {constructor PlanetData} planet
 function PlanetProblem(name, timer, data, planet) constructor{
 timer = timer;
 uid = scr_uuid_generate();

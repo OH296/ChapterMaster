@@ -119,6 +119,14 @@ add_feature = function(planet, feature) {
     array_push(p_feature[planet], feature);
 };
 
+system_problems = [];
+
+add_problem = function(p_id, data){
+    array_push(system_problems, new SystemProblem(name, data, system)){
+
+    }
+}
+
 system_player_ground_forces = 0;
 
 /// @desc Reports whether any planet in this system holds a garrison squad that still has members.
