@@ -98,7 +98,7 @@ if (battle_special == "") {
 if (battle_special == "spyrer") {
     p1 = "Your marines search through the alleyways and corridors likely to contain the Spyrer.  It does not take long before the lunatic attacks, springing off from a wall to fall among your men.  Your ranks are made up of ";
 }
-if (battle_special == "protect_raiders", battle_special) {
+if (battle_special == "protect_raiders") {
     p1 = "Following responses from scans, Your marine squad deploys and lies in wait on the planets surface. Either the eldar were expecting you or the scope of the raids on the planet had been underplayed by the governor perhaps to hide his incompetence in allowing such foul xenos actions to persist unchecked for so long.";
 }
 if (battle_special == "hunt_fallen") {

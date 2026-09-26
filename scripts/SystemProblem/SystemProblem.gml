@@ -42,8 +42,8 @@ static basic_turn_end = function(){
     }
     if ((timer > -1) && per_turn_checks) {
         var _func = undefined;
-        switch(p_id){
-        }
+        /*switch(p_id){
+        }*/
         handle_triggered_mission_func(_func)
     }
     if ((timer == 0) && zero_timer_checks && !delete_mission) {
@@ -71,7 +71,7 @@ static init = function(){
     }   
 }
 
-static init_great_crusade(){
+static init_great_crusade = function(){
     //TODO decide the target/purpose of the crusade to create more variety and to help with post crusade rewards
     _nearest_player_fleet = data.nearest_player_fleet;
     var _travel_leeway = 10;

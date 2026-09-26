@@ -352,7 +352,7 @@ var _non_power_reduce_events = [
 if (array_contains(_non_power_reduce_events, battle_special)) {
     reduce_power = false;
 }
-} else if (string_count("ruins", battle_special) > 0) {
+else if (string_count("ruins", battle_special) > 0) {
     reduce_power = false;
 }
 
@@ -542,7 +542,7 @@ if (defeat == 0 && reduce_power) {
 }
 
 if (battle_special != ""){
-    if (is_struct(special_feature), && is_instanceof(special_feature, PlanetProblem)){
+    if (is_struct(special_feature) && is_instanceof(special_feature, PlanetProblem)){
         special_feature.battle_final_message();
     }
 }

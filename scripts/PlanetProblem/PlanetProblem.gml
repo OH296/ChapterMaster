@@ -83,22 +83,23 @@ static basic_turn_end = function(){
 	if ((timer > -1) && per_turn_checks) {
 		var _func = undefined;
 		switch(p_id){
-			case "mech_raider";
+			case "mech_raider":
 				_func = per_turn_check_raider_failed;
 				break;
 			case "mech_bionics":
 				_func = per_turn_check_mech_bionics;
 				break;
 			case "mech_tomb":
-				switch(stage_id):
-						break;
+				switch(stage_id){
 					case "exploring":
 						_func = per_turn_check_mech_tomb2;
 						break;
-					case "awaiting_player";
+					case "awaiting_player":
 					default:
 						_func = per_turn_check_mech_tomb1;
 					break;
+				}
+				break;
             case "spyrer":
                 _func = per_turn_check_spyrer;
                 break;
@@ -138,13 +139,13 @@ static basic_turn_end = function(){
 			case "hunt_fallen":
 				_func = resolve_fallen;
 				break;
-			case "mech_raider";
+			case "mech_raider":
 				_func = resolve_mech_raider_failed;
 				break;
 			case "mech_bionics":
 				_func = resolve_mech_bionics;
 				break;
-			case "mech_tomb";
+			case "mech_tomb":
 				_func = resolve_mech_tomb1_failed;
 				break;
 			case "mech_mars":
@@ -256,7 +257,7 @@ static on_unit_selection = function(){
     instance_deactivate_object(obj_star);
 }
 
-static __init(){
+static __init = function(){
 	switch(p_id){
 		case "inquisition_necron":
 	        mark("green");
@@ -291,6 +292,7 @@ static __init(){
             break;
         default:
             mark("green");
+			break;
 
 	}
 }
@@ -306,17 +308,17 @@ static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, ene
     obj_turn_end.battle_object[_battle_index] = system;
     obj_turn_end.battle_special[_battle_index] = {
         special_id : special_id,
-        special_feature : self
+        special_feature : self,
     };
     if (is_undefined(enemy_data)){
         enemy_data = {
         }
     }
     if (!struct_exists(enemy_data, "reduce_power")){
-        enemy_data.reduce_power = false,
+        enemy_data.reduce_power = false;
     }
     if (!struct_exists(enemy_data, "reduce_fortification")){
-        enemy_data.reduce_fortification = false,
+        enemy_data.reduce_fortification = false;
     }
     obj_turn_end.battle_special[_battle_index].battle_enemy_data = enemy_data;
 }
@@ -435,7 +437,7 @@ static complete_beast_hunt_mission = function() {
 }
 
 
-stati init_train_forces_mission = fuction() {
+static init_train_forces_mission = fuction() {
     if (stage_id != "preliminary" || array_length(members) = 0) {
         exit;
     }
@@ -684,7 +686,7 @@ static per_turn_check_spyrer = function() {
                         ]
                     }
                 ]
-            };
+            }
         );
     }
 }
@@ -923,7 +925,7 @@ static per_turn_check_mech_tomb1 = function() {
     if (array_length(_marines) >= 20) {
         stage_id = "exploring";
         timer = 999;
-        data.turns : 0;
+        data.turns = 0;
         scr_popup("Mechanicus Research", $"The Mechanicus Research team on planet {p_data.name()} has taken note of your Astartes and are now prepared to begin their research.  Your marines are to stay on the planet until further notice.", "necron_cave", "");
     }
 }
@@ -1153,7 +1155,8 @@ static protect_raider_squad_selected = function() {
             _gar_pop.add_option("continue");
         }
     } else {
-        var _battle = new_battle(eFACTION.ELDAR)
+        var _battle = new_battle(eFACTION.ELDAR);
+		
         _roster = new Roster();
         with (_roster) {
             selected_units = _squad_units;
@@ -1161,7 +1164,6 @@ static protect_raider_squad_selected = function() {
             add_to_battle();
         }
         exit_adhoc_manage();
-        delete_mission _roster;
 
         _battle.battle_enemy_data = {
             threat : 3,
@@ -1201,7 +1203,6 @@ static protect_raider_squad_selected = function() {
         };
     }
 }    
-}
 
 static per_turn_check_inqisition_tomb = function() {
     if (p_player[run] <= 0){
@@ -1331,7 +1332,7 @@ static necron_tomb_mission_sequence = function() {
                         {
                             name : "Necron Wraith",
                             number : 1
-                        }
+                        },
                         {
                             name : "Necron Wraith",
                             number : 1
@@ -1350,7 +1351,7 @@ static necron_tomb_mission_sequence = function() {
                         {
                             name : "Canoptek Spyder",
                             number : 1
-                        }
+                        },
                         {
                             name : "Canoptek Scarab",
                             number : 20
@@ -1387,9 +1388,8 @@ static necron_tomb_mission_sequence = function() {
 
         var _battle = new_battle(
             eFACTION.NECRONS,
-            p_id,
-            _battle_data
         )
+		_battle.battle_enemy_data = _battle_data;
         _roster = new Roster();
         with (_roster) {
             roster_location = system.name;
@@ -1402,7 +1402,7 @@ static necron_tomb_mission_sequence = function() {
                 add_to_battle();
             }
         }
-        delete_mission _roster;
+
         instance_deactivate_object(obj_star);
 
         instance_destroy(obj_popup);
@@ -1606,7 +1606,7 @@ static inquisition_tyranid_org_battle_aftermath = function(){
     } else {
         var _text = "You have captured a Gaunt organism- the Inquisitor is pleased with your work.  The Tyranid will be stored until it may be retrieved.  The mission is a success.";
     }
-    scr_popup("Inquisition Mission Completed",, "inquisition", "");
+    scr_popup("Inquisition Mission Completed",_text, "inquisition", "");
     if (data.captured_gaunt > 0) {
         delete_mission = true;
     }
@@ -1635,7 +1635,7 @@ static hive_fleet_to_cult_init = function(){
 
 static per_turn_hive_fleet_to_cult = function(){
     if (timer != 3 || scr_has_disadv("Psyker Intolerant")){
-        continue;
+        exit;
     }
     var _has_head_lib = scr_role_count(obj_ini.player_role_data[eROLE.CHIEFLIBRARIAN].role, "");
 

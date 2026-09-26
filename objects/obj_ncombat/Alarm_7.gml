@@ -270,7 +270,7 @@ try {
         }
     }
 
-    if (is_struct(special_feature), && is_instanceof(special_feature, PlanetProblem)){
+    if (is_struct(special_feature) && is_instanceof(special_feature, PlanetProblem)){
         special_feature.after_battle_effects();
     }
     if ((enemy == eFACTION.PLAYER && on_ship == true) && (!defeat)) {

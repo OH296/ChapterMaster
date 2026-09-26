@@ -81,10 +81,6 @@ function mission_name_key(mission) {
     }
 }
 
-/// @self Struct.PlanetData
-function problem_end_turn_checks() {
-
-
 /// @self Asset.GMObject.obj_star
 function scr_new_governor_mission(planet, problem = "") {
     if (p_owner[planet] != eFACTION.IMPERIUM) {
