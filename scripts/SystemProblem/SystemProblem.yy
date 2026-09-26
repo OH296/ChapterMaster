@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"MissionHelper",
+  "%Name":"SystemProblem",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"MissionHelper",
+  "name":"SystemProblem",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Constructors",
+    "path":"folders/Scripts/Constructors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
