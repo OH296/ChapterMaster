@@ -115,7 +115,7 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
                 var _eta = scr_mission_eta(_star.x, _star.y, 1);
                 _eta = min(max(_eta, 6), 50);
 
-                _star.get_planet_data(planet).new_problem("tyranid_org", _eta);
+                _star.get_planet_data(planet).new_problem("iquisition_tyranid_org", _eta);
                 break;
             case eINQUISITION_MISSION.ETHEREAL:
                 mission_inquisition_ethereal();
@@ -638,23 +638,18 @@ function mission_inquistion_purge() {
             _eta = min(scr_mission_eta(_star.x, _star.y, 1), _eta); // this is wrong
         }
     }
+    _eta += 10;
     _eta = min(max(_eta, 12), 100);
 
     var text = "The Inquisition is trusting you with a special mission.";
+    var _purge_type = eDROP_TYPE.PURGEFIRE;
+    if (mission_flavour < 3){
+        eDROP_TYPE.PURGESELECTIVE;
+    } 
 
-    if (mission_flavour == 1) {
-        text += $"  A number of high-ranking nobility on the planet {scr_roman(planet)} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
-    } else if (mission_flavour == 2) {
-        text += $"  A powerful crimelord on the planet {scr_roman(planet)} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
-    } else if (mission_flavour == 3) {
-        text += $"  The mutants of hive world {scr_roman(planet)} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {string(_eta)} months.  Can your chapter handle this mission?";
-    }
+    var _p_data = _star.get_planet_data(planet);
+    _p_data.new_problem("inquisition_purge", _eta, {mission_flavour, purge_type:_purge_type});
 
-    if (mission_flavour != 3) {
-        scr_popup("Inquisition Mission", text, "inquisition", $"purge|{string(_star.name)}|{string(planet)}|{string(real(_eta + 1))}|");
-    } else {
-        scr_popup("Inquisition Mission", text, "inquisition", $"cleanse|{string(_star.name)}|{string(planet)}|{string(real(_eta + 1))}|");
-    }
 }
 
 function mission_investigate_planet() {

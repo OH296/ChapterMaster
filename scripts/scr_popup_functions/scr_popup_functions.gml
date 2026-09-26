@@ -495,7 +495,7 @@ function default_popup_image_index() {
         _img = 21;
     } else if (image == "webber") {
         _img = 22;
-    } else if (image == "spyrer") {
+    } else if (image == "inquisition_spyrer") {
         _img = 23;
     } else if (image == "fortress") {
         _img = 24;

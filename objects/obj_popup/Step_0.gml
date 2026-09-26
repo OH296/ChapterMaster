@@ -241,7 +241,7 @@ try {
                             text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to cleanse by fire the mutants in Hive {planet_numeral_name(planet, _mission_star)} within {estimate} months.";
                         }
                     }
-                    if (mission == "spyrer") {
+                    if (mission == "inquisition_spyrer") {
                         scr_event_log("", $"Inquisition Mission Accepted: The Spyrer on {_mission_star.name} {scr_roman(planet)} must be killed within {estimate} months.", _mission_star.name);
                         if (demand) {
                             text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Spyrer on Hive {_mission_star.name} {scr_roman(onceh)} must be removed within {estimate} months.";
@@ -258,9 +258,6 @@ try {
                         if (demand) {
                             title = "Inquisition Mission Demand";
                             text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to capture the Tau Ethereal somewhere within the {_mission_star.name} system.";
-                        }
-                        if (has_problem_star("recon", _mission_star)) {
-                            scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wish for {global.chapter_name} to capture the Tau Ethereal somewhere within {_mission_star.name}.", _mission_star.name);
                         }
                     }
                 }
@@ -331,13 +328,6 @@ try {
     }
 
     if ((press == 1) && (option2 != "")) {
-        if (mission == "spyrer") {
-            obj_controller.disposition[4] -= 2;
-        }
-        if (title == "Inquisition Recon") {
-            obj_controller.disposition[4] -= 2;
-        }
-
         if (title == "Mercy Plea") {
             // If have any marines within the fleet on the ships
 

@@ -130,7 +130,7 @@ static basic_turn_end = function(){
 					break;
 				}
 				break;
-            case "spyrer":
+            case "inquisition_spyrer":
                 _func = per_turn_check_spyrer;
                 break;
             case "inquisition_necron":
@@ -163,7 +163,7 @@ static basic_turn_end = function(){
 			case "inquisition_necron":
 				_func = resolve_inquisitor_necron;
 				break;
-			case "spyrer":
+			case "inquisition_spyrer":
 				_func = resolve_spyrer;
 				break;
 			case "hunt_fallen":
@@ -238,7 +238,7 @@ static after_battle_effects = function(){
     instance_activate_object(obj_star);
     var _func = undefined;
     switch(p_id){
-        case "spyrer":
+        case "inquisition_spyrer":
             _func = spyrer_battle_aftermath;
             break;
         case "protect_raiders":
@@ -250,7 +250,7 @@ static after_battle_effects = function(){
         case "inquisition_necron":
             _func = inquisition_necron_battle_aftermath;
             break;
-        case "tyranid_org":
+        case "iquisition_tyranid_org":
             _func = inquisition_tyranid_org_battle_aftermath
     }
     handle_triggered_mission_func(_func);   
@@ -314,7 +314,7 @@ static __init = function(){
         case "inquisition_demon_world":
             inquisition_demon_world_init();
             break;
-        case "tyranid_org":
+        case "iquisition_tyranid_org":
             inquisition_tyranid_org_init();
             break;
         case "hive_fleet_to_cult":
@@ -654,15 +654,16 @@ static inquisition_recon_init = function(){
         options : inquisition_mission_options("inquisition_recon_accept")
     };
 
-    var text = $"The Inquisition wishes for you to investigate {p_data.name()}";
-    text += $"  Boots are expected to be planted on its surface over the course of your investigation.";
-    text += $" You have {string(eta)} months to complete this task.";
-    scr_popup("Inquisition Recon", text, "inquisition", _pop_data);
+    var _text = $"The Inquisition wishes for you to investigate {p_data.name()}";
+    _text += $"  Boots are expected to be planted on its surface over the course of your investigation.";
+    _text += $" You have {string(eta)} months to complete this task.";
+    scr_popup("Inquisition Recon", _text, "inquisition", _pop_data);
 }
 
 static inquisition_recon_accept = function(){
     mark("green");
-    scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wish for Astartes to land on and investigate {p_data.name()} within {timer} months.", system.name);    
+    scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wish for Astartes to land on and investigate {p_data.name()} within {timer} months.", system.name);
+    with(obj_popup){ popup_default_close(); }    
 }
 
 static per_turn_inquisition_recon = function() {
@@ -705,23 +706,25 @@ static resolve_inquisitor_necron = function() {
     }
 }
 
+static inquisition_spyrer_init
+
 static resolve_spyrer = function() {
     var _planet_name = p_data.name();
     alter_disposition(eFACTION.INQUISITION, -3);
     var _alert_text = $"The Spyrer on {_planet_name} has been left unchecked.  In the ensuing carnage some high-ranking officials have been killed, along with several Nobles.  Panic is running amock in several parts of the hives and the Inquisition is less than pleased.";
     var _text = "Inquisition Mission Failed: The Spyrer on {_planet_name} was not removed.";
-    scr_popup("Inquisition Mission Failed", _alert_text, "spyrer", "");
+    scr_popup("Inquisition Mission Failed", _alert_text, p_id, "");
     scr_event_log("red", _text);
 }
 
 static per_turn_check_spyrer = function() {
     if (p_data.player_forces > 20) {
         var _tixt = $"The Spyrer on {p_data.name()} seems to have vanished, presumably gone into hiding.";
-        scr_popup("Spyrer Rampage", _tixt, "spyrer", "");
+        scr_popup("Spyrer Rampage", _tixt, p_id, "");
     } else if (p_data.player_forces <= 20) {
         new_end_turn_battle(
             30,
-            "spyrer",
+            p_id,
             {
                 threat : 1,
                 fortified : false,
@@ -752,7 +755,7 @@ static spyrer_battle_aftermath = function(){
 
     var _tixt = $"The Spyrer on {p_data.name()} has been removed.  The citizens and craftsman may sleep more soundly, the Inquisition likely pleased.";
 
-    scr_popup("Inquisition Mission Completed", _tixt, "spyrer", "");
+    scr_popup("Inquisition Mission Completed", _tixt, p_id, "");
 
     var _disp_gain = obj_controller.demanding ? choose(0, 0, 1) : 2;
     var _disp_gain_string = alter_disposition(eFACTION.INQUISITION, _disp_gain);
@@ -1681,7 +1684,7 @@ static per_turn_hive_fleet_to_cult = function(){
     if ((obj_controller.known[eFACTION.TYRANIDS] == 0) && (_has_head_lib == 0)) {
         for (var q = 0; q < array_length(obj_ini.TTRPG[0]); q++) {
             var _unit = fetch_unit([0, q]);
-            if (_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
+            if (_unit.has_role(eROLE.CHAPTERMASTER)) {
                 if (string_count("0", _unit.specials) > 0) {
                     scr_popup("Shadow in the Warp", "You are distracted and bothered by a nagging sensation in the warp.  It feels as though a shadow descends upon your sector.", "shadow", "");
                     scr_event_log("red", "You sense a disturbance in the warp.  It feels something like a massive shadow.");
@@ -1692,6 +1695,32 @@ static per_turn_hive_fleet_to_cult = function(){
     }
 
     obj_controller.known[eFACTION.TYRANIDS] = 1;
+}
+
+static inquisition_purge_init = function(){
+    var _text = "The Inquisition is trusting you with a special mission.";
+    if (data.mission_flavour == 1) {
+        _text += $"  A number of high-ranking nobility on the planet {scr_roman(planet)} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
+    } else if (data.mission_flavour == 2) {
+        _text += $"  A powerful crimelord on the planet {scr_roman(planet)} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
+    } else if (data.mission_flavour == 3) {
+        _text += $"  The mutants of hive world {scr_roman(planet)} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {string(_eta)} months.  Can your chapter handle this mission?";
+    }
+    var _pop_data = {
+        mission: self,
+        options: inquisition_mission_options("inquisition_purge_accept"),
+    };
+    scr_popup("Inquisition Mission", text, "inquisition", _pop_data);
+}
+
+static inquisition_purge_accept = function(){
+    var _text = "Inquisition Mission Accepted:"
+    if (data.purge_type == eDROP_TYPE.PURGEFIRE){
+        _text += $" The mutants beneath {p_data.name()} must be cleansed by fire within {estimate} months.";
+    } else {
+        _text += $" The nobles of {p_data.name()} must be selectively purged within {estimate} months."
+    }
+    scr_event_log("", _text, system.name);
 }
 
 }

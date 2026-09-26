@@ -159,7 +159,7 @@ function scr_cheatcode(argument0) {
                         case "planet":
                             scr_inquisition_mission(eEVENT.INQUISITION_PLANET);
                             break;
-                        case "spyrer":
+                        case "inquisition_spyrer":
                             scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.SPYRER);
                             break;
                         case "artifact":

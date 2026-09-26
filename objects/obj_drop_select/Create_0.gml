@@ -216,7 +216,7 @@ if (purge == 0) {
         spesh = true;
     }
 
-    if (_p_data.has_problem("tyranid_org")) {
+    if (_p_data.has_problem("iquisition_tyranid_org")) {
         tyranids = 2;
         attacking = 9;
     }

@@ -95,7 +95,7 @@ if (battle_special == "") {
         }
     }
 }
-if (battle_special == "spyrer") {
+if (battle_special == "inquisition_spyrer") {
     p1 = "Your marines search through the alleyways and corridors likely to contain the Spyrer.  It does not take long before the lunatic attacks, springing off from a wall to fall among your men.  Your ranks are made up of ";
 }
 if (battle_special == "protect_raiders") {
