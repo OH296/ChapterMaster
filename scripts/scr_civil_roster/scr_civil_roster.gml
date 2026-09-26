@@ -668,7 +668,6 @@ function scr_civil_roster(_unit_location, _target_location, _is_planet) {
                     targ.marine_wep2[targ.men] = _unit.weapon_two();
                     targ.marine_armour[targ.men] = _unit.armour();
                     targ.marine_gear[targ.men] = _unit.gear();
-                    targ.marine_mobi[targ.men] = _unit.mobility_item();
                     targ.marine_exp[targ.men] = _unit.experience;
                     targ.marine_powers[targ.men] = _unit.specials;
                     targ.marine_ranged[targ.men] = _unit.ranged_attack();

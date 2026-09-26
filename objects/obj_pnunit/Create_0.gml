@@ -40,7 +40,6 @@ marine_wep1 = [];
 marine_wep2 = [];
 marine_armour = [];
 marine_gear = [];
-marine_mobi = [];
 marine_powers = [];
 marine_dead = [];
 marine_attack = [];

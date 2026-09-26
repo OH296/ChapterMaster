@@ -376,8 +376,6 @@ function scr_add_unit_to_roster(unit, is_local = false, is_ally = false) {
     array_push(marine_wep2, unit.weapon_two());
     array_push(marine_armour, unit.armour());
     array_push(marine_gear, unit.gear());
-    array_push(marine_mobi, unit.mobility_item());
-    array_push(marine_mobi, unit.mobility_item());
     array_push(marine_exp, unit.experience);
     array_push(marine_powers, unit.specials);
     array_push(marine_ranged, unit.ranged_attack());
