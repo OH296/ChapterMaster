@@ -1,5 +1,5 @@
 function SystemProblem(name, data = {}, system){
-timer = 0;
+timer = -1;
 f_type = eP_FEATURES.MISSION;
 p_id = name;
 data = data;
@@ -9,6 +9,50 @@ if (struct_exists(data, "stage")){
 }
 if (struct_exists(data, "members")){
     members = data.members;
+}
+
+static handle_triggered_mission_func = function(func){
+    if (!is_undefined(func)){
+        refresh_p_data();
+        try {
+            func();
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
+        }
+    }
+    if (timer == -1 || (delete_mission)){
+        var _prob = -1;
+        for (var i = 0; i < array_length(system.system_problems); i++){
+            if (system.p_problem[i] == self){
+                _prob = i;
+            }
+        }
+        if (_prob > -1){
+            array_delete(system.system_problems, _prob,0);
+        }
+    }
+}
+
+static basic_turn_end = function(){
+    refresh_p_data();
+    if (system.storm - 1 > 0){
+        timer--;
+    }
+    if ((timer > -1) && per_turn_checks) {
+        var _func = undefined;
+        switch(p_id){
+        }
+        handle_triggered_mission_func(_func)
+    }
+    if ((timer == 0) && zero_timer_checks && !delete_mission) {
+        var _func = undefined;
+        switch(p_id){
+            case "great_crusade":
+                _func = resolve_great_crusade;
+                break;
+        }
+        handle_triggered_mission_func(_func)
+    }
 }
 
 static mark = function(colour){
@@ -23,7 +67,6 @@ static init = function(){
         great_crusade_init();
         break;
     }   
-
 }
 
 static great_crusade_init(){
@@ -38,6 +81,35 @@ static great_crusade_init(){
     mark("green")
     scr_event_log("", $"A Crusade is called; our forces are expected at {system.name} in {timer} months.", star_id.name);
 }
+
+static resolve_great_crusade = function() {
+    var _player_fleet = scr_orbiting_player_fleet(system);
+
+    if (_player_fleet != -1) {
+        var _crusade_direction = point_direction(room_width / 2, room_height / 2, system.x, system.y);
+        with (_player_fleet) {
+            action_x = x + lengthdir_x(1200, _crusade_direction);
+            action_y = y + lengthdir_y(1200, _crusade_direction);
+            set_fleet_movement(false, "crusade1");
+        }
+
+        scr_alert("green", "crusade", "Fleet embarks upon Crusade.", system.x, system.y);
+        scr_event_log("", "Fleet embarks upon Crusade.");
+    } else {
+        // hit loyalty here
+        alter_dispositions([[eFACTION.INQUISITION, -10], [eFACTION.IMPERIUM, -5]]);
+        var _string = $"No ships designated for Crusade.";
+        if (obj_controller.penitent == 1) {
+            obj_controller.penitent_current = 0;
+            _string += "Your penitence crusade has been lengthened for your failings";
+        }
+
+        scr_alert("red", "crusade", _string, system.x, system.y);
+        scr_loyalty("Refusing to Crusade", "+");
+        scr_event_log("red", "No ships designated for Crusade.");
+    }
+}
+
 }
 
 /// @param {sring} name
@@ -106,8 +178,8 @@ static handle_triggered_mission_func = function(func){
     }
     if (timer == -1 || (delete_mission)){
         var _prob = -1;
-        for (var i = 0; i < array_length(system.p_problem); i++){
-            if (system.p_problem[i] == self){
+        for (var i = 0; i < array_length(p_data.problems); i++){
+            if (p_data.problems[i] == self){
                 _prob = i;
             }
         }
@@ -170,9 +242,6 @@ static basic_turn_end = function(){
 				break;
 			case "inquisition_recon":
 				_func = resolve_inquisition_recon;
-				break;
-			case "great_crusade":
-				_func = resolve_great_crusade;
 				break;
 			case "inquisition_necron":
 				_func = resolve_inquisitor_necron;
@@ -667,11 +736,11 @@ static per_turn_inquisition_recon = function() {
     };
     scr_popup(
         "Investigation Completed", 
-        "Your marines have scouted out {_p_data.name()} and satisfied the mission requirements.", 
+        "Your marines have scouted out {p_data.name()} and satisfied the mission requirements.", 
         "inquisition", 
         _pop_data
     );
-    scr_event_log("", $"Inquisition Mission Completed: Your Astartes have succesfully scouted  {_p_data.name()}.");
+    scr_event_log("", $"Inquisition Mission Completed: Your Astartes have succesfully scouted  {p_data.name()}.");
 
     delete_mission = true;
 
@@ -683,42 +752,6 @@ static resolve_inquisition_recon = function() {
     _alert_text += $"{p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
-}
-
-static resolve_great_crusade = function() {
-    var _crusade_direction;
-    var _join_crusade = false;
-    var _player_fleet = instance_nearest(p_data.system.x, p_data.system.y, obj_p_fleet);
-
-    if (_player_fleet.action == "") {
-        if (point_distance(p_data.system.x, p_data.system.y, _player_fleet.x, _player_fleet.y) < 10) {
-            _join_crusade = true;
-        }
-    }
-
-    if (_join_crusade) {
-        _crusade_direction = point_direction(room_width / 2, room_height / 2, p_data.system.x, p_data.system.y);
-        with (_player_fleet) {
-            action_x = x + lengthdir_x(1200, _crusade_direction);
-            action_y = y + lengthdir_y(1200, _crusade_direction);
-            set_fleet_movement(false, "crusade1");
-        }
-
-        scr_alert("green", "crusade", "Fleet embarks upon Crusade.", p_data.system.x, p_data.system.y);
-        scr_event_log("", "Fleet embarks upon Crusade.");
-    } else {
-        // hit loyalty here
-        alter_dispositions([[eFACTION.INQUISITION, -10], [eFACTION.IMPERIUM, -5]]);
-        var _string = $"No ships designated for Crusade.";
-        if (obj_controller.penitent == 1) {
-            obj_controller.penitent_current = 0;
-            _string += "Your penitence crusade has been lengthened for your failings";
-        }
-
-        scr_alert("red", "crusade", _string, p_data.system.x, p_data.system.y);
-        scr_loyalty("Refusing to Crusade", "+");
-        scr_event_log("red", "No ships designated for Crusade.");
-    }
 }
 
 static resolve_inquisitor_necron = function() {
@@ -878,7 +911,7 @@ function hunt_fallen_battle_aftermath() {
         exit;
     }
     delete_mission = true;
-    var _tixt = "The Fallen on " + _p_data.name();
+    var _tixt = "The Fallen on " + p_data.name();
     scr_event_log("", $"Mission Succesful: {_tixt} have been captured or purged.");
     _tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
     var _tex_options = [

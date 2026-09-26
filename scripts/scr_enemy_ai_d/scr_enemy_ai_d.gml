@@ -80,6 +80,9 @@ function scr_enemy_ai_d() {
             }
         }
     }
+    for (var i = 0; i < array_length(system_problems); i++){
+        system_problems[i].basic_end_turn();  
+    }
     for (var i = 1; i <= planets; i++) {
 
         var _pdata = get_planet_data(i);

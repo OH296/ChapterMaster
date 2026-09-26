@@ -127,6 +127,17 @@ add_problem = function(p_id, data){
     }
 }
 
+/// @self Asset.GMObject.obj_star
+has_orbiting_player_fleet = function () {
+    if (instance_exists(obj_p_fleet)) {
+        var _nearest = instance_nearest(x, y, obj_p_fleet);
+        if (point_distance(_nearest.x, _nearest.y, x, y) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 system_player_ground_forces = 0;
 
 /// @desc Reports whether any planet in this system holds a garrison squad that still has members.
