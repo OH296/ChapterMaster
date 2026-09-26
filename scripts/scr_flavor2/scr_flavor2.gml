@@ -408,28 +408,27 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
     }
 
     var _marine_length = array_length(unit_struct);
-    var special, unit, unit_role, units_lost, plural;
     var _lost_roles_count = array_length(lost);
     for (var _role_index = 0; _role_index < _lost_roles_count; _role_index++) {
-        unit_role = lost[_role_index];
-        units_lost = lost_num[_role_index];
-        if (unit_role == "" || units_lost <= 0) {
+        var _unit_role = lost[_role_index];
+        var _units_lost = lost_num[_role_index];
+        if (_unit_role == "" || _units_lost <= 0) {
             continue;
         }
         mes_color = eMSG_COLOR.RED;
-        special = is_specialist(unit_role, SPECIALISTS_HEADS) || role_compare(unit_role, eROLE.CAPTAIN) || obj_ncombat.player_max <= 6;
+        var _special = is_specialist(_unit_role, SPECIALISTS_HEADS) || role_compare(_unit_role, eROLE.CAPTAIN) || obj_ncombat.player_max <= 6;
 
-        if (!special) {
-            plural = units_lost > 1 ? "s" : "";
-            m2 += $"{units_lost} {unit_role}{plural}, ";
+        if (!_special) {
+            var _plural = _units_lost > 1 ? "s" : "";
+            m2 += $"{_units_lost} {_unit_role}{_plural}, ";
         } else {
             for (var marine = 0; marine < _marine_length; marine++) {
                 var _unit = unit_struct[marine];
-                if (_unit.role() != unit_role || _unit.hp() > 0) {
+                if (_unit.role() != _unit_role || _unit.hp() > 0) {
                     continue;
                 }
                 var _dead_guy = ++obj_ncombat.dead_jims;
-                var _str = units_lost > 1 ? $"A {_unit.role()} has been lost!" : $"{_unit.name_role()} has been lost!";
+                var _str = _units_lost > 1 ? $"A {_unit.role()} has been lost!" : $"{_unit.name_role()} has been lost!";
                 obj_ncombat.dead_jim[_dead_guy] = _str;
                 break;
             }
