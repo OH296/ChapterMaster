@@ -214,7 +214,7 @@ function after_battle_part2() {
 
 /// @self Asset.GMObject.obj_pnunit
 function after_battle_part1() {
-    var _unit;
+    var _unit = undefined;
     var skill_level;
     for (var i = 0; i < array_length(unit_struct); i++) {
         _unit = unit_struct[i];
