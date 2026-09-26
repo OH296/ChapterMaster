@@ -428,7 +428,7 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
                 if (_unit.role() != unit_role || _unit.hp() > 0) {
                     continue;
                 }
-                var _dead_guy = obj_ncombat.dead_jims++;
+                var _dead_guy = ++obj_ncombat.dead_jims;
                 if (units_lost > 1 ) {
                     obj_ncombat.dead_jim[_dead_guy] = $"A {_unit.role()} has been lost!";
                 } else {
