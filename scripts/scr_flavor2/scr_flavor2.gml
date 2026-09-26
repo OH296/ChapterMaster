@@ -414,7 +414,7 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
         unit_role = lost[_role_index];
         units_lost = lost_num[_role_index];
         if (unit_role == "" || units_lost <= 0) {
-            continue
+            continue;
         }
         mes_color = eMSG_COLOR.RED;
         special = is_specialist(unit_role, SPECIALISTS_HEADS) || role_compare(unit_role, eROLE.CAPTAIN) || obj_ncombat.player_max <= 6;
@@ -429,11 +429,8 @@ function scr_flavor2(lost_units_count, target_type, hostile_range, hostile_weapo
                     continue;
                 }
                 var _dead_guy = obj_ncombat.dead_jims++;
-                if (units_lost > 1 ) {
-                    obj_ncombat.dead_jim[_dead_guy] = $"A {_unit.role()} has been lost!";
-                } else {
-                    obj_ncombat.dead_jim[_dead_guy] = $"{_unit.name_role()} has been lost!";
-                }
+                var _str = units_lost > 1 ? $"A {_unit.role()} has been lost!" : $"{_unit.name_role()} has been lost!";
+                obj_ncombat.dead_jim[_dead_guy] = _str;
                 break;
             }
         }
