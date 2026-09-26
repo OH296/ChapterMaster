@@ -1520,7 +1520,7 @@ function PlanetData(_planet, _system) constructor {
         //if there was an outstanding mission to provide the given garrison
         var _garrison_request = find_problem("provide_garrison");
         if (is_struct(_garrison_request)) {
-            _garrison_request.init_garrison_mission();
+            _garrison_request.provide_garrison_init();
         }
         instance_destroy(obj_star_select);
     };

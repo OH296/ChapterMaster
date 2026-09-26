@@ -731,7 +731,7 @@ function scr_random_event(execute_now) {
         if (planet > 0 && instance_exists(star)) {
             var _p_data = star.get_planet_data(planet);
             var _eta = scr_mission_eta(star.x, star.y, 1);
-            _p_data.new_problem("hunt_fallen");
+            _p_data.new_problem("hunt_fallen",_eta);
         }
         _evented = true;
     }

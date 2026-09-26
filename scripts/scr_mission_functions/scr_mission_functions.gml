@@ -31,7 +31,7 @@ global.planet_problem_keys = [
     "train_forces",
     "spyrer",
     "inquisitor",
-    "recon",
+    "inquisition_recon",
     "cleanse",
     "purge",
     "tyranid_org",
@@ -64,7 +64,7 @@ function mission_name_key(mission) {
         // Inquisition missions
         "spyrer": "Kill Spyrer for Inquisitor",
         "inquisitor": "Radical Inquisitor Arriving",
-        "recon": "Recon Mission for Inquisitor",
+        "inquisition_recon": "Recon Mission for Inquisitor",
         "cleanse": "Cleanse Planet for Inquisitor",
         "purge": "Purge Leadership for Inquisitor",
         "tyranid_org": "Capture Tyranid for Inquisitor",

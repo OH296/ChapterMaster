@@ -138,26 +138,24 @@ if ("inquisition_necron" == battle_special) {
 
     if (special_feature.data.tomb_awakens) {
         p1 = "Cave dirt crunches beneath the soles of your marines as they continue their descent.  There is little warning when the ground begins to shake.  An old, dusty breeze seems to flow through the tunnel, followed by rumbling sensations and distant mechanical sounds.  ";
-        if (threat = 2) {
+        if (threat == 2) {
             p1 += "Within minutes Necrons begin to appear from every direction.  There appears to be nearly fourty, cramped in the dark tunnels.";
         }
-        else if (threat = 3) {
+        else if (threat == 3) {
             p1 += "Within minutes Necrons begin to appear from every direction.  There appears to be nearly a hundred, cramped in the dark tunnels.";
         }
-        else if (threat = 4) {
+        else if (threat == 4) {
             p1 += "Within minutes Necrons begin to appear from every direction.  Their numbers are wihout number.";
         }
-    } else {
+    } 
 
-    }
-
-    if (special_feature.data.enemy = "wraith") {
+    if (special_feature.data.enemy == "wraith") {
         p1 += "two Necron Wraiths appear out of nowhere and begin to attack.";
     }
-    if (special_feature.data.enemy = "spyder") {
+    if (special_feature.data.enemy == "spyder") {
         p1 += "a large Canoptek Spyder launches towards your marines, a small group of scuttling Scarabs quickly following.";
     }
-    if (special_feature.data.enemy = "stalker") {
+    if (special_feature.data.enemy == "stalker") {
         p1 += "the tunnel begins to shake and a massive Tomb Stalker scuttles into your midst.";
     }
     _newline = p1;

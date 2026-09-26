@@ -208,20 +208,6 @@ try {
     }
 
     if ((press == 0) && array_length(options) || ((demand == 1) && (mission != "") && (string_count("Inquisition", title) > 0)) || ((demand == 1) && (title == "Inquisition Recon"))) {
-        if (title == "Inquisition Recon") {
-            obj_controller.temp[200] = string(loc);
-            var _mission_star = find_star_by_name(obj_controller.temp[200]);
-            var _pdata = _mission_star.get_planet_data(planet);
-            var _problem = new_problem("recon", estimate);
-
-            title = "Inquisition Mission Demand";
-            text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to land Astartes on {_mission_star.name} {scr_roman(planet)} to investigate the planet within {estimate} months.";
-            with (_mission_star) {
-                new_star_event_marker("green");
-            }
-            scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wish for Astartes to land on and investigate {_mission_star.name} {scr_roman(planet)} within {estimate} months.", _mission_star.name);
-
-        }
 
         if ((mission != "") && (title == "Inquisition Mission")) {
             obj_controller.temp[200] = string(loc);

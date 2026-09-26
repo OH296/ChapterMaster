@@ -112,10 +112,10 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
                     }
                 }
 
-                var eta = scr_mission_eta(_star.x, _star.y, 1);
-                eta = min(max(eta, 6), 50);
+                var _eta = scr_mission_eta(_star.x, _star.y, 1);
+                _eta = min(max(_eta, 6), 50);
 
-                _star.get_planet_data(planet).new_problem("tyranid_org", eta);
+                _star.get_planet_data(planet).new_problem("tyranid_org", _eta);
                 break;
             case eINQUISITION_MISSION.ETHEREAL:
                 mission_inquisition_ethereal();
@@ -159,11 +159,11 @@ function mission_inquisition_ethereal() {
             break;
         }
     }
-    var eta = scr_mission_eta(_star.x, _star.y, 1);
-    eta = min(max(eta, 12), 50);
+    var _eta = scr_mission_eta(_star.x, _star.y, 1);
+    _eta = min(max(_eta, 12), 50);
     var text = $"An Inquisitor is trusting you with a special mission.";
-    text += $"They require that you capture a Tau Ethereal from the planet {string(_star.name)} {scr_roman(planet)} for research purposes. You have {string(eta)} months to locate and capture one. Can your chapter handle this mission?";
-    scr_popup("Inquisition Mission", text, "inquisition", $"ethereal|{string(_star.name)}|{string(planet)}|{string(eta + 1)}|");
+    text += $"They require that you capture a Tau Ethereal from the planet {string(_star.name)} {scr_roman(planet)} for research purposes. You have {string(_eta)} months to locate and capture one. Can your chapter handle this mission?";
+    scr_popup("Inquisition Mission", text, "inquisition", $"ethereal|{string(_star.name)}|{string(planet)}|{string(_eta + 1)}|");
 }
 
 function mission_inquisition_tyranid_organism(worlds) {
@@ -185,7 +185,7 @@ function mission_inquisition_necron_world(tomb_worlds) {
         array_push(_star.p_feature[planet], new NewPlanetFeature(eP_FEATURES.NECRON_TOMB));
     }
 
-    var eta = scr_mission_eta(_star.x, _star.y, 1);
+    var _eta = scr_mission_eta(_star.x, _star.y, 1);
     if (global.cheat_debug) {
         LOGGER.debug("mission popup");
     }
@@ -202,14 +202,14 @@ function mission_inquisition_necron_world(tomb_worlds) {
     var _pop_data = {
         system: _star.name,
         planet: planet,
-        estimate: eta,
+        estimate: _eta,
         mission: "inquisition_necron",
         options: _options,
     };
 
     var text = $"The Inquisition is trusting you with a special mission.  They have reason to suspect the Necron Tomb on planet {string(_star.name)} {scr_roman(planet)}";
 
-    text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {string(eta)} months.  Can your chapter handle this mission?";
+    text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {string(_eta)} months.  Can your chapter handle this mission?";
 
     scr_popup("Inquisition Mission", text, "inquisition", _pop_data);
 }
@@ -273,11 +273,11 @@ function mission_inquistion_hunt_inquisitor(star_id = noone) {
     var _name = global.name_generator.GenerateFromSet($"imperial_{string_gender()}");
     var planet = irandom_range(1, _star.planets);
 
-    var eta = scr_mission_eta(_star.x, _star.y, 1);
-    eta = max(eta, 8);
-    var text = $"The Inquisition is trusting you with a special mission.  A radical inquisitor named {_name} will be visiting the {_star.name} system in {eta} month's time.  They are highly suspect of heresy, and as such, are to be put down.  Can your chapter handle this mission?";
+    var _eta = scr_mission_eta(_star.x, _star.y, 1);
+    _eta = max(_eta, 8);
+    var text = $"The Inquisition is trusting you with a special mission.  A radical inquisitor named {_name} will be visiting the {_star.name} system in {_eta} month's time.  They are highly suspect of heresy, and as such, are to be put down.  Can your chapter handle this mission?";
     if (obj_controller.demanding) {
-        text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  A radical inquisitor is enroute to {_star.name}, expected within {eta} months.  They are to be silenced and removed.";
+        text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  A radical inquisitor is enroute to {_star.name}, expected within {_eta} months.  They are to be silenced and removed.";
     }
     var _options = [
         {
@@ -300,7 +300,7 @@ function mission_inquistion_hunt_inquisitor(star_id = noone) {
     var _pop_data = {
         system: _star.name,
         planet: planet,
-        estimate: eta,
+        estimate: _eta,
         mission: "inquisitor",
         options: _options,
         mission_data: _mission_data,
@@ -375,7 +375,7 @@ function resolve_radical_inquisitor_mission(_mission_data) {
                 continue;
             }
 
-            p_problem[_planet][i].delete = true;
+            p_problem[_planet][i].delete_mission = true;
             _mission_removed = true;
             break;
         }
@@ -569,12 +569,12 @@ function mission_inquistion_spyrer() {
     }
     var _star = array_random_element(_valid_stars);
     var planet = scr_get_planet_with_type(_star, "Hive");
-    var eta = scr_mission_eta(_star.x, _star.y, 1);
-    eta = min(max(eta, 6), 50);
+    var _eta = scr_mission_eta(_star.x, _star.y, 1);
+    _eta = min(max(_eta, 6), 50);
 
     var text = $"The Inquisition is trusting you with a special mission.  An experienced Spyrer on hive world {string(_star.name)} {scr_roman(planet)}";
-    text += $" has began to hunt indiscriminately, and proven impossible to take down by conventional means.  If they are not put down within {string(eta)} month's time panic is likely.  Can your chapter handle this mission?";
-    var mission_params = $"spyrer|{string(_star.name)}|{string(planet)}|{string(eta + 1)}|";
+    text += $" has began to hunt indiscriminately, and proven impossible to take down by conventional means.  If they are not put down within {string(_eta)} month's time panic is likely.  Can your chapter handle this mission?";
+    var mission_params = $"spyrer|{string(_star.name)}|{string(planet)}|{string(_eta + 1)}|";
     LOGGER.info($"Starting spyrer mission with params {mission_params}");
     scr_popup("Inquisition Mission", text, "inquisition", mission_params);
 }
@@ -632,28 +632,28 @@ function mission_inquistion_purge() {
         exit;
     }
 
-    var eta = infinity;
+    var _eta = infinity;
     with (obj_p_fleet) {
         if (capital_number + frigate_number == 0) {
-            eta = min(scr_mission_eta(_star.x, _star.y, 1), eta); // this is wrong
+            _eta = min(scr_mission_eta(_star.x, _star.y, 1), _eta); // this is wrong
         }
     }
-    eta = min(max(eta, 12), 100);
+    _eta = min(max(_eta, 12), 100);
 
     var text = "The Inquisition is trusting you with a special mission.";
 
     if (mission_flavour == 1) {
-        text += $"  A number of high-ranking nobility on the planet {scr_roman(planet)} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {string(eta)} months.  Can your chapter handle this mission?";
+        text += $"  A number of high-ranking nobility on the planet {scr_roman(planet)} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
     } else if (mission_flavour == 2) {
-        text += $"  A powerful crimelord on the planet {scr_roman(planet)} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {string(eta)} months.  Can your chapter handle this mission?";
+        text += $"  A powerful crimelord on the planet {scr_roman(planet)} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
     } else if (mission_flavour == 3) {
-        text += $"  The mutants of hive world {scr_roman(planet)} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {string(eta)} months.  Can your chapter handle this mission?";
+        text += $"  The mutants of hive world {scr_roman(planet)} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {string(_eta)} months.  Can your chapter handle this mission?";
     }
 
     if (mission_flavour != 3) {
-        scr_popup("Inquisition Mission", text, "inquisition", $"purge|{string(_star.name)}|{string(planet)}|{string(real(eta + 1))}|");
+        scr_popup("Inquisition Mission", text, "inquisition", $"purge|{string(_star.name)}|{string(planet)}|{string(real(_eta + 1))}|");
     } else {
-        scr_popup("Inquisition Mission", text, "inquisition", $"cleanse|{string(_star.name)}|{string(planet)}|{string(real(eta + 1))}|");
+        scr_popup("Inquisition Mission", text, "inquisition", $"cleanse|{string(_star.name)}|{string(planet)}|{string(real(_eta + 1))}|");
     }
 }
 
@@ -681,20 +681,15 @@ function mission_investigate_planet() {
         LOGGER.error("RE: Investigate Planet, couldn't pick a planet");
         exit;
     }
-
-    var eta = infinity;
+    var _eta = -1;
     with (obj_p_fleet) {
         if (action != "") {
             continue;
         }
-        eta = min(eta, scr_mission_eta(_star.x, _star.y, 1));
+        _eta = min(_eta, scr_mission_eta(_star.x, _star.y, 1));
     }
-    eta = min(max(3, eta), 100);
-
-    var text = $"The Inquisition wishes for you to investigate {string(_star.name)} {scr_roman(planet)}";
-    text += $"  Boots are expected to be planted on its surface over the course of your investigation.";
-    text += $" You have {string(eta)} months to complete this task.";
-    scr_popup("Inquisition Recon", text, "inquisition", $"recon|{string(_star.name)}|{string(planet)}|{string(eta)}|");
+    _eta = min(max(3, _eta), 100);
+    _star.get_planet_data(planet).new_problem("inquisition_recon", _eta);
 }
 
 

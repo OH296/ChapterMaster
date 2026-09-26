@@ -53,6 +53,36 @@ static increment_mission_completion =  function() {
     return (data.completion / data.required_months) * 100;
 }
 
+static popup_call = function(func){
+    var _func = function(){
+        pop_data.mission[$ "func"]();
+    }
+    return _func;
+}
+
+static inquisition_mission_options = fuction(mission_accept_function){
+    var _options = [
+        {
+            str1: "Accept",
+            choice_func: function(){
+                pop_data.mission[$ mission_accept_function]();
+                obj_controller.demanding = 0;
+            }
+        },
+    ];
+    if (!obj_controller.demanding){
+        array_push(_options, {
+            str1: "Refuse",
+            choice_func: function(){
+                pop_data.mission.delete_mission = true;
+                popup_default_close();
+            }
+        })
+    }
+    return _options
+}
+
+
 static handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
         refresh_p_data();
@@ -290,6 +320,8 @@ static __init = function(){
         case "hive_fleet_to_cult":
             hive_fleet_to_cult_init();
             break;
+        case "inquisition_recon":
+            inquisition_recon_init();
         default:
             mark("green");
 			break;
@@ -614,6 +646,25 @@ static resolve_succession = function() {
 
     p_data.delete_feature(eP_FEATURES.SUCCESSION_WAR);
 }
+
+static inquisition_recon_init = function(){
+
+    var _pop_data = {
+        mission: self,
+        options : inquisition_mission_options("")
+    };
+
+    var text = $"The Inquisition wishes for you to investigate {p_data.name()}";
+    text += $"  Boots are expected to be planted on its surface over the course of your investigation.";
+    text += $" You have {string(eta)} months to complete this task.";
+    scr_popup("Inquisition Recon", text, "inquisition", $"recon|{string(_star.name)}|{string(planet)}|{string(eta)}|");
+}
+
+static inquisition_recon_accept = function(){
+    mark("green");
+    scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wish for Astartes to land on and investigate {p_data.name()} within {timer} months.", system.name);    
+}
+
 static per_turn_inquisition_recon = function() {
     if (p_data.player_forces <= 0){
         exit;
@@ -1006,7 +1057,7 @@ static resolve_mech_mars = function() {
 }
 
 
-static init_garrison_mission = function() {
+static provide_garrison_init = function() {
     var mission_data = problems_data[mission_slot];
     if (stage_id != "preliminary") {
         exit;
@@ -1216,7 +1267,7 @@ static per_turn_check_inqisition_tomb = function() {
         exit;
     }
     var _tixt;
-    _tixt = $"Your marines on {planet_numeral_name(planet, id)}";
+    _tixt = $"Your marines on {p_data.name()}";
     _tixt += " are prepared and ready to enter the Necron Tombs.  A Plasma Bomb is in tow.";
     var _number = instance_exists(obj_turn_end) ? 1 : 0;
     var _pop_data = {
@@ -1228,9 +1279,7 @@ static per_turn_check_inqisition_tomb = function() {
         options: [
             {
                 str1: "Begin the Mission",
-                choice_func: function(){
-                    mission.necron_tomb_mission_start();
-                },
+                choice_func: popup_call("necron_tomb_mission_start"),
             },
             {
                 str1: "Not Yet",
@@ -1243,7 +1292,10 @@ static per_turn_check_inqisition_tomb = function() {
 
 static necron_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
-    obj_popup.replace_options([{str1: "Continue", choice_func: self.necron_tomb_mission_sequence}, {str1: "Return to the surface", choice_func: popup_default_close}]);
+    obj_popup.replace_options([
+        {str1: "Continue", choice_func: popup_call("necron_tomb_mission_sequence")}, 
+        {str1: "Return to the surface", choice_func: popup_default_close}
+    ]);
     obj_popup.image = "necron_tunnels_1";
     obj_popup.text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";
 }
@@ -1499,27 +1551,6 @@ static advance_necron_tomb_mission = function() {
     return false;
 }
 
-static inquisition_mission_options = fuction(mission_accept_function){
-    var _options = [
-        {
-            str1: "Accept",
-            choice_func: function(){
-                pop_data.mission[$ mission_accept_function]();
-                obj_controller.demanding = 0;
-            }
-        },
-    ];
-    if (!obj_controller.demanding){
-        array_push(_options, {
-            str1: "Refuse",
-            choice_func: function(){
-                pop_data.mission.delete_mission = true;
-                popup_default_close();
-            }
-        })
-    }
-    return _options
-}
 static inquisition_demon_world_init = fuction(){
     var _text = $"The Inquisitor is trusting you with a special mission.  The planet {p_data.name()} has been uncovered as a Demon World";
     if (obj_controller.demanding) {

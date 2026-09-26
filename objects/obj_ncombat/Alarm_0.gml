@@ -131,7 +131,7 @@ try {
         u.column = (_num - j) - ((xxx / 10) - 10);
     }
 
-    var _enemies_assiged = false;
+    var _enemies_assigned = false;
     if (!is_undefined(battle_enemy_data)){
         move_data_to_curret_scope(battle_enemy_data);
         if (struct_exists(battle_enemy_data , "cols")){
@@ -149,11 +149,10 @@ try {
                 }
                 u.add_enemies(_col.enemies);
             }
-            enemies_assiged = true;
+            _enemies_assigned = true;
         }
     }
-
-    if (!enemies_assiged){
+    if (!_enemies_assigned){
     // * Praetorian Servitor Group *
     if (string_count("mech", battle_special) > 0) {
         fortified = 0;
