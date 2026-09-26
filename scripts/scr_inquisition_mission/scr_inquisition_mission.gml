@@ -681,7 +681,7 @@ function mission_investigate_planet() {
         LOGGER.error("RE: Investigate Planet, couldn't pick a planet");
         exit;
     }
-    var _eta = -1;
+    var _eta = infinity;
     with (obj_p_fleet) {
         if (action != "") {
             continue;

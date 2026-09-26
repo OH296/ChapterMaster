@@ -55,12 +55,12 @@ static increment_mission_completion =  function() {
 
 static popup_call = function(func){
     var _func = function(){
-        pop_data.mission[$ "func"]();
+        pop_data.mission[$ func]();
     }
     return _func;
 }
 
-static inquisition_mission_options = fuction(mission_accept_function){
+static inquisition_mission_options = function(mission_accept_function){
     var _options = [
         {
             str1: "Accept",
@@ -651,13 +651,13 @@ static inquisition_recon_init = function(){
 
     var _pop_data = {
         mission: self,
-        options : inquisition_mission_options("")
+        options : inquisition_mission_options("inquisition_recon_accept")
     };
 
     var text = $"The Inquisition wishes for you to investigate {p_data.name()}";
     text += $"  Boots are expected to be planted on its surface over the course of your investigation.";
     text += $" You have {string(eta)} months to complete this task.";
-    scr_popup("Inquisition Recon", text, "inquisition", $"recon|{string(_star.name)}|{string(planet)}|{string(eta)}|");
+    scr_popup("Inquisition Recon", text, "inquisition", _pop_data);
 }
 
 static inquisition_recon_accept = function(){
@@ -1394,8 +1394,8 @@ static necron_tomb_mission_sequence = function() {
                 }
             ]
             data.enemy = "wraith";
-            case 2:
             break;
+            case 2:
             _battle_data.cols = [
                 {
                     distance : 10,
@@ -1414,8 +1414,8 @@ static necron_tomb_mission_sequence = function() {
                 }
             ]
             data.enemy = "spyder"
+            break;            
             case 3:
-            break;
             _battle_data.cols = [
                 {
                     distance : 10,
@@ -1551,7 +1551,7 @@ static advance_necron_tomb_mission = function() {
     return false;
 }
 
-static inquisition_demon_world_init = fuction(){
+static inquisition_demon_world_init = function(){
     var _text = $"The Inquisitor is trusting you with a special mission.  The planet {p_data.name()} has been uncovered as a Demon World";
     if (obj_controller.demanding) {
         _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Demon World {p_data.name()} must be cleansed within {timer} months.";
@@ -1569,7 +1569,7 @@ static inquisition_demon_world_init = fuction(){
     );
 }
 
-static inquisition_demon_world_accept = fuction(){
+static inquisition_demon_world_accept = function(){
     scr_event_log("", $"Inquisition Mission Accepted: The demon world of {system.name} {scr_roman(planet)} will be purged by your hand.", system.name);
     new_star_event_marker("green");
     with(obj_popup){
@@ -1577,7 +1577,7 @@ static inquisition_demon_world_accept = fuction(){
     }
 }
 
-static inquisition_tyranid_org_init = fuction(){
+static inquisition_tyranid_org_init = function(){
     var _pop_data = {
         mission: self,
         options: inquisition_mission_options("inquisition_tyranid_org_accept"),
@@ -1590,7 +1590,7 @@ static inquisition_tyranid_org_init = fuction(){
     scr_popup("Inquisition Mission", _text, "inquisition",_pop_data);
 }
 
-static inquisition_tyranid_org_accept = fuction(){
+static inquisition_tyranid_org_accept = function(){
     obj_popup.image = "webber";
     obj_popup.title = "New Equipment";
     obj_popup.fancy_title = 0;
@@ -1620,7 +1620,7 @@ static inquisition_tyranid_on_enemy_casulties = function(){
     }
 }
 
-static inquisition_tyranid_org_battle_final_message = fuction(){
+static inquisition_tyranid_org_battle_final_message = function(){
     if (obj_ncombat.defeat || data.captured_gaunt == 0) {
         exit;
     }
