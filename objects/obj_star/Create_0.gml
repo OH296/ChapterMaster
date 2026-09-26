@@ -67,7 +67,7 @@ p_operatives = array_create_advanced(_planet_array_size, []);
 p_feature = array_create_advanced(_planet_array_size, []);
 p_upgrades = array_create_advanced(_planet_array_size, []);
 p_influence = array_create_advanced(_planet_array_size, array_create(15, 0));
-p_problem = [];
+p_problem = array_create_advanced(_planet_array_size, []);
 p_psionic = [];
 for (var i = 0; i < _planet_array_size; i++) {
     p_psionic[i] = irandom(5);
@@ -122,9 +122,9 @@ add_feature = function(planet, feature) {
 system_problems = [];
 
 add_problem = function(p_id, data){
-    array_push(system_problems, new SystemProblem(name, data, system)){
-
-    }
+    var _prob = new SystemProblem(name, data, system);
+    array_push(system_problems, _prob);
+    return _prob;
 }
 
 /// @self Asset.GMObject.obj_star

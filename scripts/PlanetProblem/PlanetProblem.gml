@@ -70,14 +70,14 @@ static handle_triggered_mission_func = function(func){
             }
         }
         if (_prob > -1){
-            array_delete(system.p_problem, _prob,0);
-            array_delete(p_data.problems, _prob,0);
+            array_delete(system.p_problem, _prob,1);
+            array_delete(p_data.problems, _prob,1);
         }
     }
 }
 static basic_turn_end = function(){
 	refresh_p_data();
-	if (p_data.system.storm - 1 > 0){
+	if (p_data.system.storm <= 0){
 		timer--;
 	}
 	if ((timer > -1) && per_turn_checks) {
@@ -174,7 +174,7 @@ static before_battle_effects = function(){
 
 //triggered at the end of scr_shoot
 static battle_on_enemy_casulties = function(){
-    if (!struct_exists(self, casualty_packet)){
+    if (!struct_exists(self, "casualty_packet")){
         exit;
     }
     instance_activate_object(obj_star);
@@ -369,13 +369,13 @@ static init_beast_hunt_mission = function() {
 }
 
 static complete_beast_hunt_mission = function() {
-    var _hunters = collect_role_group("all", [system.name, planet, 0], false, man_conditions);
+    var _man_conditions = {
+        "job": "hunt_beast",
+        "max": 3,
+    };
+    var _hunters = collect_role_group("all", [system.name, planet, 0], false, _man_conditions);
     if (stage_id == "active") {
         var _mission_string = "";
-        var man_conditions = {
-            "job": "hunt_beast",
-            "max": 3,
-        };
         var _success = false;
         var _tester = global.character_tester;
         var _unit_pass;
@@ -437,8 +437,8 @@ static complete_beast_hunt_mission = function() {
 }
 
 
-static init_train_forces_mission = fuction() {
-    if (stage_id != "preliminary" || array_length(members) = 0) {
+static init_train_forces_mission = function() {
+    if (stage_id != "preliminary" || array_length(members) == 0) {
         exit;
     }
     var _trainer = members[0];
@@ -458,14 +458,14 @@ static init_train_forces_mission = fuction() {
         p_data.add_disposition(3);
     }
 
-    data.assigned_unit = marine.uid;
+    data.assigned_unit = _trainer.uid;
 
     //pip.image="event_march"
-    _gar_pop.add_option($"Good luck {marine.name()}");
+    _gar_pop.add_option($"Good luck {_trainer.name()}");
     _gar_pop.image = "";
     _gar_pop.cooldown = 500;
     obj_controller.cooldown = 500;
-    scr_event_log("", $"{marine.name_role()} deployed to {_numeral_name} for {_mission_length} months.", p_data.system.name);
+    scr_event_log("", $"{_trainer.name_role()} deployed to {_numeral_name} for {_mission_length} months.", p_data.system.name);
     obj_controller.close_popups = false;
 }
 
@@ -475,7 +475,7 @@ static complete_train_forces_mission = function() {
     }
     var _mission_string = "";
     var _trainer = fetch_unit_uid(data.assigned_unit);
-    if (is_struct(_trainer)) {
+    if (!is_struct(_trainer)) {
         exit;
     }
     var _unit_report_string = "";
@@ -665,7 +665,7 @@ static resolve_spyrer = function() {
 
 static per_turn_check_spyrer = function() {
     if (p_data.player_forces > 20) {
-        var _tixt = "The Spyrer on " + planet_numeral_name(run, id) + " seems to have vanished, presumably gone into hiding.";
+        var _tixt = $"The Spyrer on {p_data.name()} seems to have vanished, presumably gone into hiding.";
         scr_popup("Spyrer Rampage", _tixt, "spyrer", "");
     } else if (p_data.player_forces <= 20) {
         new_end_turn_battle(
@@ -1341,8 +1341,9 @@ static necron_tomb_mission_sequence = function() {
 
                 }
             ]
-            special_feature.data.enemy = "wraith";
+            data.enemy = "wraith";
             case 2:
+            break;
             _battle_data.cols = [
                 {
                     distance : 10,
@@ -1360,8 +1361,9 @@ static necron_tomb_mission_sequence = function() {
 
                 }
             ]
-            special_feature.data.enemy = "spyder"
+            data.enemy = "spyder"
             case 3:
+            break;
             _battle_data.cols = [
                 {
                     distance : 10,
@@ -1375,7 +1377,7 @@ static necron_tomb_mission_sequence = function() {
 
                 }
             ]
-            special_feature.data.enemy = "stalker"
+            data.enemy = "stalker"
             break;
             case 4:
             _battle_data.threat = 2

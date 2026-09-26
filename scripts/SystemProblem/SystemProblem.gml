@@ -5,7 +5,11 @@ timer = -1;
 f_type = eP_FEATURES.MISSION;
 p_id = name;
 data = data;
+stage_id = "";
 self.system = system;
+zero_timer_checks = true;
+delete_mission = false;
+members = [];
 if (struct_exists(data, "stage")){
     stage_id = data.stage;
 }
@@ -15,7 +19,6 @@ if (struct_exists(data, "members")){
 
 static handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
-        refresh_p_data();
         try {
             func();
         } catch (_exception) {
@@ -25,18 +28,17 @@ static handle_triggered_mission_func = function(func){
     if (timer == -1 || (delete_mission)){
         var _prob = -1;
         for (var i = 0; i < array_length(system.system_problems); i++){
-            if (system.p_problem[i] == self){
+            if (system.system_problems[i] == self){
                 _prob = i;
             }
         }
         if (_prob > -1){
-            array_delete(system.system_problems, _prob,0);
+            array_delete(system.system_problems, _prob,1);
         }
     }
 }
 
 static basic_turn_end = function(){
-    refresh_p_data();
     if (system.storm - 1 > 0){
         timer--;
     }
@@ -73,13 +75,13 @@ static init = function(){
 
 static init_great_crusade = function(){
     //TODO decide the target/purpose of the crusade to create more variety and to help with post crusade rewards
-    _nearest_player_fleet = data.nearest_player_fleet;
+    var _nearest_player_fleet = data.nearest_player_fleet;
     var _travel_leeway = 10;
     if (_nearest_player_fleet.action == "move") {
         _travel_leeway += _nearest_player_fleet.action_eta;
     }
-    timer = get_viable_travel_time(_travel_leeway, _nearest_player_fleet.x, _nearest_player_fleet.y, star_id.x, star_id.y, _nearest_player_fleet, false);
-    scr_popup("Crusade", $"Fellow Astartes legions are preparing to embark on a Crusade to a nearby sector.  Your forces are expected at {star_id.name}; {_eta} months from now your ships there shall begin their journey.", "crusade", "");
+    timer = get_viable_travel_time(_travel_leeway, _nearest_player_fleet.x, _nearest_player_fleet.y, system.x, system.y, _nearest_player_fleet, false);
+    scr_popup("Crusade", $"Fellow Astartes legions are preparing to embark on a Crusade to a nearby sector.  Your forces are expected at {system.name}; {timer} months from now your ships there shall begin their journey.", "crusade", "");
     mark("green")
     scr_event_log("", $"A Crusade is called; our forces are expected at {system.name} in {timer} months.", star_id.name);
 }
