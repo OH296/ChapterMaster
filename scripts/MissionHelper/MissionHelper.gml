@@ -280,6 +280,7 @@ static __init(){
             mark("purple");
             break;
         case "hunt_fallen":
+            hunt_fallen_init();
             break;
         case "harlequins":
             var _text = $"Eldar Harlequins have been seen on planet {p_data.name()}. Their purposes are unknown.";
@@ -748,6 +749,13 @@ static spyrer_battle_aftermath = function(){
 
     scr_event_log("", $"Inquisition Mission Completed: The Spyrer on {system.name} {planet} has been removed. {_disp_gain_string}", system.name);
     scr_gov_disp(system.name, planet, choose(1, 2, 3, 4));
+}
+
+static hunt_fallen_init = function(){
+    var _text = localize("Sources indicate one of the Fallen may be upon {0}.  We have {1} months to send out a strike team and scour the planet.  Any longer and any Fallen that might be there will have escaped.", [p_data.name(), timer]);
+    scr_popup(localize("Hunt the Fallen"), _text, "fallen", "");
+    scr_event_log("", localize("Sources indicate one of the Fallen may be upon {0}.  We have {1} months to investigate.", [p_data.name(), timer]));
+    mark("purple");
 }
 
 static per_turn_check_fallen = function() {

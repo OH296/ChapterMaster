@@ -2051,17 +2051,4 @@ function PlanetData(_planet, _system) constructor {
         _star_alert.col = "red";
         scr_event_log("red", localize("War of Succession on {0}", [name()]));
     };
-
-    static init_fallen_marines = function() {
-        var _eta = scr_mission_eta(system.x, system.y, 1);
-        assigned_problem = new_problem("fallen", _eta);
-
-        var _text = localize("Sources indicate one of the Fallen may be upon {0}.  We have {1} months to send out a strike team and scour the planet.  Any longer and any Fallen that might be there will have escaped.", [name(), _eta]);
-        scr_popup(localize("Hunt the Fallen"), _text, "fallen", "");
-        scr_event_log("", localize("Sources indicate one of the Fallen may be upon {0}.  We have {1} months to investigate.", [name(), _eta]));
-        var star_alert = create_alert();
-        star_alert.image_alpha = 1;
-        star_alert.image_speed = 1;
-        star_alert.col = "purple";
-    };
 }

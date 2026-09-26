@@ -715,7 +715,24 @@ function scr_random_event(execute_now) {
     } else if (chosen_event == eEVENT.NECRON_AWAKEN) {
         _evented = awaken_tomb_event();
     } else if (chosen_event == eEVENT.FALLEN) {
-        event_fallen();
+        LOGGER.info("RE: Hunt the Fallen");
+        var stars = scr_get_stars();
+        var valid_stars = scr_get_stars(false, [eFACTION.IMPERIUM]);
+
+        if (array_length(valid_stars) == 0) {
+            LOGGER.error("RE: Hunt the Fallen, coulnd't find a star");
+            exit;
+        }
+        LOGGER.info($"Fallen: valid_stars {valid_stars}");
+
+        var star = array_random_element(stars);
+        var planet = scr_get_planet_with_owner(star, eFACTION.IMPERIUM);
+
+        if (planet > 0 && instance_exists(star)) {
+            var _p_data = star.get_planet_data(planet);
+            var _eta = scr_mission_eta(star.x, star.y, 1);
+            _p_data.new_problem("hunt_fallen");
+        }
         _evented = true;
     }
 
@@ -735,24 +752,4 @@ function scr_random_event(execute_now) {
     //with(obj_p_fleet){if (x<-10000){x+=20000;y+=20000;}}
     //with(obj_en_fleet){if (x<-10000){x+=20000;y+=20000;}}
     //with(obj_star){if (x<-10000){x+=20000;y+=20000;}}
-}
-
-function event_fallen() {
-    LOGGER.info("RE: Hunt the Fallen");
-    var stars = scr_get_stars();
-    var valid_stars = scr_get_stars(false, [eFACTION.IMPERIUM]);
-
-    if (array_length(valid_stars) == 0) {
-        LOGGER.error("RE: Hunt the Fallen, coulnd't find a star");
-        exit;
-    }
-    LOGGER.info($"Fallen: valid_stars {valid_stars}");
-
-    var star = array_random_element(stars);
-    var planet = scr_get_planet_with_owner(star, eFACTION.IMPERIUM);
-
-    if (planet > 0 && instance_exists(star)) {
-        var _p_data = star.get_planet_data(planet);
-        _p_data.init_fallen_marines();
-    }
 }
