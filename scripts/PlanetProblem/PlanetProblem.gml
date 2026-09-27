@@ -257,6 +257,7 @@ static on_unit_selection = function(){
     instance_deactivate_object(obj_star);
 }
 
+//TODO in the future this should be calcuated once on feature selection and then draw each turn
 static planet_draw_feature_selected = function(){
     if (!struct_exists(self, "draw_data")){
         exit;
@@ -272,7 +273,7 @@ static planet_draw_feature_selected = function(){
 }
 
 static __feature_selected_draw = function(){
-    draw_text_transformed(draw_data.x1 + (draw_data.w / 2), draw_data.y1 + 5, mission_name_key(feature.p_id), 2, 2, 0);
+    draw_text_transformed(draw_data.x1 + (draw_data.w / 2), draw_data.y1 + 5, description(p_id), 2, 2, 0);
     draw_set_halign(fa_left);
     draw_set_color(c_gray);
     draw_text_ext(draw_data.x1 + 10, draw_data.y1 + 40, draw_data.mission_description, -1, draw_data.w - 20);
@@ -345,11 +346,11 @@ __init();
 
 
 static select_units = function(select_from, purpose_string, number, selections = []){
-    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet: planet, selections: []});
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet, selections});
 }
 
 static select_squads = function(select_from, purpose_string, number, selections = []){
-    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet: planet, selections: [], select_type: eMISSION_SELECT_TYPE.SQUADS});
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet, selections, select_type: eMISSION_SELECT_TYPE.SQUADS});
 }
 // by default mission battles do not reduce the fortification level or enemy power on a planet
 static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
@@ -1115,7 +1116,7 @@ static __mech_mars_resolve = function() {
 }
 
 static __provide_garrison_feature_selected = function() {
-    if (data.reason == "importance") {}
+    //TODO : complete logic if (data.reason == "importance") {}
     draw_data.mission_description = $"The governor of {p_data.name()} has requested a force of marines might stay behind following your departure.\n\n\n assign a squad to garrison to initiate mission, The garrison leeader will need to be capable of conducting himself in a diplomatic manner in order for the garrison duration to be a success";
 }
 
@@ -1837,7 +1838,7 @@ static __join_communion_feature_selected = function(){
 }
 
 static __governor_purge_enemies_feature_selected = function(){
-    draw_data.mission_description = $"The governor of {p_data.name()} has expressed his distaste of the neighboring governance of {target.name} {feature.target} he has expressed his views that they engage in heretical ways and harbor xenos enemies though in truth it is more likely that he simply wishes his political enemies disposed of, whatever the case his planet has great economic means and he has made bare his plans to compensate the emperors angels for their aid";
+    draw_data.mission_description = $"The governor of {p_data.name()} has expressed his distaste of the neighboring governance of {system.name} {data.target} he has expressed his views that they engage in heretical ways and harbor xenos enemies though in truth it is more likely that he simply wishes his political enemies disposed of, whatever the case his planet has great economic means and he has made bare his plans to compensate the emperors angels for their aid";
 }
 
 }
