@@ -43,8 +43,9 @@ system = p_data.system;
 f_type = eP_FEATURES.MISSION;
 members = [];
 delete_mission = false;
-static refresh_p_data = function(){
+static __refresh_data = function(){
 	p_data = system.get_planet_data(planet);
+    members = clean_unit_array(members);
 }
 
 stage_id = "";
@@ -61,10 +62,31 @@ zero_timer_checks = true;
 per_turn_checks = true;
 
 static mark = function(colour){
-    refresh_p_data();
+    __refresh_data();
     with (p_data.system){
         new_star_event_marker(colour)
     }
+}
+
+static save = function(){
+    var _save_copy = variable_clone(_save_copy);
+    struct_remove(save_copy, "system");
+    struct_remove(save_copy, "p_data");
+    var _mems = clean_unit_array(members);
+    _save_copy.members = [];
+    for (var i=0;i<array_length(_mems);i++){
+        _save_copy.members[i] = _mems.uid
+    }
+    return __save_copy;
+}
+
+static load = function(data){
+    move_data_to_curren_scope(data);
+    for (var i=0;i<array_length(members);i++){
+        members[i] = fetch_unit_uid(members[i]);
+    }
+    __refresh_data();
+    f_type = eP_FEATURES.MISSION;
 }
 
 static description = function(){
@@ -83,12 +105,6 @@ static __increment_mission_completion =  function() {
     return (data.completion / data.required_months) * 100;
 }
 
-static __popup_call = function(func){
-    var _func = function(){
-        pop_data.mission[$ func]();
-    }
-    return _func;
-}
 
 static __inquisition_mission_options = function(){
     var _options = [
@@ -116,16 +132,21 @@ static __inquisition_mission_options = function(){
     return _options
 }
 
-
-static __handle_triggered_mission_func = function(func){
-    if (!is_undefined(func)){
-        refresh_p_data();
-        try {
-            func();
-        } catch (_exception) {
-            ERROR_HANDLER.handle_exception(_exception);
-        }
+static __popup_call = function(func){
+    var _func = function(){
+        pop_data.mission[$ func]();
     }
+    return _func;
+}
+
+static __popup_delete = function(){
+    with(obj_popup){
+        popup_default_close();
+    }
+    __check_delete();
+}
+
+static __check_delete = function(){
     if (timer == -1 || (delete_mission)){
         var _prob = -1;
         for (var i = 0; i < array_length(p_data.problems); i++){
@@ -137,7 +158,19 @@ static __handle_triggered_mission_func = function(func){
             array_delete(system.p_problem, _prob,1);
             array_delete(p_data.problems, _prob,1);
         }
+    }   
+}
+
+static __handle_triggered_mission_func = function(func){
+    if (!is_undefined(func)){
+        __refresh_data();
+        try {
+            func();
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
+        }
     }
+    __check_delete();
 }
 
 static find_func_ref = function(trigger_string){
@@ -155,7 +188,7 @@ static find_func = function(trigger_string){
     return undefined;
 }
 static basic_turn_end = function(){
-	refresh_p_data();
+	__refresh_data();
 	if (p_data.system.storm <= 0){
 		timer--;
 	}
@@ -226,6 +259,9 @@ static on_unit_selection = function(){
 }
 
 static __init = function(){
+    if (p_id == ""){
+        exit;
+    }
     var _func = find_func("init");
     if (!is_undefined(_func)){
         __handle_triggered_mission_func(_func);
@@ -590,7 +626,7 @@ static __inquisition_recon_init = function(){
 static __inquisition_recon_accept = function(){
     mark("green");
     scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wish for Astartes to land on and investigate {p_data.name()} within {timer} months.", system.name);
-    with(obj_popup){ popup_default_close(); }    
+    __popup_delete();
 }
 
 static __inquisition_recon_per_turn = function() {
@@ -613,7 +649,7 @@ static __inquisition_recon_per_turn = function() {
 
 }
 static __inquisition_recon_resolve = function() {
-    refresh_p_data();
+    __refresh_data();
     var _alert_text = "Inquisition Mission Failed: Investigate ";
     alter_disposition(eFACTION.INQUISITION, -5);
     _alert_text += $"{p_data.name()}.";
@@ -1238,7 +1274,7 @@ static __inquisition_tomb_per_turn = function() {
             },
             {
                 str1: "Not Yet",
-                choice_func: popup_default_close,
+                choice_func: __popup_call("__popup_delete"),
             },
         ],
     };
@@ -1249,7 +1285,7 @@ static inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
         {str1: "Continue", choice_func: __popup_call("necron_tomb_mission_sequence")}, 
-        {str1: "Return to the surface", choice_func: popup_default_close}
+        {str1: "Return to the surface", choice_func: __popup_call("__popup_delete")}
     ]);
     obj_popup.image = "necron_tunnels_1";
     obj_popup.text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";
@@ -1491,7 +1527,7 @@ static advance_necron_tomb_mission = function() {
         obj_popup.title = "Inquisition Mission Completed";
         obj_popup.text = "Your marines finally enter the deepest catacombs of the Necron Tomb.  There they place the Plasma Bomb and arm it.  All around are signs of increasing Necron activity.  With half an hour set, your men escape back to the surface.  There is a brief rumble as the charge goes off, your mission a success.";
         reset_popup_options();
-        refresh_p_data();
+        __refresh_data();
 
         alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
@@ -1652,11 +1688,11 @@ static __hive_fleet_to_cult_per_turn = function(){
 static __inquisition_purge_init = function(){
     var _text = "The Inquisition is trusting you with a special mission.";
     if (data.mission_flavour == 1) {
-        _text += $"  A number of high-ranking nobility on the planet {scr_roman(planet)} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
+        _text += $"  A number of high-ranking nobility on the {p_data.name()} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {timer} months.  Can your chapter handle this mission?";
     } else if (data.mission_flavour == 2) {
-        _text += $"  A powerful crimelord on the planet {scr_roman(planet)} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
+        _text += $"  A powerful crimelord on the {p_data.name()} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {timer} months.  Can your chapter handle this mission?";
     } else if (data.mission_flavour == 3) {
-        _text += $"  The mutants of hive world {scr_roman(planet)} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {string(_eta)} months.  Can your chapter handle this mission?";
+        _text += $"  The mutants of hive world {p_data.name()} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {timer} months.  Can your chapter handle this mission?";
     }
     var _pop_data = {
         mission: self,

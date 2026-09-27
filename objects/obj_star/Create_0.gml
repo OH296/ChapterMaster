@@ -181,18 +181,7 @@ serialize = function() {
     var planet_data = [];
 
     for (var p = 1; p <= object_star.planets; p++) {
-        planet_data[p] = {
-            dispo: object_star.dispo[p],
-            planet: object_star.planet[p],
-        };
-        var var_names = variable_instance_get_names(object_star);
-        for (var n = 0; n < array_length(var_names); n++) {
-            var var_name = var_names[n];
-            if (string_starts_with(var_name, "p_")) {
-                var val = object_star[$ var_name][p];
-                variable_struct_set(planet_data[p], var_name, val);
-            }
-        }
+        planet_data[p] = get_planet_data(p).save();
     }
 
     var save_data = {
@@ -259,11 +248,20 @@ function deserialize(save_data) {
                             continue;
                         }
 
-                        var _new_feat = new NewPlanetFeature(_feat.f_type);
+                        var _new_feat = new PlanetFeature(_feat.f_type);
 
                         _new_feat.load_json_data(_feat);
 
                         array_push(p_feature[p], _new_feat);
+                    }
+                    continue;
+                }
+                if (var_name == "p_problem") {
+                    var _planet_problems = planet[$ var_name];
+                    for (var f = 0; f < array_length(_planet_problems); f++) {
+                        var _new_prob = new PlanetProblem("", 0, {}, {planet:p,system:id});
+                        _new_prob.load(_planet_problems[f]);
+                        array_push(p_problem, _new_prob);
                     }
                     continue;
                 }

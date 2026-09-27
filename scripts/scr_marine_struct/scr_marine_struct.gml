@@ -2440,6 +2440,25 @@ function fetch_unit_uid(uuid) {
     return undefined;
 }
 
+function clean_unit_array(array){
+    for (var i = array_length(array) - 1; i >= 0; i--){
+        var _unit = array[i];
+        if (!is_struct(_unit)){
+            array_delete(array, i, 1);
+            continue;
+        }
+        if (_unit.marine_number > (company_length(_unit.company) -  1)){
+            array_delete(array, i, 1);
+            continue;
+        }
+        if (fetch_unit([_unit.company, _unit.marine_number]).uid != _unit.uid){
+            array_delete(array, i, 1);
+            continue;            
+        }
+    }
+    return array;
+}
+
 /// @desc Localizes a unit's role and appends its name and first epithet, mirroring
 ///       name_role()'s display order while keeping the role translatable.
 /// @param {Struct} _unit A marine unit struct.

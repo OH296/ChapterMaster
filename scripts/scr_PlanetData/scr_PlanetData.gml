@@ -9,6 +9,34 @@ function PlanetData(_planet, _system) constructor {
     planet = _planet;
     system = _system;
 
+    static save_problems = function(){
+        var _probs = [];
+        for (var i = 0; i < array_length(problems); i++){
+            array_push(_probs, problems[i].save());
+        }
+        return _probs;
+    }
+    static save = function(){
+        var _planet_data = {
+            dispo: system.dispo[planet],
+            planet: system.planet[planet],
+        };
+        var var_names = variable_instance_get_names(system);
+        for (var n = 0; n < array_length(var_names); n++) {
+            var var_name = var_names[n];
+            if (!string_starts_with(var_name, "p_")) {
+                continue;
+            }
+            var _val = system[$ var_name][planet];
+            if (_val == "var_name"){
+                _val = save_problems();
+            }
+            variable_struct_set(_planet_data, var_name, _val);
+        } 
+
+        return _planet_data;       
+    }
+
     static refresh_data = function() {
         features = system.p_feature[planet];
         current_owner = system.p_owner[planet];
