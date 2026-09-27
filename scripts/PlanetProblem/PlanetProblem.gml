@@ -18,7 +18,15 @@
     "on_purge" - at the top of PlanetData.purge() passes in {action_type, action_score} as purge_data overrides standdard purge popups
     "init" - runs imediatly after problem is created often used to poopulate initial popupop ir stack popup for turn end
 
-    "accept" is an edge case currently reserved for binding to button clicks in popups
+    "accept" - is an edge case currently reserved for binding to button clicks in popups
+    
+    "planet_draw_feature_selected" - runs in a FeatureSelected instance it allows a player to select the mission from the star_Select/planet screen and view data about it
+        - each `__<p_id>__feature_selected` function fills the draw_data struct so that __feature_selected_draw can run
+        - by attatching a fuction to draw_data.button_function you can create windws to select specific marines and squads for isssions
+        - do this by using select_units and select_squads which are binds of group_selection
+        - to handle the selectedd marines create `__<p_id>_unit_select` and __<p_id>_squad_selected` functions
+        - selected marines will auutooatically get added to the members array creating a direct link to marines participating in a mission
+
 
 - other than these entry points and any other later defined poisitions mission specific code should not run outsiide of the PlanetProblem container
 
