@@ -21,17 +21,17 @@ function PlanetData(_planet, _system) constructor {
             dispo: system.dispo[planet],
             planet: system.planet[planet],
         };
-        var var_names = variable_instance_get_names(system);
-        for (var n = 0; n < array_length(var_names); n++) {
-            var var_name = var_names[n];
-            if (!string_starts_with(var_name, "p_")) {
+        var __var_names = variable_instance_get_names(system);
+        for (var n = 0; n < array_length(__var_names); n++) {
+            var _var_name = __var_names[n];
+            if (!string_starts_with(_var_name, "p_")) {
                 continue;
             }
-            var _val = system[$ var_name][planet];
-            if (_val == "var_name"){
+            var _val = system[$ _var_name][planet];
+            if (_val == "p_problem"){
                 _val = save_problems();
             }
-            variable_struct_set(_planet_data, var_name, _val);
+            variable_struct_set(_planet_data, _var_name, _val);
         } 
 
         return _planet_data;       

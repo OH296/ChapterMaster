@@ -222,26 +222,26 @@ function deserialize(save_data) {
     ]; // skip automatic setting of certain vars, handle explicitly later
 
     // Automatic var setting
-    var all_names = struct_get_names(save_data);
-    for (var i = 0; i < array_length(all_names); i++) {
-        var var_name = all_names[i];
-        if (array_contains(exclusions, var_name)) {
+    var _all_names = struct_get_names(save_data);
+    for (var i = 0; i < array_length(_all_names); i++) {
+        var _var_name = _all_names[i];
+        if (array_contains(exclusions, _var_name)) {
             continue;
         }
-        var loaded_value = struct_get(save_data, var_name);
-        variable_instance_set(id, var_name, loaded_value);
+        var _loaded_value = struct_get(save_data, _var_name);
+        variable_instance_set(id, _var_name, _loaded_value);
     }
 
     if (struct_exists(save_data, "planet_data")) {
         var planet_arr = save_data.planet_data;
         for (var p = 1; p < array_length(planet_arr); p++) {
-            var planet = planet_arr[p];
-            var var_names = struct_get_names(planet);
-            for (var v = 0; v < array_length(var_names); v++) {
-                var var_name = var_names[v];
+            var _planet = planet_arr[p];
+            var _var_names = struct_get_names(_planet);
+            for (var v = 0; v < array_length(_var_names); v++) {
+                var _var_name = _var_names[v];
 
-                if (var_name == "p_feature") {
-                    var _planet_features = planet[$ var_name];
+                if (_var_name == "p_feature") {
+                    var _planet_features = _planet[$ _var_name];
                     for (var f = 0; f < array_length(_planet_features); f++) {
                         var _feat = _planet_features[f];
                         if (!is_struct(_feat) || !struct_exists(_feat, "f_type")) {
@@ -256,17 +256,17 @@ function deserialize(save_data) {
                     }
                     continue;
                 }
-                if (var_name == "p_problem") {
-                    var _planet_problems = planet[$ var_name];
+                if (_var_name == "p_problem") {
+                    var _planet_problems = _planet[$ _var_name];
                     for (var f = 0; f < array_length(_planet_problems); f++) {
-                        var _new_prob = new PlanetProblem("", 0, {}, {planet:p,system:id});
+                        var _new_prob = new PlanetProblem("", 0, {}, {_planet:p,system:id});
                         _new_prob.load(_planet_problems[f]);
                         array_push(p_problem, _new_prob);
                     }
                     continue;
                 }
-                var val = planet[$ var_name];
-                self[$ var_name][p] = val;
+                var _val = _planet[$ _var_name];
+                self[$ _var_name][p] = _val;
             }
         }
     }
