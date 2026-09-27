@@ -186,32 +186,9 @@ function mission_inquisition_necron_world(tomb_worlds) {
     }
 
     var _eta = scr_mission_eta(_star.x, _star.y, 1);
-    if (global.cheat_debug) {
-        LOGGER.debug("mission popup");
-    }
-    var _options = [
-        {
-            str1: "Accept",
-            choice_func: init_mission_inquisition_necron_world,
-        },
-        {
-            str1: "Refuse",
-            choice_func: popup_default_close,
-        },
-    ];
-    var _pop_data = {
-        system: _star.name,
-        planet: planet,
-        estimate: _eta,
-        mission: "inquisition_tomb",
-        options: _options,
-    };
 
-    var text = $"The Inquisition is trusting you with a special mission.  They have reason to suspect the Necron Tomb on planet {string(_star.name)} {scr_roman(planet)}";
-
-    text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {string(_eta)} months.  Can your chapter handle this mission?";
-
-    scr_popup("Inquisition Mission", text, "inquisition", _pop_data);
+    var _p_data = _star.get_planet_data(planet);
+    _p_data.new_problem("inquisition_tomb", _eta, {});
 }
 
 /// @self Asset.GMObject.obj_popup

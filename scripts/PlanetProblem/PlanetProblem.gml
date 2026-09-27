@@ -1194,6 +1194,21 @@ static __protect_raider_squad_selected = function() {
     }
 }    
 
+static __inquisition_tomb_init = function(){
+    var _text = $"The Inquisition is trusting you with a special mission.  They have reason to suspect the Necron Tomb on planet {p_data.name()}";
+    _text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {string(estimate)} months.  Can your chapter handle this mission?";
+    var _pop_data = {
+        mission: self,
+        options: inquisition_mission_options("__inquisition_tomb_accept"),
+    };
+    scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
+}
+
+static __inquisition_tomb_accept = function(){
+    var _text = $"Inquisition Mission Accepted: A bomb must be planted within the Necron Tomb on {p_data.name()} within {string(estimate)} months.";
+    scr_event_log("", _text, system.name);
+}
+
 static __inquisition_tomb_per_turn = function() {
     if (p_player[run] <= 0){
         exit;
