@@ -169,10 +169,6 @@ function scr_purge_world(action_type, action_score) {
         exit;
     }
     var _purge = new PlayerPurge(action_type, action_score, self);
-
-    var _isquest = 0;
-    var _thequest = "";
-    var _questnum = 0;
     var _popup_text = "";
 
     _purge.pop_before = population_as_small();
@@ -252,15 +248,15 @@ function scr_purge_world(action_type, action_score) {
         // TODO add more variation, with planets, features, marine equipment perhaps?
         _popup_text = choose($"Timing their visits right, Your forces scour {name()} burning down whatever the local heretic communities call their homes. Their screams were quickly extinguished by fire, turning whatever it was before, into ash.", $"Your forces scour {name()}, burning homes and towns that reek of heresy. The screams and wails of the damned carry through the air.");
 
-        var nid_influence = population_influences[eFACTION.TYRANIDS];
+        var _nid_influence = population_influences[eFACTION.TYRANIDS];
         if (has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
             var cult = get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
             if (cult.hiding) {}
         } else {
-            if (nid_influence > 25) {
+            if (_nid_influence > 25) {
                 _popup_text += " Scores of mutant offspring from a genestealer infestation are burnt, while we have damaged their influence over this world, the mutants appear to lack the organisation of a true cult";
                 adjust_influence(eFACTION.TYRANIDS, -10, planet, system);
-            } else if (nid_influence > 0) {
+            } else if (_nid_influence > 0) {
                 _popup_text += " There are signs of a genestealer infestation but the cultists are too unorganized to do any real damage to their influence on this world";
             }
         }
@@ -270,9 +266,6 @@ function scr_purge_world(action_type, action_score) {
     }
 
     if (action_type == eDROP_TYPE.PURGESELECTIVE) {
-        // Blam!
-        var i = 0;
-
         // TODO add more variation, with planets, features, possibly marine equipment
         _popup_text = $"Your marines move across {name()},";
         _popup_text += choose($"searching for high profile targets. Once found, they are dragged outside from their lairs. Their execution would soon follow.", $"rooting out sources of corruption. Heretics are dragged from their lairs and executed in the streets.");
@@ -301,9 +294,9 @@ function scr_purge_world(action_type, action_score) {
 
         set_population(population_large_conversion(_purge.pop_after));
 
-        var pip = instance_create(0, 0, obj_popup);
-        pip.title = "Purge Results";
-        pip.text = _txt2;
+        var _pip = instance_create(0, 0, obj_popup);
+        _pip.title = "Purge Results";
+        _pip.text = _txt2;
 
     }
     log_ship_effort_purge();
