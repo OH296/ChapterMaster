@@ -93,7 +93,7 @@ function scr_chaos_alliance_test() {
             diplo_text = "[Error: No WL10 planet feature found.]";
         }
         if (instance_exists(that_star)) {
-            var meeting_arranged = false;
+            var _meeting_arranged = false;
             var _p_data = that_star.get_planet_data(that_planet);
             _p_data.new_problem(result == "success_trap" ? "meeting_trap" : "meeting", 36);
         }

@@ -147,6 +147,7 @@ try {
                 } else {
                     u = instance_create(_col.distance, 240, obj_enunit);
                 }
+                u.flank = struct_exists(_col, "flank") && _col.flank;
                 u.add_enemies(_col.enemies);
             }
             _enemies_assigned = true;

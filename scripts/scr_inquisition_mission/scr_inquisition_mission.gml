@@ -103,7 +103,7 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
                 break;
             case eINQUISITION_MISSION.TYRANID_ORGANISM:
                 LOGGER.info("RE: Gaunt Capture");
-                var _star = array_random_element(worlds);
+                var _star = array_random_element(tyranid_org_worlds);
                 var planet = -1;
                 for (var i = 1; i <= _star.planets; i++) {
                     if (_star.p_tyranids[i] > 4) {

@@ -272,3 +272,18 @@ betchers = obj_ini.betchers; // slight melee penalty
 catalepsean = obj_ini.catalepsean; // minor global attack decrease
 occulobe = obj_ini.occulobe; // penalty if morning and susceptible to flash grenades
 mucranoid = obj_ini.mucranoid; // chance to short-circuit
+
+
+register_kills_to_missions(casulties){
+    if (obj_ncombat.battle_special != ""){
+        if (is_struct(obj_ncombat.special_feature) && is_instanceof(obj_ncombat.special_feature, PlanetProblem)){
+            var _feat = obj_ncombat.special_feature;
+            _feat.casualty_packet = casulties;
+            _feat.battle_on_enemy_casulties();
+        }
+    }
+}
+
+
+
+

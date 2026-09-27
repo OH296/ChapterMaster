@@ -1,6 +1,6 @@
 /// @param {sring} name
 /// @param {struct} data
-function SystemProblem(name, data = {}, system){
+function SystemProblem(name, data = {}, system) constructor{
 timer = -1;
 f_type = eP_FEATURES.MISSION;
 p_id = name;
@@ -17,7 +17,7 @@ if (struct_exists(data, "members")){
     members = data.members;
 }
 
-static handle_triggered_mission_func = function(func){
+static __handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
         try {
             func();
@@ -39,24 +39,32 @@ static handle_triggered_mission_func = function(func){
 }
 
 static basic_turn_end = function(){
-    if (system.storm - 1 > 0){
-        timer--;
+	if (p_data.system.storm <= 0){
+		timer--;
+	}
+	if ((timer > -1) && per_turn_checks) {
+		var _func = find_func("per_turn");
+        __handle_triggered_mission_func(_func)
+	}
+	if ((timer == 0) && zero_timer_checks && !delete_mission) {
+		var _func = find_func("resolve");
+		__handle_triggered_mission_func(_func)
+	}
+}
+
+static find_func_ref = function(trigger_string){
+    var _func_string = "__" + p_id + trigger_string;
+    if (stage_id != ""){
+        _func_string += "S" + stage_id;
     }
-    if ((timer > -1) && per_turn_checks) {
-        var _func = undefined;
-        /*switch(p_id){
-        }*/
-        handle_triggered_mission_func(_func)
+    return find_func_ref
+}
+static find_func = function(trigger_string){
+    var _func_string = find_func_ref(trigger_string);
+    if (struct_exists(self,_func_string)){
+        return self[$ _func_string]
     }
-    if ((timer == 0) && zero_timer_checks && !delete_mission) {
-        var _func = undefined;
-        switch(p_id){
-            case "great_crusade":
-                _func = resolve_great_crusade;
-                break;
-        }
-        handle_triggered_mission_func(_func)
-    }
+    return undefined;
 }
 
 static mark = function(colour){
@@ -65,15 +73,16 @@ static mark = function(colour){
     }
 }
 
-static init = function(){
-    switch(p_id){
-        case "great_crusade":
-        init_great_crusade();
-        break;
-    }   
+static __init = function(){
+    var _func = find_func("init");
+    if (!is_undefined(_func)){
+        __handle_triggered_mission_func(_func());
+    }  
 }
 
-static init_great_crusade = function(){
+__init();
+
+static great_crusade_init = function(){
     //TODO decide the target/purpose of the crusade to create more variety and to help with post crusade rewards
     var _nearest_player_fleet = data.nearest_player_fleet;
     var _travel_leeway = 10;
@@ -86,7 +95,7 @@ static init_great_crusade = function(){
     scr_event_log("", $"A Crusade is called; our forces are expected at {system.name} in {timer} months.", star_id.name);
 }
 
-static resolve_great_crusade = function() {
+static great_crusade_resolve = function() {
     var _player_fleet = scr_orbiting_player_fleet(system);
 
     if (_player_fleet != -1) {
@@ -112,6 +121,7 @@ static resolve_great_crusade = function() {
         scr_loyalty("Refusing to Crusade", "+");
         scr_event_log("red", "No ships designated for Crusade.");
     }
+    delete_mission = true;
 }
 
 }
