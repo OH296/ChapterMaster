@@ -1566,7 +1566,7 @@ static inquisition_demon_world_init = function(){
     };
     scr_popup(
         "Inquisition Mission Demon World", 
-        text, 
+        _text, 
         "inquisition", 
         _pop_data
     );

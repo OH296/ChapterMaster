@@ -229,18 +229,6 @@ try {
                     if (demand) {
                         title = "Inquisition Mission Demand";
                     }
-
-                    if (mission == "purge") {
-                        scr_event_log("", $"Inquisition Mission Accepted: The nobles of {_mission_star.name} {scr_roman(planet)} must be selectively purged within {estimate} months.", _mission_star.name);
-                        if (demand) {
-                            text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to selectively purge the Nobles on {_mission_star.name} {scr_roman(onceh)} within {estimate} months.";
-                        }
-                    } else if (mission == "cleanse") {
-                        scr_event_log("", $"Inquisition Mission Accepted: The mutants beneath {planet_numeral_name(planet, _mission_star)} must be cleansed by fire within {estimate} months.", _mission_star.name);
-                        if (demand) {
-                            text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to cleanse by fire the mutants in Hive {planet_numeral_name(planet, _mission_star)} within {estimate} months.";
-                        }
-                    }
                     if (mission == "inquisition_spyrer") {
                         scr_event_log("", $"Inquisition Mission Accepted: The Spyrer on {_mission_star.name} {scr_roman(planet)} must be killed within {estimate} months.", _mission_star.name);
                         if (demand) {
