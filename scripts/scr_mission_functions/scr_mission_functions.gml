@@ -36,7 +36,7 @@ global.planet_problem_keys = [
     "purge",
     "iquisition_tyranid_org",
     "artifact_loan",
-    "inquisition_necron",
+    "inquisition_tomb",
     "ethereal",
     "demon_world",
 ];
@@ -70,7 +70,7 @@ function mission_name_key(mission) {
         "iquisition_tyranid_org": "Capture Tyranid for Inquisitor",
         // "bomb" : "Bombard World for Inquisitor",
         "artifact_loan": "Safeguard Artifact for the Inquisition",
-        "inquisition_necron": "Bomb Necron Tomb for Inquisitor",
+        "inquisition_tomb": "Bomb Necron Tomb for Inquisitor",
         "ethereal": "Capture Ethereal for Inquisitor",
         "demon_world": "Clear Demon World for Inquisitor",
     };

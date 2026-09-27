@@ -127,7 +127,7 @@ if (battle_special == "hunt_fallen") {
     p1 += "  Your ranks are made up of ";
 }
 
-if ("inquisition_necron" == battle_special) {
+if ("inquisition_tomb" == battle_special) {
     var wh = choose(1, 2);
     if (wh == 1) {
         p1 = "Cave dirt crunches beneath the soles of your marines as they continue their descent.  There is little warning before ";

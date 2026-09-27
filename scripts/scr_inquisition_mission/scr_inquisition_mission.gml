@@ -203,7 +203,7 @@ function mission_inquisition_necron_world(tomb_worlds) {
         system: _star.name,
         planet: planet,
         estimate: _eta,
-        mission: "inquisition_necron",
+        mission: "inquisition_tomb",
         options: _options,
     };
 
@@ -239,7 +239,7 @@ function init_mission_inquisition_necron_world() {
     if (demand) {
         demand = 0;
     }
-    _p_data.new_problem("inquisition_necron", estimate, {});
+    _p_data.new_problem("inquisition_tomb", estimate, {});
     exit;
 }
 
@@ -572,11 +572,8 @@ function mission_inquistion_spyrer() {
     var _eta = scr_mission_eta(_star.x, _star.y, 1);
     _eta = min(max(_eta, 6), 50);
 
-    var text = $"The Inquisition is trusting you with a special mission.  An experienced Spyrer on hive world {string(_star.name)} {scr_roman(planet)}";
-    text += $" has began to hunt indiscriminately, and proven impossible to take down by conventional means.  If they are not put down within {string(_eta)} month's time panic is likely.  Can your chapter handle this mission?";
-    var mission_params = $"spyrer|{string(_star.name)}|{string(planet)}|{string(_eta + 1)}|";
-    LOGGER.info($"Starting spyrer mission with params {mission_params}");
-    scr_popup("Inquisition Mission", text, "inquisition", mission_params);
+    var _p_data = _star.get_planet_data(planet);
+    _p_data.new_problem("inquisition_spyrer", _eta, {});
 }
 
 function mission_inquistion_purge() {

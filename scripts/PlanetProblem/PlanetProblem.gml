@@ -41,7 +41,7 @@ static description = function(){
     return mission_name_key(p_id);
 }
 
-static increment_mission_completion =  function() {
+static __increment_mission_completion =  function() {
     if (!struct_exists(data, "completion")) {
         data.completion = 0;
     }
@@ -53,14 +53,14 @@ static increment_mission_completion =  function() {
     return (data.completion / data.required_months) * 100;
 }
 
-static popup_call = function(func){
+static __popup_call = function(func){
     var _func = function(){
         pop_data.mission[$ func]();
     }
     return _func;
 }
 
-static inquisition_mission_options = function(mission_accept_function){
+static __inquisition_mission_options = function(mission_accept_function){
     var _options = [
         {
             str1: "Accept",
@@ -83,7 +83,7 @@ static inquisition_mission_options = function(mission_accept_function){
 }
 
 
-static handle_triggered_mission_func = function(func){
+static __handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
         refresh_p_data();
         try {
@@ -105,99 +105,37 @@ static handle_triggered_mission_func = function(func){
         }
     }
 }
+
+static __find_func = function(trigger_string){
+    var _func_string = "__" + p_id + "_trigger_string";
+    if (stage_id != ""){
+        _func_string += "_?" + stage_id;
+    }
+    if (struct_exists(self,_func_string)){
+        return self[$ _func_string]
+    }
+    return undefined;
+}
 static basic_turn_end = function(){
 	refresh_p_data();
 	if (p_data.system.storm <= 0){
 		timer--;
 	}
 	if ((timer > -1) && per_turn_checks) {
-		var _func = undefined;
-		switch(p_id){
-			case "mech_raider":
-				_func = per_turn_check_raider_failed;
-				break;
-			case "mech_bionics":
-				_func = per_turn_check_mech_bionics;
-				break;
-			case "mech_tomb":
-				switch(stage_id){
-					case "exploring":
-						_func = per_turn_check_mech_tomb2;
-						break;
-					case "awaiting_player":
-					default:
-						_func = per_turn_check_mech_tomb1;
-					break;
-				}
-				break;
-            case "inquisition_spyrer":
-                _func = per_turn_check_spyrer;
-                break;
-            case "inquisition_necron":
-                _func =per_turn_check_inqisition_tomb;
-                break;
-            case "hive_fleet_to_cult":
-                _func = per_turn_hive_fleet_to_cult;
-                break;
-            case "inquisition_recon":
-                _func = per_turn_inquisition_recon;
-                break;
-		}
-        handle_triggered_mission_func(_func)
+		var _func = __find_func("per_turn");
+        __handle_triggered_mission_func(_func)
 	}
 	if ((timer == 0) && zero_timer_checks && !delete_mission) {
-		var _func = undefined;
-		switch(p_id){
-			case "hunt_beast":
-				_func = resolve_hunt_beast;
-				break;
-			case "train_forces":
-				_func = complete_train_forces_mission;
-				break;
-			case "succession":
-				_func = resolve_succession;
-				break;
-			case "inquisition_recon":
-				_func = resolve_inquisition_recon;
-				break;
-			case "inquisition_necron":
-				_func = resolve_inquisitor_necron;
-				break;
-			case "inquisition_spyrer":
-				_func = resolve_spyrer;
-				break;
-			case "hunt_fallen":
-				_func = resolve_fallen;
-				break;
-			case "mech_raider":
-				_func = resolve_mech_raider_failed;
-				break;
-			case "mech_bionics":
-				_func = resolve_mech_bionics;
-				break;
-			case "mech_tomb":
-				_func = resolve_mech_tomb1_failed;
-				break;
-			case "mech_mars":
-				_func = resolve_mech_mars;
-                break;
-            case "provide_garrison":
-                _func =  complete_garrison_mission;
-		}
-		handle_triggered_mission_func(_func)
+		var _func = __find_func("resolve");
+		__handle_triggered_mission_func(_func)
 	}
 }
 
 //triggered within drop select
 static before_battle_effects = function(){
     instance_activate_object(obj_star);
-    var _func = undefined;
-    switch(p_id){
-        case "iquisition_tyranid_org":
-            _func = inquisition_tyranid_org_setup_battle;
-            break;
-    }
-    handle_triggered_mission_func(_func);   
+    var _func = __find_func("setup_battle");
+    __handle_triggered_mission_func(_func);   
     instance_deactivate_object(obj_star);   
 }
 
@@ -208,13 +146,8 @@ static battle_on_enemy_casulties = function(){
         exit;
     }
     instance_activate_object(obj_star);
-    var _func = undefined;
-    switch(p_id){
-        case "iquisition_tyranid_org":
-            _func = inquisition_tyranid_on_enemy_casulties;
-            break;
-    }
-    handle_triggered_mission_func(_func);
+    var _func = __find_func("on_enemy_casulties");
+    __handle_triggered_mission_func(_func);
 
     struct_remove(self, "casualty_packet");
 
@@ -223,75 +156,45 @@ static battle_on_enemy_casulties = function(){
 
 //triggers in obj_ncombat alarm 5
 static battle_final_message = function(){
-      instance_activate_object(obj_star);
-    var _func = undefined;
-    switch(p_id){
-        case "iquisition_tyranid_org":
-            _func = inquisition_tyranid_org_battle_final_message;
-            break;
-    }
-    handle_triggered_mission_func(_func);   
+    instance_activate_object(obj_star);
+    var _func = __find_func("battle_final_message");
+    __handle_triggered_mission_func(_func);   
     instance_deactivate_object(obj_star);      
 }
 
 static after_battle_effects = function(){
     instance_activate_object(obj_star);
-    var _func = undefined;
-    switch(p_id){
-        case "inquisition_spyrer":
-            _func = spyrer_battle_aftermath;
-            break;
-        case "protect_raiders":
-            _func = protect_raiders_battle_aftermath;
-            break;
-        case "hunt_fallen":
-            _func = hunt_fallen_battle_aftermath;
-            break;
-        case "inquisition_necron":
-            _func = inquisition_necron_battle_aftermath;
-            break;
-        case "iquisition_tyranid_org":
-            _func = inquisition_tyranid_org_battle_aftermath
-    }
-    handle_triggered_mission_func(_func);   
+    var _func = __find_func("battle_aftermath");
+    __handle_triggered_mission_func(_func);   
     instance_deactivate_object(obj_star);
 }
 
 static on_squad_selection = function(){
-    var _func = undefined;
-    switch(p_id){
-        case "protect_raiders":
-            _func = protect_raider_squad_selected;
-            break;
-    }
-    handle_triggered_mission_func(_func);       
+    var _func = __find_func("squad_selected");
+    __handle_triggered_mission_func(_func);       
     instance_deactivate_object(obj_star);
 }
 
 
 static on_unit_selection = function(){
-    var _func = undefined;
-    switch(p_id){
-        case "hunt_beast":
-            _func = init_beast_hunt_mission;
-            break;
-        case "train_forces":
-            _func = init_train_forces_mission;
-    }
+    var _func = __find_func("unit_select");
     if (!is_undefined(_func)){
         if (struct_exists(obj_controller.selection_data, "selections")){
             members = obj_controller.selection_data.selections;
         }
-        handle_triggered_mission_func(_func);   
+        __handle_triggered_mission_func(_func);   
     }    
     instance_deactivate_object(obj_star);
 }
 
 static __init = function(){
-	switch(p_id){
-		case "inquisition_necron":
-	        mark("green");
-	        break;
+    var _func = __find_func("unit_select");
+    if (!is_undefined(_func)){
+        _func();
+    } else {
+        mark("green");
+    }
+	/*switch(p_id){
 	    case "meeting":
             var rando = choose(1, 2);
             if (rando == 1) {
@@ -303,30 +206,16 @@ static __init = function(){
             scr_event_log("", $"Chaos Lord {obj_controller.faction_leader[eFACTION.CHAOS]} agrees to meet with you on {p_data.name()} to discuss an alliance.");
             mark("purple");
             break;
-        case "hunt_fallen":
-            hunt_fallen_init();
-            break;
         case "harlequins":
             var _text = $"Eldar Harlequins have been seen on planet {p_data.name()}. Their purposes are unknown.";
             scr_popup("Harlequin Troupe", _text, "harlequin", "");
             mark("green");
             break;
-        case "inquisition_demon_world":
-            inquisition_demon_world_init();
-            break;
-        case "iquisition_tyranid_org":
-            inquisition_tyranid_org_init();
-            break;
-        case "hive_fleet_to_cult":
-            hive_fleet_to_cult_init();
-            break;
-        case "inquisition_recon":
-            inquisition_recon_init();
         default:
             mark("green");
 			break;
 
-	}
+	}*/
 }
 __init();
 
@@ -366,7 +255,7 @@ static new_battle = function(battle_opponent_id,special_id = p_id){
     return _battle;
 }
 
-static set_members_job_to_mission = function(){
+static __set_members_job_to_mission = function(){
     for (var i = 0; i < array_length(members); i++){
         var _unit = members[i];
         _unit.job = {
@@ -380,9 +269,9 @@ static set_members_job_to_mission = function(){
 
 
 
-static init_beast_hunt_mission = function() {
+static __beast_hunt_unit_select = function() {
     if (stage_id == "preliminary") {
-        set_members_job_to_mission();
+        __set_members_job_to_mission();
         var _numeral_name = p_data.name()
         stage_id = "active";
         var _mission_length = irandom_range(2, 5);
@@ -400,7 +289,7 @@ static init_beast_hunt_mission = function() {
     }
 }
 
-static complete_beast_hunt_mission = function() {
+static __beast_hunt_resolve = function() {
     var _man_conditions = {
         "job": "hunt_beast",
         "max": 3,
@@ -469,7 +358,7 @@ static complete_beast_hunt_mission = function() {
 }
 
 
-static init_train_forces_mission = function() {
+static __train_forces_unit_select = function() {
     if (stage_id != "preliminary" || array_length(members) == 0) {
         exit;
     }
@@ -501,7 +390,7 @@ static init_train_forces_mission = function() {
     obj_controller.close_popups = false;
 }
 
-static complete_train_forces_mission = function() {
+static __train_forces_resolve = function() {
     if (stage_id != "active") {
         exit;
     }
@@ -601,7 +490,7 @@ static complete_train_forces_mission = function() {
     _trainer.job = "none";
 }
 
-static resolve_succession = function() {
+static __succession_resolve = function() {
     var _result, _alert_text;
     var _dice1 = roll_dice(1, 100);
     var _dice2 = roll_dice(1, 100);
@@ -647,11 +536,11 @@ static resolve_succession = function() {
     p_data.delete_feature(eP_FEATURES.SUCCESSION_WAR);
 }
 
-static inquisition_recon_init = function(){
+static __inquisition_recon_init = function(){
 
     var _pop_data = {
         mission: self,
-        options : inquisition_mission_options("inquisition_recon_accept")
+        options : __inquisition_mission_options(__find_func("accept"))
     };
 
     var _text = $"The Inquisition wishes for you to investigate {p_data.name()}";
@@ -660,13 +549,13 @@ static inquisition_recon_init = function(){
     scr_popup("Inquisition Recon", _text, "inquisition", _pop_data);
 }
 
-static inquisition_recon_accept = function(){
+static __inquisition_recon_accept = function(){
     mark("green");
     scr_event_log("", $"Inquisition Mission Accepted: The Inquisition wish for Astartes to land on and investigate {p_data.name()} within {timer} months.", system.name);
     with(obj_popup){ popup_default_close(); }    
 }
 
-static per_turn_inquisition_recon = function() {
+static __inquisition_recon_per_turn = function() {
     if (p_data.player_forces <= 0){
         exit;
     }
@@ -685,7 +574,7 @@ static per_turn_inquisition_recon = function() {
     delete_mission = true;
 
 }
-static resolve_inquisition_recon = function() {
+static __inquisition_recon_resolve = function() {
     refresh_p_data();
     var _alert_text = "Inquisition Mission Failed: Investigate ";
     alter_disposition(eFACTION.INQUISITION, -5);
@@ -694,7 +583,7 @@ static resolve_inquisition_recon = function() {
     scr_event_log("red", _alert_text);
 }
 
-static resolve_inquisitor_necron = function() {
+static __inquisitor_necron_resolve = function() {
     alter_disposition(eFACTION.INQUISITION, -8);
     var _alert_text = $"The Necron Tomb of planet {p_data.name()} has not been deactivated in time.  It has awakened, rank upon rank of Necrons pouring out to the planet's surface.  The Inquisition is not pleased with your failure.";
     scr_popup("Inquisition Mission Failed", _alert_text, "necron_army", "");
@@ -706,9 +595,21 @@ static resolve_inquisitor_necron = function() {
     }
 }
 
-static inquisition_spyrer_init
+static __inquisition_spyrer_init = function(){
+    var _text = $"The Inquisition is trusting you with a special mission.  An experienced Spyrer on hive world {p_data.name()}";
+    _text += $" has began to hunt indiscriminately, and proven impossible to take down by conventional means.  If they are not put down within {string(estimate)} month's time panic is likely.  Can your chapter handle this mission?";
+    var _pop_data = {
+        mission: self,
+        options: __inquisition_mission_options(__find_func("accept")),
+    };
+    scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
+}
 
-static resolve_spyrer = function() {
+static __inquisition_spyrer_accept = function(){
+    var _text = $"Inquisition Mission Accepted: An experienced Spyrer on {p_data.name()} must be put down within {string(estimate)} months.";
+    scr_event_log("", _text, system.name);
+}
+static __spyrer_resolve = function() {
     var _planet_name = p_data.name();
     alter_disposition(eFACTION.INQUISITION, -3);
     var _alert_text = $"The Spyrer on {_planet_name} has been left unchecked.  In the ensuing carnage some high-ranking officials have been killed, along with several Nobles.  Panic is running amock in several parts of the hives and the Inquisition is less than pleased.";
@@ -717,7 +618,7 @@ static resolve_spyrer = function() {
     scr_event_log("red", _text);
 }
 
-static per_turn_check_spyrer = function() {
+static __inquisition_spyrer_per_turn = function() {
     if (p_data.player_forces > 20) {
         var _tixt = $"The Spyrer on {p_data.name()} seems to have vanished, presumably gone into hiding.";
         scr_popup("Spyrer Rampage", _tixt, p_id, "");
@@ -745,7 +646,7 @@ static per_turn_check_spyrer = function() {
     }
 }
 
-static spyrer_battle_aftermath = function(){
+static __inquisition_spyrer_battle_aftermath = function(){
     // title / text / image / speshul
     if (!obj_ncombat.defeat){
         exit;
@@ -764,14 +665,14 @@ static spyrer_battle_aftermath = function(){
     scr_gov_disp(system.name, planet, choose(1, 2, 3, 4));
 }
 
-static hunt_fallen_init = function(){
+static __hunt_fallen_init = function(){
     var _text = localize("Sources indicate one of the Fallen may be upon {0}.  We have {1} months to send out a strike team and scour the planet.  Any longer and any Fallen that might be there will have escaped.", [p_data.name(), timer]);
     scr_popup(localize("Hunt the Fallen"), _text, "fallen", "");
     scr_event_log("", localize("Sources indicate one of the Fallen may be upon {0}.  We have {1} months to investigate.", [p_data.name(), timer]));
     mark("purple");
 }
 
-static per_turn_check_fallen = function() {
+static __hunt_fallen_per_turn = function() {
     if (p_data.player_forces > 0){
         if (choose(true, false)) {
             var _group_big = choose(true, false);
@@ -824,7 +725,7 @@ static per_turn_check_fallen = function() {
     }
 }
 
-static resolve_fallen = function() {
+static __hunt_fallen_resolve = function() {
     //TODO marker point for cohesion mechanics
     var _alert_text = "";
     if (irandom(100) > 33) {
@@ -848,7 +749,7 @@ static resolve_fallen = function() {
     scr_event_log("red", $"Mission Failed: Any Fallen within the {system.name} system have been given time to escape.");
 }
 
-function hunt_fallen_battle_aftermath() {
+function __hunt_fallen_battle_aftermath() {
     if (obj_ncombat.defeat) {
         exit;
     }
@@ -865,11 +766,11 @@ function hunt_fallen_battle_aftermath() {
     scr_popup("Hunt the Fallen Completed", _tixt, "fallen", "");
 }
 
-static per_turn_check_mech_raider = function() {
+static __mech_raider_per_turn = function() {
     var _techs = collect_role_group(SPECIALISTS_TECHS, [system.name, planet, -1]);
     var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
     if ((array_length(_techs) >= 6) && (_lr_count >= 1)) {
-        var _percent_complete = increment_mission_completion();
+        var _percent_complete = __increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
             delete_mission = true;
@@ -881,7 +782,7 @@ static per_turn_check_mech_raider = function() {
     }
 }
 
-static resolve_mech_raider_failed = function() {
+static __mech_raider_resolve = function() {
     var _alert_text = $"Mechanicus Mission Failed: Land Raider testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
@@ -889,11 +790,11 @@ static resolve_mech_raider_failed = function() {
     delete_mission = true;
 }
 
-static per_turn_check_mech_bionics = function() {
+static __mech_bionics_per_turn = function() {
     var _units = p_data.collect_planet_group();
     var _bionics = _units.tally_attr("bionics");
     if (_bionics >= 10) {
-        var _percent_complete = increment_mission_completion();
+        var _percent_complete = __increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
             delete_mission = true;
@@ -905,7 +806,7 @@ static per_turn_check_mech_bionics = function() {
     }
 }
 
-static resolve_mech_bionics_failed = function() {
+static __mech_bionics_resolve = function() {
     var _alert_text = $"Mechanicus Mission Failed: bionics testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
@@ -913,7 +814,7 @@ static resolve_mech_bionics_failed = function() {
     delete_mission = true;
 }
 
-static per_turn_check_mech_tomb2 = function() {
+static __mech_tomb_per_turn_?exploring = function() {
     data.turns++;
     var _battli = 0;
     var _roll1 = roll_dice_chapter(1, 100 + data.turns, "low");
@@ -1131,7 +1032,7 @@ static complete_garrison_mission = function() {
     scr_popup($"Agreed Garrison of {name()} complete", _mission_string, "", "");
 }
 
-static protect_raiders_battle_aftermath = function() {
+static __protect_raiders_battle_aftermath = function() {
     // show_message(obj_turn_end.current_battle);
     // show_message(obj_turn_end.battle_world[obj_turn_end.current_battle]);
     // title / text / image / speshul
@@ -1151,7 +1052,7 @@ static protect_raiders_battle_aftermath = function() {
     }
 }
 
-static protect_raider_squad_selected = function() {
+static __protect_raider_squad_selected = function() {
     data.squad = data.squads[0];
     var _squad = data.squad;
     var _squad_units = _squad.members;
@@ -1258,7 +1159,7 @@ static protect_raider_squad_selected = function() {
     }
 }    
 
-static per_turn_check_inqisition_tomb = function() {
+static __inqisition_tomb_per_turn = function() {
     if (p_player[run] <= 0){
         exit;
     }
@@ -1282,7 +1183,7 @@ static per_turn_check_inqisition_tomb = function() {
         options: [
             {
                 str1: "Begin the Mission",
-                choice_func: popup_call("necron_tomb_mission_start"),
+                choice_func: __popup_call("necron_tomb_mission_start"),
             },
             {
                 str1: "Not Yet",
@@ -1293,10 +1194,10 @@ static per_turn_check_inqisition_tomb = function() {
     scr_popup("Necron Tomb Excursion", _tixt, $"necron_cave", _pop_data);
 }
 
-static necron_tomb_mission_start = function() {
+static inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
-        {str1: "Continue", choice_func: popup_call("necron_tomb_mission_sequence")}, 
+        {str1: "Continue", choice_func: __popup_call("necron_tomb_mission_sequence")}, 
         {str1: "Return to the surface", choice_func: popup_default_close}
     ]);
     obj_popup.image = "necron_tunnels_1";
@@ -1306,7 +1207,7 @@ static necron_tomb_mission_start = function() {
 /// @self Asset.GMObject.obj_popup
 /// @desc Advances the Necron Tomb mission or starts a combat encounter.
 /// @returns {Undefined}
-static necron_tomb_mission_sequence = function() {
+static inquisition_tomb_mission_sequence = function() {
     var _battle;
     var player_forces = system.player_forces;
     var _penalty = 0;
@@ -1468,7 +1369,7 @@ static necron_tomb_mission_sequence = function() {
     exit;
 }
 
-static inquisition_necron_battle_aftermath = function(){
+static __inquisition_tomb_battle_aftermath = function(){
     if (!data.tomb_awakens) {
         if (defeat == 1) {
             obj_controller.combat = 0;
@@ -1554,7 +1455,7 @@ static advance_necron_tomb_mission = function() {
     return false;
 }
 
-static inquisition_demon_world_init = function(){
+static __inquisition_demon_world_init = function(){
     var _text = $"The Inquisitor is trusting you with a special mission.  The planet {p_data.name()} has been uncovered as a Demon World";
     if (obj_controller.demanding) {
         _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Demon World {p_data.name()} must be cleansed within {timer} months.";
@@ -1562,7 +1463,7 @@ static inquisition_demon_world_init = function(){
     _text += $"The taint of chaos must be eradicated from this system.  Can your chapter handle this mission?";
     var _pop_data = {
         mission: self,
-        options: inquisition_mission_options("inquisition_demon_world_accept"),
+        options: __inquisition_mission_options(__find_func("accept")),
     };
     scr_popup(
         "Inquisition Mission Demon World", 
@@ -1572,7 +1473,7 @@ static inquisition_demon_world_init = function(){
     );
 }
 
-static inquisition_demon_world_accept = function(){
+static __inquisition_demon_world_accept = function(){
     scr_event_log("", $"Inquisition Mission Accepted: The demon world of {system.name} {scr_roman(planet)} will be purged by your hand.", system.name);
     new_star_event_marker("green");
     with(obj_popup){
@@ -1580,10 +1481,10 @@ static inquisition_demon_world_accept = function(){
     }
 }
 
-static inquisition_tyranid_org_init = function(){
+static __inquisition_tyranid_org_init = function(){
     var _pop_data = {
         mission: self,
-        options: inquisition_mission_options("inquisition_tyranid_org_accept"),
+        options: __inquisition_mission_options(__find_func("accept")),
     };
     var _text = $"An Inquisitor is trusting you with a special mission.  The planet {p_data.name()}";
     _text += " is ripe with Tyranid organisms.  They require that you capture one of the Gaunt species for research purposes.  Can your chapter handle this mission?";
@@ -1593,7 +1494,7 @@ static inquisition_tyranid_org_init = function(){
     scr_popup("Inquisition Mission", _text, "inquisition",_pop_data);
 }
 
-static inquisition_tyranid_org_accept = function(){
+static __inquisition_tyranid_org_accept = function(){
     obj_popup.image = "webber";
     obj_popup.title = "New Equipment";
     obj_popup.fancy_title = 0;
@@ -1607,7 +1508,7 @@ static inquisition_tyranid_org_accept = function(){
     data.captured_gaunt = 0;
 }
 
-static inquisition_tyranid_org_setup_battle = function(){
+static __inquisition_tyranid_org_setup_battle = function(){
     if ((obj_ncombat.enemy != eFACTION.TYRANIDS) || (obj_ncombat.battle_object.space_hulk)) {
         exit;
     }
@@ -1616,14 +1517,14 @@ static inquisition_tyranid_org_setup_battle = function(){
     obj_ncombat.reduce_power = false;
 }
 
-static inquisition_tyranid_on_enemy_casulties = function(){
+static __inquisition_tyranid_on_enemy_casulties = function(){
     var _c_data = casualty_packet;
     if (array_contains(["Termagaunt", "Hormagaunt"], _c_data.weapon) && (_c_data.casulties > 0)) {
         data.captured_gaunt += casulties;
     }
 }
 
-static inquisition_tyranid_org_battle_final_message = function(){
+static __inquisition_tyranid_org_battle_final_message = function(){
     if (obj_ncombat.defeat || data.captured_gaunt == 0) {
         exit;
     }
@@ -1633,7 +1534,7 @@ static inquisition_tyranid_org_battle_final_message = function(){
 
 }
 
-static inquisition_tyranid_org_battle_aftermath = function(){
+static __inquisition_tyranid_org_battle_aftermath = function(){
     if (obj_ncombat.defeat|| data.captured_gaunt == 0){
         exit;
     }
@@ -1648,7 +1549,7 @@ static inquisition_tyranid_org_battle_aftermath = function(){
     }
 }
 
-static hive_fleet_to_cult_init = function(){
+static __hive_fleet_to_cult_init = function(){
     var xx = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
     var yy = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;
     var fleet = create_enemy_fleet(xx, yy, eFACTION.TYRANIDS);
@@ -1669,7 +1570,7 @@ static hive_fleet_to_cult_init = function(){
     fleet.action = "move";
 }
 
-static per_turn_hive_fleet_to_cult = function(){
+static __hive_fleet_to_cult_per_turn = function(){
     if (timer != 3 || scr_has_disadv("Psyker Intolerant")){
         exit;
     }
@@ -1697,7 +1598,7 @@ static per_turn_hive_fleet_to_cult = function(){
     obj_controller.known[eFACTION.TYRANIDS] = 1;
 }
 
-static inquisition_purge_init = function(){
+static __inquisition_purge_init = function(){
     var _text = "The Inquisition is trusting you with a special mission.";
     if (data.mission_flavour == 1) {
         _text += $"  A number of high-ranking nobility on the planet {scr_roman(planet)} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {string(_eta)} months.  Can your chapter handle this mission?";
@@ -1708,12 +1609,12 @@ static inquisition_purge_init = function(){
     }
     var _pop_data = {
         mission: self,
-        options: inquisition_mission_options("inquisition_purge_accept"),
+        options: __inquisition_mission_options(__find_func("accept")),
     };
     scr_popup("Inquisition Mission", text, "inquisition", _pop_data);
 }
 
-static inquisition_purge_accept = function(){
+static __inquisition_purge_accept = function(){
     var _text = "Inquisition Mission Accepted:"
     if (data.purge_type == eDROP_TYPE.PURGEFIRE){
         _text += $" The mutants beneath {p_data.name()} must be cleansed by fire within {estimate} months.";
