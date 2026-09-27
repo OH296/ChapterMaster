@@ -248,7 +248,7 @@ function deserialize(save_data) {
                             continue;
                         }
 
-                        var _new_feat = new PlanetFeature(_feat.f_type);
+                        var _new_feat = new NewPlanetFeature(_feat.f_type);
 
                         _new_feat.load_json_data(_feat);
 
@@ -259,12 +259,12 @@ function deserialize(save_data) {
                 if (_var_name == "p_problem") {
                     var _planet_problems = _planet[$ _var_name];
                     for (var f = 0; f < array_length(_planet_problems); f++) {
-                        if (!is_struct(_planet_problems)){
+                        if (!is_struct(_planet_problems[f])){
                             continue;
                         }
-                        var _new_prob = new PlanetProblem("", 0, {}, {_planet:p,system:id});
+                        var _new_prob = new PlanetProblem("", 0, {}, {planet:p,system:id});
                         _new_prob.load(_planet_problems[f]);
-                        array_push(p_problem, _new_prob);
+                        array_push(p_problem[p], _new_prob);
                     }
                     continue;
                 }

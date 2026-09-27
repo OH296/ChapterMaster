@@ -28,7 +28,7 @@ function PlanetData(_planet, _system) constructor {
                 continue;
             }
             var _val = system[$ _var_name][planet];
-            if (_val == "p_problem"){
+            if (_var_name == "p_problem"){
                 _val = save_problems();
             }
             variable_struct_set(_planet_data, _var_name, _val);

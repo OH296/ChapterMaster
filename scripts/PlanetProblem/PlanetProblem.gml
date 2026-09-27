@@ -70,23 +70,23 @@ static mark = function(colour){
 }
 
 static has_data = function(key){
-    return struct_exists(self, key);
+    return struct_exists(data, key);
 }
 
 static save = function(){
-    var _save_copy = variable_clone(_save_copy);
+    var _save_copy = variable_clone(self);
     struct_remove(save_copy, "system");
     struct_remove(save_copy, "p_data");
     var _mems = clean_unit_array(members);
     _save_copy.members = [];
     for (var i=0;i<array_length(_mems);i++){
-        _save_copy.members[i] = _mems.uid
+        _save_copy.members[i] = _mems[i].uid;
     }
     return __save_copy;
 }
 
 static load = function(data){
-    move_data_to_curren_scope(data);
+    move_data_to_current_scope(data);
     for (var i=0;i<array_length(members);i++){
         members[i] = fetch_unit_uid(members[i]);
     }
@@ -137,13 +137,6 @@ static __inquisition_mission_options = function(){
     return _options
 }
 
-static __popup_call = function(func){
-    var _func = function(){
-        pop_data.mission[$ func]();
-    }
-    return _func;
-}
-
 static __popup_delete = function(){
     with(obj_popup){
         popup_default_close();
@@ -160,7 +153,7 @@ static __check_delete = function(){
             }
         }
         if (_prob > -1){
-            array_delete(system.p_problem, _prob,1);
+            array_delete(system.p_problem[planet], _prob,1);
             array_delete(p_data.problems, _prob,1);
         }
     }   
@@ -880,7 +873,7 @@ static __mech_raider_resolve = function() {
     var _alert_text = $"Mechanicus Mission Failed: Land Raider testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
-    p_data.alter_disposition(eFACTION.MECHANICUS, -6);
+    alter_disposition(eFACTION.MECHANICUS, -6);
     delete_mission = true;
 }
 
@@ -904,7 +897,7 @@ static __mech_bionics_resolve = function() {
     var _alert_text = $"Mechanicus Mission Failed: bionics testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
-    p_data.alter_disposition(eFACTION.MECHANICUS, -6);
+    alter_disposition(eFACTION.MECHANICUS, -6);
     delete_mission = true;
 }
 
@@ -937,7 +930,7 @@ static __mech_tomb_per_turnSexploring = function() {
             // XDDDDD
             scr_popup("Mechanicus Mission Failed", $"The Mechanicus Research team on planet {p_data.name()} have been killed by Necrons in the absence of your astartes.  The Mechanicus are absolutely livid, doubly so because of the promised security they did not recieve.", "", "");
             obj_controller.turns_ignored[3] += choose(8, 10, 12, 14, 16, 18, 20, 22, 24);
-            p_data.alter_disposition(eFACTION.MECHANICUS, -25);
+            alter_disposition(eFACTION.MECHANICUS, -25);
             delete_mission = true;
         }
     } else {
@@ -983,7 +976,7 @@ static __mech_tomb_resolve = function() {
     var _alert_text = $"Mechanicus Mission Failed: Necron Tomb Study at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text, system.name);
-    p_data.alter_disposition(eFACTION.MECHANICUS, -15);
+    alter_disposition(eFACTION.MECHANICUS, -15);
     delete_mission = true;
 }
 
@@ -1290,11 +1283,11 @@ static __inquisition_tomb_per_turn = function() {
         options: [
             {
                 str1: "Begin the Mission",
-                choice_func: __popup_call("necron_tomb_mission_start"),
+                choice_func: necron_tomb_mission_start,
             },
             {
                 str1: "Not Yet",
-                choice_func: __popup_call("__popup_delete"),
+                choice_func:__popup_delete,
             },
         ],
     };
@@ -1304,8 +1297,8 @@ static __inquisition_tomb_per_turn = function() {
 static inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
-        {str1: "Continue", choice_func: __popup_call("necron_tomb_mission_sequence")}, 
-        {str1: "Return to the surface", choice_func: __popup_call("__popup_delete")}
+        {str1: "Continue", choice_func: necron_tomb_mission_sequence}, 
+        {str1: "Return to the surface", choice_func: __popup_delete}
     ]);
     obj_popup.image = "necron_tunnels_1";
     obj_popup.text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";
@@ -1732,15 +1725,15 @@ static __inquisition_purge_accept = function(){
 }
 
 static __inquisition_purge_on_purge = function(){
-    switch (data.purge_type){
+    switch (purge_data.action_type){
         case eDROP_TYPE.PURGESELECTIVE:
             delete_mission = true;
 
             alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
-            _popup_text = "Your marines drop fast and hard, blowing through guards and mercenaries with minimal resistance.  Before ten minutes have passed all your targets are executed.";
+            var _popup_text = "Your marines drop fast and hard, blowing through guards and mercenaries with minimal resistance.  Before ten minutes have passed all your targets are executed.";
             scr_event_log("", $"Inquisition Mission Completed: The unruly Nobles of {name()} have been purged.");
-            add_disposition(choose(1, 2, 3));  
+            p_data.add_disposition(choose(1, 2, 3));  
             scr_popup("Inquisition Mission Completed", _popup_text, "inquisition");      
             break;
         case eDROP_TYPE.PURGEFIRE:
@@ -1748,9 +1741,9 @@ static __inquisition_purge_on_purge = function(){
 
             alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
-            _popup_text = $"Your marines scour the underhive of {name()}, spraying mutants down with promethium as they go.  It takes several days but a sizeable dent is put in their numbers.";
+            var _popup_text = $"Your marines scour the underhive of {name()}, spraying mutants down with promethium as they go.  It takes several days but a sizeable dent is put in their numbers.";
             scr_event_log("", $"Inquisition Mission Completed: The mutants of {name()} have been cleansed by promethium.");
-            add_disposition(choose(1, 2, 3));
+            p_data.add_disposition(choose(1, 2, 3));
             scr_popup("Inquisition Mission Completed", _popup_text, "inquisition"); 
             break;     
     }
