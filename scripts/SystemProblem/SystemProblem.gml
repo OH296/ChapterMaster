@@ -8,6 +8,7 @@ data = data;
 stage_id = "";
 self.system = system;
 zero_timer_checks = true;
+per_turn_checks = true;
 delete_mission = false;
 members = [];
 if (struct_exists(data, "stage")){
@@ -39,7 +40,7 @@ static __handle_triggered_mission_func = function(func){
 }
 
 static basic_turn_end = function(){
-	if (p_data.system.storm <= 0){
+	if (system.storm <= 0){
 		timer--;
 	}
 	if ((timer > -1) && per_turn_checks) {
@@ -53,11 +54,11 @@ static basic_turn_end = function(){
 }
 
 static find_func_ref = function(trigger_string){
-    var _func_string = "__" + p_id + "_" trigger_string;
+    var _func_string = "__" + p_id + "_" + trigger_string;
     if (stage_id != ""){
         _func_string += "S" + stage_id;
     }
-    return return _func_string
+    return _func_string
 }
 static find_func = function(trigger_string){
     var _func_string = find_func_ref(trigger_string);
@@ -76,13 +77,13 @@ static mark = function(colour){
 static __init = function(){
     var _func = find_func("init");
     if (!is_undefined(_func)){
-        __handle_triggered_mission_func();
+        __handle_triggered_mission_func(_func);
     }  
 }
 
 __init();
 
-static great_crusade_init = function(){
+static __great_crusade_init = function(){
     //TODO decide the target/purpose of the crusade to create more variety and to help with post crusade rewards
     var _nearest_player_fleet = data.nearest_player_fleet;
     var _travel_leeway = 10;
@@ -92,10 +93,10 @@ static great_crusade_init = function(){
     timer = get_viable_travel_time(_travel_leeway, _nearest_player_fleet.x, _nearest_player_fleet.y, system.x, system.y, _nearest_player_fleet, false);
     scr_popup("Crusade", $"Fellow Astartes legions are preparing to embark on a Crusade to a nearby sector.  Your forces are expected at {system.name}; {timer} months from now your ships there shall begin their journey.", "crusade", "");
     mark("green")
-    scr_event_log("", $"A Crusade is called; our forces are expected at {system.name} in {timer} months.", star_id.name);
+    scr_event_log("", $"A Crusade is called; our forces are expected at {system.name} in {timer} months.", system.name);
 }
 
-static great_crusade_resolve = function() {
+static __great_crusade_resolve = function() {
     var _player_fleet = scr_orbiting_player_fleet(system);
 
     if (_player_fleet != -1) {

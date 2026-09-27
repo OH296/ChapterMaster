@@ -141,11 +141,11 @@ static __handle_triggered_mission_func = function(func){
 }
 
 static find_func_ref = function(trigger_string){
-    var _func_string = "__" + p_id + "_" trigger_string;
+    var _func_string = "__" + p_id + "_" + trigger_string;
     if (stage_id != ""){
         _func_string += "S" + stage_id;
     }
-    return return _func_string
+    return _func_string
 }
 static find_func = function(trigger_string){
     var _func_string = find_func_ref(trigger_string);
@@ -923,7 +923,7 @@ static __mech_tomb_per_turn = function() {
     }
 }
 
-static ___mech_tomb_resolve = function() {
+static __mech_tomb_resolve = function() {
     var _alert_text = $"Mechanicus Mission Failed: Necron Tomb Study at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text, system.name);
@@ -1201,7 +1201,7 @@ static __inquisition_tomb_init = function(){
     _text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {timer} months.  Can your chapter handle this mission?";
     var _pop_data = {
         mission: self,
-        options: inquisition_mission_options(),
+        options: __inquisition_mission_options(),
     };
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
 }
@@ -1212,7 +1212,7 @@ static __inquisition_tomb_accept = function(){
 }
 
 static __inquisition_tomb_per_turn = function() {
-    if (p_player[run] <= 0){
+    if (p_data.player_forces <= 0){
         exit;
     }
     LOGGER.info($"player on planet with necron mission {name} planet: {planet}");
