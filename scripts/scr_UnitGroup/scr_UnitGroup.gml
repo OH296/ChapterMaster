@@ -107,7 +107,7 @@ function UnitGroup(units = []) constructor {
                 var _squad = fetch_squad(_squads[s]);
                 var _squad_units = _replica.get_from({squad: _squads[s]}, true, true);
 
-                if (_squad_units.number() < array_length(_squad.members)) {
+                if (_squad_units.number() < array_length(_squad.get_members())) {
                     _squad_units.move_to_company(company, false, false);
                     continue;
                 } else {
@@ -503,7 +503,7 @@ function UnitGroup(units = []) constructor {
                     continue;
                 }
                 var _squad = fetch_squad(_unit.squad);
-                var _members_count = array_length(_squad.members);
+                var _members_count = array_length(_squad.get_members());
                 var _conditions = {
                     squad: _unit.squad,
                     max_wanted: _members_count,

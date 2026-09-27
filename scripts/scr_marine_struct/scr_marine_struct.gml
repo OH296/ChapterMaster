@@ -1841,7 +1841,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data = {}
         if (squad != "none") {
             var _squad = get_squad();
 
-            for (var r = 0; r < array_length(_squad.members); r++) {
+            for (var r = 0; r < array_length(_squad.get_members()); r++) {
                 squad_member = _squad.members[r];
                 if (squad_member.uid == uid) {
                     array_delete(_squad.members, r, 1);

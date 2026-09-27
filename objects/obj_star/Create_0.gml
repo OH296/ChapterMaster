@@ -153,7 +153,7 @@ function has_garrison() {
             if (_operative.job != "garrison") {
                 continue;
             }
-            if (array_length(fetch_squad(_operative.reference).members) > 0) {
+            if (array_length(fetch_squad(_operative.reference).get_members()) > 0) {
                 return true;
             }
         }
