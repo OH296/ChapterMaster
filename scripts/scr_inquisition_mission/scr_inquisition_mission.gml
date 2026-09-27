@@ -115,7 +115,7 @@ function scr_inquisition_mission(event, forced_mission = eINQUISITION_MISSION.RA
                 var _eta = scr_mission_eta(_star.x, _star.y, 1);
                 _eta = min(max(_eta, 6), 50);
 
-                _star.get_planet_data(planet).new_problem("iquisition_tyranid_org", _eta);
+                _star.get_planet_data(planet).new_problem("inquisition_tyranid_org", _eta);
                 break;
             case eINQUISITION_MISSION.ETHEREAL:
                 mission_inquisition_ethereal();
@@ -164,9 +164,6 @@ function mission_inquisition_ethereal() {
     var text = $"An Inquisitor is trusting you with a special mission.";
     text += $"They require that you capture a Tau Ethereal from the planet {string(_star.name)} {scr_roman(planet)} for research purposes. You have {string(_eta)} months to locate and capture one. Can your chapter handle this mission?";
     scr_popup("Inquisition Mission", text, "inquisition", $"ethereal|{string(_star.name)}|{string(planet)}|{string(_eta + 1)}|");
-}
-
-function mission_inquisition_tyranid_organism(worlds) {
 }
 
 function mission_inquisition_necron_world(tomb_worlds) {

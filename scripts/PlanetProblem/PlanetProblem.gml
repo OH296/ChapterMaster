@@ -292,7 +292,7 @@ static __feature_selected_draw = function(){
     }
 
     if (draw_data.button_text != "") {
-        var _button = draw_unit_buttons([draw_data.x1 + ((draw_data.w / 2) - (string_width(button_text) / 2)), draw_data.y1 + 40 + _text_body_height + 10], button_text);
+        var _button = draw_unit_buttons([draw_data.x1 + ((draw_data.w / 2) - (string_width(draw_data.button_text) / 2)), draw_data.y1 + 40 + _text_body_height + 10], draw_data.button_text);
         if (draw_data.button_tooltip != "" && scr_hit(_button)) {
             tooltip_draw(draw_data.button_tooltip);
         }
@@ -409,12 +409,12 @@ static __set_members_job_to_mission = function(){
 }
 
 static __hunt_beast_feature_selected = function(){
-    draw_data.mission_description = $"The governor of {planet_name} has bemoaned the raiding of huge beasts on the fringes of the planets largest city, the numbers have swelled recently and are causing huge damage to the planets small economy. You could send a force to intervene, it would provide a fine test of metal for any that partake.";
+    draw_data.mission_description = $"The governor of {p_data.name()} has bemoaned the raiding of huge beasts on the fringes of the planets largest city, the numbers have swelled recently and are causing huge damage to the planets small economy. You could send a force to intervene, it would provide a fine test of metal for any that partake.";
     draw_data.help = "This is a good opportunity to provide experience and training, having at least one marine with experience in such matters would be advisable";
     draw_data.button_text = "Send Hunters";
-    button_function = function() {
+    draw_data.button_function = function() {
         var _dudes = collect_role_group("all", system.name);
-        select_units(_dudes, ,"Beast Hunt", number: 3});
+        select_units(_dudes, ,"Beast Hunt", number: 3);
     };    
 }
 
@@ -864,7 +864,7 @@ static __hunt_fallen_per_turn = function() {
             );
         } else {
             delete_mission = true;
-            var _tixt = "Your marines have scoured {p_data.name()} in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
+            var _tixt = $"Your marines have scoured {p_data.name()} in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
             scr_popup("Hunt the Fallen", _tixt, "fallen", "");
             scr_event_log("", $"Mission Successful: No Fallen located upon {p_data.name()}");
         }
@@ -1711,7 +1711,7 @@ static __inquisition_tyranid_org_setup_battle = function(){
 static __inquisition_tyranid_org_on_enemy_casulties = function(){
     var _c_data = casualty_packet;
     if (array_contains(["Termagaunt", "Hormagaunt"], _c_data.weapon) && (_c_data.casulties > 0)) {
-        data.captured_gaunt += casulties;
+        data.captured_gaunt += _c_data.casulties;
     }
 }
 
@@ -1719,8 +1719,8 @@ static __inquisition_tyranid_org_battle_final_message = function(){
     if (obj_ncombat.defeat || data.captured_gaunt == 0) {
         exit;
     }
-    var _gaunts = string_plural_count("Gaunt organism", captured_gaunt);
-    _newline = $"{_gaunts} have been captured.";
+    var _gaunts = string_plural_count("Gaunt organism", data.captured_gaunt);
+    var _newline = $"{_gaunts} have been captured.";
     obj_ncombat.combat_log.push(_newline, eMSG_COLOR.YELLOW);
 
 }
@@ -1754,8 +1754,8 @@ static __hive_fleet_to_cult_init = function(){
     _fleet.image_index = floor(_fleet.capital_number + (_fleet.frigate_number / 2) + (_fleet.escort_number / 4));
     _fleet.image_alpha = 0;
 
-    _fleet.action_x = x;
-    _fleet.action_y = y;
+    _fleet.action_x = system.x;
+    _fleet.action_y = system.y;
 
     _fleet.action_eta = timer;
     _fleet.action = "move";
