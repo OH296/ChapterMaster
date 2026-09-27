@@ -17,6 +17,8 @@
     "unit_select" - runs after selecting units in the unit selection screen (scr_manage_task_selector)
     "init" - runs imediatly after problem is created often used to poopulate initial popupop ir stack popup for turn end
 
+    "accept" is an edge case currently reserved for binding to button clicks in popups
+
 - other than these entry points and any other later defined poisitions mission specific code should not run outsiide of the PlanetProblem container
 
 - to set an entry point up simply register the function as a static e.g
@@ -1196,16 +1198,16 @@ static __protect_raider_squad_selected = function() {
 
 static __inquisition_tomb_init = function(){
     var _text = $"The Inquisition is trusting you with a special mission.  They have reason to suspect the Necron Tomb on planet {p_data.name()}";
-    _text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {string(estimate)} months.  Can your chapter handle this mission?";
+    _text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {timer} months.  Can your chapter handle this mission?";
     var _pop_data = {
         mission: self,
-        options: inquisition_mission_options("__inquisition_tomb_accept"),
+        options: inquisition_mission_options(),
     };
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
 }
 
 static __inquisition_tomb_accept = function(){
-    var _text = $"Inquisition Mission Accepted: A bomb must be planted within the Necron Tomb on {p_data.name()} within {string(estimate)} months.";
+    var _text = $"Inquisition Mission Accepted: A bomb must be planted within the Necron Tomb on {p_data.name()} within {timer} months.";
     scr_event_log("", _text, system.name);
 }
 
@@ -1228,7 +1230,6 @@ static __inquisition_tomb_per_turn = function() {
         mission: self,
         loc: system.name,
         planet: planet,
-        estimate: 999,
         number: _number,
         options: [
             {
@@ -1667,9 +1668,9 @@ static __inquisition_purge_init = function(){
 static __inquisition_purge_accept = function(){
     var _text = "Inquisition Mission Accepted:"
     if (data.purge_type == eDROP_TYPE.PURGEFIRE){
-        _text += $" The mutants beneath {p_data.name()} must be cleansed by fire within {estimate} months.";
+        _text += $" The mutants beneath {p_data.name()} must be cleansed by fire within {timer} months.";
     } else {
-        _text += $" The nobles of {p_data.name()} must be selectively purged within {estimate} months."
+        _text += $" The nobles of {p_data.name()} must be selectively purged within {timer} months."
     }
     scr_event_log("", _text, system.name);
 }
