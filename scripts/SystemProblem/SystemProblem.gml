@@ -58,7 +58,7 @@ static find_func_ref = function(trigger_string){
     if (stage_id != ""){
         _func_string += "S" + stage_id;
     }
-    return _func_string
+    return _func_string;
 }
 static find_func = function(trigger_string){
     var _func_string = find_func_ref(trigger_string);

@@ -15,6 +15,7 @@
     "battle_aftermath" - runs post combat during obj_ncombat alarm_7
     "squad_selected" -  runs after selecting a squad inn the squad select window (scr_manage_task_selector)
     "unit_select" - runs after selecting units in the unit selection screen (scr_manage_task_selector)
+    "on_purge" - at the top of PlanetData.purge() passes in {action_type, action_score} as purge_data overrides standdard purge popups
     "init" - runs imediatly after problem is created often used to poopulate initial popupop ir stack popup for turn end
 
     "accept" is an edge case currently reserved for binding to button clicks in popups
@@ -66,6 +67,10 @@ static mark = function(colour){
     with (p_data.system){
         new_star_event_marker(colour)
     }
+}
+
+static has_data = function(key){
+    return struct_exists(self, key);
 }
 
 static save = function(){
@@ -178,7 +183,12 @@ static find_func_ref = function(trigger_string){
     if (stage_id != ""){
         _func_string += "S" + stage_id;
     }
-    return _func_string
+    return _func_string;
+}
+
+static has_func = function(trigger_string){
+    var _func_string = find_func_ref(trigger_string);
+    return struct_exists(self,_func_string);
 }
 static find_func = function(trigger_string){
     var _func_string = find_func_ref(trigger_string);
@@ -256,6 +266,16 @@ static on_unit_selection = function(){
         __handle_triggered_mission_func(_func);   
     }    
     instance_deactivate_object(obj_star);
+}
+
+static on_purge = function(){
+    if (!struct_exists(self, "purge_data")){
+        exit;
+    }
+    var _func = find_func("on_purge");
+    __handle_triggered_mission_func(_func);
+
+    struct_remove(self, "purge_data");
 }
 
 static __init = function(){
@@ -1709,6 +1729,31 @@ static __inquisition_purge_accept = function(){
         _text += $" The nobles of {p_data.name()} must be selectively purged within {timer} months."
     }
     scr_event_log("", _text, system.name);
+}
+
+static __inquisition_purge_on_purge = function(){
+    switch (data.purge_type){
+        case eDROP_TYPE.PURGESELECTIVE:
+            delete_mission = true;
+
+            alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
+
+            _popup_text = "Your marines drop fast and hard, blowing through guards and mercenaries with minimal resistance.  Before ten minutes have passed all your targets are executed.";
+            scr_event_log("", $"Inquisition Mission Completed: The unruly Nobles of {name()} have been purged.");
+            add_disposition(choose(1, 2, 3));  
+            scr_popup("Inquisition Mission Completed", _popup_text, "inquisition");      
+            break;
+        case eDROP_TYPE.PURGEFIRE:
+            delete_mission = true;
+
+            alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
+
+            _popup_text = $"Your marines scour the underhive of {name()}, spraying mutants down with promethium as they go.  It takes several days but a sizeable dent is put in their numbers.";
+            scr_event_log("", $"Inquisition Mission Completed: The mutants of {name()} have been cleansed by promethium.");
+            add_disposition(choose(1, 2, 3));
+            scr_popup("Inquisition Mission Completed", _popup_text, "inquisition"); 
+            break;     
+    }
 }
 
 }
