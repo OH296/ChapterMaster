@@ -259,6 +259,9 @@ function deserialize(save_data) {
                 if (_var_name == "p_problem") {
                     var _planet_problems = _planet[$ _var_name];
                     for (var f = 0; f < array_length(_planet_problems); f++) {
+                        if (!is_struct(_planet_problems)){
+                            continue;
+                        }
                         var _new_prob = new PlanetProblem("", 0, {}, {_planet:p,system:id});
                         _new_prob.load(_planet_problems[f]);
                         array_push(p_problem, _new_prob);
