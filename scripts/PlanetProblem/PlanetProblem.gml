@@ -1,6 +1,7 @@
 //All missions that run on a planet now need their own PlanetProblem instance
 //missions for the most part can only run from predefined points in the code
 // to run from each of these points easch mission must have a registered function these functions are then called implicitly
+//each function follows the format  `__<p_id>_<entry_flag>`
 /* the current entry points for the code are 
     "per_turn" - runs every end turn to check for certain conditions often contains reactions to actions player has done last turn
     "resolve" - runs when the mission timer hits 0 often contains the failiure conditions for the mission
@@ -20,7 +21,7 @@
     if i create static __inquisition_are_dicks_per_turn once a "inquisition_are_dicks" problem is registered on a planet via 
     PlanetData.new_problem("inquisition_are_dicks",200) the per turn check will run no other code is required
 other info
-    - set a mission for deletion by settinng delete_mission = true; this will delete the mission after the current function
+    - set a mission for deletion by setting delete_mission = true; this will delete the mission after the current function
     has finished executing and 
 */
 /// @param {sring} name
