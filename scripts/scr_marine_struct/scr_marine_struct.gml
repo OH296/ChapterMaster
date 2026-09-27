@@ -2451,7 +2451,8 @@ function clean_unit_array(array){
             array_delete(array, i, 1);
             continue;
         }
-        if (fetch_unit([_unit.company, _unit.marine_number]).uid != _unit.uid){
+        var _current_unit = fetch_unit([_unit.company, _unit.marine_number]);
+        if (!is_struct(_current_unit) || _current_unit.uid != _unit.uid){
             array_delete(array, i, 1);
             continue;            
         }
