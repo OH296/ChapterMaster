@@ -33,12 +33,12 @@ other info
 /// @param {Real} timer
 /// @param {struct} data
 /// @param {constructor PlanetData} planet
-function PlanetProblem(name, timer, data, planet) constructor{
-timer = timer;
+function PlanetProblem(_name, _timer, _data, _planet_data) constructor{
+timer = _timer;
 uid = scr_uuid_generate();
-p_id = name;
-self.data = data;
-p_data = planet;
+p_id = _name;
+data = _data;
+p_data = _planet_data;
 planet = p_data.planet;
 system = p_data.system;
 f_type = eP_FEATURES.MISSION;
@@ -75,8 +75,8 @@ static has_data = function(key){
 
 static save = function(){
     var _save_copy = variable_clone(self);
-    struct_remove(save_copy, "system");
-    struct_remove(save_copy, "p_data");
+    struct_remove(_save_copy, "system");
+    struct_remove(_save_copy, "p_data");
     var _mems = clean_unit_array(members);
     _save_copy.members = [];
     for (var i=0;i<array_length(_mems);i++){
@@ -173,9 +173,6 @@ static __handle_triggered_mission_func = function(func){
 
 static find_func_ref = function(trigger_string){
     var _func_string = "__" + p_id + "_" + trigger_string;
-    if (stage_id != ""){
-        _func_string += "S" + stage_id;
-    }
     return _func_string;
 }
 
@@ -191,7 +188,6 @@ static find_func = function(trigger_string){
     return undefined;
 }
 static basic_turn_end = function(){
-	__refresh_data();
 	if (p_data.system.storm <= 0){
 		timer--;
 	}
@@ -261,6 +257,47 @@ static on_unit_selection = function(){
     instance_deactivate_object(obj_star);
 }
 
+static planet_draw_feature_selected = function(){
+    if (!struct_exists(self, "draw_data")){
+        exit;
+    }
+    draw_data.mission_description = "";
+    draw_data.button_text = "";
+    draw_data.button_function = noone;
+    draw_data.help = "";
+    var _func = find_func("feature_selected");
+    __handle_triggered_mission_func(_func);
+    __feature_selected_draw();
+    struct_remove(self, "draw_data");
+}
+
+static __feature_selected_draw = function(){
+    draw_text_transformed(draw_data.x1 + (draw_data.w / 2), draw_data.y1 + 5, mission_name_key(feature.p_id), 2, 2, 0);
+    draw_set_halign(fa_left);
+    draw_set_color(c_gray);
+    draw_text_ext(draw_data.x1 + 10, draw_data.y1 + 40, draw_data.mission_description, -1, draw_data.w - 20);
+    var _text_body_height = string_height_ext(draw_data.mission_description, -1, draw_data.w - 20);
+    if (draw_data.help != "") {
+        draw_text_ext(draw_data.x1 + 10, draw_data.y1 + 40 + _text_body_height + 10, draw_data.help, -1, draw_data.w - 20);
+        _text_body_height += string_height_ext(draw_data.mission_description, -1, draw_data.w - 20) + 10;
+    }
+
+    if (button_text != "") {
+        var _button = draw_unit_buttons([draw_data.x1 + ((draw_data.w / 2) - (string_width(button_text) / 2)), draw_data.y1 + 40 + _text_body_height + 10], button_text);
+        if (draw_data.button_tooltip != "" && scr_hit(_button)) {
+            tooltip_draw(draw_data.button_tooltip);
+        }
+        if (point_and_click(_button)) {
+            if (is_callable(draw_data.button_function)) {
+                draw_data.button_function();
+                destroy = true;
+            } else {
+                tooltip_draw("no implemented function");
+            }
+        }
+    }    
+}
+
 static on_purge = function(){
     if (!struct_exists(self, "purge_data")){
         exit;
@@ -306,6 +343,14 @@ static __init = function(){
 }
 __init();
 
+
+static select_units = function(select_from, purpose_string, number, selections = []){
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet: planet, selections: []});
+}
+
+static select_squads = function(select_from, purpose_string, number, selections = []){
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet: planet, selections: [], select_type: eMISSION_SELECT_TYPE.SQUADS});
+}
 // by default mission battles do not reduce the fortification level or enemy power on a planet
 static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
     var _battle_index = obj_turn_end.battles++;
@@ -354,9 +399,18 @@ static __set_members_job_to_mission = function(){
     }    
 }
 
+static __hunt_beast_feature_selected = function(){
+    mission_description = $"The governor of {planet_name} has bemoaned the raiding of huge beasts on the fringes of the planets largest city, the numbers have swelled recently and are causing huge damage to the planets small economy. You could send a force to intervene, it would provide a fine test of metal for any that partake.";
+    help = "This is a good opportunity to provide experience and training, having at least one marine with experience in such matters would be advisable";
+    button_text = "Send Hunters";
+    button_function = function() {
+        var _dudes = collect_role_group("all", system.name);
+        select_units(_dudes, ,"Beast Hunt", number: 3});
+    };    
+}
 
 
-static __beast_hunt_unit_select = function() {
+static __hunt_beast_unit_select = function() {
     if (stage_id == "preliminary") {
         __set_members_job_to_mission();
         var _numeral_name = p_data.name()
@@ -376,7 +430,7 @@ static __beast_hunt_unit_select = function() {
     }
 }
 
-static __beast_hunt_resolve = function() {
+static __hunt_beast_resolve = function() {
     var _man_conditions = {
         "job": "hunt_beast",
         "max": 3,
@@ -444,6 +498,16 @@ static __beast_hunt_resolve = function() {
     }
 }
 
+static __train_forces_feature_selected = function() {
+    draw_data.mission_description = $"The governor of {p_data.name()} fears the planet will not hold in the case of major incursion, it has not seen war in some time and he fears the ineptitude of the commanders available, he asks for aid in planning a thorough plan for defense and schedule of works for a period of at least 6 months.";
+    draw_data.help = $"A task best suited to the more knowledgable or wise of your Commanders";
+    draw_data.button_text = "Assign Officer";
+    draw_data.button_function = function() {
+        var _dudes = collect_role_group(SPECIALISTS_CAPTAIN_CANDIDATES, system.name);
+        select_units(_dudes,"Select Officer", 1);
+        obj_select.feature.destroy = true;
+    };    
+}
 
 static __train_forces_unit_select = function() {
     if (stage_id != "preliminary" || array_length(members) == 0) {
@@ -662,7 +726,6 @@ static __inquisition_recon_per_turn = function() {
 
 }
 static __inquisition_recon_resolve = function() {
-    __refresh_data();
     var _alert_text = "Inquisition Mission Failed: Investigate ";
     alter_disposition(eFACTION.INQUISITION, -5);
     _alert_text += $"{p_data.name()}.";
@@ -901,7 +964,21 @@ static __mech_bionics_resolve = function() {
     delete_mission = true;
 }
 
-static __mech_tomb_per_turnSexploring = function() {
+static __mech_tomb_per_turn = function() {
+    if (stage_id != "exploring"){
+        var _marines = collect_role_group("all", [system.name, planet, -1]);
+        if (array_length(_marines) >= 20) {
+            stage_id = "exploring";
+            timer = 999;
+            data.turns = 0;
+            scr_popup("Mechanicus Research", $"The Mechanicus Research team on planet {p_data.name()} has taken note of your Astartes and are now prepared to begin their research.  Your marines are to stay on the planet until further notice.", "necron_cave", "");
+        }
+    } else {
+        __mech_tomb_exploring();
+    }
+}
+
+static __mech_tomb_exploring = function() {
     data.turns++;
     var _battli = 0;
     var _roll1 = roll_dice_chapter(1, 100 + data.turns, "low");
@@ -959,16 +1036,6 @@ static __mech_tomb_per_turnSexploring = function() {
             per_turn_checks = false;
             zero_timer_checks = false;
         }
-    }
-}
-
-static __mech_tomb_per_turn = function() {
-    var _marines = collect_role_group("all", [system.name, planet, -1]);
-    if (array_length(_marines) >= 20) {
-        stage_id = "exploring";
-        timer = 999;
-        data.turns = 0;
-        scr_popup("Mechanicus Research", $"The Mechanicus Research team on planet {p_data.name()} has taken note of your Astartes and are now prepared to begin their research.  Your marines are to stay on the planet until further notice.", "necron_cave", "");
     }
 }
 
@@ -1047,6 +1114,10 @@ static __mech_mars_resolve = function() {
     }
 }
 
+static __provide_garrison_feature_selected = function() {
+    if (data.reason == "importance") {}
+    draw_data.mission_description = $"The governor of {p_data.name()} has requested a force of marines might stay behind following your departure.\n\n\n assign a squad to garrison to initiate mission, The garrison leeader will need to be capable of conducting himself in a diplomatic manner in order for the garrison duration to be a success";
+}
 
 static __provide_garrison_init = function() {
     if (stage_id != "preliminary") {
@@ -1075,11 +1146,11 @@ static __garrison_mission_resolve = function() {
     p_data.garrisons.update();
     if (p_data.current_owner != eFACTION.IMPERIUM || !p_data.garrisons.garrison_force) {
         p_data.add_disposition(-20);
-        scr_popup($"Agreed Garrison of {name()}", $"your agreed garrison of  {name()} was cut short by your chapter the planetary governor has expressed his displeasure (disposition -20)", "", "");
+        scr_popup($"Agreed Garrison of {p_data.name()}", $"your agreed garrison of  {p_data.name()} was cut short by your chapter the planetary governor has expressed his displeasure (disposition -20)", "", "");
         return;
     }
 
-    var _mission_string = $"The garrison on {name()} has finished the period of garrison support agreed with the planetary governor.";
+    var _mission_string = $"The garrison on {p_data.name()} has finished the period of garrison support agreed with the planetary governor.";
     var _result = p_data.garrisons.garrison_disposition_change();
     if (!p_data.garrisons.garrison_leader) {
         p_data.garrisons.find_leader();
@@ -1115,7 +1186,18 @@ static __garrison_mission_resolve = function() {
             }
         }
     }
-    scr_popup($"Agreed Garrison of {name()} complete", _mission_string, "", "");
+    scr_popup($"Agreed Garrison of {p_data.name()} complete", _mission_string, "", "");
+}
+
+static protect_raiders_feature_selected =  function() {
+    draw_data.mission_description = $"The governor of {p_data.name()} has sent many requests to the sector commander for help with defending against xenos raids on the populace of the planet, the reports seem to suggest the xenos in question are in fact dark eldar.";
+    draw_data.help = "Set a squads to ambush";
+    draw_data.button_text = "Send Squad";
+    draw_data.button_tooltip = "milage may vary on playability of this mission progress at your own risk";
+    button_function = function() {
+        var _dudes = collect_role_group("all", system.name);
+        select_squads(_dudes, "Select Squad for Ambush", 1)
+    }; 
 }
 
 static __protect_raiders_battle_aftermath = function() {
@@ -1298,7 +1380,7 @@ static inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
         {str1: "Continue", choice_func: necron_tomb_mission_sequence}, 
-        {str1: "Return to the surface", choice_func: __popup_delete}
+        {str1: "Return to the surface", choice_func: __popup_delete }
     ]);
     obj_popup.image = "necron_tunnels_1";
     obj_popup.text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";
@@ -1650,9 +1732,9 @@ static __inquisition_tyranid_org_battle_aftermath = function(){
 }
 
 static __hive_fleet_to_cult_init = function(){
-    var xx = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
-    var yy = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;
-    var fleet = create_enemy_fleet(xx, yy, eFACTION.TYRANIDS);
+    var draw_data.x1 = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
+    var draw_data.y1 = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;
+    var fleet = create_enemy_fleet(draw_data.x1, draw_data.y1, eFACTION.TYRANIDS);
     fleet.sprite_index = spr_fleet_tyranid;
     fleet.image_speed = 0;
 
@@ -1732,7 +1814,7 @@ static __inquisition_purge_on_purge = function(){
             alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
             var _popup_text = "Your marines drop fast and hard, blowing through guards and mercenaries with minimal resistance.  Before ten minutes have passed all your targets are executed.";
-            scr_event_log("", $"Inquisition Mission Completed: The unruly Nobles of {name()} have been purged.");
+            scr_event_log("", $"Inquisition Mission Completed: The unruly Nobles of {p_data.name()} have been purged.");
             p_data.add_disposition(choose(1, 2, 3));  
             scr_popup("Inquisition Mission Completed", _popup_text, "inquisition");      
             break;
@@ -1741,15 +1823,23 @@ static __inquisition_purge_on_purge = function(){
 
             alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
-            var _popup_text = $"Your marines scour the underhive of {name()}, spraying mutants down with promethium as they go.  It takes several days but a sizeable dent is put in their numbers.";
-            scr_event_log("", $"Inquisition Mission Completed: The mutants of {name()} have been cleansed by promethium.");
+            var _popup_text = $"Your marines scour the underhive of {p_data.name()}, spraying mutants down with promethium as they go.  It takes several days but a sizeable dent is put in their numbers.";
+            scr_event_log("", $"Inquisition Mission Completed: The mutants of {p_data.name()} have been cleansed by promethium.");
             p_data.add_disposition(choose(1, 2, 3));
             scr_popup("Inquisition Mission Completed", _popup_text, "inquisition"); 
             break;     
     }
 }
 
+static __join_communion_feature_selected = function(){
+    draw_data.mission_description = $"The governor of {p_data.name()} has Invited a delegate of your forces to take part in ceremony.";
+    draw_data.help  = "This mission is not yet completed"
 }
 
+static __governor_purge_enemies_feature_selected = function(){
+    draw_data.mission_description = $"The governor of {p_data.name()} has expressed his distaste of the neighboring governance of {target.name} {feature.target} he has expressed his views that they engage in heretical ways and harbor xenos enemies though in truth it is more likely that he simply wishes his political enemies disposed of, whatever the case his planet has great economic means and he has made bare his plans to compensate the emperors angels for their aid";
+}
+
+}
 
 

@@ -967,6 +967,11 @@ enum eMISSION_SELECT_TYPE {
 }
 
 function group_selection(group, selection_data = {}) {
+    if (instance_exists(obj_star_select)){
+        if (is_struct(obj_star_select, "feature")){
+            obj_star_select.feature.destroy = true;
+        }
+    }
     try {
         var _unit, s, unit_location;
         obj_controller.selection_data = selection_data;

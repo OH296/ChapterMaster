@@ -618,7 +618,7 @@ function mission_inquistion_purge() {
     var text = "The Inquisition is trusting you with a special mission.";
     var _purge_type = eDROP_TYPE.PURGEFIRE;
     if (mission_flavour < 3){
-        eDROP_TYPE.PURGESELECTIVE;
+        _purge_type = eDROP_TYPE.PURGESELECTIVE;
     } 
 
     var _p_data = _star.get_planet_data(planet);

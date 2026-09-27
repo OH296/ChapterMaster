@@ -91,7 +91,7 @@ function scr_new_governor_mission(planet, problem = "") {
         if (planet_type == "Death") {
             problem = choose("hunt_beast", "provide_garrison");
         } else if (planet_type == "Hive") {
-            problem = choose("show_of_power", "provide_garrison", "purge_enemies", "raid_black_market");
+            problem = choose("show_of_power", "provide_garrison", "governor_purge_enemies", "raid_black_market");
         } else if (planet_type == "Temperate") {
             problem = choose("provide_garrison", "train_forces", "join_parade");
         } else if (planet_type == "Shrine") {
@@ -118,7 +118,7 @@ function scr_new_governor_mission(planet, problem = "") {
                 exit;
             }
             mission_data.reason = choose("stability", "importance");
-        } else if (problem == "purge_enemies") {
+        } else if (problem == "governor_purge_enemies") {
             var enemy = 0;
             if (planets > 1) {
                 for (var i = 1; i <= planets; i++) {

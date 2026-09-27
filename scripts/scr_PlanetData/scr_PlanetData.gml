@@ -1430,7 +1430,7 @@ function PlanetData(_planet, _system) constructor {
 
         for (var i = 0; i < array_length(problems); i++) {
             var _problem = problems[i];
-            if (problem_data.stage_id == "preliminary") {
+            if (_problem.stage_id == "preliminary") {
                 var _mission_string = localize("{0} Audience", [_problem.data.applicant]);
                 problem_data.problem = _problem;
                 array_push(planet_displays, [_mission_string, _problem]);
