@@ -2,33 +2,33 @@
 //missions for the most part can only run from predefined points in the code
 // to run from each of these points easch mission must have a registered function these functions are then called implicitly
 //each function follows the format  `__<p_id>_<entry_flag>`
-//each one can have extentions written to account for different stage_id's by insteadd usig the syntax
+//each one can have extensions written to account for different stage_id's by instead usig the syntax
 //`__<p_id>_<entry_flag>S<stage_id>` if stage id is "" `__<p_id>_<entry_flag>` will be used
 /* the current entry points for the code are 
     "per_turn" - runs every end turn to check for certain conditions often contains reactions to actions player has done last turn
-    "resolve" - runs when the mission timer hits 0 often contains the failiure conditions for the mission
+    "resolve" - runs when the mission timer hits 0 often contains the failure conditions for the mission
     - both of the above runn via basic_turn_end -> PlanetData.problem_count_down -> scr_enemy_ai_d
 
-    "setup_battle" - runs when the player intiates a battle via drop select window on a planet with a problem on
-    "on_enemy_casulties" - runs during combat after player iflicts casualties to log data or inject mission specific combat logs
+    "setup_battle" - runs when the player initiates a battle via drop select window on a planet with a problem on
+    "on_enemy_casulties" - runs during combat after player inflicts casualties to log data or inject mission specific combat logs
     "battle_final_message" - runs during combat to tally data and display a final log to the combat log
     "battle_aftermath" - runs post combat during obj_ncombat alarm_7
     "squad_selected" -  runs after selecting a squad inn the squad select window (scr_manage_task_selector)
     "unit_select" - runs after selecting units in the unit selection screen (scr_manage_task_selector)
-    "on_purge" - at the top of PlanetData.purge() passes in {action_type, action_score} as purge_data overrides standdard purge popups
-    "init" - runs imediatly after problem is created often used to poopulate initial popupop ir stack popup for turn end
+    "on_purge" - at the top of PlanetData.purge() passes in {action_type, action_score} as purge_data overrides standard purge popups
+    "init" - runs immediately after problem is created often used to populate initial popup or stack popup for turn end
 
     "accept" - is an edge case currently reserved for binding to button clicks in popups
     
     "planet_draw_feature_selected" - runs in a FeatureSelected instance it allows a player to select the mission from the star_Select/planet screen and view data about it
         - each `__<p_id>__feature_selected` function fills the draw_data struct so that __feature_selected_draw can run
-        - by attatching a fuction to draw_data.button_function you can create windws to select specific marines and squads for isssions
+        - by attaching a function to draw_data.button_function you can create windows to select specific marines and squads for missions
         - do this by using select_units and select_squads which are binds of group_selection
-        - to handle the selectedd marines create `__<p_id>_unit_select` and __<p_id>_squad_selected` functions
-        - selected marines will auutooatically get added to the members array creating a direct link to marines participating in a mission
+        - to handle the selected marines create `__<p_id>_unit_select` and __<p_id>_squad_selected` functions
+        - selected marines will automatically get added to the members array creating a direct link to marines participating in a mission
 
 
-- other than these entry points and any other later defined poisitions mission specific code should not run outsiide of the PlanetProblem container
+- other than these entry points and any other later defined positions mission specific code should not run outside of the PlanetProblem container
 
 - to set an entry point up simply register the function as a static e.g
     if i create static __inquisition_are_dicks_per_turn once a "inquisition_are_dicks" problem is registered on a planet via 
@@ -90,7 +90,7 @@ static save = function(){
     for (var i=0;i<array_length(_mems);i++){
         _save_copy.members[i] = _mems[i].uid;
     }
-    return __save_copy;
+    return _save_copy;
 }
 
 static load = function(data){
@@ -281,7 +281,7 @@ static planet_draw_feature_selected = function(){
 }
 
 static __feature_selected_draw = function(){
-    draw_text_transformed(draw_data.x1 + (draw_data.w / 2), draw_data.y1 + 5, description(p_id), 2, 2, 0);
+    draw_text_transformed(draw_data.x1 + (draw_data.w / 2), draw_data.y1 + 5, description(), 2, 2, 0);
     draw_set_halign(fa_left);
     draw_set_color(c_gray);
     draw_text_ext(draw_data.x1 + 10, draw_data.y1 + 40, draw_data.mission_description, -1, draw_data.w - 20);
@@ -291,7 +291,7 @@ static __feature_selected_draw = function(){
         _text_body_height += string_height_ext(draw_data.mission_description, -1, draw_data.w - 20) + 10;
     }
 
-    if (button_text != "") {
+    if (draw_data.button_text != "") {
         var _button = draw_unit_buttons([draw_data.x1 + ((draw_data.w / 2) - (string_width(button_text) / 2)), draw_data.y1 + 40 + _text_body_height + 10], button_text);
         if (draw_data.button_tooltip != "" && scr_hit(_button)) {
             tooltip_draw(draw_data.button_tooltip);
@@ -354,11 +354,11 @@ __init();
 
 
 static select_units = function(select_from, purpose_string, number, selections = []){
-    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet, selections});
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: number, system , feature: self, planet, selections});
 }
 
 static select_squads = function(select_from, purpose_string, number, selections = []){
-    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: 1, system , feature: self, planet, selections, select_type: eMISSION_SELECT_TYPE.SQUADS});
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: number, system , feature: self, planet, selections, select_type: eMISSION_SELECT_TYPE.SQUADS});
 }
 // by default mission battles do not reduce the fortification level or enemy power on a planet
 static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
@@ -409,9 +409,9 @@ static __set_members_job_to_mission = function(){
 }
 
 static __hunt_beast_feature_selected = function(){
-    mission_description = $"The governor of {planet_name} has bemoaned the raiding of huge beasts on the fringes of the planets largest city, the numbers have swelled recently and are causing huge damage to the planets small economy. You could send a force to intervene, it would provide a fine test of metal for any that partake.";
-    help = "This is a good opportunity to provide experience and training, having at least one marine with experience in such matters would be advisable";
-    button_text = "Send Hunters";
+    draw_data.mission_description = $"The governor of {planet_name} has bemoaned the raiding of huge beasts on the fringes of the planets largest city, the numbers have swelled recently and are causing huge damage to the planets small economy. You could send a force to intervene, it would provide a fine test of metal for any that partake.";
+    draw_data.help = "This is a good opportunity to provide experience and training, having at least one marine with experience in such matters would be advisable";
+    draw_data.button_text = "Send Hunters";
     button_function = function() {
         var _dudes = collect_role_group("all", system.name);
         select_units(_dudes, ,"Beast Hunt", number: 3});
@@ -514,7 +514,6 @@ static __train_forces_feature_selected = function() {
     draw_data.button_function = function() {
         var _dudes = collect_role_group(SPECIALISTS_CAPTAIN_CANDIDATES, system.name);
         select_units(_dudes,"Select Officer", 1);
-        obj_select.feature.destroy = true;
     };    
 }
 
@@ -742,18 +741,6 @@ static __inquisition_recon_resolve = function() {
     scr_event_log("red", _alert_text);
 }
 
-static __inquisitor_necron_resolve = function() {
-    alter_disposition(eFACTION.INQUISITION, -8);
-    var _alert_text = $"The Necron Tomb of planet {p_data.name()} has not been deactivated in time.  It has awakened, rank upon rank of Necrons pouring out to the planet's surface.  The Inquisition is not pleased with your failure.";
-    scr_popup("Inquisition Mission Failed", _alert_text, "necron_army", "");
-    scr_event_log("red", $"Inquisition Mission Failed: Bombing run failed; the Necron Tomb on {p_data.name()} has become active.");
-
-    p_data.add_forces(eFACTION.NECRONS, 4);
-    if (awake_tomb_world(p_data.features) == 0) {
-        awaken_tomb_world(p_data.features);
-    }
-}
-
 static __inquisition_spyrer_init = function(){
     var _text = $"The Inquisition is trusting you with a special mission.  An experienced Spyrer on hive world {p_data.name()}";
     _text += $" has began to hunt indiscriminately, and proven impossible to take down by conventional means.  If they are not put down within {timer} month's time panic is likely.  Can your chapter handle this mission?";
@@ -768,7 +755,7 @@ static __inquisition_spyrer_accept = function(){
     var _text = $"Inquisition Mission Accepted: An experienced Spyrer on {p_data.name()} must be put down within {timer} months.";
     scr_event_log("", _text, system.name);
 }
-static __spyrer_resolve = function() {
+static __inquisition_spyrer_resolve = function() {
     var _planet_name = p_data.name();
     alter_disposition(eFACTION.INQUISITION, -3);
     var _alert_text = $"The Spyrer on {_planet_name} has been left unchecked.  In the ensuing carnage some high-ranking officials have been killed, along with several Nobles.  Panic is running amock in several parts of the hives and the Inquisition is less than pleased.";
@@ -877,9 +864,9 @@ static __hunt_fallen_per_turn = function() {
             );
         } else {
             delete_mission = true;
-            var _tixt = "Your marines have scoured " + planet_numeral_name(run, id) + " in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
+            var _tixt = "Your marines have scoured {p_data.name()} in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
             scr_popup("Hunt the Fallen", _tixt, "fallen", "");
-            scr_event_log("", $"Mission Successful: No Fallen located upon {planet_numeral_name(run, id)}");
+            scr_event_log("", $"Mission Successful: No Fallen located upon {p_data.name()}");
         }
     }
 }
@@ -1147,8 +1134,9 @@ static __provide_garrison_init = function() {
     scr_event_log("", $"Garrison committed to {_numeral_name} for {_garrison_length} months.", p_data.system.name);
 }
 
-static __garrison_mission_resolve = function() {
+static __provide_garrison_resolve = function() {
     if (stage_id != "active"){
+        delete_mission = true;
         exit;
     }
 
@@ -1198,12 +1186,12 @@ static __garrison_mission_resolve = function() {
     scr_popup($"Agreed Garrison of {p_data.name()} complete", _mission_string, "", "");
 }
 
-static protect_raiders_feature_selected =  function() {
+static __protect_raiders_feature_selected =  function() {
     draw_data.mission_description = $"The governor of {p_data.name()} has sent many requests to the sector commander for help with defending against xenos raids on the populace of the planet, the reports seem to suggest the xenos in question are in fact dark eldar.";
     draw_data.help = "Set a squads to ambush";
     draw_data.button_text = "Send Squad";
     draw_data.button_tooltip = "milage may vary on playability of this mission progress at your own risk";
-    button_function = function() {
+    draw_data.button_function = function() {
         var _dudes = collect_role_group("all", system.name);
         select_squads(_dudes, "Select Squad for Ambush", 1)
     }; 
@@ -1229,7 +1217,7 @@ static __protect_raiders_battle_aftermath = function() {
     }
 }
 
-static __protect_raider_squad_selected = function() {
+static __protect_raiders_squad_selected = function() {
     data.squad = data.squads[0];
     var _squad = data.squad;
     var _squad_units = _squad.get_members();
@@ -1374,7 +1362,7 @@ static __inquisition_tomb_per_turn = function() {
         options: [
             {
                 str1: "Begin the Mission",
-                choice_func: necron_tomb_mission_start,
+                choice_func: inquisition_tomb_mission_start,
             },
             {
                 str1: "Not Yet",
@@ -1388,7 +1376,7 @@ static __inquisition_tomb_per_turn = function() {
 static inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
-        {str1: "Continue", choice_func: necron_tomb_mission_sequence}, 
+        {str1: "Continue", choice_func: inquisition_tomb_mission_sequence}, 
         {str1: "Return to the surface", choice_func: __popup_delete }
     ]);
     obj_popup.image = "necron_tunnels_1";
@@ -1429,7 +1417,7 @@ static inquisition_tomb_mission_sequence = function() {
     // Result
     data.tomb_awakens = false;
     if (_roll <= 60) {
-        advance_necron_tomb_mission();
+        advance_inquisition_tomb_mission();
         exit;
     }
     if ((_roll > 60) && (_roll <= 82)) {
@@ -1569,8 +1557,8 @@ static __inquisition_tomb_battle_aftermath = function(){
         } else if (defeat == 0) {
             obj_controller.combat = 0;
             var pip = instance_create(0, 0, obj_popup);
-            necron_tomb_mission_start();
-            var _completed = advance_necron_tomb_mission();
+            inquisition_tomb_mission_start();
+            var _completed = advance_inquisition_tomb_mission();
             with (pip) {
                 if (_completed) {
                     keyboard_clear(vk_enter);
@@ -1612,7 +1600,7 @@ static __inquisition_tomb_battle_aftermath = function(){
     }
 }
 
-static advance_necron_tomb_mission = function() {
+static advance_inquisition_tomb_mission = function() {
     data.mission_stage++;
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
 
@@ -1644,6 +1632,18 @@ static advance_necron_tomb_mission = function() {
         return true;
     }
     return false;
+}
+
+static __inquisition_tomb_resolve = function() {
+    alter_disposition(eFACTION.INQUISITION, -8);
+    var _alert_text = $"The Necron Tomb of planet {p_data.name()} has not been deactivated in time.  It has awakened, rank upon rank of Necrons pouring out to the planet's surface.  The Inquisition is not pleased with your failure.";
+    scr_popup("Inquisition Mission Failed", _alert_text, "necron_army", "");
+    scr_event_log("red", $"Inquisition Mission Failed: Bombing run failed; the Necron Tomb on {p_data.name()} has become active.");
+
+    p_data.add_forces(eFACTION.NECRONS, 4);
+    if (awake_tomb_world(p_data.features) == 0) {
+        awaken_tomb_world(p_data.features);
+    }
 }
 
 static __inquisition_demon_world_init = function(){
@@ -1708,7 +1708,7 @@ static __inquisition_tyranid_org_setup_battle = function(){
     obj_ncombat.reduce_power = false;
 }
 
-static __inquisition_tyranid_on_enemy_casulties = function(){
+static __inquisition_tyranid_org_on_enemy_casulties = function(){
     var _c_data = casualty_packet;
     if (array_contains(["Termagaunt", "Hormagaunt"], _c_data.weapon) && (_c_data.casulties > 0)) {
         data.captured_gaunt += casulties;
@@ -1741,24 +1741,24 @@ static __inquisition_tyranid_org_battle_aftermath = function(){
 }
 
 static __hive_fleet_to_cult_init = function(){
-    var draw_data.x1 = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
-    var draw_data.y1 = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;
-    var fleet = create_enemy_fleet(draw_data.x1, draw_data.y1, eFACTION.TYRANIDS);
-    fleet.sprite_index = spr_fleet_tyranid;
-    fleet.image_speed = 0;
+    var _x1 = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
+    var _y1 = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;
+    var _fleet = create_enemy_fleet(_x1, _y1, eFACTION.TYRANIDS);
+    _fleet.sprite_index = spr_fleet_tyranid;
+    _fleet.image_speed = 0;
 
-    fleet.capital_number = choose(7, 8, 9);
-    fleet.frigate_number = round(random_range(6, 12));
-    fleet.escort_number = round(random_range(12, 27));
+    _fleet.capital_number = choose(7, 8, 9);
+    _fleet.frigate_number = round(random_range(6, 12));
+    _fleet.escort_number = round(random_range(12, 27));
 
-    fleet.image_index = floor(fleet.capital_number + (fleet.frigate_number / 2) + (fleet.escort_number / 4));
-    fleet.image_alpha = 0;
+    _fleet.image_index = floor(_fleet.capital_number + (_fleet.frigate_number / 2) + (_fleet.escort_number / 4));
+    _fleet.image_alpha = 0;
 
-    fleet.action_x = x;
-    fleet.action_y = y;
+    _fleet.action_x = x;
+    _fleet.action_y = y;
 
-    fleet.action_eta = timer;
-    fleet.action = "move";
+    _fleet.action_eta = timer;
+    _fleet.action = "move";
 }
 
 static __hive_fleet_to_cult_per_turn = function(){
