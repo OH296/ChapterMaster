@@ -44,20 +44,20 @@ static basic_turn_end = function(){
 	}
 	if ((timer > -1) && per_turn_checks) {
 		var _func = find_func("per_turn");
-        __handle_triggered_mission_func(_func)
+        __handle_triggered_mission_func(_func);
 	}
 	if ((timer == 0) && zero_timer_checks && !delete_mission) {
 		var _func = find_func("resolve");
-		__handle_triggered_mission_func(_func)
+		__handle_triggered_mission_func(_func);
 	}
 }
 
 static find_func_ref = function(trigger_string){
-    var _func_string = "__" + p_id + trigger_string;
+    var _func_string = "__" + p_id + "_" trigger_string;
     if (stage_id != ""){
         _func_string += "S" + stage_id;
     }
-    return find_func_ref
+    return return _func_string
 }
 static find_func = function(trigger_string){
     var _func_string = find_func_ref(trigger_string);
@@ -76,7 +76,7 @@ static mark = function(colour){
 static __init = function(){
     var _func = find_func("init");
     if (!is_undefined(_func)){
-        __handle_triggered_mission_func(_func());
+        __handle_triggered_mission_func();
     }  
 }
 

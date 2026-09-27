@@ -141,11 +141,11 @@ static __handle_triggered_mission_func = function(func){
 }
 
 static find_func_ref = function(trigger_string){
-    var _func_string = "__" + p_id + trigger_string;
+    var _func_string = "__" + p_id + "_" trigger_string;
     if (stage_id != ""){
         _func_string += "S" + stage_id;
     }
-    return find_func_ref
+    return return _func_string
 }
 static find_func = function(trigger_string){
     var _func_string = find_func_ref(trigger_string);
@@ -161,11 +161,11 @@ static basic_turn_end = function(){
 	}
 	if ((timer > -1) && per_turn_checks) {
 		var _func = find_func("per_turn");
-        __handle_triggered_mission_func(_func)
+        __handle_triggered_mission_func(_func);
 	}
 	if ((timer == 0) && zero_timer_checks && !delete_mission) {
 		var _func = find_func("resolve");
-		__handle_triggered_mission_func(_func)
+		__handle_triggered_mission_func(_func);
 	}
 }
 
@@ -228,7 +228,7 @@ static on_unit_selection = function(){
 static __init = function(){
     var _func = find_func("init");
     if (!is_undefined(_func)){
-        __handle_triggered_mission_func(_func());
+        __handle_triggered_mission_func(_func);
     } else {
         mark("green");
     }
@@ -1535,7 +1535,7 @@ static __inquisition_demon_world_accept = function(){
 static __inquisition_tyranid_org_init = function(){
     var _pop_data = {
         mission: self,
-        options: __inquisition_mission_options()),
+        options: __inquisition_mission_options(),
     };
     var _text = $"An Inquisitor is trusting you with a special mission.  The planet {p_data.name()}";
     _text += " is ripe with Tyranid organisms.  They require that you capture one of the Gaunt species for research purposes.  Can your chapter handle this mission?";
