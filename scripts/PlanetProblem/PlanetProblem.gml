@@ -37,6 +37,9 @@ other info
     - set a mission for deletion by setting delete_mission = true; this will delete the mission after the current function
     has finished executing and 
 */
+
+//ANYTIME an exception is caught on a entry point for a mission the mission is prematurely deleted this ensures the player is not unfairly penalised for errors
+
 /// @param {sring} name
 /// @param {Real} timer
 /// @param {struct} data
@@ -179,6 +182,7 @@ static __handle_triggered_mission_func = function(func){
         try {
             func();
         } catch (_exception) {
+            delete_mission = true;
             ERROR_HANDLER.handle_exception(_exception);
         }
     }
