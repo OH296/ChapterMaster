@@ -1946,8 +1946,8 @@ static __inquisition_tyranid_org_battle_aftermath = function(){
 }
 
 static __hive_fleet_to_cult_init = function(){
-    var _x1 = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + x;
-    var _y1 = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + y;
+    var _x1 = (random_range(room_width * 1.25, room_width * 2) * choose(-1, 1)) + system.x;
+    var _y1 = (random_range(room_height * 1.25, room_height * 2) * choose(-1, 1)) + system.y;
     var _fleet = create_enemy_fleet(_x1, _y1, eFACTION.TYRANIDS);
     _fleet.sprite_index = spr_fleet_tyranid;
     _fleet.image_speed = 0;
@@ -2007,7 +2007,7 @@ static __inquisition_purge_init = function(){
         mission: self,
         options: __inquisition_mission_options(),
     };
-    scr_popup("Inquisition Mission", text, "inquisition", _pop_data);
+    scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
 }
 
 static __inquisition_purge_accept = function(){

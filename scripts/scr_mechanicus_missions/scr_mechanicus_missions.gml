@@ -8,7 +8,7 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
     if (array_length(_forge_stars)) {
         array_push(mechanicus_missions, "mech_bionics");
         var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true],"",false,{},true);
-        if (_techs.number >= 3) {
+        if (_techs.number() >= 3) {
             array_push(mechanicus_missions, "mech_raider");
         }
     }
@@ -136,7 +136,7 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
 function accept_mechanicus_tomb_mission() {
     var _planet = false;
     var _star = pop_data.star;
-    for (var i = 1; i < _star.planets; i++) {
+    for (var i = 1; i <= _star.planets; i++) {
         if (awake_tomb_world(_star.p_feature[i]) != 0) {
             _planet = i;
             break;
