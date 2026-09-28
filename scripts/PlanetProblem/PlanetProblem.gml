@@ -2,8 +2,6 @@
 //missions for the most part can only run from predefined points in the code
 // to run from each of these points each mission must have a registered function these functions are then called implicitly
 //each function follows the format  `__<p_id>_<entry_flag>`
-//each one can have extensions written to account for different stage_id's by instead using the syntax
-//`__<p_id>_<entry_flag>S<stage_id>` if stage id is "" `__<p_id>_<entry_flag>` will be used
 /* the current entry points for the code are 
     "per_turn" - runs every end turn to check for certain conditions often contains reactions to actions player has done last turn
     "resolve" - runs when the mission timer hits 0 often contains the failure conditions for the mission

@@ -753,6 +753,7 @@
     {"id":{"name":"ErrorHandler","path":"scripts/ErrorHandler/ErrorHandler.yy",},},
     {"id":{"name":"exp_and_exp_growth","path":"scripts/exp_and_exp_growth/exp_and_exp_growth.yy",},},
     {"id":{"name":"explode_script","path":"scripts/explode_script/explode_script.yy",},},
+    {"id":{"name":"FleetProblem","path":"scripts/FleetProblem/FleetProblem.yy",},},
     {"id":{"name":"GitHub","path":"scripts/GitHub/GitHub.yy",},},
     {"id":{"name":"GitHubBugReporter","path":"scripts/GitHubBugReporter/GitHubBugReporter.yy",},},
     {"id":{"name":"GitHubContent","path":"scripts/GitHubContent/GitHubContent.yy",},},

@@ -48,6 +48,21 @@ acted = 0;
 hurssy = 0;
 hurssy_time = 0;
 /// Called from save function to take all object variables and convert them to a json savable format and return it
+
+problems = [];
+/// @param {string} _name
+/// @param {Real} _timer
+/// @param {struct} _data
+/// @returns {Struct.FleetProblem}
+add_problem = function(_name, _timer, _data = {}){
+    var _problem = new FleetProblem(_name, _timer, _data, self);
+    if (_problem.delete_mission){
+        return undefined;
+    }
+    array_push(problems, _problem);
+    return _problem;
+}
+
 serialize = function() {
     var object_fleet = self;
 
@@ -62,15 +77,21 @@ serialize = function() {
         "serialize",
         "deserialize",
         "orbiting",
+        "problems",
     ];
 
     copy_serializable_fields(object_fleet, save_data, excluded_from_save);
+
+    save_data.problems = [];
+    for (var i = 0; i < array_length(problems); i++) {
+        array_push(save_data.problems, problems[i].save());
+    }
 
     return save_data;
 };
 
 deserialize = function(save_data) {
-    var exclusions = ["orbiting"]; // skip automatic setting of certain vars, handle explicitly later
+    var exclusions = ["orbiting", "problems"]; // skip automatic setting of certain vars, handle explicitly later
 
     // Automatic var setting
     var all_names = struct_get_names(save_data);
@@ -88,7 +109,21 @@ deserialize = function(save_data) {
         }
     }
 
+    // Problems, old saves won't have this key
+    problems = [];
+    if (struct_exists(save_data, "problems")) {
+        for (var i = 0; i < array_length(save_data.problems); i++) {
+            try {
+                // empty p_id stops __init from running, load() then restores the real p_id and timer
+                var _problem = new FleetProblem("", 0, {}, self);
+                _problem.load(save_data.problems[i]);
+                _problem.fleet = self;
+                array_push(problems, _problem);
+            } catch (e) {
+                LOGGER.exception("Fleet problem deserialization failed", e);
+            }
+        }
+    }
+
     set_player_fleet_image();
 };
-
-#endregion
