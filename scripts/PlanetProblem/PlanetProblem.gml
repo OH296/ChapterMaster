@@ -968,15 +968,14 @@ static __mech_raider_per_turn = function() {
     var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
     var _percent_complete = 0;
     if ((_techs.number() >= data.techs_required) && (_lr_count >= 1)) {
-        var _percent_complete = __increment_mission_completion();
+        _percent_complete = __increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
     }
     if (_percent_complete < 100){
         exit;
     }
-    var _cleanup = array_create(11, 0);
+    var _cleanup = array_create(11, false);
     delete_mission = true;
-    scr_mission_reward("mech_raider", system, planet);
     timer = -1
     per_turn_checks = false;
     zero_timer_checks = false;
@@ -1005,8 +1004,9 @@ static __mech_raider_per_turn = function() {
                 break;
             }
             for (var i = 1; i <= 100; i++) {
-                if ((obj_ini.veh_role[com][i] == "Land Raider") && (obj_ini.veh_loc[com][i] == star.name) && (obj_ini.veh_wid[com][i] == planet)) {
+                if ((obj_ini.veh_role[com][i] == "Land Raider") && (obj_ini.veh_loc[com][i] == system.name) && (obj_ini.veh_wid[com][i] == planet)) {
                     destroy_vehicle(com, i);
+                    _cleanup[com] = true;
                     _found = true;
                     break;
                 }
@@ -1022,7 +1022,7 @@ static __mech_raider_per_turn = function() {
                 break;
             }
             for (var i = 1; i <= 100; i++) {
-                if ((obj_ini.veh_role[com][i] == "Land Raider") && (obj_ini.veh_loc[com][i] == star.name) && (obj_ini.veh_wid[com][i] == planet)) {
+                if ((obj_ini.veh_role[com][i] == "Land Raider") && (obj_ini.veh_loc[com][i] == system.name) && (obj_ini.veh_wid[com][i] == planet)) {
                     _found = true;
                     obj_ini.veh_hp[com][i] = 100;
                 }
@@ -1036,7 +1036,7 @@ static __mech_raider_per_turn = function() {
     }
 
     for (var i = 0; i <= obj_ini.companies; i++) {
-        if (_cleanup[i] == 1) {
+        if (_cleanup[i]) {
             with (obj_ini) {
                 scr_vehicle_order(i);
             }
@@ -1082,26 +1082,25 @@ static __mech_bionics_per_turn = function() {
     if (_roll1 > 66) {
         result = "Marines Lost";
     }
-    mech_disp_change = 0;
+    var _mech_disp_change = 0;
     var _text = "The Adeptus Mechanicus have finished experimenting on your marines";
-    var _marines = collect_role_group("all", [star.name, planet, -1], false, {}, true);
+    var _marines = collect_role_group("all", [system.name, planet, -1], false, {}, true);
     if (result == "Marines Lost") {
         _text += "- unfortunantly none of them have survived.  150 Requisition has provided as weregild for each Astartes lost.";
-        mech_disp_change = 2;
+        _mech_disp_change = 2;
         obj_controller.requisition += 150 * _marines.number();
         _marines.kill_percent(100);
     } else if (result == "Bionics" || result == "Requisition") {
-        obj_controller.disposition[3] += 1;
-        mech_disp_change = 1;
+        _mech_disp_change = 1;
 
         if (result == "Bionics") {
             var _new_bionics = irandom_range(40, 100);
             scr_add_item("Bionics", _new_bionics);
             _text += $" A large amount of additional Bionics have been provided by the Mechanicus as a reward ( X{_new_bionics} Bionics added to stocks)";
         } else if (result == "Requisition") {
-            req_gain = irandom_range(200, 650);
-            _text += $"{req_gain} Requisition has been provided by the Mechanicus as a reward.";
-            obj_controller.requisition += req_gain;
+            var _req_gain = irandom_range(200, 650);
+            _text += $"{_req_gain} Requisition has been provided by the Mechanicus as a reward.";
+            obj_controller.requisition += _req_gain;
         }
         var _limit = 0;
         for (var i = 0; i < array_length(_marines.units); i++) {
@@ -1123,7 +1122,7 @@ static __mech_bionics_per_turn = function() {
             }
         }
     }
-    _text += $"\n mechanics Disposition {mech_disp_change > 0 ? "+" : "-"}{mech_disp_change}";
+    _text += $"\n{alter_disposition(eFACTION.MECHANICUS, _mech_disp_change)}";
     scr_popup("Mechanicus Mission Completed", _text, "mechanicus");
     sort_all_companies_to_map(_cleanup);
 }

@@ -1,12 +1,12 @@
 /// @param {sring} name
 /// @param {struct} data
-function SystemProblem(name, data = {}, system) constructor{
+function SystemProblem(_name, _data = {}, _system) constructor{
 timer = -1;
 f_type = eP_FEATURES.MISSION;
-p_id = name;
-data = data;
+p_id = _name;
+data = _data;
 stage_id = "";
-self.system = system;
+system = _system;
 zero_timer_checks = true;
 per_turn_checks = true;
 delete_mission = false;
