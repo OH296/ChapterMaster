@@ -489,7 +489,11 @@ function scr_end_turn() {
                     }
 
                     if (instance_exists(obj_p_fleet)) {
-                        obj_p_fleet.alarm[1] = 1;
+                        wait_and_execute(1, function(){
+                            with(obj_p_fleet){
+                                player_fleet_end_turn();
+                            }
+                        });
                     }
                     if (instance_exists(obj_en_fleet)) {
                         obj_en_fleet.alarm[1] = 1;
