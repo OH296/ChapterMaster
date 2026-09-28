@@ -1015,7 +1015,7 @@ static __mech_bionics_resolve = function() {
 static __mech_tomb_init = function() {
     var _name = p_data.name();
     obj_popup.text = $"The Adeptus Mechanicus await your forces at {_name}.  They are expecting at least two squads of Astartes and have placed the testing on hold until their arrival.  {global.chapter_name} have 16 months to arrive.";
-    scr_event_log("", "Mechanicus Mission Accepted: At least two squads of marines are expected at {_name} within 16 months.", _star.name);
+    scr_event_log("", $"Mechanicus Mission Accepted: At least two squads of marines are expected at {_name} within 16 months.", system.name);
     mark("green");
     obj_popup.title = "Mechanicus Mission Accepted";
     reset_popup_options();

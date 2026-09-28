@@ -607,7 +607,7 @@ function scr_random_event(execute_now) {
             //var enemy = choose(7,8,9,10,13);
             var enemy = choose(7, 8, 9);
             var text;
-            var max_enemies_on_planet = 5; // I don't know the actual value, i need to change it;
+            var max_enemies_on_planet = 6; // I don't know the actual value, i need to change it;
             switch (enemy) {
                 case 7:
                     text = "Orks";
