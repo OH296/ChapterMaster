@@ -836,7 +836,7 @@ static __inquisition_spyrer_battle_aftermath = function(){
     scr_popup("Inquisition Mission Completed", _tixt, p_id, "");
 
     var _disp_gain = obj_controller.demanding ? choose(0, 0, 1) : 2;
-    var _disp_gain_string = alter_disposition(eFACTION.INQUISITION, _disp_gain);
+    var _disp_gain_string = alter_disposition(eFACTION.INQUISITION, _disp_gain, true);
 
     scr_event_log("", $"Inquisition Mission Completed: The Spyrer on {system.name} {planet} has been removed. {_disp_gain_string}", system.name);
     scr_gov_disp(system.name, planet, choose(1, 2, 3, 4));
@@ -1122,7 +1122,7 @@ static __mech_bionics_per_turn = function() {
             }
         }
     }
-    _text += $"\n{alter_disposition(eFACTION.MECHANICUS, _mech_disp_change)}";
+    _text += $"\n{alter_disposition(eFACTION.MECHANICUS, _mech_disp_change, true)}";
     scr_popup("Mechanicus Mission Completed", _text, "mechanicus");
     sort_all_companies_to_map(_cleanup);
 }
@@ -1232,7 +1232,7 @@ static __mech_tomb_battle_aftermath = function() {
     if (obj_ncombat.defeat) {
         delete_mission = true;
 
-        var _disp_change = alter_disposition(eFACTION.MECHANICUS, -10);
+        var _disp_change = alter_disposition(eFACTION.MECHANICUS, -10, true);
 
         if (data.battle_key == "study2a") {
             scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust, and the Adeptus Mechanicus is furious with your chapter for not providing enough security.  Relations with them are worse than before. {_disp_change}", "", "");
@@ -1240,7 +1240,7 @@ static __mech_tomb_battle_aftermath = function() {
         if (data.battle_key == "study2b") {
             battle_object.p_necrons[battle_id] = 5;
             awaken_tomb_world(battle_object.p_feature[battle_id]);
-            _disp_change = alter_dispositions([[eFACTION.MECHANICUS, -15], [eFACTION.INQUISITION, -5]]);
+            _disp_change = alter_dispositions([[eFACTION.MECHANICUS, -15], [eFACTION.INQUISITION, -5]], true);
             scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust.  To make matters worse the Necron Tomb has fully awakened- countless numbers of the souless machines are now pouring out of the tomb.  The Adeptus Mechanicus are furious with your chapter. {_disp_change}", "necron_army", "");
             scr_alert("", "inquisition", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb", 0, 0);
             scr_event_log("", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb");
