@@ -183,6 +183,7 @@ static __handle_triggered_mission_func = function(func){
         }
     }
     __check_delete();
+    obj_controller.location_viewer.update_mission_log();
 }
 
 static find_func_ref = function(trigger_string){
@@ -454,8 +455,8 @@ static __hunt_beast_unit_select = function() {
 }
 
 static __hunt_beast_resolve = function() {
+    delete_mission = true;
     if (stage_id == "preliminary"){
-        delete_mission = true;
         exit;
     }
     var _hunters = clean_unit_array(members);
@@ -466,7 +467,6 @@ static __hunt_beast_resolve = function() {
         };
         _hunters = collect_role_group("all", [system.name, planet, 0], false, _man_conditions);
         if (array_length(_hunters) == 0){
-            delete_mission = true;
             exit;
         }
     }
@@ -527,6 +527,7 @@ static __hunt_beast_resolve = function() {
     for (var i = 0; i < array_length(_hunters); i++) {
     	_hunters[i].job = "none";
     }
+    delete_mission = true;
 }
 
 static __train_forces_feature_selected = function() {
@@ -572,6 +573,7 @@ static __train_forces_unit_select = function() {
 }
 
 static __train_forces_resolve = function() {
+    delete_mission = true;
     if (stage_id != "active") {
         exit;
     }
@@ -756,6 +758,7 @@ static __inquisition_recon_per_turn = function() {
 
 }
 static __inquisition_recon_resolve = function() {
+    delete_mission = true;
     var _alert_text = "Inquisition Mission Failed: Investigate ";
     alter_disposition(eFACTION.INQUISITION, -5);
     _alert_text += $"{p_data.name()}.";
@@ -778,6 +781,7 @@ static __inquisition_spyrer_accept = function(){
     scr_event_log("", _text, system.name);
 }
 static __inquisition_spyrer_resolve = function() {
+    delete_mission = true;
     var _planet_name = p_data.name();
     alter_disposition(eFACTION.INQUISITION, -3);
     var _alert_text = $"The Spyrer on {_planet_name} has been left unchecked.  In the ensuing carnage some high-ranking officials have been killed, along with several Nobles.  Panic is running amock in several parts of the hives and the Inquisition is less than pleased.";
@@ -894,6 +898,7 @@ static __hunt_fallen_per_turn = function() {
 }
 
 static __hunt_fallen_resolve = function() {
+    delete_mission = true;
     //TODO marker point for cohesion mechanics
     var _alert_text = "";
     if (irandom(100) > 33) {
@@ -910,7 +915,7 @@ static __hunt_fallen_resolve = function() {
         }
     }
     _alert_text = $"Any Fallen that may have been on {p_data.name()} ";
-    _alert_text += "have been given sufficient time to escape.  Morale within your chapter has plummeted; some of your battle brothers have become restless and speak among eachother in hushed tones.";
+    _alert_text += "have been given sufficient time to escape.  Morale within your chapter has plummeted; some of your battle brothers have become restless and speak among each other in hushed tones.";
     scr_popup("Hunt the Fallen Failed", _alert_text + "\n\n(Chapter wide loyalty: -10)\nChaplains note marked changes in behaviour of some brothers", "fallen", "");
     obj_controller.loyalty -= 10;
     obj_controller.loyalty_hidden -= 10;
@@ -951,6 +956,7 @@ static __mech_raider_per_turn = function() {
 }
 
 static __mech_raider_resolve = function() {
+    delete_mission = true;
     var _alert_text = $"Mechanicus Mission Failed: Land Raider testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
@@ -975,6 +981,7 @@ static __mech_bionics_per_turn = function() {
 }
 
 static __mech_bionics_resolve = function() {
+    delete_mission = true;
     var _alert_text = $"Mechanicus Mission Failed: bionics testing at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text);
@@ -1058,6 +1065,7 @@ static __mech_tomb_exploring = function() {
 }
 
 static __mech_tomb_resolve = function() {
+    delete_mission = true;
     var _alert_text = $"Mechanicus Mission Failed: Necron Tomb Study at {p_data.name()}.";
     scr_alert("red", "mission_failed", _alert_text, 0, 0);
     scr_event_log("red", _alert_text, system.name);
@@ -1089,6 +1097,7 @@ static __mech_tomb_battle_aftermath = function() {
 }
 
 static __mech_mars_resolve = function() {
+    delete_mission = true;
     var _techs_taken = 0;
     var _techs = collect_role_group([SPECIALISTS_TECHMARINES,false,true],system.name);
     for (i = 0; i < array_length(_techs); i++) {
@@ -1167,8 +1176,8 @@ static provide_garrison_on_garrison = function() {
 }
 
 static __provide_garrison_resolve = function() {
+    delete_mission = true;
     if (stage_id != "active"){
-        delete_mission = true;
         exit;
     }
 
@@ -1673,6 +1682,7 @@ static advance_inquisition_tomb_mission = function() {
 }
 
 static __inquisition_tomb_resolve = function() {
+    delete_mission = true;
     alter_disposition(eFACTION.INQUISITION, -8);
     var _alert_text = $"The Necron Tomb of planet {p_data.name()} has not been deactivated in time.  It has awakened, rank upon rank of Necrons pouring out to the planet's surface.  The Inquisition is not pleased with your failure.";
     scr_popup("Inquisition Mission Failed", _alert_text, "necron_army", "");

@@ -819,7 +819,7 @@ function PlanetData(_planet, _system) constructor {
             }
             var _mission_explain = _problem.description();
             var _data = {
-                system: name,
+                system: name(),
                 mission: _mission_explain,
                 time: _problem.timer,
                 problem :  _problem,
