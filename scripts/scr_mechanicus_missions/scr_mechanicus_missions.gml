@@ -7,7 +7,8 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
 
     if (array_length(_forge_stars)) {
         array_push(mechanicus_missions, "mech_bionics");
-        if (scr_role_count(obj_ini.player_role_data[eROLE.TECHMARINE].role, "") >= 6) {
+        var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true]);
+        if (_techs >= 3) {
             array_push(mechanicus_missions, "mech_raider");
         }
     }
@@ -142,17 +143,8 @@ function accept_mechanicus_tomb_mission() {
         }
     }
     if (_planet > 0) {
-        _planet = _star.get_planet_data(_planet);
-        _planet.new_problem("mech_tomb", 17, {stage : "awating_player"});
-        var _name = _planet.name();
-        text = $"The Adeptus Mechanicus await your forces at {_name}.  They are expecting at least two squads of Astartes and have placed the testing on hold until their arrival.  {global.chapter_name} have 16 months to arrive.";
-        scr_event_log("", "Mechanicus Mission Accepted: At least two squads of marines are expected at {_name} within 16 months.", _star.name);
-        with (_star) {
-            new_star_event_marker("green");
-        }
-        title = "Mechanicus Mission Accepted";
-        reset_popup_options();
-        cooldown = 15;
+        planet = _star.get_planet_data(_planet);
+        _planet.new_problem("mech_tomb", scr_mission_eta(_star.x, _star.y), {stage : "awating_player"});
         exit;
     }
 }
@@ -163,18 +155,7 @@ function accept_mechanicus_land_raider_mission() {
     var _forge_planet = scr_get_planet_with_type(_star, "Forge");
     if (_forge_planet > 0) {
         var _planet = _star.get_planet_data(_forge_planet);
-
-        var _mission_loc = _planet.name();
-        var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
-        var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
-
-        _planet.new_problem("mech_raider", _mission_time, {completion: 0, required_months: 24});
-        text = $"The Adeptus Mechanicus await your forces at {_mission_loc}.  They are expecting six {obj_ini.player_role_data[eROLE.TECHMARINE].role}s and a Land Raider.";
-        scr_event_log("", $"Mechanicus Mission Accepted: Six of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s and a Land Raider are to be stationed at {_mission_loc} for {_mission_time} months.", _star.name);
-        with (_star) {
-            new_star_event_marker("green");
-        }
-        title = "Mechanicus Mission Accepted";
+        _planet.new_problem("mech_raider", _mission_time,{});
     } else {
         text = $"Error valid forge planet not found please open a bug report if seen";
     }

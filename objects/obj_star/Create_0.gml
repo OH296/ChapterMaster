@@ -269,6 +269,9 @@ function deserialize(save_data) {
                     continue;
                 }
                 var _val = _planet[$ _var_name];
+                if (!is_array(self[$ _var_name])){
+                    self[$ _var_name] = array_create(9, 0);
+                }
                 self[$ _var_name][p] = _val;
             }
         }

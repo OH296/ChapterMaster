@@ -1,16 +1,8 @@
 /// @self Asset.GMObject.obj_star
 function scr_enemy_ai_d() {
-    if (x < -15000) {
+    while (x < -15000){
         x += 20000;
-        y += 20000;
-    }
-    if (x < -15000) {
-        x += 20000;
-        y += 20000;
-    }
-    if (x < -15000) {
-        x += 20000;
-        y += 20000;
+        y += 20000;        
     }
 
     // Planetary problems here
@@ -118,27 +110,13 @@ function scr_enemy_ai_d() {
     if (trader > 0) {
         trader -= 1;
         if (trader == 0) {
-            var tr = "Rogue Trader fleet departs from " + string(name) + ".";
+            var tr = $"Rogue Trader fleet departs from {name}.";
             scr_alert("green", "Warp", tr, x, y);
             scr_event_log("green", tr);
         }
     }
 
     // Colonists Colonize
-
-    with (obj_star) {
-        if (x < -10000) {
-            x += 20000;
-            y += 20000;
-        }
-    }
-    with (obj_star) {
-        if (x < -10000) {
-            x += 20000;
-            y += 20000;
-        }
-    }
-
     var already_enroute = false;
     var cur_star = id;
     with (obj_en_fleet) {

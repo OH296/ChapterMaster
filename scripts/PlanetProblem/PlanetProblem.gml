@@ -115,6 +115,7 @@ static view_on_planet_screen = function(){
     return (stage_id == "preliminary") && (has_data("applicant"));
 }
 
+//requires the completion and required_months flag to be in the data struct
 static __increment_mission_completion =  function() {
     if (!struct_exists(data, "completion")) {
         data.completion = 0;
@@ -849,55 +850,56 @@ static __hunt_fallen_init = function(){
 }
 
 static __hunt_fallen_per_turn = function() {
-    if (p_data.player_forces > 0){
-        if (choose(true, false)) {
-            var _group_big = choose(true, false);
-            var _battle_enemy_data = {};
-            if (_group_big){
-                _battle_enemy_data = {
-                    threat : 1,
-                    fortified : false,
-                    cols : [
-                        {
-                            distance : 80,
-                            enemies : [
-                                {
-                                    name : "Fallen",
-                                    number : 1
-                                }
-                            ]
-                        }
-                    ]
-                };
+    if (p_data.player_forces <= 0){
+        exit;
+    }
+    if (irandom(1) == 1) {
+        var _group_big = choose(true, false);
+        var _battle_enemy_data = {};
+        if (_group_big){
+            _battle_enemy_data = {
+                threat : 1,
+                fortified : false,
+                cols : [
+                    {
+                        distance : 80,
+                        enemies : [
+                            {
+                                name : "Fallen",
+                                number : 1
+                            }
+                        ]
+                    }
+                ]
+            };
 
-                // * Large Fallen Group *
-                _battle_enemy_data = {
-                    threat : 1,
-                    fortified : false,
-                    cols : [
-                        {
-                            distance : 80,
-                            enemies : [
-                                {
-                                    name : "Fallen",
-                                    number : choose(1, 1, 2, 2, 3)
-                                }
-                            ]
-                        }
-                    ]
-                };
-            }
-            new_end_turn_battle(
-                10, 
-                p_id,
-                _battle_enemy_data
-            );
-        } else {
-            delete_mission = true;
-            var _tixt = $"Your marines have scoured {p_data.name()} in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
-            scr_popup("Hunt the Fallen", _tixt, "fallen", "");
-            scr_event_log("", $"Mission Successful: No Fallen located upon {p_data.name()}");
+            // * Large Fallen Group *
+            _battle_enemy_data = {
+                threat : 1,
+                fortified : false,
+                cols : [
+                    {
+                        distance : 80,
+                        enemies : [
+                            {
+                                name : "Fallen",
+                                number : choose(3, 4, 5)
+                            }
+                        ]
+                    }
+                ]
+            };
         }
+        new_end_turn_battle(
+            10, 
+            p_id,
+            _battle_enemy_data
+        );
+    } else {
+        delete_mission = true;
+        var _tixt = $"Your marines have scoured {p_data.name()} in search of the Fallen.  Despite their best efforts, and meticulous searching, none have been found.  It appears as though the information was faulty or out of date.";
+        scr_popup("Hunt the Fallen", _tixt, "fallen", "");
+        scr_event_log("", $"Mission Successful: No Fallen located upon {p_data.name()}");
     }
 }
 
@@ -943,10 +945,28 @@ function __hunt_fallen_battle_aftermath() {
     scr_popup("Hunt the Fallen Completed", _tixt, "fallen", "");
 }
 
+static __mech_raider_init = function(){
+    var _mission_loc = _planet.name();
+    var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
+    var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
+    var _vacation_time = 24;
+    _mission_time += _vacation_time;
+    var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true]);
+
+    var _techs_required = min(array_length(_techs) - 2, 6);
+
+    data =  {completion: 0, required_months: _vacation_time,techs_required:_techs_required}
+    var _eligible_roles = role_groups(SPECIALISTS_TECHMARINES);
+    obj_popup.text = $"The Adeptus Mechanicus await your forces at {_mission_loc}.  They are expecting {_techs_required} {_eligible_roles}s and a Land Raider.";
+    scr_event_log("", $"Mechanicus Mission Accepted: {_techs_required} of your {_eligible_roles}s and a Land Raider are to be stationed at {_mission_loc} for {_mission_time} months.", _star.name);
+    mark("green");
+    title = "Mechanicus Mission Accepted";
+}
+
 static __mech_raider_per_turn = function() {
-    var _techs = collect_role_group(SPECIALISTS_TECHS, [system.name, planet, -1]);
+    var _techs = collect_role_group(SPECIALISTS_TECHMARINES, false, true, [system.name, planet, -1]);
     var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
-    if ((array_length(_techs) >= 6) && (_lr_count >= 1)) {
+    if ((array_length(_techs) >= data.techs_required) && (_lr_count >= 1)) {
         var _percent_complete = __increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
@@ -992,9 +1012,17 @@ static __mech_bionics_resolve = function() {
     alter_disposition(eFACTION.MECHANICUS, -6);
     delete_mission = true;
 }
-
+static __mech_tomb_init = function() {
+    var _name = p_data.name();
+    obj_popup.text = $"The Adeptus Mechanicus await your forces at {_name}.  They are expecting at least two squads of Astartes and have placed the testing on hold until their arrival.  {global.chapter_name} have 16 months to arrive.";
+    scr_event_log("", "Mechanicus Mission Accepted: At least two squads of marines are expected at {_name} within 16 months.", _star.name);
+    mark("green");
+    obj_popup.title = "Mechanicus Mission Accepted";
+    reset_popup_options();
+    obj_popup.cooldown = 15;
+}
 static __mech_tomb_per_turn = function() {
-    if (stage_id != "exploring"){
+    if (stage_id == "awating_player"){
         var _marines = collect_role_group("all", [system.name, planet, -1]);
         if (array_length(_marines) >= 20) {
             stage_id = "exploring";
@@ -1929,7 +1957,8 @@ static __governor_purge_enemies_init = function(){
 }
 
 static __governor_purge_enemies_feature_selected = function(){
-    draw_data.mission_description = $"The governor of {p_data.name()} has expressed his distaste of the neighboring governance of {system.name} {data.target} he has expressed his views that they engage in heretical ways and harbor xenos enemies though in truth it is more likely that he simply wishes his political enemies disposed of, whatever the case his planet has great economic means and he has made bare his plans to compensate the emperors angels for their aid";
+    draw_data.mission_description = $"The governor of {p_data.name()} has expressed his distaste of the neighbouring governance of {system.name} {data.target} he has expressed his views that they engage in heretical ways and harbor xenos enemies though in truth it is more likely that he simply wishes his political enemies disposed of, whatever the case his planet has great economic means and he has made bare his plans to compensate the emperors angels for their aid";
+    draw_data.help = "This mission is not yet complete";
 }
 
 }
