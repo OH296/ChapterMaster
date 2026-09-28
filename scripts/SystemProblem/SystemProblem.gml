@@ -1,6 +1,6 @@
 /// @param {sring} name
 /// @param {struct} data
-function SystemProblem(_name, _data = {}, _system) constructor{
+function SystemProblem(_name, _system, _data = {}) constructor{
 timer = -1;
 f_type = eP_FEATURES.MISSION;
 p_id = _name;
