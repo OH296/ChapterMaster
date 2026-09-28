@@ -704,7 +704,7 @@ try {
             }
 
             if (array_length(complex_route) > 0) {
-                set_new_player_fleet_course(complex_route);
+                arrive_at_waypoint();
             } else {
                 for (var i = 0; i < array_length(problems); i++){
                     problems[i].on_final_arrival();
