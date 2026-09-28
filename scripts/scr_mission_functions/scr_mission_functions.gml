@@ -129,10 +129,10 @@ function init_marine_acting_strange() {
         exit;
     }
     var _text = _unit.name_role();
-    var company_text = scr_convert_company_to_string(_unit.company);
-    if (company_text != "") {
-        company_text = $"({company_text})";
-        _text += company_text;
+    var _company_text = scr_convert_company_to_string(_unit.company);
+    if (_company_text != "") {
+        _company_text = $"({_company_text})";
+        _text += _company_text;
     }
     _text += " is behaving strangely.";
     scr_alert("color", "lol", _text, 0, 0);
