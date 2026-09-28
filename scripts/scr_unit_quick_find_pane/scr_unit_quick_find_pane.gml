@@ -264,29 +264,8 @@ function UnitQuickFindPanel() constructor {
         with (obj_star) {
             for (var i = 1; i <= planets; i++) {
                 var problems = p_problem[i];
-                for (var p = 0; p < array_length(problems); p++) {
-                    var _problem = problems[p];
-                    if (_problem.stage_id == "preliminary") {
-                        continue;
-                    }
-                    var mission_explain = mission_name_key(problems[p]);
-                    if (mission_explain != "none") {
-                        var _data = {
-                            system: name,
-                            mission: mission_explain,
-                            time: _problem.timer,
-                            planet: i,
-                            system_id: id,
-                            problem :  _problem,
-                        };
-
-                        _data.click_left = method(_data, function() {
-                            set_map_pan_to_loc(system_id);
-                        });
-
-                        array_push(temp_log, _data);
-                    }
-                }
+                var _p_data = get_planet_data(i);
+                temp_log = array_concat(temp_log, _p_data.problems_to_mission_log());
             }
         }
         with (obj_en_fleet) {

@@ -7,7 +7,7 @@
 /* the current entry points for the code are 
     "per_turn" - runs every end turn to check for certain conditions often contains reactions to actions player has done last turn
     "resolve" - runs when the mission timer hits 0 often contains the failure conditions for the mission
-    - both of the above runn via basic_turn_end -> PlanetData.problem_count_down -> scr_enemy_ai_d
+    - both of the above run via basic_turn_end -> PlanetData.problem_count_down -> scr_enemy_ai_d
 
     "setup_battle" - runs when the player initiates a battle via drop select window on a planet with a problem on
     "on_enemy_casulties" - runs during combat after player inflicts casualties to log data or inject mission specific combat logs
@@ -103,7 +103,9 @@ static load = function(data){
 }
 
 static description = function(){
-    return mission_name_key(p_id);
+    var _n = mission_name_key(p_id);
+    _n = _n == "" ? p_id : _n;
+    return _n;
 }
 
 static __increment_mission_completion =  function() {
@@ -257,15 +259,16 @@ static on_squad_selection = function(){
 static on_unit_selection = function(){
     var _func = find_func("unit_select");
     if (!is_undefined(_func)){
-        if (struct_exists(obj_controller.selection_data, "selections")){
-            members = obj_controller.selection_data.selections;
+        var _selec_data = obj_controller.selection_data;
+        if (struct_exists(_selec_data, "selections")){
+            members = _selec_data.selections;
         }
         __handle_triggered_mission_func(_func);   
     }    
     instance_deactivate_object(obj_star);
 }
 
-//TODO in the future this should be calcuated once on feature selection and then draw each turn
+//TODO in the future this should be calculated once on feature selection and then draw each turn
 static planet_draw_feature_selected = function(){
     if (!struct_exists(self, "draw_data")){
         exit;
@@ -406,6 +409,11 @@ static __set_members_job_to_mission = function(){
         };
         _unit.unload(planet, system);            
     }    
+};
+
+static __hunt_beast_init = function(){
+    stage_id =  "preliminary";
+    data.applicant = "Governor"
 }
 
 static __hunt_beast_feature_selected = function(){
@@ -414,9 +422,9 @@ static __hunt_beast_feature_selected = function(){
     draw_data.button_text = "Send Hunters";
     draw_data.button_function = function() {
         var _dudes = collect_role_group("all", system.name);
-        select_units(_dudes, ,"Beast Hunt", number: 3);
+        select_units(_dudes, "Beast Hunt",  3);
     };    
-}
+};
 
 
 static __hunt_beast_unit_select = function() {
@@ -424,84 +432,91 @@ static __hunt_beast_unit_select = function() {
         __set_members_job_to_mission();
         var _numeral_name = p_data.name()
         stage_id = "active";
-        var _mission_length = irandom_range(2, 5);
-        timer = _mission_length;
+        timer = irandom_range(2, 5);;
         var _gar_pop = instance_create(0, 0, obj_popup);
         //TODO some new MissonHelper methods for popups
         _gar_pop.title = $"Marines assigned to hunt beasts around {_numeral_name}";
-        _gar_pop.text = $"The govornor of {_numeral_name} Thanks you for the participation of your elite warriors in your execution of such a menial task.";
+        _gar_pop.text = $"The governor of {_numeral_name} Thanks you for the participation of your elite warriors in your execution of such a menial task.";
         _gar_pop.add_option("Happy Hunting");
         _gar_pop.image = "";
         _gar_pop.cooldown = 8;
         obj_controller.cooldown = 20;
-        scr_event_log("", $"Beast hunters deployed to {_numeral_name} for {_mission_length} months.", p_data.system.name);
+        scr_event_log("", $"Beast hunters deployed to {_numeral_name} for {timer} months.", p_data.system.name);
         obj_controller.close_popups = false;
     }
 }
 
 static __hunt_beast_resolve = function() {
-    var _man_conditions = {
-        "job": "hunt_beast",
-        "max": 3,
-    };
-    var _hunters = collect_role_group("all", [system.name, planet, 0], false, _man_conditions);
-    if (stage_id == "active") {
-        var _mission_string = "";
-        var _success = false;
-        var _tester = global.character_tester;
-        var _unit_pass;
-        var _unit;
-        var _unit_report_string = "";
-        var _deaths = 0;
-        var _successful_hunters = [];
-
-        if (!array_length(_hunters)) {
-            return;
+    if (stage_id == "preliminary"){
+        delete_mission = true;
+        exit;
+    }
+    var _hunters = clean_unit_array(members);
+    if (array_length(_hunters) == 0){
+        var _man_conditions = {
+            "job": "hunt_beast",
+            "max": 3,
+        };
+        _hunters = collect_role_group("all", [system.name, planet, 0], false, _man_conditions);
+        if (array_length(_hunters) == 0){
+            delete_mission = true;
+            exit;
         }
+    }
 
-        for (var i = 0; i < array_length(_hunters); i++) {
-            _unit = _hunters[i];
-            _unit_pass = _tester.standard_test(_unit, "weapon_skill", 10, ["beast"]);
-            if (_unit_pass[0]) {
-                if (!_success) {
-                    _success = true;
-                }
-                _unit_report_string += _unit.add_trait("beast_slayer", true, true);
-                array_push(_successful_hunters, _unit);
-            } else {
-                var _tough_check = _tester.standard_test(_unit, "constitution", _unit.luck);
-                if (!_tough_check[0]) {
-                    if (_tough_check[1] < -10) {
-                        _unit_report_string += $"{_unit.name_role()} Was mauled to death\n";
-                        _unit.kill(true, false);
-                        _deaths++;
+    var _mission_string = "";
+    var _success = false;
+    var _tester = global.character_tester;
+    var _unit_report_string = "";
+    var _deaths = 0;
+    var _successful_hunters = [];
+
+    if (!array_length(_hunters)) {
+        return;
+    }
+
+    for (var i = 0; i < array_length(_hunters); i++) {
+        var _unit = _hunters[i];
+        var _unit_pass = _tester.standard_test(_unit, "weapon_skill", 10, ["beast"]);
+        if (_unit_pass[0]) {
+            if (!_success) {
+                _success = true;
+            }
+            _unit_report_string += _unit.add_trait("beast_slayer", true, true);
+            array_push(_successful_hunters, _unit);
+        } else {
+            var _tough_check = _tester.standard_test(_unit, "constitution", _unit.luck);
+            if (!_tough_check[0]) {
+                if (_tough_check[1] < -10) {
+                    _unit_report_string += $"{_unit.name_role()} Was mauled to death\n";
+                    _unit.kill(true, false);
+                    _deaths++;
+                } else {
+                    if (irandom(30) < _unit.luck) {
+                        _unit.add_or_sub_health(-100);
+                        _unit_report_string += $"{_unit.name_role()} Was injured (health - 100)\n";
                     } else {
-                        if (irandom(100) < _unit.luck) {
-                            _unit.add_or_sub_health(-100);
-                            _unit_report_string += $"{_unit.name_role()} Was injured (health - 100)\n";
-                        } else {
-                            _unit.add_or_sub_health(-250);
-                            _unit_report_string += $"{_unit.name_role()} Was Badly injured, it is unknown if he will recover (health - 250)\n";
-                        }
+                        _unit.add_or_sub_health(-250);
+                        _unit_report_string += $"{_unit.name_role()} Was Badly injured, it is unknown if he will recover (health - 250)\n";
                     }
                 }
             }
-            _unit.job = "none";
         }
-
-        if (_success) {
-            _mission_string = $"The mission was a success and a great number of beasts rounded up and slain, your marines were able to gain great skills and the prestige of your chapter has increased greatly across the planets populace.";
-            if (_deaths) {
-                _mission_string += $"Unfortunatly {_deaths} of your marines died.";
-            }
-            _mission_string += $"\n{_unit_report_string}";
-        } else {
-            _mission_string = $"The mission was a failiure. The governor is disapointed and the legend of your chapter has undoubtedly been diminished";
-            _mission_string += $"\n{_unit_report_string}";
-        }
-
-        scr_popup($"Beast Hunt on {p_data.name()}", _mission_string, "", "");
+        _unit.job = "none";
     }
+
+    if (_success) {
+        _mission_string = $"The mission was a success and a great number of beasts rounded up and slain, your marines were able to gain great skills and the prestige of your chapter has increased greatly across the planets populace.";
+        if (_deaths) {
+            _mission_string += $"Unfortunately {_deaths} of your marines died.";
+        }
+        _mission_string += $"\n{_unit_report_string}";
+    } else {
+        _mission_string = $"The mission was a failure. The governor is disappointed and the legend of your chapter has undoubtedly been diminished";
+        _mission_string += $"\n{_unit_report_string}";
+    }
+
+    scr_popup($"Beast Hunt on {p_data.name()}", _mission_string, "", "");
     for (var i = 0; i < array_length(_hunters); i++) {
     	_hunters[i].job = "none";
     }
@@ -1110,12 +1125,22 @@ static __mech_mars_resolve = function() {
     }
 }
 
+static __provide_garrison_init = function(){
+    if (system.get_garrison(planet).garrison_force) {
+        delete_mission = true;
+        exit;
+    }
+    stage_id =  "preliminary";
+    data.applicant = "Governor"
+    data.reason = choose("stability", "importance");
+}
+
 static __provide_garrison_feature_selected = function() {
     //TODO : complete logic if (data.reason == "importance") {}
     draw_data.mission_description = $"The governor of {p_data.name()} has requested a force of marines might stay behind following your departure.\n\n\n assign a squad to garrison to initiate mission, The garrison leeader will need to be capable of conducting himself in a diplomatic manner in order for the garrison duration to be a success";
 }
 
-static __provide_garrison_init = function() {
+static provide_garrison_on_garrison = function() {
     if (stage_id != "preliminary") {
         exit;
     }
@@ -1184,6 +1209,11 @@ static __provide_garrison_resolve = function() {
         }
     }
     scr_popup($"Agreed Garrison of {p_data.name()} complete", _mission_string, "", "");
+}
+
+static __protect_raiders_init = function(){
+    stage_id = "preliminary";
+    data.applicant = "Governor"
 }
 
 static __protect_raiders_feature_selected =  function() {
@@ -1843,6 +1873,33 @@ static __inquisition_purge_on_purge = function(){
 static __join_communion_feature_selected = function(){
     draw_data.mission_description = $"The governor of {p_data.name()} has Invited a delegate of your forces to take part in ceremony.";
     draw_data.help  = "This mission is not yet completed"
+}
+
+static __governor_purge_enemies_init = function(){
+    if (system.planets < 2){
+        delete_mission = true;
+        exit;
+    }
+    var _planet = planet;
+    var _enemy = 0;
+    with (system){
+        for (var i = 1; i <= planets; i++) {
+            if (i == _planet) {
+                continue;
+            }
+            if (p_owner[i] == eFACTION.IMPERIUM) {
+                enemy = i;
+                break;
+            }
+        }
+    }
+    if (_enemy == 0){
+        delete_mission = true;
+        exit;        
+    }
+    data.enemy = _enemy;
+    stage_id = "preliminary";
+    data.applicant = "Governor";
 }
 
 static __governor_purge_enemies_feature_selected = function(){

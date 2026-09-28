@@ -809,6 +809,31 @@ function PlanetData(_planet, _system) constructor {
         }
     }
 
+    static  problems_to_mission_log = function(){
+        var _logs = [];
+        for (var p = 0; p < array_length(problems); p++) {
+            var _problem = problems[p];
+
+            if (_problem.stage_id == "preliminary") {
+                continue;
+            }
+            var _mission_explain = _problem.description();
+            var _data = {
+                system: name,
+                mission: _mission_explain,
+                time: _problem.timer,
+                problem :  _problem,
+            };
+
+            _data.click_left = method(_data, function() {
+                set_map_pan_to_loc(problem.system);
+            });
+
+            array_push(_logs, _data);
+        }
+        return _logs;
+    }
+
     static name = function() {
         return planet_numeral_name(planet, system);
     };
@@ -1548,7 +1573,7 @@ function PlanetData(_planet, _system) constructor {
         //if there was an outstanding mission to provide the given garrison
         var _garrison_request = find_problem("provide_garrison");
         if (is_struct(_garrison_request)) {
-            _garrison_request.provide_garrison_init();
+            _garrison_request.provide_garrison_on_garrison();
         }
         instance_destroy(obj_star_select);
     };

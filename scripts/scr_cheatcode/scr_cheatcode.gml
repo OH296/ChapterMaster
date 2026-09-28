@@ -159,23 +159,11 @@ function scr_cheatcode(argument0) {
                         case "planet":
                             scr_inquisition_mission(eEVENT.INQUISITION_PLANET);
                             break;
-                        case "inquisition_spyrer":
-                            scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.SPYRER);
-                            break;
                         case "artifact":
                             scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.ARTIFACT);
                             break;
                         case "inquisitor":
                             scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.INQUISITOR);
-                            break;
-                        case "purge":
-                            scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.PURGE);
-                            break;
-                        case "tomb_world":
-                            scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.TOMB_WORLD);
-                            break;
-                        case "tyranid_organism":
-                            scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.TYRANID_ORGANISM);
                             break;
                         case "demon":
                             scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.DEMON_WORLD);
@@ -496,21 +484,10 @@ function draw_planet_debug_problems() {
             if (mouse_button_clicked()) {
                 var _p_data = obj_star_select.p_data;
                 _p_data.new_problem(_keys[i], 3);
+                /*
                 switch (_keys[i]) {
                     case "inquisitor":
                         mission_inquistion_hunt_inquisitor(target.id);
-                        break;
-                    case "inquisition_tomb":
-                        mission_inquisition_necron_world(target.id);
-                        break;
-                    case "mech_raider":
-                        spawn_mechanicus_mission("mech_raider");
-                        break;
-                    case "mech_mars":
-                        spawn_mechanicus_mission("mech_mars");
-                        break;
-                    case "mech_bionics":
-                        spawn_mechanicus_mission("mech_bionics");
                         break;
                     case "succession":
                         _p_data.init_war_of_succession();
@@ -519,6 +496,7 @@ function draw_planet_debug_problems() {
                         scr_popup("error", "no specific debug action created please consider helping to make one", "");
                         break;
                 }
+                */
             }
         }
     }

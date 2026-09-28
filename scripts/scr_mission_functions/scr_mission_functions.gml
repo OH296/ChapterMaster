@@ -1,5 +1,3 @@
-function MissionHandler(planet, system) : PlanetData(planet, system) constructor {}
-
 function location_out_of_player_control(unit_loc) {
     static _locs = [
         "Terra",
@@ -78,7 +76,7 @@ function mission_name_key(mission) {
     if (struct_exists(mission_key, mission)) {
         return mission_key[$ mission];
     } else {
-        return "none";
+        return "";
     }
 }
 
@@ -87,25 +85,25 @@ function scr_new_governor_mission(planet, problem = "") {
     if (p_owner[planet] != eFACTION.IMPERIUM) {
         exit;
     }
-    var planet_type = p_type[planet];
+    var _planet_type = p_type[planet];
     if (problem == "") {
-        if (planet_type == "Death") {
+        if (_planet_type == "Death") {
             problem = choose("hunt_beast", "provide_garrison");
-        } else if (planet_type == "Hive") {
+        } else if (_planet_type == "Hive") {
             problem = choose("show_of_power", "provide_garrison", "governor_purge_enemies", "raid_black_market");
-        } else if (planet_type == "Temperate") {
+        } else if (_planet_type == "Temperate") {
             problem = choose("provide_garrison", "train_forces", "join_parade");
-        } else if (planet_type == "Shrine") {
+        } else if (_planet_type == "Shrine") {
             problem = choose("provide_garrison", "join_communion");
-        } else if (planet_type == "Ice") {
+        } else if (_planet_type == "Ice") {
             problem = choose("provide_garrison", "hunt_beast");
-        } else if (planet_type == "Lava") {
+        } else if (_planet_type == "Lava") {
             problem = choose("provide_garrison", "protect_raiders");
-        } else if (planet_type == "Agri") {
+        } else if (_planet_type == "Agri") {
             problem = choose("provide_garrison", "protect_raiders", "recover_artifacts");
-        } else if (planet_type == "Desert") {
+        } else if (_planet_type == "Desert") {
             problem = choose("provide_garrison", "protect_raiders", "recover_artifacts");
-        } else if (planet_type == "Feudal") {
+        } else if (_planet_type == "Feudal") {
             problem = choose("hunt_beast", "protect_raiders");
         }
     }
@@ -114,29 +112,6 @@ function scr_new_governor_mission(planet, problem = "") {
         applicant: "Governor",
     };
     if (problem != "") {
-        if (problem == "provide_garrison") {
-            if (get_garrison(planet).garrison_force) {
-                exit;
-            }
-            mission_data.reason = choose("stability", "importance");
-        } else if (problem == "governor_purge_enemies") {
-            var enemy = 0;
-            if (planets > 1) {
-                for (var i = 1; i <= planets; i++) {
-                    if (i == planet) {
-                        continue;
-                    }
-                    if (p_owner[i] == eFACTION.IMPERIUM) {
-                        enemy = i;
-                        break;
-                    }
-                }
-            }
-            mission_data.target = enemy;
-            if (!enemy) {
-                exit;
-            }
-        }
         var _p_data = get_planet_data(planet);
         _p_data.new_problem(problem, 20 + irandom(20),mission_data);
     }
@@ -153,16 +128,15 @@ function init_marine_acting_strange() {
     if (!is_struct(unit)) {
         exit;
     }
-    var role = unit.role();
-    var text = unit.name_role();
+    var _text = unit.name_role();
     var company_text = scr_convert_company_to_string(unit.company);
     if (company_text != "") {
         company_text = $"({company_text})";
         text += company_text;
     }
-    text += " is behaving strangely.";
-    scr_alert("color", "lol", text, 0, 0);
-    scr_event_log("color", text);
+    _text += " is behaving strangely.";
+    scr_alert("color", "lol", _text, 0, 0);
+    scr_event_log("color", _text);
 }
 
 /// @self Asset.GMObject.obj_popup
