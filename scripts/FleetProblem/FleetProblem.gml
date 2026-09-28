@@ -319,74 +319,66 @@ static __great_crusade_results = function(){
     }
     var total_ship_id = array_concat(fleet.capital_num, fleet.frigate_num, fleet.escort_num);
 
-    for (co = 0; co <= obj_ini.companies; co++) {
-        for (i = 0; i < company_length(co); i++) {
-            _unit = fetch_unit([co, i]);
-            if (!is_struct(_unit)) {
-                continue;
-            }
-            if (_unit.ship_location == -1) {
-                continue;
-            }
-            if (array_contains(total_ship_id, _unit.ship_location)) {
-                death_determination = floor(random(100)) + 1;
-                //specialist trait greatly reduces death risk
-                //TODO figure out how to quantify and present these risks so the player knows to protect dudes with trait
-                if (_unit.has_trait("very_hard_to_kill")) {
-                    death_determination -= 20;
-                }
-                death_determination_2 = death_determination;
-                death_determination -= _unit.experience / 2;
+    var _units = collect_role_group("all", ["", 0 , total_ship_id],false, {}, true);
+    for (var i = 0; i < _units.number(); i++){
+    	_unit = _units.units[i];
 
-                //more generalised trait bonus mainly linked to chapter advantage of same name
-                if (_unit.has_trait("slow_and_purposeful")) {
-                    death_determination -= 10;
-                }
+        death_determination = floor(random(100)) + 1;
+        //specialist trait greatly reduces death risk
+        //TODO figure out how to quantify and present these risks so the player knows to protect dudes with trait
+        if (_unit.has_trait("very_hard_to_kill")) {
+            death_determination -= 20;
+        }
+        death_determination_2 = death_determination;
+        death_determination -= _unit.experience / 2;
 
-                var _dead = false;
-                if (death_determination > death_data[0] || death_determination_2 > death_data[1]) {
-                    _dead = true;
-                    if (_unit.role() == obj_ini.player_role_data[eROLE.CAPTAIN].role) {
-                        if (irandom(20) < _unit.luck) {
-                            _dead = false;
-                        } else {
-                            if (irandom(100) < _unit.weapon_skill) {
-                                var heroic_deed = choose("holding a breach in imperial defenses allowing allied forces to regroup,", "slaying the enemy leader in glorious combat, while victorious he ultimately succumbed to his wounds,", "leading an imortant boarding mission,");
-                                //TODO figure out a blance in reward for captains or high rnaking death on crusade
-                                //adds dynamacism as itt creates reward for the potential loss of men and talent during crusades
-                                //var consolations = ["ship", "req",""]
-                                //var consolation_prize = irandom(2)
-                                var heroic_death = $"{_unit.full_title()} died {heroic_deed} {_unit.name()} dies a hero of the {global.chapter_name}";
-                                array_push(heroics_strings, heroic_death);
-                            }
-                        }
-                    } else if (_unit.role() == obj_ini.player_role_data[eROLE.ANCIENT].role || _unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) {
-                        _dead = false;
-                    }
-                }
-                if (_dead) {
-                    obj_ini.ship_carrying[_unit.ship_location] -= _unit.get_unit_size();
-                    if (_unit.IsSpecialist(SPECIALISTS_STANDARD, true)) {
-                        obj_controller.command--;
-                    } else {
-                        obj_controller.marines--;
-                    }
+        //more generalised trait bonus mainly linked to chapter advantage of same name
+        if (_unit.has_trait("slow_and_purposeful")) {
+            death_determination -= 10;
+        }
 
-                    clean[co] = 1;
-                    marines_lost++;
-                    _unit.kill(false, true);
+        var _dead = false;
+        if (death_determination > death_data[0] || death_determination_2 > death_data[1]) {
+            _dead = true;
+            if (_unit.has_role(eROLE.CAPTAIN)) {
+                if (irandom(20) < _unit.luck) {
+                    _dead = false;
                 } else {
-                    if (_unit.IsSpecialist(SPECIALISTS_APOTHECARIES) && (_unit.gear() == "Narthecium")) {
-                        apoth++;
-                    }
-                    _unit.add_exp(irandom(death_data[3][0]) + death_data[3][1]);
-
-                    if (irandom(99) == 1 && irandom(20) < _unit.luck) {
-                        var heroic_deed = choose("still_standing", "lone_survivor", "beast_slayer");
-                        _unit.add_trait(heroic_deed);
-                        array_push(heroics_strings, string(global.trait_list[$ heroic_deed].flavour_text, _unit.full_title()));
+                    if (irandom(100) < _unit.weapon_skill) {
+                        var _heroic_deed = choose("holding a breach in imperial defenses allowing allied forces to regroup,", "slaying the enemy leader in glorious combat, while victorious he ultimately succumbed to his wounds,", "leading an imortant boarding mission,");
+                        //TODO figure out a blance in reward for captains or high rnaking death on crusade
+                        //adds dynamacism as itt creates reward for the potential loss of men and talent during crusades
+                        //var consolations = ["ship", "req",""]
+                        //var consolation_prize = irandom(2)
+                        var heroic_death = $"{_unit.full_title()} died {_heroic_deed} {_unit.name()} dies a hero of the {global.chapter_name}";
+                        array_push(heroics_strings, heroic_death);
                     }
                 }
+            } else if (_unit.has_role(eROLE.ANCIENT) || _unit.has_role(eROLE.CHAPTERMASTER])) {
+                _dead = false;
+            }
+        }
+        if (_dead) {
+            obj_ini.ship_carrying[_unit.ship_location] -= _unit.get_unit_size();
+            if (_unit.IsSpecialist(SPECIALISTS_STANDARD, true)) {
+                obj_controller.command--;
+            } else {
+                obj_controller.marines--;
+            }
+
+            clean[co] = 1;
+            marines_lost++;
+            _unit.kill(false, true);
+        } else {
+            if (_unit.IsSpecialist(SPECIALISTS_APOTHECARIES) && (_unit.gear() == "Narthecium")) {
+                apoth++;
+            }
+            _unit.add_exp(irandom(death_data[3][0]) + death_data[3][1]);
+
+            if (irandom(99) == 1 && irandom(20) < _unit.luck) {
+                var _heroic_deed = choose("still_standing", "lone_survivor", "beast_slayer");
+                _unit.add_trait(_heroic_deed);
+                array_push(heroics_strings, string(global.trait_list[$ _heroic_deed].flavour_text, _unit.full_title()));
             }
         }
     }
@@ -402,7 +394,7 @@ static __great_crusade_results = function(){
     }
 
     with (obj_ini) {
-        for (var _c = 0; _c <= 10; _c++) {
+        for (var _c = 0; _c <= obj_ini.companies; _c++) {
             scr_company_order(_c);
         }
     }
@@ -434,12 +426,13 @@ static __great_crusade_results = function(){
 
     tixt += string(marines_lost) + " of your battle brothers fell in combat.";
 
+    var _apoth_role = obj_ini.player_role_data[eROLE.APOTHECARY].role;
     if (obj_ini.doomed == 0) {
         if ((apoth > 0) && (seed > 0)) {
-            tixt += "  The " + string(apoth) + " surviving " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + " were able to recover " + string(seed) + " Gene-Seed.";
+            tixt += $"  The {apoth} surviving {_apoth_role} were able to recover {seed} Gene-Seed.";
         }
         if ((apoth == 0) && (seed > 0)) {
-            tixt += "  You had no able-bodied " + string(obj_ini.player_role_data[eROLE.APOTHECARY].role) + ", or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(seed) + " of your Gene-Seed.";
+            tixt += $"  You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(seed) + " of your Gene-Seed.";
         }
     }
     if (obj_ini.doomed == 1) {
@@ -447,7 +440,7 @@ static __great_crusade_results = function(){
     }
 
     if (artifacts > 0) {
-        tixt += "  " + string(artifacts) + " Artifacts were granted to your Chapter or looted.";
+        tixt += $"  {artifacts} Artifacts were granted to your Chapter or looted.";
     }
     if ((roll3 <= 10) && (artifacts > 1)) {
         tixt += "  One of them were given as a bonus for exceptional valor.";
