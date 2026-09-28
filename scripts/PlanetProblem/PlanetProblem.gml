@@ -108,6 +108,10 @@ static description = function(){
     return _n;
 }
 
+static view_on_planet_screen = function(){
+    return (stage_id == "preliminary") && (has_data("applicant"));
+}
+
 static __increment_mission_completion =  function() {
     if (!struct_exists(data, "completion")) {
         data.completion = 0;
@@ -277,6 +281,7 @@ static planet_draw_feature_selected = function(){
     draw_data.button_text = "";
     draw_data.button_function = noone;
     draw_data.help = "";
+    draw_data.button_tooltip = "";
     var _func = find_func("feature_selected");
     __handle_triggered_mission_func(_func);
     __feature_selected_draw();
@@ -916,11 +921,11 @@ function __hunt_fallen_battle_aftermath() {
     }
     delete_mission = true;
     var _tixt = "The Fallen on " + p_data.name();
-    scr_event_log("", $"Mission Succesful: {_tixt} have been captured or purged.");
+    scr_event_log("", $"Mission Successful: {_tixt} have been captured or purged.");
     _tixt += $" have been captured or purged.  They shall be brought to the Chapter {obj_ini.player_role_data[eROLE.CHAPLAIN].role}s posthaste, in order to account for their sins.  ";
     var _tex_options = [
         "Suffering is the beginning to penance.",
-        "Their screams shall be the harbringer of their contrition.",
+        "Their screams shall be the harbinger of their contrition.",
         "The shame they inflicted upon us shall be written in their flesh.",
     ];
     _tixt += _tex_options[choose(0, 0, 1, 2)];
@@ -1038,7 +1043,7 @@ static __mech_tomb_exploring = function() {
                 var _last_artifact = scr_add_artifact("random", "", 0);
                 _text = $"The Mechanicus Research team on planet {p_data.name()} have completed their work without any major setbacks.  Pleased with your astartes' work, they have granted your Chapter an artifact, to be used as you see fit.";
                 scr_event_log("", $"Mechanicus Mission Completed: The Mechanicus research team on {p_data.name()} have completed their work.");
-                scr_event_log("", "Artifact gifted from Mechanicus.");
+                scr_event_log("", "Artefact gifted from Mechanicus.");
             }
             _text += "\n" + add_disposition(eFACTION.MECHANICUS, 1);
             scr_popup("Mechanicus Mission Completed", _text, "mechanicus", "");
@@ -1072,11 +1077,11 @@ static __mech_tomb_battle_aftermath = function() {
             awaken_tomb_world(battle_object.p_feature[battle_id]);
             _disp_change = alter_dispositions([[eFACTION.MECHANICUS, -15], [eFACTION.INQUISITION, -5]]);
             scr_popup("Mechanicus Mission Failed", $"All of your Astartes and the Mechanicus Research party have been killed down to the last man.  The research is a bust.  To make matters worse the Necron Tomb has fully awakened- countless numbers of the souless machines are now pouring out of the tomb.  The Adeptus Mechanicus are furious with your chapter. {_disp_change}", "necron_army", "");
-            scr_alert("", "inqi", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb", 0, 0);
+            scr_alert("", "inquisition", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb", 0, 0);
             scr_event_log("", "The Inquisition is displeased with your Chapter for tampering with and awakening a Necron Tomb");
         }
 
-        scr_event_log("", "Mechanicus Mission Failed: Necron Tomb Research Party and present astartes have been killed.");
+        scr_event_log("", "Mechanicus Mission Failed: Necron Tomb Research Party and present Astartes have been killed.");
 
     }   
 }
@@ -1177,6 +1182,7 @@ static __provide_garrison_resolve = function() {
     if (!p_data.garrisons.garrison_leader) {
         p_data.garrisons.find_leader();
     }
+    var _leader = garrisons.garrison_leader;
 
     var _effect = 0;
     if (_result == "none") {
@@ -1191,20 +1197,20 @@ static __provide_garrison_resolve = function() {
 
     p_data.add_disposition(_effect);
     var _tester = global.character_tester;
-    var _widom_test = _tester.standard_test(garrisons.garrison_leader, "wisdom", 0, ["siege"]);
+    var _widom_test = _tester.standard_test(_leader, "wisdom", 0, ["siege"]);
 
     if (_widom_test[0]) {
         p_data.alter_fortification(1);
-        _mission_string += $"while stationed {garrisons.garrison_leader.name_role()} makes several notable observations and is able to instruct the planets defense core leaving the world better defended (fortifications+1).";
+        _mission_string += $"while stationed {_leader.name_role()} makes several notable observations and is able to instruct the planets defense core leaving the world better defended (fortifications+1).";
     }
-    //TODO just generall apply this each turn with a garrison to see if a cult is found
+    //TODO just generally apply this each turn with a garrison to see if a cult is found
     if (has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
         var _cult = get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
         if (_cult.hiding) {
-            _widom_test = _tester.standard_test(garrisons.garrison_leader, "wisdom", 0, ["tyranids"]);
+            _widom_test = _tester.standard_test(_leader, "wisdom", 0, ["tyranids"]);
             if (_widom_test[0]) {
                 _cult.hiding = false;
-                _mission_string += "Most alarmingly signs of a genestealer _cult are noted by the garrison. how far the rot has gone will now need to be investigated and the xenos taint purged.";
+                _mission_string += "Most alarmingly signs of a Genestealer cult are noted by the garrison. how far the rot has gone will now need to be investigated and the xenos taint purged.";
             }
         }
     }
@@ -1213,7 +1219,7 @@ static __provide_garrison_resolve = function() {
 
 static __protect_raiders_init = function(){
     stage_id = "preliminary";
-    data.applicant = "Governor"
+    data.applicant = "Governor";
 }
 
 static __protect_raiders_feature_selected =  function() {
@@ -1870,6 +1876,10 @@ static __inquisition_purge_on_purge = function(){
     }
 }
 
+static __join_communion_init = function(){
+    stage_id =  "preliminary";
+    data.applicant = "Governor";
+}
 static __join_communion_feature_selected = function(){
     draw_data.mission_description = $"The governor of {p_data.name()} has Invited a delegate of your forces to take part in ceremony.";
     draw_data.help  = "This mission is not yet completed"

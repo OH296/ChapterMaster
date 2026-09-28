@@ -1408,29 +1408,29 @@ function PlanetData(_planet, _system) constructor {
 
         draw_text(xx + 349, yy + 346, string_hash_to_newline(string(presence_text)));
 
-        var planet_displays = [];
-        var feat_count = array_length(features);
-        var upgrade_count = array_length(upgrades);
+        var _planet_displays = [];
+        var _feat_count = array_length(features);
+        var _upgrade_count = array_length(upgrades);
         var size = global.planet_size;
-        if (feat_count > 0) {
-            for (var i = 0; i < feat_count; i++) {
+        if (_feat_count > 0) {
+            for (var i = 0; i < _feat_count; i++) {
                 var cur_feature = features[i];
                 try {
                     if (cur_feature.planet_display != 0) {
                         if (cur_feature.f_type == eP_FEATURES.GENE_STEALER_CULT) {
                             if (!cur_feature.hiding) {
-                                array_push(planet_displays, [cur_feature.planet_display, cur_feature]);
+                                array_push(_planet_displays, [cur_feature.planet_display, cur_feature]);
                             }
                         } else if (cur_feature.player_hidden == 1) {
-                            array_push(planet_displays, ["????", ""]);
+                            array_push(_planet_displays, ["????", ""]);
                         } else {
-                            array_push(planet_displays, [cur_feature.planet_display, cur_feature]);
+                            array_push(_planet_displays, [cur_feature.planet_display, cur_feature]);
                         }
                         if (cur_feature.f_type == eP_FEATURES.MONASTERY) {
                             if (cur_feature.forge > 0) {
-                                var forge = cur_feature.forge_data;
-                                var size_string = localize("{0} Chapter Forge", [size[forge.size]]);
-                                array_push(planet_displays, [size_string, forge]);
+                                var _forge = cur_feature.forge_data;
+                                var _size_string = localize("{0} Chapter Forge", [size[forge.size]]);
+                                array_push(_planet_displays, [_size_string, _forge]);
                             }
                         }
                     }
@@ -1440,14 +1440,14 @@ function PlanetData(_planet, _system) constructor {
                 }
             }
         }
-        if (upgrade_count > 0) {
-            for (var i = 0; i < upgrade_count; i++) {
+        if (_upgrade_count > 0) {
+            for (var i = 0; i < _upgrade_count; i++) {
                 var _upgrade = upgrades[i];
                 if (_upgrade.f_type == eP_FEATURES.SECRET_BASE) {
                     if (_upgrade.forge > 0) {
-                        var forge = _upgrade.forge_data;
-                        var size_string = localize("{0} Chapter Forge", [size[forge.size]]);
-                        array_push(planet_displays, [size_string, forge]);
+                        var _forge = _upgrade.forge_data;
+                        var _size_string = localize("{0} Chapter Forge", [size[_forge.size]]);
+                        array_push(_planet_displays, [_size_string, _forge]);
                     }
                 }
             }
@@ -1455,26 +1455,25 @@ function PlanetData(_planet, _system) constructor {
 
         for (var i = 0; i < array_length(problems); i++) {
             var _problem = problems[i];
-            if (_problem.stage_id == "preliminary") {
+            if (_problem.view_on_planet_screen()) {
                 var _mission_string = localize("{0} Audience", [_problem.data.applicant]);
-                problem_data.problem = _problem;
-                array_push(planet_displays, [_mission_string, _problem]);
+                array_push(_planet_displays, [_mission_string, _problem]);
             }
         }
 
-        var button_size;
-        var y_move = 0;
-        var button_colour;
-        for (var i = 0; i < array_length(planet_displays); i++) {
-            button_colour = c_green;
-            if (planet_displays[i][0] == "????") {
-                button_colour = c_red;
+        var _button_size;
+        var _y_move = 0;
+        var _button_colour;
+        for (var i = 0; i < array_length(_planet_displays); i++) {
+            _button_colour = c_green;
+            if (_planet_displays[i][0] == "????") {
+                _button_colour = c_red;
             }
-            button_size = draw_unit_buttons([xx + 535, yy + 346 + y_move], planet_displays[i][0], [1, 1], button_colour,, fnt_40k_14b, 1);
-            y_move += button_size[3] - button_size[1];
-            if (point_and_click(button_size)) {
-                if (planet_displays[i][0] != "????") {
-                    obj_star_select.feature = new FeatureSelected(planet_displays[i][1], system, current_planet);
+            _button_size = draw_unit_buttons([xx + 535, yy + 346 + _y_move], _planet_displays[i][0], [1, 1], _button_colour,, fnt_40k_14b, 1);
+            _y_move += _button_size[3] - _button_size[1];
+            if (point_and_click(_button_size)) {
+                if (_planet_displays[i][0] != "????") {
+                    obj_star_select.feature = new FeatureSelected(_planet_displays[i][1], system, current_planet);
                 } else {
                     obj_star_select.feature = "";
                 }
@@ -1586,7 +1585,7 @@ function PlanetData(_planet, _system) constructor {
         if (garrisons.garrison_force) {
             garrisons.find_leader();
             garrisons.garrison_disposition_change(true);
-        }
+        }        
     };
 
     static planet_selection_logic = function() {
