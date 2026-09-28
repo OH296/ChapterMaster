@@ -121,7 +121,7 @@ add_feature = function(planet, feature) {
 system_problems = [];
 
 add_problem = function(p_id, data = {}){
-    var _prob = new SystemProblem(name, SystemProblem, data);
+    var _prob = new SystemProblem(p_id, self, data);
     array_push(system_problems, _prob);
     return _prob;
 }
