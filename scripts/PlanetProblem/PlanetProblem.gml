@@ -360,13 +360,15 @@ static __init = function(){
 }
 __init();
 
-
+//self must be referenced like this or the compiler assumes i want feature to refer to the arg struct i'm passing 
 static select_units = function(select_from, purpose_string, number, selections = []){
-    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: number, system , feature: self, planet, selections});
+    var _self = self;
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: number, system , feature: _self, planet, selections});
 }
 
 static select_squads = function(select_from, purpose_string, number, selections = []){
-    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: number, system , feature: self, planet, selections, select_type: eMISSION_SELECT_TYPE.SQUADS});
+    var _self = self;
+    group_selection(select_from, {purpose: purpose_string, purpose_code: p_id, number: number, system , feature: _self, planet, selections, select_type: eMISSION_SELECT_TYPE.SQUADS});
 }
 // by default mission battles do not reduce the fortification level or enemy power on a planet
 static new_end_turn_battle = function(battle_opponent_id, special_id = p_id, enemy_data = undefined){
@@ -632,7 +634,7 @@ static __train_forces_resolve = function() {
         }
     } else {
         var disp_loss = -5;
-        _mission_string += "The orgional training mission was a failiure";
+        _mission_string += "The original training mission was a failure";
         if (_brute) {
             _mission_string += "in no short part due to his brutish nature";
         }
@@ -657,7 +659,7 @@ static __train_forces_resolve = function() {
                 }
             }
             if (_hard_loss) {
-                _mission_string += $"His particularly grueling regimes and standards imposed upon the senior officers of the pdf caused friction with physical injury being caused to one officer";
+                _mission_string += $"His particularly gruelling regimes and standards imposed upon the senior officers of the pdf caused friction with physical injury being caused to one officer";
                 disp_loss = -25;
                 _mission_string += "(disposition -25)";
             }
@@ -708,7 +710,7 @@ static __succession_resolve = function() {
         scr_alert("green", "succession", _alert_text, p_data.system.x, p_data.system.y);
         scr_event_log("", _alert_text);
     } else {
-        //At the moment does not fire but a worty flavour option for down the line
+        //At the moment does not fire but a worthy flavour option for down the line
         _alert_text += " Word is the new Governor has Heretical leanings and sympathises with xenos.";
     }
 
@@ -748,7 +750,7 @@ static __inquisition_recon_per_turn = function() {
         "inquisition", 
         _pop_data
     );
-    scr_event_log("", $"Inquisition Mission Completed: Your Astartes have succesfully scouted  {p_data.name()}.");
+    scr_event_log("", $"Inquisition Mission Completed: Your Astartes have successfully scouted  {p_data.name()}.");
 
     delete_mission = true;
 
@@ -813,7 +815,7 @@ static __inquisition_spyrer_per_turn = function() {
 }
 
 static __inquisition_spyrer_battle_aftermath = function(){
-    // title / text / image / speshul
+    // title / text / image / special
     if (!obj_ncombat.defeat){
         exit;
     }
@@ -1189,7 +1191,7 @@ static __provide_garrison_resolve = function() {
         //TODO make a dedicated plus minus string function if there isn't one already
     } else if (_result < 0) {
         _effect = _result * irandom_range(1, 5);
-        _mission_string += $"A number of diplomatic incidents occured over the period which had considerable negative effects on our disposition with the planetary governor (disposition -{_effect})";
+        _mission_string += $"A number of diplomatic incidents occurred over the period which had considerable negative effects on our disposition with the planetary governor (disposition -{_effect})";
     } else {
         _effect = _result * irandom_range(1, 5);
         _mission_string += $"As a diplomatic mission the duration of the stay was a success with our political position with the planet being enhanced greatly (disposition +{_effect})";
@@ -1226,7 +1228,7 @@ static __protect_raiders_feature_selected =  function() {
     draw_data.mission_description = $"The governor of {p_data.name()} has sent many requests to the sector commander for help with defending against xenos raids on the populace of the planet, the reports seem to suggest the xenos in question are in fact dark eldar.";
     draw_data.help = "Set a squads to ambush";
     draw_data.button_text = "Send Squad";
-    draw_data.button_tooltip = "milage may vary on playability of this mission progress at your own risk";
+    draw_data.button_tooltip = "mileage may vary on playability of this mission progress at your own risk";
     draw_data.button_function = function() {
         var _dudes = collect_role_group("all", system.name);
         select_squads(_dudes, "Select Squad for Ambush", 1)
@@ -1830,7 +1832,7 @@ static __inquisition_purge_init = function(){
     if (data.mission_flavour == 1) {
         _text += $"  A number of high-ranking nobility on the {p_data.name()} are being difficult and harboring heretical thoughts.  They are to be selectively purged within {timer} months.  Can your chapter handle this mission?";
     } else if (data.mission_flavour == 2) {
-        _text += $"  A powerful crimelord on the {p_data.name()} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {timer} months.  Can your chapter handle this mission?";
+        _text += $"  A powerful crime-lord on the {p_data.name()} is gaining an unacceptable amount of power and disrupting daily operations.  They are to be selectively purged within {timer} months.  Can your chapter handle this mission?";
     } else if (data.mission_flavour == 3) {
         _text += $"  The mutants of hive world {p_data.name()} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {timer} months.  Can your chapter handle this mission?";
     }
@@ -1868,7 +1870,7 @@ static __inquisition_purge_on_purge = function(){
 
             alter_disposition(eFACTION.INQUISITION, obj_controller.demanding ? choose(0, 0, 1) : 1);
 
-            var _popup_text = $"Your marines scour the underhive of {p_data.name()}, spraying mutants down with promethium as they go.  It takes several days but a sizeable dent is put in their numbers.";
+            var _popup_text = $"Your marines scour the under-hive of {p_data.name()}, spraying mutants down with promethium as they go.  It takes several days but a sizeable dent is put in their numbers.";
             scr_event_log("", $"Inquisition Mission Completed: The mutants of {p_data.name()} have been cleansed by promethium.");
             p_data.add_disposition(choose(1, 2, 3));
             scr_popup("Inquisition Mission Completed", _popup_text, "inquisition"); 

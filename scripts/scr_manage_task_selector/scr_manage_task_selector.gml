@@ -158,8 +158,11 @@ function task_selector_man_manage() {
     }
     selection_data.selections = _selections;
     if (struct_exists(selection_data, "feature")){
+        LOGGER.info("feature select call point")
         var _feat = selection_data.feature;
+        LOGGER.info($"is struct: {is_struct(_feat)}, is_ instance{is_instanceof(_feat, PlanetProblem)}, \nfeature: {_feat}")
         if (is_struct(_feat) && is_instanceof(_feat, PlanetProblem)){
+            LOGGER.info("feature is real")
             _feat.on_unit_selection();
         }
     }
