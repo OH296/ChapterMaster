@@ -241,8 +241,8 @@ function scr_random_event(execute_now) {
                 spaceHulkX = _star_id.x + (choose(-1, 1) * irandom_range(50, 60));
                 spaceHulkY = _star_id.y + (choose(-1, 1) * irandom_range(50, 80));
                 spaceHulkY = max(spaceHulkY, 40);
-                var distanceToNearestStarOk = point_distance(spaceHulkX, spaceHulkY, instance_nearest(spaceHulkX, spaceHulkY, obj_star).x, instance_nearest(spaceHulkX, spaceHulkY, obj_star).y) >= 70;
-                if (distanceToNearestStarOk) {
+                var _distanceToNearestStarOk = point_distance(spaceHulkX, spaceHulkY, instance_nearest(spaceHulkX, spaceHulkY, obj_star).x, instance_nearest(spaceHulkX, spaceHulkY, obj_star).y) >= 70;
+                if (_distanceToNearestStarOk) {
                     positionFound = true;
                 }
                 tries_to_place_space_hulk++;
@@ -277,15 +277,10 @@ function scr_random_event(execute_now) {
             LOGGER.error("RE: Promotion, couldn't pick a space marine");
             exit;
         }
-        var role = _unit.role();
-        var text = _unit.name_role();
-        var company_text = scr_convert_company_to_string(company);
-        //var company_text = scr_company_string(company);
-        if (company_text != "") {
-            company_text = "(" + company_text + ")";
-        }
-        text += company_text;
-        text += " has distinguished himself.##He åis up for review to be promoted.";
+        var _text = _unit.name_role();
+        var _company_text = $"({scr_convert_company_to_string(company)})";
+        _text += _company_text;
+        _text += " has distinguished himself.##He åis up for review to be promoted.";
 
         if (company != 10) {
             _unit.add_exp(10);
@@ -293,8 +288,8 @@ function scr_random_event(execute_now) {
             _unit.add_exp(max(20, _unit.experience));
         }
 
-        scr_popup("Promotions!", text, "distinguished", "");
-        scr_event_log("green", text);
+        scr_popup("Promotions!", _text, "distinguished", "");
+        scr_event_log("green", _text);
         _evented = true;
     } else if (chosen_event == eEVENT.STRANGE_BUILDING) {
         _evented = strange_build_event();
@@ -324,7 +319,7 @@ function scr_random_event(execute_now) {
                 exit;
             }
 
-            var _planet = _star_id.get_plaet_data(array_random_element(eligible_planets));
+            var _planet = _star_id.get_planet_data(array_random_element(eligible_planets));
             _planet.add_forces(eFACTION.ECCLESIARCHY, 1);
             _evented = true;
 

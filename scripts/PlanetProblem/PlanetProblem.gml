@@ -946,9 +946,9 @@ function __hunt_fallen_battle_aftermath() {
 }
 
 static __mech_raider_init = function(){
-    var _mission_loc = _planet.name();
-    var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
-    var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
+    var _mission_loc = p_data.name();
+    var _nearest_fleet = instance_nearest(system.x, system.y, obj_p_fleet);
+    var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, system.x, system.y, _nearest_fleet, false);
     var _vacation_time = 24;
     _mission_time += _vacation_time;
     var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true]);
@@ -1942,7 +1942,7 @@ static __governor_purge_enemies_init = function(){
                 continue;
             }
             if (p_owner[i] == eFACTION.IMPERIUM) {
-                enemy = i;
+                _enemy = i;
                 break;
             }
         }

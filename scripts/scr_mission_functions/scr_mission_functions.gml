@@ -124,15 +124,15 @@ function init_marine_acting_strange() {
         exit;
     }
 
-    var unit = fetch_unit(marine_and_company);
-    if (!is_struct(unit)) {
+    var _unit = fetch_unit(marine_and_company);
+    if (!is_struct(_unit)) {
         exit;
     }
-    var _text = unit.name_role();
-    var company_text = scr_convert_company_to_string(unit.company);
+    var _text = _unit.name_role();
+    var company_text = scr_convert_company_to_string(_unit.company);
     if (company_text != "") {
         company_text = $"({company_text})";
-        text += company_text;
+        _text += company_text;
     }
     _text += " is behaving strangely.";
     scr_alert("color", "lol", _text, 0, 0);

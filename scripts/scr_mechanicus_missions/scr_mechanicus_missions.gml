@@ -8,7 +8,7 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
     if (array_length(_forge_stars)) {
         array_push(mechanicus_missions, "mech_bionics");
         var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true]);
-        if (_techs >= 3) {
+        if (array_length(_techs >= 3)) {
             array_push(mechanicus_missions, "mech_raider");
         }
     }
@@ -143,7 +143,7 @@ function accept_mechanicus_tomb_mission() {
         }
     }
     if (_planet > 0) {
-        planet = _star.get_planet_data(_planet);
+        _planet = _star.get_planet_data(_planet);
         _planet.new_problem("mech_tomb", scr_mission_eta(_star.x, _star.y), {stage : "awating_player"});
         exit;
     }
@@ -155,7 +155,7 @@ function accept_mechanicus_land_raider_mission() {
     var _forge_planet = scr_get_planet_with_type(_star, "Forge");
     if (_forge_planet > 0) {
         var _planet = _star.get_planet_data(_forge_planet);
-        _planet.new_problem("mech_raider", _mission_time,{});
+        _planet.new_problem("mech_raider", 1, {});
     } else {
         text = $"Error valid forge planet not found please open a bug report if seen";
     }

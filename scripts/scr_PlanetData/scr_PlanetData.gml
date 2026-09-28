@@ -1429,7 +1429,7 @@ function PlanetData(_planet, _system) constructor {
                         if (cur_feature.f_type == eP_FEATURES.MONASTERY) {
                             if (cur_feature.forge > 0) {
                                 var _forge = cur_feature.forge_data;
-                                var _size_string = localize("{0} Chapter Forge", [size[forge.size]]);
+                                var _size_string = localize("{0} Chapter Forge", [size[_forge.size]]);
                                 array_push(_planet_displays, [_size_string, _forge]);
                             }
                         }
