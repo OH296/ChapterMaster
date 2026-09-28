@@ -259,12 +259,11 @@ static __great_crusade_on_final_arrival(){
 }
 
 static __great_crusade_results = function(){
-    var _unit;
-    var co = 0, i = 0, apoth = 0, death_determination = 0, death_determination_2 = 0, roll3 = 0, type = "", artifacts = 0;
-    var seed = 0;
-    var marines_lost = 0;
-    var heroics_strings = [];
-    var clean = [];
+   	var _apoth = 0, _death_determination = 0, _death_determination_2 = 0, _roll3 = 0, _type = "", _artifacts = 0;
+    var _seed = 0;
+    var _marines_lost = 0;
+    var _heroics_strings = [];
+    var _clean = [];
 
     //index 1: death_determine 1 //index 2: death_determine 2 /index 3: apoth_recovery
     //index 3 exp_gains irandom + static
@@ -298,47 +297,47 @@ static __great_crusade_results = function(){
         ],
     };
 
-    death_determination = floor(random(100)) + 1;
-    roll3 = irandom(99) + 1;
+    _death_determination = floor(random(100)) + 1;
+    _roll3 = irandom(99) + 1;
 
-    if (death_determination <= 50) {
-        type = "normal";
-        artifacts = choose(0, 0, 0, 0, 0, 1);
-    } else if (death_determination > 50 && death_determination <= 80) {
-        type = "hard";
-        artifacts = choose(0, 0, 1);
-    } else if (death_determination > 80) {
-        type = "brutal";
-        artifacts = choose(1, 2, 3);
+    if (_death_determination <= 50) {
+        _type = "normal";
+        _artifacts = choose(0, 0, 0, 0, 0, 1);
+    } else if (_death_determination > 50 && _death_determination <= 80) {
+        _type = "hard";
+        _artifacts = choose(0, 0, 1);
+    } else if (_death_determination > 80) {
+        _type = "brutal";
+        _artifacts = choose(1, 2, 3);
     }
 
-    var death_data = death_sets[$ type];
+    var death_data = death_sets[$ _type];
 
-    for (co = 0; co <= obj_ini.companies; co++) {
-        clean[co] = 0;
+    for (var co = 0; co <= obj_ini.companies; co++) {
+        _clean[co] = 0;
     }
     var total_ship_id = array_concat(fleet.capital_num, fleet.frigate_num, fleet.escort_num);
 
     var _units = collect_role_group("all", ["", 0 , total_ship_id],false, {}, true);
     for (var i = 0; i < _units.number(); i++){
-    	_unit = _units.units[i];
+    	var _unit = _units.units[i];
 
-        death_determination = floor(random(100)) + 1;
+        _death_determination = floor(random(100)) + 1;
         //specialist trait greatly reduces death risk
         //TODO figure out how to quantify and present these risks so the player knows to protect dudes with trait
         if (_unit.has_trait("very_hard_to_kill")) {
-            death_determination -= 20;
+            _death_determination -= 20;
         }
-        death_determination_2 = death_determination;
-        death_determination -= _unit.experience / 2;
+        _death_determination_2 = _death_determination;
+        _death_determination -= _unit.experience / 2;
 
         //more generalised trait bonus mainly linked to chapter advantage of same name
         if (_unit.has_trait("slow_and_purposeful")) {
-            death_determination -= 10;
+            _death_determination -= 10;
         }
 
         var _dead = false;
-        if (death_determination > death_data[0] || death_determination_2 > death_data[1]) {
+        if (_death_determination > death_data[0] || _death_determination_2 > death_data[1]) {
             _dead = true;
             if (_unit.has_role(eROLE.CAPTAIN)) {
                 if (irandom(20) < _unit.luck) {
@@ -351,7 +350,7 @@ static __great_crusade_results = function(){
                         //var consolations = ["ship", "req",""]
                         //var consolation_prize = irandom(2)
                         var heroic_death = $"{_unit.full_title()} died {_heroic_deed} {_unit.name()} dies a hero of the {global.chapter_name}";
-                        array_push(heroics_strings, heroic_death);
+                        array_push(_heroics_strings, heroic_death);
                     }
                 }
             } else if (_unit.has_role(eROLE.ANCIENT) || _unit.has_role(eROLE.CHAPTERMASTER])) {
@@ -366,31 +365,31 @@ static __great_crusade_results = function(){
                 obj_controller.marines--;
             }
 
-            clean[co] = 1;
-            marines_lost++;
+            _clean[co] = 1;
+            _marines_lost++;
             _unit.kill(false, true);
         } else {
             if (_unit.IsSpecialist(SPECIALISTS_APOTHECARIES) && (_unit.gear() == "Narthecium")) {
-                apoth++;
+                _apoth++;
             }
             _unit.add_exp(irandom(death_data[3][0]) + death_data[3][1]);
 
             if (irandom(99) == 1 && irandom(20) < _unit.luck) {
                 var _heroic_deed = choose("still_standing", "lone_survivor", "beast_slayer");
                 _unit.add_trait(_heroic_deed);
-                array_push(heroics_strings, string(global.trait_list[$ _heroic_deed].flavour_text, _unit.full_title()));
+                array_push(_heroics_strings, string(global.trait_list[$ _heroic_deed].flavour_text, _unit.full_title()));
             }
         }
     }
 
     if (obj_ini.doomed == 0) {
-        if (apoth > 0) {
-            seed = min(seed, apoth * death_data[2]);
+        if (_apoth > 0) {
+            _seed = min(_seed, _apoth * death_data[2]);
         }
-        if (apoth == 0) {
-            seed = floor(seed * 0.2);
+        if (_apoth == 0) {
+            _seed = floor(_seed * 0.2);
         }
-        obj_controller.gene_seed += seed;
+        obj_controller.gene_seed += _seed;
     }
 
     with (obj_ini) {
@@ -399,11 +398,11 @@ static __great_crusade_results = function(){
         }
     }
 
-    if (roll3 <= 10) {
-        artifacts += 1;
+    if (_roll3 <= 10) {
+        _artifacts += 1;
     }
-    if (artifacts > 0) {
-        repeat (artifacts) {
+    if (_artifacts > 0) {
+        repeat (_artifacts) {
             if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
                 scr_add_artifact("random", "", 4, obj_ini.home_name, -1);
             }
@@ -414,47 +413,47 @@ static __great_crusade_results = function(){
     }
 
     var tixt = "Your ships have returned from the Crusade.  ";
-    if (type == "normal") {
+    if (_type == "normal") {
         tixt += "The combat was as could be expected- ";
     }
-    if (type == "hard") {
+    if (_type == "hard") {
         tixt += "The combat was fairly grueling- ";
     }
-    if (type == "brutal") {
+    if (_type == "brutal") {
         tixt += "The combat was absolutely brutal- your marines were the first into the fray, and as a result ";
     }
 
-    tixt += string(marines_lost) + " of your battle brothers fell in combat.";
+    tixt += $"{_marines_lost} of your battle brothers fell in combat.";
 
     var _apoth_role = obj_ini.player_role_data[eROLE.APOTHECARY].role;
     if (obj_ini.doomed == 0) {
-        if ((apoth > 0) && (seed > 0)) {
-            tixt += $"  The {apoth} surviving {_apoth_role} were able to recover {seed} Gene-Seed.";
+        if ((_apoth > 0) && (_seed > 0)) {
+            tixt += $"  The {_apoth} surviving {_apoth_role} were able to recover {_seed} Gene-Seed.";
         }
-        if ((apoth == 0) && (seed > 0)) {
-            tixt += $"  You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(seed) + " of your Gene-Seed.";
+        if ((_apoth == 0) && (_seed > 0)) {
+            tixt += $"  You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(_seed) + " of your Gene-Seed.";
         }
     }
     if (obj_ini.doomed == 1) {
         tixt += "  Due to fatal mutations in your marines none of the fallen Gene-Seed was recoverable.";
     }
 
-    if (artifacts > 0) {
-        tixt += $"  {artifacts} Artifacts were granted to your Chapter or looted.";
+    if (_artifacts > 0) {
+        tixt += $"  {_artifacts} Artifacts were granted to your Chapter or looted.";
     }
-    if ((roll3 <= 10) && (artifacts > 1)) {
+    if ((_roll3 <= 10) && (_artifacts > 1)) {
         tixt += "  One of them were given as a bonus for exceptional valor.";
     }
 
-    if (array_length(heroics_strings) == 1) {
+    if (array_length(_heroics_strings) == 1) {
         tixt += " A heroic deed was recorded";
-    } else if (array_length(heroics_strings) > 1) {
+    } else if (array_length(_heroics_strings) > 1) {
         tixt += " Several deeds were recorded";
     }
     // title / text / image / speshul
     scr_popup("Crusade Results", tixt, "crusade", "");
-    for (i = 0; i < array_length(heroics_strings); i++) {
-        scr_popup("Heroic Deed", heroics_strings[i], "crusade", "");
+    for (i = 0; i < array_length(_heroics_strings); i++) {
+        scr_popup("Heroic Deed", _heroics_strings[i], "crusade", "");
     }
 
     delete_mission = true;
