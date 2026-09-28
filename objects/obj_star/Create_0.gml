@@ -29,7 +29,6 @@ visited = 0;
 stored_owner = -1;
 
 // sets up default planet variables
-var PLANET_ARRAY_SIZE = 9;
 planet = array_create(PLANET_ARRAY_SIZE, 0);
 dispo = array_create(PLANET_ARRAY_SIZE, -50);
 p_type = array_create(PLANET_ARRAY_SIZE, "");
@@ -270,7 +269,7 @@ function deserialize(save_data) {
                 }
                 var _val = _planet[$ _var_name];
                 if (!is_array(self[$ _var_name])) {
-                    self[$ _var_name] = array_create(9, 0);
+                    self[$ _var_name] = array_create(PLANET_ARRAY_SIZE, 0);
                 }
                 self[$ _var_name][p] = _val;
             }
