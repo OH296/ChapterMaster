@@ -966,17 +966,83 @@ static __mech_raider_init = function(){
 static __mech_raider_per_turn = function() {
     var _techs = collect_role_group(SPECIALISTS_TECHMARINES,[system.name, planet, -1] , false,{},true );
     var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
+    var _percent_complete = 0;
     if ((_techs.number() >= data.techs_required) && (_lr_count >= 1)) {
         var _percent_complete = __increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
-        if (_percent_complete >= 100) {
-            delete_mission = true;
-            scr_mission_reward("mech_raider", system, planet);
-            timer = -1
-            per_turn_checks = false;
-            zero_timer_checks = false;
+    }
+    if (_percent_complete < 100){
+        exit;
+    }
+    var _cleanup = array_create(11, 0);
+    delete_mission = true;
+    scr_mission_reward("mech_raider", system, planet);
+    timer = -1
+    per_turn_checks = false;
+    zero_timer_checks = false;
+
+    var _roll1 = roll_dice_chapter(1, 100, "low");
+    var result = "";
+
+    if (_roll1 <= 33) {
+        result = "New";
+    }
+    if ((_roll1 > 33) && (_roll1 <= 66)) {
+        result = "Land Raider";
+    }
+    if (_roll1 > 66) {
+        result = "Requisition";
+    }
+    var _tech_role = obj_ini.player_role_data[eROLE.TECHMARINE].role;
+
+    if (result == "New") {
+        scr_popup("Mechanicus Mission Completed", $"Your {obj_ini.player_role_data[eROLE.TECHMARINE].role} have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  300 Requisition has been given to your Chapter and relations are better than before.", "mechanicus", "");
+        obj_controller.requisition += 300;
+        alter_disposition(eFACTION.MECHANICUS ,2);
+        var _found = false;
+        for (var com = 0; com <= obj_ini.companies; com++) {
+            if (_found) {
+                break;
+            }
+            for (var i = 1; i <= 100; i++) {
+                if ((obj_ini.veh_role[com][i] == "Land Raider") && (obj_ini.veh_loc[com][i] == star.name) && (obj_ini.veh_wid[com][i] == planet)) {
+                    destroy_vehicle(com, i);
+                    _found = true;
+                    break;
+                }
+            }
         }
     }
+    if (result == "Land Raider") {
+        scr_popup("Mechanicus Mission Completed", $"Your {_tech_role} have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  A new Land Raider has been provided in return.", "mechanicus", "");
+        var _found = false;
+        alter_disposition(eFACTION.MECHANICUS ,1);
+        for (var com = 0; com <= obj_ini.companies; com++) {
+            if (_found) {
+                break;
+            }
+            for (var i = 1; i <= 100; i++) {
+                if ((obj_ini.veh_role[com][i] == "Land Raider") && (obj_ini.veh_loc[com][i] == star.name) && (obj_ini.veh_wid[com][i] == planet)) {
+                    _found = true;
+                    obj_ini.veh_hp[com][i] = 100;
+                }
+            }
+        }
+    }
+    if (result == "Requisition") {
+        scr_popup("Mechanicus Mission Completed", $"Your {_tech_role} have worked with the Adeptus Mechanicus in a satisfactory manor.  The testing and training went well, but your Land Raider was ultimately lost.  600 Requisition has been given to your Chapter as compensation.", "mechanicus", "");
+        obj_controller.requisition += 600;
+        alter_disposition(eFACTION.MECHANICUS ,1);
+    }
+
+    for (var i = 0; i <= obj_ini.companies; i++) {
+        if (_cleanup[i] == 1) {
+            with (obj_ini) {
+                scr_vehicle_order(i);
+            }
+        }
+    }
+
 }
 
 static __mech_raider_resolve = function() {
@@ -991,17 +1057,75 @@ static __mech_raider_resolve = function() {
 static __mech_bionics_per_turn = function() {
     var _units = p_data.collect_planet_group();
     var _bionics = _units.tally_attr("bionics");
+    var _percent_complete = 0;
     if (_bionics >= 10) {
-        var _percent_complete = __increment_mission_completion();
+        _percent_complete = __increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
-        if (_percent_complete >= 100) {
-            delete_mission = true;
-            scr_mission_reward("mech_bionics", id, planet);
-            timer = -1
-            per_turn_checks = false;
-            zero_timer_checks = false;
+    }
+    if (_percent_complete < 100){
+        exit;
+    }
+    var _cleanup = array_create(11, 0);
+    delete_mission = true;
+    timer = -1
+    per_turn_checks = false;
+    zero_timer_checks = false;
+    var _roll1 = roll_dice_chapter(1, 100, "low");
+    var result = "";
+
+    if (_roll1 <= 33) {
+        result = "Requisition";
+    }
+    if ((_roll1 > 33) && (_roll1 <= 66)) {
+        result = "Bionics";
+    }
+    if (_roll1 > 66) {
+        result = "Marines Lost";
+    }
+    mech_disp_change = 0;
+    var _text = "The Adeptus Mechanicus have finished experimenting on your marines";
+    var _marines = collect_role_group("all", [star.name, planet, -1], false, {}, true);
+    if (result == "Marines Lost") {
+        _text += "- unfortunantly none of them have survived.  150 Requisition has provided as weregild for each Astartes lost.";
+        mech_disp_change = 2;
+        obj_controller.requisition += 150 * _marines.number();
+        _marines.kill_percent(100);
+    } else if (result == "Bionics" || result == "Requisition") {
+        obj_controller.disposition[3] += 1;
+        mech_disp_change = 1;
+
+        if (result == "Bionics") {
+            var _new_bionics = irandom_range(40, 100);
+            scr_add_item("Bionics", _new_bionics);
+            _text += $" A large amount of additional Bionics have been provided by the Mechanicus as a reward ( X{_new_bionics} Bionics added to stocks)";
+        } else if (result == "Requisition") {
+            req_gain = irandom_range(200, 650);
+            _text += $"{req_gain} Requisition has been provided by the Mechanicus as a reward.";
+            obj_controller.requisition += req_gain;
+        }
+        var _limit = 0;
+        for (var i = 0; i < array_length(_marines.units); i++) {
+            var _unit = _marines.units[i];
+            if (_unit.bionics > 0) {
+                _unit.update_health(irandom_range(2, 80));
+
+                if (!_unit.has_trait("flesh_is_weak")) {
+                    _unit.update_loyalty(-20);
+                }
+
+                repeat (choose(2, 3, 4)) {
+                    _unit.add_bionics();
+                }
+                _limit++;
+            }
+            if (_limit >= 10) {
+                break;
+            }
         }
     }
+    _text += $"\n mechanics Disposition {mech_disp_change > 0 ? "+" : "-"}{mech_disp_change}";
+    scr_popup("Mechanicus Mission Completed", _text, "mechanicus");
+    sort_all_companies_to_map(_cleanup);
 }
 
 static __mech_bionics_resolve = function() {
