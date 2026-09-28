@@ -649,8 +649,11 @@ function calculate_fleet_bombard_score(ship_array) {
 
 function player_fleet_end_turn(){
 try {
-    acted = 0;
 
+    for (var i = 0; i < array_length(problems); i++){
+        problems[i].basic_turn_end();
+    }
+    acted = 0;
     if (action == "Lost") {
         set_fleet_location("Lost");
         exit;
@@ -689,86 +692,23 @@ try {
         action_eta -= 1;
         just_left = false;
 
-        if ((action_eta == 0) && (action == "crusade1")) {
-            var dr = point_direction(room_width / 2, room_height / 2, x, y);
-            action_x = x + lengthdir_x(600, dr);
-            action_y = y + lengthdir_y(600, dr);
-            action = "crusade2";
-            set_fleet_movement(false, "crusade2");
-        }
-        if ((action_eta == 0) && (action == "crusade2")) {
-            with (obj_star) {
-                if (owner > 5) {
-                    instance_deactivate_object(id);
-                }
-                var enemies = false;
-                for (var i = 6; i < 13; i++) {
-                    if (scr_orbiting_fleet(i) != noone) {
-                        enemies = true;
-                        break;
-                    }
-                }
-                if (enemies) {
-                    instance_deactivate_object(id);
-                }
-            }
-            var ret = instance_nearest(x, y, obj_star);
-            action_x = ret.x;
-            action_y = ret.y;
-            action = "crusade3";
-            set_fleet_movement(false, "crusade3");
-            instance_activate_object(obj_star);
-        }
-        if ((action_eta == 0) && (action == "crusade3")) {
-            // Popup here
-            scr_crusade();
-            action = "";
-        }
-
-        if ((action_eta == 0) && (action != "crusade1") && (action != "crusade2")) {
-            // Check to see if there are already player ships in the spot where this object will move to
-            // If yes, combine the two of them
-
-            var steh = instance_nearest(action_x, action_y, obj_star);
-            if (steh.vision == 0) {
-                steh.vision = 1;
-            }
-            fleet_register_at_star(id, steh);
-
-            meet_system_governors(steh);
-
-            if ((steh.p_owner[1] == eFACTION.ECCLESIARCHY) || (steh.p_owner[2] == eFACTION.ECCLESIARCHY) || (steh.p_owner[3] == eFACTION.ECCLESIARCHY) || (steh.p_owner[4] == eFACTION.ECCLESIARCHY)) {
-                if ((obj_controller.faction_defeated[5] == 0) && (obj_controller.known[eFACTION.ECCLESIARCHY] == 0)) {
-                    obj_controller.known[eFACTION.ECCLESIARCHY] = 1;
-                }
-            }
-            if ((steh.owner == eFACTION.ELDAR) && (obj_controller.faction_defeated[6] == 0) && (obj_controller.known[eFACTION.ELDAR] == 0)) {
-                obj_controller.known[eFACTION.ELDAR] = 1;
-            }
-            if ((steh.owner == eFACTION.TAU) && (obj_controller.faction_defeated[8] == 0) && (obj_controller.known[eFACTION.TAU] == 0)) {
-                obj_controller.known[eFACTION.TAU] = 1;
-            }
-
+        if (action_eta == 0){
             action = "";
             x = action_x;
             y = action_y;
-            action_x = 0;
-            action_y = 0;
-
-            var i;
-            set_fleet_location(steh.name);
-            if (steh.visited == 0) {
-                for (var plan_num = 1; plan_num <= steh.planets; plan_num++) {
-                    if (array_length(steh.p_feature[plan_num]) != 0) {
-                        with (steh) {
-                            scr_planetary_feature(plan_num);
-                        }
-                    }
-                }
-                steh.visited = 1;
+            fleet_is_orbiting();
+            if (orbiting != noone){
+                arrive_at_star();
+            } else {
+                set_fleet_location("Near " + instance_nearest(obj_star).name);
             }
+
             if (array_length(complex_route) > 0) {
                 set_new_player_fleet_course(complex_route);
+            } else {
+                for (var i = 0; i < array_length(problems); i++){
+                    problems[i].on_final_arrival();
+                }                
             }
         }
     }

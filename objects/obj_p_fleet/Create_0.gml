@@ -63,6 +63,43 @@ add_problem = function(_name, _timer, _data = {}){
     return _problem;
 }
 
+arrive_at_star = function(){
+    set_fleet_location(orbiting.name);
+    if (orbiting.visited == 0) {
+        for (var plan_num = 1; plan_num <= orbiting.planets; plan_num++) {
+            if (array_length(orbiting.p_feature[plan_num]) != 0) {
+                with (orbiting) {
+                    scr_planetary_feature(plan_num);
+                }
+            }
+        }
+        orbiting.visited = 1;
+    }
+    if (orbiting.vision == 0) {
+        orbiting.vision = 1;
+    }
+    meet_system_governors(orbiting);
+
+    if (array_contains(orbiting.p_owner, eFACTION.ECCLESIARCHY)) {
+        if ((obj_controller.faction_defeated[5] == 0) && (obj_controller.known[eFACTION.ECCLESIARCHY] == 0)) {
+            obj_controller.known[eFACTION.ECCLESIARCHY] = 1;
+        }
+    }
+    if ((orbiting.owner == eFACTION.ELDAR) && (obj_controller.faction_defeated[eFACTION.ELDAR] == 0) && (obj_controller.known[eFACTION.ELDAR] == 0)) {
+        obj_controller.known[eFACTION.ELDAR] = 1;
+    }
+    if ((orbiting.owner == eFACTION.TAU) && (obj_controller.faction_defeated[eFACTION.TAU] == 0) && (obj_controller.known[eFACTION.TAU] == 0)) {
+        obj_controller.known[eFACTION.TAU] = 1;
+    }   
+}
+
+arrive_at_waypoint = function(){
+    for (var i = 0; i < array_length(problems); i++){
+        problems[i].on_waypoint_arrival();
+    }
+    set_new_player_fleet_course(complex_route);
+}
+
 serialize = function() {
     var object_fleet = self;
 

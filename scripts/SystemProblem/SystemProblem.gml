@@ -100,12 +100,7 @@ static __great_crusade_resolve = function() {
     var _player_fleet = scr_orbiting_player_fleet(system);
 
     if (_player_fleet != -1) {
-        var _crusade_direction = point_direction(room_width / 2, room_height / 2, system.x, system.y);
-        with (_player_fleet) {
-            action_x = x + lengthdir_x(1200, _crusade_direction);
-            action_y = y + lengthdir_y(1200, _crusade_direction);
-            set_fleet_movement(false, "crusade1");
-        }
+        _player_fleet.add_problem("great_crusade",infinte, {});
 
         scr_alert("green", "crusade", "Fleet embarks upon Crusade.", system.x, system.y);
         scr_event_log("", "Fleet embarks upon Crusade.");

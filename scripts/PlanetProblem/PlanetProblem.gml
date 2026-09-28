@@ -972,7 +972,7 @@ static __mech_raider_per_turn = function() {
     if (_percent_complete < 100){
         exit;
     }
-    var _cleanup = array_create(11, false);
+    var _cleanup = array_create(obj_ini.companies+1, false);
     delete_mission = true;
     timer = -1
     per_turn_checks = false;
@@ -1063,7 +1063,7 @@ static __mech_bionics_per_turn = function() {
     if (_percent_complete < 100){
         exit;
     }
-    var _cleanup = array_create(11, 0);
+    var _cleanup = array_create(obj_ini.companies + 1, 0);
     delete_mission = true;
     timer = -1
     per_turn_checks = false;
@@ -1111,7 +1111,7 @@ static __mech_bionics_per_turn = function() {
                 }
 
                 repeat (choose(2, 3, 4)) {
-                    _unit.add_bionics();
+                    _unit.add_bionics("none", "any", false);
                 }
                 _limit++;
             }

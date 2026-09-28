@@ -13,6 +13,19 @@ function distribute_strength_to_fleet(strength, fleet) {
         }
     }
 }
+/// @{Id.Instance.obj_p_fleet}
+function fleet_is_orbiting(){
+    orbiting = noone;
+    if (fleet.action == "move"){
+        return orbiting;
+    }
+    var _star = instance_nearest(x, y, obj_star);
+    if (_star.x == x  && _star.y == y){
+        orbiting = _star.id
+        return orbiting;
+    }
+    return noone;
+}
 
 /// @self Id.Instance.obj_en_fleet|Id.Instance.obj_p_fleet
 /// @param {Id.Instance.obj_en_fleet|Id.Instance.obj_p_fleet} fleet
@@ -677,7 +690,7 @@ function fleet_star_draw_offsets() {
 }
 
 //TODO further split this shite up
-/// @self Asset.GMObject.obj_en_fleet|Asset.GMObject.obj_p_fleet
+/// @self Asset.GMObject.obj_en_fleet
 function fleet_arrival_logic() {
     var _dest_star = instance_nearest(action_x, action_y, obj_star);
     x = _dest_star.x;

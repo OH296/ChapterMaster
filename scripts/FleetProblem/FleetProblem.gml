@@ -149,7 +149,7 @@ static find_func = function(trigger_string){
 }
 
 //runs the entry point with event_data available for the duration of the call
-static __trigger_with_event = function(trigger_string, _event_data){
+static __trigger_with_event = function(trigger_string, _event_data = {}){
     var _func = find_func(trigger_string);
     if (is_undefined(_func)){
         exit;
@@ -161,15 +161,19 @@ static __trigger_with_event = function(trigger_string, _event_data){
 
 static basic_turn_end = function(){
     timer--;
+    var _func = undefined;
     if ((timer > -1) && per_turn_checks) {
         var _func = find_func("per_turn");
-        __handle_triggered_mission_func(_func);
     }
+    __handle_triggered_mission_func(_func);
 }
 
-/// @param {Id.Instance.obj_star} star
-static on_arrival = function(star){
-    __trigger_with_event("on_arrival", {star});
+static on_waypoint_arrival = function(){
+    __trigger_with_event("on_waypoint_arrival");
+}
+
+static on_final_arrival = function(){
+    __trigger_with_event("on_final_arrival");
 }
 
 /// @param {array} units
@@ -209,4 +213,54 @@ static __init = function(){
     }
 }
 __init();
+
+static __great_crusade_init(){
+    var _crusade_direction = point_direction(room_width / 2, room_height / 2, system.x, system.y);
+    fleet.action_x = x + lengthdir_x(1200, _crusade_direction);
+    fleet.action_y = y + lengthdir_y(1200, _crusade_direction);
+    fleet.set_fleet_movement(false, p_id);
+    stage_id = "travel_to_crusade";
 }
+
+static __great_crusade_on_final_arrival(){
+	if (stage_id == "travel_to_crusade"){
+        var dr = point_direction(room_width / 2, room_height / 2, x, y);
+        fleet.action_x = x + lengthdir_x(600, dr);
+        fleet.action_y = y + lengthdir_y(600, dr);
+        set_fleet_movement(false, p_id);
+        stage_id = "crusading"
+	} else if (stage_id == "crusading"){
+        with (obj_star) {
+            if (owner > 5) {
+                instance_deactivate_object(id);
+            }
+            var enemies = false;
+            for (var i = 6; i < 13; i++) {
+                if (scr_orbiting_fleet(i) != noone) {
+                    enemies = true;
+                    break;
+                }
+            }
+            if (enemies) {
+                instance_deactivate_object(id);
+            }
+        }
+        var ret = instance_nearest(x, y, obj_star);
+        action_x = ret.x;
+        action_y = ret.y;
+        action = "crusade3";
+        set_fleet_movement(false, "crusade3");
+        instance_activate_object(obj_star);		
+        stage_id = "returning_home"
+	} else if (stage_id == "returning_home"){
+        scr_crusade();
+        action = "";
+	}
+}
+}
+
+
+
+
+
+
