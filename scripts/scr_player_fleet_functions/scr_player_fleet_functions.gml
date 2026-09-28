@@ -698,7 +698,7 @@ try {
             y = action_y;
             fleet_is_orbiting();
             if (orbiting != noone){
-                arrive_at_star();
+                arrived_at_star();
             } else {
                 set_fleet_location("Near " + instance_nearest(obj_star).name);
             }
@@ -711,40 +711,6 @@ try {
                 }                
             }
         }
-    }
-
-    if ((action == "") && (obj_controller.known[eFACTION.ELDAR] == 0)) {
-        instance_activate_object(obj_star); // Kind of half-ass band-aiding that bug, might need to remove this later; this might cause problems later
-
-        with (obj_star) {
-            if (p_type[1] != "Craftworld") {
-                instance_deactivate_object(id);
-            }
-        }
-
-        var steh = instance_nearest(x, y, obj_star);
-        if (instance_exists(steh) && (steh != 0)) {
-            if (steh.p_type[1] == "Craftworld") {
-                var dist, rando;
-                dist = 999;
-                rando = floor(random(100)) + 1;
-                dist = point_distance(x, y, steh.old_x, steh.old_y);
-
-                if ((rando >= 95) && (dist <= 300)) {
-                    obj_controller.known[eFACTION.ELDAR] = 1;
-                    scr_alert("green", "elfs", "Eldar Craftworld discovered.", steh.old_x, steh.old_y);
-                    with (obj_en_fleet) {
-                        if (owner == eFACTION.ELDAR) {
-                            image_alpha = 1;
-                        }
-                    }
-                }
-                // Quene eldar introduction
-                // if (rando>=95) and (dist<=300) then show_message("MON'KEIGH");
-            }
-        }
-
-        instance_activate_object(obj_star);
     }
 } catch (_exception) {
     ERROR_HANDLER.handle_exception(_exception);

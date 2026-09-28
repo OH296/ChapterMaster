@@ -63,7 +63,7 @@ add_problem = function(_name, _timer, _data = {}){
     return _problem;
 }
 
-arrive_at_star = function(){
+arrived_at_star = function(){
     set_fleet_location(orbiting.name);
     if (orbiting.visited == 0) {
         for (var plan_num = 1; plan_num <= orbiting.planets; plan_num++) {
@@ -90,7 +90,26 @@ arrive_at_star = function(){
     }
     if ((orbiting.owner == eFACTION.TAU) && (obj_controller.faction_defeated[eFACTION.TAU] == 0) && (obj_controller.known[eFACTION.TAU] == 0)) {
         obj_controller.known[eFACTION.TAU] = 1;
-    }   
+    } 
+
+
+    if (steh.p_type[1] == "Craftworld") {
+        rando = roll_dice_chapter(1, 100, "high");
+
+        if ((rando >= 95)) {
+            obj_controller.known[eFACTION.ELDAR] = 1;
+            scr_alert("green", "elfs", "Eldar Craftworld discovered.", steh.old_x, steh.old_y);
+            with (obj_en_fleet) {
+                if (owner == eFACTION.ELDAR) {
+                    image_alpha = 1;
+                }
+            }
+        }
+        // Quene eldar introduction
+        // if (rando>=95) and (dist<=300) then show_message("MON'KEIGH");
+    }
+
+    instance_activate_object(obj_star); 
 }
 
 arrive_at_waypoint = function(){
