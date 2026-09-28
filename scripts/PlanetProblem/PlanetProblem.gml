@@ -948,25 +948,25 @@ function __hunt_fallen_battle_aftermath() {
 static __mech_raider_init = function(){
     var _mission_loc = p_data.name();
     var _nearest_fleet = instance_nearest(system.x, system.y, obj_p_fleet);
-    var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, system.x, system.y, _nearest_fleet, false);
+    timer = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, system.x, system.y, _nearest_fleet, false);
     var _vacation_time = 24;
-    _mission_time += _vacation_time;
+    timer += _vacation_time;
     var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true]);
 
+    //tech count is calculated earlier called mission is not added to p_problems array if less than 3
     var _techs_required = min(array_length(_techs) - 2, 6);
-
     data =  {completion: 0, required_months: _vacation_time,techs_required:_techs_required}
     var _eligible_roles = role_groups(SPECIALISTS_TECHMARINES);
     obj_popup.text = $"The Adeptus Mechanicus await your forces at {_mission_loc}.  They are expecting {_techs_required} {_eligible_roles}s and a Land Raider.";
-    scr_event_log("", $"Mechanicus Mission Accepted: {_techs_required} of your {_eligible_roles}s and a Land Raider are to be stationed at {_mission_loc} for {_mission_time} months.", _star.name);
+    scr_event_log("", $"Mechanicus Mission Accepted: {_techs_required} of your {_eligible_roles}s and a Land Raider are to be stationed at {_mission_loc} for {timer} months.", system.name);
     mark("green");
     title = "Mechanicus Mission Accepted";
 }
 
 static __mech_raider_per_turn = function() {
-    var _techs = collect_role_group(SPECIALISTS_TECHMARINES, false, true, [system.name, planet, -1]);
+    var _techs = collect_role_group(SPECIALISTS_TECHMARINES,[system.name, planet, -1] , false,{},true );
     var _lr_count = scr_vehicle_count("Land Raider", [system.name, planet, -1]);
-    if ((array_length(_techs) >= data.techs_required) && (_lr_count >= 1)) {
+    if ((_techs.number() >= data.techs_required) && (_lr_count >= 1)) {
         var _percent_complete = __increment_mission_completion();
         scr_alert("", "mission", $"Mechanicus Mission on {p_data.name()} is {floor(_percent_complete)}% complete.", 0, 0);
         if (_percent_complete >= 100) {
@@ -1132,7 +1132,7 @@ static __mech_mars_resolve = function() {
     delete_mission = true;
     var _techs_taken = 0;
     var _techs = collect_role_group([SPECIALISTS_TECHMARINES,false,true],system.name);
-    for (i = 0; i < array_length(_techs); i++) {
+    for (var i = 0; i < array_length(_techs); i++) {
         var _unit = _techs[i];
         system.p_player[planet] -= _unit.get_unit_size();
         _unit.location_string = "Mechanicus Vessel";
@@ -1213,19 +1213,20 @@ static __provide_garrison_resolve = function() {
         exit;
     }
 
-    p_data.garrisons.update();
-    if (p_data.current_owner != eFACTION.IMPERIUM || !p_data.garrisons.garrison_force) {
+    var _garrison = p_data.garrisons;
+    _garrison.update();
+    if (p_data.current_owner != eFACTION.IMPERIUM || !_garrison.garrison_force) {
         p_data.add_disposition(-20);
         scr_popup($"Agreed Garrison of {p_data.name()}", $"your agreed garrison of  {p_data.name()} was cut short by your chapter the planetary governor has expressed his displeasure (disposition -20)", "", "");
         return;
     }
 
     var _mission_string = $"The garrison on {p_data.name()} has finished the period of garrison support agreed with the planetary governor.";
-    var _result = p_data.garrisons.garrison_disposition_change();
-    if (!p_data.garrisons.garrison_leader) {
-        p_data.garrisons.find_leader();
+    var _result = _garrison.garrison_disposition_change();
+    if (!_garrison.garrison_leader) {
+        _garrison.find_leader();
     }
-    var _leader = garrisons.garrison_leader;
+    var _leader = _garrison.garrison_leader;
 
     var _effect = 0;
     if (_result == "none") {
@@ -1247,8 +1248,8 @@ static __provide_garrison_resolve = function() {
         _mission_string += $"while stationed {_leader.name_role()} makes several notable observations and is able to instruct the planets defense core leaving the world better defended (fortifications+1).";
     }
     //TODO just generally apply this each turn with a garrison to see if a cult is found
-    if (has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
-        var _cult = get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
+    if (p_data.has_feature(eP_FEATURES.GENE_STEALER_CULT)) {
+        var _cult = p_data.get_features(eP_FEATURES.GENE_STEALER_CULT)[0];
         if (_cult.hiding) {
             _widom_test = _tester.standard_test(_leader, "wisdom", 0, ["tyranids"]);
             if (_widom_test[0]) {
@@ -1951,7 +1952,7 @@ static __governor_purge_enemies_init = function(){
         delete_mission = true;
         exit;        
     }
-    data.enemy = _enemy;
+    data.target = _enemy;
     stage_id = "preliminary";
     data.applicant = "Governor";
 }

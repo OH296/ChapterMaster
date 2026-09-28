@@ -7,8 +7,8 @@ function spawn_mechanicus_mission(chosen_mission = "random") {
 
     if (array_length(_forge_stars)) {
         array_push(mechanicus_missions, "mech_bionics");
-        var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true]);
-        if (array_length(_techs >= 3)) {
+        var _techs = collect_role_group([SPECIALISTS_TECHMARINES, false, true],"",false,{},true);
+        if (_techs.number >= 3) {
             array_push(mechanicus_missions, "mech_raider");
         }
     }
