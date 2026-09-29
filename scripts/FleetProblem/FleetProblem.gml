@@ -218,8 +218,9 @@ static __great_crusade_init(){
     var _crusade_direction = point_direction(room_width / 2, room_height / 2, system.x, system.y);
     fleet.action_x = x + lengthdir_x(1200, _crusade_direction);
     fleet.action_y = y + lengthdir_y(1200, _crusade_direction);
-    fleet.set_fleet_movement(false, p_id);
+    fleet.set_fleet_movement(false, "move");
     stage_id = "travel_to_crusade";
+    fleet.beyond_engagement = true;
 }
 
 static __great_crusade_on_final_arrival(){
@@ -227,8 +228,9 @@ static __great_crusade_on_final_arrival(){
         var dr = point_direction(room_width / 2, room_height / 2, x, y);
         fleet.action_x = x + lengthdir_x(600, dr);
         fleet.action_y = y + lengthdir_y(600, dr);
-        set_fleet_movement(false, p_id);
+        set_fleet_movement(false, "move");
         stage_id = "crusading"
+        fleet.beyond_engagement = true;
 	} else if (stage_id == "crusading"){
         with (obj_star) {
             if (owner > 5) {
@@ -249,13 +251,18 @@ static __great_crusade_on_final_arrival(){
         action_x = ret.x;
         action_y = ret.y;
         action = "crusade3";
-        set_fleet_movement(false, "crusade3");
-        instance_activate_object(obj_star);		
+        set_fleet_movement(false, "move");
+        instance_activate_object(obj_star);	
+        fleet.beyond_engagement = true;	
         stage_id = "returning_home"
 	} else if (stage_id == "returning_home"){
         __great_crusade_results();
-        
+        fleet.beyond_engagement = false;	
 	}
+}
+
+static __great_crusade_status_description = function(){
+
 }
 
 static __great_crusade_results = function(){

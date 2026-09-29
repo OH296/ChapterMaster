@@ -945,7 +945,11 @@ function __hunt_fallen_battle_aftermath() {
 
 static __mech_raider_init = function(){
     var _mission_loc = p_data.name();
-    var _nearest_fleet = instance_nearest(system.x, system.y, obj_p_fleet);
+    var _nearest_fleet = get_nearest_player_fleet(system.x, system.y);
+    if (_nearest_fleet == noone){
+        delete_mission = true;
+        exit;
+    }
     timer = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, system.x, system.y, _nearest_fleet, false);
     var _vacation_time = 24;
     timer += _vacation_time;

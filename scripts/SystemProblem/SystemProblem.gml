@@ -97,9 +97,9 @@ static __great_crusade_init = function(){
 }
 
 static __great_crusade_resolve = function() {
-    var _player_fleet = scr_orbiting_player_fleet(system);
+    var _player_fleet = system.get_orbiting_player_fleet();
 
-    if (_player_fleet != -1) {
+    if (_player_fleet != noone) {
         _player_fleet.add_problem("great_crusade",infinte, {});
 
         scr_alert("green", "crusade", "Fleet embarks upon Crusade.", system.x, system.y);

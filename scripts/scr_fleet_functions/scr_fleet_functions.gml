@@ -244,7 +244,7 @@ function set_fleet_movement(_fastest_route = true, _new_action = "move", _minimu
 /// @param {Struct} unit
 function load_unit_to_fleet(fleet, unit) {
     var loaded = false;
-    var all_ships = fleet_full_ship_array(fleet);
+    var all_ships = fleet.full_ship_array();
 
     for (var i = 0; i < array_length(all_ships); i++) {
         var ship_ident = all_ships[i];
@@ -539,39 +539,7 @@ function object_distance(obj_1, obj_2) {
     return point_distance(obj_1.x, obj_1.y, obj_2.x, obj_2.y);
 }
 
-/// @function scr_orbiting_player_fleet(system)
-/// @description Returns the ID of the nearest player fleet orbiting the given system or star.
-/// @param {Id.Instance.obj_star} system
-/// The system instance or identifier to check. If `noone`, the function checks the calling star instance.
-/// @returns {Id.Instance.obj_p_fleet} The instance ID of the orbiting player fleet, or -1 if none is found.
-///
-/// @example
-/// ```gml
-/// var fleet_id = scr_orbiting_player_fleet();
-/// if (fleet_id != -1) {
-///     LOGGER.debug("Fleet orbiting star: " + string(fleet_id));
-/// }
-/// ```
-function scr_orbiting_player_fleet(system = noone) {
-    if (system == noone && !is_struct(self) && object_index == obj_star) {
-        var _fleet = instance_nearest(x, y, obj_p_fleet);
-        if (object_distance(self, _fleet) > 0) {
-            return -1;
-        } else {
-            return _fleet.id;
-        }
-    } else if (system != noone) {
-        try {
-            with (system) {
-                return scr_orbiting_player_fleet();
-            }
-        } catch (_exception) {
-            ERROR_HANDLER.handle_exception(_exception);
-        }
-    }
 
-    return -1;
-}
 
 function get_orbiting_fleets(faction, system = noone) {
     var _fleets = [];
@@ -1354,6 +1322,15 @@ function fleet_register_at_star(_fleet, _star) {
     if (_faction == eFACTION.PLAYER && _star.vision == 0) {
         _star.vision = 1;
     }
+
+    if (_faction != eFACTION.PLAYER){
+        if (obj_controller.known[_faction] == 0){
+            var _p_fleet = get_orbiting_player_fleet();
+            if (_p_fleet != noone){
+                obj_controller.known[_faction] == 1;
+            }
+        }
+    }
 }
 
 /// @desc Unregisters a fleet from its orbiting star (if there is one), clears orbiting and decrements present_fleet.
@@ -1409,22 +1386,6 @@ function fleet_register_at_nearest_star(_fleet, _max_distance = undefined) {
     return noone;
 }
 
-/// @desc Creates a new player fleet, registering at the nearest star if within 50px.
-/// @param {Real} _x
-/// @param {Real} _y
-/// @param {Array} _ships  Optional array of ship IDs to add to the fleet
-/// @returns {Id.Instance.obj_p_fleet}
-function create_player_fleet(_x, _y, _ships = []) {
-    var _fleet = instance_create(_x, _y, obj_p_fleet);
-    _fleet.owner = eFACTION.PLAYER;
-    fleet_register_at_nearest_star(_fleet);
-
-    for (var _i = 0; _i < array_length(_ships); _i++) {
-        add_ship_to_fleet(_ships[_i], _fleet);
-    }
-
-    return _fleet;
-}
 
 /// @desc Creates a new enemy fleet, registering at the nearest star if within 50px.
 /// @param {Real} _x

@@ -4,7 +4,7 @@ function space_hulk_explore_battle_aftermath() {
 
         var shiyp = instance_nearest(battle_object.x, battle_object.y, obj_p_fleet);
         if (shiyp.x == battle_object.x && shiyp.y == battle_object.y) {
-            shi = fleet_full_ship_array(shiyp)[0];
+            shi = shiyp.full_ship_array()[0];
             loc = obj_ini.ship[shi];
         }
 

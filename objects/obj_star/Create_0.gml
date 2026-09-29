@@ -27,6 +27,7 @@ storm_image = 0;
 trader = 0;
 visited = 0;
 stored_owner = -1;
+navy_enemy_fleet_enroute = false;
 
 // sets up default planet variables
 planet = array_create(PLANET_ARRAY_SIZE, 0);
@@ -130,11 +131,33 @@ add_problem = function(p_id, data = {}){
 has_orbiting_player_fleet = function () {
     if (instance_exists(obj_p_fleet)) {
         var _nearest = instance_nearest(x, y, obj_p_fleet);
-        if (point_distance(_nearest.x, _nearest.y, x, y) == 0) {
+        if (action != "move" && point_distance(_nearest.x, _nearest.y, x, y) == 0) {
             return true;
         }
     }
     return false;
+}
+
+/// @function get_orbiting_player_fleet()
+/// @description Returns the ID of the nearest player fleet orbiting the given system or star.
+/// The system instance or identifier to check. If `noone`, the function checks the calling star instance.
+/// @returns {Id.Instance.obj_p_fleet} The instance ID of the orbiting player fleet, or -1 if none is found.
+///
+/// @example
+/// ```gml
+/// var fleet_id = get_orbiting_player_fleet();
+/// if (fleet_id != noone) {
+///     LOGGER.debug("Fleet orbiting star: " + string(fleet_id));
+/// }
+/// ```
+get_orbiting_player_fleet = function() {
+    var _fleet = instance_nearest(x, y, obj_p_fleet);
+    if (object_distance(self, _fleet) > 0 && action != "move") {
+        return noone;
+    } else {
+        return _fleet.id;
+    }
+    return noone;
 }
 
 system_player_ground_forces = 0;

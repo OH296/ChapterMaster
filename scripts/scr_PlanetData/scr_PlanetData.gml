@@ -645,11 +645,8 @@ function PlanetData(_planet, _system) constructor {
             if (fleet_buildable && planet_forces[eFACTION.ORK] >= 4) {
                 // Used to not have Ice either
 
-                if (instance_exists(obj_p_fleet)) {
-                    var ppp = instance_nearest(x, y, obj_p_fleet);
-                    if ((point_distance(x, y, ppp.x, ppp.y) < 50) && (ppp.action == "")) {
-                        exit;
-                    }
+                if (has_orbiting_player_fleet()) {
+                    exit;
                 }
                 if (planet_type == "Forge") {
                     _rando -= 80;

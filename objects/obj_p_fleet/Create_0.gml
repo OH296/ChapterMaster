@@ -37,6 +37,7 @@ escort_health = 100;
 
 complex_route = [];
 just_left = false;
+beyond_engagement = false;
 
 action = "";
 action_x = 0;
@@ -117,6 +118,35 @@ arrive_at_waypoint = function(){
         problems[i].on_waypoint_arrival();
     }
     set_new_player_fleet_course(complex_route);
+}
+
+full_ship_array = function(exclude_capitals = false, exclude_frigates = false, exclude_escorts = false) {
+    var all_ships = [];
+    var _ship_count = array_length(obj_ini.ship);
+
+    if (!exclude_capitals) {
+        for (var i = 0; i < array_length(capital_num); i++) {
+            if (capital_num[i] < _ship_count) {
+                array_push(all_ships, capital_num[i]);
+            }
+        }
+    }
+    if (!exclude_frigates) {
+        for (var i = 0; i < array_length(frigate_num); i++) {
+            if (frigate_num[i] < _ship_count) {
+                array_push(all_ships, frigate_num[i]);
+            }
+        }
+    }
+    if (!exclude_escorts) {
+        for (var i = 0; i < array_length(escort_num); i++) {
+            if (escort_num[i] < _ship_count) {
+                array_push(all_ships, escort_num[i]);
+            }
+        }
+    }
+
+    return all_ships;
 }
 
 serialize = function() {
