@@ -178,7 +178,7 @@ function scr_image_load(path) {
 
     for (var _i = 1; _i <= 40; _i++) {
 
-        var _file = _entry.file_prefix + string(_i) + ".png";
+        var _file = $"{_entry.file_prefix}{_i}.png";
 
         if (file_exists(_file)) {
             _entry.sprites[_i - 1] = sprite_add(_file, 1, false, false, 0, 0);
