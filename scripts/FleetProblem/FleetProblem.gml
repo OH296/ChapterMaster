@@ -38,13 +38,8 @@ other info
 /// @param {Real} _timer
 /// @param {struct} _data
 /// @param {Id.Instance.obj_p_fleet} _fleet
-function FleetProblem(_name, _timer, _data, _fleet) constructor{
-timer = _timer;
-uid = scr_uuid_generate();
-p_id = _name;
-data = _data;
+function FleetProblem(_name, _timer, _data, _fleet) : Problem(_name, _timer, _data) constructor{
 fleet = _fleet;
-delete_mission = false;
 
 static __refresh_data = function(){
     if (!instance_exists(fleet)){
@@ -52,17 +47,7 @@ static __refresh_data = function(){
     }
 }
 
-stage_id = "";
-if (struct_exists(data, "stage")){
-    stage_id = data.stage;
-}
-
-remove = false;
 per_turn_checks = true;
-
-static has_data = function(key){
-    return struct_exists(data, key);
-}
 
 static save = function(){
     var _save_copy = variable_clone(self);
@@ -73,12 +58,6 @@ static save = function(){
 //the owning fleet must re-attach itself after loading (problem.fleet = self)
 static load = function(data){
     move_data_to_current_scope(data);
-}
-
-static description = function(){
-    var _n = mission_name_key(p_id);
-    _n = _n == "" ? p_id : _n;
-    return _n;
 }
 
 //requires the completion and required_months flag to be in the data struct
@@ -92,13 +71,6 @@ static __increment_mission_completion =  function() {
         return 0;
     }
     return (data.completion / data.required_months) * 100;
-}
-
-static __popup_delete = function(){
-    with(obj_popup){
-        popup_default_close();
-    }
-    __check_delete();
 }
 
 static __check_delete = function(){
@@ -118,37 +90,101 @@ static __check_delete = function(){
     }
 }
 
-static __handle_triggered_mission_func = function(func){
-    if (!is_undefined(func)){
-        __refresh_data();
+//runs the entry point with fleet_event_data available for the duration of the call
+static __trigger_with_event = function(trigger_string, _event_data){
+    var _func = find_func(trigger_string);
+    if (is_undefined(_func)){
+        exit;
+    }
+    fleet_event_data = _event_data;
+    __handle_triggered_mission_func(_func);
+    struct_remove(self, "fleet_event_data");
+}
+
+static basic_turn_end = function(){
+    timer--;
+    if ((timer > -1) && per_turn_checks) {
+        var _func = find_func("per_turn");
+        __handle_triggered_mission_func(_func);
+    }
+    __check_delete();
+}
+
+/// @param {Id.Instance.obj_star} star
+static on_arrival = function(star){
+    __trigger_with_event("on_arrival", {star});
+}
+
+/// @param {array} units
+static on_load = function(units){
+    __trigger_with_event("on_load", {units});
+}
+
+/// @param {array} units
+static on_unload = function(units){
+    __trigger_with_event("on_unload", {units});
+}
+
+/// @param {Id.Instance.obj_p_fleet} new_fleet
+static on_split = function(new_fleet){
+    __trigger_with_event("on_split", {new_fleet});
+}
+
+/// @param {Id.Instance.obj_p_fleet} merged_fleet
+static on_merge = function(merged_fleet){
+    __trigger_with_event("on_merge", {merged_fleet});
+}
+
+//call this before the fleet instance is destroyed
+static on_destruction = function(){
+    __trigger_with_event("on_destruction", {});
+    delete_mission = true;
+    __check_delete();
+}
+
+static mission_log_entry = function(){
+    var _func = find_func("mission_log_entry");
+    if (!is_undefined(_func)){
         try {
-            func();
+            return _func();
         } catch (_exception) {
             delete_mission = true;
             ERROR_HANDLER.handle_exception(_exception);
+            __check_delete();
+            return undefined;
         }
     }
-    __check_delete();
-    obj_controller.location_viewer.update_mission_log();
+    return __default_mission_log_entry();
 }
 
-static find_func_ref = function(trigger_string){
-    var _func_string = "__" + p_id + "_" + trigger_string;
-    return _func_string;
-}
-
-static has_func = function(trigger_string){
-    var _func_string = find_func_ref(trigger_string);
-    return struct_exists(self,_func_string);
-}
-
-static find_func = function(trigger_string){
-    var _func_string = find_func_ref(trigger_string);
-    if (struct_exists(self,_func_string)){
-        return self[$ _func_string]
+static __default_mission_log_entry = function(){
+    if (!instance_exists(fleet)){
+        return undefined;
     }
-    return undefined;
+    var _data = {
+        system: is_callable(fleet.name) ? fleet.name() : object_get_name(fleet.object_index),
+        mission: description(),
+        time: timer,
+        problem: self,
+    };
+
+    _data.click_left = method(_data, function() {
+        set_map_pan_to_loc(problem.fleet);
+    });
+
+    return _data;
 }
+
+static __init = function(){
+    if (p_id == ""){
+        exit;
+    }
+    var _func = find_func("init");
+    if (!is_undefined(_func)){
+        __handle_triggered_mission_func(_func);
+    }
+}
+__init();
 
 //runs the entry point with fleet_event_data available for the duration of the call
 static __trigger_with_event = function(trigger_string, _event_data = {}){

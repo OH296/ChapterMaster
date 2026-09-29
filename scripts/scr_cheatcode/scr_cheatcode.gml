@@ -384,30 +384,34 @@ function scr_cheatcode(argument0) {
 
 /// @self Asset.GMObject.obj_star_select
 function draw_system_debug(){
-    garrison_data_slate.inside_method = function() {
-        garrison_data_slate.title = localize("Garrison Report");
+    add_draw_return_values();
+    debug_slate.inside_method = function() {
+        debug_slate.title = localize("DEBUG");
         draw_set_color(c_gray);
-        var xx = garrison_data_slate.XX;
-        var yy = garrison_data_slate.YY;
-        var _base_y = yy + 20;
+        var xx = debug_slate.XX;
+        var yy = debug_slate.YY;
+        var _base_y = yy + 50;
+        var _base_x = xx + 75;
         var _keys = global.planet_problem_keys;
         var _star_missions = [
             "great_crusade",
         ]
         _base_y += 2;
+        draw_set_font(fnt_40k_12);
         for (var i = 0; i < array_length(_star_missions); i++) {
             var _y = _base_y + i * 20;
-            draw_text(38, _y, _star_missions[i]);
-            if (scr_hit(38, _y, 337, _y + 20)) {
+            var _c = draw_unit_buttons([_base_x, _base_y], _star_missions[i]);
+            if (scr_hit(_c[0], _c[1],_c[2],_c[3])) {
                 tooltip_draw(mission_name_key(_star_missions[i]));
                 if (mouse_button_clicked()) {
-                    var _p_data = obj_star_select.p_data;
-                    _p_data.new_problem(_star_missions[i], 3);
+                    target.add_problem(_star_missions[i], 3).timer = 3;
                 }
             }
+            _base_y += _c[3] - _c[1];
         }
     };
-    garrison_data_slate.draw(340 + main_data_slate.width, 160, 0.6, 0.6);      
+    debug_slate.draw(350 + main_data_slate.width, 160, 0.6, 0.6); 
+    pop_draw_return_values();    
 }
 
 /// @self Asset.GMObject.obj_star_select

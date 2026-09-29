@@ -1,3 +1,66 @@
+/// @param {string} _name
+/// @param {Real} _timer
+/// @param {struct} _data
+function Problem(_name, _timer, _data) constructor {
+    p_id = _name;
+    timer = _timer;
+    data = _data;
+    uid = scr_uuid_generate();
+    delete_mission = false;
+    f_type = eP_FEATURES.MISSION;
+    stage_id = "";
+    if (struct_exists(data, "stage")){
+        stage_id = data.stage;
+    }
+    if (struct_exists(data, "members")){
+        members = data.members;
+    }
+    static has_data = function(key){
+        return struct_exists(data, key);
+    }
+    static description = function(){
+        var _n = mission_name_key(p_id);
+        _n = _n == "" ? p_id : _n;
+        return _n;
+    }
+    static __popup_delete = function(){
+        with(obj_popup){
+            popup_default_close();
+        }
+        __check_delete();
+    }
+
+    static find_func_ref = function(trigger_string){
+        var _func_string = "__" + p_id + "_" + trigger_string;
+        return _func_string;
+    }
+
+    static has_func = function(trigger_string){
+        var _func_string = find_func_ref(trigger_string);
+        return struct_exists(self,_func_string);
+    }
+    static find_func = function(trigger_string){
+        var _func_string = find_func_ref(trigger_string);
+        if (struct_exists(self,_func_string)){
+            return self[$ _func_string]
+        }
+        return undefined;
+    }
+    static __handle_triggered_mission_func = function(func){
+        if (!is_undefined(func)){
+            __refresh_data();
+            try {
+                func();
+            } catch (_exception) {
+                delete_mission = true;
+                ERROR_HANDLER.handle_exception(_exception);
+            }
+        }
+        __check_delete();
+        obj_controller.location_viewer.update_mission_log();
+    }
+}
+
 function location_out_of_player_control(unit_loc) {
     static _locs = [
         "Terra",

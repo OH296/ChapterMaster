@@ -38,32 +38,23 @@ other info
 
 //ANYTIME an exception is caught on a entry point for a mission the mission is prematurely deleted this ensures the player is not unfairly penalised for errors
 
-/// @param {string} name
-/// @param {Real} timer
-/// @param {struct} data
-/// @param {constructor PlanetData} planet
-function PlanetProblem(_name, _timer, _data, _planet_data) constructor{
-timer = _timer;
-uid = scr_uuid_generate();
-p_id = _name;
-data = _data;
+/// @param {string} _name
+/// @param {Real} _timer
+/// @param {struct} _data
+/// @param {constructor PlanetData} _planet_data
+function PlanetProblem(_name, _timer, _data, _planet_data) : Problem(_name, _timer, _data) constructor{
 p_data = _planet_data;
 planet = p_data.planet;
 system = p_data.system;
-f_type = eP_FEATURES.MISSION;
-members = [];
-delete_mission = false;
-static __refresh_data = function(){
-	p_data = system.get_planet_data(planet);
-    members = clean_unit_array(members);
+
+//base only assigns members when data.members exists; default it here without clobbering that
+if (!variable_struct_exists(self, "members")){
+    members = [];
 }
 
-stage_id = "";
-if (struct_exists(data, "stage")){
-	stage_id = data.stage;
-}
-if (struct_exists(data, "members")){
-    members = data.members;
+static __refresh_data = function(){
+    p_data = system.get_planet_data(planet);
+    members = clean_unit_array(members);
 }
 
 extend_timer_for_warp_storm = true;
@@ -76,10 +67,6 @@ static mark = function(colour){
     with (p_data.system){
         new_star_event_marker(colour)
     }
-}
-
-static has_data = function(key){
-    return struct_exists(data, key);
 }
 
 static save = function(){
@@ -103,12 +90,6 @@ static load = function(data){
     f_type = eP_FEATURES.MISSION;
 }
 
-static description = function(){
-    var _n = mission_name_key(p_id);
-    _n = _n == "" ? p_id : _n;
-    return _n;
-}
-
 static view_on_planet_screen = function(){
     return (stage_id == "preliminary") && (has_data("applicant"));
 }
@@ -125,7 +106,6 @@ static __increment_mission_completion =  function() {
     }
     return (data.completion / data.required_months) * 100;
 }
-
 
 static __inquisition_mission_options = function(){
     var _options = [
@@ -153,13 +133,6 @@ static __inquisition_mission_options = function(){
     return _options
 }
 
-static __popup_delete = function(){
-    with(obj_popup){
-        popup_default_close();
-    }
-    __check_delete();
-}
-
 static __check_delete = function(){
     if (timer == -1 || (delete_mission)){
         var _prob = -1;
@@ -175,6 +148,7 @@ static __check_delete = function(){
     }   
 }
 
+//overrides Problem's base version
 static __handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
         __refresh_data();
@@ -189,34 +163,18 @@ static __handle_triggered_mission_func = function(func){
     obj_controller.location_viewer.update_mission_log();
 }
 
-static find_func_ref = function(trigger_string){
-    var _func_string = "__" + p_id + "_" + trigger_string;
-    return _func_string;
-}
-
-static has_func = function(trigger_string){
-    var _func_string = find_func_ref(trigger_string);
-    return struct_exists(self,_func_string);
-}
-static find_func = function(trigger_string){
-    var _func_string = find_func_ref(trigger_string);
-    if (struct_exists(self,_func_string)){
-        return self[$ _func_string]
-    }
-    return undefined;
-}
 static basic_turn_end = function(){
-	if (p_data.system.storm <= 0){
-		timer--;
-	}
-	if ((timer > -1) && per_turn_checks) {
-		var _func = find_func("per_turn");
+    if (p_data.system.storm <= 0){
+        timer--;
+    }
+    if ((timer > -1) && per_turn_checks) {
+        var _func = find_func("per_turn");
         __handle_triggered_mission_func(_func);
-	}
-	if ((timer == 0) && zero_timer_checks && !delete_mission) {
-		var _func = find_func("resolve");
-		__handle_triggered_mission_func(_func);
-	}
+    }
+    if ((timer == 0) && zero_timer_checks && !delete_mission) {
+        var _func = find_func("resolve");
+        __handle_triggered_mission_func(_func);
+    }
 }
 
 //triggered within drop select

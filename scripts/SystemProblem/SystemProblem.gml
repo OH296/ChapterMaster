@@ -1,30 +1,19 @@
-/// @param {sring} name
-/// @param {struct} data
-function SystemProblem(_name, _system, _data = {}) constructor{
-timer = -1;
-f_type = eP_FEATURES.MISSION;
-p_id = _name;
-data = _data;
-stage_id = "";
+/// @param {string} _name
+/// @param {Asset.GMObject.obj_star} _system
+/// @param {struct} _data
+/// @param {Real} _timer
+function SystemProblem(_name, _system, _data = {}, _timer = -1) : Problem(_name, _timer, _data) constructor{
 system = _system;
+
+//base only assigns members when data.members exists; default it here without clobbering that
+if (!variable_struct_exists(self, "members")){
+    members = [];
+}
+
 zero_timer_checks = true;
 per_turn_checks = true;
-delete_mission = false;
-members = [];
-if (struct_exists(data, "stage")){
-    stage_id = data.stage;
-}
-if (struct_exists(data, "members")){
-    members = data.members;
-}
 
-static description = function(){
-    var _n = mission_name_key(p_id);
-    _n = _n == "" ? p_id : _n;
-    return _n;
-}
-
-
+//overrides Problem's base version — appends the stage suffix and skips __refresh_data/location_viewer
 static __handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
         try {
@@ -47,26 +36,20 @@ static __handle_triggered_mission_func = function(func){
 }
 
 static basic_turn_end = function(){
-	if (system.storm <= 0){
-		timer--;
-	}
-	if ((timer > -1) && per_turn_checks) {
-		var _func = find_func("per_turn");
+    if (system.storm <= 0){
+        timer--;
+    }
+    if ((timer > -1) && per_turn_checks) {
+        var _func = find_func("per_turn");
         __handle_triggered_mission_func(_func);
-	}
-	if ((timer == 0) && zero_timer_checks && !delete_mission) {
-		var _func = find_func("resolve");
-		__handle_triggered_mission_func(_func);
-	}
+    }
+    if ((timer == 0) && zero_timer_checks && !delete_mission) {
+        var _func = find_func("resolve");
+        __handle_triggered_mission_func(_func);
+    }
 }
 
-static find_func_ref = function(trigger_string){
-    var _func_string = "__" + p_id + "_" + trigger_string;
-    if (stage_id != ""){
-        _func_string += "S" + stage_id;
-    }
-    return _func_string;
-}
+
 static find_func = function(trigger_string){
     var _func_string = find_func_ref(trigger_string);
     if (struct_exists(self,_func_string)){
@@ -92,7 +75,7 @@ __init();
 
 static __great_crusade_init = function(){
     //TODO decide the target/purpose of the crusade to create more variety and to help with post crusade rewards
-    var _nearest_player_fleet = data.nearest_player_fleet;
+    var _nearest_player_fleet = has_data("nearest_player_fleet") ? data.nearest_player_fleet : instance_nearest(system.x, system.y, obj_p_fleet);
     var _travel_leeway = 10;
     if (_nearest_player_fleet.action == "move") {
         _travel_leeway += _nearest_player_fleet.action_eta;
