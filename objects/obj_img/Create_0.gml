@@ -7,8 +7,6 @@ img_cache: {
  */
 LOGGER.debug("obj_img spawned");
 
-image_cache = {};
-
 var _array_size = 301;
 
 creation = array_create(_array_size, 0);
@@ -87,4 +85,41 @@ slate_good = false;
 
 // End Image Replacer
 // Start Text Replacer
+image_registry = scr_image_registry_build(self);
 scr_image("force", -50, 0, 0, 0, 0);
+
+image_cache = {
+    creation: "creation",
+    main_splash: "main",
+    existing_splash: "existing",
+    other_splash: "others",
+    advisor: "advisor",
+    diplomacy_splash: "diplomacy_splash",
+    diplomacy_daemon: "diplomacy_daemon",
+    diplomacy_icon: "diplomacy_icon",
+    menu: "menu",
+    loading: "loading",
+    postbattle: "postbattle",
+    postspace: "postspace",
+    formation: "formation",
+    popup: "popup",
+    commander: "commander",
+    planet: "planet",
+    attacked: "attacked",
+    force: "force",
+    purge: "purge",
+    event: "event",
+    title_splash: "title_splash",
+    symbol: "symbol",
+    defeat: "defeat",
+    slate: "slate"
+};
+
+image_cache_index = {
+    creation: 1,
+    diplomacy_icon: 1,
+    menu: 1,
+    title_splash: 1
+};
+
+
