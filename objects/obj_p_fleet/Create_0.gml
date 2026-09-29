@@ -160,6 +160,11 @@ full_ship_array = function(exclude_capitals = false, exclude_frigates = false, e
     return all_ships;
 }
 
+calculate_eta = function(target_x, target_y,from_star = true, to_star = true){
+    calculate_fleet_eta(x, y, target_x, target_y, fleet_speed, from_star , to_star , warp_able);
+}
+
+move = method(self, set_fleet_movement);
 serialize = function() {
     var object_fleet = self;
 

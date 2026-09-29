@@ -473,14 +473,14 @@ function scr_end_turn() {
                     }
                     with (obj_p_fleet) {
                         if ((action == "move") && (obj_controller.faction_status[eFACTION.IMPERIUM] == "War")) {
-                            var him = instance_nearest(action_x, action_y, obj_star);
-                            navy_enemy_fleet_enroute =  (point_distance(action_x, action_y, him.x, him.y) == 0);
+                            var _him = instance_nearest(action_x, action_y, obj_star);
+                            _him.navy_enemy_fleet_enroute =  (point_distance(action_x, action_y, _him.x, _him.y) == 0);
                         }
                     }
                     with (obj_en_fleet) {
                         if ((action == "move") && (owner > 5)) {
-                            var him = instance_nearest(action_x, action_y, obj_star);
-                            navy_enemy_fleet_enroute =  (point_distance(action_x, action_y, him.x, him.y) == 0);
+                            var _him = instance_nearest(action_x, action_y, obj_star);
+                            _him.navy_enemy_fleet_enroute =  (point_distance(action_x, action_y, _him.x, _him.y) == 0);
                         }
                     }
 

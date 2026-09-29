@@ -383,6 +383,34 @@ function scr_cheatcode(argument0) {
 }
 
 /// @self Asset.GMObject.obj_star_select
+function draw_system_debug(){
+    garrison_data_slate.inside_method = function() {
+        garrison_data_slate.title = localize("Garrison Report");
+        draw_set_color(c_gray);
+        var xx = garrison_data_slate.XX;
+        var yy = garrison_data_slate.YY;
+        var _base_y = yy + 20;
+        var _keys = global.planet_problem_keys;
+        var _star_missions = [
+            "great_crusade",
+        ]
+        _base_y += 2;
+        for (var i = 0; i < array_length(_star_missions); i++) {
+            var _y = _base_y + i * 20;
+            draw_text(38, _y, _star_missions[i]);
+            if (scr_hit(38, _y, 337, _y + 20)) {
+                tooltip_draw(mission_name_key(_star_missions[i]));
+                if (mouse_button_clicked()) {
+                    var _p_data = obj_star_select.p_data;
+                    _p_data.new_problem(_star_missions[i], 3);
+                }
+            }
+        }
+    };
+    garrison_data_slate.draw(340 + main_data_slate.width, 160, 0.6, 0.6);      
+}
+
+/// @self Asset.GMObject.obj_star_select
 function draw_planet_debug_options() {
     try {
         add_draw_return_values();
@@ -457,11 +485,11 @@ function draw_planet_debug_features() {
         },
     ];
 
-    var base_y = 220;
-    base_y += 2;
+    var _base_y = 220;
+    _base_y += 2;
 
     for (var i = 0; i < array_length(_addable_features); i++) {
-        var _y = base_y + i * 20;
+        var _y = _base_y + i * 20;
         var _feat = _addable_features[i];
         draw_text(38, _y, _feat.name);
         if (point_and_click([38, _y, 337, _y + 20])) {
@@ -473,11 +501,11 @@ function draw_planet_debug_features() {
 
 /// @self Asset.GMObject.obj_star_select
 function draw_planet_debug_problems() {
-    var base_y = 220;
+    var _base_y = 220;
     var _keys = global.planet_problem_keys;
-    base_y += 2;
+    _base_y += 2;
     for (var i = 0; i < array_length(_keys); i++) {
-        var _y = base_y + i * 20;
+        var _y = _base_y + i * 20;
         draw_text(38, _y, _keys[i]);
         if (scr_hit(38, _y, 337, _y + 20)) {
             tooltip_draw(mission_name_key(_keys[i]));
@@ -506,9 +534,9 @@ function draw_planet_debug_problems() {
 function draw_planet_debug_forces() {
     add_draw_return_values();
     var current_planet = obj_controller.selecting_planet;
-    var base_y = 220;
+    var _base_y = 220;
     // Close window if clicked outside
-    if (!scr_hit([36, base_y, 337, base_y + 281]) && mouse_button_clicked()) {
+    if (!scr_hit([36, _base_y, 337, _base_y + 281]) && mouse_button_clicked()) {
         debug = 0;
         exit;
     }
@@ -536,9 +564,9 @@ function draw_planet_debug_forces() {
     ];
 
     // Loop through each faction row
-    base_y += 2;
+    _base_y += 2;
     for (var i = 0; i < array_length(faction_names); i++) {
-        var _y = base_y + i * 20;
+        var _y = _base_y + i * 20;
         var key = faction_keys[i];
 
         // Draw faction name and value

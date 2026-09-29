@@ -130,7 +130,6 @@ add_problem = function(p_id, data = {}){
 problems_to_mission_log = function(){
     var _temp_log = [];
     for (var i = 1; i <= planets; i++) {
-        var problems = p_problem[i];
         var _p_data = get_planet_data(i);
         _temp_log = array_concat(_temp_log, _p_data.problems_to_mission_log());
     }
@@ -142,7 +141,7 @@ problems_to_mission_log = function(){
 has_orbiting_player_fleet = function () {
     if (instance_exists(obj_p_fleet)) {
         var _nearest = instance_nearest(x, y, obj_p_fleet);
-        if (action != "move" && point_distance(_nearest.x, _nearest.y, x, y) == 0) {
+        if (_nearest.action != "move" && point_distance(_nearest.x, _nearest.y, x, y) == 0) {
             return true;
         }
     }
@@ -163,12 +162,14 @@ has_orbiting_player_fleet = function () {
 /// ```
 get_orbiting_player_fleet = function() {
     var _fleet = instance_nearest(x, y, obj_p_fleet);
-    if (object_distance(self, _fleet) > 0 && _fleet.action != "move") {
+    if (!instance_exists(_fleet)){
+        return noone;
+    }
+    if (object_distance(self, _fleet) > 0 || _fleet.action == "move") {
         return noone;
     } else {
         return _fleet.id;
     }
-    return noone;
 }
 
 system_player_ground_forces = 0;

@@ -374,6 +374,8 @@ try {
                 scr_destroy_planet(2);
             }
         }
+    } else if (global.cheat_debug ){
+        draw_system_debug();
     }
 
     if (target != 0) {

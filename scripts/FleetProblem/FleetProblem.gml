@@ -206,16 +206,37 @@ static on_destruction = function(){
 }
 
 static mission_log_entry = function(){
-    var _func = find_func("mission_log_entry")
+    var _func = find_func("mission_log_entry");
     if (!is_undefined(_func)){
         try {
             return _func();
         } catch (_exception) {
             delete_mission = true;
             ERROR_HANDLER.handle_exception(_exception);
+            __check_delete();
+            return undefined;
         }
     }
-    __check_delete();
+    return __default_mission_log_entry();
+}
+
+static __default_mission_log_entry = function(){
+    if (!instance_exists(fleet)){
+        return undefined;
+    }
+    var _near_star = instance_nearest(fleet.x, fleet.y ,obj_star);
+    var _data = {
+        system: _near_star,
+        mission: description(),
+        time: timer,
+        problem: self,
+    };
+
+    _data.click_left = method(_data, function() {
+        set_map_pan_to_loc(problem.fleet);
+    });
+
+    return _data;
 }
 
 static __init = function(){
@@ -230,20 +251,20 @@ static __init = function(){
 __init();
 
 static __great_crusade_init = function(){
-    var _crusade_direction = point_direction(room_width / 2, room_height / 2, system.x, system.y);
-    fleet.action_x = x + lengthdir_x(1200, _crusade_direction);
-    fleet.action_y = y + lengthdir_y(1200, _crusade_direction);
-    fleet.set_fleet_movement(false, "move");
+    var _crusade_direction = point_direction(room_width / 2, room_height / 2, fleet.x, fleet.y);
+    fleet.action_x = fleet.x + lengthdir_x(1200, _crusade_direction);
+    fleet.action_y = fleet.y + lengthdir_y(1200, _crusade_direction);
+    fleet.move(false, "move");
     stage_id = "travel_to_crusade";
     fleet.beyond_engagement = true;
 }
 
 static __great_crusade_on_final_arrival = function(){
 	if (stage_id == "travel_to_crusade"){
-        var dr = point_direction(room_width / 2, room_height / 2, x, y);
-        fleet.action_x = x + lengthdir_x(600, dr);
-        fleet.action_y = y + lengthdir_y(600, dr);
-        set_fleet_movement(false, "move");
+        var _direction = point_direction(room_width / 2, room_height / 2, fleet.x, fleet.y);
+        fleet.action_x = fleet.x + lengthdir_x(600, _direction);
+        fleet.action_y = fleet.y + lengthdir_y(600, _direction);
+        fleet.move(false, "move");
         stage_id = "crusading"
         fleet.beyond_engagement = true;
 	} else if (stage_id == "crusading"){
@@ -262,11 +283,10 @@ static __great_crusade_on_final_arrival = function(){
                 instance_deactivate_object(id);
             }
         }
-        var ret = instance_nearest(x, y, obj_star);
-        action_x = ret.x;
-        action_y = ret.y;
-        action = "crusade3";
-        set_fleet_movement(false, "move");
+        var _return_star = instance_nearest(x, fleet.y, obj_star);
+        action_x = _return_star.x;
+        action_y = _return_star.y;
+        fleet.move(false, "move");
         instance_activate_object(obj_star);	
         fleet.beyond_engagement = true;	
         stage_id = "returning_home"
@@ -442,10 +462,10 @@ static __great_crusade_results = function(){
         tixt += "The combat was fairly grueling- ";
     }
     if (_type == "brutal") {
-        tixt += "The combat was absolutely brutal- your marines were the first into the fray, and as a result ";
+        tixt += "The combat was absolutely brutal- fleet.your marines were the first into the fray, and as a result ";
     }
 
-    tixt += $"{_marines_lost} of your battle brothers fell in combat.";
+    tixt += $"{_marines_lost} of fleet.your battle brothers fell in combat.";
 
     var _apoth_role = obj_ini.player_role_data[eROLE.APOTHECARY].role;
     if (obj_ini.doomed == 0) {
@@ -453,15 +473,15 @@ static __great_crusade_results = function(){
             tixt += $"  The {_apoth} surviving {_apoth_role} were able to recover {_seed} Gene-Seed.";
         }
         if ((_apoth == 0) && (_seed > 0)) {
-            tixt += $"  You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(_seed) + " of your Gene-Seed.";
+            tixt += $"  fleet.You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(_seed) + " of fleet.your Gene-Seed.";
         }
     }
     if (obj_ini.doomed == 1) {
-        tixt += "  Due to fatal mutations in your marines none of the fallen Gene-Seed was recoverable.";
+        tixt += "  Due to fatal mutations in fleet.your marines none of the fallen Gene-Seed was recoverable.";
     }
 
     if (_artifacts > 0) {
-        tixt += $"  {_artifacts} Artifacts were granted to your Chapter or looted.";
+        tixt += $"  {_artifacts} Artifacts were granted to fleet.your Chapter or looted.";
     }
     if ((_roll3 <= 10) && (_artifacts > 1)) {
         tixt += "  One of them were given as a bonus for exceptional valor.";
@@ -483,14 +503,13 @@ static __great_crusade_results = function(){
 }
 
 static __deliver_hunt_trophy_mission_log_entry = function(){
-    var _problem = problems[i];
     var _mission = localize("Deliver Trophy Guard");
     var _sys = fleets_next_location();
     var _mission_data = {
-        mission: _problem,
+        mission: self,
         system: _sys.name,
         system_id: _sys.id,
-        target: id,
+        target: self,
         important_person: _event.data.trophy_owner,
         person_name: _event.data.delivering_marine,
         planet: 0,

@@ -9,6 +9,7 @@ enum ePOPUP_TYPE {
     ITEM_GIFT = 9,
     ADD_TAGS = 12,
     SYSTEM_DEBUG = 13,
+    PLAYER_FLEETDEBUG = 14,
     BATTLE_OPTIONS = 98,
     FLEET_MOVE = 99,
 }
