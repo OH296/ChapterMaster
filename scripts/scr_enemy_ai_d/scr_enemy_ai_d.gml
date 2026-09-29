@@ -72,8 +72,8 @@ function scr_enemy_ai_d() {
             }
         }
     }
-    for (var i = 0; i < array_length(system_problems); i++){
-        system_problems[i].basic_turn_end();  
+    for (var i = 0; i < array_length(problems); i++){
+        problems[i].basic_turn_end();  
     }
     for (var i = 1; i <= planets; i++) {
 

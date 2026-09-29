@@ -1325,9 +1325,9 @@ function fleet_register_at_star(_fleet, _star) {
 
     if (_faction != eFACTION.PLAYER){
         if (obj_controller.known[_faction] == 0){
-            var _p_fleet = get_orbiting_player_fleet();
+            var _p_fleet = _star.get_orbiting_player_fleet();
             if (_p_fleet != noone){
-                obj_controller.known[_faction] == 1;
+                obj_controller.known[_faction] = 1;
             }
         }
     }

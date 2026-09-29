@@ -18,6 +18,13 @@ if (struct_exists(data, "members")){
     members = data.members;
 }
 
+static description = function(){
+    var _n = mission_name_key(p_id);
+    _n = _n == "" ? p_id : _n;
+    return _n;
+}
+
+
 static __handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
         try {
@@ -28,13 +35,13 @@ static __handle_triggered_mission_func = function(func){
     }
     if (timer == -1 || (delete_mission)){
         var _prob = -1;
-        for (var i = 0; i < array_length(system.system_problems); i++){
-            if (system.system_problems[i] == self){
+        for (var i = 0; i < array_length(system.problems); i++){
+            if (system.problems[i] == self){
                 _prob = i;
             }
         }
         if (_prob > -1){
-            array_delete(system.system_problems, _prob,1);
+            array_delete(system.problems, _prob,1);
         }
     }
 }

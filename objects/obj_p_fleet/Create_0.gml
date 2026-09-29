@@ -64,6 +64,17 @@ add_problem = function(_name, _timer, _data = {}){
     return _problem;
 }
 
+problems_to_mission_log = function(){
+    var _temp_log = []
+    for (var i = 0; i < array_length(problems); i++) {
+        var _mission_data = problems[i].mission_log_entry();
+        array_push(_temp_log, _mission_data);
+    }
+
+    return _temp_log;
+}
+
+
 arrived_at_star = function(){
     set_fleet_location(orbiting.name);
     if (orbiting.visited == 0) {

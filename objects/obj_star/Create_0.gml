@@ -119,12 +119,23 @@ add_feature = function(planet, feature) {
     array_push(p_feature[planet], feature);
 };
 
-system_problems = [];
+problems = [];
 
 add_problem = function(p_id, data = {}){
     var _prob = new SystemProblem(p_id, self, data);
-    array_push(system_problems, _prob);
+    array_push(problems, _prob);
     return _prob;
+}
+
+problems_to_mission_log = function(){
+    var _temp_log = [];
+    for (var i = 1; i <= planets; i++) {
+        var problems = p_problem[i];
+        var _p_data = get_planet_data(i);
+        _temp_log = array_concat(_temp_log, _p_data.problems_to_mission_log());
+    }
+    _temp_log = array_concat(_temp_log, generic_problems_to_mission_log());
+    return _temp_log;
 }
 
 /// @self Asset.GMObject.obj_star
@@ -152,7 +163,7 @@ has_orbiting_player_fleet = function () {
 /// ```
 get_orbiting_player_fleet = function() {
     var _fleet = instance_nearest(x, y, obj_p_fleet);
-    if (object_distance(self, _fleet) > 0 && action != "move") {
+    if (object_distance(self, _fleet) > 0 && _fleet.action != "move") {
         return noone;
     } else {
         return _fleet.id;

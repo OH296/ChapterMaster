@@ -641,11 +641,11 @@ function PlanetData(_planet, _system) constructor {
             } // Empire bonus, was 15 before
 
             // Check for industrial facilities
-            var fleet_buildable = (planet_type != "Dead" && planet_type != "Lava") || _has_warboss || _has_stronghold;
-            if (fleet_buildable && planet_forces[eFACTION.ORK] >= 4) {
+            var _fleet_buildable = (planet_type != "Dead" && planet_type != "Lava") || _has_warboss || _has_stronghold;
+            if (_fleet_buildable && planet_forces[eFACTION.ORK] >= 4) {
                 // Used to not have Ice either
 
-                if (has_orbiting_player_fleet()) {
+                if (system.has_orbiting_player_fleet()) {
                     exit;
                 }
                 if (planet_type == "Forge") {
@@ -806,30 +806,7 @@ function PlanetData(_planet, _system) constructor {
         }
     }
 
-    static  problems_to_mission_log = function(){
-        var _logs = [];
-        for (var p = 0; p < array_length(problems); p++) {
-            var _problem = problems[p];
-
-            if (_problem.stage_id == "preliminary") {
-                continue;
-            }
-            var _mission_explain = _problem.description();
-            var _data = {
-                system: name(),
-                mission: _mission_explain,
-                time: _problem.timer,
-                problem :  _problem,
-            };
-
-            _data.click_left = method(_data, function() {
-                set_map_pan_to_loc(problem.system);
-            });
-
-            array_push(_logs, _data);
-        }
-        return _logs;
-    }
+    static problems_to_mission_log = method(self, generic_problems_to_mission_log);
 
     static name = function() {
         return planet_numeral_name(planet, system);

@@ -260,60 +260,14 @@ function UnitQuickFindPanel() constructor {
 
     update_mission_log = function() {
         mission_log = [];
-        var temp_log = [];
+        var _temp_log = [];
         with (obj_star) {
-            for (var i = 1; i <= planets; i++) {
-                var problems = p_problem[i];
-                var _p_data = get_planet_data(i);
-                temp_log = array_concat(temp_log, _p_data.problems_to_mission_log());
-            }
+            _temp_log = array_concat(_temp_log, problems_to_mission_log());
         }
-        with (obj_en_fleet) {
-            if (array_length(events)) {
-                for (var i = 0; i < array_length(events); i++) {
-                    var _event = events[i];
-                    if (struct_exists(_event, "turn_end")) {
-                        switch (_event.turn_end) {
-                            //this is being pre seeded for a later coming feature set
-                            case "deliver_trophy_end_turn_check":
-                                var _mission = localize("Deliver Trophy Guard");
-                                var _sys = fleets_next_location();
-                                var _mission_data = {
-                                    mission: _mission,
-                                    system: _sys.name,
-                                    system_id: _sys.id,
-                                    target: id,
-                                    important_person: _event.fleetevent_data.trophy_owner,
-                                    person_name: _event.fleetevent_data.delivering_marine,
-                                    planet: 0,
-                                    start_system: _event.fleetevent_data.system,
-                                    time: _event.timer,
-                                };
-
-                                _mission_data.click_left = method(_mission_data, function() {
-                                    set_map_pan_to_loc(system_id);
-                                });
-
-                                _mission_data.hover = method(_mission_data, function() {
-                                    tooltip_draw(localize("You are to have {0} deliver trophy hunted on {1} to the {1} regiments\n\nLeft click to see target fleet intercept system right click to view the trophy bearing marine {0}", [person_name, start_system]));
-                                });
-
-                                _mission_data.click_right = method(_mission_data, function() {
-                                    var _unit = fetch_unit_uid(important_person);
-                                    if (is_struct(_unit)) {
-                                        var _unit_l = [_unit];
-                                        group_selection(_unit_l);
-                                    }
-                                });
-
-                                array_push(temp_log, _mission_data);
-                                break;
-                        }
-                    }
-                }
-            }
+        with (obj_p_fleet) {
+            _temp_log = array_concat(_temp_log, problems_to_mission_log());
         }
-        mission_log = temp_log;
+        mission_log = _temp_log;
         var xx = main_panel.XX;
         var yy = main_panel.YY;
         var _data = {

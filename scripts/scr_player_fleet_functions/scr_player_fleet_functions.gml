@@ -669,7 +669,7 @@ try {
             if (orbiting != noone){
                 arrived_at_star();
             } else {
-                set_fleet_location("Near " + instance_nearest(obj_star).name);
+                set_fleet_location("Near " + instance_nearest(x, y,obj_star).name);
             }
 
             if (array_length(complex_route) > 0) {

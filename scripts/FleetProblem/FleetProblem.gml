@@ -8,13 +8,15 @@
 
     "init" - runs immediately after problem is created often used to populate initial popup or stack popup for turn end
 
-    "on_arrival" - runs when the fleet arrives at a star, event_data holds {star}
-    "on_load" - runs when units are loaded onto the fleet, event_data holds {units}
-    "on_unload" - runs when units are unloaded from the fleet, event_data holds {units}
-    "on_split" - runs on the original fleet when it splits, event_data holds {new_fleet}
-    "on_merge" - runs on the receiving fleet when another fleet merges into it, event_data holds {merged_fleet}
+    "on_arrival" - runs when the fleet arrives at a star, fleet_event_data holds {star}
+    "on_load" - runs when units are loaded onto the fleet, fleet_event_data holds {units}
+    "on_unload" - runs when units are unloaded from the fleet, fleet_event_data holds {units}
+    "on_split" - runs on the original fleet when it splits, fleet_event_data holds {new_fleet}
+    "on_merge" - runs on the receiving fleet when another fleet merges into it, fleet_event_data holds {merged_fleet}
     "on_destruction" - runs when the fleet is destroyed, the mission is deleted after this function has run
         - must be triggered BEFORE the fleet instance is destroyed
+
+    "mission_log_entry" - runs to provide a data row for the mission log
 
 - other than these entry points and any other later defined positions mission specific code should not run outside of the FleetProblem container
 
@@ -24,7 +26,7 @@
 
 other info
     - the owning fleet must have a `problems = []` array in its create event
-    - entry points that receive extra information read it from event_data, which only exists for the duration of the call
+    - entry points that receive extra information read it from fleet_event_data, which only exists for the duration of the call
     - set a mission for deletion by setting delete_mission = true; this will delete the mission after the current function
     has finished executing
     - functions prefixed with `__` are only accessible from within the FleetProblem's internal scope
@@ -148,15 +150,15 @@ static find_func = function(trigger_string){
     return undefined;
 }
 
-//runs the entry point with event_data available for the duration of the call
+//runs the entry point with fleet_event_data available for the duration of the call
 static __trigger_with_event = function(trigger_string, _event_data = {}){
     var _func = find_func(trigger_string);
     if (is_undefined(_func)){
         exit;
     }
-    event_data = _event_data;
+    fleet_event_data = _event_data;
     __handle_triggered_mission_func(_func);
-    struct_remove(self, "event_data");
+    struct_remove(self, "fleet_event_data");
 }
 
 static basic_turn_end = function(){
@@ -203,6 +205,19 @@ static on_destruction = function(){
     __check_delete();
 }
 
+static mission_log_entry = function(){
+    var _func = find_func("mission_log_entry")
+    if (!is_undefined(_func)){
+        try {
+            return _func();
+        } catch (_exception) {
+            delete_mission = true;
+            ERROR_HANDLER.handle_exception(_exception);
+        }
+    }
+    __check_delete();
+}
+
 static __init = function(){
     if (p_id == ""){
         exit;
@@ -214,7 +229,7 @@ static __init = function(){
 }
 __init();
 
-static __great_crusade_init(){
+static __great_crusade_init = function(){
     var _crusade_direction = point_direction(room_width / 2, room_height / 2, system.x, system.y);
     fleet.action_x = x + lengthdir_x(1200, _crusade_direction);
     fleet.action_y = y + lengthdir_y(1200, _crusade_direction);
@@ -223,7 +238,7 @@ static __great_crusade_init(){
     fleet.beyond_engagement = true;
 }
 
-static __great_crusade_on_final_arrival(){
+static __great_crusade_on_final_arrival = function(){
 	if (stage_id == "travel_to_crusade"){
         var dr = point_direction(room_width / 2, room_height / 2, x, y);
         fleet.action_x = x + lengthdir_x(600, dr);
@@ -360,7 +375,7 @@ static __great_crusade_results = function(){
                         array_push(_heroics_strings, heroic_death);
                     }
                 }
-            } else if (_unit.has_role(eROLE.ANCIENT) || _unit.has_role(eROLE.CHAPTERMASTER])) {
+            } else if (_unit.has_role(eROLE.ANCIENT) || _unit.has_role(eROLE.CHAPTERMASTER)) {
                 _dead = false;
             }
         }
@@ -459,15 +474,49 @@ static __great_crusade_results = function(){
     }
     // title / text / image / speshul
     scr_popup("Crusade Results", tixt, "crusade", "");
-    for (i = 0; i < array_length(_heroics_strings); i++) {
+    for (var i = 0; i < array_length(_heroics_strings); i++) {
         scr_popup("Heroic Deed", _heroics_strings[i], "crusade", "");
     }
 
     delete_mission = true;
     fleet.action = "";
-}	
+}
+
+static __deliver_hunt_trophy_mission_log_entry = function(){
+    var _problem = problems[i];
+    var _mission = localize("Deliver Trophy Guard");
+    var _sys = fleets_next_location();
+    var _mission_data = {
+        mission: _problem,
+        system: _sys.name,
+        system_id: _sys.id,
+        target: id,
+        important_person: _event.data.trophy_owner,
+        person_name: _event.data.delivering_marine,
+        planet: 0,
+        start_system: _event.data.system,
+        time: timer,
+    };
+
+    _mission_data.click_left = method(_mission_data, function() {
+        set_map_pan_to_loc(system_id);
+    });
+
+    _mission_data.hover = method(_mission_data, function() {
+        tooltip_draw(localize("You are to have {0} deliver trophy hunted on {1} to the {1} regiments\n\nLeft click to see target fleet intercept system right click to view the trophy bearing marine {0}", [person_name, start_system]));
+    });
+
+    _mission_data.click_right = method(_mission_data, function() {
+        var _unit = fetch_unit_uid(important_person);
+        if (is_struct(_unit)) {
+            var _unit_l = [_unit];
+            group_selection(_unit_l);
+        }
+    });
+    return _mission_data;   
 }
 }
+
 
 
 
