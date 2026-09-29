@@ -100,7 +100,7 @@ function scr_image_unload_entry(_entry, _reset_flag = true) {
 
     for (var _i = 0; _i < _count; _i++) {
 
-        if (_exists[_i] > 0) {
+        if (_entry.exists[_i] > 0) {
 
             if (sprite_exists(_entry.sprites[_i])) {
                 sprite_delete(_entry.sprites[_i]);
