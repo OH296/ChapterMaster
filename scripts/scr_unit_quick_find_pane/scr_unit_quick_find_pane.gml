@@ -527,6 +527,7 @@ function UnitQuickFindPanel() constructor {
     				}*/
                 }
                 if (array_length(travel_target) == 2) {
+                    obj_controller.camera_moved_this_turn = true;
                     if (obj_controller.x != travel_target[0] || obj_controller.y != travel_target[1]) {
                         obj_controller.x += travel_increments[0];
                         obj_controller.y += travel_increments[1];

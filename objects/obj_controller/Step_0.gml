@@ -156,9 +156,6 @@ try {
     if ((disposition[4] > 20) && (loyalty > 33) && (demanding == 1)) {
         demanding = 0;
     }
-
-    main_map_move_keys();
-
     // Menu selection screens
     var freq = 150;
     if (l_options > 0) {

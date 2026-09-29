@@ -1,6 +1,14 @@
 if ((obj_controller.menu != eMENU.DEFAULT && obj_controller.menu != eMENU.TURN_END) || !instance_exists(obj_star)) {
     exit;
 }
+
+if (obj_controller.camera_moved_this_turn){
+    in_view = in_camera_view(star_box_shape());
+}
+if (!in_view){
+    exit;
+}
+
 var scale = obj_controller.scale_mod;
 
 var draw_icon = false;

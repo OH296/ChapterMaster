@@ -97,6 +97,8 @@ unit_manage_constants.current_data = "";
 management_buttons = false;
 display_unit = undefined;
 
+camera_moved_this_turn = true;
+
 diplo_buttons = {};
 diplomacy_pathway = "";
 option_selections = [];
@@ -1104,7 +1106,8 @@ serialize = function() {
         "lair_styles",
         "reclusiam_vars",
         "management_buttons",
-        "settings_buttons_ui_components"
+        "settings_buttons_ui_components",
+        "camera_moved_this_turn"
     ];
     var _excluded_from_save_start = ["restart_"];
 
