@@ -23,6 +23,7 @@ etah = 0;
 safe = 0;
 last_turn_check = 0;
 events = [];
+in_view = true;
 
 uid = scr_uuid_generate();
 //TODO set up special save method for faction specific fleet variables
@@ -94,6 +95,7 @@ serialize = function() {
         "serialize",
         "deserialize",
         "orbiting",
+        "in_view",
     ];
 
     copy_serializable_fields(object_fleet, save_data, excluded_from_save);
