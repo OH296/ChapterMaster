@@ -2,6 +2,7 @@ global.default_view_width = 1600;
 global.default_view_height = 900;
 
 function scr_zoom() {
+    camera_moved_this_turn = true;
     // Zooms the view in or out when executed
     set_zoom_to_default();
     if (obj_controller.zoomed) {
@@ -45,11 +46,13 @@ function scr_zoom_keys() {
     if (keyboard_check(vk_subtract) || keyboard_check(187) || keyboard_check(24) || mouse_wheel_down()) {
         if (obj_controller.map_scale > min_zoom) {
             zoom_delta = -1;
+            camera_moved_this_turn = true;
         }
     }
     if (keyboard_check(vk_add) || mouse_wheel_up()) {
         if (obj_controller.map_scale < max_zoom) {
             zoom_delta = +1;
+            camera_moved_this_turn = true;
         }
     }
     if (zoom_delta != 0) {
