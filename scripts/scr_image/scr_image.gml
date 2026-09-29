@@ -212,7 +212,7 @@ function scr_image_registry_build(_img) {
         ["postbattle",       "postbattle",       "ui",        "postbattle","postbattle_good"],
         ["postspace",        "postspace",        "ui",        "postspace","postspace_good"],
         ["formation",        "formation",        "ui",        "formation","formation_good"],
-        ["popup",            "popup",            "ui",        "popup",    "popup_good"],
+        ["popup",            "popup",            "popup",     "popup",    "popup_good"],
         ["commander",        "commander",        "ui",        "commander","commander_good"],
         ["planet",           "planet",           "ui",        "planet",   "planet_good"],
         ["attacked",         "attacked",         "ui",        "attacked", "attacked_good"],
