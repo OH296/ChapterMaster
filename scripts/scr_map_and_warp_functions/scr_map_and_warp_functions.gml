@@ -25,21 +25,25 @@ function main_map_move_keys() {
                 var rel_view = view_w > global.default_view_width ? global.default_view_width / 2 : view_w / 2;
                 x = (x > view_x + rel_view) ? view_x + rel_view : x;
                 x -= spd;
+                camera_moved_this_turn = true;
             }
             if ((keyboard_check(vk_right) || (mouse_x >= view_x + (view_w * 0.98)) || keyboard_check(ord("D"))) && (x < (room_width - x_limits))) {
                 var rel_view = view_w > global.default_view_width ? global.default_view_width / 2 : view_w / 2;
                 x = (x < view_x + view_w - rel_view) ? view_x + view_w - rel_view : x;
                 x += spd;
+                camera_moved_this_turn = true;
             }
             if ((keyboard_check(vk_up) || (mouse_y <= view_y + (view_h * 0.02)) || keyboard_check(ord("W"))) && (y > y_limits)) {
                 var rel_view = view_h > global.default_view_height ? global.default_view_height / 2 : view_h / 2;
                 y = (y > view_y + rel_view) ? view_y + rel_view : y;
                 y -= spd;
+                camera_moved_this_turn = true;
             }
             if ((keyboard_check(vk_down) || (mouse_y >= view_y + (view_h * 0.98)) || keyboard_check(ord("S"))) && (y < room_height - y_limits)) {
                 var rel_view = view_h > global.default_view_height ? global.default_view_height / 2 : view_h / 2;
                 y = (y < view_y + view_h - rel_view) ? view_y + view_h - rel_view : y;
                 y += spd;
+                camera_moved_this_turn = true;
             }
         }
     }

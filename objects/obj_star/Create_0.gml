@@ -28,6 +28,7 @@ trader = 0;
 visited = 0;
 stored_owner = -1;
 navy_enemy_fleet_enroute = false;
+in_view = true;
 
 // sets up default planet variables
 planet = array_create(PLANET_ARRAY_SIZE, 0);

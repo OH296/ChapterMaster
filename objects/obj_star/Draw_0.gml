@@ -1,4 +1,12 @@
 // Draws the system name and color codes it based on ownership
+
+
+if (obj_controller.camera_moved_this_turn){
+    in_view = in_camera_view(star_box_shape());
+}
+if (!in_view){
+    exit;
+}
 if ((p_type[1] == "Craftworld") && (obj_controller.known[eFACTION.ELDAR] == 0)) {
     draw_set_alpha(0);
     draw_set_color(255);
@@ -18,7 +26,7 @@ if ((!craftworld) && (vision == 1)) {
 }
 if (craftworld) {
     draw_sprite_ext(spr_craftworld, 0, x, y, 1 * scale, 1 * scale, point_direction(x, y, room_width / 2, room_height / 2) + 90, c_white, 1);
-}
+} else 
 if (space_hulk) {
     draw_sprite_ext(spr_star_hulk, 0, x, y, 1 * scale, 1 * scale, 0, c_white, 1);
 }
@@ -33,7 +41,7 @@ draw_set_halign(fa_center);
 draw_set_font(cjk_font(fnt_cul_14));
 draw_set_alpha(1);
 
-if (global.load == -1 && (obj_controller.zoomed || in_camera_view(star_box_shape()))) {
+if (global.load == -1 && (obj_controller.zoomed || in_view)) {
     if (has_garrison()) {
         draw_sprite(spr_new_resource, 3, x - 30, y + 15);
         if (scr_hit(x - 40, y + 10, x - 10, y + 35)) {
