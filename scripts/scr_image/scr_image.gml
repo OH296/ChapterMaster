@@ -19,13 +19,11 @@ function scr_image(path, image_id, x1, y1, width, height) {
     if ((image_id >= 0) && (image_id != 666)) {
 
         if (!is_undefined(_entry)) {
-
             var _sprites = _entry.sprites;
             var _index = (_entry.fixed_index >= 0) ? _entry.fixed_index : image_id;
 
             if (_index < array_length(_sprites)) {
                 var _sprite = _sprites[_index];
-
                 if ((_sprite > 0) && sprite_exists(_sprite)) {
                     draw_sprite_stretched(_sprite, image_id, x1, y1, width, height);
                     return;
@@ -173,8 +171,8 @@ function scr_image_load(path) {
     if (_entry.sheet_path != "") {
 
         if (file_exists(_entry.sheet_path)) {
-            _sprites[1] = sprite_add(_entry.sheet_path, _entry.sheet_frames, false, false, 0, 0);
-            _exists[1] = true;
+            _entry.sprites[1] = sprite_add(_entry.sheet_path, _entry.sheet_frames, false, false, 0, 0);
+            _entry.exists[1] = true;
             variable_instance_set(obj_img, _entry.good, true);
         }
 
@@ -189,8 +187,8 @@ function scr_image_load(path) {
         var _file = _entry.file_prefix + string(_i) + ".png";
 
         if (file_exists(_file)) {
-            _sprites[_i - 1] = sprite_add(_file, 1, false, false, 0, 0);
-            _exists[_i - 1] = 1;
+            _entry.sprites[_i - 1] = sprite_add(_file, 1, false, false, 0, 0);
+            _entry.exists[_i - 1] = 1;
             _found++;
         }
     }
