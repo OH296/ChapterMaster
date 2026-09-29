@@ -120,11 +120,9 @@ if ((!instance_exists(obj_fleet)) && (!instance_exists(obj_ncombat))) {
     }
 
     if ((room_get_name(room) == "rm_main_menu") && (title_splash_good == false)) {
-        LOGGER.info("loading splash")
         scr_image("title_splash", -50, 0, 0, 0, 0);
     }
     if ((room_get_name(room) != "rm_main_menu") && (title_splash_good == true)) {
-        LOGGER.info("unloading splash")
         scr_image("title_splash", -666, 0, 0, 0, 0);
     }
 

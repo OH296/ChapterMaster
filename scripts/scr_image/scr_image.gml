@@ -96,21 +96,18 @@ function scr_image_draw_file(path, image_id, x1, y1, width, height) {
 
 
 function scr_image_unload_entry(_entry, _reset_flag = true) {
-
-    var _sprites = _entry.sprites;
-    var _exists = _entry.exists;
-    var _count = min(80, array_length(_sprites));
+    var _count = min(80, array_length(_entry.sprites));
 
     for (var _i = 0; _i < _count; _i++) {
 
         if (_exists[_i] > 0) {
 
-            if (sprite_exists(_sprites[_i])) {
-                sprite_delete(_sprites[_i]);
+            if (sprite_exists(_entry.sprites[_i])) {
+                sprite_delete(_entry.sprites[_i]);
             }
 
-            _exists[_i] = -1;
-            _sprites[_i] = 0;
+            _entry.exists[_i] = -1;
+            _entry.sprites[_i] = 0;
         }
     }
 
@@ -163,9 +160,6 @@ function scr_image_load(path) {
 
     // Splash groups share one flag, so don't clear it when reloading one of them
     scr_image_unload_entry(_entry, false);
-
-    var _sprites = _entry.sprites;
-    var _exists = _entry.exists;
 
     // Single sprite sheets, always stored at index 1
     if (_entry.sheet_path != "") {
