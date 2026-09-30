@@ -70,8 +70,12 @@ function WarpLane(_star_1, _star_2, _grade) constructor {
     grade = _grade;
     handler = obj_ini.sector_handler.warp_lanes;
     line_alpha = 0.4;
-    static index = 0;
-    index++
+    static count = 0;
+    count++;
+    index = count;
+    line_x_travel = 0;
+    line_y_travel = 0;
+    last_map_scale = 0;
 
     static calc_in_view = function(){
         in_view = star_1.in_view || star_2.in_view;
@@ -83,7 +87,7 @@ function WarpLane(_star_1, _star_2, _grade) constructor {
         draw_set_alpha(1);       
     }
 
-    static warp_route_tooltip = "Major warp _route to {0} (x4 travel speed for warp capable crafts)\n\nHold Shift and click Left Mouse Button to see destination.";
+    static warp_route_tooltip = "Major warp route to {0} (x4 travel speed for warp capable crafts)\n\nHold Shift and click Left Mouse Button to see destination.";
     static major_warp_route_hit_box = function(star = 1){
         var _dest_star = star == 1 ? star_2 :  star_1;
         var _hover_star = star == 1 ? star_1 : star_2;
@@ -133,9 +137,8 @@ function WarpLane(_star_1, _star_2, _grade) constructor {
             }
         }
     }
-    static draw_major_warp_route = function(){
-        draw_set_color(c_yellow);
-        //TODO abstract code as a ratio distance function
+
+    static update_draw_distance_from_star = fuction(){
         var _direction_x = x2 - x1;
         var _direction_y = y2 - y1;
         var _forward = _direction_x >= 0 ? 1 : -1;
@@ -147,6 +150,14 @@ function WarpLane(_star_1, _star_2, _grade) constructor {
         var _y_ratio = _direction_y * _downward / _sum;
         line_x_travel = sqrt(_pythag_dist * _x_ratio) * _forward;
         line_y_travel = sqrt(_pythag_dist * _y_ratio) * _downward;
+        last_map_scale = obj_controller.map_scale;
+    }
+    static draw_major_warp_route = function(){
+        draw_set_color(c_yellow);
+        //TODO abstract code as a ratio distance function
+        if (last_map_scale != obj_controller.map_scale){
+            update_draw_distance_from_star();
+        }
 
         major_warp_route_hit_box();
         major_warp_route_hit_box(2);
@@ -163,14 +174,15 @@ function WarpLane(_star_1, _star_2, _grade) constructor {
 }
 
 function WarpLaneHandler() constructor{
-    static routes = [];
+    routes = [];
     static current_seed = global.game_seed;
     static warp_image = -1;
     static warp_width = sprite_get_width(spr_warp_storm) * 0.75;
     static warp_height = sprite_get_height(spr_warp_storm) * 0.75;
     static line_width = 0;
     static line_alpha = 0.4;
-    static allow_tooltips = true;
+
+    allow_tooltips = true;
 
     static calc_warp_lanes = function(){
         current_seed = global.game_seed

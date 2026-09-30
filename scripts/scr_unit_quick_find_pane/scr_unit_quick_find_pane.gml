@@ -442,7 +442,7 @@ function UnitQuickFindPanel() constructor {
                 if (!hover_entered) {
                     if (point_and_click([xx + 10, yy + 88 + (20 * i), xx + main_panel.width, yy + 108 + (20 * i)])) {
                         var _star = find_star_by_name(system_names[i]);
-                        if (star != noone) {
+                        if (_star != noone) {
                             set_map_pan_to_loc(_star);
                         }
                     }
@@ -532,6 +532,7 @@ function UnitQuickFindPanel() constructor {
             travel_time++;
         } else {
             travel_target = [];
+            exit;
         }
         if (travel_time == 15) {
             obj_controller.x = travel_target[0];
