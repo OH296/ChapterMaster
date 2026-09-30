@@ -3,19 +3,20 @@ function SectorHandler() constructor {
     year_fraction = 0;
     year = 735;
     check_number = 5;
+    warp_lanes = new WarpLaneHandler();
 
     static date = function() {
-        var yf = "";
+        var _yf = "";
         if (year_fraction < 10) {
-            yf = "00" + string(year_fraction);
+            _yf = "00" + string(year_fraction);
         }
         if ((year_fraction >= 10) && (year_fraction < 100)) {
-            yf = "0" + string(year_fraction);
+            _yf = "0" + string(year_fraction);
         }
         if (year_fraction >= 100) {
-            yf = string(year_fraction);
+            _yf = string(year_fraction);
         }
-        return $"{check_number} {yf} {year}.M{millenium}";
+        return $"{check_number} {_yf} {year}.M{millenium}";
     };
 
     static game_year = function() {
@@ -42,5 +43,12 @@ function SectorHandler() constructor {
         return game_year() - age;
     };
 
+    
+
+    static save = function(){
+        var _copy = variable_clone(self);
+        struct_remove(_copy, "warp_lanes");
+        return _copy;
+    }
     LOGGER.info("SectorHandler successfully initialised");
 }

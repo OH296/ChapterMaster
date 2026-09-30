@@ -10,6 +10,7 @@ if ((((x >= (room_width - 150)) && (y <= 450)) || (y < 100)) && (global.load == 
 }
 
 scale = 1;
+star_scale = 0;
 name = "";
 star = noone;
 planets = 0;
@@ -28,6 +29,7 @@ trader = 0;
 visited = 0;
 stored_owner = -1;
 in_view = true;
+garrisoned = false;
 
 // sets up default planet variables
 var _planet_array_size = 9;
@@ -199,6 +201,7 @@ serialize = function() {
         "system_sabatours",
         "system_datas",
         "present_fleet",
+        "garrisoned"
     ];
     var excluded_from_save_start = ["p_"];
 

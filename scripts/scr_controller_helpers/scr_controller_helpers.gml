@@ -107,6 +107,7 @@ function main_map_defaults() {
         audience = 0;
         clear_diplo_choices();
         zoomed = 0;
+        camera_moved_this_turn = true;
     }
 }
 
