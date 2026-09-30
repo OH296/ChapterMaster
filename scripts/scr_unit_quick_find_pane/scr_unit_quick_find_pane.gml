@@ -236,6 +236,7 @@ function UnitQuickFindPanel() constructor {
         }
 
         if (fleet_table.last_drawn_sequence != hide_sequence){
+            fleet_table.last_drawn_sequence = hide_sequence;
             fleet_table.update({x1: xx + 40, y1: yy + 50, y2: yy + 50 + main_panel.height, colour: c_white, font: fnt_40k_14});
         }
 
@@ -365,7 +366,7 @@ function UnitQuickFindPanel() constructor {
         mission_table = new Table(_data);
     };
 
-    main_panel.inside_method = function() {
+    static main_panel_content = function(){
         var xx = main_panel.XX;
         var yy = main_panel.YY;
         is_entered = scr_hit(xx, yy, xx + main_panel.width, yy + main_panel.height);
@@ -440,17 +441,9 @@ function UnitQuickFindPanel() constructor {
 
                 if (!hover_entered) {
                     if (point_and_click([xx + 10, yy + 88 + (20 * i), xx + main_panel.width, yy + 108 + (20 * i)])) {
-                        var star = find_star_by_name(system_names[i]);
+                        var _star = find_star_by_name(system_names[i]);
                         if (star != noone) {
-                            travel_target = [
-                                star.x,
-                                star.y,
-                            ];
-                            travel_increments = [
-                                (travel_target[0] - obj_controller.x) / 15,
-                                (travel_target[1] - obj_controller.y) / 15,
-                            ];
-                            travel_time = 0;
+                            set_map_pan_to_loc(_star);
                         }
                     }
                 }
@@ -480,6 +473,8 @@ function UnitQuickFindPanel() constructor {
             mission_table.draw();
         }
     };
+
+    main_panel.inside_method = method(self, main_panel_content);
 
     static hide_reveal_sequence = function(){
         var _x_draw = 0;
@@ -531,7 +526,6 @@ function UnitQuickFindPanel() constructor {
         if (array_length(travel_target) != 2) {
             exit;
         }
-        obj_controller.camera_moved_this_turn = true;
         if (obj_controller.x != travel_target[0] || obj_controller.y != travel_target[1]) {
             obj_controller.x += travel_increments[0];
             obj_controller.y += travel_increments[1];
@@ -555,6 +549,7 @@ function UnitQuickFindPanel() constructor {
             if (!instances_exist_any([obj_fleet_select, obj_star_select])) {
                 hide_reveal_sequence();
             }
+            travel_camera_to_target();
             pop_draw_return_values();
         } catch (_exception) {} //dangerous to handle will just make game unplayable if crash does occur
     };
