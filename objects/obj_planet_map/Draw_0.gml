@@ -14,5 +14,5 @@ if (obj_controller.invis == true) {
 }
 
 if (obj_controller.menu == eMENU.DEFAULT || obj_controller.menu == eMENU.TURN_END) {
-    draw_warp_lanes();
+    obj_ini.sector_handler.warp_lanes.draw();
 }

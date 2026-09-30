@@ -41,6 +41,7 @@ function UnitQuickFindPanel() constructor {
         row_h: 20,
         localize_headings: true,
     });
+    fleet_table.last_drawn_sequence = -1;
 
     static has_troops = function(name) {
         return struct_exists(garrison_log, name);
@@ -234,7 +235,10 @@ function UnitQuickFindPanel() constructor {
             update_fleet_table();
         }
 
-        fleet_table.update({x1: xx + 40, y1: yy + 50, y2: yy + 50 + main_panel.height, colour: c_white, font: fnt_40k_14});
+        if (fleet_table.last_drawn_sequence != hide_sequence){
+            fleet_table.last_drawn_sequence = hide_sequence;
+            fleet_table.update({x1: xx + 40, y1: yy + 50, y2: yy + 50 + main_panel.height, colour: c_white, font: fnt_40k_14});
+        }
 
         fleet_table.draw();
 
@@ -294,7 +298,7 @@ function UnitQuickFindPanel() constructor {
         mission_table = new Table(_data);
     };
 
-    main_panel.inside_method = function() {
+    static main_panel_content = function(){
         var xx = main_panel.XX;
         var yy = main_panel.YY;
         is_entered = scr_hit(xx, yy, xx + main_panel.width, yy + main_panel.height);
@@ -369,17 +373,9 @@ function UnitQuickFindPanel() constructor {
 
                 if (!hover_entered) {
                     if (point_and_click([xx + 10, yy + 88 + (20 * i), xx + main_panel.width, yy + 108 + (20 * i)])) {
-                        var star = find_star_by_name(system_names[i]);
-                        if (star != noone) {
-                            travel_target = [
-                                star.x,
-                                star.y,
-                            ];
-                            travel_increments = [
-                                (travel_target[0] - obj_controller.x) / 15,
-                                (travel_target[1] - obj_controller.y) / 15,
-                            ];
-                            travel_time = 0;
+                        var _star = find_star_by_name(system_names[i]);
+                        if (_star != noone) {
+                            set_map_pan_to_loc(_star);
                         }
                     }
                 }
@@ -410,70 +406,83 @@ function UnitQuickFindPanel() constructor {
         }
     };
 
+    main_panel.inside_method = method(self, main_panel_content);
+
+    static hide_reveal_sequence = function(){
+        var _x_draw = 0;
+        var _lower_draw = main_panel.height + 110;
+        if (hide_sequence == 30) {
+            hide_sequence = 0;
+        }
+        if ((hide_sequence > 0 && hide_sequence < 15) || (hide_sequence > 15 && hide_sequence < 30)) {
+            var _increment = (main_panel.width / 15);
+            if (hide_sequence > 15) {
+                _x_draw = (_increment * (hide_sequence - 15)) - main_panel.width;
+            } else {
+                _x_draw = -(_increment * hide_sequence);
+            }
+            hide_sequence++;
+        }
+        if (hide_sequence > 15 || hide_sequence < 15) {
+            main_panel.draw(_x_draw, 110, 0.46, 0.75);
+            if (tab_buttons.fleets.draw(_x_draw, 79, localize("Fleets"))) {
+                view_area = "fleets";
+                update_fleet_table();
+            }
+            if (tab_buttons.garrisons.draw(115 + _x_draw, 79, localize("System Troops"))) {
+                view_area = "garrisons";
+                update_garrison_log();
+            }
+            if (tab_buttons.missions.draw(230 + _x_draw, 79, localize("Missions"))) {
+                view_area = "missions";
+                update_mission_log();
+            }
+            if (_x_draw < 0) {
+                tab_buttons.hider.draw(0, _lower_draw, localize("Show"));
+            } else {
+                if (tab_buttons.hider.draw(_x_draw + 280, _lower_draw, localize("Hide"))) {
+                    hide_sequence++;
+                }
+            }
+        } else if (hide_sequence == 15) {
+            if (tab_buttons.hider.draw(0, _lower_draw, localize("Show"))) {
+                hide_sequence++;
+            }
+        }
+        /*if (tab_buttons.troops.draw(345,79, "Troops")){
+            view_area="troops";
+        }*/
+    }
+
+    static travel_camera_to_target = function(){
+        if (array_length(travel_target) != 2) {
+            exit;
+        }
+        if (obj_controller.x != travel_target[0] || obj_controller.y != travel_target[1]) {
+            obj_controller.x += travel_increments[0];
+            obj_controller.y += travel_increments[1];
+            travel_time++;
+        } else {
+            travel_target = [];
+            exit;
+        }
+        if (travel_time == 15) {
+            obj_controller.x = travel_target[0];
+            obj_controller.y = travel_target[1];
+            travel_target = [];
+        }
+    }
+
     static draw = function() {
         try {
             add_draw_return_values();
-            if (obj_controller.menu == eMENU.DEFAULT && !obj_controller.zoomed) {
-                if (!instances_exist_any([obj_fleet_select, obj_star_select])) {
-                    var x_draw = 0;
-                    var lower_draw = main_panel.height + 110;
-                    if (hide_sequence == 30) {
-                        hide_sequence = 0;
-                    }
-                    if ((hide_sequence > 0 && hide_sequence < 15) || (hide_sequence > 15 && hide_sequence < 30)) {
-                        if (hide_sequence > 15) {
-                            x_draw = ((main_panel.width / 15) * (hide_sequence - 15)) - main_panel.width;
-                        } else {
-                            x_draw = -((main_panel.width / 15) * hide_sequence);
-                        }
-                        hide_sequence++;
-                    }
-                    if (hide_sequence > 15 || hide_sequence < 15) {
-                        main_panel.draw(x_draw, 110, 0.46, 0.75);
-                        if (tab_buttons.fleets.draw(x_draw, 79, localize("Fleets"))) {
-                            view_area = "fleets";
-                            update_fleet_table();
-                        }
-                        if (tab_buttons.garrisons.draw(115 + x_draw, 79, localize("System Troops"))) {
-                            view_area = "garrisons";
-                            update_garrison_log();
-                        }
-                        if (tab_buttons.missions.draw(230 + x_draw, 79, localize("Missions"))) {
-                            view_area = "missions";
-                            update_mission_log();
-                        }
-                        if (x_draw < 0) {
-                            tab_buttons.hider.draw(0, lower_draw, localize("Show"));
-                        } else {
-                            if (tab_buttons.hider.draw(x_draw + 280, lower_draw, localize("Hide"))) {
-                                hide_sequence++;
-                            }
-                        }
-                    } else if (hide_sequence == 15) {
-                        if (tab_buttons.hider.draw(0, lower_draw, localize("Show"))) {
-                            hide_sequence++;
-                        }
-                    }
-                    /*if (tab_buttons.troops.draw(345,79, "Troops")){
-    				    view_area="troops";
-    				}*/
-                }
-                if (array_length(travel_target) == 2) {
-                    obj_controller.camera_moved_this_turn = true;
-                    if (obj_controller.x != travel_target[0] || obj_controller.y != travel_target[1]) {
-                        obj_controller.x += travel_increments[0];
-                        obj_controller.y += travel_increments[1];
-                        travel_time++;
-                    } else {
-                        travel_target = [];
-                    }
-                    if (travel_time == 15) {
-                        obj_controller.x = travel_target[0];
-                        obj_controller.y = travel_target[1];
-                        travel_target = [];
-                    }
-                }
+            if (obj_controller.menu != eMENU.DEFAULT || obj_controller.zoomed) {
+                exit;
             }
+            if (!instances_exist_any([obj_fleet_select, obj_star_select])) {
+                hide_reveal_sequence();
+            }
+            travel_camera_to_target();
             pop_draw_return_values();
         } catch (_exception) {} //dangerous to handle will just make game unplayable if crash does occur
     };

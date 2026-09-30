@@ -45,6 +45,9 @@ function main_map_move_keys() {
                 y += spd;
                 camera_moved_this_turn = true;
             }
+            if (array_length(location_viewer.travel_target) > 0){
+                camera_moved_this_turn = true;
+            }
         }
     }
 
@@ -56,155 +59,190 @@ function scr_map_scale() {
     return global.default_view_width / camera_get_view_width(view_camera[0]);
 }
 
-function draw_warp_lanes() {
-    static routes = [];
-    static current_seed = global.game_seed;
+function WarpLane(_star_1, _star_2, _grade) constructor {
+    star_1 = _star_1;
+    star_2 = _star_2;
+    x1 = star_1.x;
+    x2 = star_2.x;
+    y1 = star_1.y;
+    y2 = star_2.y;
+    in_view = true;
+    grade = _grade;
+    handler = obj_ini.sector_handler.warp_lanes;
+    line_alpha = 0.4;
+    static count = 0;
+    count++;
+    index = count;
+    line_x_travel = 0;
+    line_y_travel = 0;
+    last_map_scale = 0;
 
-    var line_width = 2 * obj_controller.scale_mod;
-    var line_alpha = 0.4;
+    static calc_in_view = function(){
+        in_view = star_1.in_view || star_2.in_view;
+    }
 
-    if (array_length(routes) == 0 || current_seed != global.game_seed) {
-        current_seed = global.game_seed;
-        routes = [];
-        var star_degrade_list = [];
-        var total_stars = instance_number(obj_star);
-        for (var i = 0; i < total_stars; i++) {
-            array_push(star_degrade_list, i);
+    static draw_basic_lane = function(){
+        draw_set_alpha(line_alpha);
+        draw_line_width(x1, y1, x2, y2, handler.line_width);
+        draw_set_alpha(1);       
+    }
+
+    static warp_route_tooltip = "Major warp route to {0} (x4 travel speed for warp capable crafts)\n\nHold Shift and click Left Mouse Button to see destination.";
+    static major_warp_route_hit_box = function(star = 1){
+        var _dest_star = star == 1 ? star_2 :  star_1;
+        var _hover_star = star == 1 ? star_1 : star_2;
+
+        var _warp_center = {
+            x1 : star == 1 ? _hover_star.x + line_x_travel : _hover_star.x - line_x_travel,
+            y1 : star == 1 ? _hover_star.y + line_y_travel : _hover_star.y - line_y_travel,
         }
-        for (var i = 0; i < total_stars; i++) {
-            var cur_star = instance_find(obj_star, star_degrade_list[i]);
-            var this_star = cur_star.id;
 
-            if (array_length(cur_star.warp_lanes) > 0) {
-                for (var s = 0; s < total_stars; s++) {
+        for (var s = 0; s < grade; s++) {
+            draw_set_alpha(line_alpha);
+            draw_line_width(_hover_star.x, _hover_star.y, _warp_center.x1, _warp_center.y1, handler.line_width);
+            draw_set_alpha(1);
+        }
+        if (!_hover_star.in_view){
+            exit;
+        }
+        draw_sprite_centered(spr_warp_storm, handler.warp_image + index, _warp_center.x1, _warp_center.y1, 0.75, 0.75, 0, c_white, 1);
+
+        var _hit_box = [
+            _warp_center.x1 - (handler.warp_width / 2),
+            _warp_center.y1 - (handler.warp_height / 2),
+            _warp_center.x1 + (handler.warp_width / 2),
+            _warp_center.y1 + (handler.warp_height / 2),
+        ];
+
+        
+        if (scr_hit(_hit_box)) {
+            //TODO centralise this for efficiency so it's only run once at the beggingin of step sequence
+            var _star_overlap = false;
+            with (obj_star) {
+                if (point_distance(mouse_x, mouse_y, x, y) < 20) {
+                    _star_overlap = true;
+                    break;
+                }
+            }
+
+            if (!_star_overlap) {
+
+                if (handler.allow_tooltips) {
+                    tooltip_draw(string(warp_route_tooltip, _dest_star.name));
+                }
+
+                if (mouse_check_button_pressed(mb_left) && keyboard_check(vk_shift)) {
+                    set_map_pan_to_loc(_dest_star);
+                }
+            }
+        }
+    }
+
+    static update_draw_distance_from_star = function(){
+        var _direction_x = x2 - x1;
+        var _direction_y = y2 - y1;
+        var _forward = _direction_x >= 0 ? 1 : -1;
+        var _downward = _direction_y >= 0 ? 1 : -1;
+        var _total_dist = 80;
+        var _pythag_dist = sqr(_total_dist);
+        var _sum = (_direction_x * _forward) + (_direction_y * _downward);
+        var _x_ratio = _direction_x * _forward / _sum;
+        var _y_ratio = _direction_y * _downward / _sum;
+        line_x_travel = sqrt(_pythag_dist * _x_ratio) * _forward;
+        line_y_travel = sqrt(_pythag_dist * _y_ratio) * _downward;
+        last_map_scale = obj_controller.map_scale;
+    }
+    static draw_major_warp_route = function(){
+        draw_set_color(c_yellow);
+        //TODO abstract code as a ratio distance function
+        if (last_map_scale != obj_controller.map_scale){
+            update_draw_distance_from_star();
+        }
+
+        major_warp_route_hit_box();
+        major_warp_route_hit_box(2);
+
+    }
+    static draw = function(){
+        if (grade < 4) {
+            draw_basic_lane();
+        } else if (grade == 4) {
+            draw_major_warp_route();
+        }
+    }
+
+}
+
+function WarpLaneHandler() constructor{
+    routes = [];
+    static current_seed = global.game_seed;
+    static warp_image = -1;
+    static warp_width = sprite_get_width(spr_warp_storm) * 0.75;
+    static warp_height = sprite_get_height(spr_warp_storm) * 0.75;
+    static line_width = 0;
+    static line_alpha = 0.4;
+
+    allow_tooltips = true;
+
+    static calc_warp_lanes = function(){
+        current_seed = global.game_seed
+        routes = [];
+        var _star_degrade_list = [];
+        var _total_stars = instance_number(obj_star);
+        for (var i = 0; i < _total_stars; i++) {
+            array_push(_star_degrade_list, i);
+        }
+        for (var i = 0; i < _total_stars; i++) {
+            var _cur_star = instance_find(obj_star, _star_degrade_list[i]);
+            var _this_star = _cur_star.id;
+
+            if (array_length(_cur_star.warp_lanes) > 0) {
+                for (var s = 0; s < _total_stars; s++) {
                     if (s == i) {
                         continue;
                     }
-                    var check_star = instance_find(obj_star, star_degrade_list[s]);
-                    var connection = determine_warp_join(check_star.id, this_star);
-                    if (connection) {
-                        array_push(routes, [[check_star.x, check_star.y, this_star.x, this_star.y], connection]);
+                    var _check_star = instance_find(obj_star, _star_degrade_list[s]);
+                    var _connection = determine_warp_join(_check_star.id, _this_star);
+                    if (_connection) {
+                        array_push(routes, new WarpLane(_check_star, _this_star,_connection));
                     }
                 }
             }
-            array_delete(star_degrade_list, i, 1);
-            total_stars--;
+            array_delete(_star_degrade_list, i, 1);
+            _total_stars--;
             i--;
         }
     }
-    var route;
-    static warp_image = -1;
-    warp_image += 0.5;
-    if (warp_image == 58) {
-        warp_image = 0;
-    }
-    for (var i = 0; i < array_length(routes); i++) {
-        draw_set_color(c_gray);
-        route = routes[i];
 
-        var route_coords = route[0];
+    static draw = function(){
+        line_width = 2 * obj_controller.scale_mod;
+        warp_image += 0.5;
+        if (warp_image == 58) {
+            warp_image = 0;
+        }
+        allow_tooltips = !instance_exists(obj_star_select);
 
-        if (route[1] < 4) {
-            draw_set_alpha(line_alpha);
-            draw_line_width(route_coords[0], route_coords[1], route_coords[2], route_coords[3], line_width);
-            draw_set_alpha(1);
-        } else if (route[1] == 4) {
-            draw_set_color(c_yellow);
-            //TODO abstract code as a ratio distance function
-            var direction_x = route_coords[2] - route_coords[0];
-            var direction_y = route_coords[3] - route_coords[1];
-            var forward = direction_x >= 0 ? 1 : -1;
-            var downward = direction_y >= 0 ? 1 : -1;
-            var total_dist = 80;
-            var pythag_dist = sqr(total_dist);
-            var sum = (direction_x * forward) + (direction_y * downward);
-            var x_ratio = direction_x * forward / sum;
-            var y_ratio = direction_y * downward / sum;
-            var dist_x = sqrt(pythag_dist * x_ratio) * forward;
-            var dist_y = sqrt(pythag_dist * y_ratio) * downward;
+        if (allow_tooltips && instance_exists(obj_fleet_select)) {
+            var mouse_consts = return_mouse_consts();
 
-            var warp_width = sprite_get_width(spr_warp_storm) * 0.75;
-            var warp_height = sprite_get_height(spr_warp_storm) * 0.75;
+            allow_tooltips = !obj_fleet_select.currently_entered || (mouse_consts[0] - camera_get_view_x(view_camera[0]) > 300);
+        }
 
-            for (var s = 0; s < route[1]; s++) {
-                draw_set_alpha(line_alpha);
-                draw_line_width(route_coords[0], route_coords[1], route_coords[0] + dist_x, route_coords[1] + dist_y, line_width);
-                draw_set_alpha(1);
+        if (array_length(routes) == 0 || current_seed != global.game_seed) {
+            calc_warp_lanes();
+        }
+
+        for (var i = 0; i < array_length(routes); i++) {
+            draw_set_color(c_gray);
+            var _route = routes[i];
+            if (obj_controller.camera_moved_this_turn){
+                _route.calc_in_view();
+            }
+            if (!_route.in_view){
+                continue;
             }
 
-            draw_sprite_centered(spr_warp_storm, warp_image + i, route_coords[0] + dist_x, route_coords[1] + dist_y, 0.75, 0.75, 0, c_white, 1);
-
-            var hit_box = [
-                route_coords[0] + dist_x - (warp_width / 2),
-                route_coords[1] + dist_y - (warp_height / 2),
-                route_coords[0] + dist_x + (warp_width / 2),
-                route_coords[1] + dist_y + (warp_height / 2),
-            ];
-
-            var _allow_tooltips = !instance_exists(obj_star_select);
-
-            if (_allow_tooltips && instance_exists(obj_fleet_select)) {
-                var mouse_consts = return_mouse_consts();
-
-                _allow_tooltips = !obj_fleet_select.currently_entered || (mouse_consts[0] - camera_get_view_x(view_camera[0]) > 300);
-            }
-            var warp_route_tooltip = "Major warp route to {0} (x4 travel speed for warp capable crafts)\n\nHold Shift and click Left Mouse Button to see destination.";
-            if (scr_hit(hit_box)) {
-                //TODO centralise this for efficiency so it's only run once at the beggingin of step sequence
-                var star_overlap = false;
-                with (obj_star) {
-                    if (point_distance(mouse_x, mouse_y, x, y) < 20) {
-                        star_overlap = true;
-                        break;
-                    }
-                }
-
-                if (!star_overlap) {
-                    var to = instance_nearest(route_coords[2], route_coords[3], obj_star);
-
-                    if (_allow_tooltips) {
-                        tooltip_draw(string(warp_route_tooltip, to.name));
-                    }
-
-                    if (mouse_check_button_pressed(mb_left) && keyboard_check(vk_shift)) {
-                        set_map_pan_to_loc(to);
-                    }
-                }
-            }
-
-            for (var s = 0; s < route[1]; s++) {
-                draw_set_alpha(line_alpha);
-                draw_line_width(route_coords[2] + s, route_coords[3] + s, (route_coords[2] - dist_x + s), (route_coords[3] + s - dist_y), line_width);
-                draw_set_alpha(1);
-            }
-            draw_sprite_centered(spr_warp_storm, warp_image + i, (route_coords[2] - dist_x), (route_coords[3] - dist_y), 0.75, 0.75, 0, c_white, 1);
-
-            hit_box = [
-                (route_coords[2] - dist_x) - (warp_width / 2),
-                (route_coords[3] - dist_y) - (warp_height / 2),
-                (route_coords[2] - dist_x) + (warp_width / 2),
-                (route_coords[3] - dist_y) + (warp_height / 2),
-            ];
-            if (scr_hit(hit_box)) {
-                var star_overlap = false;
-                with (obj_star) {
-                    if (point_distance(mouse_x, mouse_y, x, y) < 20) {
-                        star_overlap = true;
-                        break;
-                    }
-                }
-                if (!star_overlap) {
-                    var to = instance_nearest(route_coords[0], route_coords[1], obj_star);
-
-                    if (_allow_tooltips) {
-                        tooltip_draw(string(warp_route_tooltip, to.name));
-                    }
-
-                    if (mouse_check_button_pressed(mb_left) && keyboard_check(vk_shift)) {
-                        set_map_pan_to_loc(to);
-                    }
-                }
-            }
+            _route.draw();
         }
     }
 }
