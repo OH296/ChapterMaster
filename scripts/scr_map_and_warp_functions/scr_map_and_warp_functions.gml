@@ -138,7 +138,7 @@ function WarpLane(_star_1, _star_2, _grade) constructor {
         }
     }
 
-    static update_draw_distance_from_star = fuction(){
+    static update_draw_distance_from_star = function(){
         var _direction_x = x2 - x1;
         var _direction_y = y2 - y1;
         var _forward = _direction_x >= 0 ? 1 : -1;
@@ -186,6 +186,7 @@ function WarpLaneHandler() constructor{
 
     static calc_warp_lanes = function(){
         current_seed = global.game_seed
+        routes = [];
         var _star_degrade_list = [];
         var _total_stars = instance_number(obj_star);
         for (var i = 0; i < _total_stars; i++) {
