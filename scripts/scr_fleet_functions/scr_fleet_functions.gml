@@ -667,6 +667,9 @@ function fleet_arrival_logic() {
     action = "";
     fleet_register_at_star(id, _dest_star);
 
+    for (var i=0; i<array_length(problems);i++){
+        problems[i].on_arrival();
+    }
     if (owner == eFACTION.MECHANICUS) {
         if (trade_goods == "mars_spelunk1") {
             trade_goods = "mars_spelunk2";

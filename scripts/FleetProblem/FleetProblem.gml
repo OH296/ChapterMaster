@@ -38,7 +38,7 @@ other info
 /// @param {Real} _timer
 /// @param {struct} _data
 /// @param {Id.Instance.obj_p_fleet} |  {Id.Instance.obj_en_fleet} _fleet
-function FleetProblem(_name, _timer, _data, _fleet) : Problem(_name, _timer, _data) constructor{
+function FleetProblem(_name, _timer = -1, _data ={}, _fleet = noone) : Problem(_name, _timer, _data) constructor{
 fleet = _fleet;
 
 static __refresh_data = function(){
@@ -98,8 +98,8 @@ static basic_turn_end = function(){
 }
 
 /// @param {Id.Instance.obj_star} star
-static on_arrival = function(star){
-    __trigger_with_event("on_arrival", {star});
+static on_arrival = function(){
+    __trigger_with_event("on_arrival");
 }
 
 /// @param {Id.Instance.obj_p_fleet} new_fleet

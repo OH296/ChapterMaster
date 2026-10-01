@@ -38,7 +38,7 @@ other info
 /// @param {Real} _timer
 /// @param {struct} _data
 /// @param {Id.Instance.obj_p_fleet} _fleet
-function PlayerFleetProblem(_name, _timer, _data, _fleet) : FleetProblem(_name, _timer, _data) constructor{
+function PlayerFleetProblem(_name, _timer = -1, _data ={}, _fleet = noone) : FleetProblem(_name, _timer, _data, _fleet) constructor{
 fleet = _fleet;
 
 per_turn_checks = true;
@@ -315,39 +315,6 @@ static __great_crusade_results = function(){
 
     delete_mission = true;
     fleet.action = "";
-}
-
-static __deliver_hunt_trophy_mission_log_entry = function(){
-    var _mission = localize("Deliver Trophy Guard");
-    var _sys = fleets_next_location();
-    var _mission_data = {
-        mission: self,
-        system: _sys.name,
-        system_id: _sys.id,
-        target: self,
-        important_person: _event.data.trophy_owner,
-        person_name: _event.data.delivering_marine,
-        planet: 0,
-        start_system: _event.data.system,
-        time: timer,
-    };
-
-    _mission_data.click_left = method(_mission_data, function() {
-        set_map_pan_to_loc(system_id);
-    });
-
-    _mission_data.hover = method(_mission_data, function() {
-        tooltip_draw(localize("You are to have {0} deliver trophy hunted on {1} to the {1} regiments\n\nLeft click to see target fleet intercept system right click to view the trophy bearing marine {0}", [person_name, start_system]));
-    });
-
-    _mission_data.click_right = method(_mission_data, function() {
-        var _unit = fetch_unit_uid(important_person);
-        if (is_struct(_unit)) {
-            var _unit_l = [_unit];
-            group_selection(_unit_l);
-        }
-    });
-    return _mission_data;   
 }
 }
 

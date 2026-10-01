@@ -2,7 +2,7 @@
 /// @param {Asset.GMObject.obj_star} _system
 /// @param {struct} _data
 /// @param {Real} _timer
-function SystemProblem(_name, _system, _data = {}, _timer = -1) : Problem(_name, _timer, _data) constructor{
+function SystemProblem(_name, _system = noone, _data = {}, _timer = -1) : Problem(_name, _timer, _data) constructor{
 system = _system;
 
 //base only assigns members when data.members exists; default it here without clobbering that
@@ -120,6 +120,65 @@ static __great_crusade_resolve = function() {
         scr_event_log("red", "No ships designated for Crusade.");
     }
     delete_mission = true;
+}
+
+static hunt_inquisitor_init = function(){
+    LOGGER.info("RE: Inquisitor Hunt");
+
+
+    if (system == noone) {
+        var _stars = scr_get_stars();
+
+        if (array_length(_stars) == 0) {
+            delete_mission = true;
+            exit;
+            LOGGER.error("RE: Inquisitor Hunt,couldn't find a _star");
+            exit;
+        }
+
+        system = array_random_element(_stars);
+    } 
+
+    var _gender = set_gender();
+    var _name = global.name_generator.GenerateFromSet($"imperial_{string_gender()}");
+
+    var _eta = scr_mission_eta(system.x, system.y, 1);
+    _eta = max(_eta, 8);
+    timer = _eta
+    var _text = $"The Inquisition is trusting you with a special mission.  A radical inquisitor named {_name} will be visiting the {_star.name} system in {_eta} month's time.  They are highly suspect of heresy, and as such, are to be put down.  Can your chapter handle this mission?";
+    if (obj_controller.demanding) {
+        _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  A radical inquisitor is enroute to {_star.name}, expected within {_eta} months.  They are to be silenced and removed.";
+    }
+
+    data.inquisitor_name: _name,
+    data.inquisitor_gender: _gender,
+    var _pop_data = {
+        mission: self,
+        options: __inquisition_mission_options(),
+    };
+
+    scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);    
+}
+
+static hunt_inquisitor_accept = function(){
+
+    scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {pop_data.mission_data.inquisitor_name} enroute to {_mission_star.name} must be removed.  Estimated arrival in {pop_data.estimate} months.", _mission_star.name);
+
+    var _radical_inquisitor_fleet = create_enemy_fleet(system.x - irandom_range(-400, 400), system.y - irandom_range(-400, 400), eFACTION.INQUISITION);
+    with (_radical_inquisitor_fleet) {
+        base_inquis_fleet();
+    }
+    _radical_inquisitor_fleet.action_x = system.x;
+    _radical_inquisitor_fleet.action_y = system.y;
+    with (_radical_inquisitor_fleet) {
+        set_fleet_movement(false, "move", timer, timer);
+    }
+    data.target_name = system.name;
+    _radical_inquisitor_fleet.add_problem("radical_inquisitor", timer, data);
+
+    delete_mission = true;
+    reset_popup_options();
+    exit;
 }
 
 }

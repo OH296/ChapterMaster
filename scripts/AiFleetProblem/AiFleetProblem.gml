@@ -37,8 +37,8 @@ other info
 /// @param {string} _name
 /// @param {Real} _timer
 /// @param {struct} _data
-/// @param {Id.Instance.obj_p_fleet} _fleet
-function FleetProblem(_name, _timer, _data, _fleet) : Problem(_name, _timer, _data) constructor{
+/// @param {Id.Instance.obj_en_fleet} _fleet
+function AiFleetProblem(_name, _timer = -1, _data ={}, _fleet = noone) : FleetProblem(_name, _timer, _data, _fleet) constructor{
 fleet = _fleet;
 
 per_turn_checks = true;
@@ -97,6 +97,197 @@ static __deliver_hunt_trophy_mission_log_entry = function(){
     });
     return _mission_data;   
 }
+
+static radical_inquisitor_init = function(){
+    if (!instance_exists(obj_popup)){
+        scr_popup("","","","");
+    }
+    obj_popup.title = _"Inquisition Mission Accepted";
+    obj_popup.text = $"{global.chapter_name} will intercept the radical Inquisitor {data.inquisitor_name} at {data.target_name}, expected within {timer} months.";
+}
+
+static radical_inquisitor_on_arrival = function(){
+    if (!orbiting.has_orbiting_player_fleet()) {
+        with (fleet){
+            random_sector_exit_point();
+            action_spd = 256;
+            action = "";
+            set_fleet_movement();
+            instance_destroy();
+        }
+        alter_disposition(eFACTION.INQUISITION, -15);
+        scr_popup("Inquisitor Mission Failed", "The radical Inquisitor has departed from the planned intercept coordinates.  They will now be nearly impossible to track- the mission is a failure.", "inquisition", "");
+        scr_event_log("red", "Inquisition Mission Failed: The radical Inquisitor has departed from the planned intercept coordinates.");
+        delete_mission = true;
+        exit;
+    }
+
+    action = "";
+    var _gender = string_gender_third_person(data.inquisitor_gender);
+
+    var _tixt = $"You have located the radical Inquisitor.  As you prepare to destroy their ship, and complete the mission, you recieve a hail- it appears as though {_gender} wishes to speak.";
+    var _options = [
+        {
+            str1: "Destroy their vessel",
+            choice_func: method(self, radical_inquisitor_destroy_inquisitor_ship),
+        },
+        {
+            str1: "Hear them out",
+            choice_func: method(self, radical_inquisitor_hear_them_out),
+        },
+    ];
+    scr_popup("Inquisitor Located", _tixt, "inquisition", _radical_inquisitor);
+    exit;   
+}
+
+/// @self Asset.GMObject.obj_popup
+static radical_inquisitor_destroy_inquisitor_ship function() {
+    LOGGER.debug("mission_hunt_inquisitor_destroy_inquisitor_ship");
+    var _final_disp_mod = 0;
+
+    if (obj_controller.demanding == 0) {
+        _final_disp_mod += 1;
+    } else if (obj_controller.demanding == 1) {
+        _final_disp_mod += choose(0, 0, 1);
+    }
+
+    if ((obj_popup.title == "Artifact Offered") || (obj_popup.title == "Mercy Plea")) {
+        _final_disp_mod -= choose(0, 1);
+    }
+
+    alter_disposition(eFACTION.INQUISITION, _final_disp_mod);
+
+    obj_popup.title = "Inquisition Mission Completed";
+    obj_popup.image = "exploding_ship";
+    obj_popup.text = "The Inquisitor's ship begans to bank and turn, to flee, but is immediately fired upon by your fleet.  The ship explodes, taking the Inquisitor with it.  The mission has been accomplished.";
+    reset_popup_options();
+    scr_event_log("", "Inquisition Mission Completed: The radical Inquisitor has been purged.");
+    delete_mission = true;
+    __check_delete();
+    exit;
+}
+
+
+/// @self Asset.GMObject.obj_popup
+static radical_inquisitor_hear_them_out = function() {
+    var _offer = choose(1, 1, 2, 2, 3);
+
+    var _gender = data.inquisitor_gender;
+    var _gender_third = string_gender_third_person(_gender);
+    var gender_pronoun = string_gender_pronouns(_gender);
+
+    if (_offer == 1) {
+        replace_options([
+            {
+                str1: "Destroy their vessel",
+                choice_func: method(self, radical_inquisitor_destroy_inquisitor_ship),
+            }, 
+            {
+                str1: "Take the artifact and then destroy them", 
+                choice_func: method(self, radical_inquisitor_artifact_double_cross)
+            },
+            {
+                str1: "Take the artifact and spare them", 
+                choice_func: mission_hunt_inquisitor_take_artifact_bribe
+            }
+        ]);
+        obj_popup.title = "Artifact Offered";
+        obj_popup.text = $"The Inquisitor claims that this is a massive misunderstanding, and {_gender_third} wishes to prove {gender_pronoun} innocence.  If {global.chapter_name} allow their ship to leave {_gender_third} will give {global.chapter_name} an artifact.";
+        exit;
+    } else if (_offer == 2) {
+        replace_options(
+            [
+                {
+                    str1: "Destroy their vessel", 
+                    choice_func: mission_hunt_inquisitor_destroy_inquisitor_ship
+                },
+                {
+                    str1: "Search their ship", 
+                    //choice_func : instance_destroy, // TODO: Implement proper ship search logic
+                },
+                {
+                    str1: "Spare them", 
+                    choice_func: method(self, radical_inquisitor_show_mercy)
+                },
+            ],
+        );
+        title = "Mercy Plea";
+        text = $"The Inquisitor claims that {_gender_third} has key knowledge that would grant the Imperium vital power over the forces of Chaos.  If {global.chapter_name} allow {gender_pronoun} ship to leave the forces of Chaos within this sector will be weakened.";
+        exit;
+    } else if (_offer == 3) {
+        with (fleet) {
+            with (instance_nearest(fleet.x, fleet.y, obj_p_fleet)) {
+                scr_add_corruption(true, "1d3");
+            }
+            instance_destroy();
+        }
+        obj_popup.title = "Inquisition Mission Completed";
+        obj_popup.image = "exploding_ship";
+        obj_popup.text = $"{global.chapter_name} allow communications.  As soon as the vox turns on {global.chapter_name} hear a sickly, hateful voice.  They begin to speak of the inevitable death of your marines, the fall of all that is and ever shall be, and " + string(gender_pronoun) + " Lord of Decay.  Their ship is fired upon and destroyed without hesitation.";
+        reset_popup_options();
+        scr_event_log("", "Inquisition Mission Completed: The radical Inquisitor has been purged.");
+    }
+    delete_mission = true;
+    __check_delete();
+}
+
+static radical_inquisitor_show_mercy() {
+    with (fleet) {
+        random_sector_exit_point();
+        trade_goods = "|DELETE|";
+        action_spd = 256;
+        set_fleet_movement(false, 8);
+    }
+
+    obj_popup.title = "Inquisition Mission Completed";
+    obj_popup.text = $"{global.chapter_name} allow the Inquisitor to leave, trusting in their words.  If they truly do have key information it is a risk {global.chapter_name} are willing to take.  What's the worst that could happen?";
+    obj_popup.image = "artifact_recovered";
+    reset_popup_options();
+    scr_event_log("", "Inquisition Mission Completed?: The radical Inquisitor has been allowed to flee in order to weaken the forces of Chaos, as they promised.");
+    add_event({e_id: "inquisitor_spared", duration: irandom_range(6, 18) + 1, variation: 2});
+    delete_mission = true;
+    __check_delete();
+}
+
+static radical_inquisitor_artifact_double_cross function() {
+    with (fleet) {
+        instance_destroy();
+    }
+    var last_artifact = scr_add_artifact("random", "", 4);
+
+    reset_popup_options();
+
+    obj_popup.title = "Inquisition Mission Completed";
+    obj_popup.text = "Your ship sends over a boarding party, who retrieve the offered artifact- ";
+    obj_popup.text += $" some form of {fetch_artifact(last_artifact).get_type_name()}.  Once it is safely stowed away your ship is then ordered to fire.  The Inquisitor's own seems to hesitate an instant before banking away, but is quickly destroyed.";
+    obj_popup.image = "exploding_ship";
+    scr_event_log("", "Artifact recovered from radical Inquisitor.");
+    scr_event_log("", "Inquisition Mission Completed: The radical Inquisitor has been purged.");
+    delete_mission = true;
+    __check_delete();
+}
+
+/// @self Asset.GMObject.obj_popup
+function radical_inquisitor_take_artifact_bribe() {
+    with (fleet) {
+        random_sector_exit_point();
+        trade_goods = "|DELETE|";
+        action_spd = 256;
+        set_fleet_movement(false);
+    }
+    var last_artifact = scr_add_artifact("random", "", 4);
+
+    reset_popup_options();
+
+    obj_popup.title = "Inquisition Mission Completed";
+    obj_popup.text = "Your ship sends over a boarding party, who retrieve the offered artifact- ";
+    obj_popup.text += $" some form of {fetch_artifact(last_artifact).get_type_name()}.  As promised {global.chapter_name} allow the Inquisitor to leave, hoping for the best.  What's the worst that could happen?";
+    obj_popup.image = "artifact_recovered";
+    scr_event_log("", "Artifact Recovered from radical Inquisitor.");
+    scr_event_log("", "Inquisition Mission Completed: The radical Inquisitor has been purged.");
+    add_event({e_id: "inquisitor_spared", duration: irandom_range(6, 18) + 1, variation: 1});
+}
+
 }
 
 
