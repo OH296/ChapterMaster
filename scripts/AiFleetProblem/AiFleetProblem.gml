@@ -65,6 +65,8 @@ static on_merge = function(merged_fleet){
 
 __init();
 
+
+//unfinished will be completed in adjacent pr
 static __deliver_hunt_trophy_mission_log_entry = function(){
     var _mission = localize("Deliver Trophy Guard");
     var _sys = fleets_next_location(fleet);
@@ -123,6 +125,7 @@ static __radical_inquisitor_mission_log_entry = function(){
     _mission_data.hover = method(_mission_data, function() {
         tooltip_draw($"intercept the radical Inquisitor {mission.data.inquisitor_name} at {mission.data.target_name}, expected within {mission.timer} months.");
     });
+    return _mission_data;
 }
 
 static __radical_inquisitor_on_arrival = function(){

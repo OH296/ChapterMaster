@@ -350,10 +350,10 @@ static __hunt_beast_feature_selected = function(){
     draw_data.mission_description = $"The governor of {p_data.name()} has bemoaned the raiding of huge beasts on the fringes of the planets largest city, the numbers have swelled recently and are causing huge damage to the planets small economy. You could send a force to intervene, it would provide a fine test of metal for any that partake.";
     draw_data.help = "This is a good opportunity to provide experience and training, having at least one marine with experience in such matters would be advisable";
     draw_data.button_text = "Send Hunters";
-    draw_data.button_function = function() {
+    draw_data.button_function = method(self, function() {
         var _dudes = collect_role_group("all", system.name);
         select_units(_dudes, "Beast Hunt",  3);
-    };    
+    });    
 };
 
 
@@ -456,10 +456,10 @@ static __train_forces_feature_selected = function() {
     draw_data.mission_description = $"The governor of {p_data.name()} fears the planet will not hold in the case of major incursion, it has not seen war in some time and he fears the ineptitude of the commanders available, he asks for aid in planning a thorough plan for defense and schedule of works for a period of at least 6 months.";
     draw_data.help = $"A task best suited to the more knowledgable or wise of your Commanders";
     draw_data.button_text = "Assign Officer";
-    draw_data.button_function = function() {
+    draw_data.button_function = method(self, function() {
         var _dudes = collect_role_group(SPECIALISTS_CAPTAIN_CANDIDATES, system.name);
         select_units(_dudes,"Select Officer", 1);
-    };    
+    });    
 }
 
 static __train_forces_unit_select = function() {
@@ -1318,10 +1318,10 @@ static __protect_raiders_feature_selected =  function() {
     draw_data.help = "Set a squads to ambush";
     draw_data.button_text = "Send Squad";
     draw_data.button_tooltip = "mileage may vary on playability of this mission progress at your own risk";
-    draw_data.button_function = function() {
+    draw_data.button_function = method(self, function() {
         var _dudes = collect_role_group("all", system.name);
         select_squads(_dudes, "Select Squad for Ambush", 1)
-    }; 
+    }); 
 }
 
 static __protect_raiders_battle_aftermath = function() {
