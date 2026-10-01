@@ -112,15 +112,15 @@ function ShopItem(_name) constructor {
             return "";
         }
 
-        return $"{localize(}Missing Requirements:\n{0}{, [string_join_ext(}\n{, missing_technologies)])}";
+        return localize("Missing Requirements:\n{0}", [string_join_ext("\n", missing_technologies)]);
     };
 
     static get_buy_cost_tooltip = function() {
-        var _text = $"{localize(}Base Value: {0}\n\n{, [value])}";
+        var _text = localize("Base Value: {0}\n\n", [value]);
         var _seller = (best_seller == "rogue_trader") ? localize("Rogue Trader") : string_upper_first(best_seller);
 
-        _text += $"{localize(}Best Seller: {0}\n{, [_seller])}";
-        _text += $"{localize(}Disposition Modifier: x{0}{, [buy_cost_mod])}";
+        _text += localize("Best Seller: {0}\n", [_seller]);
+        _text += localize("Disposition Modifier: x{0}", [buy_cost_mod]);
 
         return _text;
     };
@@ -130,11 +130,11 @@ function ShopItem(_name) constructor {
     /// @returns {string}
     static get_forge_cost_tooltip = function(_stc_details = "") {
         var _base_forge = value * SHOP_FORGE_MOD;
-        var _text = $"{localize(}Base Forging Cost: {0}\n{, [_base_forge])}";
+        var _text = $"{localize("Base Forging Cost: {0}\n", [_base_forge])}";
 
         if (_stc_details != "") {
             _text += $"\n{_stc_details}";
-            _text += $"\n{localize(}Total Modifier: x{0}{, [string_format(forge_cost_mod, 1, 2)])}";
+            _text += $"\n{localize("Total Modifier: x{0}", [string_format(forge_cost_mod, 1, 2)])}";
         }
 
         return _text;
@@ -362,7 +362,7 @@ function STCResearchPanel(_controller_ref, _on_change_callback) constructor {
 
         draw_set_font(cjk_font(fnt_aldrich_12));
         draw_set_color(c_gray);
-        draw_text(_x + 34, _y, $"{localize(}{0} Unidentified Fragments{, [_total_un])}");
+        draw_text(_x + 34, _y, $"{localize("{0} Unidentified Fragments", [_total_un])}");
 
         var _has_fragments = _total_un > 0;
         draw_set_alpha(_has_fragments ? 1 : 0.25);
@@ -811,7 +811,7 @@ function Armamentarium(_controller) constructor {
             case "mobility":
                 discount_stc = controller.stc_wargear * 5;
                 if (discount_stc > 0) {
-                    global_cost_tooltip += $"{localize(}Wargear STC: -{0}%\n{, [discount_stc])}";
+                    global_cost_tooltip += $"{localize("Wargear STC: -{0}%\n", [discount_stc])}";
                 }
                 break;
             case "vehicles":
@@ -819,13 +819,13 @@ function Armamentarium(_controller) constructor {
                 var _hanger_bonus = max(array_length(controller.player_forge_data.vehicle_hanger) - 1, 0);
                 discount_stc = (controller.stc_vehicles + _hanger_bonus) * 3;
                 if (discount_stc > 0) {
-                    global_cost_tooltip += $"{localize(}Vehicle STC & Hangars: -{0}%\n{, [discount_stc])}";
+                    global_cost_tooltip += $"{localize("Vehicle STC & Hangars: -{0}%\n", [discount_stc])}";
                 }
                 break;
             case "ships":
                 discount_stc = controller.stc_ships * 5;
                 if (discount_stc > 0) {
-                    global_cost_tooltip += $"{localize(}Ship STC: -{0}%\n{, [discount_stc])}";
+                    global_cost_tooltip += $"{localize("Ship STC: -{0}%\n", [discount_stc])}";
                 }
                 break;
         }
@@ -839,22 +839,22 @@ function Armamentarium(_controller) constructor {
         var _diff = _max_techs - count_total;
         var _req_dispo = (abs(_diff) * 2) + ((_dispo_mech % 2 == 0) ? 2 : 1);
 
-        var _text = $"{localize(}Subject ID confirmed. Rank Identified. Salutations Chapter Master. The status report is ready.{)}";
-        _text += $"\n\n{localize(}Personnel: {0}s: {1}, Aspirants: {2}.{, [_role_tech, count_techmarines, count_aspirants])}";
-        _text += $"\n\n{localize(}Training: {)}";
+        var _text = $"{localize("Subject ID confirmed. Rank Identified. Salutations Chapter Master. The status report is ready.")}";
+        _text += $"\n\n{localize("Personnel: {0}s: {1}, Aspirants: {2}.", [_role_tech, count_techmarines, count_aspirants])}";
+        _text += $"\n\n{localize("Training: ")}";
 
         if (controller.faction_status[eFACTION.MECHANICUS] != "War") {
-            _text += (_diff > 0) ? $"{localize(}We can train {0} more {1}(s).{, [_diff, _role_tech])}" : $"{localize(}To train more, we need {0} more Mechanicus Disposition.{, [_req_dispo])}";
+            _text += (_diff > 0) ? $"{localize("We can train {0} more {1}(s).", [_diff, _role_tech])}" : $"{localize("To train more, we need {0} more Mechanicus Disposition.", [_req_dispo])}";
         } else {
-            _text += $"{localize(}Training handled internally due to Mechanicus hostilities.{)}";
+            _text += $"{localize("Training handled internally due to Mechanicus hostilities.")}";
         }
 
         var _pace = controller.training_techmarine;
-        _text += $"{localize(} The training pace is {0}.{, [global.recruitment_pace_descriptions[_pace] ?? localize(}unknown{)])}";
+        _text += $"{localize(" The training pace is {0}.", [global.recruitment_pace_descriptions[_pace] ?? localize("unknown")])}";
 
         if (controller.tech_aspirant > 0 && _pace > 0) {
             var _eta_val = floor((359 - controller.tech_points) / global.techmarine_training_tiers[_pace]) + 1;
-            _text += $"{localize(} An Aspirant will finish training in {0} month(s).{, [_eta_val])}";
+            _text += $"{localize(" An Aspirant will finish training in {0} month(s).", [_eta_val])}";
         }
         advisor_report_text = _text;
     };
@@ -1167,12 +1167,12 @@ function Armamentarium(_controller) constructor {
         var _master_craft = controller.master_craft_chance;
         var _forge_count = controller.player_forge_data.player_forges;
 
-        var _text = $"{localize(}Status Report:\n\n{)}";
-        _text += $"{localize(}Forge Point production per turn: {0}\n{, [controller.forge_points])}";
-        _text += $"{localize(}Chapter Total {0}s: {1}\n\n{, [_role_name, count_total])}";
-        _text += $"{localize(}Planetary Forges in operation: {0}\n\n{, [_forge_count])}";
-        _text += $"{localize(}Master Craft Forge Chance: {0}%\n{, [_master_craft])}";
-        _text += $"{localize(}Assign techmarines to forges to increase Master Craft Chance{)}";
+        var _text = $"{localize("Status Report:\n\n")}";
+        _text += $"{localize("Forge Point production per turn: {0}\n", [controller.forge_points])}";
+        _text += $"{localize("Chapter Total {0}s: {1}\n\n", [_role_name, count_total])}";
+        _text += $"{localize("Planetary Forges in operation: {0}\n\n", [_forge_count])}";
+        _text += $"{localize("Master Craft Forge Chance: {0}%\n", [_master_craft])}";
+        _text += $"{localize("Assign techmarines to forges to increase Master Craft Chance")}";
 
         draw_set_color(c_gray);
         draw_set_font(cjk_font(fnt_aldrich_12));

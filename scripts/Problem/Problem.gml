@@ -47,7 +47,7 @@ function Problem(_name, _timer, _data) constructor {
         return undefined;
     }
 
-    static __popup_choice(trigger_string){
+    static __popup_choice = function(trigger_string){
         var _func = find_func(trigger_string);
         if (!is_undefined(_func)){
             return method(self, _func);
@@ -69,7 +69,7 @@ function Problem(_name, _timer, _data) constructor {
     }
 
     //requires the completion and required_months flag to be in the data struct
-    static __increment_mission_completion =  function() {
+    static __increment_mission_completion = function() {
         if (!struct_exists(data, "completion")) {
             data.completion = 0;
         }

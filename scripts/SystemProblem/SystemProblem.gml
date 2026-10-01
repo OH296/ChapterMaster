@@ -150,8 +150,8 @@ static __hunt_inquisitor_init = function(){
         _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  A radical inquisitor is enroute to {_star.name}, expected within {_eta} months.  They are to be silenced and removed.";
     }
 
-    data.inquisitor_name: _name,
-    data.inquisitor_gender: _gender,
+    data.inquisitor_name = _name,
+    data.inquisitor_gender = _gender,
     var _pop_data = {
         mission: self,
         options: __inquisition_mission_options(),

@@ -133,7 +133,7 @@ static __radical_inquisitor_on_arrival = function(){
             action = "";
             set_fleet_movement();
             instance_destroy();
-        }å
+        }
         alter_disposition(eFACTION.INQUISITION, -15);
         scr_popup("Inquisitor Mission Failed", "The radical Inquisitor has departed from the planned intercept coordinates.  They will now be nearly impossible to track- the mission is a failure.", "inquisition", "");
         scr_event_log("red", "Inquisition Mission Failed: The radical Inquisitor has departed from the planned intercept coordinates.");
@@ -160,7 +160,7 @@ static __radical_inquisitor_on_arrival = function(){
 }
 
 /// @self Asset.GMObject.obj_popup
-static __radical_inquisitor_destroy_inquisitor_ship function() {
+static __radical_inquisitor_destroy_inquisitor_ship = function() {
     LOGGER.debug("mission_hunt_inquisitor_destroy_inquisitor_ship");
     var _final_disp_mod = 0;
 
