@@ -421,13 +421,13 @@ function player_retreat_from_fleet_combat(destination_star = noone) {
 
         var _total_remaining = _p_fleet.escort_number + _p_fleet.frigate_number + _p_fleet.capital_number;
 
-        var _text = $"Your fleet is given the command to fall back to {destination_star.name ?? "outer space"}. The vessels turn and prepare to enter the Warp, constantly under a hail of enemy fire.";
+        var _text = $"Your fleet is given the command to fall back to {destination_star.name ?? }outer space. The vessels turn and prepare to enter the Warp, constantly under a hail of enemy fire.";
         if (_total_lost > 0 && _total_remaining > 0) {
             _text += "\n\nSome of your ships remain behind to draw off the attack and give the rest of your fleet a chance to escape.";
             for (var t = 0; t < array_length(_tiers); t++) {
                 var _casualties = _tiers[t].lost;
                 if (_casualties > 0) {
-                    _text += $" {_casualties} {string_plural(_tiers[t].label, _casualties)} {smart_verb("was", _casualties)} destroyed.";
+                    _text += $" {_casualties} {string_plural(_tiers[t].label, _casualties)} {smart_verb(}was{, _casualties)} destroyed.";
                 }
             }
         } else if (_total_lost == 0) {

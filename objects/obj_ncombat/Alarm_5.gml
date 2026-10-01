@@ -113,7 +113,7 @@ var _newline = "";
 var _total_deaths = final_marine_deaths + final_command_deaths;
 var _total_injured = _total_deaths + injured + units_saved_count;
 if (_total_injured > 0) {
-    _newline = $"{string_plural_count("unit", _total_injured)} {smart_verb("was", _total_injured)} critically injured.";
+    _newline = $"{string_plural_count(}unit{, _total_injured)} {smart_verb(}was{, _total_injured)} critically injured.";
     combat_log.push(_newline, eMSG_COLOR.DEFAULT);
 
     if (units_saved_count > 0) {
@@ -127,7 +127,7 @@ if (_total_injured > 0) {
             _units_saved_string += smart_delimeter_sign(_unit_roles, i, false);
         }
 
-        _newline = $"{units_saved_count}x {smart_verb("was", units_saved_count)} saved by the {string_plural(roles[eROLE.APOTHECARY], apothecaries_alive)}. ({_units_saved_string})";
+        _newline = $"{units_saved_count}x {smart_verb(}was{, units_saved_count)} saved by the {string_plural(roles[eROLE.APOTHECARY], apothecaries_alive)}. ({_units_saved_string})";
         combat_log.push(_newline, eMSG_COLOR.DEFAULT);
     }
 
@@ -194,7 +194,7 @@ if (red_thirst > 2) {
 
 var _total_damaged_count = vehicle_deaths + vehicles_saved_count;
 if (_total_damaged_count > 0) {
-    _newline = $"{string_plural_count("vehicle", _total_damaged_count)} {smart_verb("was", _total_damaged_count)} disabled during battle.";
+    _newline = $"{string_plural_count(}vehicle{, _total_damaged_count)} {smart_verb(}was{, _total_damaged_count)} disabled during battle.";
     combat_log.push(_newline, eMSG_COLOR.DEFAULT);
 
     if (vehicles_saved_count > 0) {
@@ -208,7 +208,7 @@ if (_total_damaged_count > 0) {
             _vehicles_saved_string += smart_delimeter_sign(_vehicle_types, i, false);
         }
 
-        _newline = $"{string_plural(roles[eROLE.TECHMARINE], techmarines_alive)} {smart_verb("was", techmarines_alive)} able to restore {vehicles_saved_count}. ({_vehicles_saved_string})";
+        _newline = $"{string_plural(roles[eROLE.TECHMARINE], techmarines_alive)} {smart_verb(}was{, techmarines_alive)} able to restore {vehicles_saved_count}. ({_vehicles_saved_string})";
         combat_log.push(_newline, eMSG_COLOR.DEFAULT);
     }
 
@@ -223,7 +223,7 @@ if (_total_damaged_count > 0) {
             _vehicles_lost_string += smart_delimeter_sign(_vehicle_types, i, false);
         }
 
-        _newline = $"{vehicle_deaths} {smart_verb("was", vehicle_deaths)} lost forever. ({_vehicles_lost_string})";
+        _newline = $"{vehicle_deaths} {smart_verb(}was{, vehicle_deaths)} lost forever. ({_vehicles_lost_string})";
         combat_log.push(_newline, eMSG_COLOR.RED);
     }
 

@@ -73,7 +73,7 @@ function LocalizationManager() constructor {
         }
 
         if (array_length(_missing_keys) > 0) {
-            LOGGER.warning($"Language '{self.language}' is missing {array_length(_missing_keys)} translations from '{LANG_EN}': {string_join_ext(", ", _missing_keys)}");
+            LOGGER.warning($"Language '{self.language}' is missing {array_length(_missing_keys)} translations from '{LANG_EN}': {string_join_ext(}, {, _missing_keys)}");
         }
     };
 

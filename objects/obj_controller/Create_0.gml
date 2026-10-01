@@ -1348,7 +1348,7 @@ var _build_clause = function(_prefix, _parts) {
     if (array_length(_parts) == 0) {
         return "";
     }
-    return $"{_prefix} {string_join_ext(", ", _parts)}.";
+    return $"{_prefix} {string_join_ext(}, {, _parts)}.";
 };
 
 LOGGER.info("Command staff");
@@ -1415,7 +1415,7 @@ for (var i = 0, l = array_length(_specialist_display); i < l; i++) {
 temp[35] = _build_clause("Specialist branches staffed by", _parts);
 var _honour_guard_count = _hq_index.has_role(_canon[eROLE.HONOURGUARD]) ? _hq_index.role_count(_canon[eROLE.HONOURGUARD]) : 0;
 if (_honour_guard_count > 0) {
-    temp[35] += $"\n\nHonour Guard, having the {_honour_guard_count} most veteran {string_plural("marine", _honour_guard_count)} of your chapter serving in it.";
+    temp[35] += $"\n\nHonour Guard, having the {_honour_guard_count} most veteran {string_plural(}marine{, _honour_guard_count)} of your chapter serving in it.";
 }
 
 var _vehicle_display = [
@@ -1496,7 +1496,7 @@ for (var i = 0; i < _ship_count; i++) {
     }
 }
 
-temp[62] += $" {string_plural_count("warship", ships)}-\n";
+temp[62] += $" {string_plural_count(}warship{, ships)}-\n";
 
 if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD || bb == 1) {
     temp[62] += $"Your flagship, Battle Barge {obj_ini.ship[0]}.";
@@ -1504,19 +1504,19 @@ if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD || bb == 1) {
     bb--;
 }
 if (bb > 0) {
-    temp[62] += $"{string_plural_count("Battle Barge", bb)}: {array_to_string_order(bb_names, true)}";
+    temp[62] += $"{string_plural_count(}Battle Barge{, bb)}: {array_to_string_order(bb_names, true)}";
     temp[62] += "\n";
 }
 if (sk > 0) {
-    temp[62] += $"{string_plural_count("Strike Cruiser", sk)}: {array_to_string_order(sk_names, true)}";
+    temp[62] += $"{string_plural_count(}Strike Cruiser{, sk)}: {array_to_string_order(sk_names, true)}";
     temp[62] += "\n";
 }
 if (glad > 0) {
-    temp[62] += $"{string_plural_count("Gladius Escort", glad)}: {array_to_string_order(glad_names, true)}";
+    temp[62] += $"{string_plural_count(}Gladius Escort{, glad)}: {array_to_string_order(glad_names, true)}";
     temp[62] += "\n";
 }
 if (hunt > 0) {
-    temp[62] += $"{string_plural_count("Hunter Escort", hunt)}: {array_to_string_order(hunt_names, true)}";
+    temp[62] += $"{string_plural_count(}Hunter Escort{, hunt)}: {array_to_string_order(hunt_names, true)}";
     temp[62] += "\n";
 }
 

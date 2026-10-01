@@ -806,7 +806,7 @@ function SquadArrangementEditor(company) constructor {
                 var _btn = new UnitButtonObject({
                     style: "pixel",
                     label: _squad_data.type_data.display_data,
-                    tooltip: $"add {_key} as a {require_filter ? "required" : "proportional"} squad",
+                    tooltip: $"add {_key} as a {require_filter ? }required {: }proportional squad",
                     set_width: true,
                     x1: picker_x,
                     y1: _py,

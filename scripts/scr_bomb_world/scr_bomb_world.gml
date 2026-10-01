@@ -13,7 +13,7 @@ function scr_bomb_world(bombard_target_faction, bombard_ment_power, target_stren
     if (obj_bomb_select.ships_selected == 1) {
         txt1 += "s";
     }
-    txt1 += $" annihilation upon {name()}. Even from space the explosions can be seen, {choose("tearing ground", "hammering", "battering", "thundering")} across the planet's surface.";
+    txt1 += $" annihilation upon {name()}. Even from space the explosions can be seen, {choose(}tearing ground{, }hammering{, }battering{, }thundering{)} across the planet's surface.";
 
     kill = population_small_conversion(0.15);
 

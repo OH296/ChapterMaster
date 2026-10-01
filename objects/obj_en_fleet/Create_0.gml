@@ -76,7 +76,19 @@ trade_goods = "";
 capital_health = 100;
 frigate_health = 100;
 escort_health = 100;
-
+problems = [];
+/// @param {string} _name
+/// @param {Real} _timer
+/// @param {struct} _data
+/// @returns {Struct.AiFleetProblem}
+add_problem = function(_name, _timer, _data = {}){
+    var _problem = new AiFleetProblem(_name, _timer, _data, self);
+    if (_problem.delete_mission){
+        return undefined;
+    }
+    array_push(problems, _problem);
+    return _problem;
+}
 #region save/load serialization
 
 /// Called from save function to take all object variables and convert them to a json savable format and return it
@@ -132,6 +144,7 @@ deserialize = function(_save_data) {
             cargo_data.ork_warboss = _boss;
         }
     }
+    load_fleet_problems(AiFleetProblems, save_data);
 };
 
 #endregion

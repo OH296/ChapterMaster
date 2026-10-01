@@ -626,16 +626,16 @@ function GitHub(_authToken = undefined) constructor {
             _queryParams += $"since={_since}&";
         }
         if (_collab != undefined) {
-            _queryParams += $"collab={_collab ? "true" : "false"}&";
+            _queryParams += $"collab={_collab ? }true {: }false&";
         }
         if (_orgs != undefined) {
-            _queryParams += $"orgs={_orgs ? "true" : "false"}&";
+            _queryParams += $"orgs={_orgs ? }true {: }false&";
         }
         if (_owned != undefined) {
-            _queryParams += $"owned={_owned ? "true" : "false"}&";
+            _queryParams += $"owned={_owned ? }true {: }false&";
         }
         if (_pulls != undefined) {
-            _queryParams += $"pulls={_pulls ? "true" : "false"}&";
+            _queryParams += $"pulls={_pulls ? }true {: }false&";
         }
         if (_perPage != undefined || _page != undefined) {
             _queryParams += __buildPaginationQueryParams(_perPage, _page);

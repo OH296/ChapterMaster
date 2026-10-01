@@ -465,7 +465,7 @@ function alter_unit_equipment(update_equipment, from_armoury = true, to_armoury 
                 break;
         }
         if (_outcome == "no_items") {
-            _missing_items += $"{_missing_items == "" ? "" : ","} {localize(_item)}";
+            _missing_items += $"{_missing_items == } {? } {: }, {localize(_item)}";
             _success = false;
         }
     }

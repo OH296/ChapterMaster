@@ -37,69 +37,20 @@ other info
 /// @param {string} _name
 /// @param {Real} _timer
 /// @param {struct} _data
-/// @param {Id.Instance.obj_p_fleet} |  {Id.Instance.obj_en_fleet} _fleet
+/// @param {Id.Instance.obj_p_fleet} _fleet
 function FleetProblem(_name, _timer, _data, _fleet) : Problem(_name, _timer, _data) constructor{
 fleet = _fleet;
 
-static __refresh_data = function(){
-    if (!instance_exists(fleet)){
-        delete_mission = true;
-    }
-}
-
 per_turn_checks = true;
 
-static save = function(){
-    var _save_copy = variable_clone(self);
-    struct_remove(_save_copy, "fleet");
-    return _save_copy;
+/// @param {array} units
+static on_load = function(units){
+    __trigger_with_event("on_load", {units});
 }
 
-//the owning fleet must re-attach itself after loading (problem.fleet = self)
-static load = function(data){
-    move_data_to_current_scope(data);
-}
-
-static __check_delete = function(){
-    if (timer == -1 || (delete_mission)){
-        if (!instance_exists(fleet)){
-            exit;
-        }
-        var _prob = -1;
-        for (var i = 0; i < array_length(fleet.problems); i++){
-            if (fleet.problems[i] == self){
-                _prob = i;
-            }
-        }
-        if (_prob > -1){
-            array_delete(fleet.problems, _prob, 1);
-        }
-    }
-}
-
-//runs the entry point with fleet_event_data available for the duration of the call
-static __trigger_with_event = function(trigger_string, _event_data){
-    var _func = find_func(trigger_string);
-    if (is_undefined(_func)){
-        exit;
-    }
-    fleet_event_data = _event_data;
-    __handle_triggered_mission_func(_func);
-    struct_remove(self, "fleet_event_data");
-}
-
-static basic_turn_end = function(){
-    timer--;
-    if ((timer > -1) && per_turn_checks) {
-        var _func = find_func("per_turn");
-        __handle_triggered_mission_func(_func);
-    }
-    __check_delete();
-}
-
-/// @param {Id.Instance.obj_star} star
-static on_arrival = function(star){
-    __trigger_with_event("on_arrival", {star});
+/// @param {array} units
+static on_unload = function(units){
+    __trigger_with_event("on_unload", {units});
 }
 
 /// @param {Id.Instance.obj_p_fleet} new_fleet
@@ -112,54 +63,39 @@ static on_merge = function(merged_fleet){
     __trigger_with_event("on_merge", {merged_fleet});
 }
 
-//call this before the fleet instance is destroyed
-static on_destruction = function(){
-    __trigger_with_event("on_destruction", {});
-    delete_mission = true;
-    __check_delete();
-}
+__init();
 
-static mission_log_entry = function(){
-    var _func = find_func("mission_log_entry");
-    if (!is_undefined(_func)){
-        try {
-            return _func();
-        } catch (_exception) {
-            delete_mission = true;
-            ERROR_HANDLER.handle_exception(_exception);
-            __check_delete();
-            return undefined;
-        }
-    }
-    return __default_mission_log_entry();
-}
-
-static __default_mission_log_entry = function(){
-    if (!instance_exists(fleet)){
-        return undefined;
-    }
-    var _data = {
-        system: is_callable(fleet.name) ? fleet.name() : object_get_name(fleet.object_index),
-        mission: description(),
+static __deliver_hunt_trophy_mission_log_entry = function(){
+    var _mission = localize("Deliver Trophy Guard");
+    var _sys = fleets_next_location();
+    var _mission_data = {
+        mission: self,
+        system: _sys.name,
+        system_id: _sys.id,
+        target: self,
+        important_person: _event.data.trophy_owner,
+        person_name: _event.data.delivering_marine,
+        planet: 0,
+        start_system: _event.data.system,
         time: timer,
-        problem: self,
     };
 
-    _data.click_left = method(_data, function() {
-        set_map_pan_to_loc(problem.fleet);
+    _mission_data.click_left = method(_mission_data, function() {
+        set_map_pan_to_loc(system_id);
     });
 
-    return _data;
-}
+    _mission_data.hover = method(_mission_data, function() {
+        tooltip_draw(localize("You are to have {0} deliver trophy hunted on {1} to the {1} regiments\n\nLeft click to see target fleet intercept system right click to view the trophy bearing marine {0}", [person_name, start_system]));
+    });
 
-static __init = function(){
-    if (p_id == ""){
-        exit;
-    }
-    var _func = find_func("init");
-    if (!is_undefined(_func)){
-        __handle_triggered_mission_func(_func);
-    }
+    _mission_data.click_right = method(_mission_data, function() {
+        var _unit = fetch_unit_uid(important_person);
+        if (is_struct(_unit)) {
+            var _unit_l = [_unit];
+            group_selection(_unit_l);
+        }
+    });
+    return _mission_data;   
 }
 }
 
