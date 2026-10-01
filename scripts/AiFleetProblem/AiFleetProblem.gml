@@ -250,7 +250,7 @@ static __radical_inquisitor_hear_them_out = function() {
     __check_delete();
 }
 
-static __radical_inquisitor_show_mercy() {
+static __radical_inquisitor_show_mercy = function() {
     with (fleet) {
         random_sector_exit_point();
         trade_goods = "|DELETE|";
@@ -268,7 +268,7 @@ static __radical_inquisitor_show_mercy() {
     __check_delete();
 }
 
-static __radical_inquisitor_artifact_double_cross function() {
+static __radical_inquisitor_artifact_double_cross = function() {
     with (fleet) {
         instance_destroy();
     }
@@ -287,7 +287,7 @@ static __radical_inquisitor_artifact_double_cross function() {
 }
 
 /// @self Asset.GMObject.obj_popup
-function radical_inquisitor_take_artifact_bribe() {
+static __radical_inquisitor_take_artifact_bribe = function() {
     with (fleet) {
         random_sector_exit_point();
         trade_goods = "|DELETE|";

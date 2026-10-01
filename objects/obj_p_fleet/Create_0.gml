@@ -26,6 +26,8 @@ escort = [];
 escort_num = [];
 escort_sel = [];
 escort_uid = [];
+problems = [];
+
 
 image_speed = 0;
 
