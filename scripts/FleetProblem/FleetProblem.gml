@@ -186,106 +186,6 @@ static __init = function(){
 }
 __init();
 
-//runs the entry point with fleet_event_data available for the duration of the call
-static __trigger_with_event = function(trigger_string, _event_data = {}){
-    var _func = find_func(trigger_string);
-    if (is_undefined(_func)){
-        exit;
-    }
-    fleet_event_data = _event_data;
-    __handle_triggered_mission_func(_func);
-    struct_remove(self, "fleet_event_data");
-}
-
-static basic_turn_end = function(){
-    timer--;
-    var _func = undefined;
-    if ((timer > -1) && per_turn_checks) {
-        var _func = find_func("per_turn");
-    }
-    __handle_triggered_mission_func(_func);
-}
-
-static on_waypoint_arrival = function(){
-    __trigger_with_event("on_waypoint_arrival");
-}
-
-static on_final_arrival = function(){
-    __trigger_with_event("on_final_arrival");
-}
-
-/// @param {array} units
-static on_load = function(units){
-    __trigger_with_event("on_load", {units});
-}
-
-/// @param {array} units
-static on_unload = function(units){
-    __trigger_with_event("on_unload", {units});
-}
-
-/// @param {Id.Instance.obj_p_fleet} new_fleet
-static on_split = function(new_fleet){
-    __trigger_with_event("on_split", {new_fleet});
-}
-
-/// @param {Id.Instance.obj_p_fleet} merged_fleet
-static on_merge = function(merged_fleet){
-    __trigger_with_event("on_merge", {merged_fleet});
-}
-
-//call this before the fleet instance is destroyed
-static on_destruction = function(){
-    __trigger_with_event("on_destruction", {});
-    delete_mission = true;
-    __check_delete();
-}
-
-static mission_log_entry = function(){
-    var _func = find_func("mission_log_entry");
-    if (!is_undefined(_func)){
-        try {
-            return _func();
-        } catch (_exception) {
-            delete_mission = true;
-            ERROR_HANDLER.handle_exception(_exception);
-            __check_delete();
-            return undefined;
-        }
-    }
-    return __default_mission_log_entry();
-}
-
-static __default_mission_log_entry = function(){
-    if (!instance_exists(fleet)){
-        return undefined;
-    }
-    var _near_star = instance_nearest(fleet.x, fleet.y ,obj_star);
-    var _data = {
-        system: _near_star,
-        mission: description(),
-        time: timer,
-        problem: self,
-    };
-
-    _data.click_left = method(_data, function() {
-        set_map_pan_to_loc(problem.fleet);
-    });
-
-    return _data;
-}
-
-static __init = function(){
-    if (p_id == ""){
-        exit;
-    }
-    var _func = find_func("init");
-    if (!is_undefined(_func)){
-        __handle_triggered_mission_func(_func);
-    }
-}
-__init();
-
 static __great_crusade_init = function(){
     var _crusade_direction = point_direction(room_width / 2, room_height / 2, fleet.x, fleet.y);
     fleet.action_x = fleet.x + lengthdir_x(1200, _crusade_direction);
@@ -319,9 +219,9 @@ static __great_crusade_on_final_arrival = function(){
                 instance_deactivate_object(id);
             }
         }
-        var _return_star = instance_nearest(x, fleet.y, obj_star);
-        action_x = _return_star.x;
-        action_y = _return_star.y;
+        var _return_star = instance_nearest(fleet.x, fleet.y, obj_star);
+        fleet.action_x = _return_star.x;
+        fleet.action_y = _return_star.y;
         fleet.move(false, "move");
         instance_activate_object(obj_star);	
         fleet.beyond_engagement = true;	
@@ -509,7 +409,7 @@ static __great_crusade_results = function(){
             tixt += $"  The {_apoth} surviving {_apoth_role} were able to recover {_seed} Gene-Seed.";
         }
         if ((_apoth == 0) && (_seed > 0)) {
-            tixt += $"  fleet.You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover " + string(_seed) + " of fleet.your Gene-Seed.";
+            tixt += $"  fleet.You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover {_seed} of fleet.your Gene-Seed.";
         }
     }
     if (obj_ini.doomed == 1) {
@@ -517,7 +417,7 @@ static __great_crusade_results = function(){
     }
 
     if (_artifacts > 0) {
-        tixt += $"  {_artifacts} Artifacts were granted to fleet.your Chapter or looted.";
+        tixt += $"  {_artifacts} Artifacts were granted to your Chapter or looted.";
     }
     if ((_roll3 <= 10) && (_artifacts > 1)) {
         tixt += "  One of them were given as a bonus for exceptional valor.";

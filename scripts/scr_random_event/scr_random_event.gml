@@ -643,8 +643,7 @@ function scr_random_event(execute_now) {
             _evented = true;
         }
     } else if (chosen_event == eEVENT.CRUSADE) {
-        //i think all events should be hanlded like this then we have far more options on when to call them and how they work
-        _evented = launch_crusade();
+        new SystemProblem("great_crusade", noone);
     } else if (chosen_event == eEVENT.ENEMY) {
         _evented = make_faction_enemy_event();
     } else if (chosen_event == eEVENT.MUTATION) {

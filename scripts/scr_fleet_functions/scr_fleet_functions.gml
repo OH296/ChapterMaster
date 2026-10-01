@@ -16,7 +16,7 @@ function distribute_strength_to_fleet(strength, fleet) {
 /// @{Id.Instance.obj_p_fleet}
 function fleet_is_orbiting(){
     orbiting = noone;
-    if (fleet == "move"){
+    if (action == "move"){
         return orbiting;
     }
     var _star = instance_nearest(x, y, obj_star);

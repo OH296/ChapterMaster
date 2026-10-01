@@ -13,7 +13,6 @@ if (!variable_struct_exists(self, "members")){
 zero_timer_checks = true;
 per_turn_checks = true;
 
-//overrides Problem's base version — appends the stage suffix and skips __refresh_data/location_viewer
 static __handle_triggered_mission_func = function(func){
     if (!is_undefined(func)){
         try {
@@ -74,8 +73,21 @@ static __init = function(){
 __init();
 
 static __great_crusade_init = function(){
+    if (system == noone){
+        system = scr_random_find(2, true, "", "");
+        if (system == noone) {
+            delete_mission = true;
+            LOGGER.error("RE: Crusade, couldn't find a star for the crusade");
+            exit;
+        }
+        array_push(system.problems ,self);  
+    }
     //TODO decide the target/purpose of the crusade to create more variety and to help with post crusade rewards
-    var _nearest_player_fleet = has_data("nearest_player_fleet") ? data.nearest_player_fleet : instance_nearest(system.x, system.y, obj_p_fleet);
+    var _nearest_player_fleet = get_nearest_player_fleet(system.x, system.y);
+    if (_nearest_player_fleet == noone){
+        delete_mission = true;
+        exit;
+    }
     var _travel_leeway = 10;
     if (_nearest_player_fleet.action == "move") {
         _travel_leeway += _nearest_player_fleet.action_eta;

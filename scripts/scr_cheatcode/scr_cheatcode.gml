@@ -197,12 +197,7 @@ function scr_cheatcode(argument0) {
                     }
                     break;
                 case "event":
-                    if (cheat_arguments[0] == "crusade") {
-                        LOGGER.debug("crusading");
-                        with (obj_controller) {
-                            launch_crusade();
-                        }
-                    } else if (cheat_arguments[0] == "tomb") {
+                    if (cheat_arguments[0] == "tomb") {
                         LOGGER.debug("necron_tomb_awaken");
                         with (obj_controller) {
                             awaken_tomb_event();
@@ -404,7 +399,7 @@ function draw_system_debug(){
             if (scr_hit(_c[0], _c[1],_c[2],_c[3])) {
                 tooltip_draw(mission_name_key(_star_missions[i]));
                 if (mouse_button_clicked()) {
-                    target.add_problem(_star_missions[i], 3).timer = 3;
+                    target.add_problem(_star_missions[i], {}, 3).timer = 3;
                 }
             }
             _base_y += _c[3] - _c[1];
