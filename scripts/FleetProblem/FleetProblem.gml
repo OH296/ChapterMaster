@@ -163,6 +163,23 @@ static __init = function(){
 }
 }
 
+function load_fleet_problems(_problem_constructor, _save_data){
+    // Problems, old saves won't have this key
+    problems = [];
+    if (struct_exists(_save_data, "problems")) {
+        for (var i = 0; i < array_length(_save_data.problems); i++) {
+            try {
+                // empty p_id stops __init from running, load() theadn restores the real p_id and timer
+                var _problem = new _problem_constructor("", 0, {}, self);
+                _problem.load(_save_data.problems[i]);
+                _problem.fleet = self;
+                array_push(problems, _problem);
+            } catch (e) {
+                LOGGER.exception("Fleet problem deserialization failed", e);
+            }
+        }
+    }
+}
 
 
 

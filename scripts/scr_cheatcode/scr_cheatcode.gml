@@ -366,7 +366,7 @@ function draw_system_debug(){
         var _keys = global.planet_problem_keys;
         var _star_missions = [
             "great_crusade",
-            "radical_inquisitor"
+            "hunt_inquisitor"
         ]
         _base_y += 2;
         draw_set_font(fnt_40k_12);

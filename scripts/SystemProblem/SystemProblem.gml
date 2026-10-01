@@ -145,9 +145,9 @@ static __hunt_inquisitor_init = function(){
     var _eta = scr_mission_eta(system.x, system.y, 1);
     _eta = max(_eta, 8);
     timer = _eta
-    var _text = $"The Inquisition is trusting you with a special mission.  A radical inquisitor named {_name} will be visiting the {_star.name} system in {_eta} month's time.  They are highly suspect of heresy, and as such, are to be put down.  Can your chapter handle this mission?";
+    var _text = $"The Inquisition is trusting you with a special mission.  A radical inquisitor named {_name} will be visiting the {system.name} system in {_eta} month's time.  They are highly suspect of heresy, and as such, are to be put down.  Can your chapter handle this mission?";
     if (obj_controller.demanding) {
-        _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  A radical inquisitor is enroute to {_star.name}, expected within {_eta} months.  They are to be silenced and removed.";
+        _text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  A radical inquisitor is enroute to {system.name}, expected within {_eta} months.  They are to be silenced and removed.";
     }
 
     data.inquisitor_name = _name;
@@ -156,13 +156,13 @@ static __hunt_inquisitor_init = function(){
         mission: self,
         options: __inquisition_mission_options(),
     };
-
+    show_debug_message("works");
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);    
 }
 
 static __hunt_inquisitor_accept = function(){
 
-    scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {pop_data.mission_data.inquisitor_name} enroute to {_mission_star.name} must be removed.  Estimated arrival in {pop_data.estimate} months.", _mission_star.name);
+    scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {data.inquisitor_name} enroute to {system.name} must be removed.  Estimated arrival in {pop_data.estimate} months.", system.name);
 
     var _radical_inquisitor_fleet = create_enemy_fleet(system.x - irandom_range(-400, 400), system.y - irandom_range(-400, 400), eFACTION.INQUISITION);
     with (_radical_inquisitor_fleet) {
