@@ -98,15 +98,34 @@ static __deliver_hunt_trophy_mission_log_entry = function(){
     return _mission_data;   
 }
 
-static radical_inquisitor_init = function(){
+static __radical_inquisitor_init = function(){
     if (!instance_exists(obj_popup)){
         scr_popup("","","","");
     }
-    obj_popup.title = _"Inquisition Mission Accepted";
+    obj_popup.title = "Inquisition Mission Accepted";
     obj_popup.text = $"{global.chapter_name} will intercept the radical Inquisitor {data.inquisitor_name} at {data.target_name}, expected within {timer} months.";
 }
 
-static radical_inquisitor_on_arrival = function(){
+static __radical_inquisitor_mission_log_entry = function(){
+    var _mission = "Intercept Radical Inquisitor";
+    var _sys = fleets_next_location();
+    var _mission_data = {
+        mission: self,
+        system: data.target_name,
+        system_id: find_star_by_name(data.target_name),
+        time: timer,
+    };
+
+    _mission_data.click_left = method(_mission_data, function() {
+        set_map_pan_to_loc(mission.fleet);
+    });
+
+    _mission_data.hover = method(_mission_data, function() {
+        tooltip_draw($"intercept the radical Inquisitor {mission.data.inquisitor_name} at {mission.data.target_name}, expected within {mission.timer} months.");
+    });
+}
+
+static __radical_inquisitor_on_arrival = function(){
     if (!orbiting.has_orbiting_player_fleet()) {
         with (fleet){
             random_sector_exit_point();
@@ -114,7 +133,7 @@ static radical_inquisitor_on_arrival = function(){
             action = "";
             set_fleet_movement();
             instance_destroy();
-        }
+        }å
         alter_disposition(eFACTION.INQUISITION, -15);
         scr_popup("Inquisitor Mission Failed", "The radical Inquisitor has departed from the planned intercept coordinates.  They will now be nearly impossible to track- the mission is a failure.", "inquisition", "");
         scr_event_log("red", "Inquisition Mission Failed: The radical Inquisitor has departed from the planned intercept coordinates.");
@@ -136,12 +155,12 @@ static radical_inquisitor_on_arrival = function(){
             choice_func: method(self, radical_inquisitor_hear_them_out),
         },
     ];
-    scr_popup("Inquisitor Located", _tixt, "inquisition", _radical_inquisitor);
+    scr_popup("Inquisitor Located", _tixt, "inquisition", {mission:self, options : _options});
     exit;   
 }
 
 /// @self Asset.GMObject.obj_popup
-static radical_inquisitor_destroy_inquisitor_ship function() {
+static __radical_inquisitor_destroy_inquisitor_ship function() {
     LOGGER.debug("mission_hunt_inquisitor_destroy_inquisitor_ship");
     var _final_disp_mod = 0;
 
@@ -169,7 +188,7 @@ static radical_inquisitor_destroy_inquisitor_ship function() {
 
 
 /// @self Asset.GMObject.obj_popup
-static radical_inquisitor_hear_them_out = function() {
+static __radical_inquisitor_hear_them_out = function() {
     var _offer = choose(1, 1, 2, 2, 3);
 
     var _gender = data.inquisitor_gender;
@@ -180,15 +199,15 @@ static radical_inquisitor_hear_them_out = function() {
         replace_options([
             {
                 str1: "Destroy their vessel",
-                choice_func: method(self, radical_inquisitor_destroy_inquisitor_ship),
+                choice_func: method(self, __popup_choice("inquisitor_ship")),
             }, 
             {
                 str1: "Take the artifact and then destroy them", 
-                choice_func: method(self, radical_inquisitor_artifact_double_cross)
+                choice_func: method(self, __popup_choice("artifact_double_cross"))
             },
             {
                 str1: "Take the artifact and spare them", 
-                choice_func: mission_hunt_inquisitor_take_artifact_bribe
+                choice_func: __popup_choice("take_artifact_bribe");
             }
         ]);
         obj_popup.title = "Artifact Offered";
@@ -199,7 +218,7 @@ static radical_inquisitor_hear_them_out = function() {
             [
                 {
                     str1: "Destroy their vessel", 
-                    choice_func: mission_hunt_inquisitor_destroy_inquisitor_ship
+                    choice_func: __popup_choice("destroy_inquisitor_ship");
                 },
                 {
                     str1: "Search their ship", 
@@ -207,7 +226,7 @@ static radical_inquisitor_hear_them_out = function() {
                 },
                 {
                     str1: "Spare them", 
-                    choice_func: method(self, radical_inquisitor_show_mercy)
+                    choice_func: __popup_choice("show_mercy");
                 },
             ],
         );
@@ -231,7 +250,7 @@ static radical_inquisitor_hear_them_out = function() {
     __check_delete();
 }
 
-static radical_inquisitor_show_mercy() {
+static __radical_inquisitor_show_mercy() {
     with (fleet) {
         random_sector_exit_point();
         trade_goods = "|DELETE|";
@@ -249,7 +268,7 @@ static radical_inquisitor_show_mercy() {
     __check_delete();
 }
 
-static radical_inquisitor_artifact_double_cross function() {
+static __radical_inquisitor_artifact_double_cross function() {
     with (fleet) {
         instance_destroy();
     }

@@ -122,7 +122,7 @@ static __great_crusade_resolve = function() {
     delete_mission = true;
 }
 
-static hunt_inquisitor_init = function(){
+static __hunt_inquisitor_init = function(){
     LOGGER.info("RE: Inquisitor Hunt");
 
 
@@ -160,7 +160,7 @@ static hunt_inquisitor_init = function(){
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);    
 }
 
-static hunt_inquisitor_accept = function(){
+static __hunt_inquisitor_accept = function(){
 
     scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {pop_data.mission_data.inquisitor_name} enroute to {_mission_star.name} must be removed.  Estimated arrival in {pop_data.estimate} months.", _mission_star.name);
 

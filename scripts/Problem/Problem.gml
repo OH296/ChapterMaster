@@ -46,6 +46,14 @@ function Problem(_name, _timer, _data) constructor {
         }
         return undefined;
     }
+
+    static __popup_choice(trigger_string){
+        var _func = find_func(trigger_string);
+        if (!is_undefined(_func)){
+            return method(self, _func);
+        }
+        return undefined;
+    }
     static __handle_triggered_mission_func = function(func){
         if (!is_undefined(func)){
             __refresh_data();
