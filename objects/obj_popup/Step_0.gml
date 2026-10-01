@@ -43,9 +43,6 @@ try {
         }
         exit;
     }
-    if (((title == "Inquisition Mission") || (title == "Inquisition Recon")) && (title != "Artifact Located") && (obj_controller.demanding == 1)) {
-        demand = 1;
-    }
 
     if ((image == "chaos_messenger") && (title == "Chaos Meeting")) {
         if ((mission == "meeting_1") || (mission == "meeting_1t")) {
@@ -203,131 +200,53 @@ try {
     }
     if (title == "Scheduled Event:2") {
         exit;
-    } else if (((title == "Inquisition Mission") || (title == "Inquisition Recon")) && (array_length(options) == 0)) {
-        add_option(["Accept", "Refuse"], true);
-    }
-
-    if ((press == 0) && array_length(options) || ((demand == 1) && (mission != "") && (string_count("Inquisition", title) > 0)) || ((demand == 1) && (title == "Inquisition Recon"))) {
-
-        if ((mission != "") && (title == "Inquisition Mission")) {
-            obj_controller.temp[200] = string(loc);
-            var onceh = 0;
-            var _mission_star = find_star_by_name(obj_controller.temp[200]);
-            var mission_is_go = false;
-            if (_mission_star != noone && planet > 0) {
-                var _estimate = estimate;
-                var _planet = planet;
-                var _mission = mission;
-                var _p_data = _mission_star.get_planet_data(_planet);
-                with (_mission_star) {
-                    _p_data.new_problem(_mission, _estimate)
-                    new_star_event_marker("green");
-                    mission_is_go = true;
+    } 
+    /*
+        if (mission == "artifact") {
+            var last_artifact;
+            scr_quest(0, "artifact_loan", 4, estimate);
+            if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
+                image = "fortress";
+                if (obj_ini.home_type == "Hive") {
+                    image = "fortress_hive";
                 }
-
-                if (mission_is_go) {
-                    if (demand) {
-                        title = "Inquisition Mission Demand";
-                    }
-                    if (mission == "inquisition_spyrer") {
-                        scr_event_log("", $"Inquisition Mission Accepted: The Spyrer on {_mission_star.name} {scr_roman(planet)} must be killed within {estimate} months.", _mission_star.name);
-                        if (demand) {
-                            text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  An out of control Spyrer on Hive {_mission_star.name} {scr_roman(onceh)} must be removed within {estimate} months.";
-                        }
-                    } else if (mission == "ethereal") {
-                        with (obj_star) {
-                            if ((p_tau[1] >= 4) || (p_tau[2] >= 4) || (p_tau[3] >= 4) || (p_tau[4] >= 4)) {
-                                new_star_event_marker("green");
-                            }
-                        }
-                        scr_quest(0, "ethereal_capture", 4, estimate);
-                        obj_controller.useful_info += "Tau|";
-
-                        if (demand) {
-                            title = "Inquisition Mission Demand";
-                            text = $"The Inquisition demands that your Chapter demonstrate its loyalty to the Imperium of Mankind and the Emperor.  {global.chapter_name} are to capture the Tau Ethereal somewhere within the {_mission_star.name} system.";
-                        }
-                    }
+                if (obj_ini.home_type == "Death") {
+                    image = "fortress_death";
                 }
-            }
-            if (!mission_is_go) {
-                if (mission == "artifact") {
-                    var last_artifact;
-                    scr_quest(0, "artifact_loan", 4, estimate);
-                    if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
-                        image = "fortress";
-                        if (obj_ini.home_type == "Hive") {
-                            image = "fortress_hive";
-                        }
-                        if (obj_ini.home_type == "Death") {
-                            image = "fortress_death";
-                        }
-                        if (obj_ini.home_type == "Ice") {
-                            image = "fortress_ice";
-                        }
-                        if (obj_ini.home_type == "Lava") {
-                            image = "fortress_lava";
-                        }
-                        last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.home_name, -1);
-                    } else if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
-                        image = "artifact_given";
-                        last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.ship[0], 0);
-                    }
-
-                    title = "New Artifact";
-                    fancy_title = 0;
-                    text_center = 0;
-                    text = "The Inquisition has left an Artifact in your care, until it may be retrieved.  It has been stored ";
-                    if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
-                        text += "within your Fortress Monastery.";
-                    }
-                    if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
-                        text += $"upon your ship '{obj_ini.ship[0]}'.";
-                    }
-                    scr_event_log("", "Inquisition Mission Accepted: The Inquisition has left an Artifact in your care.");
-
-                    text += $"  It is some form of {fetch_artifact(last_artifact).get_type_name()}.";
-                    reset_popup_options();
-                    obj_controller.cooldown = 10;
-                    exit;
+                if (obj_ini.home_type == "Ice") {
+                    image = "fortress_ice";
                 }
+                if (obj_ini.home_type == "Lava") {
+                    image = "fortress_lava";
+                }
+                last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.home_name, -1);
+            } else if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
+                image = "artifact_given";
+                last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.ship[0], 0);
             }
 
-            if (demand) {
-                demand = 0;
-                reset_popup_options();
-                exit;
-            } // Remove multi-choices
-        }
+            title = "New Artifact";
+            fancy_title = 0;
+            text_center = 0;
+            text = "The Inquisition has left an Artifact in your care, until it may be retrieved.  It has been stored ";
+            if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
+                text += "within your Fortress Monastery.";
+            }
+            if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
+                text += $"upon your ship '{obj_ini.ship[0]}'.";
+            }
+            scr_event_log("", "Inquisition Mission Accepted: The Inquisition has left an Artifact in your care.");
 
-        if (image == "artifact2") {
-            ground_forces_collect_artifact();
+            text += $"  It is some form of {fetch_artifact(last_artifact).get_type_name()}.";
+            reset_popup_options();
             obj_controller.cooldown = 10;
-            instance_destroy();
-        }
-
-        obj_controller.cooldown = 10;
-        if (obj_controller.complex_event == false) {
-            if (number != 0 && instance_exists(obj_turn_end)) {
-                obj_turn_end.alarm[1] = 4;
-            }
-            instance_destroy();
-        }
-    }
-
-    if ((press == 1) && (option2 != "")) {
-        if (title == "Mercy Plea") {
-            // If have any marines within the fleet on the ships
-
-            var able, i;
-            able = 0;
-            i = 0;
-
-            // Several things can happen when the ship is searched;
-            // Full of demons, maybe remove a marine, fired upon and explodes
-
             exit;
         }
+    }
+    */
+
+    if ((press == 1) && (option2 != "")) {
+
 
         if (image == "artifact2") {
             scr_return_ship(obj_ground_mission.loc, obj_ground_mission, obj_ground_mission.num);
