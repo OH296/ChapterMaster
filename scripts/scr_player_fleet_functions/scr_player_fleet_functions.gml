@@ -676,7 +676,7 @@ try {
                 arrive_at_waypoint();
             } else {
                 for (var i = 0; i < array_length(problems); i++){
-                    problems[i].on_final_arrival();
+                    problems[i].on_arrival();
                 }                
             }
         }

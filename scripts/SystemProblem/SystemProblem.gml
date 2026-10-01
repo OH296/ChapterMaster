@@ -137,7 +137,8 @@ static __hunt_inquisitor_init = function(){
         }
 
         system = array_random_element(_stars);
-    } 
+    }
+    array_push(system.problems, self);
 
     var _gender = set_gender();
     var _name = global.name_generator.GenerateFromSet($"imperial_{string_gender()}");
@@ -162,7 +163,7 @@ static __hunt_inquisitor_init = function(){
 
 static __hunt_inquisitor_accept = function(){
 
-    scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {data.inquisitor_name} enroute to {system.name} must be removed.  Estimated arrival in {pop_data.estimate} months.", system.name);
+    scr_event_log("", $"Inquisition Mission Accepted: The radical Inquisitor {data.inquisitor_name} enroute to {system.name} must be removed.  Estimated arrival in {timer} months.", system.name);
 
     var _radical_inquisitor_fleet = create_enemy_fleet(system.x - irandom_range(-400, 400), system.y - irandom_range(-400, 400), eFACTION.INQUISITION);
     with (_radical_inquisitor_fleet) {

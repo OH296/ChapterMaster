@@ -74,7 +74,7 @@ static __great_crusade_init = function(){
     fleet.beyond_engagement = true;
 }
 
-static __great_crusade_on_final_arrival = function(){
+static __great_crusade_on_arrival = function(){
 	if (stage_id == "travel_to_crusade"){
         var _direction = point_direction(room_width / 2, room_height / 2, fleet.x, fleet.y);
         fleet.action_x = fleet.x + lengthdir_x(600, _direction);
@@ -201,9 +201,9 @@ static __great_crusade_results = function(){
                     _dead = false;
                 } else {
                     if (irandom(100) < _unit.weapon_skill) {
-                        var _heroic_deed = choose("holding a breach in imperial defenses allowing allied forces to regroup,", "slaying the enemy leader in glorious combat, while victorious he ultimately succumbed to his wounds,", "leading an imortant boarding mission,");
-                        //TODO figure out a blance in reward for captains or high rnaking death on crusade
-                        //adds dynamacism as itt creates reward for the potential loss of men and talent during crusades
+                        var _heroic_deed = choose("holding a breach in imperial defences allowing allied forces to regroup,", "slaying the enemy leader in glorious combat, while victorious he ultimately succumbed to his wounds,", "leading an imortant boarding mission,");
+                        //TODO figure out a blance in reward for captains or high ranking death on crusade
+                        //adds dynamism as it creates reward for the potential loss of men and talent during crusades
                         //var consolations = ["ship", "req",""]
                         //var consolation_prize = irandom(2)
                         var heroic_death = $"{_unit.full_title()} died {_heroic_deed} {_unit.name()} dies a hero of the {global.chapter_name}";
@@ -274,7 +274,7 @@ static __great_crusade_results = function(){
         tixt += "The combat was as could be expected- ";
     }
     if (_type == "hard") {
-        tixt += "The combat was fairly grueling- ";
+        tixt += "The combat was fairly gruelling- ";
     }
     if (_type == "brutal") {
         tixt += "The combat was absolutely brutal- fleet.your marines were the first into the fray, and as a result ";
@@ -296,10 +296,10 @@ static __great_crusade_results = function(){
     }
 
     if (_artifacts > 0) {
-        tixt += $"  {_artifacts} Artifacts were granted to your Chapter or looted.";
+        tixt += $"  {_artifacts} Artefacts were granted to your Chapter or looted.";
     }
     if ((_roll3 <= 10) && (_artifacts > 1)) {
-        tixt += "  One of them were given as a bonus for exceptional valor.";
+        tixt += "  One of them were given as a bonus for exceptional valour.";
     }
 
     if (array_length(_heroics_strings) == 1) {
@@ -307,7 +307,7 @@ static __great_crusade_results = function(){
     } else if (array_length(_heroics_strings) > 1) {
         tixt += " Several deeds were recorded";
     }
-    // title / text / image / speshul
+    // title / text / image /
     scr_popup("Crusade Results", tixt, "crusade", "");
     for (var i = 0; i < array_length(_heroics_strings); i++) {
         scr_popup("Heroic Deed", _heroics_strings[i], "crusade", "");

@@ -643,7 +643,8 @@ function scr_random_event(execute_now) {
             _evented = true;
         }
     } else if (chosen_event == eEVENT.CRUSADE) {
-        new SystemProblem("great_crusade", noone);
+        var _crusade = new SystemProblem("great_crusade", noone);
+        _evented = _crusade.delete_mission != true;
     } else if (chosen_event == eEVENT.ENEMY) {
         _evented = make_faction_enemy_event();
     } else if (chosen_event == eEVENT.MUTATION) {
@@ -689,6 +690,7 @@ function scr_random_event(execute_now) {
         scr_event_log("red", "The Chapter Gene-Seed has mutated.");
     } else if (chosen_event == eEVENT.SHIP_LOST) {
         loose_ship_to_warp_event();
+        _evented = true;
     } else if (chosen_event == eEVENT.CHAOS_INVASION) {
         LOGGER.info("RE: Chaos Invasion");
 
@@ -706,6 +708,7 @@ function scr_random_event(execute_now) {
         } else if ((psyker_intolerant || !_has_chief_psyker) && _cm_is_psyker) {
             scr_popup("The Maw of the Warp Yawns Wide", "The barrier between the realm of man and the Immaterium feels thin and tested to you.  Dark forces are afoot.", "Warp", "");
         }
+        _evented = true;
     } else if (chosen_event == eEVENT.NECRON_AWAKEN) {
         _evented = awaken_tomb_event();
     } else if (chosen_event == eEVENT.FALLEN) {

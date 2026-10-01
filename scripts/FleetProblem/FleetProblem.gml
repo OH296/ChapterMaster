@@ -78,7 +78,7 @@ static __check_delete = function(){
 }
 
 //runs the entry point with fleet_event_data available for the duration of the call
-static __trigger_with_event = function(trigger_string, _event_data){
+static __trigger_with_event = function(trigger_string, _event_data = {}){
     var _func = find_func(trigger_string);
     if (is_undefined(_func)){
         exit;
@@ -105,6 +105,10 @@ static on_arrival = function(){
 /// @param {Id.Instance.obj_p_fleet} new_fleet
 static on_split = function(new_fleet){
     __trigger_with_event("on_split", {new_fleet});
+}
+
+static on_waypoint_arrival = function(new_fleet){
+    __trigger_with_event("on_waypoint_arrival");
 }
 
 /// @param {Id.Instance.obj_p_fleet} merged_fleet

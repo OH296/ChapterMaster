@@ -67,7 +67,7 @@ __init();
 
 static __deliver_hunt_trophy_mission_log_entry = function(){
     var _mission = localize("Deliver Trophy Guard");
-    var _sys = fleets_next_location();
+    var _sys = fleets_next_location(fleet);
     var _mission_data = {
         mission: self,
         system: _sys.name,
@@ -108,7 +108,7 @@ static __radical_inquisitor_init = function(){
 
 static __radical_inquisitor_mission_log_entry = function(){
     var _mission = "Intercept Radical Inquisitor";
-    var _sys = fleets_next_location();
+    var _sys = fleets_next_location(fleet);
     var _mission_data = {
         mission: self,
         system: data.target_name,
@@ -126,7 +126,7 @@ static __radical_inquisitor_mission_log_entry = function(){
 }
 
 static __radical_inquisitor_on_arrival = function(){
-    if (!orbiting.has_orbiting_player_fleet()) {
+    if (!fleet.orbiting.has_orbiting_player_fleet()) {
         with (fleet){
             random_sector_exit_point();
             action_spd = 256;
@@ -140,19 +140,17 @@ static __radical_inquisitor_on_arrival = function(){
         delete_mission = true;
         exit;
     }
-
-    action = "";
     var _gender = string_gender_third_person(data.inquisitor_gender);
 
     var _tixt = $"You have located the radical Inquisitor.  As you prepare to destroy their ship, and complete the mission, you recieve a hail- it appears as though {_gender} wishes to speak.";
     var _options = [
         {
             str1: "Destroy their vessel",
-            choice_func: method(self, radical_inquisitor_destroy_inquisitor_ship),
+            choice_func: method(self, __popup_choice("destroy_inquisitor_ship")),
         },
         {
             str1: "Hear them out",
-            choice_func: method(self, radical_inquisitor_hear_them_out),
+            choice_func: method(self, __popup_choice("hear_them_out")),
         },
     ];
     scr_popup("Inquisitor Located", _tixt, "inquisition", {mission:self, options : _options});
