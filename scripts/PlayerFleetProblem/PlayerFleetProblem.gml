@@ -277,10 +277,10 @@ static __great_crusade_results = function(){
         tixt += "The combat was fairly gruelling- ";
     }
     if (_type == "brutal") {
-        tixt += "The combat was absolutely brutal- fleet.your marines were the first into the fray, and as a result ";
+        tixt += "The combat was absolutely brutal- your marines were the first into the fray, and as a result ";
     }
 
-    tixt += $"{_marines_lost} of fleet.your battle brothers fell in combat.";
+    tixt += $"{_marines_lost} of your battle brothers fell in combat.";
 
     var _apoth_role = obj_ini.player_role_data[eROLE.APOTHECARY].role;
     if (obj_ini.doomed == 0) {
@@ -288,11 +288,11 @@ static __great_crusade_results = function(){
             tixt += $"  The {_apoth} surviving {_apoth_role} were able to recover {_seed} Gene-Seed.";
         }
         if ((_apoth == 0) && (_seed > 0)) {
-            tixt += $"  fleet.You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover {_seed} of fleet.your Gene-Seed.";
+            tixt += $"  fleet.You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover {_seed} of your Gene-Seed.";
         }
     }
     if (obj_ini.doomed == 1) {
-        tixt += "  Due to fatal mutations in fleet.your marines none of the fallen Gene-Seed was recoverable.";
+        tixt += "  Due to fatal mutations in your marines none of the fallen Gene-Seed was recoverable.";
     }
 
     if (_artifacts > 0) {
