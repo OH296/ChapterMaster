@@ -288,7 +288,7 @@ static __great_crusade_results = function(){
             tixt += $"  The {_apoth} surviving {_apoth_role} were able to recover {_seed} Gene-Seed.";
         }
         if ((_apoth == 0) && (_seed > 0)) {
-            tixt += $"  fleet.You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover {_seed} of your Gene-Seed.";
+            tixt += $"  You had no able-bodied {_apoth_role}, or all of them perished in the Crusade.  Foreign Apothecaries were able to recover {_seed} of your Gene-Seed.";
         }
     }
     if (obj_ini.doomed == 1) {

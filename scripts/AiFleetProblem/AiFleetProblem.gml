@@ -129,7 +129,7 @@ static __radical_inquisitor_mission_log_entry = function(){
 }
 
 static __radical_inquisitor_on_arrival = function(){
-    if (orbiting == noone){
+    if (fleet.orbiting == noone){
         LOGGER.error("radical_inquisitor mission inquisitor fleet did not arrive at system");
         delete_mission = true;
         exit;
@@ -154,11 +154,11 @@ static __radical_inquisitor_on_arrival = function(){
     var _options = [
         {
             str1: "Destroy their vessel",
-            choice_func: , __popup_choice("destroy_inquisitor_ship"),
+            choice_func:  __popup_choice("destroy_inquisitor_ship"),
         },
         {
             str1: "Hear them out",
-            choice_func: _popup_choice("hear_them_out"),
+            choice_func: __popup_choice("hear_them_out"),
         },
     ];
     scr_popup("Inquisitor Located", _tixt, "inquisition", {mission:self, options : _options});

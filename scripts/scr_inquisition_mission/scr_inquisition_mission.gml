@@ -228,10 +228,10 @@ function mission_inquisition_artifact() {
                 choice_func: mission_inquisition_artifact_accept,
             },
             {
-                str1 "Refuse",
-                choice_func: popup_default_close()
+                str1 : "Refuse",
+                choice_func: popup_default_close,
             }
-        ]
+        ],
         estimate : irandom_range(6, 26)
     }
 
@@ -242,7 +242,7 @@ function mission_inquisition_artifact() {
 // @self Asset.GMObject.obj_popup
 function mission_inquisition_artifact_accept(){
     var _last_artifact;
-    scr_quest(0, "artifact_loan", 4, estimate);
+    scr_quest(0, "artifact_loan", 4, pop_data.estimate);
     if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
         image = "fortress";
         if (obj_ini.home_type == "Hive") {
@@ -279,7 +279,6 @@ function mission_inquisition_artifact_accept(){
     reset_popup_options();
     obj_controller.cooldown = 10;
     exit;
-    }
 }
 
 
