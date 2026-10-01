@@ -221,10 +221,67 @@ function mission_inquisition_artifact() {
     var text;
     LOGGER.info("RE: Artifact Hold");
     text = "The Inquisition is trusting you with a special mission.  A local Inquisitor has a powerful artifact.  You are to keep it safe, and NOT use it, until the artifact may be safely retrieved.  Can your chapter handle this mission?";
-    scr_popup("Inquisition Mission", text, "inquisition", $"artifact|bop|0|{string(irandom_range(6, 26))}|");
+    var _pop_data = {
+        options : [
+            {
+                str1: "Accept",
+                choice_func: mission_inquisition_artifact_accept,
+            },
+            {
+                str1 "Refuse",
+                choice_func: popup_default_close()
+            }
+        ]
+        estimate : irandom_range(6, 26)
+    }
+
+    scr_popup("Inquisition Mission", text, "inquisition", _pop_data);
 }
 
-/// @self Asset.GMObject.obj_popup
+
+// @self Asset.GMObject.obj_popup
+function mission_inquisition_artifact_accept(){
+    var _last_artifact;
+    scr_quest(0, "artifact_loan", 4, estimate);
+    if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
+        image = "fortress";
+        if (obj_ini.home_type == "Hive") {
+            image = "fortress_hive";
+        }
+        if (obj_ini.home_type == "Death") {
+            image = "fortress_death";
+        }
+        if (obj_ini.home_type == "Ice") {
+            image = "fortress_ice";
+        }
+        if (obj_ini.home_type == "Lava") {
+            image = "fortress_lava";
+        }
+        _last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.home_name, -1);
+    } else if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
+        image = "artifact_given";
+        _last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.ship[0], 0);
+    }
+
+    title = "New Artifact";
+    fancy_title = 0;
+    text_center = 0;
+    text = "The Inquisition has left an Artifact in your care, until it may be retrieved.  It has been stored ";
+    if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
+        text += "within your Fortress Monastery.";
+    }
+    if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
+        text += $"upon your ship '{obj_ini.ship[0]}'.";
+    }
+    scr_event_log("", "Inquisition Mission Accepted: The Inquisition has left an Artifact in your care.");
+
+    text += $"  It is some form of {fetch_artifact(_last_artifact).get_type_name()}.";
+    reset_popup_options();
+    obj_controller.cooldown = 10;
+    exit;
+    }
+}
+
 
 function hunt_inquisition_spared_inquisitor_consequence(event) {
     var _diceh = roll_dice_chapter(1, 100, "high");

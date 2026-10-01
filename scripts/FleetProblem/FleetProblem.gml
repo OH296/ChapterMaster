@@ -107,7 +107,7 @@ static on_split = function(new_fleet){
     __trigger_with_event("on_split", {new_fleet});
 }
 
-static on_waypoint_arrival = function(new_fleet){
+static on_waypoint_arrival = function(){
     __trigger_with_event("on_waypoint_arrival");
 }
 

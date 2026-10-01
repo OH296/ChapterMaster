@@ -201,49 +201,6 @@ try {
     if (title == "Scheduled Event:2") {
         exit;
     } 
-    /*
-        if (mission == "artifact") {
-            var last_artifact;
-            scr_quest(0, "artifact_loan", 4, estimate);
-            if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
-                image = "fortress";
-                if (obj_ini.home_type == "Hive") {
-                    image = "fortress_hive";
-                }
-                if (obj_ini.home_type == "Death") {
-                    image = "fortress_death";
-                }
-                if (obj_ini.home_type == "Ice") {
-                    image = "fortress_ice";
-                }
-                if (obj_ini.home_type == "Lava") {
-                    image = "fortress_lava";
-                }
-                last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.home_name, -1);
-            } else if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
-                image = "artifact_given";
-                last_artifact = scr_add_artifact("good", "inquisition", 0, obj_ini.ship[0], 0);
-            }
-
-            title = "New Artifact";
-            fancy_title = 0;
-            text_center = 0;
-            text = "The Inquisition has left an Artifact in your care, until it may be retrieved.  It has been stored ";
-            if (obj_ini.fleet_type == ePLAYER_BASE.HOME_WORLD) {
-                text += "within your Fortress Monastery.";
-            }
-            if (obj_ini.fleet_type != ePLAYER_BASE.HOME_WORLD) {
-                text += $"upon your ship '{obj_ini.ship[0]}'.";
-            }
-            scr_event_log("", "Inquisition Mission Accepted: The Inquisition has left an Artifact in your care.");
-
-            text += $"  It is some form of {fetch_artifact(last_artifact).get_type_name()}.";
-            reset_popup_options();
-            obj_controller.cooldown = 10;
-            exit;
-        }
-    }
-    */
 
     if ((press == 1) && (option2 != "")) {
 

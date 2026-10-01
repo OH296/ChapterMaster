@@ -86,7 +86,6 @@ function Problem(_name, _timer, _data) constructor {
             {
                 str1: "Accept",
                 choice_func: function(){
-                    show_debug_message("accepted");
                     var _mission = pop_data.mission
                     var _func_str = _mission.find_func_ref("accept");
                     if (struct_exists(_mission, _func_str)){

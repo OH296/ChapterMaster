@@ -137,8 +137,8 @@ static __hunt_inquisitor_init = function(){
         }
 
         system = array_random_element(_stars);
+        array_push(system.problems, self);
     }
-    array_push(system.problems, self);
 
     var _gender = set_gender();
     var _name = global.name_generator.GenerateFromSet($"imperial_{string_gender()}");
@@ -157,7 +157,6 @@ static __hunt_inquisitor_init = function(){
         mission: self,
         options: __inquisition_mission_options(),
     };
-    show_debug_message("works");
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);    
 }
 

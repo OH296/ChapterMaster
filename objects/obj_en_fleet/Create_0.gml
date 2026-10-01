@@ -144,7 +144,7 @@ deserialize = function(_save_data) {
             cargo_data.ork_warboss = _boss;
         }
     }
-    load_fleet_problems(AiFleetProblems, save_data);
+    load_fleet_problems(AiFleetProblem, save_data);
 };
 
 #endregion

@@ -202,6 +202,6 @@ deserialize = function(save_data) {
 
     // Problems, old saves won't have this key
     problems = [];
-    load_fleet_problems(PlayerFleetProblems, save_data);
+    load_fleet_problems(PlayerFleetProblem, save_data);
     set_player_fleet_image();
 };
