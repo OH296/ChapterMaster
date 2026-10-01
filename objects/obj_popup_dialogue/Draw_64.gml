@@ -34,7 +34,7 @@ if (scr_hit(x + 19, y + 46, x + 280, y + 70)) {
 draw_set_font(fnt_40k_14);
 draw_set_color(c_gray);
 
-draw_text(x + 150 + (blink ? 2 : 0), y + 50, $"{inputting}{blink ? }| {: }");
+draw_text(x + 150 + (blink ? 2 : 0), y + 50, $"{inputting}{blink ? "|" : ""}");
 
 // Button 1s
 draw_set_alpha(0.25);

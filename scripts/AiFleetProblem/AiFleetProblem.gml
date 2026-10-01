@@ -207,7 +207,7 @@ static __radical_inquisitor_hear_them_out = function() {
             },
             {
                 str1: "Take the artifact and spare them", 
-                choice_func: __popup_choice("take_artifact_bribe");
+                choice_func: __popup_choice("take_artifact_bribe")
             }
         ]);
         obj_popup.title = "Artifact Offered";
@@ -218,7 +218,7 @@ static __radical_inquisitor_hear_them_out = function() {
             [
                 {
                     str1: "Destroy their vessel", 
-                    choice_func: __popup_choice("destroy_inquisitor_ship");
+                    choice_func: __popup_choice("destroy_inquisitor_ship"),
                 },
                 {
                     str1: "Search their ship", 
@@ -226,7 +226,7 @@ static __radical_inquisitor_hear_them_out = function() {
                 },
                 {
                     str1: "Spare them", 
-                    choice_func: __popup_choice("show_mercy");
+                    choice_func: __popup_choice("show_mercy"),
                 },
             ],
         );
