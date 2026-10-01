@@ -329,7 +329,7 @@ function scr_flavor(id_of_attacking_weapons, target, target_type, number_of_shot
         flavoured = true;
         if (!character_shot) {
             if (number_of_shots < 10) {
-                attack_message += $"{number_of_shots} vehicle{((number_of_shots > 1) ? }s {: }{)} thunder forward, armoured hulls crashing into the enemy lines- ";
+                attack_message += $"{number_of_shots} vehicle{((number_of_shots > 1) ? "s" : "")} thunder forward, armoured hulls crashing into the enemy lines- ";
             } else {
                 attack_message += $"An armoured column of {number_of_shots} vehicles smashes into the enemy, grinding everything in its path- ";
             }

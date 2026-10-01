@@ -224,16 +224,16 @@ function move_enemy_blocks() {
 function block_composition_string() {
     var _composition_string = $"{unit_count}x Total; ";
     if (men > 0) {
-        _composition_string += $"{string_plural_count(}Normal Unit{, men)}; ";
+        _composition_string += $"{string_plural_count("Normal Unit", men)}; ";
     }
     if (medi > 0) {
-        _composition_string += $"{string_plural_count(}Big Unit{, medi)}; ";
+        _composition_string += $"{string_plural_count("Big Unit", medi)}; ";
     }
     if (dreads > 0) {
-        _composition_string += $"{string_plural_count(}Walker{, dreads)}; ";
+        _composition_string += $"{string_plural_count("Walker", dreads)}; ";
     }
     if (veh > 0) {
-        _composition_string += $"{string_plural_count(}Vehicle{, veh)}; ";
+        _composition_string += $"{string_plural_count("Vehicle", veh)}; ";
     }
     _composition_string += $"\n";
 

@@ -304,7 +304,7 @@ function scr_draw_management_unit(selected, yy = 0, xx = 0, draw = true, click_l
             }
         }
 
-        var exp_string = $"{localize(}{0} EXP{, [round(ma_exp[selected])])}";
+        var exp_string = $"{localize("{0} EXP", [round(ma_exp[selected])])}";
         var hpText = [
             xx + 240 + 8,
             yy + 66,

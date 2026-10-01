@@ -376,7 +376,7 @@ function EquipmentStruct(item_data = undefined, core_type = "", quality_request 
                     break;
                 case "req_exp":
                     if (req_exp > 0) {
-                        item_desc_tooltip += $"{localize(}#Requires {0} EXP#{, [req_exp])}";
+                        item_desc_tooltip += $"{localize("#Requires {0} EXP#", [req_exp])}";
                     }
                     break;
                 case "tags":

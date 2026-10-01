@@ -144,7 +144,7 @@ function scr_livery_setup() {
     draw_set_font(cjk_font(fnt_40k_30b));
     draw_set_halign(fa_center);
     if (_livery_type != 2) {
-        var liv_string = $"Full Livery \n{livery_picker.role_set == 0 ? }default {: player_role_data[livery_picker.role_set].role}";
+        var liv_string = $"Full Livery \n{livery_picker.role_set == 0 ? "default" : player_role_data[livery_picker.role_set].role}";
         draw_text(160, 100, liv_string);
     } else {
         draw_text(160, 100, "Company Livery");

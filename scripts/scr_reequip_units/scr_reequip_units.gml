@@ -289,7 +289,7 @@ function draw_popup_equip(before_after_styling = true) {
         _descriptor = "Vehicles";
     }
     if (company != -1) {
-        draw_text(_x1 + 286, _y1 + 32, $"{comp} {localize(}Company{)}, {unit_count} {localize(_descriptor)}");
+        draw_text(_x1 + 286, _y1 + 32, $"{comp} {localize("Company")}, {unit_count} {localize(_descriptor)}");
     }
 
     draw_set_halign(fa_left);

@@ -27,7 +27,7 @@ function scr_librarium_gui() {
     }
     /// @type {Struct.ArtifactStruct}
     var cur_arti = fetch_artifact(menu_artifact);
-    var artif_descr = $"This artifact is an unidentified {cur_arti.get_type_name()}.##It is stored on {cur_arti.get_ship_id() > -1 ? }the ship {: } '{cur_arti.get_location_string()}'.";
+    var artif_descr = $"This artifact is an unidentified {cur_arti.get_type_name()}.##It is stored on {cur_arti.get_ship_id() > -1 ? "the ship" : ""} '{cur_arti.get_location_string()}'.";
     var artif_timer = cur_arti.get_identification_timer();
 
     draw_set_color(#5F730D);
