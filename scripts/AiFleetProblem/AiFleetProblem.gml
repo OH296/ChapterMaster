@@ -75,10 +75,10 @@ static __deliver_hunt_trophy_mission_log_entry = function(){
         system: _sys.name,
         system_id: _sys.id,
         target: self,
-        important_person: _event.data.trophy_owner,
-        person_name: _event.data.delivering_marine,
+        important_person: data.trophy_owner,
+        person_name: data.delivering_marine,
         planet: 0,
-        start_system: _event.data.system,
+        start_system: data.system,
         time: timer,
     };
 
@@ -202,14 +202,14 @@ static __radical_inquisitor_hear_them_out = function() {
     var gender_pronoun = string_gender_pronouns(_gender);
 
     if (_offer == 1) {
-        replace_options([
+        obj_popop.replace_options([
             {
                 str1: "Destroy their vessel",
-                choice_func: method(self, __popup_choice("inquisitor_ship")),
+                choice_func: __popup_choice("destroy_inquisitor_ship"),
             }, 
             {
                 str1: "Take the artifact and then destroy them", 
-                choice_func: method(self, __popup_choice("artifact_double_cross"))
+                choice_func: __popup_choice("artifact_double_cross"),
             },
             {
                 str1: "Take the artifact and spare them", 
@@ -220,7 +220,7 @@ static __radical_inquisitor_hear_them_out = function() {
         obj_popup.text = $"The Inquisitor claims that this is a massive misunderstanding, and {_gender_third} wishes to prove {gender_pronoun} innocence.  If {global.chapter_name} allow their ship to leave {_gender_third} will give {global.chapter_name} an artifact.";
         exit;
     } else if (_offer == 2) {
-        replace_options(
+        obj_popop.replace_options(
             [
                 {
                     str1: "Destroy their vessel", 
@@ -236,8 +236,8 @@ static __radical_inquisitor_hear_them_out = function() {
                 },
             ],
         );
-        title = "Mercy Plea";
-        text = $"The Inquisitor claims that {_gender_third} has key knowledge that would grant the Imperium vital power over the forces of Chaos.  If {global.chapter_name} allow {gender_pronoun} ship to leave the forces of Chaos within this sector will be weakened.";
+        obj_popop.title = "Mercy Plea";
+        obj_popop.text = $"The Inquisitor claims that {_gender_third} has key knowledge that would grant the Imperium vital power over the forces of Chaos.  If {global.chapter_name} allow {gender_pronoun} ship to leave the forces of Chaos within this sector will be weakened.";
         exit;
     } else if (_offer == 3) {
         with (fleet) {
