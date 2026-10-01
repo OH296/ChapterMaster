@@ -162,9 +162,6 @@ function scr_cheatcode(argument0) {
                         case "artifact":
                             scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.ARTIFACT);
                             break;
-                        case "inquisitor":
-                            scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.INQUISITOR);
-                            break;
                         case "demon":
                             scr_inquisition_mission(eEVENT.INQUISITION_MISSION, eINQUISITION_MISSION.DEMON_WORLD);
                             break;
@@ -174,27 +171,6 @@ function scr_cheatcode(argument0) {
                     }
                     LOGGER.debug("inquisitor mission initiated");
                     obj_controller.location_viewer.update_mission_log();
-                    break;
-                case "artifactpopulate":
-                    with (obj_star) {
-                        for (var i = 1; i <= planets; i++) {
-                            array_push(p_feature[i], new NewPlanetFeature(eP_FEATURES.ARTIFACT));
-                        }
-                    }
-                    break;
-                case "ruinspopulate":
-                    with (obj_star) {
-                        for (var i = 1; i <= planets; i++) {
-                            array_push(p_feature[i], new NewPlanetFeature(eP_FEATURES.ANCIENT_RUINS));
-                        }
-                    }
-                    break;
-                case "stcpopulate":
-                    with (obj_star) {
-                        for (var i = 1; i <= planets; i++) {
-                            array_push(p_feature[i], new NewPlanetFeature(eP_FEATURES.STC_FRAGMENT));
-                        }
-                    }
                     break;
                 case "event":
                     if (cheat_arguments[0] == "tomb") {
