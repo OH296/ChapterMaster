@@ -746,7 +746,7 @@ function system_debug_remove_fleet() {
     }
     array_push(_opts, {"str1": "exit", choice_func: popup_default_close});
 
-    replace_options(_opts, false, false);
+    replace_options(_opts, false);
 
     text = "Which fleet would you like to delete?";
 }

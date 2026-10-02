@@ -171,7 +171,7 @@ function PopupOption(data) constructor {
 }
 
 /// @self Asset.GMObject.obj_popup
-function add_option(option, if_empty = false, use_default_option = true) {
+function add_option(option, if_empty = false) {
     if (if_empty) {
         if (array_length(options)) {
             return;
@@ -184,21 +184,17 @@ function add_option(option, if_empty = false, use_default_option = true) {
     }
     if (is_array(option)) {
         for (var i = 0; i < array_length(option); i++) {
-            add_option(option[i], false, use_default_option);
+            add_option(option[i], false);
         }
     } else if (array_length(options) < 10) {
-        if (use_default_option) {
-            array_push(options, new PopupOption(option));
-        } else {
-            array_push(options, option);
-        }
+        array_push(options, new PopupOption(option));
     }
 }
 
 /// @self Asset.GMObject.obj_popup
-function replace_options(option, if_empty = false, use_default_option = true) {
+function replace_options(option, if_empty = false) {
     options = [];
-    add_option(option, if_empty, use_default_option);
+    add_option(option, if_empty);
 }
 
 function evaluate_popup_option(opt) {
