@@ -80,7 +80,7 @@ static __deliver_hunt_trophy_mission_log_entry = function(){
         start_system: data.system,
         time: timer,
     };
-    _pop_data.mission = self;
+    _mission_data.mission = self;
 
     _mission_data.click_left = method(_mission_data, function() {
         set_map_pan_to_loc(system_id);
@@ -116,7 +116,7 @@ static __radical_inquisitor_mission_log_entry = function(){
         system_id: find_star_by_name(data.target_name),
         time: timer,
     };
-    _pop_data.mission = self;
+    _mission_data.mission = self;
 
     _mission_data.click_left = method(_mission_data, function() {
         set_map_pan_to_loc(mission.fleet);

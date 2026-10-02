@@ -187,6 +187,7 @@ function load_fleet_problems(_problem_constructor, _save_data){
 function add_fleet_problem(_p_id, _timer = -1, _data = {}){
     var _instance = object_index == obj_en_fleet ? AiFleetProblem : PlayerFleetProblem;
     var _problem = new _instance(_p_id, _timer, _data, self);
+    if (_problem.delete_mission) return undefined;
     array_push(problems, _problem);
     return _problem;
 }
