@@ -27,6 +27,27 @@ function fleet_is_orbiting(){
     return noone;
 }
 
+/// @param {Id.Instance.obj_en_fleet|Id.Instance.obj_p_fleet} _fleet
+function fleet_location_description(_fleet){
+    var _loc = "";
+    var _zoomable = true;
+    if (!point_in_rectangle(_fleet.x, _fleet.y, 0, 0, room_width, room_height)){
+        _loc = "Out of Sector"
+        _zoomable = false;
+    }
+    else if (_fleet.action == "Lost") {
+        _loc = localize("Lost");
+        _zoomable = false;
+    } else if (_fleet.action == "move") {
+        _loc = localize("Warp Travel");
+    }  else {
+        var _near_star = instance_nearest(_fleet.x, _fleet.y, obj_star);
+        _loc = _near_star.name;
+    }
+    return {loc: _loc , zoomable : _zoomable};
+}
+
+
 /// @self Id.Instance.obj_en_fleet|Id.Instance.obj_p_fleet
 /// @param {Id.Instance.obj_en_fleet|Id.Instance.obj_p_fleet} fleet
 function standard_fleet_strength_calc(fleet = noone) {

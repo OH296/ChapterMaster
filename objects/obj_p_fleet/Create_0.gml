@@ -53,6 +53,8 @@ hurssy_time = 0;
 /// Called from save function to take all object variables and convert them to a json savable format and return it
 
 
+add_problem = method(self, add_fleet_problem);
+
 problems_to_mission_log = function(){
     var _temp_log = []
     for (var i = 0; i < array_length(problems); i++) {
@@ -94,12 +96,12 @@ arrived_at_star = function(){
     } 
 
 
-    if (steh.p_type[1] == "Craftworld") {
-        rando = roll_dice_chapter(1, 100, "high");
+    if (orbiting.p_type[1] == "Craftworld") {
+        var _rando = roll_dice_chapter(1, 100, "high");
 
-        if ((rando >= 95)) {
+        if ((_rando >= 95)) {
             obj_controller.known[eFACTION.ELDAR] = 1;
-            scr_alert("green", "elfs", "Eldar Craftworld discovered.", steh.old_x, steh.old_y);
+            scr_alert("green", "elfs", "Eldar Craftworld discovered.", orbiting.old_x, orbiting.old_y);
             with (obj_en_fleet) {
                 if (owner == eFACTION.ELDAR) {
                     image_alpha = 1;

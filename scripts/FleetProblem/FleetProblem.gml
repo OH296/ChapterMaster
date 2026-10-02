@@ -143,7 +143,7 @@ static __default_mission_log_entry = function(){
         return undefined;
     }
     var _data = {
-        system: is_callable(fleet.name) ? fleet.name() : object_get_name(fleet.object_index),
+        system: fleet_location_description(fleet).loc,
         mission: description(),
         time: timer,
         problem: self,
@@ -183,6 +183,12 @@ function load_fleet_problems(_problem_constructor, _save_data){
             }
         }
     }
+}
+function add_fleet_problem(_p_id, _timer = -1, _data = {}){
+    var _instance = object_index == obj_en_fleet ? AiFleetProblem : PlayerFleetProblem;
+    var _problem = new _instance(_p_id, _timer, _data, self);
+    array_push(problems, _problem);
+    return _problem;
 }
 
 

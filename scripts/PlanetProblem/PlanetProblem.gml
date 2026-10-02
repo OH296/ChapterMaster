@@ -104,7 +104,6 @@ static __check_delete = function(){
         }
         if (_prob > -1){
             array_delete(system.p_problem[planet], _prob,1);
-            array_delete(p_data.problems, _prob,1);
         }
     }   
 }
@@ -1879,7 +1878,7 @@ static __hive_fleet_to_cult_init = function(){
     _fleet.frigate_number = round(random_range(6, 12));
     _fleet.escort_number = round(random_range(12, 27));
 
-    _fleet.image_index = floor(_fleet.capital_number + (_fleet.frigate_number / 2) + (_fleet.escort_number / 4));
+    _fleet.image_index = standard_fleet_strength_calc(_fleet);
     _fleet.image_alpha = 0;
 
     _fleet.action_x = system.x;

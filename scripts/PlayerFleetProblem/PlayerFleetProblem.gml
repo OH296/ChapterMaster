@@ -67,9 +67,9 @@ __init();
 
 static __great_crusade_init = function(){
     var _crusade_direction = point_direction(room_width / 2, room_height / 2, fleet.x, fleet.y);
-    fleet.action_x = fleet.x + lengthdir_x(1200, _crusade_direction);
-    fleet.action_y = fleet.y + lengthdir_y(1200, _crusade_direction);
-    fleet.move(false, "move");
+    fleet.action_x = fleet.x + lengthdir_x(room_width / 2, _crusade_direction);
+    fleet.action_y = fleet.y + lengthdir_y(room_height / 2, _crusade_direction);
+    fleet.move(false, "move", irandom_range(24, 36), irandom_range(24, 36));
     stage_id = "travel_to_crusade";
     fleet.beyond_engagement = true;
 }
@@ -101,7 +101,7 @@ static __great_crusade_on_arrival = function(){
         var _return_star = instance_nearest(fleet.x, fleet.y, obj_star);
         fleet.action_x = _return_star.x;
         fleet.action_y = _return_star.y;
-        fleet.move(false, "move");
+        fleet.move(false, "move", irandom_range(24, 36), irandom_range(24, 36));
         instance_activate_object(obj_star);	
         fleet.beyond_engagement = true;	
         stage_id = "returning_home"
