@@ -643,9 +643,9 @@ static __succession_resolve = function() {
 static __inquisition_recon_init = function(){
 
     var _pop_data = {
-        mission: self,
         options : __inquisition_mission_options()
     };
+    _pop_data.mission = self;
 
     var _text = $"The Inquisition wishes for you to investigate {p_data.name()}";
     _text += $"  Boots are expected to be planted on its surface over the course of your investigation.";
@@ -665,8 +665,8 @@ static __inquisition_recon_per_turn = function() {
     }
 
     var _pop_data = {
-        mission: self,
     };
+    _pop_data.mission = self;
     scr_popup(
         "Investigation Completed", 
         "Your marines have scouted out {p_data.name()} and satisfied the mission requirements.", 
@@ -691,9 +691,9 @@ static __inquisition_spyrer_init = function(){
     var _text = $"The Inquisition is trusting you with a special mission.  An experienced Spyrer on hive world {p_data.name()}";
     _text += $" has began to hunt indiscriminately, and proven impossible to take down by conventional means.  If they are not put down within {timer} month's time panic is likely.  Can your chapter handle this mission?";
     var _pop_data = {
-        mission: self,
         options: __inquisition_mission_options(),
     };
+    _pop_data.mission = self;
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
 }
 
@@ -1454,9 +1454,9 @@ static __inquisition_tomb_init = function(){
     var _text = $"The Inquisition is trusting you with a special mission.  They have reason to suspect the Necron Tomb on planet {p_data.name()}";
     _text += $" may become active.  You are to send a small group of marines to plant a bomb deep inside, within {timer} months.  Can your chapter handle this mission?";
     var _pop_data = {
-        mission: self,
         options: __inquisition_mission_options(),
     };
+    _pop_data.mission = self;
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
 }
 
@@ -1481,7 +1481,6 @@ static __inquisition_tomb_per_turn = function() {
     _tixt += " are prepared and ready to enter the Necron Tombs.  A Plasma Bomb is in tow.";
     var _number = instance_exists(obj_turn_end) ? 1 : 0;
     var _pop_data = {
-        mission: self,
         loc: system.name,
         planet: planet,
         number: _number,
@@ -1496,6 +1495,7 @@ static __inquisition_tomb_per_turn = function() {
             },
         ],
     };
+    _pop_data.mission = self;
     scr_popup("Necron Tomb Excursion", _tixt, $"necron_cave", _pop_data);
 }
 
@@ -1780,9 +1780,9 @@ static __inquisition_demon_world_init = function(){
     }
     _text += $"The taint of chaos must be eradicated from this system.  Can your chapter handle this mission?";
     var _pop_data = {
-        mission: self,
         options: __inquisition_mission_options(),
     };
+    _pop_data.mission = self;
     scr_popup(
         "Inquisition Mission Demon World", 
         _text, 
@@ -1801,9 +1801,9 @@ static __inquisition_demon_world_accept = function(){
 
 static __inquisition_tyranid_org_init = function(){
     var _pop_data = {
-        mission: self,
         options: __inquisition_mission_options(),
     };
+    _pop_data.mission = self;
     var _text = $"An Inquisitor is trusting you with a special mission.  The planet {p_data.name()}";
     _text += " is ripe with Tyranid organisms.  They require that you capture one of the Gaunt species for research purposes.  Can your chapter handle this mission?";
     if (obj_controller.demanding) {
@@ -1926,9 +1926,9 @@ static __inquisition_purge_init = function(){
         _text += $"  The mutants of hive world {p_data.name()} are growing in numbers and ferocity, rising sporadically from the underhive.  They are to be cleansed by promethium within {timer} months.  Can your chapter handle this mission?";
     }
     var _pop_data = {
-        mission: self,
         options: __inquisition_mission_options(),
     };
+    _pop_data.mission = self;
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);
 }
 

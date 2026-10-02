@@ -154,9 +154,9 @@ static __hunt_inquisitor_init = function(){
     data.inquisitor_name = _name;
     data.inquisitor_gender = _gender;
     var _pop_data = {
-        mission: self,
         options: __inquisition_mission_options(),
     };
+    _pop_data.mission = self;
     scr_popup("Inquisition Mission", _text, "inquisition", _pop_data);    
 }
 
