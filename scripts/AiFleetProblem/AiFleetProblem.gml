@@ -298,7 +298,7 @@ static __mech_mars_init = fuction(){
     stage_id = "to_mars";  
 }
 
-static __mech_mars_on_arrival(){
+static __mech_mars_on_arrival = function(){
     if (stage_id == "to_mars"){
         fleet.action_x = home_x;
         fleet.action_y = home_y;

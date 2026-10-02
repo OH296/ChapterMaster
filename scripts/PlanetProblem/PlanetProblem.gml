@@ -1364,7 +1364,7 @@ static __protect_raiders_suppress_information= function() {
     }
 }
 
-static __protect_raiders_hold_memorial() {
+static __protect_raiders_hold_memorial = function() {
     reset_popup_options();
     __add_option("continue");
     _pdata.add_disposition(-30);
