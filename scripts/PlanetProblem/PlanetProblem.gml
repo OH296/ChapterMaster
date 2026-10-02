@@ -1209,13 +1209,10 @@ static __mech_mars_resolve = function() {
             capital_number = 1;
             image_index = 0;
             image_speed = 0;
-            trade_goods = "mars_spelunk1";
             home_x = x;
             home_y = y;
-            action_x = x + lengthdir_x(3000, obj_controller.terra_direction);
-            action_y = y + lengthdir_y(3000, obj_controller.terra_direction);
-            set_fleet_movement(false, "move", 48, 48);
         }
+        flit.add_problem("mech_mars");
     }
 }
 
@@ -1819,7 +1816,7 @@ static __inquisition_demon_world_init = function(){
 }
 
 static __inquisition_demon_world_accept = function(){
-    scr_event_log("", $"Inquisition Mission Accepted: The demon world of {system.name} {scr_roman(planet)} will be purged by your hand.", system.name);
+    scr_event_log("", $"Inquisition Mission Accepted: The demon world of {p_data.name()} will be purged by your hand.", system.name);
     new_star_event_marker("green");
     with(obj_popup){
         popup_default_close();
@@ -1842,8 +1839,6 @@ static __inquisition_tyranid_org_init = function(){
 static __inquisition_tyranid_org_accept = function(){
     obj_popup.image = "webber";
     obj_popup.title = "New Equipment";
-    obj_popup.fancy_title = 0;
-    obj_popup.text_center = 0;
     obj_popup.text = $"{global.chapter_name} have been provided with 4x Astartes Webbers in order to complete the mission.";
     reset_popup_options();
     scr_add_item("Webber", 4);

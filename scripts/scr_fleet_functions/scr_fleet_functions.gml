@@ -691,21 +691,6 @@ function fleet_arrival_logic() {
     for (var i=0; i<array_length(problems);i++){
         problems[i].on_arrival();
     }
-    if (owner == eFACTION.MECHANICUS) {
-        if (trade_goods == "mars_spelunk1") {
-            trade_goods = "mars_spelunk2";
-            action_x = home_x;
-            action_y = home_y;
-            action_eta = 52;
-            action = "move";
-            exit;
-        } else if (trade_goods == "mars_spelunk2") {
-            // Unload techmarines nao plz
-            scr_mission_reward("mars_spelunk", instance_nearest(home_x, home_y, obj_star), 1);
-            instance_destroy();
-        }
-    }
-
     //TODO create oppertunity to purge new colonisers if they have taint and the player has garrisons or control of the planet
     if (fleet_has_cargo("colonize")) {
         deploy_colonisers(_dest_star);
@@ -766,9 +751,6 @@ function fleet_arrival_logic() {
             cancel = true;
         }
         if (string_count("investigate_dead", trade_goods) > 0) {
-            cancel = true;
-        }
-        if (string_count("spelunk", trade_goods) > 0) {
             cancel = true;
         }
         if (fleet_has_cargo("warband")) {

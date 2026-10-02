@@ -273,10 +273,10 @@ static __great_crusade_results = function(){
     if (_type == "normal") {
         tixt += "The combat was as could be expected- ";
     }
-    if (_type == "hard") {
+    else if (_type == "hard") {
         tixt += "The combat was fairly gruelling- ";
     }
-    if (_type == "brutal") {
+    else if (_type == "brutal") {
         tixt += "The combat was absolutely brutal- your marines were the first into the fray, and as a result ";
     }
 

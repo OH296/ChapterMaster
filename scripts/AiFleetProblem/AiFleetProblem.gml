@@ -150,12 +150,12 @@ static __radical_inquisitor_on_arrival = function(){
     }
     var _gender = string_gender_third_person(data.inquisitor_gender);
 
-    var _tixt = $"You have located the radical Inquisitor.  As you prepare to destroy their ship, and complete the mission, you recieve a hail- it appears as though {_gender} wishes to speak.";
+    var __tixt = $"You have located the radical Inquisitor.  As you prepare to destroy their ship, and complete the mission, you recieve a hail- it appears as though {_gender} wishes to speak.";
     var _options = [
         __create_popup_option("Destroy their vessel", "destroy_inquisitor_ship"),
         __create_popup_option("Hear them out", "hear_them_out"),
     ];
-    scr_popup("Inquisitor Located", _tixt, "inquisition", {mission: self, options : _options});
+    scr_popup("Inquisitor Located", __tixt, "inquisition", {mission: self, options : _options});
     exit;   
 }
 
@@ -274,7 +274,7 @@ static __radical_inquisitor_take_artifact_bribe = function() {
         random_sector_exit_point();
         trade_goods = "|DELETE|";
         action_spd = 256;
-        set_fleet_movement(false);
+        fleet.move(false)
     }
     var last_artifact = scr_add_artifact("random", "", 4);
 
@@ -287,6 +287,118 @@ static __radical_inquisitor_take_artifact_bribe = function() {
     scr_event_log("", "Artifact Recovered from radical Inquisitor.");
     scr_event_log("", "Inquisition Mission Completed: The radical Inquisitor has been purged.");
     add_event({e_id: "inquisitor_spared", duration: irandom_range(6, 18) + 1, variation: 1});
+}
+
+static __mech_mars_init = fuction(){
+    fleet.home_x = x;
+    fleet.home_y = y;
+    fleet.action_x = x + lengthdir_x(3000, obj_controller.terra_direction);
+    fleet.action_y = y + lengthdir_y(3000, obj_controller.terra_direction);
+    fleet.move(false, "move", 48, 48);  
+    stage_id = "to_mars";  
+}
+
+static __mech_mars_on_arrival(){
+    if (stage_id == "to_mars"){
+        fleet.action_x = home_x;
+        fleet.action_y = home_y;
+        fleet.move(false, "move", 48, 48);
+        stage_id = "returning_home";
+        exit;   
+    }
+
+    var _cleanup = array_create(11, 0);
+
+    var _roll1 = roll_dice_chapter(1, 100, "high"); // For the first STC
+    var _found_stc = 0, _found_artifact = 0, _found_requisition = 0;
+    var _techs_lost = 0, techs_alive = 0;
+
+    var _conditions = {
+        job: "mecanicus mission",
+    };
+    var _techs = collect_role_group(SPECIALISTS_TECHS, star.name, false, _conditions);
+
+    var _tech_point_gain = 0;
+
+    for (var i = 0; i < array_length(_techs); i++) {
+        var _tech = _techs[i];
+        var _tech_roll = global.character_tester.standard_test(_tech, "technology", -10)[1];
+        var _wep_test = global.character_tester.standard_test(_tech, "weapon_skill", 10);
+        if (!_wep_test[0]) {
+            _tech.kill(true, false);
+            _techs_lost++;
+            _cleanup[_tech.company] = true;
+        } else {
+            star.p_player[planet] += _tech.get_unit_size();
+            _tech.location_string = star.name;
+
+            _tech.planet_location = planet;
+
+            _tech.ship_location = -1;
+
+            _tech.job = "none";
+            techs_alive += 1;
+
+            _tech.add_experience(irandom_range(3, 18));
+            var gain = irandom(2);
+
+            _tech.technology += gain;
+            _tech_point_gain += gain;
+            if (_tech_roll < 10 && _tech_roll > 0) {
+                _found_requisition += irandom_range(5, 40);
+            }
+        }
+        if ((_tech_roll >= 10) && (_tech_roll < 15)) {
+            _found_requisition += 100;
+        }
+        if ((_tech_roll >= 15) && (_tech_roll < 25)) {
+            var last_artifact = scr_add_artifact("random", "", 4);
+            _found_artifact += 1;
+        }
+        if (_tech_roll >= 25) {
+            scr_add_stc_fragment(); // STC here
+            _found_stc += 1;
+        }
+    }
+
+    obj_controller.requisition += _found_requisition;
+    if ((techs_alive + _techs_lost >= 2) && (techs_alive > 0)) {
+        if (_roll1 >= (40 + (techs_alive + _techs_lost) * 5)) {
+            scr_add_stc_fragment(); // STC here
+            _found_stc += 1;
+        }
+    }
+
+    var _tixt = $"The journey into the Mars Catacombs was a success.  Your {techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {star.name} {scr_roman(planet)}.\n";
+    _tixt += $"\n{_found_requisition} Requisition from salvage";
+    if (_found_artifact > 0) {
+        _tixt += $"\n{string_plural("Unidentified Artifacts", _found_artifact)}  recovered";
+    }
+    if (_found_stc > 0) {
+        _tixt += $"\n{string_plural("STC Fragment", _found_stc)}  recovered";
+    }
+
+    if (_tech_point_gain) {
+        _tixt += $"\n{string_plural("Tech Point", _tech_point_gain)}  recovered";
+    }
+
+    scr_popup("Mechanicus Mission Completed", _tixt, "mechanicus", "");
+    _tixt = "Mechanicus Mission Completed: {techs_alive}/{techs_alive+_techs_lost} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s return with ";
+    _tixt += string(_found_requisition) + " Requisition, ";
+    if (_found_artifact > 0) {
+        _tixt += $"\n{_found_artifact} : {string_plural("Unidentified Artifacts", _found_artifact)}  recovered";
+    }
+    if (_found_stc > 0) {
+        _tixt += $"\n{_found_stc} : {string_plural("STC Fragment", _found_stc)}  recovered";
+    }
+    if (_tech_point_gain) {
+        _tixt += $"\n{_tech_point_gain} {string_plural("Tech Point", _tech_point_gain)}  gained";
+    }
+    scr_event_log("green", _tixt);
+
+    sort_all_companies_to_map(_cleanup);
+
+    delete_mission = true;
 }
 
 }
