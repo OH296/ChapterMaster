@@ -156,6 +156,7 @@ calculate_eta = function(target_x, target_y,from_star = true, to_star = true){
 }
 
 move = method(self, set_fleet_movement);
+
 serialize = function() {
     var object_fleet = self;
 

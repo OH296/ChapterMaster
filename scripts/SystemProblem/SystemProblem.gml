@@ -170,9 +170,7 @@ static __hunt_inquisitor_accept = function(){
     }
     _radical_inquisitor_fleet.action_x = system.x;
     _radical_inquisitor_fleet.action_y = system.y;
-    with (_radical_inquisitor_fleet) {
-        set_fleet_movement(false, "move", timer, timer);
-    }
+    _radical_inquisitor_fleet.move(false, "move", timer, timer);
     data.target_name = system.name;
     _radical_inquisitor_fleet.add_problem("radical_inquisitor", timer, data);
 

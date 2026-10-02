@@ -1385,9 +1385,10 @@ static __protect_raiders_squad_selected = function() {
 
             _gar_pop.text += "\nThe total loss of a squad in what was meant to be a routine operation is bad for moral and your chapters reputation you must now decide how to proceed";
 
-            _gar_pop.add_option({str1: "Suppress the Information", choice_func: protect_raiders_suppress_information});
-
-            _gar_pop.add_option({str1: "Hold a Memorial", choice_func: protect_raiders_hold_memorial});
+            _gar_pop.replace_options([
+                __create_popup_option("Suppress the Information", "suppress_information"),
+                __create_popup_option("Hold a Memorial", "hold_memorial"),
+            ]);
         } else {
             var _gar_pop = instance_create(0, 0, obj_popup);
             _gar_pop.title = $"Ineffective Ambush";
@@ -1484,26 +1485,20 @@ static __inquisition_tomb_per_turn = function() {
         loc: system.name,
         planet: planet,
         number: _number,
-        options: [
-            {
-                str1: "Begin the Mission",
-                choice_func: inquisition_tomb_mission_start,
-            },
-            {
-                str1: "Not Yet",
-                choice_func:__popup_delete,
-            },
-        ],
     };
     _pop_data.mission = self;
+    _pop_data.options = [
+        __create_popup_option("Begin the Mission", "inquisition_tomb_mission_start"),
+        __create_popup_option("Not Yet"),
+    ];
     scr_popup("Necron Tomb Excursion", _tixt, $"necron_cave", _pop_data);
 }
 
 static inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
-        {str1: "Continue", choice_func: inquisition_tomb_mission_sequence}, 
-        {str1: "Return to the surface", choice_func: __popup_delete }
+        __create_popup_option("Continue", "inquisition_tomb_mission_sequence"),
+        __create_popup_option("Return to the surface"),
     ]);
     obj_popup.image = "necron_tunnels_1";
     obj_popup.text = "Your marines enter the massive tunnel complex, following the energy readings.  At first the walls are cramped and tiny, closing about them, but the tunnels widen at a rapid pace.";

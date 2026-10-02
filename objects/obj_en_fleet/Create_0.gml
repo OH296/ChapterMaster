@@ -82,6 +82,8 @@ problems = [];
 /// @param {struct} _data
 /// @returns {Struct.AiFleetProblem}
 add_problem = method(self, add_fleet_problem);
+move = method(self, set_fleet_movement);
+
 #region save/load serialization
 
 /// Called from save function to take all object variables and convert them to a json savable format and return it

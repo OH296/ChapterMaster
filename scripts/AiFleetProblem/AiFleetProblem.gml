@@ -152,16 +152,10 @@ static __radical_inquisitor_on_arrival = function(){
 
     var _tixt = $"You have located the radical Inquisitor.  As you prepare to destroy their ship, and complete the mission, you recieve a hail- it appears as though {_gender} wishes to speak.";
     var _options = [
-        {
-            str1: "Destroy their vessel",
-            choice_func:  __popup_choice("destroy_inquisitor_ship"),
-        },
-        {
-            str1: "Hear them out",
-            choice_func: __popup_choice("hear_them_out"),
-        },
+        __create_popup_option("Destroy their vessel", "destroy_inquisitor_ship"),
+        __create_popup_option("Hear them out", "hear_them_out"),
     ];
-    scr_popup("Inquisitor Located", _tixt, "inquisition", {mission:self, options : _options});
+    scr_popup("Inquisitor Located", _tixt, "inquisition", {mission: self, options : _options});
     exit;   
 }
 
@@ -203,18 +197,9 @@ static __radical_inquisitor_hear_them_out = function() {
 
     if (_offer == 1) {
         obj_popup.replace_options([
-            {
-                str1: "Destroy their vessel",
-                choice_func: __popup_choice("destroy_inquisitor_ship"),
-            }, 
-            {
-                str1: "Take the artifact and then destroy them", 
-                choice_func: __popup_choice("artifact_double_cross"),
-            },
-            {
-                str1: "Take the artifact and spare them", 
-                choice_func: __popup_choice("take_artifact_bribe")
-            }
+            __create_popup_option("Destroy their vessel", "destroy_inquisitor_ship"),
+            __create_popup_option("Take the artifact and then destroy them", "artifact_double_cross"),
+            __create_popup_option("Take the artifact and spare them", "take_artifact_bribe"),
         ]);
         obj_popup.title = "Artifact Offered";
         obj_popup.text = $"The Inquisitor claims that this is a massive misunderstanding, and {_gender_third} wishes to prove {gender_pronoun} innocence.  If {global.chapter_name} allow their ship to leave {_gender_third} will give {global.chapter_name} an artifact.";
@@ -222,18 +207,9 @@ static __radical_inquisitor_hear_them_out = function() {
     } else if (_offer == 2) {
         obj_popup.replace_options(
             [
-                {
-                    str1: "Destroy their vessel", 
-                    choice_func: __popup_choice("destroy_inquisitor_ship"),
-                },
-                {
-                    str1: "Search their ship", 
-                    //choice_func : instance_destroy, // TODO: Implement proper ship search logic
-                },
-                {
-                    str1: "Spare them", 
-                    choice_func: __popup_choice("show_mercy"),
-                },
+                __create_popup_option("Destroy their vessel", "destroy_inquisitor_ship"),
+                //__create_popup_option("Search their ship"), // TODO: Implement proper ship search logic
+                __create_popup_option("Spare them", "show_mercy"),
             ],
         );
         obj_popup.title = "Mercy Plea";

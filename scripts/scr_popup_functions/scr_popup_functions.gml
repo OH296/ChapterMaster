@@ -118,6 +118,56 @@ function PopupOption(data) constructor {
     if (!struct_exists(self, "choice_func")) {
         choice_func = popup_default_close;
     }
+    if (!struct_exists(self, "run_in_popup")) {
+        run_in_popup = true;
+    }
+
+    static get_label = function(_index) {
+        return $"{_index + 1}. {str1}";
+    }
+
+    static on_hover = function(_popup) {
+        if (struct_exists(self, "hover") && is_callable(hover)) {
+            var _hover = hover;
+            with (_popup) {
+                script_execute(_hover);
+            }
+        }
+    }
+
+    static on_click = function(_popup) {
+        if (!is_callable(choice_func)) {
+            return;
+        }
+        var _newest_popup = noone;
+        with (obj_popup) {
+            if (id > _newest_popup) {
+                _newest_popup = id;
+            }
+        }
+
+        var _func = choice_func;
+        if (run_in_popup) {
+            with (_popup) {
+                script_execute(_func);
+            }
+        } else {
+            _func();
+        }
+
+        _popup.press = -1;
+        if (instance_exists(_popup)) {
+            var _replaced = false;
+            with (obj_popup) {
+                if (id > _newest_popup) {
+                    _replaced = true;
+                }
+            }
+            if (_replaced) {
+                instance_destroy(_popup);
+            }
+        }
+    }
 }
 
 /// @self Asset.GMObject.obj_popup
@@ -195,14 +245,7 @@ function draw_popup_options() {
         entered_option = -1;
         for (var i = 0; i < array_length(options); i++) {
             var _opt = options[i];
-            var _opt_string = "";
-            if (!is_struct(_opt)) {
-                _opt_string = _opt;
-            } else {
-                _opt_string = _opt.str1;
-            }
-
-            _opt_string = $"{i + 1}. {_opt_string}";
+            var _opt_string = _opt.get_label(i);
             var _string_x = x1 + 25.5;
             var _string_y = y1 + 20 + sz;
 
@@ -214,37 +257,10 @@ function draw_popup_options() {
                 draw_sprite(spr_popup_select, 0, x1 + 8.5, y1 + 21 + sz);
                 entered_option = i;
                 current_option = _opt;
-                var _is_struct = is_struct(_opt);
-                if (_is_struct && struct_exists(_opt, "hover")) {
-                    if (is_callable(_opt.hover)) {
-                        script_execute(_opt.hover);
-                    }
-                }
+                _opt.on_hover(self);
                 if (mouse_button_clicked(,, true)) {
                     press = i;
-                    if (_is_struct && struct_exists(_opt, "choice_func")) {
-                        if (is_callable(_opt.choice_func)) {
-                            var _newest_popup = noone;
-                            with (obj_popup) {
-                                if (id > _newest_popup) {
-                                    _newest_popup = id;
-                                }
-                            }
-                            script_execute(_opt.choice_func);
-                            press = -1;
-                            if (instance_exists(id)) {
-                                var _replaced = false;
-                                with (obj_popup) {
-                                    if (id > _newest_popup) {
-                                        _replaced = true;
-                                    }
-                                }
-                                if (_replaced) {
-                                    instance_destroy();
-                                }
-                            }
-                        }
-                    }
+                    _opt.on_click(self);
                 }
             }
 
