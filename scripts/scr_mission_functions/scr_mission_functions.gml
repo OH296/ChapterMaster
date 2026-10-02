@@ -140,40 +140,6 @@ function init_marine_acting_strange() {
     scr_event_log("color", _text);
 }
 
-/// @self Asset.GMObject.obj_popup
-function protect_raiders_suppress_information() {
-    title = "Captains Disgruntled";
-    options1 = "continue";
-    pathway = "";
-    var _caps = scr_role_count(obj_ini.player_role_data[eROLE.CAPTAIN].role);
-    var _worst = -1;
-    var _worst_hit = -1;
-    for (var i = 0; i < array_length(_caps); i++) {
-        if (!irandom(2)) {
-            var _cap = _caps[i];
-            var _loyalty_hit = irandom(6);
-            if (_loyalty_hit > _worst_hit) {
-                _worst_hit = _loyalty_hit;
-                _worst = i;
-            }
-        }
-    }
-
-    if (_worst == -1) {
-        text = $"You are able to convince your captains of the strategic need to cover up the incidence, various excuses are made and fake logs that cover up the disaster of the mission";
-    } else {
-        text = $"Not all of your captains are convinced of the need to use deceit and a none have breached the order but it has soured your relations with a few namely {_caps[_worst].name_role()}";
-    }
-}
-
-/// @self Asset.GMObject.obj_popup
-function protect_raiders_hold_memorial() {
-    reset_popup_options();
-    options1 = "continue";
-    _pdata.add_disposition(-30);
-    text = $"You prepare to have a large public memorial for your fallen marines on the planet surface as a show of defiance. The chapter are pleased by such an act and the population of the planet are mesmerized by the spectacle. The governor is furious not only has his incompetence to deal with the planets xenos issue been made public in such a way that the sector commander has now heard about it but he perceives his failures are being paraded in font of him\n nGovernor Disposition : -30";
-}
-
 
 // returns a bool for if any planet on a given star has the given problem
 /// @self Asset.GMObject.obj_star

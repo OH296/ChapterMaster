@@ -1343,6 +1343,38 @@ static __protect_raiders_battle_aftermath = function() {
     }
 }
 
+static __protect_raiders_suppress_information= function() {
+    obj_popup.title = "Captains Disgruntled";
+    __add_option("continue");
+    var _caps = scr_role_count(eROLE.CAPTAIN ,"", "units");
+    var _worst = -1;
+    var _worst_hit = -1;
+    for (var i = 0; i < array_length(_caps); i++) {
+        if (irandom(2)) {
+            continue;
+        }
+        var _cap = _caps[i];
+        var _loyalty_hit = irandom(6);
+        if (_loyalty_hit > _worst_hit) {
+            _worst_hit = _loyalty_hit;
+            _worst = i;
+        }
+    }
+    if (_worst == -1) {
+        obj_popup.text = $"You are able to convince your captains of the strategic need to cover up the incidence, various excuses are made and fake logs that cover up the disaster of the mission";
+    } else {
+        obj_popup.text = $"Not all of your captains are convinced of the need to use deceit and a none have breached the order but it has soured your relations with a few namely {_caps[_worst].name_role()}";
+    }
+}
+
+static __protect_raiders_hold_memorial() {
+    reset_popup_options();
+    __add_option("continue");
+    _pdata.add_disposition(-30);
+    text = $"You prepare to have a large public memorial for your fallen marines on the planet surface as a show of defiance. The chapter are pleased by such an act and the population of the planet are mesmerized by the spectacle. The governor is furious not only has his incompetence to deal with the planets xenos issue been made public in such a way that the sector commander has now heard about it but he perceives his failures are being paraded in font of him\n nGovernor Disposition : -30";
+}
+
+
 static __protect_raiders_squad_selected = function() {
     data.squad = data.squads[0];
     var _squad = data.squad;
@@ -1423,12 +1455,12 @@ static __protect_raiders_squad_selected = function() {
                     enemies : [
                         {
                             name : "Dire Avenger",
-                            number : 40,
+                            number : 20,
                             special : "shimmershield"
                         },
                         {
                             name : "Dire Avenger Exarch",
-                            number : 4,
+                            number : 2,
                             special : "shimmershield"
                         },
                         {
@@ -1488,7 +1520,7 @@ static __inquisition_tomb_per_turn = function() {
     };
     _pop_data.mission = self;
     _pop_data.options = [
-        __create_popup_option("Begin the Mission", "inquisition_tomb_mission_start"),
+        __create_popup_option("Begin the Mission", "mission_start"),
         __create_popup_option("Not Yet"),
     ];
     scr_popup("Necron Tomb Excursion", _tixt, $"necron_cave", _pop_data);
@@ -1497,7 +1529,7 @@ static __inquisition_tomb_per_turn = function() {
 static inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
-        __create_popup_option("Continue", "inquisition_tomb_mission_sequence"),
+        __create_popup_option("Continue", "mission_sequence"),
         __create_popup_option("Return to the surface"),
     ]);
     obj_popup.image = "necron_tunnels_1";

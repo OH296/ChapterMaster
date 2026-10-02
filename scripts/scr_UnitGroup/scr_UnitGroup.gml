@@ -757,6 +757,9 @@ function SearchConditions(data) constructor {
             array_push(checks_order, squadless_valuate);
         }
         if (role != "") {
+            if (!is_real(role)){
+                role = obj_ini.player_role_data[role].role;
+            }
             array_push(checks_order, role_valuate);
         }
         if (bool(array_length(roles))) {

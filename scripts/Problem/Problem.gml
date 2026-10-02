@@ -50,11 +50,7 @@ function Problem(_name, _timer, _data) constructor {
     static __popup_choice = function(trigger_string){
         var _func = find_func(trigger_string);
         if (!is_undefined(_func)){
-            if (instance_exists(self) && self.object_index == obj_popup){
-                return method(self.pop_data.mission, _func);
-            } else if (is_struct(self) && is_instanceof(self, Problem)){
-                return method(self, _func);
-            }
+            return method(self, _func);
         }
         return undefined;
     }
@@ -70,10 +66,16 @@ function Problem(_name, _timer, _data) constructor {
             var _func = __popup_choice(_func_string);
             if (!is_undefined(_func)){
                 _opt.choice_func = _func;
+            } else {
+                LOGGER.error($"unknown popup trigger {_func_string} for {p_id}") 
             }
         }
 
         return _opt;
+    }
+
+    static __add_option = function(_str1 = "", _func_string = "popup_delete"){
+        add_option(__create_popup_option(_str1, _func_string));
     }
 
     static __handle_triggered_mission_func = function(func){
