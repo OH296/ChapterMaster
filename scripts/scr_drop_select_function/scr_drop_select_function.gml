@@ -254,7 +254,6 @@ function drop_select_unit_selection() {
 
             if ((attacking == 10) || (attacking == 11)) {
                 remove_planet_problem(planet_number, "meeting", p_target);
-                remove_planet_problem(planet_number, "meeting_trap", p_target);
             }
 
             instance_create(0, 0, obj_ncombat);

@@ -346,7 +346,6 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
 
             with (obj_star) {
                 remove_star_problem("meeting");
-                remove_star_problem("meeting_trap");
             }
 
             var born = false;
@@ -384,7 +383,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
                 if (has_problem_star("meeting") > 0 && has_problem_star("meeting") > 0) {
                     _found = true;
                     _star = id;
-                    _planet = has_problem_star("meeting") > 0 ? has_problem_star("meeting") : has_problem_star("meeting_trap");
+                    _planet = has_problem_star("meeting");
                     break;
                 }
             }
@@ -441,7 +440,6 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
 
                     with (obj_star) {
                         remove_star_problem("meeting");
-                        remove_star_problem("meeting_trap");
                     }
                 }
 
@@ -973,7 +971,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
                 with (obj_star) {
                     for (var i = 1; i <= 4;) {
                         for (var r = 1; r <= 4; r++) {
-                            if ((p_problem[i][r] == "meeting") || (p_problem[i][r] == "meeting_trap")) {
+                            if (p_problem[i][r] == "meeting") {
                                 _found = true;
                                 _star = id;
                                 _planet = r;

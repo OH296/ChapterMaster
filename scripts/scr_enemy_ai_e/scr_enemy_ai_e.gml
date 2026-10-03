@@ -54,7 +54,7 @@ function scr_enemy_ai_e() {
 
         if ((present_fleet[10] > 0) && (obj_controller.faction_status[10] == "War")) {
             if (!battle) {
-                if (!has_problem_star("meeting") && !has_problem_star("meeting_trap")) {
+                if (!has_problem_star("meeting")) {
                     battle = 1;
                 }
             }
@@ -453,7 +453,7 @@ function scr_enemy_ai_e() {
             for (var i = 2; i <= 10; i++) {
                 var special_stop = false;
                 if (i == 10) {
-                    special_stop = has_problem_star("meeting") || has_problem_star("meeting_trap");
+                    special_stop = has_problem_star("meeting");
                 }
 
                 if ((obj_controller.faction_status[i] == "War") && (!special_stop) && (present_fleet[i] > 0)) {
@@ -574,13 +574,13 @@ function scr_enemy_ai_e() {
                         }
                         break;
                     case 10:
-                        pause = _p_data.has_problem( "meeting") || _p_data.has_problem( "meeting_trap");
+                        pause = _p_data.has_problem( "meeting");
                         if (p_guardsmen[run] + p_pdf[run] == 0 && p_player[run] > 0 && p_chaos[run] > 0 && !pause && obj_controller.faction_status[10] == "War") {
                             battle_opponent = 10;
                         }
                         break;
                     case 11:
-                        pause = _p_data.has_problem( "meeting") || _p_data.has_problem( "meeting_trap");
+                        pause = _p_data.has_problem( "meeting");
                         if (p_guardsmen[run] + p_pdf[run] == 0 && p_player[run] > 0 && p_traitors[run] > 0 && !pause && obj_controller.faction_status[10] == "War") {
                             battle_opponent = 11;
                         }

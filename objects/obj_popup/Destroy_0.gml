@@ -76,7 +76,6 @@ if (instance_exists(obj_controller)) {
 
         with (obj_star) {
             remove_star_problem("meeting");
-            remove_star_problem("meeting_trap");
         }
 
         obj_controller.useful_info += "CHTRP|";

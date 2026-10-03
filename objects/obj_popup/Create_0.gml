@@ -40,7 +40,6 @@ giveto = 0;
 inq_hide = 0;
 ma_co = 0;
 ma_id = 0;
-ma_name = "";
 manag = 0;
 fallen = 0;
 ship_lost = 0;

@@ -56,7 +56,6 @@ try {
                         var i = 0;
                         repeat (planets) {
                             remove_planet_problem(i, "meeting");
-                            remove_planet_problem(i, "meeting_trap");
                         }
                     }
                     obj_controller.disposition[10] -= 10;
@@ -88,7 +87,6 @@ try {
                 } else if ((press == 1) && (mission == "meeting_1t")) {
                     with (obj_star) {
                         remove_star_problem("meeting");
-                        remove_star_problem("meeting_trap");
                     }
                     obj_controller.complex_event = true;
                     obj_controller.current_eventing = "chaos_trap";
