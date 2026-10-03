@@ -53,15 +53,18 @@ static on_unload = function(units){
     __trigger_with_event("on_unload", {units});
 }
 
-/// @param {Id.Instance.obj_p_fleet} new_fleet
-static on_split = function(new_fleet){
-    __trigger_with_event("on_split", {new_fleet});
-}
+static __set_members_job_to_mission = function(){
+    for (var i = 0; i < array_length(members); i++){
+        var _unit = members[i];
+        _unit.job = {
+            type: p_id,
+            location: "{global.faction_names[fleet.owner]} Fleet",
+            fleet : fleet.uid,
+        };
+        _unit.unload(planet, system);            
+    }    
+};
 
-/// @param {Id.Instance.obj_p_fleet} merged_fleet
-static on_merge = function(merged_fleet){
-    __trigger_with_event("on_merge", {merged_fleet});
-}
 
 __init();
 
@@ -289,19 +292,25 @@ static __radical_inquisitor_take_artifact_bribe = function() {
     add_event({e_id: "inquisitor_spared", duration: irandom_range(6, 18) + 1, variation: 1});
 }
 
-static __mech_mars_init = fuction(){
-    fleet.home_x = x;
-    fleet.home_y = y;
-    fleet.action_x = x + lengthdir_x(3000, obj_controller.terra_direction);
-    fleet.action_y = y + lengthdir_y(3000, obj_controller.terra_direction);
-    fleet.move(false, "move", 48, 48);  
+static __mech_mars_init = function(){
+    if (array_length(members) == 0){
+        delete_mission = true;
+        exit;
+    }
+    __set_members_job_to_mission();
+    fleet.home_x = fleet.x;
+    fleet.home_y = fleet.y;
+    fleet.action_x = fleet.x + lengthdir_x(3000, obj_controller.terra_direction);
+    fleet.action_y = fleet.y + lengthdir_y(3000, obj_controller.terra_direction);
+    fleet.move(false, "move", 48, 48);
+    timer = 96; 
     stage_id = "to_mars";  
 }
 
 static __mech_mars_on_arrival = function(){
     if (stage_id == "to_mars"){
-        fleet.action_x = home_x;
-        fleet.action_y = home_y;
+        fleet.action_x = fleet.home_x;
+        fleet.action_y = fleet.home_y;
         fleet.move(false, "move", 48, 48);
         stage_id = "returning_home";
         exit;   
@@ -311,34 +320,27 @@ static __mech_mars_on_arrival = function(){
 
     var _roll1 = roll_dice_chapter(1, 100, "high"); // For the first STC
     var _found_stc = 0, _found_artifact = 0, _found_requisition = 0;
-    var _techs_lost = 0, techs_alive = 0;
+    var _techs_lost = 0;
 
-    var _conditions = {
-        job: "mecanicus mission",
-    };
-    var _techs = collect_role_group(SPECIALISTS_TECHS, star.name, false, _conditions);
+    var _orbiting = fleet.orbiting;
+    var _techs = clean_unit_array(members);
 
     var _tech_point_gain = 0;
 
-    for (var i = 0; i < array_length(_techs); i++) {
+    var _planet = irandom_range(1, _orbiting.planets);
+    for (var i = array_length(_techs) - 1; 0 >= array_length(_techs); i--) {
+        var _std_tester = global.character_tester.standard_test;
         var _tech = _techs[i];
-        var _tech_roll = global.character_tester.standard_test(_tech, "technology", -10)[1];
-        var _wep_test = global.character_tester.standard_test(_tech, "weapon_skill", 10);
+        var _tech_roll = _std_tester(_tech, "technology", -10)[1];
+        var _wep_test = _std_tester(_tech, "weapon_skill", 10);
         if (!_wep_test[0]) {
             _tech.kill(true, false);
             _techs_lost++;
             _cleanup[_tech.company] = true;
+            array_delete(_techs , i , 1);
         } else {
-            star.p_player[planet] += _tech.get_unit_size();
-            _tech.location_string = star.name;
-
-            _tech.planet_location = planet;
-
-            _tech.ship_location = -1;
-
+            _tech.unload(_planet, fleet.orbiting);
             _tech.job = "none";
-            techs_alive += 1;
-
             _tech.add_experience(irandom_range(3, 18));
             var gain = irandom(2);
 
@@ -360,16 +362,17 @@ static __mech_mars_on_arrival = function(){
             _found_stc += 1;
         }
     }
+    var _techs_alive = array_length(_techs);
 
     obj_controller.requisition += _found_requisition;
-    if ((techs_alive + _techs_lost >= 2) && (techs_alive > 0)) {
-        if (_roll1 >= (40 + (techs_alive + _techs_lost) * 5)) {
+    if ((_techs_alive + _techs_lost >= 2) && (_techs_alive > 0)) {
+        if (_roll1 >= (40 + (_techs_alive + _techs_lost) * 5)) {
             scr_add_stc_fragment(); // STC here
             _found_stc += 1;
         }
     }
 
-    var _tixt = $"The journey into the Mars Catacombs was a success.  Your {techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {star.name} {scr_roman(planet)}.\n";
+    var _tixt = $"The journey into the Mars Catacombs was a success.  Your {_techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {star.name} {scr_roman(planet)}.\n";
     _tixt += $"\n{_found_requisition} Requisition from salvage";
     if (_found_artifact > 0) {
         _tixt += $"\n{string_plural("Unidentified Artifacts", _found_artifact)}  recovered";
@@ -383,7 +386,7 @@ static __mech_mars_on_arrival = function(){
     }
 
     scr_popup("Mechanicus Mission Completed", _tixt, "mechanicus", "");
-    _tixt = "Mechanicus Mission Completed: {techs_alive}/{techs_alive+_techs_lost} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s return with ";
+    _tixt = "Mechanicus Mission Completed: {_techs_alive}/{_techs_alive+_techs_lost} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s return with ";
     _tixt += string(_found_requisition) + " Requisition, ";
     if (_found_artifact > 0) {
         _tixt += $"\n{_found_artifact} : {string_plural("Unidentified Artifacts", _found_artifact)}  recovered";

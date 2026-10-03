@@ -744,9 +744,8 @@ function Armamentarium(_controller) constructor {
 
     /// @desc Updates the counts of tech-capable personnel.
     static _refresh_personnel_counts = function() {
-        var _role_name = obj_ini.player_role_data[eROLE.TECHMARINE].role;
-        count_techmarines = scr_role_count(_role_name, "");
-        count_aspirants = scr_role_count(obj_ini.player_role_data[eROLE.TECHMARINEASPIRANT].role);
+        count_techmarines = scr_group_count([SPECIALISTS_TECHMARINES, false, true]);
+        count_aspirants = scr_role_count(eROLE.TECHMARINEASPIRANT);
         count_total = count_techmarines + count_aspirants;
     };
 

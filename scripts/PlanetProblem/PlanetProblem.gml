@@ -47,11 +47,6 @@ p_data = _planet_data;
 planet = p_data.planet;
 system = p_data.system;
 
-//base only assigns members when data.members exists; default it here without clobbering that
-if (!variable_struct_exists(self, "members")){
-    members = [];
-}
-
 static __refresh_data = function(){
     p_data = system.get_planet_data(planet);
     members = clean_unit_array(members);
@@ -73,21 +68,14 @@ static save = function(){
     var _save_copy = variable_clone(self);
     struct_remove(_save_copy, "system");
     struct_remove(_save_copy, "p_data");
-    var _mems = clean_unit_array(members);
-    _save_copy.members = [];
-    for (var i=0;i<array_length(_mems);i++){
-        _save_copy.members[i] = _mems[i].uid;
-    }
+    __save_members(_save_copy);
     return _save_copy;
 }
 
 static load = function(data){
     move_data_to_current_scope(data);
-    for (var i=0;i<array_length(members);i++){
-        members[i] = fetch_unit_uid(members[i]);
-    }
+    __load_members();
     __refresh_data();
-    f_type = eP_FEATURES.MISSION;
 }
 
 static view_on_planet_screen = function(){
@@ -1176,19 +1164,9 @@ static __mech_tomb_battle_aftermath = function() {
 
 static __mech_mars_resolve = function() {
     delete_mission = true;
-    var _techs_taken = 0;
-    var _techs = collect_role_group([SPECIALISTS_TECHMARINES,false,true],system.name);
-    for (var i = 0; i < array_length(_techs); i++) {
-        var _unit = _techs[i];
-        system.p_player[planet] -= _unit.get_unit_size();
-        _unit.location_string = "Mechanicus Vessel";
-        _unit.planet_location = 0;
-        _unit.ship_location = -1;
-        _unit.job = {
-            type: "mechanicus mission",
-        };
-        _techs_taken += 1;
-    }
+    var _techs = scr_group_count([SPECIALISTS_TECHMARINES,false,true], system.name, "units");
+    members = _techs;
+    var _techs_taken = array_legth(members);
 
     if (_techs_taken == 0) {
         var alert_text = $"Mechanicus Mission Failed: Journey to Mars Catacombs at {p_data.name()}.";
@@ -1202,17 +1180,15 @@ static __mech_mars_resolve = function() {
         var _text = $"Mechanicus Ship departs for the Mars catacombs.  Onboard are {_techs_taken} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s.";
         scr_alert("", "mission", _text, 0, 0);
         scr_event_log("green", _text);
-        var flit = create_enemy_fleet(system.x, system.y, eFACTION.MECHANICUS);
+        var _flit = create_enemy_fleet(system.x, system.y, eFACTION.MECHANICUS);
 
-        with (flit) {
+        with (_flit) {
             sprite_index = spr_fleet_mechanicus;
             capital_number = 1;
             image_index = 0;
             image_speed = 0;
-            home_x = x;
-            home_y = y;
         }
-        flit.add_problem("mech_mars");
+        _flit.add_problem("mech_mars", -1, {members});
     }
 }
 
@@ -1367,8 +1343,8 @@ static __protect_raiders_suppress_information= function() {
 static __protect_raiders_hold_memorial = function() {
     reset_popup_options();
     __add_option("continue");
-    _pdata.add_disposition(-30);
-    text = $"You prepare to have a large public memorial for your fallen marines on the planet surface as a show of defiance. The chapter are pleased by such an act and the population of the planet are mesmerized by the spectacle. The governor is furious not only has his incompetence to deal with the planets xenos issue been made public in such a way that the sector commander has now heard about it but he perceives his failures are being paraded in font of him\n nGovernor Disposition : -30";
+    p_data.add_disposition(-30);
+    obj_popup.text = $"You prepare to have a large public memorial for your fallen marines on the planet surface as a show of defiance. The chapter are pleased by such an act and the population of the planet are mesmerized by the spectacle. The governor is furious not only has his incompetence to deal with the planets xenos issue been made public in such a way that the sector commander has now heard about it but he perceives his failures are being paraded in font of him\n nGovernor Disposition : -30";
 }
 
 

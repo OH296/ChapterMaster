@@ -18,9 +18,12 @@ function UnitGroup(units = []) constructor {
         array_push(units, unit);
     };
 
-    static has_role = function(role) {
+    static has_role = function(_role) {
+        if (is_real(_role)){
+            _role = obj_ini.player_role_data[_role].role;
+        }
         for (var i = 0; i < array_length(units); i++) {
-            if (units[i].role() == role) {
+            if (units[i].has_role(_role)) {
                 return true;
             }
         }
@@ -757,7 +760,7 @@ function SearchConditions(data) constructor {
             array_push(checks_order, squadless_valuate);
         }
         if (role != "") {
-            if (!is_real(role)){
+            if (!is_string(role)){
                 role = obj_ini.player_role_data[role].role;
             }
             array_push(checks_order, role_valuate);

@@ -52,12 +52,14 @@ per_turn_checks = true;
 static save = function(){
     var _save_copy = variable_clone(self);
     struct_remove(_save_copy, "fleet");
+    __save_members(_save_copy)
     return _save_copy;
 }
 
 //the owning fleet must re-attach itself after loading (problem.fleet = self)
 static load = function(data){
     move_data_to_current_scope(data);
+    __load_members();
 }
 
 static __check_delete = function(){
@@ -118,7 +120,7 @@ static on_merge = function(merged_fleet){
 
 //call this before the fleet instance is destroyed
 static on_destruction = function(){
-    __trigger_with_event("on_destruction", {});
+    __trigger_with_event("on_destruction");
     delete_mission = true;
     __check_delete();
 }

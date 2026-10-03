@@ -9,6 +9,7 @@ function Problem(_name, _timer, _data) constructor {
     delete_mission = false;
     f_type = eP_FEATURES.MISSION;
     stage_id = "";
+    members = [];
     if (struct_exists(data, "stage")){
         stage_id = data.stage;
     }
@@ -28,6 +29,20 @@ function Problem(_name, _timer, _data) constructor {
             popup_default_close();
         }
         __check_delete();
+    }
+
+    static __save_members = function(_save_copy){
+        var _mems = clean_unit_array(members);
+        _save_copy.members = [];
+        for (var i=0;i<array_length(_mems);i++){
+            _save_copy.members[i] = _mems[i].uid;
+        }        
+    }
+
+    static __load_members =  function(){
+        for (var i=0;i<array_length(members);i++){
+            members[i] = fetch_unit_uid(members[i]);
+        }
     }
 
     static find_func_ref = function(trigger_string){
