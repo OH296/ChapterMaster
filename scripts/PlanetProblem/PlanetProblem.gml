@@ -1184,7 +1184,7 @@ static __mech_mars_resolve = function() {
     delete_mission = true;
     var _techs = scr_group_count([SPECIALISTS_TECHMARINES,false,true], system.name, "units");
     members = _techs;
-    var _techs_taken = array_legth(members);
+    var _techs_taken = array_length(members);
 
     if (_techs_taken == 0) {
         var alert_text = $"Mechanicus Mission Failed: Journey to Mars Catacombs at {p_data.name()}.";

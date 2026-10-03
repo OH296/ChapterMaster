@@ -153,12 +153,14 @@ get_unit_promotion_options = function() {
     }
     if (target_comp > 0 && target_comp <= 10 && spec == 0) {
         if (units == 1) {
+            //all captains are equalish   
             var _singles = [{role:eROLE.CAPTAIN, exp : 80}, {role:eROLE.ANCIENT, exp : company_promote_data[target_comp].exp + 10}, {role:eROLE.CHAMPION, exp : company_promote_data[target_comp].exp + 10}];
-            for (var i=0;i<array_legth(_singles);i++){
-                if (!_company_units.has_role(_singles[i].role)){
+            for (var s=0;s<array_length(_singles);s++){
+                var _r_data = _singles[s];
+                if (!_company_units.has_role(_r_data.role)){
                     i++;
-                    role_name[i] = _role_data[_singles[i].role].role;
-                    role_exp[i] = _singles[i].exp; //all captains are equalish                    
+                    role_name[i] = _role_data[_r_data.role].role;
+                    role_exp[i] = _r_data.exp;                  
                 }
             }
             i += 1;

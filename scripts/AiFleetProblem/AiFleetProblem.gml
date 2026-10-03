@@ -58,10 +58,12 @@ static __set_members_job_to_mission = function(){
         var _unit = members[i];
         _unit.job = {
             type: p_id,
-            location: "{global.faction_names[fleet.owner]} Fleet",
+            location: $"{global.faction_names[fleet.owner]} Fleet",
             fleet : fleet.uid,
         };
-        _unit.unload(planet, system);            
+        _unit.ship_location = -1;
+        _unit.planet_location = 0;
+        _unit.location_string = $"{global.faction_names[fleet.owner]} Fleet";
     }    
 };
 
@@ -328,7 +330,7 @@ static __mech_mars_on_arrival = function(){
     var _tech_point_gain = 0;
 
     var _planet = irandom_range(1, _orbiting.planets);
-    for (var i = array_length(_techs) - 1; 0 >= array_length(_techs); i--) {
+    for (var i = array_length(_techs) - 1; i >= 0; i--) {
         var _std_tester = global.character_tester.standard_test;
         var _tech = _techs[i];
         var _tech_roll = _std_tester(_tech, "technology", -10)[1];
@@ -372,7 +374,7 @@ static __mech_mars_on_arrival = function(){
         }
     }
 
-    var _tixt = $"The journey into the Mars Catacombs was a success.  Your {_techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {star.name} {scr_roman(planet)}.\n";
+    var _tixt = $"The journey into the Mars Catacombs was a success.  Your {_techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {orbiting.name()}.\n";
     _tixt += $"\n{_found_requisition} Requisition from salvage";
     if (_found_artifact > 0) {
         _tixt += $"\n{string_plural("Unidentified Artifacts", _found_artifact)}  recovered";
