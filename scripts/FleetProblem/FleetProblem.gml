@@ -129,8 +129,8 @@ static __default_mission_log_entry = function(){
     if (!instance_exists(fleet)){
         return undefined;
     }
-    if (_problem.stage_id == "preliminary") {
-        continue;
+    if (stage_id == "preliminary") {
+        return undefined;
     }
     var _data = {
         system: fleet_location_description(fleet).loc,

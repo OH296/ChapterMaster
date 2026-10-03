@@ -90,8 +90,8 @@ function Problem(_name, _timer, _data) constructor {
         if (!instance_exists(system)){
             return undefined;
         }
-        if (_problem.stage_id == "preliminary") {
-            continue;
+        if (stage_id == "preliminary") {
+            return undefined;
         }
         var _data = {
             system: is_callable(system.name) ? system.name() : system.name,

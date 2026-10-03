@@ -202,7 +202,9 @@ function generic_problems_to_mission_log (){
         var _problem = problems[p];
         var _data = _problem.mission_log_entry();
 
-        array_push(_logs, _data);
+        if (!is_undefined(_data)){
+            array_push(_logs, _data);
+        }
     }
     return _logs;
 }
