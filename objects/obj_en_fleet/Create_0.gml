@@ -83,6 +83,7 @@ problems = [];
 /// @returns {Struct.AiFleetProblem}
 add_problem = method(self, add_fleet_problem);
 move = method(self, set_fleet_movement);
+problems_to_mission_log = method(self, fleet_problems_to_mission_log);
 
 #region save/load serialization
 

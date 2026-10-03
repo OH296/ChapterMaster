@@ -200,21 +200,7 @@ function generic_problems_to_mission_log (){
     var _logs = [];
     for (var p = 0; p < array_length(problems); p++) {
         var _problem = problems[p];
-
-        if (_problem.stage_id == "preliminary") {
-            continue;
-        }
-        var _mission_explain = _problem.description();
-        var _data = {
-            system: is_callable(name) ? name() : name,
-            mission: _mission_explain,
-            time: _problem.timer,
-            problem :  _problem,
-        };
-
-        _data.click_left = method(_data, function() {
-            set_map_pan_to_loc(problem.system);
-        });
+        var _data = _problem.mission_log_entry();
 
         array_push(_logs, _data);
     }

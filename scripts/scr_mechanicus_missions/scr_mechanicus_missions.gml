@@ -192,19 +192,7 @@ function accept_mechanicus_mars_mission() {
     var _forge_planet = scr_get_planet_with_type(_star, "Forge");
     if (_forge_planet > 0) {
         var _planet = _star.get_planet_data(_forge_planet);
-
-        var _mission_loc = _planet.name();
-        var _nearest_fleet = instance_nearest(_star.x, _star.y, obj_p_fleet);
-        var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, _star.x, _star.y, _nearest_fleet, false);
-
-        _planet.new_problem("mech_mars", _mission_time);
-        text = $"The Adeptus Mechanicus await your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s at {_mission_loc}.  They are willing to hold on the voyage for up to {_mission_time} months.";
-        scr_event_log("", $"Mechanicus Mission Accepted: {obj_ini.player_role_data[eROLE.TECHMARINE].role}s are expected at {_mission_loc} within 30 months, for the voyage to Mars.", _star.name);
-        with (_star) {
-            new_star_event_marker("green");
-        }
-        title = "Mechanicus Mission Accepted";
-        reset_popup_options();
+        _planet.new_problem("mech_mars", -1);
     } else {
         text = $"Error valid forge planet not found please open a bug report if seen";
     }

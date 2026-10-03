@@ -70,6 +70,43 @@ function Problem(_name, _timer, _data) constructor {
         return undefined;
     }
 
+// PlanetProblem
+    static mission_log_entry = function(){
+        var _func = find_func("mission_log_entry");
+        if (!is_undefined(_func)){
+            try {
+                return _func();
+            } catch (_exception) {
+                delete_mission = true;
+                ERROR_HANDLER.handle_exception(_exception);
+                __check_delete();
+                return undefined;
+            }
+        }
+        return __default_mission_log_entry();
+    }
+
+    static __default_mission_log_entry = function(){
+        if (!instance_exists(system)){
+            return undefined;
+        }
+        if (_problem.stage_id == "preliminary") {
+            continue;
+        }
+        var _data = {
+            system: is_callable(system.name) ? system.name() : system.name,
+            mission: description(),
+            time: timer,
+            problem: self,
+        };
+
+        _data.click_left = method(_data, function() {
+            set_map_pan_to_loc(problem.system);
+        });
+
+        return _data;
+    }
+
     static __create_popup_option = function(_str1 = "", _func_string = "popup_delete"){
         var _opt = {
             str1 : _str1,

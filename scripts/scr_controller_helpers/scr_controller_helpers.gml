@@ -59,6 +59,7 @@ function scr_menu_clear_up(specific_area_function) {
 /// @description handles in game area and menu changes
 /// @returns {bool}
 function scr_change_menu(wanted_menu, specific_area_function = undefined) {
+    instance_activate_all();
     var continue_sequence = false;
     if (obj_controller.menu_lock) {
         return false;

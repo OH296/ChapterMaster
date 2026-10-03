@@ -260,6 +260,9 @@ function UnitQuickFindPanel() constructor {
         with (obj_p_fleet) {
             _temp_log = array_concat(_temp_log, problems_to_mission_log());
         }
+        with (obj_en_fleet) {
+            _temp_log = array_concat(_temp_log, problems_to_mission_log());
+        }
         mission_log = _temp_log;
         var _xx = main_panel.XX;
         var _yy = main_panel.YY;

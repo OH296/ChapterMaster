@@ -13,14 +13,8 @@ if (!variable_struct_exists(self, "members")){
 zero_timer_checks = true;
 per_turn_checks = true;
 
-static __handle_triggered_mission_func = function(func){
-    if (!is_undefined(func)){
-        try {
-            func();
-        } catch (_exception) {
-            ERROR_HANDLER.handle_exception(_exception);
-        }
-    }
+
+static __check_delete = function(){
     if (timer == -1 || (delete_mission)){
         var _prob = -1;
         for (var i = 0; i < array_length(system.problems); i++){
@@ -29,9 +23,20 @@ static __handle_triggered_mission_func = function(func){
             }
         }
         if (_prob > -1){
-            array_delete(system.problems, _prob,1);
+            array_delete(system.problems, _prob, 1);
+        }
+    }   
+}
+
+static __handle_triggered_mission_func = function(func){
+    if (!is_undefined(func)){
+        try {
+            func();
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
         }
     }
+    __check_delete();
 }
 
 static basic_turn_end = function(){

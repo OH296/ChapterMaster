@@ -125,24 +125,12 @@ static on_destruction = function(){
     __check_delete();
 }
 
-static mission_log_entry = function(){
-    var _func = find_func("mission_log_entry");
-    if (!is_undefined(_func)){
-        try {
-            return _func();
-        } catch (_exception) {
-            delete_mission = true;
-            ERROR_HANDLER.handle_exception(_exception);
-            __check_delete();
-            return undefined;
-        }
-    }
-    return __default_mission_log_entry();
-}
-
 static __default_mission_log_entry = function(){
     if (!instance_exists(fleet)){
         return undefined;
+    }
+    if (_problem.stage_id == "preliminary") {
+        continue;
     }
     var _data = {
         system: fleet_location_description(fleet).loc,
@@ -192,6 +180,17 @@ function add_fleet_problem(_p_id, _timer = -1, _data = {}){
     if (_problem.delete_mission) return undefined;
     array_push(problems, _problem);
     return _problem;
+}
+
+
+function fleet_problems_to_mission_log(){
+    var _temp_log = []
+    for (var i = 0; i < array_length(problems); i++) {
+        var _mission_data = problems[i].mission_log_entry();
+        array_push(_temp_log, _mission_data);
+    }
+
+    return _temp_log;
 }
 
 

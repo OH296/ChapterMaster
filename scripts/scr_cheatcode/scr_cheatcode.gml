@@ -408,7 +408,7 @@ function draw_planet_debug_options() {
                         break;
                 }
             };
-            debug_slate.draw();
+            debug_slate.draw(36, 160, 0.6, 0.6);
         }
         if (debug_button.draw()) {
             debug = !debug;

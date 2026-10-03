@@ -157,7 +157,7 @@ get_unit_promotion_options = function() {
             for (var i=0;i<array_legth(_singles);i++){
                 if (!_company_units.has_role(_singles[i].role)){
                     i++;
-                    role_name[i] = _role_data[eROLE._singles[i].role].role;
+                    role_name[i] = _role_data[_singles[i].role].role;
                     role_exp[i] = _singles[i].exp; //all captains are equalish                    
                 }
             }

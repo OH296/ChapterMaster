@@ -55,16 +55,7 @@ hurssy_time = 0;
 
 add_problem = method(self, add_fleet_problem);
 
-problems_to_mission_log = function(){
-    var _temp_log = []
-    for (var i = 0; i < array_length(problems); i++) {
-        var _mission_data = problems[i].mission_log_entry();
-        array_push(_temp_log, _mission_data);
-    }
-
-    return _temp_log;
-}
-
+problems_to_mission_log = method(self, fleet_problems_to_mission_log);
 
 arrived_at_star = function(){
     set_fleet_location(orbiting.name);

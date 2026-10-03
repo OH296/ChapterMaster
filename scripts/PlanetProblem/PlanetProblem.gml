@@ -349,7 +349,7 @@ static __hunt_beast_unit_select = function() {
         __set_members_job_to_mission();
         var _numeral_name = p_data.name()
         stage_id = "active";
-        timer = irandom_range(2, 5);;
+        timer = irandom_range(2, 5);
         var _gar_pop = instance_create(0, 0, obj_popup);
         //TODO some new MissonHelper methods for popups
         _gar_pop.title = $"Marines assigned to hunt beasts around {_numeral_name}";
@@ -1160,6 +1160,24 @@ static __mech_tomb_battle_aftermath = function() {
         scr_event_log("", "Mechanicus Mission Failed: Necron Tomb Research Party and present Astartes have been killed.");
 
     }   
+}
+
+static __mech_mars_init = function() {
+    reset_popup_options();    
+    var _mission_loc = p_data.name();
+    var _nearest_fleet = get_nearest_player_fleet(system.x, system.y );
+    if (_nearest_fleet == noone){
+        delete_mission = true;
+        obj_popup.text = $"Error valid player fleet not found please open a bug report if seen";
+        exit;
+    }
+    var _mission_time = get_viable_travel_time(5, _nearest_fleet.x, _nearest_fleet.y, system.x, system.y, _nearest_fleet, false);
+    timer = _mission_time;
+    obj_popup.text = $"The Adeptus Mechanicus await your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s at {_mission_loc}.  They are willing to hold on the voyage for up to {_mission_time} months.";
+    scr_event_log("", $"Mechanicus Mission Accepted: {obj_ini.player_role_data[eROLE.TECHMARINE].role}s are expected at {_mission_loc} within 30 months, for the voyage to Mars.", system.name);
+    mark();
+    obj_popup.title = "Mechanicus Mission Accepted";
+    
 }
 
 static __mech_mars_resolve = function() {
