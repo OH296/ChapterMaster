@@ -1499,7 +1499,7 @@ static __inquisition_tomb_per_turn = function() {
     scr_popup("Necron Tomb Excursion", _tixt, $"necron_cave", _pop_data);
 }
 
-static inquisition_tomb_mission_start = function() {
+static __inquisition_tomb_mission_start = function() {
     obj_popup.title = $"Necron Tunnels : {data.mission_stage}";
     obj_popup.replace_options([
         __create_popup_option("Continue", "mission_sequence"),

@@ -277,7 +277,7 @@ static __radical_inquisitor_take_artifact_bribe = function() {
         random_sector_exit_point();
         trade_goods = "|DELETE|";
         action_spd = 256;
-        fleet.move(false)
+        move(false);
     }
     var last_artifact = scr_add_artifact("random", "", 4);
 
@@ -386,7 +386,7 @@ static __mech_mars_on_arrival = function(){
     }
 
     scr_popup("Mechanicus Mission Completed", _tixt, "mechanicus", "");
-    _tixt = "Mechanicus Mission Completed: {_techs_alive}/{_techs_alive+_techs_lost} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s return with ";
+    _tixt = $"Mechanicus Mission Completed: {_techs_alive}/{_techs_alive+_techs_lost} of your {obj_ini.player_role_data[eROLE.TECHMARINE].role}s return with ";
     _tixt += string(_found_requisition) + " Requisition, ";
     if (_found_artifact > 0) {
         _tixt += $"\n{_found_artifact} : {string_plural("Unidentified Artifacts", _found_artifact)}  recovered";
