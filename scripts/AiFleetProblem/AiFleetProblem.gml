@@ -374,7 +374,7 @@ static __mech_mars_on_arrival = function(){
         }
     }
 
-    var _tixt = $"The journey into the Mars Catacombs was a success.  Your {_techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {orbiting.name()}.\n";
+    var _tixt = $"The journey into the Mars Catacombs was a success.  Your {_techs_alive} remaining {obj_ini.player_role_data[eROLE.TECHMARINE].role}s were useful to the Mechanicus force and return with a bounty.  They await retrieval at {_orbiting.name()}.\n";
     _tixt += $"\n{_found_requisition} Requisition from salvage";
     if (_found_artifact > 0) {
         _tixt += $"\n{string_plural("Unidentified Artifacts", _found_artifact)}  recovered";
