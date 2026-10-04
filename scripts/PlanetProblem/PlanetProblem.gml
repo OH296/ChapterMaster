@@ -57,7 +57,7 @@ remove = false;
 zero_timer_checks = true;
 per_turn_checks = true;
 
-static mark = function(colour){
+static mark = function(colour = "green"){
     __refresh_data();
     with (p_data.system){
         new_star_event_marker(colour)
@@ -246,7 +246,7 @@ static __init = function(){
         mark("green");
     }
 	/*switch(p_id){
-	    case "meeting":
+	    case "chaos_lord_meeting":
             var rando = choose(1, 2);
             if (rando == 1) {
                 obj_controller.diplo_text += $"A proposal that needs further consideration and some negotiation.  Meet me at {p_data.name()} and we shall resolve this.";
