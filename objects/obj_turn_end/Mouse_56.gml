@@ -1,5 +1,5 @@
 //so this only runs if there aren't these types of instances
-if (!instance_exists(obj_saveload) && !instance_exists(obj_popup) && !instance_exists(obj_ncombat) && !instance_exists(obj_fleet)) {
+if (instance_exists(obj_saveload) && !instance_exists(obj_popup) && !instance_exists(obj_ncombat) && !instance_exists(obj_fleet)) {
     if ((obj_controller.complex_event == true) || instance_exists(obj_temp_meeting)) {
         exit;
     }

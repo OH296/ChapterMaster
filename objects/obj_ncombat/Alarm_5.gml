@@ -542,7 +542,7 @@ if (defeat == 0 && reduce_power) {
 }
 
 if (battle_special != ""){
-    if (is_struct(special_feature) && is_instanceof(special_feature, PlanetProblem)){
+    if (valid_special_feature()){
         special_feature.battle_final_message();
     }
 }

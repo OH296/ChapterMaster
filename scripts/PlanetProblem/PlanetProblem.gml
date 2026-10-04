@@ -2024,6 +2024,146 @@ static __governor_purge_enemies_feature_selected = function(){
     draw_data.help = "This mission is not yet complete";
 }
 
+static __chaos_lord_meeting_per_turn = function(){
+    if (p_data.player_forces <= 0){
+        exit;
+    };
+
+    var _units = p_data.collect_planet_group();
+
+    var _master_present = _units.has_role(eROLE.CHAPTERMASTER);
+    var _force_size = _units.number();
+    if (_force_size == 0){
+        system.p_player[planet] = 0;
+        exit;
+    }
+    members = _units.units;
+
+    var _pop_data = {
+        mission : self,
+    }
+    // title / text / image / speshul
+    var _popup_text = "A cloaked, ragged figure approaches your forces and hails you. ";
+    if (_master_present && (_force_size <= 21)) {
+        _popup_text += "He is to bring you to meet with their master and you have few enough forces to be permitted.  What is thy will?"
+        var _options = [
+            __create_popup_option("Die, heretic!", "kill_messenger"),
+            __create_popup_option("Very well.  Lead the way.", "attend_meeting"),
+            "I must take care of an urgent matter first.  (Exit)",
+        ]
+    }
+    if (_master_present && (_force_size > 21)) {
+        _popup_text += $"He is to bring you to their master, but before the meeting proceeds, you must bring fewer forces.  Only yourself and up to two squads will be allowed in the presence of {obj_controller.faction_title[10]} {obj_controller.faction_leader[10]}."
+    }
+    if (!_master_present && (_force_size > 21)) {
+        _popup_text += "The meeting was supposed to be with the Chaos Lord, and yourself, but you are not planet-side.  Land on the planet with up to two squads and the meeting will proceed."
+    }
+    scr_popup("Chaos Meeting", _popup_text, "chaos_messenger", _pop_data);
+}
+
+static __chaos_lord_meeting_kill_messenger = function(){
+    delete_mission = true;
+    alter_disposition(eFACTION.CHAOS, -10);
+    obj_popup.text = "The heretic is killed in a most violent fashion.  With a lack of go-between the meeting cannot proceed.";
+    reset_popup_options();
+    if (obj_controller.blood_debt == 1) {
+        obj_controller.penitent_current += 1;
+        obj_controller.penitent_turn = 0;
+        obj_controller.penitent_turnly = 0;
+    }
+    exit;    
+}
+
+static __chaos_lord_meeting_attend_meeting = function(){
+    var _text = $"{global.chapter_name} signal your readiness to the heretic.  Nearly twenty minutes of following the man passes before {global.chapter_name} all enter an ordinary-looking structure.  Down, within the basement, {global.chapter_name} then pass into the entrance of a tunnel.  As the trek downward continues more and more heretics appear- cultists, renegades that appear to be from the local garrison, and occasionally even the fallen of your kind.  Overall the heretics seem well supplied and equip.  This observation is interrupted as your group enters into a larger chamber, revealing a network of tunnels and what appears to be ancient catacombs.  Bones of the ancient dead, the forgotten, litter the walls and floor.  And the chamber seems to open up wider, and wider, until {global.chapter_name} find yourself within a hall.  Within this hall, waiting for {global.chapter_name}"
+     if (!data.trap) {
+        obj_controller.complex_event = true;
+        obj_controller.current_eventing = "chaos_meeting_1";
+        obj_popup.text = $" are several dozen Chaos Terminators, a Greater Daemon of Tzeentch and Slaanesh, and Chaos Lord {obj_controller.faction_leader[eFACTION.CHAOS]}.";
+        scr_toggle_diplomacy();
+        obj_controller.diplomacy = 10;
+        obj_controller.cooldown = 5000;
+        with (obj_controller) {
+            scr_dialogue("cs_meeting1");
+        }
+        instance_destroy(obj_popup);
+        exit;
+    } else {
+        delete_mission = true;
+        obj_controller.complex_event = true;
+        obj_controller.current_eventing = "chaos_trap";
+        obj_popup.text = $" are several dozen Chaos Terminators, a handful of Helbrute, and many more Chaos Space Marines.  The Chaos Lord is nowhere to be seen.  It is a trap.";
+        reset_popup_options();
+
+        var _battle = new_battle(eFACTION.CHAOS , "cs_meeting_battle10");
+        _battle.dropping = 0;
+        _battle.attacking = 1;
+        _battle.local_forces = 0;
+        _battle.threat = 3;
+        _battle.battle_enemy_data = {
+            threat : 3,
+            fortified : false,
+            cols : [
+                {
+                    distance : 20,
+                    enemies : [
+                        {
+                            name : "Greater Daemon of Tzeentch",
+                            number : 1
+                        },
+                        {
+                            name : "Greater Daemon of Slaanesh",
+                            number : 1
+                        },
+                        {
+                            name : "Venerable Chaos Terminator",
+                            number : 20
+                        }
+                    ]
+                },
+                {
+                    distance : 10,
+                    enemies : [
+                        {
+                            name : "Venerable Chaos Chosen",
+                            number : 40,
+                        },
+                        {
+                            name : "Helbrute",
+                            number : 3
+                        },
+                    ]
+                }
+            ]
+        };
+        _roster = new Roster();
+        _roster.selected_units = members;
+        _roster.setup_battle_formations();
+        _roster.add_to_battle();
+
+        obj_controller.useful_info += "CHTRP|";
+        instance_deactivate_object(obj_star);
+        instance_destroy(obj_popup);
+        exit;
+    }   
+}
+
+static __chaos_lord_meeting_battle_aftermath = function(){
+    if (defeat){
+        exit;
+    }
+    obj_controller.diplomacy = 0;
+    obj_controller.menu = 0;
+    obj_controller.force_goodbye = 0;
+    obj_controller.cooldown = 20;
+    obj_controller.current_eventing = "chaos_meeting_end";
+    if (instance_exists(obj_turn_end)) {
+        obj_turn_end.combating = 0;
+    }
+    var pip = instance_create(0, 0, obj_popup);
+    pip.title = "Survived";
+    pip.text = "You and the rest of your battle brothers fight your way out of the catacombs, back through the tunnel where you first entered.  By the time you manage it your forces are battered and bloodied and in desperate need of pickup.  The whole meeting was a bust- Chaos Lord " + string(obj_controller.faction_leader[eFACTION.CHAOS]) + " clearly intended to kill you and simply be done with it.";
+}
 }
 
 

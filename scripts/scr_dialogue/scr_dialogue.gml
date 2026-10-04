@@ -345,7 +345,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             faction_status[eFACTION.CHAOS] = "Antagonism";
 
             with (obj_star) {
-                remove_star_problem("meeting");
+                remove_star_problem("chaos_lord_meeting");
             }
 
             var born = false;
@@ -380,10 +380,10 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             var _star = noone;
             var _planet = noone;
             with (obj_star) {
-                if (has_problem_star("meeting") > 0 && has_problem_star("meeting") > 0) {
+                if (has_problem_star("chaos_lord_meeting") > 0 && has_problem_star("chaos_lord_meeting") > 0) {
                     _found = true;
                     _star = id;
-                    _planet = has_problem_star("meeting");
+                    _planet = has_problem_star("chaos_lord_meeting");
                     break;
                 }
             }
@@ -439,7 +439,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
                     obj_ncombat.leader = 1;
 
                     with (obj_star) {
-                        remove_star_problem("meeting");
+                        remove_star_problem("chaos_lord_meeting");
                     }
                 }
 
@@ -971,7 +971,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
                 with (obj_star) {
                     for (var i = 1; i <= 4;) {
                         for (var r = 1; r <= 4; r++) {
-                            if (p_problem[i][r] == "meeting") {
+                            if (p_problem[i][r].p_id == "chaos_lord_meeting") {
                                 _found = true;
                                 _star = id;
                                 _planet = r;

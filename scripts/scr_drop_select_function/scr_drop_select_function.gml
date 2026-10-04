@@ -253,7 +253,7 @@ function drop_select_unit_selection() {
             }
 
             if ((attacking == 10) || (attacking == 11)) {
-                remove_planet_problem(planet_number, "meeting", p_target);
+                remove_planet_problem(planet_number, "chaos_lord_meeting", p_target);
             }
 
             instance_create(0, 0, obj_ncombat);
@@ -354,15 +354,7 @@ function drop_select_unit_selection() {
             if (_chaos_lord_jump_possible && _no_know_chaos) {
                 if (_chaos_popup_turn_reached && _chaos_warlord_present) {
                     if (_chaos_unknown) {
-                        var pop;
-                        pop = instance_create(0, 0, obj_popup);
-                        pop.image = "chaos_symbol";
-                        pop.title = "Concealed Heresy";
-                        pop.text = $"Your astartes set out and begin to cleanse {planet_numeral_name(_battle_sub_loc, _battle_place)} of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";
-                        cancel_combat();
-                        combating = 0;
-                        instance_activate_all();
-                        exit;
+                        chaos_fuck_up_purge();
                     }
                     if (obj_controller.known[eFACTION.CHAOS] >= 2 && obj_controller.faction_gender[10] == 1) {
                         with (obj_drop_select) {
@@ -399,6 +391,46 @@ function drop_select_unit_selection() {
             _p_data.purge(purge, _purge_score);
         }
     }
+}
+
+function chaos_fuck_up_purge(){
+    var pop;
+    pop = instance_create(0, 0, obj_popup);
+    pop.image = "chaos_symbol";
+    pop.title = "Concealed Heresy";
+    pop.text = $"Your astartes set out and begin to cleanse {planet_numeral_name(_battle_sub_loc, _battle_place)} of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";
+    pop.add_option([{
+        str1 : "For the Emperor"
+        choice_func : function(){
+            with (obj_drop_select) {
+                obj_controller.cooldown = 30;
+                // ** Starts the battle **
+                is_in_combat = true;
+
+                instance_deactivate_all_safe();
+                instance_activate_object(obj_drop_select);
+
+                instance_create(0, 0, obj_ncombat);
+                obj_ncombat.battle_object = p_target;
+                obj_ncombat.battle_loc = p_target.name;
+                obj_ncombat.battle_id = obj_controller.selecting_planet;
+                obj_ncombat.dropping = 0;
+                obj_ncombat.attacking = 10;
+                obj_ncombat.enemy = eFACTION.CHAOS;
+                obj_ncombat.formation_set = 2;
+                obj_ncombat.leader = 1;
+                obj_ncombat.threat = 5;
+                obj_ncombat.battle_special = "WL10_reveal";
+                scr_battle_allies();
+                setup_battle_formations();
+                roster.add_to_battle();
+            }                                
+        }
+    }])
+    cancel_combat();
+    combating = 0;
+    instance_activate_all();
+    exit;
 }
 
 function drop_select_draw() {

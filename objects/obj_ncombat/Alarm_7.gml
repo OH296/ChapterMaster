@@ -270,7 +270,7 @@ try {
         }
     }
 
-    if (is_struct(special_feature) && is_instanceof(special_feature, PlanetProblem)){
+    if (valid_special_feature()){
         special_feature.after_battle_effects();
     }
     if ((enemy == eFACTION.PLAYER && on_ship == true) && (!defeat)) {
@@ -316,7 +316,6 @@ try {
             obj_controller.menu = 0;
             obj_controller.force_goodbye = 0;
             obj_controller.cooldown = 20;
-            obj_controller.current_eventing = "chaos_meeting_end";
             with (obj_temp_meeting) {
                 instance_destroy();
             }

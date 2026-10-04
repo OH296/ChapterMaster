@@ -10,8 +10,7 @@ function location_out_of_player_control(unit_loc) {
 }
 
 global.planet_problem_keys = [
-    "meeting_trap",
-    "meeting",
+    "chaos_lord_meeting",
     "succession",
     "mech_raider",
     "mech_bionics",
@@ -43,8 +42,7 @@ global.planet_problem_keys = [
 
 function mission_name_key(mission) {
     static mission_key = {
-        "meeting_trap": "Chaos Lord Meeting",
-        "meeting": "Chaos Lord Meeting",
+        "chaos_lord_meeting": "Chaos Lord Meeting",
         "succession": "War of succession",
         "mech_raider": "Provide Land Raider to Mechanicus",
         "mech_bionics": "Provide Bionic Augmented marines to study",

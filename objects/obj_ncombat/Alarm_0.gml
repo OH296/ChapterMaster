@@ -211,32 +211,6 @@ try {
         u.dudes_num[1] = 20;
         enemies[1] = 20;
     }
-    // * Chaos Space Marine Elite Company *
-    if (battle_special == "cs_meeting_battle10") {
-        fortified = 0;
-        with (obj_enunit) {
-            instance_destroy();
-        }
-        u = instance_create(xxx + 20, 240, obj_enunit);
-        enemy_dudes = "";
-        u.dudes[1] = "Greater Daemon of Tzeentch";
-        u.dudes_num[1] = 1;
-        enemies[1] = 1;
-        u.dudes[2] = "Greater Daemon of Slaanesh";
-        u.dudes_num[2] = 1;
-        enemies[2] = 1;
-        u.dudes[3] = "Venerable Chaos Terminator";
-        u.dudes_num[3] = 20;
-        enemies[3] = 20;
-        u = instance_create(xxx + 10, 240, obj_enunit);
-        enemy_dudes = "";
-        u.dudes[1] = "Venerable Chaos Chosen";
-        u.dudes_num[1] = 40;
-        enemies[1] = 40;
-        u.dudes[2] = "Helbrute";
-        u.dudes_num[2] = 3;
-        enemies[2] = 3;
-    }
 
     // ** Space Hulk Forces **
     if (battle_special == "space_hulk") {
