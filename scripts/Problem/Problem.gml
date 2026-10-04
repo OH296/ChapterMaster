@@ -130,6 +130,63 @@ function Problem(_name, _timer, _data) constructor {
         add_option(__create_popup_option(_str1, _func_string));
     }
 
+    //triggered at the end of scr_shoot
+    static battle_on_enemy_casulties = function(){
+        if (!struct_exists(self, "casualty_packet")){
+            exit;
+        }
+        instance_activate_object(obj_star);
+        var _func = find_func("on_enemy_casulties");
+        __handle_triggered_mission_func(_func);
+
+        struct_remove(self, "casualty_packet");
+
+        instance_deactivate_object(obj_star);  
+    }
+
+    //triggers in obj_ncombat alarm 5
+    static battle_final_message = function(){
+        instance_activate_object(obj_star);
+        var _func = find_func("battle_final_message");
+        __handle_triggered_mission_func(_func);   
+        instance_deactivate_object(obj_star);      
+    }
+
+    static after_battle_effects = function(){
+        instance_activate_object(obj_star);
+        var _func = find_func("battle_aftermath");
+        __handle_triggered_mission_func(_func);   
+        instance_deactivate_object(obj_star);
+    }
+
+        //triggered within drop select
+    static before_battle_effects = function(){
+        instance_activate_object(obj_star);
+        var _func = find_func("setup_battle");
+        __handle_triggered_mission_func(_func);   
+        instance_deactivate_object(obj_star);   
+    }
+
+    static on_squad_selection = function(){
+        var _func = find_func("squad_selected");
+        __handle_triggered_mission_func(_func);       
+        instance_deactivate_object(obj_star);
+    }
+
+
+    static on_unit_selection = function(){
+        var _func = find_func("unit_select");
+        if (!is_undefined(_func)){
+            var _selec_data = obj_controller.selection_data;
+            if (struct_exists(_selec_data, "selections")){
+                members = _selec_data.selections;
+            }
+            __handle_triggered_mission_func(_func);   
+        }    
+        instance_deactivate_object(obj_star);
+    }
+
+
     static __handle_triggered_mission_func = function(func){
         if (!is_undefined(func)){
             __refresh_data();
