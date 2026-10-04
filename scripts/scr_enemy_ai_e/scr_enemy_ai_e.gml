@@ -53,10 +53,8 @@ function scr_enemy_ai_e() {
         }
 
         if ((present_fleet[10] > 0) && (obj_controller.faction_status[10] == "War")) {
-            if (!battle) {
-                if (!has_problem_star("chaos_lord_meeting")) {
-                    battle = 1;
-                }
+            if (!battle && !has_problem_star("chaos_lord_meeting")) {
+                battle = 1;
             }
         }
         if (present_fleet[13] > 0) {

@@ -46,9 +46,6 @@ try {
         }
     }
     if (string_count("cs_meeting", battle_special) > 0) {
-        with (obj_temp_meeting) {
-            instance_destroy();
-        }
 
         with (obj_star) {
             if (name == obj_ncombat.battle_loc) {
@@ -316,9 +313,6 @@ try {
             obj_controller.menu = 0;
             obj_controller.force_goodbye = 0;
             obj_controller.cooldown = 20;
-            with (obj_temp_meeting) {
-                instance_destroy();
-            }
             with (obj_popup) {
                 instance_destroy();
             }
@@ -333,26 +327,6 @@ try {
     }
 
     if (enemy == eFACTION.CHAOS) {
-        if ((battle_special == "cs_meeting_battle10") && (defeat == 0)) {
-            obj_controller.complex_event = false;
-            obj_controller.diplomacy = 0;
-            obj_controller.menu = 0;
-            obj_controller.force_goodbye = 0;
-            obj_controller.cooldown = 20;
-            obj_controller.current_eventing = "chaos_meeting_end";
-            with (obj_temp_meeting) {
-                instance_destroy();
-            }
-            with (obj_popup) {
-                instance_destroy();
-            }
-            if (instance_exists(obj_turn_end)) {
-                obj_turn_end.combating = 0;
-            }
-            var pip = instance_create(0, 0, obj_popup);
-            pip.title = "Survived";
-            pip.text = "You and the rest of your battle brothers fight your way out of the catacombs, back through the tunnel where you first entered.  By the time you manage it your forces are battered and bloodied and in desperate need of pickup.  The whole meeting was a bust- Chaos Lord " + string(obj_controller.faction_leader[eFACTION.CHAOS]) + " clearly intended to kill you and simply be done with it.";
-        }
 
         if (((battle_special == "cs_meeting_battle5") || (battle_special == "cs_meeting_battle6")) && (defeat == 0)) {
             var mos = false;

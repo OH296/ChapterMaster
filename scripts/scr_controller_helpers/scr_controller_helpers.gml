@@ -10,6 +10,7 @@ function active_game_ini(){
     return instance_exists(obj_creation) ? obj_creation : obj_ini;
 }
 
+function instance_exists_any
 /// @description Cleans up the current game menu area to allow changing menus 
 /// @returns {Any}
 function scr_menu_clear_up(specific_area_function) {

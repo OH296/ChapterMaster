@@ -809,7 +809,6 @@
     {"id":{"name":"scr_cheatcode","path":"scripts/scr_cheatcode/scr_cheatcode.yy",},},
     {"id":{"name":"scr_check_equip","path":"scripts/scr_check_equip/scr_check_equip.yy",},},
     {"id":{"name":"scr_choose_weighted","path":"scripts/scr_choose_weighted/scr_choose_weighted.yy",},},
-    {"id":{"name":"scr_civil_roster","path":"scripts/scr_civil_roster/scr_civil_roster.yy",},},
     {"id":{"name":"scr_clean","path":"scripts/scr_clean/scr_clean.yy",},},
     {"id":{"name":"scr_colors_initialize","path":"scripts/scr_colors_initialize/scr_colors_initialize.yy",},},
     {"id":{"name":"scr_company_load","path":"scripts/scr_company_load/scr_company_load.yy",},},

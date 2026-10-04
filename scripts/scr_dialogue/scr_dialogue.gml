@@ -448,10 +448,9 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
                         obj_ncombat.fighting[obj_temp_meeting.co[v]][obj_temp_meeting.ide[v]] = 1;
                     }
                 }
-                scr_civil_roster(obj_ncombat.battle_loc, obj_ncombat.battle_id, true);
+                //scr_civil_roster(obj_ncombat.battle_loc, obj_ncombat.battle_id, true);
 
                 instance_deactivate_all_safe();
-                instance_activate_object(obj_temp_meeting);
                 instance_activate_object(obj_ncombat);
                 instance_activate_object(obj_centerline);
                 instance_activate_object(obj_pnunit);
