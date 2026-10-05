@@ -411,8 +411,8 @@ function chaos_fuck_up_purge(){
                 instance_activate_object(obj_drop_select);
 
                 instance_create(0, 0, obj_ncombat);
-                obj_ncombat.battle_object = p_target;
-                obj_ncombat.battle_loc = p_target.name;
+                obj_ncombat.battle_object = obj_drop_select.p_target;
+                obj_ncombat.battle_loc = obj_drop_select.p_target.name;
                 obj_ncombat.battle_id = obj_controller.selecting_planet;
                 obj_ncombat.dropping = 0;
                 obj_ncombat.attacking = 10;

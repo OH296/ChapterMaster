@@ -2092,7 +2092,7 @@ static __chaos_lord_meeting_attend_meeting = function(){
 }
 
 static __chaos_lord_meeting_battle_aftermath = function(){
-    if (defeat){
+    if (obj_n_combat.defeat){
         exit;
     }
     obj_controller.diplomacy = 0;
