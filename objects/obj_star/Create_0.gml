@@ -29,7 +29,9 @@ trader = 0;
 visited = 0;
 stored_owner = -1;
 in_view = true;
-garrisoned = false;
+
+/// @type {Bool|Undefined}
+__garrison_operative_present = undefined;
 
 // sets up default planet variables
 var _planet_array_size = 9;
@@ -125,9 +127,10 @@ add_feature = function(planet, feature) {
 
 system_player_ground_forces = 0;
 
-/// @desc Reports whether any planet in this system holds a garrison squad that still has members.
+/// @desc Reports whether any planet in this system holds a garrison squad operative.
+/// @param {Bool} [_require_members] Whether the squad must still have members; false also counts operatives whose squads are empty. Defaults to true.
 /// @returns {Bool}
-function has_garrison() {
+function has_garrison(_require_members = true) {
     for (var _planet = 1; _planet <= planets; _planet++) {
         var _operative_count = array_length(p_operatives[_planet]);
         for (var i = 0; i < _operative_count; i++) {
@@ -138,6 +141,9 @@ function has_garrison() {
             if (_operative.job != "garrison") {
                 continue;
             }
+            if (!_require_members) {
+                return true;
+            }
             if (array_length(fetch_squad(_operative.reference).members) > 0) {
                 return true;
             }
@@ -145,6 +151,31 @@ function has_garrison() {
     }
 
     return false;
+}
+
+/// @desc Reports whether to show the garrison icon, caching operative presence until operatives change and rescanning squad membership each call while a garrison operative is present.
+/// @returns {Bool}
+function shows_garrison_icon() {
+    __garrison_operative_present ??= has_garrison(false);
+    return __garrison_operative_present && has_garrison();
+}
+
+/// @desc Adds an operative to a planet. Edit p_operatives only through this and remove_operative so the cached garrison scan stays accurate.
+/// @param {Real} _planet
+/// @param {Struct} _operative Operative entry with type, reference, job and task_time fields.
+/// @returns {Undefined}
+function add_operative(_planet, _operative) {
+    array_push(p_operatives[_planet], _operative);
+    __garrison_operative_present = undefined;
+}
+
+/// @desc Removes the operative at an index on a planet. Edit p_operatives only through this and add_operative so the cached garrison scan stays accurate.
+/// @param {Real} _planet
+/// @param {Real} _index
+/// @returns {Undefined}
+function remove_operative(_planet, _index) {
+    array_delete(p_operatives[_planet], _index, 1);
+    __garrison_operative_present = undefined;
 }
 
 var _array_size = 23;
@@ -201,7 +232,7 @@ serialize = function() {
         "system_sabatours",
         "system_datas",
         "present_fleet",
-        "garrisoned"
+        "__garrison_operative_present"
     ];
     var excluded_from_save_start = ["p_"];
 
