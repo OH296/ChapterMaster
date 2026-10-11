@@ -224,7 +224,7 @@ function UnitQuickFindPanel() constructor {
             update_fleet_table();
         }
 
-        if (fleet_table.last_drawn_sequence != hide_sequence){
+        if (fleet_table.last_drawn_sequence != hide_sequence) {
             fleet_table.last_drawn_sequence = hide_sequence;
             fleet_table.update({x1: _xx + 40, y1: _yy + 50, y2: _yy + 50 + main_panel.height, colour: c_white, font: fnt_40k_14});
         }
@@ -451,7 +451,7 @@ function UnitQuickFindPanel() constructor {
         }
     }
 
-    static travel_camera_to_target = function(){
+    static travel_camera_to_target = function() {
         if (array_length(travel_target) != 2) {
             exit;
         }
@@ -468,7 +468,7 @@ function UnitQuickFindPanel() constructor {
             obj_controller.y = travel_target[1];
             travel_target = [];
         }
-    }
+    };
 
     errored_once = false;
     static draw = function() {

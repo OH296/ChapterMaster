@@ -230,8 +230,8 @@ function after_battle_part1() {
             continue;
         }
         //ensures death if battle lost
-        if ((obj_ncombat.defeat) && (marine_dead[i] < 2)){
-            if (obj_ncombat.dropping){
+        if (obj_ncombat.defeat && (marine_dead[i] < 2)) {
+            if (obj_ncombat.dropping) {
                 marine_dead[i] = 1;
             } else {
                 marine_dead[i] = 2;
@@ -263,7 +263,7 @@ function after_battle_part1() {
         }
     }
     for (var i = 0; i < array_length(veh_type); i++) {
-        if ((veh_type[i] != "") && (obj_ncombat.defeat)) {
+        if ((veh_type[i] != "") && obj_ncombat.defeat) {
             veh_dead[i] = 1;
             veh_hp[i] = -200;
         }

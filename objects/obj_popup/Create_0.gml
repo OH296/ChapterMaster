@@ -139,7 +139,7 @@ get_unit_promotion_options = function() {
         role_name[1] = _role_data[eROLE.CHAPLAIN].role;
         role_exp[1] = 5;
         spec = 1;
-    } else if (unit_role == _role_data[eROLE.LEXICANUM].role ) {
+    } else if (unit_role == _role_data[eROLE.LEXICANUM].role) {
         role_name[1] = _role_data[eROLE.LIBRARIAN].role;
         role_exp[1] = 125;
         spec = 1;
