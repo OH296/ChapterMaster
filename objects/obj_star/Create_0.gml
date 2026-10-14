@@ -204,17 +204,6 @@ function has_garrison() {
     return false;
 }
 
-/// @self Asset.GMObject.obj_star
-has_orbiting_player_fleet = function () {
-    if (instance_exists(obj_p_fleet)) {
-        var _nearest = instance_nearest(x, y, obj_p_fleet);
-        if (_nearest.action != "move" && point_distance(_nearest.x, _nearest.y, x, y) == 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
 var _array_size = 23;
 present_fleet = array_create(_array_size, 0);
 
