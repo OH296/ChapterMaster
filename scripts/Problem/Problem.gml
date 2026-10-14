@@ -70,8 +70,8 @@ function Problem(_name, _timer, _data) constructor {
         return undefined;
     }
 
-// PlanetProblem
     static mission_log_entry = function(){
+        LOGGER.info($"mission : {p_id}");
         var _func = find_func("mission_log_entry");
         if (!is_undefined(_func)){
             try {
@@ -87,6 +87,7 @@ function Problem(_name, _timer, _data) constructor {
     }
 
     static __default_mission_log_entry = function(){
+        LOGGER.info($"mission : {p_id}");
         if (!instance_exists(system)){
             return undefined;
         }
@@ -94,7 +95,8 @@ function Problem(_name, _timer, _data) constructor {
             return undefined;
         }
         var _data = {
-            system: is_callable(system.name) ? system.name() : system.name,
+            location : is_callable(system.name) ? system.name() : system.name,
+            system: system,
             mission: description(),
             time: timer,
             problem: self,

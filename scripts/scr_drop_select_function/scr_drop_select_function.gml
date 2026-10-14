@@ -400,7 +400,7 @@ function chaos_fuck_up_purge(){
     pop.title = "Concealed Heresy";
     pop.text = $"Your astartes set out and begin to cleanse {planet_numeral_name(_battle_sub_loc, _battle_place)} of possible heresy.  The general populace appears to be devout in their faith, but a disturbing trend appears- the odd citizen cursing your forces, frothing at the mouth, and screaming out heresy most foul.  One week into the cleansing a large hostile force is detected approaching and encircling your forces.";
     pop.add_option([{
-        str1 : "For the Emperor"
+        str1 : "For the Emperor",
         choice_func : function(){
             with (obj_drop_select) {
                 obj_controller.cooldown = 30;

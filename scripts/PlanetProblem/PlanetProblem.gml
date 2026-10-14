@@ -1195,7 +1195,9 @@ static __provide_garrison_resolve = function() {
 
     var _garrison = p_data.garrisons;
     _garrison.update();
-    if (p_data.current_owner != eFACTION.IMPERIUM || !_garrison.garrison_force) {
+    if (p_data.current_owner != eFACTION.IMPERIUM){
+        scr_popup($"Agreed Garrison of {p_data.name()}", $"your agreed garrison of  {p_data.name()} was cut short. The previous governor has been replaced as part of the plaets new control", "", "");
+    } else if (!_garrison.garrison_force) {
         p_data.add_disposition(-20);
         scr_popup($"Agreed Garrison of {p_data.name()}", $"your agreed garrison of  {p_data.name()} was cut short by your chapter the planetary governor has expressed his displeasure (disposition -20)", "", "");
         return;
@@ -1376,7 +1378,9 @@ static __protect_raiders_squad_selected = function() {
             setup_battle_formations();
             add_to_battle();
         }
-        exit_adhoc_manage();
+        with(obj_controller){
+            exit_adhoc_manage();
+        }
 
         _battle.battle_enemy_data = {
             threat : 3,
@@ -2092,7 +2096,7 @@ static __chaos_lord_meeting_attend_meeting = function(){
 }
 
 static __chaos_lord_meeting_battle_aftermath = function(){
-    if (obj_n_combat.defeat){
+    if (obj_ncombat.defeat){
         exit;
     }
     obj_controller.diplomacy = 0;

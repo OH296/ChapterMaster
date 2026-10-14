@@ -133,7 +133,7 @@ static __default_mission_log_entry = function(){
         return undefined;
     }
     var _data = {
-        system: fleet_location_description(fleet).loc,
+        location : fleet_location_description(fleet).loc,
         mission: description(),
         time: timer,
         problem: self,

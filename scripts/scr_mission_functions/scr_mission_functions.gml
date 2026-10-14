@@ -199,7 +199,7 @@ function generic_problems_to_mission_log (){
     for (var p = 0; p < array_length(problems); p++) {
         var _problem = problems[p];
         var _data = _problem.mission_log_entry();
-
+        LOGGER.info($"{_data}");
         if (!is_undefined(_data)){
             array_push(_logs, _data);
         }

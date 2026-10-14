@@ -133,7 +133,7 @@ try {
 
     var _enemies_assigned = false;
     if (!is_undefined(battle_enemy_data)){
-        move_data_to_curret_scope(battle_enemy_data);
+        move_data_to_current_scope(battle_enemy_data);
         if (struct_exists(battle_enemy_data , "cols")){
             var _cols = battle_enemy_data.cols;
             for (var i = 0; i < array_length(_cols); i++){

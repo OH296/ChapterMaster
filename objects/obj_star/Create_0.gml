@@ -133,8 +133,13 @@ add_problem = function(p_id, data = {}, timer = -1){
 problems_to_mission_log = function(){
     var _temp_log = [];
     for (var i = 1; i <= planets; i++) {
-        var _p_data = get_planet_data(i);
-        _temp_log = array_concat(_temp_log, _p_data.problems_to_mission_log());
+        for (var p = 0; p < array_length(p_problem[i]); p++) {
+            var _problem = p_problem[i][p];
+            var _data = _problem.mission_log_entry();
+            if (!is_undefined(_data)){
+                array_push(_temp_log, _data);
+            }
+        }
     }
     _temp_log = array_concat(_temp_log, generic_problems_to_mission_log());
     return _temp_log;

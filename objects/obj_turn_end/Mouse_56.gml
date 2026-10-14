@@ -1,5 +1,5 @@
 //so this only runs if there aren't these types of instances
-if (instances_exist_any([obj_saveload, obj_popup, obj_ncombat,obj_fleet]) {
+if (instances_exist_any([obj_saveload, obj_popup, obj_ncombat,obj_fleet])) {
     exit;
 }
 

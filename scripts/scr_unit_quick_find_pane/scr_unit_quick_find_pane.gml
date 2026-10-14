@@ -281,7 +281,7 @@ function UnitQuickFindPanel() constructor {
             ],
             row_data: mission_log,
             row_key_draw: [
-                "system",
+                "location",
                 "mission",
                 "time",
             ],
