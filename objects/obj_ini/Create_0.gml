@@ -182,7 +182,7 @@ serialize = function() {
         chapter_data,
         chapter_squad_arrangement,
         player_role_data,
-        sector_handler : sector_handler.save()
+        sector_handler: sector_handler.save(),
     };
 
     if (variable_instance_exists(self, "last_ship")) {
@@ -203,7 +203,7 @@ serialize = function() {
         "chapter_data",
         "chapter_squad_arrangement",
         "artifact_map",
-        "sector_handler"
+        "sector_handler",
     ];
 
     copy_serializable_fields(id, save_data, excluded_from_save);
@@ -287,6 +287,24 @@ deserialize = function(save_data) {
         variable_instance_set(id, "squad_types", save_data.squad_types);
     }
 
+    if (struct_exists(save_data, "player_role_data")) {
+        var _defaults = setup_default_gears();
+        var _save = save_data.player_role_data;
+        for (var i = 0; i < array_length(_save); i++) {
+            if (!is_struct(_save[i])) {
+                continue;
+            }
+            var _required_names = global.role_data_keys;
+            for (var k = 0; k < array_length(_required_names); k++) {
+                var _name = _required_names[k];
+                if (struct_exists(_save[i], _name)) {
+                    _defaults[i][$ _name] = _save[i][$ _name];
+                }
+            }
+        }
+        player_role_data = _defaults;
+    }
+
     var _marine_structs = save_data[$ "marine_structs"];
 
     function load_marine_struct(company, marine, struct) {
@@ -349,24 +367,6 @@ deserialize = function(save_data) {
         with (obj_ini.sector_handler) {
             move_data_to_current_scope(save_data.sector_handler);
         }
-    }
-
-    if (struct_exists(save_data, "player_role_data")) {
-        var _defaults = setup_default_gears();
-        var _save = save_data.player_role_data;
-        for (var i = 0; i < array_length(_save); i++) {
-            if (!is_struct(_save[i])) {
-                continue;
-            }
-            var _required_names = global.role_data_keys;
-            for (var k = 0; k < array_length(_required_names); k++) {
-                var _name = _required_names[k];
-                if (struct_exists(_save[i], _name)) {
-                    _defaults[i][$ _name] = _save[i][$ _name];
-                }
-            }
-        }
-        player_role_data = _defaults;
     }
 };
 

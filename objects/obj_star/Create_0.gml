@@ -173,6 +173,17 @@ function invalidate_garrison_cache() {
 function remove_operative(_planet, _index) {
     array_delete(p_operatives[_planet], _index, 1);
     invalidate_garrison_cache();
+
+/// @self Asset.GMObject.obj_star
+has_orbiting_player_fleet = function () {
+    if (instance_exists(obj_p_fleet)) {
+        var _nearest = instance_nearest(x, y, obj_p_fleet);
+        if (_nearest.action != "move" && point_distance(_nearest.x, _nearest.y, x, y) == 0) {
+            return true;
+        }
+    }
+    return false;
+
 }
 
 var _array_size = 23;
