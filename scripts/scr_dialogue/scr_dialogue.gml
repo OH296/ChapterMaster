@@ -968,7 +968,11 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
                 var _found = false;
                 var _star, _planet;
                 with (obj_star) {
-                    for (var i = 1; i <= 4;) {
+                    if (has_problem_star("chaos_lord_meeting")){
+                        
+                    }
+                    for (var i = 1; i <= planets;i++) {
+                        var _p_data = get_planet_data(i);
                         for (var r = 1; r <= 4; r++) {
                             if (p_problem[i][r].p_id == "chaos_lord_meeting") {
                                 _found = true;

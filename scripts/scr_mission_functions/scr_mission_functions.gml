@@ -139,27 +139,6 @@ function init_marine_acting_strange() {
 }
 
 
-// returns a bool for if any planet on a given star has the given problem
-/// @self Asset.GMObject.obj_star
-function has_problem_star(problem, star = noone) {
-    var has_problem = false;
-    if (star == noone) {
-        for (var i = 1; i <= planets; i++) {
-            has_problem = get_planet_data(i).has_problem(problem);
-            if (has_problem) {
-                has_problem = true;
-                break;
-            }
-        }
-    } else {
-        with (star) {
-            has_problem = has_problem_star(problem);
-        }
-    }
-    return has_problem;
-}
-
-
 ///removie all of a given problem from a planet
 /// @self Asset.GMObject.obj_star
 function remove_planet_problem(planet, problem, star = noone) {

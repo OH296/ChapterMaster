@@ -204,6 +204,21 @@ function has_garrison() {
     return false;
 }
 
+// returns a bool for if any planet on a given star has the given problem
+/// @self Asset.GMObject.obj_star
+function has_problem(problem, star = noone) {
+    var has_problem = false;
+
+    for (var i = 1; i <= planets; i++) {
+        has_problem = get_planet_data(i).has_problem(problem);
+        if (has_problem) {
+            has_problem = true;
+            break;
+        }
+    }
+    return has_problem;
+}
+
 var _array_size = 23;
 present_fleet = array_create(_array_size, 0);
 
