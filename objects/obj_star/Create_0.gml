@@ -124,10 +124,23 @@ add_feature = function(planet, feature) {
 
 problems = [];
 
-add_problem = function(p_id, data = {}, timer = -1){
-    var _prob = new SystemProblem(p_id, self, data, timer);
+add_problem = function(_p_id, _data = {}, _timer = -1){
+    var _prob = new SystemProblem(_p_id, self, _data, _timer);
     array_push(problems, _prob);
     return _prob;
+}
+
+
+has_problem = function(_p_id, _return_problem = false){
+    for (var i=0; i < array_length(problems);i++){
+        if (problems[i].p_id == _p_id){
+            if (_return_problem){
+                return problems[i];
+            }
+            return true;
+        }
+    }
+    return false;
 }
 
 problems_to_mission_log = function(){
@@ -206,18 +219,17 @@ function has_garrison() {
 
 // returns a bool for if any planet on a given star has the given problem
 /// @self Asset.GMObject.obj_star
-function has_problem(problem, star = noone) {
-    var has_problem = false;
-
+function has_problem_planet(problem, _return_problem = false) {
     for (var i = 1; i <= planets; i++) {
-        has_problem = get_planet_data(i).has_problem(problem);
-        if (has_problem) {
-            has_problem = true;
-            break;
+        var _has_problem = get_planet_data(i).has_problem(problem, _return_problem);
+        if (!_return_problem && _has_problem) {
+            return true;
+        } else if (_return_problem && _has_problem != false){
+            return _has_problem;
         }
     }
-    return has_problem;
-}
+    return false;
+} 
 
 var _array_size = 23;
 present_fleet = array_create(_array_size, 0);

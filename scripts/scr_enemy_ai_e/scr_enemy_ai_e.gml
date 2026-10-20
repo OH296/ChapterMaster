@@ -53,7 +53,7 @@ function scr_enemy_ai_e() {
         }
 
         if ((present_fleet[10] > 0) && (obj_controller.faction_status[10] == "War")) {
-            if (!battle && !has_problem("chaos_lord_meeting")) {
+            if (!battle && !has_problem_planet("chaos_lord_meeting")) {
                 battle = 1;
             }
         }
@@ -451,7 +451,7 @@ function scr_enemy_ai_e() {
             for (var i = 2; i <= 10; i++) {
                 var special_stop = false;
                 if (i == 10) {
-                    special_stop = has_problem("chaos_lord_meeting");
+                    special_stop = has_problem_planet("chaos_lord_meeting");
                 }
 
                 if ((obj_controller.faction_status[i] == "War") && (!special_stop) && (present_fleet[i] > 0)) {

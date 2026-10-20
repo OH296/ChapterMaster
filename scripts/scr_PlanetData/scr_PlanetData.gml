@@ -763,10 +763,15 @@ function PlanetData(_planet, _system) constructor {
         corruption = system.p_heresy[planet];
     };
 
-    static has_problem = function(problem) {
+    static has_problem = function(problem, _return_problem = false) {
         for (var i = 0; i < array_length(problems); i++){
             if (problems[i].p_id == problem){
-                return true;
+                if (!_return_problem){
+                    return true;
+                } else {
+                    return problems[i];
+                }
+                
             }
         }
         return false;
