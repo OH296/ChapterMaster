@@ -83,5 +83,15 @@
             "tribal_or_house", 
         ],
         "preffered_method" : "complex"
+    },
+    {
+        "load_as": "Ultra",
+        "load_set": "ultra",
+        "composites": [
+            "praenomen",
+            "nomen",
+            "cognomen"
+        ],
+        "preffered_method": "complex"
     }
 ]
