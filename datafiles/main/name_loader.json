@@ -95,6 +95,15 @@
         "preffered_method" : "complex"
     },
     {
+      "load_as": "Runic",
+      "load_set": "runic",
+      "composites": [
+        "first_name",
+        "second_name"
+      ],
+      "preffered_method": "complex"
+    },
+    {
         "load_as": "Ultra",
         "load_set": "ultra",
         "composites": [
