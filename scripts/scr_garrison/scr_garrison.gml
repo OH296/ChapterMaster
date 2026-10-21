@@ -74,6 +74,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
         total_garrison = 0;
         viable_garrison = 0;
         garrison_force = false;
+        operatives = system.p_operatives[planet];
         var _op_num = array_length(operatives);
         for (var _ops = _op_num - 1; _ops >= 0; _ops--) {
             var _op = operatives[_ops];

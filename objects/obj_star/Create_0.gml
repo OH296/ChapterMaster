@@ -144,9 +144,11 @@ function has_garrison(_require_members = true) {
             if (!_require_members) {
                 return true;
             }
-            if (array_length(fetch_squad(_operative.reference).members) > 0) {
-                return true;
+            var _squad = fetch_squad(_operative.reference);
+            if (!is_struct(_squad) || array_length(_squad.members) == 0) {
+                continue;
             }
+            return true;
         }
     }
 
@@ -173,6 +175,7 @@ function invalidate_garrison_cache() {
 function remove_operative(_planet, _index) {
     array_delete(p_operatives[_planet], _index, 1);
     invalidate_garrison_cache();
+}
 
 /// @self Asset.GMObject.obj_star
 has_orbiting_player_fleet = function () {
