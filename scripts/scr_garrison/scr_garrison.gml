@@ -66,12 +66,15 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
         }
     };
 
+    /// @desc Rebuilds this force's squads and members from the planet's operatives, deleting operatives of this force's type whose squads have no members.
+    /// @returns {Undefined}
     static update = function() {
         garrison_squads = [];
         members = [];
         total_garrison = 0;
         viable_garrison = 0;
         garrison_force = false;
+        operatives = system.p_operatives[planet];
         var _op_num = array_length(operatives);
         for (var _ops = _op_num - 1; _ops >= 0; _ops--) {
             var _op = operatives[_ops];
@@ -80,7 +83,7 @@ function GarrisonForce(system, planet, type = "garrison") constructor {
                     continue;
                 }
                 if (evaluate_operative_squad(_op) == "delete") {
-                    array_delete(operatives, _ops, 1);
+                    system.remove_operative(planet, _ops);
                 }
             }
         }
