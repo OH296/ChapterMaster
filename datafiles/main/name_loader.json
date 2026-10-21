@@ -112,5 +112,14 @@
             "cognomen"
         ],
         "preffered_method": "complex"
+    },
+    {
+      "load_as": "Flame Cult",
+      "load_set": "flame_cult",
+      "composites": [
+        "first_name",
+        "second_name"
+      ],
+      "preffered_method": "complex"
     }
 ]
