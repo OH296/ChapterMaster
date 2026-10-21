@@ -85,6 +85,16 @@
         "preffered_method" : "complex"
     },
     {
+
+        "load_as": "Gladiator",
+        "load_set": "gladiator",
+        "composites": [
+            "first_name",
+            "second_name"
+        ],
+        "preffered_method" : "complex"
+    },
+    {
         "load_as": "Ultra",
         "load_set": "ultra",
         "composites": [
