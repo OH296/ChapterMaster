@@ -116,14 +116,14 @@ function scr_update_unit_armour(new_armour, from_armoury = true, to_armoury = tr
         }
 
         if (new_arm_data.has_tag("dreadnought")) {
-            if (!is_struct(_old_armour_data) || !_old_armour_data.has_tag("dreadnought")){
-                update_health(max_health());
-            }
             is_boarder = false;
             remove_from_squad();
             update_role(obj_ini.player_role_data[eROLE.DREADNOUGHT].role);
             update_gear("");
             update_mobility_item("");
+            if (!is_struct(_old_armour_data) || !_old_armour_data.has_tag("dreadnought")){
+                update_health(max_health());
+            }
         }
     }
 
