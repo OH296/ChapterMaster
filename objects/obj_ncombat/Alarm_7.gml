@@ -421,10 +421,7 @@ try {
             }
             // Master of Sanctity present, wishes to take in the player
             if (instance_exists(obj_ground_mission) && (string_count("CRMOS|", obj_controller.useful_info) == 0)) {
-                scr_toggle_diplomacy();
-                with (obj_controller) {
-                    scr_dialogue("cs_meeting_m5");
-                }
+                meet_faction_head(10, "cs_meeting_m5")
             }
 
             // Master of Sanctity not present, just get told that you have defeated the Chaos Lord

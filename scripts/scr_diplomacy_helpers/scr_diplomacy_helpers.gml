@@ -28,11 +28,27 @@ function DiplomacyHandler() constructor {
     diplomacy_pathway = "";
     diplo_text = "";
     diplo_text_displayed = "";
+    diplo_last = "";
     diplo_char = 0;
     diplo_text_alpha = 0;
 
+    diag_variables = {};
+
     static clear_diplo_choices = function() {
         obj_controller.diplo_helper.diplo_options = [];
+    }
+
+    static __setup_dialogue_variables(){
+        diag_variables = {
+            faction_leader: faction_leader[faction_engaged],
+            sector: obj_ini.sector_name,
+            relationship: rela,
+            annoyed: annoyed[faction_engaged],
+            turns_ignored: turns_ignored[faction_engaged],
+            chapter_name: global.chapter_name,
+            master_name: obj_ini.master_name,
+            faction_status: obj_controller.faction_status[faction_engaged],
+        };
     }
     static setup_faction_head_meeting = function(_faction, _dialogue = "intro", _audience_data = {}){
         self.audience_data = _audience_data;
@@ -40,6 +56,8 @@ function DiplomacyHandler() constructor {
         if ((faction_engaged == eFACTION.CHAOS) && (obj_controller.faction_gender[eFACTION.CHAOS] == 2)) {
             global.audio_manager.play_playlist(CONTEXT_DIPLOMACY, 60);
         }
+        __setup_dialogue_variables();
+
         if (string_count("intro", _dialogue) > 0) {
             obj_controller.known[faction_engaged] = 2;
             faction_justmet = 1;
@@ -51,6 +69,31 @@ function DiplomacyHandler() constructor {
             scr_dialogue(_dialogue);
         }
     }
+
+    static  draw_character_diplomacy_base_page = function() {
+        menu_lock = true;
+        if (!audience && !valid_diplomacy_options()) {
+            with (diplo_buttons) {
+                trade.draw();
+                demand.draw();
+                discuss.draw();
+                alliance.draw();
+                denounce.draw();
+                praise.draw();
+                declare_war.draw_shutter(praise.x1, alliance.y2, localize("WAR"), 0.4);
+            }
+        } else {
+            if (!valid_diplomacy_options()) {
+                diplo_buttons.denounce.draw();
+                diplo_buttons.praise.draw();
+            }
+        }
+        if (!valid_diplomacy_options() || force_goodbye) {
+            diplo_buttons.exit_button.draw();
+        }
+    }
+
+
     static __main_faction_head_diplomacy = function(){
         draw_diplomacy_diplo_text();
         if (trading) {
@@ -400,13 +443,11 @@ function add_diplomacy_option(option = {}) {
 /// @desc Opens the trade screen for the current faction_engaged faction.
 /// @returns {undefined}
 function open_trade_screen() {
-    with (obj_controller) {
-        trading = 1;
-        scr_dialogue("open_trade");
-        cooldown = 8;
-        click2 = 1;
-        trade_attempt = new TradeAttempt(faction_engaged);
-    }
+    trading = 1;
+    scr_dialogue("open_trade");
+    cooldown = 8;
+    click2 = 1;
+    trade_attempt = new TradeAttempt(faction_engaged);
 }
 
 /// @desc Leaves the artifact negotiation and cleans up the associated objects.

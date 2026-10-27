@@ -407,7 +407,6 @@ function scr_toggle_diplomacy() {
         with (obj_controller) {
             if (menu != eMENU.DIPLOMACY) {
                 set_zoom_to_default();
-                set_up_diplomacy_buttons();
                 menu = eMENU.DIPLOMACY;
                 diplo_handler = new DiplomacyHandler();
                 hide_banner = 1;

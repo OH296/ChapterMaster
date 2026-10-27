@@ -1,52 +1,27 @@
-/// @self Asset.GMObject.obj_controller
-function draw_character_diplomacy_base_page() {
-    menu_lock = true;
-    if (!audience && !valid_diplomacy_options()) {
-        with (diplo_buttons) {
-            trade.draw();
-            demand.draw();
-            discuss.draw();
-            alliance.draw();
-            denounce.draw();
-            praise.draw();
-            declare_war.draw_shutter(praise.x1, alliance.y2, localize("WAR"), 0.4);
-        }
-    } else {
-        if (!valid_diplomacy_options()) {
-            diplo_buttons.denounce.draw();
-            diplo_buttons.praise.draw();
-        }
-    }
-    if (!valid_diplomacy_options() || force_goodbye) {
-        diplo_buttons.exit_button.draw();
-    }
-}
 
 function intro_to_diplomacy(faction_enum) {
-    with (obj_controller) {
-        var _new_diag = "intro";
-        if (faction_enum != 4) {
-            if (obj_controller.known[faction_enum] == 1) {
-                obj_controller.known[faction_engaged] = 2;
-                faction_justmet = 1;
-            } else if (obj_controller.known[faction_enum] >= 2) {
-                _new_diag = "hello";
-            }
-        } else {
-            if (obj_controller.known[eFACTION.INQUISITION] == 1) {
-                obj_controller.known[faction_engaged] = 2;
-                faction_justmet = 1;
-                obj_controller.last_mission = turn + 1;
-            } else if (obj_controller.known[eFACTION.INQUISITION] == 3) {
-                obj_controller.known[faction_enum] = 4;
-                faction_justmet = 1;
-                obj_controller.last_mission = turn + 1;
-            } else if (obj_controller.known[faction_enum] >= 4) {
-                _new_diag = "hello";
-            }
+    var _new_diag = "intro";
+    if (faction_enum != 4) {
+        if (obj_controller.known[faction_enum] == 1) {
+            obj_controller.known[faction_engaged] = 2;
+            faction_justmet = 1;
+        } else if (obj_controller.known[faction_enum] >= 2) {
+            _new_diag = "hello";
         }
-        scr_dialogue(_new_diag);
+    } else {
+        if (obj_controller.known[eFACTION.INQUISITION] == 1) {
+            obj_controller.known[faction_engaged] = 2;
+            faction_justmet = 1;
+            obj_controller.last_mission = turn + 1;
+        } else if (obj_controller.known[eFACTION.INQUISITION] == 3) {
+            obj_controller.known[faction_enum] = 4;
+            faction_justmet = 1;
+            obj_controller.last_mission = turn + 1;
+        } else if (obj_controller.known[faction_enum] >= 4) {
+            _new_diag = "hello";
+        }
     }
+    scr_dialogue(_new_diag);
 }
 
 /// @self Struct.DiplomacyHandler
@@ -273,26 +248,25 @@ function set_up_diplomacy_buttons() {
     set_up_rpgcharacter_diplomacy();
 }
 
+/// @self Asset.DiplomacyHandler
 function set_up_rpgcharacter_diplomacy() {
-    with (obj_controller) {
-        diplo_buttons.meet_slate = new DataSlate();
-        with (diplo_buttons.meet_slate) {
-            width = 572;
-            height = 188;
-            XX = 0;
-            YY = 712;
-            set_width = true;
-            style = "plain";
-        }
-        diplo_buttons.cm_slate = new DataSlate();
-        with (diplo_buttons.cm_slate) {
-            width = 572;
-            height = 188;
-            XX = 1031;
-            YY = 712;
-            set_width = true;
-            style = "plain";
-        }
+    diplo_buttons.meet_slate = new DataSlate();
+    with (diplo_buttons.meet_slate) {
+        width = 572;
+        height = 188;
+        XX = 0;
+        YY = 712;
+        set_width = true;
+        style = "plain";
+    }
+    diplo_buttons.cm_slate = new DataSlate();
+    with (diplo_buttons.cm_slate) {
+        width = 572;
+        height = 188;
+        XX = 1031;
+        YY = 712;
+        set_width = true;
+        style = "plain";
     }
 }
 
@@ -391,7 +365,7 @@ function set_up_diplomacy_persons() {
             _screen_slate.width = 153;
             _screen_slate.height = 135;
             _screen_slate.inside_method = function() {
-                scr_image("faction_engaged/icons", image, XX + 10, YY + 10, 153, 135);
+                scr_image("diplomacy/icons", image, XX + 10, YY + 10, 153, 135);
             };
             cover_text = obj_controller.faction[_faction_enum];
             inside_method = function() {
