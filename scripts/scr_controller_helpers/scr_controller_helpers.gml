@@ -103,7 +103,6 @@ function main_map_defaults() {
         unit_profile = false;
         force_goodbye = 0;
         hide_banner = 0;
-        diplomacy = 0;
         audience = 0;
         clear_diplo_choices();
         zoomed = 0;
@@ -412,8 +411,8 @@ function scr_toggle_diplomacy() {
                 set_zoom_to_default();
                 set_up_diplomacy_buttons();
                 menu = eMENU.DIPLOMACY;
+                diplo_handler = new DiplomacyHandler();
                 audience = 0;
-                diplomacy = 0;
                 hide_banner = 1;
                 character_diplomacy = false;
                 LOGGER.debug("set_diplo");

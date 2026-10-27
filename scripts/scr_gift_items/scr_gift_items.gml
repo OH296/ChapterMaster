@@ -51,11 +51,7 @@ function gift_artifact(give_to, known = true) {
 
     var arti_index = obj_controller.menu_artifact;
     var artifact_struct = fetch_artifact(arti_index);
-
-    obj_controller.cooldown = 10;
-    scr_toggle_diplomacy();
-    obj_controller.diplomacy = give_to;
-    obj_controller.force_goodbye = -1;
+    meet_faction_head(give_to, "artifact",{},{force_goodbye : -1});
     var the = "";
 
     if ((give_to != 7) && (give_to != 10)) {
@@ -299,9 +295,8 @@ function gift_stc_fragment() {
     } // 137 ; chance for mechanicus to get very pissed
     // End disposition
     obj_controller.cooldown = 7000;
-    scr_toggle_diplomacy();
-    obj_controller.diplomacy = giveto;
-    obj_controller.force_goodbye = -1;
+    meet_faction_head(giveto, "stc_thanks", {}, {force_goodbye : -1})
+
     var the = "";
     if ((giveto != eFACTION.ORK) && (giveto != eFACTION.CHAOS)) {
         the = "the ";
@@ -309,9 +304,6 @@ function gift_stc_fragment() {
 
     scr_event_log("", $"STC Fragment gifted to {the}{obj_controller.faction[giveto]}.");
 
-    with (obj_controller) {
-        scr_dialogue("stc_thanks");
-    }
     instance_destroy();
     exit;
 }

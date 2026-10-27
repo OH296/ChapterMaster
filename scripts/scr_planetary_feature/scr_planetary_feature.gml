@@ -796,12 +796,7 @@ function governor_negotiate_artifact() {
             instance_destroy();
         } else {
             scr_toggle_diplomacy();
-            obj_controller.cooldown = 10;
-            obj_controller.diplomacy = pdata.current_owner;
-            obj_controller.trading_artifact = 1;
-            with (obj_controller) {
-                scr_dialogue("artifact");
-            }
+            meet_faction_head(pdata.current_owner, "artifact", {}, {trading_artifact : true});
             instance_destroy(obj_popup);
         }
     }
