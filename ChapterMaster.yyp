@@ -572,6 +572,7 @@
     {"$GMIncludedFile":"","%Name":"space_marine.json","CopyToMask":-1,"filePath":"datafiles/main/names","name":"space_marine.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"star.json","CopyToMask":-1,"filePath":"datafiles/main/names","name":"star.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tau.json","CopyToMask":-1,"filePath":"datafiles/main/names","name":"tau.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"ultra.json","CopyToMask":-1,"filePath":"datafiles/main/names","name":"ultra.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"readme.md","CopyToMask":-1,"filePath":"datafiles/main","name":"readme.md","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"load_sets.json","CopyToMask":-1,"filePath":"datafiles/main/role_markings","name":"load_sets.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"pauldron.png","CopyToMask":-1,"filePath":"datafiles/main/role_markings/ultramarines","name":"pauldron.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

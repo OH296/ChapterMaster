@@ -235,37 +235,41 @@ function NameGenerator() constructor {
     name_sets = {};
 
     for (var i = 0; i < array_length(_simple_names); i++) {
-        var _name = _simple_names[i];
-        var _load_name = _name;
-        var _load_as_composite = false;
-        var _preffered = "simple";
-        var _composites = {};
-        if (is_struct(_name)) {
-            var _struc = _name;
-            _name = _struc.load_as;
-            _load_name = _struc.load_set;
-            if (struct_exists(_struc, "composites")) {
-                _load_as_composite = true;
-                _composites = _struc.composites;
-            }
-            if (struct_exists(_struc, "preffered_method")) {
-                _preffered = _struc.preffered_method;
-            } else {
-                if (_load_as_composite) {
-                    _preffered = "composite";
+        try {
+            var _name = _simple_names[i];
+            var _load_name = _name;
+            var _load_as_composite = false;
+            var _preffered = "simple";
+            var _composites = {};
+            if (is_struct(_name)) {
+                var _struc = _name;
+                _name = _struc.load_as;
+                _load_name = _struc.load_set;
+                if (struct_exists(_struc, "composites")) {
+                    _load_as_composite = true;
+                    _composites = _struc.composites;
+                }
+                if (struct_exists(_struc, "preffered_method")) {
+                    _preffered = _struc.preffered_method;
+                } else {
+                    if (_load_as_composite) {
+                        _preffered = "composite";
+                    }
                 }
             }
-        }
 
-        name_sets[$ _name] = new NameTracker(_name);
-        var _fallback_name = string_replace_all(_name, "_", " ") + " 1";
+            name_sets[$ _name] = new NameTracker(_name);
+            var _fallback_name = string_replace_all(_name, "_", " ") + " 1";
 
-        var _set = name_sets[$ _name];
-        _set.preffered_method = _preffered;
-        if (!_load_as_composite) {
-            _set.LoadSimpleNames(_load_name, _fallback_name);
-        } else {
-            _set.LoadCompositeNames(_load_name, _composites);
+            var _set = name_sets[$ _name];
+            _set.preffered_method = _preffered;
+            if (!_load_as_composite) {
+                _set.LoadSimpleNames(_load_name, _fallback_name);
+            } else {
+                _set.LoadCompositeNames(_load_name, _composites);
+            }
+        } catch (_exception) {
+            ERROR_HANDLER.handle_exception(_exception);
         }
     }
 
@@ -282,11 +286,14 @@ function NameGenerator() constructor {
     static ChapterMemberNameGeneration = function() {
         try {
             var _name = "";
-            var _styles = ["space_marine"];
+            var _styles = [];
             if (instance_exists(obj_creation)) {
                 _styles = array_join(_styles, obj_creation.buttons.culture_styles.selections());
             } else {
                 _styles = array_join(obj_ini.culture_styles, _styles);
+            }
+            if (array_length(_styles) == 0) {
+                _styles = ["space_marine"];
             }
 
             _styles = array_shuffle(_styles);
