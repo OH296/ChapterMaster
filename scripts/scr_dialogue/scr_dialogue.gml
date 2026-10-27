@@ -1,6 +1,7 @@
 function initialize_dialogue() {
     global.dialogue = {};
     global.dialogue.sisters = json_to_gamemaker(working_directory + "/data/dialogue/sisters.json", json_parse);
+    global.dialogue.chaos_sm = json_to_gamemaker(working_directory + "/data/dialogue/chaos_sm.json", json_parse);
 }
 
 function interpret_diag_string(string_data, data) {
@@ -102,7 +103,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
             diplomacy = 10;
             diplo_text = $"So you have brought yourself before me {obj_ini.master_name}. This pleases me. You are not the first among the Astartes to come to me. Do not look so shocked. Many have gazed upon the decay and decrepitude of the Imperium with open eyes, and heard the empty slogans of the Corpse Emperor with fresh ears and come to the realization I had so many long millennia ago. There is only one truth in the universe, one path worthy of an Astartes to walk. The path of true power. The path of true insight into the nature of reality and what lies beyond. The path of Chaos. Only when free of the pointless bondage of the Imperium can we ascend to our rightful place in the universe.";
             add_diplomacy_option({option_text: "[Continue]", goto: "cs_meeting2"});
-            alter_disposition(10, 10);
+            alter_disposition(eFACTION.CHAOS, 10);
         }
         // First branch of choices
         if ((diplo_keyphrase == "cs_meeting2") || (diplo_keyphrase == "cs_meeting20")) {
