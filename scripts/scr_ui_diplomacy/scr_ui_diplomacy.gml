@@ -49,7 +49,7 @@ function intro_to_diplomacy(faction_enum) {
     }
 }
 
-/// @self Asset.GMObject.obj_controller
+/// @self Struct.DiplomacyHandler
 function exit_diplomacy_dialogue() {
     menu_lock = false;
     if (global.audio_manager.current_context == CONTEXT_DIPLOMACY) {
@@ -132,7 +132,7 @@ function exit_diplomacy_dialogue() {
     }
 }
 
-/// @self Asset.GMObject.obj_controller
+/// @self Struct.DiplomacyHandler
 function draw_diplomacy_diplo_text() {
     if (string_length(diplo_text_displayed) < string_length(diplo_text)) {
         diplo_char += 2;
@@ -150,7 +150,7 @@ function draw_diplomacy_diplo_text() {
     draw_line(429, 710, 800, 710);
 }
 
-/// @self Asset.GMObject.obj_controller
+/// @self Struct.DiplomacyHandler
 function set_up_diplomacy_buttons() {
     diplo_buttons = {};
     audience_data = {};

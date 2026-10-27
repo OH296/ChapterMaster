@@ -1,16 +1,15 @@
 
 
 function meet_faction_head(_faction, _dialogue = "intro", _audience_data = {}, _handler_settings = {}){
-    obj_controller.audience = _faction;
     scr_toggle_diplomacy();
     with (obj_controller.diplo_helper){
         move_data_to_current_scope(_handler_settings);
         setup_faction_head_meeting(_faction, _dialogue, _audience_data);
+        audience = true;
     }
 }
 
 function meet_character(_character){
-    obj_controller.audience = 1;
     scr_toggle_diplomacy();
     with (obj_controller.diplo_helper){
         character_diplomacy = _character;
@@ -23,6 +22,7 @@ function DiplomacyHandler() constructor {
     faction_engaged = eFACTION.NONE;
     force_goodbye = true;
     faction_justmet = false;
+    audience = false;
     audience_data = {};
     diplo_options = [];
     diplomacy_pathway = "";

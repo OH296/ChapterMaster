@@ -583,7 +583,6 @@ trading_demand = 0;
 trade_likely = "";
 questing = 0;
 liscensing = 0;
-audience = 0;
 force_goodbye = 0;
 trade_req = 0;
 trade_gene = 0;

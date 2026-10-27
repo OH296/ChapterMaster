@@ -13,7 +13,7 @@ if (array_length(audience_stack) > 0) {
         scr_toggle_diplomacy();
     }
     obj_controller.diplo_handler.setup_faction_head_meeting(current_audience.faction, current_audience.topic, current_audience.audience_data)
-    obj_controller.audience = current_audience.faction;
+    audience = true;
 
     array_delete(audience_stack, 0, 1);
     exit;
