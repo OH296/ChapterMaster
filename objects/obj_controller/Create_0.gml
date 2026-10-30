@@ -593,6 +593,7 @@ trade_info = 0;
 zui = 0;
 // Variables for management
 temp = array_create(9001, "");
+fleet_eta_board = 0;
 // ** Resets all audiences **
 audience_stack = [];
 audiences = 0;
