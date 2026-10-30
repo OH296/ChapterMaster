@@ -25,6 +25,7 @@ function DiplomacyHandler() constructor {
     audience = false;
     audience_data = {};
     diplo_options = [];
+    diplo_keyphrase = "";
     diplomacy_pathway = "";
     diplo_text = "";
     diplo_text_displayed = "";
@@ -36,6 +37,27 @@ function DiplomacyHandler() constructor {
 
     static clear_diplo_choices = function() {
         obj_controller.diplo_helper.diplo_options = [];
+    }
+
+    static __create_dialogue_string(call_data){
+        diag_set = noone;
+        switch(faction_engaged){
+            case eFACTION.ECCLESIARCHY:
+                diag_set = global.dialogue.sisters;
+                break;
+        }
+        if (diag_set != noone){
+            if (!struct_exists(diag_set, diplo_keyphrase)) {
+                return "Error : Could not fetch dialogue string data";
+            }
+            var _string_data = variable_clone(diag_set[$ diplo_keyphrase]);
+
+            return interpret_diag_string(_string_data, diag_variables);
+
+            if (struct_exists(call_data, "prepend")) {
+                diplo_text = $"{call_data.prepend} {diplo_text}";
+            }
+        }
     }
 
     static __setup_dialogue_variables(){

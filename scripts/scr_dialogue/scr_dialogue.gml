@@ -38,19 +38,11 @@ function interpret_diag_string(string_data, data) {
     return _string;
 }
 
-function create_dialogue_string(dialogue_set, key, data) {
-    if (!struct_exists(dialogue_set, key)) {
-        return "Error : Could not fetch dialogue string data";
-    }
-    var _string_data = variable_clone(dialogue_set[$ key]);
-
-    return interpret_diag_string(_string_data, data);
-}
-
 // Handles all dialog for all factions and special events. Handles diplomatic changes and faction_engaged as well
 /// @self Asset.DiplomacyHandler
 function scr_dialogue(diplo_keyphrase, data = {}) {
 // diplo_last="";
+    self.diplo_keyphrase = diplo_keyphrase;
     
     __setup_dialogue_variables();
     // diplo_keyphrase = keyphrase
@@ -183,7 +175,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
         var born = false;
         for (var i = 0; i < array_length(obj_ini.TTRPG[0]); i++) {
             var _unit = fetch_unit([0, i]);
-            if ((_unit.role() == obj_ini.player_role_data[eROLE.CHAPTERMASTER].role) && (string_count("$", _unit.specials) > 0)) {
+            if ((_unit.has_role(eROLE.CHAPTERMASTER)) && (string_count("$", _unit.specials) > 0)) {
                 born = true;
             }
         }
@@ -2329,7 +2321,7 @@ function scr_dialogue(diplo_keyphrase, data = {}) {
     if (faction_engaged == 5) {
 
         var _diag_set = global.dialogue.sisters;
-        diplo_text = create_dialogue_string(global.dialogue.sisters, diplo_keyphrase, diag_variables);
+        diplo_text = __create_dialogue_string(global.dialogue.sisters, diplo_keyphrase, diag_variables);
 
         if (struct_exists(data, "prepend")) {
             diplo_text = $"{data.prepend} {diplo_text}";
