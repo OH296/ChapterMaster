@@ -135,7 +135,7 @@ function AiFleetProblem(_name, _timer = -1, _data = {}, _fleet = noone) : FleetP
     static __deliver_hunt_trophy_mission_log_entry = function() {
         var _sys = fleets_next_location(fleet);
         var _mission_data = {
-            system: _sys.name,
+            location : location.name,
             system_id: _sys.id,
             target: self,
             important_person: data.trophy_owner,
@@ -143,8 +143,9 @@ function AiFleetProblem(_name, _timer = -1, _data = {}, _fleet = noone) : FleetP
             planet: 0,
             start_system: data.origin_sys,
             time: timer,
+            mission : "Deliver Trophy to Navy Fleet"
         };
-        _mission_data.mission = self;
+        _mission_data.mission_obj = self;
 
         _mission_data.click_left = method(_mission_data, function() {
             set_map_pan_to_loc(system_id);
@@ -158,7 +159,7 @@ function AiFleetProblem(_name, _timer = -1, _data = {}, _fleet = noone) : FleetP
             var _unit = fetch_unit_uid(important_person);
             if (is_struct(_unit)) {
                 var _unit_l = [_unit];
-                group_selection(_unit_l);
+                group_selection(_unit_l, {purpose: $"{mission_obj.data.trophy_name} Bearer", purpose_code: "manage"});
             }
         });
         return _mission_data;
@@ -251,15 +252,16 @@ function AiFleetProblem(_name, _timer = -1, _data = {}, _fleet = noone) : FleetP
             system: data.target_name,
             system_id: find_star_by_name(data.target_name),
             time: timer,
+            mission : _mission
         };
-        _mission_data.mission = self;
+        _mission_data.mission_obj = self;
 
         _mission_data.click_left = method(_mission_data, function() {
-            set_map_pan_to_loc(mission.fleet);
+            set_map_pan_to_loc(mission_obj.fleet);
         });
 
         _mission_data.hover = method(_mission_data, function() {
-            tooltip_draw($"intercept the radical Inquisitor {mission.data.inquisitor_name} at {mission.data.target_name}, expected within {mission.timer} months.");
+            tooltip_draw($"intercept the radical Inquisitor {mission_obj.data.inquisitor_name} at {mission_obj.data.target_name}, expected within {mission_obj.timer} months.");
         });
         return _mission_data;
     };
