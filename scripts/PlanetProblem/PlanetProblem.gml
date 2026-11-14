@@ -142,7 +142,7 @@ function PlanetProblem(_name, _timer, _data, _planet_data) : Problem(_name, _tim
         var _text_body_height = string_height_ext(draw_data.mission_description, -1, draw_data.w - 20);
         if (draw_data.help != "") {
             draw_text_ext(draw_data.x1 + 10, draw_data.y1 + 40 + _text_body_height + 10, draw_data.help, -1, draw_data.w - 20);
-            _text_body_height += string_height_ext(draw_data.mission_description, -1, draw_data.w - 20) + 10;
+            _text_body_height += string_height_ext(draw_data.help, -1, draw_data.w - 20) + 10;
         }
 
         if (draw_data.button_text != "") {
