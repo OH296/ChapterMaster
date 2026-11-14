@@ -133,6 +133,48 @@ try {
     LOGGER.info($"default Distance : {xxx}");
     var _enemies_assigned = false;
 
+    var _fetch_enemy_organisation = function(){
+        enemy_organisations = json_to_gamemaker(working_directory + "/data/battle_organisation_formats.json", json_parse);
+
+        var _battle_string = $"{global.faction_names_en[enemy]}_force{threat}";
+        if (leader == true) {
+            _battle_string = "leader_" + _battle_string;
+        }
+        if (struct_exists(enemy_organisations, _battle_string)) {
+            return enemy_organisations[$ _battle_string];
+        }
+        return undefined;
+    }
+
+    var _add_enemy_columns_to_battle = function(_cols){
+        for (var i = 0; i < array_length(_cols); i++) {
+            var _col = _cols[i];
+            _u = instance_create(0, 240, obj_enunit);
+            _u.flank = struct_exists(_col, "flank") && _col.flank;
+            _u.add_enemies(_col.enemies);
+            _u.engaged = struct_exists(_col, "engaged") && _col.engaged;
+            if (_u.flank) {
+                if (_col.distance > 0) {
+                    _u.x = instance_nearest(0, 240, obj_pnunit).x - _col.distance;
+                } else {
+                    _u.x = instance_nearest(0, 240, obj_pnunit).x - 80;
+                }
+            } else {
+                _u.x = _xxx + _col.distance;
+            }
+            if (_u.engaged) {
+                var _nearest_player = instance_nearest(_u.flank ? 0 : _xxx, 240, obj_pnunit);
+                if (!_u.flank) {
+                    _u.x = _nearest_player.x + 10;
+                } else {
+                    _u.x = _nearest_player.x - 10;
+                }
+                _u.engaged = true;
+                _nearest_player.engaged = true;
+            }
+        }
+        _enemies_assigned = true;
+    }
     if (is_undefined(battle_enemy_data) && battle_special != "") {
         enemy_organisations = json_to_gamemaker(working_directory + "/data/battle_organisation_specials.json", json_parse);
         if (struct_exists(enemy_organisations, battle_special)) {
@@ -147,7 +189,7 @@ try {
             _battle_string = "leader_" + _battle_string;
         }
         if (struct_exists(enemy_organisations, _battle_string)) {
-            battle_enemy_data = enemy_organisations[$ _battle_string];
+            battle_enemy_data = _fetch_enemy_organisation();
         }
     }
     if (!is_undefined(battle_enemy_data)) {
@@ -163,33 +205,13 @@ try {
         }
         if (struct_exists(battle_enemy_data, "cols")) {
             var _cols = battle_enemy_data.cols;
-            for (var i = 0; i < array_length(_cols); i++) {
-                var _col = _cols[i];
-                _u = instance_create(0, 240, obj_enunit);
-                _u.flank = struct_exists(_col, "flank") && _col.flank;
-                _u.add_enemies(_col.enemies);
-                _u.engaged = struct_exists(_col, "engaged") && _col.engaged;
-                if (_u.flank) {
-                    if (_col.distance > 0) {
-                        _u.x = instance_nearest(0, 240, obj_pnunit).x - _col.distance;
-                    } else {
-                        _u.x = instance_nearest(0, 240, obj_pnunit).x - 80;
-                    }
-                } else {
-                    _u.x = _xxx + _col.distance;
-                }
-                if (_u.engaged) {
-                    var _nearest_player = instance_nearest(_u.flank ? 0 : _xxx, 240, obj_pnunit);
-                    if (!_u.flank) {
-                        _u.x = _nearest_player.x + 10;
-                    } else {
-                        _u.x = _nearest_player.x - 10;
-                    }
-                    _u.engaged = true;
-                    _nearest_player.engaged = true;
-                }
-            }
-            _enemies_assigned = true;
+            _add_enemy_columns_to_battle(_cols);
+        }
+        if (!_enemies_assigned){
+            var _org_structure = _fetch_enemy_organisation();  
+            if (!is_undefined(_org_structure) & struct_exists(_org_structure, "cols")){
+                _add_enemy_columns_to_battle(_org_structure.cols);
+            }        
         }
     }
     if (!_enemies_assigned) {
