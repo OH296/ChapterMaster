@@ -135,7 +135,7 @@ function AiFleetProblem(_name, _timer = -1, _data = {}, _fleet = noone) : FleetP
     static __deliver_hunt_trophy_mission_log_entry = function() {
         var _sys = fleets_next_location(fleet);
         var _mission_data = {
-            location : location.name,
+            location: _sys.name,
             system_id: _sys.id,
             target: self,
             important_person: data.trophy_owner,
@@ -143,7 +143,7 @@ function AiFleetProblem(_name, _timer = -1, _data = {}, _fleet = noone) : FleetP
             planet: 0,
             start_system: data.origin_sys,
             time: timer,
-            mission : "Deliver Trophy to Navy Fleet"
+            mission: "Deliver Trophy to Navy Fleet",
         };
         _mission_data.mission_obj = self;
 
@@ -247,12 +247,11 @@ function AiFleetProblem(_name, _timer = -1, _data = {}, _fleet = noone) : FleetP
 
     static __radical_inquisitor_mission_log_entry = function() {
         var _mission = "Intercept Radical Inquisitor";
-        var _sys = fleets_next_location(fleet);
         var _mission_data = {
-            system: data.target_name,
+            location: data.target_name,
             system_id: find_star_by_name(data.target_name),
             time: timer,
-            mission : _mission
+            mission: _mission,
         };
         _mission_data.mission_obj = self;
 

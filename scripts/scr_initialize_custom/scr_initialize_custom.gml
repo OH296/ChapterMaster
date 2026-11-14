@@ -2544,7 +2544,7 @@ function scr_initialize_custom() {
             }
             if (!_is_vehicle && _role == "captains") {
                 var _cap_gen_name = global.name_generator.ChapterMemberNameGeneration();
-				var _new_name = "";
+                var _new_name = "";
                 switch (_coy.coy) {
                     case 1:
                         _new_name = honor_captain_name != "" ? honor_captain_name : _cap_gen_name;
